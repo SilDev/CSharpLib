@@ -1,4 +1,5 @@
 #region auto-generated FILE INFORMATION
+
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
@@ -9,7 +10,9 @@
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
+
 #endregion
+
 namespace SilDev
 {
     using System;
@@ -19,25 +22,25 @@ namespace SilDev
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     Provides static methods based on the <see cref="Path" /> class to perform operations on
-    ///     <see cref="string" /> instances that contain file or directory path information.
+    ///     Provides static methods based on the <see cref="Path"/> class to perform operations on
+    ///     <see cref="string"/> instances that contain file or directory path information.
     /// </summary>
     public static class PathEx
     {
         /// <summary>
         ///     Gets the full process executable path of the assembly based on
-        ///     <see cref="Assembly.GetEntryAssembly()" />.CodeBase.
+        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
         public static string LocalPath => Assembly.GetEntryAssembly().CodeBase.ToUri()?.LocalPath;
 
         /// <summary>
         ///     Gets the process executable located directory path of the assembly based on
-        ///     <see cref="Assembly.GetEntryAssembly()" />.CodeBase.
+        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
         public static string LocalDir => Path.GetDirectoryName(LocalPath)?.TrimEnd(Path.DirectorySeparatorChar);
 
         /// <summary>
-        ///     Combines <see cref="Directory.Exists(string)" /> and <see cref="File.Exists(string)" />
+        ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
         ///     to determine whether the specified path element exists.
         /// </summary>
         /// <param name="path">
@@ -47,7 +50,7 @@ namespace SilDev
             Directory.Exists(path) || File.Exists(path);
 
         /// <summary>
-        ///     Combines <see cref="Directory.Exists(string)" /> and <see cref="File.Exists(string)" />
+        ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
         ///     to determine whether the specified path elements exists.
         /// </summary>
         /// <param name="paths">
@@ -67,16 +70,18 @@ namespace SilDev
 
         /// <summary>
         ///     <para>
-        ///         Combines an array of strings, based on <see cref="Path.Combine(string[])" />,
-        ///         <see cref="Path.GetFullPath(string)" />,
-        ///         <see cref="Environment.GetFolderPath(Environment.SpecialFolder)" />,
-        ///         <see cref="Environment.GetEnvironmentVariable(string)" /> and
-        ///         <see cref="Regex.Match(string, string, RegexOptions)" />, into a path.
+        ///         Combines an array of strings, based on <see cref="Path.Combine(string[])"/>,
+        ///         <see cref="Path.GetFullPath(string)"/>,
+        ///         <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/>,
+        ///         <see cref="Environment.GetEnvironmentVariable(string)"/> and
+        ///         <see cref="Regex.Match(string, string, RegexOptions)"/>, into a path.
         ///     </para>
         ///     <para>
-        ///         <c>Hint:</c>
+        ///         <c>
+        ///             Hint:
+        ///         </c>
         ///         Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)" />,
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>,
         ///         for example, write <code>"%Desktop%"</code>, cases are ignored as well.
         ///     </para>
         /// </summary>
@@ -117,7 +122,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()" />.
+        ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()"/>.
         /// </summary>
         /// <param name="label">
         ///     This text is at the beginning of the name.
@@ -141,7 +146,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()" />.
+        ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()"/>.
         /// </summary>
         /// <param name="len">
         ///     The length of the hash. Valid values are 4 through 24.
@@ -150,7 +155,7 @@ namespace SilDev
             GetTempDirName("tmp", len);
 
         /// <summary>
-        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()" />.
+        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
         /// </summary>
         /// <param name="label">
         ///     This text is at the beginning of the name.
@@ -162,7 +167,7 @@ namespace SilDev
             GetTempDirName(label, len) + ".tmp";
 
         /// <summary>
-        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()" />.
+        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
         /// </summary>
         /// <param name="len">
         ///     The length of the hash. Valid values are 4 through 24.

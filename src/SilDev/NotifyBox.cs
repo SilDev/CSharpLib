@@ -1,4 +1,5 @@
 #region auto-generated FILE INFORMATION
+
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
@@ -9,7 +10,9 @@
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
+
 #endregion
+
 namespace SilDev
 {
     using System;
@@ -57,7 +60,7 @@ namespace SilDev
         private double _opacity = .95d;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NotifyBox" /> class.
+        ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
         /// </summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
         public NotifyBox() { }
