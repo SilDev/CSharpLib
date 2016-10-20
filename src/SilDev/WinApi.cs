@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-20 11:52
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -1783,7 +1783,7 @@ namespace SilDev
         {
             var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x10000L);
             var error = GetLastError("GetWindowLong");
-            UnsafeNativeMethods.SetWindowLong(hWnd, WindowLongFunc.GWL_STYLE, style);
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
             error += GetLastError("SetWindowLong");
             return error == 0;
         }
@@ -1792,7 +1792,7 @@ namespace SilDev
         {
             var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x20000L);
             var error = GetLastError("GetWindowLong");
-            UnsafeNativeMethods.SetWindowLong(hWnd, WindowLongFunc.GWL_STYLE, style);
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
             error += GetLastError("SetWindowLong");
             return error == 0;
         }
@@ -1952,11 +1952,11 @@ namespace SilDev
                 style = style & ~(int)WindowStyleFunc.WS_MINIMIZE;
                 style = style & ~(int)WindowStyleFunc.WS_MAXIMIZEBOX;
                 style = style & ~(int)WindowStyleFunc.WS_THICKFRAME;
-                UnsafeNativeMethods.SetWindowLong(hWnd, WindowLongFunc.GWL_STYLE, style);
+                UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
                 error += GetLastError();
                 style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE) | (int)WindowStyleFunc.WS_EX_DLGMODALFRAME;
                 error += GetLastError("GetWindowLong");
-                UnsafeNativeMethods.SetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE, style);
+                UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_EXSTYLE, (IntPtr)style);
                 error += GetLastError("SetWindowLong");
                 return error == 0;
             }
@@ -1973,7 +1973,7 @@ namespace SilDev
             var error = GetLastError("ShowWindow");
             var style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE) | (int)WindowStyleFunc.WS_EX_TOOLWINDOW;
             error += GetLastError("GetWindowLong");
-            UnsafeNativeMethods.SetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE, style);
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_EXSTYLE, (IntPtr)style);
             error += GetLastError("SetWindowLong");
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_SHOW);
             error += GetLastError("ShowWindow");
@@ -2573,8 +2573,8 @@ namespace SilDev
             /// </param>
             /// <returns>
             /// </returns>
-            [DllImport(DllNames.Shell32, SetLastError = true)]
-            internal static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, GetFileInfoFunc uFlags);
+            [DllImport(DllNames.Shell32, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
+            internal static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, GetFileInfoFunc uFlags);
 
             /// <summary>
             ///     Retrieves the names of all sections in an initialization file.
@@ -2717,7 +2717,7 @@ namespace SilDev
             ///     If the function succeeds, the return value is nonzero.
             /// </returns>
             [DllImport(DllNames.Kernel32, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
-            internal static extern int WritePrivateProfileSection([MarshalAs(UnmanagedType.LPStr)] string lpAppName, [MarshalAs(UnmanagedType.LPStr)] string lpString, [MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+            internal static extern int WritePrivateProfileSection([MarshalAs(UnmanagedType.LPStr)] string lpAppName, [MarshalAs(UnmanagedType.LPStr, SizeConst = 65535)] string lpString, [MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
             /// <summary>
             ///     Copies a string into the specified section of an initialization file.
@@ -4342,8 +4342,8 @@ namespace SilDev
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
             /// </returns>
-            [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Auto)]
-            public static extern bool SendNotifyMessage(IntPtr hWnd, uint msg, UIntPtr wParam, string lParam);
+            [DllImport(DllNames.User32, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
+            public static extern bool SendNotifyMessage(IntPtr hWnd, uint msg, UIntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
             /// <summary>
             ///     Moves the cursor to the specified screen coordinates. If the new coordinates are not within
@@ -4501,8 +4501,16 @@ namespace SilDev
             /// <returns>
             ///     If the function succeeds, the return value is the previous value of the specified 32-bit integer.
             /// </returns>
-            [DllImport(DllNames.User32, SetLastError = true)]
-            public static extern int SetWindowLong(IntPtr hWnd, WindowLongFunc nIndex, long dwNewLong);
+            //[DllImport(DllNames.User32, SetLastError = true)]
+            //public static extern int SetWindowLong(IntPtr hWnd, WindowLongFunc nIndex, long dwNewLong);
+            public static IntPtr SetWindowLongPtr(IntPtr hWnd, WindowLongFunc nIndex, IntPtr dwNewLong) =>
+                IntPtr.Size == 4 ? SetWindowLongPtr32(hWnd, (int)nIndex, dwNewLong) : SetWindowLongPtr64(hWnd, (int)nIndex, dwNewLong);
+
+            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLong")]
+            private static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLongPtr")]
+            private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
             /// <summary>
             ///     Sets the show state and the restored, minimized, and maximized positions of the specified window.
@@ -4634,8 +4642,17 @@ namespace SilDev
             [DllImport(DllNames.User32, EntryPoint = "SetWindowTextW", SetLastError = true, CharSet = CharSet.Unicode)]
             public static extern bool SetWindowText(IntPtr hWnd, string lpString);
 
-            [DllImport(DllNames.Kernel32, SetLastError = true)]
-            public static extern bool SetCurrentDirectory(string lpPathName);
+            /// <summary>
+            ///     Changes the current directory for the current process.
+            /// </summary>
+            /// <param name="lpPathName">
+            ///     The path to the new current directory.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+            /// </returns>
+            [DllImport(DllNames.Kernel32, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
+            public static extern bool SetCurrentDirectory([MarshalAs(UnmanagedType.LPWStr)] string lpPathName);
 
             /// <summary>
             ///     Sends an appbar message to the system.
@@ -4849,7 +4866,7 @@ namespace SilDev
             ///     If the function succeeds, the return value is nonzero.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
-            public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int nSize, out IntPtr lpNumberOfBytesWritten);
+            public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, [MarshalAs(UnmanagedType.SysInt)] int nSize, out IntPtr lpNumberOfBytesWritten);
         }
 
         /// <summary>

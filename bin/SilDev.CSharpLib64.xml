@@ -4923,7 +4923,7 @@
         </member>
         <member name="M:SilDev.NotifyBox.#ctor">
             <summary>
-                Initializes a new instance of the <see cref="T:SilDev.NotifyBox" /> class.
+                Initializes a new instance of the <see cref="T:SilDev.NotifyBox"/> class.
             </summary>
         </member>
         <member name="P:SilDev.NotifyBox.Opacity">
@@ -5146,25 +5146,25 @@
         </member>
         <member name="T:SilDev.PathEx">
             <summary>
-                Provides static methods based on the <see cref="T:System.IO.Path" /> class to perform operations on
-                <see cref="T:System.String" /> instances that contain file or directory path information.
+                Provides static methods based on the <see cref="T:System.IO.Path"/> class to perform operations on
+                <see cref="T:System.String"/> instances that contain file or directory path information.
             </summary>
         </member>
         <member name="P:SilDev.PathEx.LocalPath">
             <summary>
                 Gets the full process executable path of the assembly based on
-                <see cref="M:System.Reflection.Assembly.GetEntryAssembly" />.CodeBase.
+                <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
             </summary>
         </member>
         <member name="P:SilDev.PathEx.LocalDir">
             <summary>
                 Gets the process executable located directory path of the assembly based on
-                <see cref="M:System.Reflection.Assembly.GetEntryAssembly" />.CodeBase.
+                <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
             </summary>
         </member>
         <member name="M:SilDev.PathEx.DirOrFileExists(System.String)">
             <summary>
-                Combines <see cref="M:System.IO.Directory.Exists(System.String)" /> and <see cref="M:System.IO.File.Exists(System.String)" />
+                Combines <see cref="M:System.IO.Directory.Exists(System.String)"/> and <see cref="M:System.IO.File.Exists(System.String)"/>
                 to determine whether the specified path element exists.
             </summary>
             <param name="path">
@@ -5173,7 +5173,7 @@
         </member>
         <member name="M:SilDev.PathEx.DirsOrFilesExists(System.String[])">
             <summary>
-                Combines <see cref="M:System.IO.Directory.Exists(System.String)" /> and <see cref="M:System.IO.File.Exists(System.String)" />
+                Combines <see cref="M:System.IO.Directory.Exists(System.String)"/> and <see cref="M:System.IO.File.Exists(System.String)"/>
                 to determine whether the specified path elements exists.
             </summary>
             <param name="paths">
@@ -5183,16 +5183,18 @@
         <member name="M:SilDev.PathEx.Combine(System.String[])">
             <summary>
                 <para>
-                    Combines an array of strings, based on <see cref="M:System.IO.Path.Combine(System.String[])" />,
-                    <see cref="M:System.IO.Path.GetFullPath(System.String)" />,
-                    <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)" />,
-                    <see cref="M:System.Environment.GetEnvironmentVariable(System.String)" /> and
-                    <see cref="M:System.Text.RegularExpressions.Regex.Match(System.String,System.String,System.Text.RegularExpressions.RegexOptions)" />, into a path.
+                    Combines an array of strings, based on <see cref="M:System.IO.Path.Combine(System.String[])"/>,
+                    <see cref="M:System.IO.Path.GetFullPath(System.String)"/>,
+                    <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>,
+                    <see cref="M:System.Environment.GetEnvironmentVariable(System.String)"/> and
+                    <see cref="M:System.Text.RegularExpressions.Regex.Match(System.String,System.String,System.Text.RegularExpressions.RegexOptions)"/>, into a path.
                 </para>
                 <para>
-                    <c>Hint:</c>
+                    <c>
+                        Hint:
+                    </c>
                     Allows superordinate directory navigation and environment variables
-                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)" />,
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>,
                     for example, write <code>"%Desktop%"</code>, cases are ignored as well.
                 </para>
             </summary>
@@ -5202,7 +5204,7 @@
         </member>
         <member name="M:SilDev.PathEx.GetTempDirName(System.String,System.Int32)">
             <summary>
-                Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName" />.
+                Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
             </summary>
             <param name="label">
                 This text is at the beginning of the name.
@@ -5213,7 +5215,7 @@
         </member>
         <member name="M:SilDev.PathEx.GetTempDirName(System.Int32)">
             <summary>
-                Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName" />.
+                Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
             </summary>
             <param name="len">
                 The length of the hash. Valid values are 4 through 24.
@@ -5221,7 +5223,7 @@
         </member>
         <member name="M:SilDev.PathEx.GetTempFileName(System.String,System.Int32)">
             <summary>
-                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName" />.
+                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
             </summary>
             <param name="label">
                 This text is at the beginning of the name.
@@ -5232,7 +5234,7 @@
         </member>
         <member name="M:SilDev.PathEx.GetTempFileName(System.Int32)">
             <summary>
-                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName" />.
+                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
             </summary>
             <param name="len">
                 The length of the hash. Valid values are 4 through 24.
@@ -10731,7 +10733,7 @@
                 </para>
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.UnsafeNativeMethods.SetWindowLong(System.IntPtr,SilDev.WinApi.WindowLongFunc,System.Int64)">
+        <member name="M:SilDev.WinApi.UnsafeNativeMethods.SetWindowLongPtr(System.IntPtr,SilDev.WinApi.WindowLongFunc,System.IntPtr)">
             <summary>
                 Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the
                 specified offset into the extra window memory.
@@ -10873,6 +10875,17 @@
             </param>
             <returns>
                 If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.UnsafeNativeMethods.SetCurrentDirectory(System.String)">
+            <summary>
+                Changes the current directory for the current process.
+            </summary>
+            <param name="lpPathName">
+                The path to the new current directory.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.UnsafeNativeMethods.SHAppBarMessage(SilDev.WinApi.AppBarMessageFunc,SilDev.WinApi.APPBARDATA@)">
