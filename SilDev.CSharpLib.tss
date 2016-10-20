@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ArrayOfArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\properties\assemblyinfo.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\compaction.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\comparison.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\crypto.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>B:\Profile\Documents\Visual Studio 2015\Projects\OpenSource\SilDev.CSharpLib\src\SilDev\Data.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\depiction.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\elevation.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\environmentex.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\forms.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\ini.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\json.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\log.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\media.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\msgboxex.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\netex.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\notifybox.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\pathex.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\processex.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>B:\Profile\Documents\Visual Studio 2015\Projects\OpenSource\SilDev.CSharpLib\src\SilDev\Reg.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\reorganize.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\resourcesex.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\service.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\taskbar.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>b:\profile\documents\visual studio 2015\projects\opensource\sildev.csharplib\src\sildev\winapi.cs</string>
+    </ArrayOfString>
+  </ArrayOfArrayOfString>
+</ArrayOfArrayOfArrayOfString>
