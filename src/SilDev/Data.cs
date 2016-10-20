@@ -252,6 +252,9 @@ namespace SilDev
             }
         }
 
+        /// <summary>
+        ///     Restores the name of the current principal.
+        /// </summary>
         public static void RestorePrincipalName()
         {
             try
