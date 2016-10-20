@@ -244,7 +244,7 @@ namespace SilDev
         ///     true to release all resources used by the <see cref="Component.Dispose()"/>
         ///     if the process has been started; otherwise, false.
         /// </param>
-        public static Process Start(string fileName, bool verbRunAs, bool dispose = true) =>
+        public static Process Start(string fileName, bool verbRunAs, bool dispose) =>
             Start(fileName, null, null, verbRunAs, dispose);
 
         /// <summary>

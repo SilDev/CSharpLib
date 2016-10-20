@@ -2177,6 +2177,11 @@
                 cannot be longer than the original one.
             </param>
         </member>
+        <member name="M:SilDev.Data.RestorePrincipalName">
+            <summary>
+                Restores the name of the current principal.
+            </summary>
+        </member>
         <member name="M:SilDev.Data.PinToTaskbar(System.String)">
             <summary>
                 Pin the specified file to taskbar.
