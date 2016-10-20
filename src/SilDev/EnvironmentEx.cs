@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-20 12:09
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -202,16 +202,8 @@ namespace SilDev
                 if (lower)
                     value = value?.ToLower();
             }
-            catch (ArgumentNullException)
-            {
-                if (Log.DebugMode > 2)
-                    throw;
-            }
-            catch (ArgumentException)
-            {
-                if (Log.DebugMode > 2)
-                    throw;
-            }
+            catch (ArgumentNullException) { }
+            catch (ArgumentException) { }
             catch (Exception ex)
             {
                 Log.Write(ex);
@@ -252,16 +244,8 @@ namespace SilDev
                 if (!string.IsNullOrWhiteSpace(variable))
                     variable = $"%{variable}%";
             }
-            catch (ArgumentNullException)
-            {
-                if (Log.DebugMode > 2)
-                    throw;
-            }
-            catch (ArgumentException)
-            {
-                if (Log.DebugMode > 2)
-                    throw;
-            }
+            catch (ArgumentNullException) { }
+            catch (ArgumentException) { }
             catch (Exception ex)
             {
                 Log.Write(ex);

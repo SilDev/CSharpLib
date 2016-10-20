@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-20 12:09
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -90,8 +90,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                if (Log.DebugMode > 2)
-                    throw;
                 return false;
             }
         }
@@ -121,8 +119,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                if (Log.DebugMode > 2)
-                    throw;
                 return false;
             }
         }
@@ -167,8 +163,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                if (Log.DebugMode > 2)
-                    throw;
             }
             return output;
         }
@@ -227,8 +221,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                if (Log.DebugMode > 2)
-                    throw;
             }
             return output;
         }
@@ -304,8 +296,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                if (Log.DebugMode > 2)
-                    throw;
             }
             return output;
         }
@@ -383,8 +373,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                if (Log.DebugMode > 2)
-                    throw;
             }
             return output;
         }
@@ -1256,8 +1244,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                if (Log.DebugMode > 2)
-                    throw;
                 return false;
             }
         }
