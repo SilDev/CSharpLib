@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-21 05:12
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -58,6 +58,8 @@ namespace SilDev
             /// </summary>
             AlwaysOnTop = 0x2
         }
+
+        private static TaskbarInstance TaskBarInstance => new TaskbarInstance();
 
         /// <summary>
         ///     Returns the current <see cref="State"/> of the taskbar.
@@ -140,6 +142,26 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Adds an item to the taskbar.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window to be added to the taskbar.
+        /// </param>
+        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        public static void AddTab(IntPtr hWnd) =>
+            (TaskBarInstance as ITaskBarList3)?.AddTab(hWnd);
+
+        /// <summary>
+        ///     Deletes an item from the taskbar.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window to be deleted from the taskbar.
+        /// </param>
+        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        public static void DeleteTab(IntPtr hWnd) =>
+            (TaskBarInstance as ITaskBarList3)?.DeleteTab(hWnd);
+
+        /// <summary>
         ///     Provides static methods to manage a progress bar hosted in a taskbar button.
         /// </summary>
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
@@ -192,9 +214,6 @@ namespace SilDev
                 Paused = 0x8
             }
 
-            private static readonly ITaskBarList3 TaskBarInstance = (ITaskBarList3)new TaskbarInstance();
-            private static readonly bool TaskBarSupported = Environment.OSVersion.Version >= new Version(6, 1);
-
             /// <summary>
             ///     Sets the type and state of the progress indicator displayed on a taskbar button.
             /// </summary>
@@ -204,11 +223,8 @@ namespace SilDev
             /// <param name="flags">
             ///     The flag that control the current state of the progress button.
             /// </param>
-            public static void SetState(IntPtr hWnd, Flags flags)
-            {
-                if (TaskBarSupported)
-                    TaskBarInstance.SetProgressState(hWnd, flags);
-            }
+            public static void SetState(IntPtr hWnd, Flags flags) =>
+                (TaskBarInstance as ITaskBarList3)?.SetProgressState(hWnd, flags);
 
             /// <summary>
             ///     Displays or updates a progress bar hosted in a taskbar button to show the specific
@@ -226,46 +242,43 @@ namespace SilDev
             ///     An application-defined value that specifies the value ullCompleted will have when the
             ///     operation is complete.
             /// </param>
-            public static void SetValue(IntPtr hWnd, double progressValue, double progressMax)
-            {
-                if (TaskBarSupported)
-                    TaskBarInstance.SetProgressValue(hWnd, (ulong)progressValue, (ulong)progressMax);
-            }
-
-            [ComImport]
-            [Guid("EA1AFB91-9E28-4B86-90E9-9E9F8A5EEFAF")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            private interface ITaskBarList3
-            {
-                [PreserveSig]
-                void HrInit();
-
-                [PreserveSig]
-                void AddTab(IntPtr hwnd);
-
-                [PreserveSig]
-                void DeleteTab(IntPtr hwnd);
-
-                [PreserveSig]
-                void ActivateTab(IntPtr hwnd);
-
-                [PreserveSig]
-                void SetActiveAlt(IntPtr hwnd);
-
-                [PreserveSig]
-                void MarkFullscreenWindow(IntPtr hwnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
-
-                [PreserveSig]
-                void SetProgressValue(IntPtr hwnd, ulong ullCompleted, ulong ullTotal);
-
-                [PreserveSig]
-                void SetProgressState(IntPtr hwnd, Flags tbpFlags);
-            }
-
-            [Guid("56FDF344-FD6D-11D0-958A-006097C9A090")]
-            [ClassInterface(ClassInterfaceType.None)]
-            [ComImport]
-            private class TaskbarInstance { }
+            public static void SetValue(IntPtr hWnd, double progressValue, double progressMax) =>
+                (TaskBarInstance as ITaskBarList3)?.SetProgressValue(hWnd, (ulong)progressValue, (ulong)progressMax);
         }
+
+        [ComImport]
+        [Guid("EA1AFB91-9E28-4B86-90E9-9E9F8A5EEFAF")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        private interface ITaskBarList3
+        {
+            [PreserveSig]
+            void HrInit();
+
+            [PreserveSig]
+            void AddTab(IntPtr hwnd);
+
+            [PreserveSig]
+            void DeleteTab(IntPtr hwnd);
+
+            [PreserveSig]
+            void ActivateTab(IntPtr hwnd);
+
+            [PreserveSig]
+            void SetActiveAlt(IntPtr hwnd);
+
+            [PreserveSig]
+            void MarkFullscreenWindow(IntPtr hwnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
+
+            [PreserveSig]
+            void SetProgressValue(IntPtr hwnd, ulong ullCompleted, ulong ullTotal);
+
+            [PreserveSig]
+            void SetProgressState(IntPtr hwnd, Progress.Flags tbpFlags);
+        }
+
+        [Guid("56FDF344-FD6D-11D0-958A-006097C9A090")]
+        [ClassInterface(ClassInterfaceType.None)]
+        [ComImport]
+        private class TaskbarInstance { }
     }
 }
