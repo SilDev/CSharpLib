@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-21 08:27
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -261,13 +261,20 @@ namespace SilDev
         {
             try
             {
-                var s = PathEx.Combine(destPath);
+                var path = PathEx.Combine(destPath);
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException();
+                var dir = Path.GetDirectoryName(path);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException();
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
                 using (var ms = new MemoryStream(resData))
                 {
                     var data = ms.ToArray();
                     if (reverseBytes)
                         data = data.Reverse().ToArray();
-                    using (var fs = new FileStream(s, FileMode.CreateNew, FileAccess.Write))
+                    using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
                         fs.Write(data, 0, data.Length);
                 }
             }
