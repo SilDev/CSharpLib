@@ -251,22 +251,23 @@ namespace SilDev
         ///     The resource to extract.
         /// </param>
         /// <param name="destPath">
-        ///     The file to create.
+        ///     The file to create (environment variables are accepted).
         /// </param>
         /// <param name="reverseBytes">
         ///     true to invert the order of the bytes in the specified sequence before extracting;
         ///     otherwise, false.
         /// </param>
-        public static void Extract(byte[] resData, string destPath, bool reverseBytes = true)
+        public static void Extract(byte[] resData, string destPath, bool reverseBytes = false)
         {
             try
             {
+                var s = PathEx.Combine(destPath);
                 using (var ms = new MemoryStream(resData))
                 {
                     var data = ms.ToArray();
                     if (reverseBytes)
                         data = data.Reverse().ToArray();
-                    using (var fs = new FileStream(destPath, FileMode.CreateNew, FileAccess.Write))
+                    using (var fs = new FileStream(s, FileMode.CreateNew, FileAccess.Write))
                         fs.Write(data, 0, data.Length);
                 }
             }
@@ -504,7 +505,7 @@ namespace SilDev
                     };
                     _button.FlatAppearance.BorderSize = 0;
                     _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? ProfessionalColors.ButtonSelectedHighlight;
-                    _button.Click += button_Click;
+                    _button.Click += Button_Click;
                     Controls.Add(_button);
                     ResumeLayout(false);
                     if (_file != null && _file != path)
@@ -531,7 +532,7 @@ namespace SilDev
                     return index > _icons.Length - 1 ? null : Icon.FromHandle(_icons[index]);
                 }
 
-                private void button_Click(object sender, EventArgs e)
+                private void Button_Click(object sender, EventArgs e)
                 {
                     if (ParentForm == null)
                         return;
