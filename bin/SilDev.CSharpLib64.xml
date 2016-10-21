@@ -6637,6 +6637,22 @@
                 The handle of the window on which the taskbar is located.
             </param>
         </member>
+        <member name="M:SilDev.TaskBar.AddTab(System.IntPtr)">
+            <summary>
+                Adds an item to the taskbar.
+            </summary>
+            <param name="hWnd">
+                A handle to the window to be added to the taskbar.
+            </param>
+        </member>
+        <member name="M:SilDev.TaskBar.DeleteTab(System.IntPtr)">
+            <summary>
+                Deletes an item from the taskbar.
+            </summary>
+            <param name="hWnd">
+                A handle to the window to be deleted from the taskbar.
+            </param>
+        </member>
         <member name="T:SilDev.TaskBar.Progress">
             <summary>
                 Provides static methods to manage a progress bar hosted in a taskbar button.
