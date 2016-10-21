@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-21 05:11
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -181,7 +181,7 @@ namespace SilDev
         /// <param name="path">
         ///     The file to check.
         /// </param>
-        public static bool FileIs64Bit(this string path)
+        public static bool FileIs64Bit(string path)
         {
             ushort us = 0x0;
             try
