@@ -3677,7 +3677,7 @@
             <summary>
                 <para>
                     Copies an <see cref="T:System.Object"/> into the specified section of an initialization
-                    file. The following objects are valid:
+                    file. The following types are valid:
                 </para>
                 <para>
                     <see cref="T:System.Boolean"/>,
@@ -3694,8 +3694,9 @@
                     <see cref="T:System.Int16"/>,
                     <see cref="T:System.Drawing.Size"/>,
                     <see cref="T:System.String"/>,
-                    <see cref="T:System.String"/>[], and
-                    <see cref="T:System.Version"/>
+                    <see cref="T:System.String"/>[],
+                    <see cref="T:System.Version"/>,
+                    and all other types convertible with <see cref="T:System.Object"/>.ToString().
                 </para>
             </summary>
             <param name="section">
