@@ -4073,6 +4073,12 @@
                 Specifies that the mouse pointer moves once to a new dialog box.
             </summary>
         </member>
+        <member name="F:SilDev.MsgBoxEx.TopMost">
+            <summary>
+                Specifies that the dialog box is placed above all non-topmost windows. This
+                option has no effect if an <see cref="T:System.Windows.Forms.IWin32Window"/> owner is defined.
+            </summary>
+        </member>
         <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
             <summary>
                 Displays a message box in the center of the specified object and with the
