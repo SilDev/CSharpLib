@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MsgBoxEx.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-22 07:20
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -45,6 +45,12 @@ namespace SilDev
         ///     Specifies that the mouse pointer moves once to a new dialog box.
         /// </summary>
         public static bool CenterMousePointer = false;
+
+        /// <summary>
+        ///     Specifies that the dialog box is placed above all non-topmost windows. This
+        ///     option has no effect if an <see cref="IWin32Window"/> owner is defined.
+        /// </summary>
+        public static bool TopMost = false;
 
         static MsgBoxEx()
         {
@@ -97,8 +103,7 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, caption, buttons, icon, defButton, options);
+                return Show(text, caption, buttons, icon, defButton, options);
             }
         }
 
@@ -141,8 +146,7 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, caption, buttons, icon, defButton);
+                return Show(text, caption, buttons, icon, defButton);
             }
         }
 
@@ -181,8 +185,7 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, caption, buttons, icon);
+                return Show(text, caption, buttons, icon);
             }
         }
 
@@ -217,8 +220,7 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, caption, buttons);
+                return Show(text, caption, buttons);
             }
         }
 
@@ -249,8 +251,7 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, caption);
+                return Show(text, caption);
             }
         }
 
@@ -278,8 +279,7 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text);
+                return Show(text);
             }
         }
 
@@ -314,20 +314,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options)
-        {
-            try
-            {
-                Initialize(owner);
-                return MessageBox.Show(owner, text, string.Empty, buttons, icon, defButton, options);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, string.Empty, buttons, icon, defButton, options);
-            }
-        }
+        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options) =>
+            Show(owner, text, string.Empty, buttons, icon, defButton, options);
 
         /// <summary>
         ///     Displays a message box in the center of the specified object and with the
@@ -355,20 +343,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton)
-        {
-            try
-            {
-                Initialize(owner);
-                return MessageBox.Show(owner, text, string.Empty, buttons, icon, defButton);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, string.Empty, buttons, icon, defButton);
-            }
-        }
+        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton) =>
+            Show(owner, text, string.Empty, buttons, icon, defButton);
 
         /// <summary>
         ///     Displays a message box in the center of the specified object and with the
@@ -392,20 +368,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon)
-        {
-            try
-            {
-                Initialize(owner);
-                return MessageBox.Show(owner, text, string.Empty, buttons, icon);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, string.Empty, buttons, icon);
-            }
-        }
+        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon) =>
+            Show(owner, text, string.Empty, buttons, icon);
 
         /// <summary>
         ///     Displays a message box in the center of the specified object and with the
@@ -425,20 +389,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons)
-        {
-            try
-            {
-                Initialize(owner);
-                return MessageBox.Show(owner, text, string.Empty, buttons);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                Initialize();
-                return MessageBox.Show(text, string.Empty, buttons);
-            }
-        }
+        public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons) =>
+            Show(owner, text, string.Empty, buttons);
 
         /// <summary>
         ///     Displays a message box with the specified text, caption, buttons, icon, default
@@ -473,7 +425,10 @@ namespace SilDev
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options)
         {
             Initialize();
-            return MessageBox.Show(text, caption, buttons, icon, defButton, options);
+            if (!TopMost)
+                return MessageBox.Show(text, caption, buttons, icon, defButton, options);
+            using (var f = new Form { TopMost = true })
+                return MessageBox.Show(f, text, caption, buttons, icon, defButton, options);
         }
 
         /// <summary>
@@ -504,7 +459,10 @@ namespace SilDev
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton)
         {
             Initialize();
-            return MessageBox.Show(text, caption, buttons, icon, defButton);
+            if (!TopMost)
+                return MessageBox.Show(text, caption, buttons, icon, defButton);
+            using (var f = new Form { TopMost = true })
+                return MessageBox.Show(f, text, caption, buttons, icon, defButton);
         }
 
         /// <summary>
@@ -530,7 +488,10 @@ namespace SilDev
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             Initialize();
-            return MessageBox.Show(text, caption, buttons, icon);
+            if (!TopMost)
+                return MessageBox.Show(text, caption, buttons, icon);
+            using (var f = new Form { TopMost = true })
+                return MessageBox.Show(f, text, caption, buttons, icon);
         }
 
         /// <summary>
@@ -552,7 +513,10 @@ namespace SilDev
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons)
         {
             Initialize();
-            return MessageBox.Show(text, caption, buttons);
+            if (!TopMost)
+                return MessageBox.Show(text, caption, buttons);
+            using (var f = new Form { TopMost = true })
+                return MessageBox.Show(f, text, caption, buttons);
         }
 
         /// <summary>
@@ -570,7 +534,10 @@ namespace SilDev
         public static DialogResult Show(string text, string caption)
         {
             Initialize();
-            return MessageBox.Show(text, caption);
+            if (!TopMost)
+                return MessageBox.Show(text, caption);
+            using (var f = new Form { TopMost = true })
+                return MessageBox.Show(f, text, caption);
         }
 
         /// <summary>
@@ -585,7 +552,10 @@ namespace SilDev
         public static DialogResult Show(string text)
         {
             Initialize();
-            return MessageBox.Show(text);
+            if (!TopMost)
+                return MessageBox.Show(text);
+            using (var f = new Form { TopMost = true })
+                return MessageBox.Show(f, text);
         }
 
         /// <summary>
@@ -615,11 +585,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options)
-        {
-            Initialize();
-            return MessageBox.Show(text, string.Empty, buttons, icon, defButton, options);
-        }
+        public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options) =>
+            Show(text, string.Empty, buttons, icon, defButton, options);
 
         /// <summary>
         ///     Displays a message box with the specified text, buttons, icon, and default
@@ -643,11 +610,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton)
-        {
-            Initialize();
-            return MessageBox.Show(text, string.Empty, buttons, icon, defButton);
-        }
+        public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton) =>
+            Show(text, string.Empty, buttons, icon, defButton);
 
         /// <summary>
         ///     Displays a message box with the specified text, buttons, and icon.
@@ -666,11 +630,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon)
-        {
-            Initialize();
-            return MessageBox.Show(text, string.Empty, buttons, icon);
-        }
+        public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon) =>
+            Show(text, string.Empty, buttons, icon);
 
         /// <summary>
         ///     Displays a message box with the specified text, and buttons.
@@ -685,11 +646,8 @@ namespace SilDev
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
-        public static DialogResult Show(string text, MessageBoxButtons buttons)
-        {
-            Initialize();
-            return MessageBox.Show(text, string.Empty, buttons);
-        }
+        public static DialogResult Show(string text, MessageBoxButtons buttons) =>
+            Show(text, string.Empty, buttons);
 
         private static void Initialize(IWin32Window owner = null)
         {
