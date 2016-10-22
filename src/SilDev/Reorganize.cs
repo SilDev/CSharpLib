@@ -225,7 +225,7 @@ namespace SilDev
         {
             try
             {
-                var s = strs.Aggregate(str, (current, x) => Regex.Replace(current, x, x.ToLower(), RegexOptions.IgnoreCase));
+                var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToLower(), RegexOptions.IgnoreCase));
                 return s;
             }
             catch (Exception ex)
@@ -248,7 +248,7 @@ namespace SilDev
         {
             try
             {
-                var s = strs.Aggregate(str, (current, x) => Regex.Replace(current, x, x.ToUpper(), RegexOptions.IgnoreCase));
+                var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToUpper(), RegexOptions.IgnoreCase));
                 return s;
             }
             catch (Exception ex)
@@ -294,7 +294,7 @@ namespace SilDev
         {
             try
             {
-                var s = strs.Aggregate(str, (current, x) => current.Replace(x, string.Empty));
+                var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
                 return s;
             }
             catch (Exception ex)
