@@ -381,89 +381,96 @@ namespace SilDev
         private static object ReadObject(string section, string key, object defValue, IniValueKind valkind, string fileOrContent)
         {
             object output = null;
-            var value = Read(section, key, fileOrContent);
-            switch (valkind)
+            try
             {
-                case IniValueKind.Boolean:
-                    bool boolParser;
-                    if (bool.TryParse(Read(section, key, fileOrContent), out boolParser))
-                        output = boolParser;
-                    break;
-                case IniValueKind.Byte:
-                    byte byteParser;
-                    if (byte.TryParse(Read(section, key, fileOrContent), out byteParser))
-                        output = byteParser;
-                    break;
-                case IniValueKind.ByteArray:
-                    var bytesParser = value.FromHexStringToByteArray();
-                    if (bytesParser.Length > 0)
-                        output = bytesParser;
-                    break;
-                case IniValueKind.DateTime:
-                    DateTime dateTimeParser;
-                    if (DateTime.TryParse(Read(section, key, fileOrContent), out dateTimeParser))
-                        output = dateTimeParser;
-                    break;
-                case IniValueKind.Double:
-                    double doubleParser;
-                    if (double.TryParse(Read(section, key, fileOrContent), out doubleParser))
-                        output = doubleParser;
-                    break;
-                case IniValueKind.Float:
-                    float floatParser;
-                    if (float.TryParse(Read(section, key, fileOrContent), out floatParser))
-                        output = floatParser;
-                    break;
-                case IniValueKind.Image:
-                    var imageParser = value.FromHexStringToImage();
-                    if (imageParser != null)
-                        output = imageParser;
-                    break;
-                case IniValueKind.Integer:
-                    int intParser;
-                    if (int.TryParse(Read(section, key, fileOrContent), out intParser))
-                        output = intParser;
-                    break;
-                case IniValueKind.Long:
-                    long longParser;
-                    if (long.TryParse(Read(section, key, fileOrContent), out longParser))
-                        output = longParser;
-                    break;
-                case IniValueKind.Point:
-                    var pointParser = Read(section, key, fileOrContent).ToPoint();
-                    if (pointParser != new Point(int.MinValue, int.MinValue))
-                        output = pointParser;
-                    break;
-                case IniValueKind.Rectangle:
-                    var rectParser = Read(section, key, fileOrContent).ToRectangle();
-                    if (rectParser != Rectangle.Empty)
-                        output = rectParser;
-                    break;
-                case IniValueKind.Short:
-                    short shortParser;
-                    if (short.TryParse(Read(section, key, fileOrContent), out shortParser))
-                        output = shortParser;
-                    break;
-                case IniValueKind.Size:
-                    var sizeParser = Read(section, key, fileOrContent).ToSize();
-                    if (sizeParser != Size.Empty)
-                        output = sizeParser;
-                    break;
-                case IniValueKind.StringArray:
-                    var stringsParser = value.FromHexString().Split(new string(Enumerable.Range(0, 8).Select(i => (char)i).ToArray()).Reverse());
-                    if (stringsParser.Length > 0)
-                        output = stringsParser;
-                    break;
-                case IniValueKind.Version:
-                    Version versionParser;
-                    if (Version.TryParse(Read(section, key, fileOrContent), out versionParser))
-                        output = versionParser;
-                    break;
-                default:
-                    output = Read(section, key, fileOrContent);
-                    if (string.IsNullOrWhiteSpace(output as string))
-                        output = null;
-                    break;
+                var value = Read(section, key, fileOrContent);
+                switch (valkind)
+                {
+                    case IniValueKind.Boolean:
+                        bool boolParser;
+                        if (bool.TryParse(Read(section, key, fileOrContent), out boolParser))
+                            output = boolParser;
+                        break;
+                    case IniValueKind.Byte:
+                        byte byteParser;
+                        if (byte.TryParse(Read(section, key, fileOrContent), out byteParser))
+                            output = byteParser;
+                        break;
+                    case IniValueKind.ByteArray:
+                        var bytesParser = value.FromHexStringToByteArray();
+                        if (bytesParser.Length > 0)
+                            output = bytesParser;
+                        break;
+                    case IniValueKind.DateTime:
+                        DateTime dateTimeParser;
+                        if (DateTime.TryParse(Read(section, key, fileOrContent), out dateTimeParser))
+                            output = dateTimeParser;
+                        break;
+                    case IniValueKind.Double:
+                        double doubleParser;
+                        if (double.TryParse(Read(section, key, fileOrContent), out doubleParser))
+                            output = doubleParser;
+                        break;
+                    case IniValueKind.Float:
+                        float floatParser;
+                        if (float.TryParse(Read(section, key, fileOrContent), out floatParser))
+                            output = floatParser;
+                        break;
+                    case IniValueKind.Image:
+                        var imageParser = value.FromHexStringToImage();
+                        if (imageParser != null)
+                            output = imageParser;
+                        break;
+                    case IniValueKind.Integer:
+                        int intParser;
+                        if (int.TryParse(Read(section, key, fileOrContent), out intParser))
+                            output = intParser;
+                        break;
+                    case IniValueKind.Long:
+                        long longParser;
+                        if (long.TryParse(Read(section, key, fileOrContent), out longParser))
+                            output = longParser;
+                        break;
+                    case IniValueKind.Point:
+                        var pointParser = Read(section, key, fileOrContent).ToPoint();
+                        if (pointParser != new Point(int.MinValue, int.MinValue))
+                            output = pointParser;
+                        break;
+                    case IniValueKind.Rectangle:
+                        var rectParser = Read(section, key, fileOrContent).ToRectangle();
+                        if (rectParser != Rectangle.Empty)
+                            output = rectParser;
+                        break;
+                    case IniValueKind.Short:
+                        short shortParser;
+                        if (short.TryParse(Read(section, key, fileOrContent), out shortParser))
+                            output = shortParser;
+                        break;
+                    case IniValueKind.Size:
+                        var sizeParser = Read(section, key, fileOrContent).ToSize();
+                        if (sizeParser != Size.Empty)
+                            output = sizeParser;
+                        break;
+                    case IniValueKind.StringArray:
+                        var stringsParser = value.FromHexString()?.Split("\0\0\0")?.Reverse().Skip(1).Reverse().Select(x => x?.ToString().FromHexString()).ToArray();
+                        if (stringsParser?.Length > 0)
+                            output = stringsParser;
+                        break;
+                    case IniValueKind.Version:
+                        Version versionParser;
+                        if (Version.TryParse(Read(section, key, fileOrContent), out versionParser))
+                            output = versionParser;
+                        break;
+                    default:
+                        output = Read(section, key, fileOrContent);
+                        if (string.IsNullOrWhiteSpace(output as string))
+                            output = null;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
             }
             return output ?? defValue;
         }
@@ -1152,7 +1159,7 @@ namespace SilDev
         /// <summary>
         ///     <para>
         ///         Copies an <see cref="object"/> into the specified section of an initialization
-        ///         file. The following objects are valid:
+        ///         file. The following types are valid:
         ///     </para>
         ///     <para>
         ///         <see cref="bool"/>,
@@ -1169,8 +1176,9 @@ namespace SilDev
         ///         <see cref="short"/>,
         ///         <see cref="Size"/>,
         ///         <see cref="string"/>,
-        ///         <see cref="string"/>[], and
-        ///         <see cref="Version"/>
+        ///         <see cref="string"/>[],
+        ///         <see cref="Version"/>,
+        ///         and all other types convertible with <see cref="object"/>.ToString().
         ///     </para>
         /// </summary>
         /// <param name="section">
@@ -1223,17 +1231,22 @@ namespace SilDev
                         value = ms.ToArray();
                     }
                 }
-                var newValue = value.ToString();
+                if (value is List<string>)
+                    value = ((List<string>)value).ToArray();
+                var sb = new StringBuilder();
                 if (value is byte[])
-                    newValue = ((byte[])value).ToHexString();
+                    sb.Append(((byte[])value).ToHexString());
                 if (value is string[])
                 {
-                    var separator = new string(Enumerable.Range(0, 8).Select(i => (char)i).ToArray()).Reverse();
-                    newValue = ((string[])value).Join(separator);
-                    if (!newValue.Contains(separator))
-                        newValue += separator;
-                    newValue = newValue.ToHexString();
+                    const string separator = "\0\0\0";
+                    var sa = (string[])value;
+                    for (var i = 0; i < sa.Length; i++)
+                        sa[i] = sa[i].ToHexString();
+                    sb.Append((sa.Join(separator) + separator).ToHexString());
                 }
+                if (sb.Length == 0)
+                    sb.Append(value);
+                var newValue = sb.ToString();
                 if (forceOverwrite && !skipExistValue)
                     return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, newValue, path) != 0;
                 var curValue = Read(section, key, path);
