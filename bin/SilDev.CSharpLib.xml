@@ -4919,7 +4919,7 @@
         </member>
         <member name="T:SilDev.NotifyBox">
             <summary>
-                Displays a notification window, simliar with a system tray notification, which presents a
+                Represents a notification window, simliar with a system tray notification, which presents a
                 notification to the user.
             </summary>
         </member>
@@ -4961,6 +4961,11 @@
         <member name="P:SilDev.NotifyBox.TextColor">
             <summary>
                 Gets or sets the text color for the notify box.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.TopMost">
+            <summary>
+                Specifies that the notify box is placed above all non-topmost windows.
             </summary>
         </member>
         <member name="P:SilDev.NotifyBox.IsAlive">
@@ -5111,6 +5116,146 @@
             <summary>
                 Terminates the current notify box.
             </summary>
+        </member>
+        <member name="T:SilDev.NotifyBoxEx">
+            <summary>
+                Displays a notification window, simliar with a system tray notification, which presents a
+                notification to the user.
+            </summary>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, sound, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, sound, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, sound, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, sound, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
         </member>
         <member name="T:SilDev.Compaction">
             <summary>

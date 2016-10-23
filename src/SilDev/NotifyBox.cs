@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-23 05:42
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -26,7 +26,7 @@ namespace SilDev
     using Timer = System.Windows.Forms.Timer;
 
     /// <summary>
-    ///     Displays a notification window, simliar with a system tray notification, which presents a
+    ///     Represents a notification window, simliar with a system tray notification, which presents a
     ///     notification to the user.
     /// </summary>
     public class NotifyBox
@@ -94,6 +94,11 @@ namespace SilDev
         /// </summary>
         public Color TextColor { get; set; } = SystemColors.MenuText;
 
+        /// <summary>
+        ///     Specifies that the notify box is placed above all non-topmost windows.
+        /// </summary>
+        public bool TopMost { get; set; }
+
         private NotifyForm NotifyWindow { get; set; }
         private Thread NotifyThread { get; set; }
 
@@ -142,7 +147,7 @@ namespace SilDev
             {
                 if (IsAlive)
                     throw new NotSupportedException();
-                NotifyWindow = new NotifyForm(text, caption, position, duration, borders, _opacity, BackColor, BorderColor, CaptionColor, TextColor);
+                NotifyWindow = new NotifyForm(text, caption, position, duration, borders, _opacity, BackColor, BorderColor, CaptionColor, TextColor, TopMost);
                 NotifyThread = new Thread(() => NotifyWindow.ShowDialog());
                 NotifyThread.Start();
                 switch (sound)
@@ -326,7 +331,7 @@ namespace SilDev
             private readonly Timer _loadingDots = new Timer();
             private readonly Label _textLabel;
 
-            public NotifyForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool borders, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor)
+            public NotifyForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool borders, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor, bool topMost)
             {
                 SuspendLayout();
                 _asyncWait.DoWork += AsyncWait_DoWork;
@@ -408,6 +413,7 @@ namespace SilDev
                             break;
                     }
                 }
+                TopMost = topMost;
                 Shown += NotifyForm_Shown;
                 ResumeLayout(false);
                 PerformLayout();
@@ -425,7 +431,7 @@ namespace SilDev
             {
                 if (_textLabel.Text.EndsWith(" . . ."))
                     _loadingDots.Enabled = true;
-                if (_duration >= 100)
+                if (_duration > 0)
                     _asyncWait.RunWorkerAsync();
             }
 
@@ -438,21 +444,166 @@ namespace SilDev
             private void LoadingDots_Tick(object sender, EventArgs e)
             {
                 var s = _textLabel.Text;
-                if (!s.EndsWith(""))
+                if (!s.EndsWith(" ."))
                 {
                     ((Timer)sender).Enabled = false;
                     return;
                 }
                 if (s.EndsWith(" . . ."))
-                {
-                    s = s.Replace(" . . .", " .");
                     while (s.EndsWith(" . ."))
                         s = s.Replace(" . .", " .");
-                }
                 else
                     s = s.EndsWith(" . .") ? s.Replace(" . .", " . . .") : s.Replace(" .", " . .");
                 _textLabel.Text = s;
             }
         }
+    }
+
+    /// <summary>
+    ///     Displays a notification window, simliar with a system tray notification, which presents a
+    ///     notification to the user.
+    /// </summary>
+    public static class NotifyBoxEx
+    {
+        /// <summary>
+        ///     Displays a notify box with the specified text, caption, position, sound, duration, and borders.
+        /// </summary>
+        /// <param name="text">
+        ///     The notification text to display in the notify box.
+        /// </param>
+        /// <param name="caption">
+        ///     The caption text to display in the notify box.
+        /// </param>
+        /// <param name="position">
+        ///     The window position for the notify box.
+        /// </param>
+        /// <param name="sound">
+        ///     The play sound for the notify box.
+        /// </param>
+        /// <param name="duration">
+        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        /// </param>
+        /// <param name="borders">
+        ///     true to visible the window borders; otherwise, false.
+        /// </param>
+        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position = NotifyBox.NotifyBoxStartPosition.BottomRight, NotifyBox.NotifyBoxSound sound = NotifyBox.NotifyBoxSound.None, ushort duration = 5000, bool borders = true) =>
+            new NotifyBox { TopMost = true }.Show(text, caption, position, sound, (ushort)(duration < 200 ? 200 : duration), borders);
+
+        /// <summary>
+        ///     Displays a notify box with the specified text, caption, position, sound, and borders.
+        /// </summary>
+        /// <param name="text">
+        ///     The notification text to display in the notify box.
+        /// </param>
+        /// <param name="caption">
+        ///     The caption text to display in the notify box.
+        /// </param>
+        /// <param name="position">
+        ///     The window position for the notify box.
+        /// </param>
+        /// <param name="sound">
+        ///     The play sound for the notify box.
+        /// </param>
+        /// <param name="borders">
+        ///     true to visible the window borders; otherwise, false.
+        /// </param>
+        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position, NotifyBox.NotifyBoxSound sound, bool borders) =>
+            Show(text, caption, position, sound, 5000, borders);
+
+        /// <summary>
+        ///     Displays a notify box with the specified text, caption, position, duration, and borders.
+        /// </summary>
+        /// <param name="text">
+        ///     The notification text to display in the notify box.
+        /// </param>
+        /// <param name="caption">
+        ///     The caption text to display in the notify box.
+        /// </param>
+        /// <param name="position">
+        ///     The window position for the notify box.
+        /// </param>
+        /// <param name="duration">
+        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        /// </param>
+        /// <param name="borders">
+        ///     true to visible the window borders; otherwise, false.
+        /// </param>
+        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position, ushort duration, bool borders = true) =>
+            Show(text, caption, position, NotifyBox.NotifyBoxSound.None, duration, borders);
+
+        /// <summary>
+        ///     Displays a notify box with the specified text, caption, position, and borders.
+        /// </summary>
+        /// <param name="text">
+        ///     The notification text to display in the notify box.
+        /// </param>
+        /// <param name="caption">
+        ///     The caption text to display in the notify box.
+        /// </param>
+        /// <param name="position">
+        ///     The window position for the notify box.
+        /// </param>
+        /// <param name="borders">
+        ///     true to visible the window borders; otherwise, false.
+        /// </param>
+        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position, bool borders) =>
+            Show(text, caption, position, NotifyBox.NotifyBoxSound.None, 5000, borders);
+
+        /// <summary>
+        ///     Displays a notify box with the specified text, caption, sound, duration, and borders.
+        /// </summary>
+        /// <param name="text">
+        ///     The notification text to display in the notify box.
+        /// </param>
+        /// <param name="caption">
+        ///     The caption text to display in the notify box.
+        /// </param>
+        /// <param name="sound">
+        ///     The play sound for the notify box.
+        /// </param>
+        /// <param name="duration">
+        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        /// </param>
+        /// <param name="borders">
+        ///     true to visible the window borders; otherwise, false.
+        /// </param>
+        public static void Show(string text, string caption, NotifyBox.NotifyBoxSound sound, ushort duration = 5000, bool borders = true) =>
+            Show(text, caption, NotifyBox.NotifyBoxStartPosition.BottomRight, sound, duration, borders);
+
+        /// <summary>
+        ///     Displays a notify box with the specified text, caption, sound, and borders.
+        /// </summary>
+        /// <param name="text">
+        ///     The notification text to display in the notify box.
+        /// </param>
+        /// <param name="caption">
+        ///     The caption text to display in the notify box.
+        /// </param>
+        /// <param name="sound">
+        ///     The play sound for the notify box.
+        /// </param>
+        /// <param name="borders">
+        ///     true to visible the window borders; otherwise, false.
+        /// </param>
+        public static void Show(string text, string caption, NotifyBox.NotifyBoxSound sound, bool borders) =>
+            Show(text, caption, NotifyBox.NotifyBoxStartPosition.BottomRight, sound, 5000, borders);
+
+        /// <summary>
+        ///     Displays a notify box with the specified text, caption, duration, and borders.
+        /// </summary>
+        /// <param name="text">
+        ///     The notification text to display in the notify box.
+        /// </param>
+        /// <param name="caption">
+        ///     The caption text to display in the notify box.
+        /// </param>
+        /// <param name="duration">
+        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        /// </param>
+        /// <param name="borders">
+        ///     true to visible the window borders; otherwise, false.
+        /// </param>
+        public static void Show(string text, string caption, ushort duration, bool borders = true) =>
+            Show(text, caption, NotifyBox.NotifyBoxStartPosition.BottomRight, NotifyBox.NotifyBoxSound.None, duration, borders);
     }
 }
