@@ -336,6 +336,265 @@
                 The path to convert.
             </param>
         </member>
+        <member name="T:SilDev.Forms.ButtonEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.Button"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})">
+            <summary>
+                <para>
+                    Creates a small split button on the right side of this <see cref="T:System.Windows.Forms.Button"/> which is
+                    mostly used for drop down menu controls.
+                </para>
+                <para>
+                    Please note that the <see cref="T:System.Windows.Forms.FlatStyle"/> is overwritten to <see cref="F:System.Windows.Forms.FlatStyle.Flat"/>
+                    which is required for highlight effects.
+                </para>
+            </summary>
+            <param name="button">
+                The button to split.
+            </param>
+            <param name="buttonText">
+                The button text color, <see cref="P:System.Drawing.SystemColors.ControlText"/> is used by default.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ButtonEx.Split_ClickEvent(System.Windows.Forms.Button,System.Windows.Forms.ContextMenuStrip)">
+            <summary>
+                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> click <see cref="T:System.EventHandler"/>
+                which determines whether the split area of this <see cref="T:System.Windows.Forms.Button"/> is clicked which opens the
+                specified <see cref="T:System.Windows.Forms.ContextMenuStrip"/> control.
+            </summary>
+            <param name="button">
+                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
+            </param>
+            <param name="contextMenuStrip">
+                The drop down menu that opens for the splitted area.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ButtonEx.Split_MouseMoveEvent(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})">
+            <summary>
+                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> mouse move <see cref="T:System.EventHandler"/>
+                which handles the different highlighting for both areas.
+            </summary>
+            <param name="button">
+                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
+            </param>
+            <param name="backColor">
+                The background color, <see cref="T:System.Windows.Forms.Button"/>.BackColor is used by default.
+            </param>
+            <param name="hoverColor">
+                The highlight color, <see cref="T:System.Windows.Forms.Button"/>.FlatAppearance.MouseOverBackColor is used by default.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ButtonEx.Split_MouseLeaveEvent(System.Windows.Forms.Button)">
+            <summary>
+                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> mouse leave <see cref="T:System.EventHandler"/>
+                which is absolutly required for the functionality of
+                the <see cref="M:SilDev.Forms.ButtonEx.Split_MouseMoveEvent(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})"/> function.
+            </summary>
+            <param name="button">
+                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.ContextMenuStripEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ContextMenuStripEx.SetFixedSingle(System.Windows.Forms.ContextMenuStrip,System.Windows.Forms.PaintEventArgs,System.Nullable{System.Drawing.Color})">
+            <summary>
+                Represents the method that is used for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> paint <see cref="T:System.EventHandler"/>
+                which redraws the menu control with a similar border style, which is known from
+                <see cref="F:System.Windows.Forms.BorderStyle.FixedSingle"/>.
+            </summary>
+            <param name="contextMenuStrip">
+                The <see cref="T:System.Windows.Forms.ContextMenuStrip"/> to redraw.
+            </param>
+            <param name="paintEventArgs">
+                The paint event data.
+            </param>
+            <param name="borderColor">
+                THe border color.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.ControlEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.Control"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.GetAncestor(System.Windows.Forms.Control)">
+            <summary>
+                Gets the ancestor of this <see cref="T:System.Windows.Forms.Control"/>.
+            </summary>
+            <param name="control">
+                The control to query.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.EnableDragMove(System.Windows.Forms.Control,System.Boolean)">
+            <summary>
+                Enables a window to be dragged by a mouse with its left button down over this <see cref="T:System.Windows.Forms.Control"/>.
+            </summary>
+            <param name="control">
+                The control to change.
+            </param>
+            <param name="cursor">
+                true to change <see cref="T:System.Windows.Forms.Control"/>.Cursor to <see cref="P:System.Windows.Forms.Cursors.SizeAll"/> while dragging;
+                otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.SetControlStyle(System.Windows.Forms.Control,System.Windows.Forms.ControlStyles,System.Boolean)">
+            <summary>
+                Enables or disables the specified <see cref="T:System.Windows.Forms.ControlStyles"/> for this <see cref="T:System.Windows.Forms.Control"/>, even it
+                is not directly supported.
+            </summary>
+            <param name="control">
+                The control to change.
+            </param>
+            <param name="controlStyles">
+                The new styles to enable or disable.
+            </param>
+            <param name="enable">
+                true to enable the specified styles; otherwise, false to disable the specified styles.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color})">
+            <summary>
+                Draws a 12px large size grip <see cref="T:System.Drawing.Image"/> in this <see cref="T:System.Windows.Forms.Control"/>.
+            </summary>
+            <param name="control">
+                The control that receives the size grip <see cref="T:System.Drawing.Image"/>.
+            </param>
+            <param name="color">
+                The color for the size grip <see cref="T:System.Drawing.Image"/>, <see cref="P:System.Drawing.Color.White"/> is used by default.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.ProgressBarEx">
+            <summary>
+                Expands the functionality for the <see cref="T:SilDev.Forms.ProgressBarEx"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ProgressBarEx.JumpToEnd(System.Windows.Forms.ProgressBar)">
+            <summary>
+                Skips the very long animation and jumps directly to the <see cref="P:System.Windows.Forms.ProgressBar.Maximum"/>.
+            </summary>
+            <param name="progressBar">
+                The <see cref="T:System.Windows.Forms.ProgressBar"/> to progress.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.RichTextBoxEx">
+            <summary>
+                Expands the functionality for the <see cref="T:SilDev.Forms.RichTextBoxEx"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.RichTextBoxEx.MarkText(System.Windows.Forms.RichTextBox,System.String,System.Drawing.Color,System.Nullable{System.Drawing.Color},System.Drawing.Font)">
+            <summary>
+                Marks the specified text on this <see cref="T:System.Windows.Forms.RichTextBox"/> control.
+            </summary>
+            <param name="richTextBox">
+                The <see cref="T:System.Windows.Forms.RichTextBox"/> control to change.
+            </param>
+            <param name="text">
+                The text to mark.
+            </param>
+            <param name="foreColor">
+                The new forground color.
+            </param>
+            <param name="backColor">
+                The new background color.
+            </param>
+            <param name="font">
+                The new font.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.LinkLabelEx">
+            <summary>
+                Expands the functionality for the <see cref="T:SilDev.Forms.LinkLabelEx"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.Uri)">
+            <summary>
+                Creates a link for the specified text and associates it with the specified link.
+            </summary>
+            <param name="linkLabel">
+                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
+            </param>
+            <param name="text">
+                The text to link.
+            </param>
+            <param name="uri">
+                The link to associate.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.String)">
+            <summary>
+                Creates a link for the specified text and associates it with the specified link.
+            </summary>
+            <param name="linkLabel">
+                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
+            </param>
+            <param name="text">
+                The text to link.
+            </param>
+            <param name="uri">
+                The link to associate.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.ListViewEx">
+            <summary>
+                Expands the functionality for the <see cref="T:SilDev.Forms.ListViewEx"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.ItemFromPoint(System.Windows.Forms.ListView)">
+            <summary>
+                Retrives the <see cref="T:System.Windows.Forms.ListViewItem"/> at the current cursor's position.
+            </summary>
+            <param name="listView">
+                The <see cref="T:System.Windows.Forms.ListView"/> control to check.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.ListViewEx.AlphanumericComparer">
+            <summary>
+                Provides a base class for comparison.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.#ctor(System.Boolean)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.Forms.ListViewEx.AlphanumericComparer"/> class. A
+                parameter specifies whether the order is descended.
+            </summary>
+            <param name="descendent">
+                true to enable the descending order; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.Compare(System.Object,System.Object)">
+            <summary>
+                Compare two specified objects and returns an integer that indicates their
+                relative position in the sort order.
+            </summary>
+            <param name="a">
+                The first object to compare.
+            </param>
+            <param name="b">
+                The second object to compare.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.TextBoxEx">
+            <summary>
+                Expands the functionality for the <see cref="T:SilDev.Forms.TextBoxEx"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.TextBoxEx.DrawSearchSymbol(System.Windows.Forms.TextBox,System.Nullable{System.Drawing.Color})">
+            <summary>
+                Draws a search symbol on the right side of this <see cref="T:System.Windows.Forms.TextBox"/>.
+            </summary>
+            <param name="textBox">
+                The <see cref="T:System.Windows.Forms.TextBox"/> control to change.
+            </param>
+            <param name="color">
+                The search symbol color, <see cref="T:System.Windows.Forms.TextBox"/>.ForeColor is used by default.
+            </param>
+        </member>
         <member name="T:SilDev.Json">
             <summary>
                 Provides basic functionality for the JSON format.
@@ -370,6 +629,12 @@
             <param name="keys">
                 An array of keys to navigate to the exact position of the value.
             </param>
+        </member>
+        <member name="T:SilDev.QuickWmi.Win32_OperatingSystem">
+            <summary>
+                ***This is an undocumented class and can be changed or removed in the future
+                without futher notice.
+            </summary>
         </member>
         <member name="T:SilDev.Reorganize">
             <summary>
@@ -2632,245 +2897,6 @@
             <param name="cmdLineArgs">
                 The command-line arguments to use when starting the application. Use null to use
                 the current arguments, which are already in use.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ButtonEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.Button"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})">
-            <summary>
-                <para>
-                    Creates a small split button on the right side of this <see cref="T:System.Windows.Forms.Button"/> which is
-                    mostly used for drop down menu controls.
-                </para>
-                <para>
-                    Please note that the <see cref="T:System.Windows.Forms.FlatStyle"/> is overwritten to <see cref="F:System.Windows.Forms.FlatStyle.Flat"/>
-                    which is required for highlight effects.
-                </para>
-            </summary>
-            <param name="button">
-                The button to split.
-            </param>
-            <param name="buttonText">
-                The button text color, <see cref="P:System.Drawing.SystemColors.ControlText"/> is used by default.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ButtonEx.Split_ClickEvent(System.Windows.Forms.Button,System.Windows.Forms.ContextMenuStrip)">
-            <summary>
-                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> click <see cref="T:System.EventHandler"/>
-                which determines whether the split area of this <see cref="T:System.Windows.Forms.Button"/> is clicked which opens the
-                specified <see cref="T:System.Windows.Forms.ContextMenuStrip"/> control.
-            </summary>
-            <param name="button">
-                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
-            </param>
-            <param name="contextMenuStrip">
-                The drop down menu that opens for the splitted area.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ButtonEx.Split_MouseMoveEvent(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})">
-            <summary>
-                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> mouse move <see cref="T:System.EventHandler"/>
-                which handles the different highlighting for both areas.
-            </summary>
-            <param name="button">
-                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
-            </param>
-            <param name="backColor">
-                The background color, <see cref="T:System.Windows.Forms.Button"/>.BackColor is used by default.
-            </param>
-            <param name="hoverColor">
-                The highlight color, <see cref="T:System.Windows.Forms.Button"/>.FlatAppearance.MouseOverBackColor is used by default.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ButtonEx.Split_MouseLeaveEvent(System.Windows.Forms.Button)">
-            <summary>
-                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> mouse leave <see cref="T:System.EventHandler"/>
-                which is absolutly required for the functionality of
-                the <see cref="M:SilDev.Forms.ButtonEx.Split_MouseMoveEvent(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})"/> function.
-            </summary>
-            <param name="button">
-                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ControlEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.Control"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ControlEx.SetControlStyle(System.Windows.Forms.Control,System.Windows.Forms.ControlStyles,System.Boolean)">
-            <summary>
-                Enables or disables the specified <see cref="T:System.Windows.Forms.ControlStyles"/> for this <see cref="T:System.Windows.Forms.Control"/>, even it
-                is not directly supported.
-            </summary>
-            <param name="control">
-                The control to change.
-            </param>
-            <param name="controlStyles">
-                The new styles to enable or disable.
-            </param>
-            <param name="enable">
-                true to enable the specified styles; otherwise, false to disable the specified styles.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color})">
-            <summary>
-                Draws a 12px large size grip <see cref="T:System.Drawing.Image"/> in this <see cref="T:System.Windows.Forms.Control"/>.
-            </summary>
-            <param name="control">
-                The control that receives the size grip <see cref="T:System.Drawing.Image"/>.
-            </param>
-            <param name="color">
-                The color for the size grip <see cref="T:System.Drawing.Image"/>, <see cref="P:System.Drawing.Color.White"/> is used by default.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ContextMenuStripEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ContextMenuStripEx.SetFixedSingle(System.Windows.Forms.ContextMenuStrip,System.Windows.Forms.PaintEventArgs,System.Nullable{System.Drawing.Color})">
-            <summary>
-                Represents the method that is used for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> paint <see cref="T:System.EventHandler"/>
-                which redraws the menu control with a similar border style, which is known from
-                <see cref="F:System.Windows.Forms.BorderStyle.FixedSingle"/>.
-            </summary>
-            <param name="contextMenuStrip">
-                The <see cref="T:System.Windows.Forms.ContextMenuStrip"/> to redraw.
-            </param>
-            <param name="paintEventArgs">
-                The paint event data.
-            </param>
-            <param name="borderColor">
-                THe border color.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.LinkLabelEx">
-            <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.LinkLabelEx"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.Uri)">
-            <summary>
-                Creates a link for the specified text and associates it with the specified link.
-            </summary>
-            <param name="linkLabel">
-                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
-            </param>
-            <param name="text">
-                The text to link.
-            </param>
-            <param name="uri">
-                The link to associate.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.String)">
-            <summary>
-                Creates a link for the specified text and associates it with the specified link.
-            </summary>
-            <param name="linkLabel">
-                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
-            </param>
-            <param name="text">
-                The text to link.
-            </param>
-            <param name="uri">
-                The link to associate.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ListViewEx">
-            <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.ListViewEx"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ListViewEx.ItemFromPoint(System.Windows.Forms.ListView)">
-            <summary>
-                Retrives the <see cref="T:System.Windows.Forms.ListViewItem"/> at the current cursor's position.
-            </summary>
-            <param name="listView">
-                The <see cref="T:System.Windows.Forms.ListView"/> control to check.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ListViewEx.AlphanumericComparer">
-            <summary>
-                Provides a base class for comparison.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.#ctor(System.Boolean)">
-            <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Forms.ListViewEx.AlphanumericComparer"/> class. A
-                parameter specifies whether the order is descended.
-            </summary>
-            <param name="descendent">
-                true to enable the descending order; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.Compare(System.Object,System.Object)">
-            <summary>
-                Compare two specified objects and returns an integer that indicates their
-                relative position in the sort order.
-            </summary>
-            <param name="a">
-                The first object to compare.
-            </param>
-            <param name="b">
-                The second object to compare.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ProgressBarEx">
-            <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.ProgressBarEx"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ProgressBarEx.JumpToEnd(System.Windows.Forms.ProgressBar)">
-            <summary>
-                Skips the very long animation and jumps directly to the <see cref="P:System.Windows.Forms.ProgressBar.Maximum"/>.
-            </summary>
-            <param name="progressBar">
-                The progress to change.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.RichTextBoxEx">
-            <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.RichTextBoxEx"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.RichTextBoxEx.MarkText(System.Windows.Forms.RichTextBox,System.String,System.Drawing.Color,System.Nullable{System.Drawing.Color},System.Drawing.Font)">
-            <summary>
-                Marks the specified text on this <see cref="T:System.Windows.Forms.RichTextBox"/> control.
-            </summary>
-            <param name="richTextBox">
-                The <see cref="T:System.Windows.Forms.RichTextBox"/> control to change.
-            </param>
-            <param name="text">
-                The text to mark.
-            </param>
-            <param name="foreColor">
-                The new forground color.
-            </param>
-            <param name="backColor">
-                The new background color.
-            </param>
-            <param name="font">
-                The new font.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.TextBoxEx">
-            <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.TextBoxEx"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.TextBoxEx.DrawSearchSymbol(System.Windows.Forms.TextBox,System.Nullable{System.Drawing.Color})">
-            <summary>
-                Draws a search symbol on the right side of this <see cref="T:System.Windows.Forms.TextBox"/>.
-            </summary>
-            <param name="textBox">
-                The <see cref="T:System.Windows.Forms.TextBox"/> control to change.
-            </param>
-            <param name="color">
-                The search symbol color, <see cref="T:System.Windows.Forms.TextBox"/>.ForeColor is used by default.
             </param>
         </member>
         <member name="T:SilDev.Ini">
@@ -6375,6 +6401,23 @@
                 Provides static methods based on the <see cref="T:System.Diagnostics.Process"/> class to enable you to start
                 local system processes.
             </summary>
+        </member>
+        <member name="M:SilDev.ProcessEx.GetCommandLineArgs(System.Diagnostics.Process)">
+            <summary>
+                Returns a string array containing the command-line arguments for this
+                <see cref="T:System.Diagnostics.Process"/>.
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> component.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.GetCommandLine(System.Diagnostics.Process)">
+            <summary>
+                Returns the command-line arguments for this process.
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> component.
+            </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.Process,System.Boolean)">
             <summary>
