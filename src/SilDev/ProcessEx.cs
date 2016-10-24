@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-24 09:58
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,9 +16,12 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
+    using System.Management;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Process"/> class to enable you to start
@@ -26,6 +29,39 @@ namespace SilDev
     /// </summary>
     public static class ProcessEx
     {
+        /// <summary>
+        ///     Returns a string array containing the command-line arguments for this
+        ///     <see cref="Process"/>.
+        /// </summary>
+        /// <param name="process">
+        ///     The <see cref="Process"/> component.
+        /// </param>
+        public static string[] GetCommandLineArgs(this Process process)
+        {
+            try
+            {
+                var list = new List<string>();
+                var query = "SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id;
+                using (var objs = new ManagementObjectSearcher(query))
+                    list.AddRange(objs.Get().Cast<ManagementBaseObject>().Select(obj => obj["CommandLine"].ToString()));
+                return list.ToArray();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the command-line arguments for this process.
+        /// </summary>
+        /// <param name="process">
+        ///     The <see cref="Process"/> component.
+        /// </param>
+        public static string GetCommandLine(this Process process) =>
+            process.GetCommandLineArgs().Join(' ');
+
         /// <summary>
         ///     <para>
         ///         Starts (or reuses) the process resource that is specified by the current
