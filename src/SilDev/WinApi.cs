@@ -1891,14 +1891,6 @@ namespace SilDev
         public static bool MoveWindow(IntPtr hWnd, int x, int y) =>
             MoveWindow(hWnd, new Point(0, 0));
 
-        public static void MoveWindowAtMouseButtonLeft(IWin32Window owner, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-                return;
-            UnsafeNativeMethods.ReleaseCapture();
-            UnsafeNativeMethods.SendMessage(owner.Handle, 0xA1, (IntPtr)0x02, IntPtr.Zero);
-        }
-
         public static bool RefreshVisibleTrayArea()
         {
             try
