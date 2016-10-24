@@ -40,6 +40,33 @@ namespace SilDev.Forms
         }
 
         /// <summary>
+        ///     Enables a window to be dragged by a mouse with its left button down over this <see cref="Control"/>.
+        /// </summary>
+        /// <param name="control">
+        ///     The control to change.
+        /// </param>
+        /// <param name="cursor">
+        ///     true to change <see cref="Control"/>.Cursor to <see cref="Cursors.SizeAll"/> while dragging;
+        ///     otherwise, false.
+        /// </param>
+        public static void EnableDragMove(this Control control, bool cursor = true)
+        {
+            control.MouseDown += (sender, args) =>
+            {
+                var c = sender as Control;
+                if (c == null || args == null || args.Button != MouseButtons.Left)
+                    return;
+                var cc = c.Cursor;
+                if (cursor)
+                    c.Cursor = Cursors.SizeAll;
+                WinApi.UnsafeNativeMethods.ReleaseCapture();
+                WinApi.UnsafeNativeMethods.SendMessage(c.GetAncestor().Handle, 0xa1, new IntPtr(0x02), IntPtr.Zero);
+                if (c.Cursor != cc)
+                    c.Cursor = cc;
+            };
+        }
+
+        /// <summary>
         ///     Enables or disables the specified <see cref="ControlStyles"/> for this <see cref="Control"/>, even it
         ///     is not directly supported.
         /// </summary>
