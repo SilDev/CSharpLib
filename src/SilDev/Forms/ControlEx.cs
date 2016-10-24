@@ -26,6 +26,20 @@ namespace SilDev.Forms
     public static class ControlEx
     {
         /// <summary>
+        ///     Gets the ancestor of this <see cref="Control"/>.
+        /// </summary>
+        /// <param name="control">
+        ///     The control to query.
+        /// </param>
+        public static Control GetAncestor(this Control control)
+        {
+            var c = control;
+            while (c.Parent != null)
+                c = c.Parent;
+            return c;
+        }
+
+        /// <summary>
         ///     Enables or disables the specified <see cref="ControlStyles"/> for this <see cref="Control"/>, even it
         ///     is not directly supported.
         /// </summary>
