@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2016-10-24 15:58
+// Version:  2016-10-24 18:19
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
