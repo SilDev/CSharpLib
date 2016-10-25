@@ -359,7 +359,7 @@
                 The button text color, <see cref="P:System.Drawing.SystemColors.ControlText"/> is used by default.
             </param>
         </member>
-        <member name="M:SilDev.Forms.ButtonEx.Split_ClickEvent(System.Windows.Forms.Button,System.Windows.Forms.ContextMenuStrip)">
+        <member name="M:SilDev.Forms.ButtonEx.SplitClickHandler(System.Windows.Forms.Button,System.Windows.Forms.ContextMenuStrip)">
             <summary>
                 Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> click <see cref="T:System.EventHandler"/>
                 which determines whether the split area of this <see cref="T:System.Windows.Forms.Button"/> is clicked which opens the
@@ -370,31 +370,6 @@
             </param>
             <param name="contextMenuStrip">
                 The drop down menu that opens for the splitted area.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ButtonEx.Split_MouseMoveEvent(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})">
-            <summary>
-                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> mouse move <see cref="T:System.EventHandler"/>
-                which handles the different highlighting for both areas.
-            </summary>
-            <param name="button">
-                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
-            </param>
-            <param name="backColor">
-                The background color, <see cref="T:System.Windows.Forms.Button"/>.BackColor is used by default.
-            </param>
-            <param name="hoverColor">
-                The highlight color, <see cref="T:System.Windows.Forms.Button"/>.FlatAppearance.MouseOverBackColor is used by default.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ButtonEx.Split_MouseLeaveEvent(System.Windows.Forms.Button)">
-            <summary>
-                Represents the method that is used for the <see cref="T:System.Windows.Forms.Button"/> mouse leave <see cref="T:System.EventHandler"/>
-                which is absolutly required for the functionality of
-                the <see cref="M:SilDev.Forms.ButtonEx.Split_MouseMoveEvent(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})"/> function.
-            </summary>
-            <param name="button">
-                The button which contains a splitted area, created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
             </param>
         </member>
         <member name="T:SilDev.Forms.ContextMenuStripEx">
@@ -471,7 +446,7 @@
         </member>
         <member name="T:SilDev.Forms.ProgressBarEx">
             <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.ProgressBarEx"/> class.
+                Expands the functionality for the <see cref="T:System.Windows.Forms.ProgressBar"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.ProgressBarEx.JumpToEnd(System.Windows.Forms.ProgressBar)">
@@ -484,7 +459,7 @@
         </member>
         <member name="T:SilDev.Forms.RichTextBoxEx">
             <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.RichTextBoxEx"/> class.
+                Expands the functionality for the <see cref="T:System.Windows.Forms.RichTextBox"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.RichTextBoxEx.MarkText(System.Windows.Forms.RichTextBox,System.String,System.Drawing.Color,System.Nullable{System.Drawing.Color},System.Drawing.Font)">
@@ -509,7 +484,7 @@
         </member>
         <member name="T:SilDev.Forms.LinkLabelEx">
             <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.LinkLabelEx"/> class.
+                Expands the functionality for the <see cref="T:System.Windows.Forms.LinkLabel"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.Uri)">
@@ -542,7 +517,7 @@
         </member>
         <member name="T:SilDev.Forms.ListViewEx">
             <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.ListViewEx"/> class.
+                Expands the functionality for the <see cref="T:System.Windows.Forms.ListView"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.ListViewEx.ItemFromPoint(System.Windows.Forms.ListView)">
@@ -581,7 +556,7 @@
         </member>
         <member name="T:SilDev.Forms.TextBoxEx">
             <summary>
-                Expands the functionality for the <see cref="T:SilDev.Forms.TextBoxEx"/> class.
+                Expands the functionality for the <see cref="T:System.Windows.Forms.TextBox"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.TextBoxEx.DrawSearchSymbol(System.Windows.Forms.TextBox,System.Nullable{System.Drawing.Color})">
