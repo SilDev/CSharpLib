@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2016-10-24 15:58
+// Version:  2016-10-24 20:29
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -44,6 +44,8 @@ namespace SilDev.Forms
         {
             try
             {
+                if (button.Width < 48 || button.Height < 16)
+                    throw new NotSupportedException();
                 if (button.FlatStyle != FlatStyle.Flat)
                 {
                     button.FlatStyle = FlatStyle.Flat;
@@ -60,6 +62,8 @@ namespace SilDev.Forms
                     gr.DrawLine(pen, size.Width + 1, size.Height + 1, size.Width + 4, size.Height + 1);
                     gr.DrawLine(pen, size.Width + 2, size.Height + 2, size.Width + 3, size.Height + 2);
                 }
+                button.MouseMove += Split_MouseMove;
+                button.MouseLeave += Split_MouseLeave;
             }
             catch (Exception ex)
             {
@@ -78,55 +82,40 @@ namespace SilDev.Forms
         /// <param name="contextMenuStrip">
         ///     The drop down menu that opens for the splitted area.
         /// </param>
-        public static bool Split_ClickEvent(this Button button, ContextMenuStrip contextMenuStrip)
+        public static bool SplitClickHandler(this Button button, ContextMenuStrip contextMenuStrip)
         {
-            if (button.PointToClient(Cursor.Position).X < button.Width - 16)
+            if (button.PointToClient(Cursor.Position).X < button.Right - 16)
                 return false;
             contextMenuStrip.Show(button, new Point(0, button.Height), ToolStripDropDownDirection.BelowRight);
             return true;
         }
 
-        /// <summary>
-        ///     Represents the method that is used for the <see cref="Button"/> mouse move <see cref="EventHandler"/>
-        ///     which handles the different highlighting for both areas.
-        /// </summary>
-        /// <param name="button">
-        ///     The button which contains a splitted area, created by <see cref="Split(Button, Color?)"/>.
-        /// </param>
-        /// <param name="backColor">
-        ///     The background color, <see cref="Button"/>.BackColor is used by default.
-        /// </param>
-        /// <param name="hoverColor">
-        ///     The highlight color, <see cref="Button"/>.FlatAppearance.MouseOverBackColor is used by default.
-        /// </param>
-        public static void Split_MouseMoveEvent(this Button button, Color? backColor = null, Color? hoverColor = null)
+        private static void Split_MouseMove(object sender, MouseEventArgs e)
         {
-            Split_MouseLeaveEvent(button);
+            var button = sender as Button;
+            if (button == null)
+                return;
+            Split_MouseLeave(button, null);
             try
             {
-                if (backColor == null)
-                    backColor = button.BackColor;
-                if (hoverColor == null)
-                    hoverColor = button.FlatAppearance.MouseOverBackColor;
-                if (button.PointToClient(Cursor.Position).X >= button.Width - 16)
+                if (button.PointToClient(Cursor.Position).X >= button.Right - 16)
                 {
                     if (button.BackgroundImage != null)
                         return;
-                    button.BackgroundImage = new Bitmap(button.Width - 16 - button.FlatAppearance.BorderSize, button.Height);
+                    button.BackgroundImage = new Bitmap(button.Width, button.Height);
+                    var w = button.Right - 16 - button.FlatAppearance.BorderSize;
                     using (var g = Graphics.FromImage(button.BackgroundImage))
-                        using (Brush b = new SolidBrush((Color)backColor))
-                            g.FillRectangle(b, 0, 0, button.BackgroundImage.Width, button.BackgroundImage.Height);
+                        using (Brush b = new SolidBrush(button.BackColor))
+                            g.FillRectangle(b, 0, 0, w, button.BackgroundImage.Height);
                 }
                 else
                 {
                     button.BackgroundImage = new Bitmap(button.Width, button.Height);
+                    var x = button.BackgroundImage.Width - 15 - button.FlatAppearance.BorderSize;
+                    var w = 15 + button.FlatAppearance.BorderSize;
                     using (var g = Graphics.FromImage(button.BackgroundImage))
-                    {
-                        using (Brush b = new SolidBrush((Color)backColor))
-                            g.FillRectangle(b, 0, 0, button.BackgroundImage.Width, button.BackgroundImage.Height);
-                        using (Brush b = new SolidBrush((Color)hoverColor))
-                            g.FillRectangle(b, 0, 0, button.BackgroundImage.Width - 15 - button.FlatAppearance.BorderSize, button.BackgroundImage.Height);
-                    }
+                        using (Brush b = new SolidBrush(button.BackColor))
+                            g.FillRectangle(b, x, 0, w, button.BackgroundImage.Height);
                 }
             }
             catch (Exception ex)
@@ -135,18 +124,13 @@ namespace SilDev.Forms
             }
         }
 
-        /// <summary>
-        ///     Represents the method that is used for the <see cref="Button"/> mouse leave <see cref="EventHandler"/>
-        ///     which is absolutly required for the functionality of
-        ///     the <see cref="Split_MouseMoveEvent(Button, Color?, Color?)"/> function.
-        /// </summary>
-        /// <param name="button">
-        ///     The button which contains a splitted area, created by <see cref="Split(Button, Color?)"/>.
-        /// </param>
-        public static void Split_MouseLeaveEvent(this Button button)
+        private static void Split_MouseLeave(object sender, EventArgs e)
         {
-            if (button.BackgroundImage != null)
-                button.BackgroundImage = null;
+            var button = sender as Button;
+            if (button?.BackgroundImage == null)
+                return;
+            button.BackgroundImage.Dispose();
+            button.BackgroundImage = null;
         }
     }
 }
