@@ -20,7 +20,7 @@ namespace SilDev.Forms
     using System.Windows.Forms;
 
     /// <summary>
-    ///     Expands the functionality for the <see cref="RichTextBoxEx"/> class.
+    ///     Expands the functionality for the <see cref="RichTextBox"/> class.
     /// </summary>
     public static class RichTextBoxEx
     {
