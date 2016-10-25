@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-25 15:31
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -472,18 +472,18 @@ namespace SilDev
             }
             var cmd = string.Empty;
             if (backup)
-                if (link.DirOrFileExists())
+                if (PathEx.DirOrFileExists(link))
                     if (!DirIsLink(link))
                         cmd += $"MOVE /Y \"{link}\" \"{link}.SI13N7-BACKUP\"";
                     else
                         UnLinker(link, true, true, elevated);
-            if (link.DirOrFileExists())
+            if (PathEx.DirOrFileExists(link))
             {
                 if (!string.IsNullOrEmpty(cmd))
                     cmd += " && ";
                 cmd += $"{(destIsDir ? "RD /S /Q" : "DEL / F / Q")} \"{link}\"";
             }
-            if (dest.DirOrFileExists())
+            if (PathEx.DirOrFileExists(dest))
             {
                 if (!string.IsNullOrEmpty(cmd))
                     cmd += " && ";
@@ -541,9 +541,9 @@ namespace SilDev
             var link = PathEx.Combine(path);
             var cmd = string.Empty;
             if (backup)
-                if ($"{link}.SI13N7-BACKUP".DirOrFileExists())
+                if (PathEx.DirOrFileExists($"{link}.SI13N7-BACKUP"))
                 {
-                    if (link.DirOrFileExists())
+                    if (PathEx.DirOrFileExists(link))
                         cmd += $"{(pathIsDir ? "RD /S /Q" : "DEL / F / Q")} \"{link}\"";
                     if (!string.IsNullOrEmpty(cmd))
                         cmd += " && ";

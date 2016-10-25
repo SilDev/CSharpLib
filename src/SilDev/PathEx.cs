@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2016-10-21 05:11
+// Version:  2016-10-25 15:31
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -46,7 +46,7 @@ namespace SilDev
         /// <param name="path">
         ///     The file or directory to check.
         /// </param>
-        public static bool DirOrFileExists(this string path) =>
+        public static bool DirOrFileExists(string path) =>
             Directory.Exists(path) || File.Exists(path);
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SilDev
             var exists = false;
             foreach (var path in paths)
             {
-                exists = path.DirOrFileExists();
+                exists = DirOrFileExists(path);
                 if (!exists)
                     break;
             }
