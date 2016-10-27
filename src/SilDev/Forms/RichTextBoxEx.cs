@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2016-10-24 15:58
+// Version:  2016-10-27 13:54
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev.Forms
 {
     using System;
     using System.Drawing;
+    using System.IO;
     using System.Windows.Forms;
 
     /// <summary>
@@ -72,5 +73,97 @@ namespace SilDev.Forms
                 Log.Write(ex);
             }
         }
+
+        /// <summary>
+        ///     Sets a default <see cref="ContextMenuStrip"/> to this <see cref="RichTextBox"/> with cut,
+        ///     copy, paste, select all, load file, save file and undo.
+        /// </summary>
+        /// <param name="richTextBox">
+        ///     The <see cref="RichTextBox"/> control to add the <see cref="ContextMenuStrip"/>.
+        /// </param>
+        /// <param name="owner">
+        ///     An implementation of <see cref="IWin32Window"/> that will own modal dialog boxes.
+        /// </param>
+        public static void SetDefaultContextMenuStrip(this RichTextBox richTextBox, IWin32Window owner = null)
+        {
+            var cms = new ContextMenuStrip
+            {
+                AutoSize = true,
+                RenderMode = ToolStripRenderMode.System,
+                ShowImageMargin = false
+            };
+            cms.AddToolStripItem(new ToolStripMenuItem("Cut"), richTextBox.Cut);
+            cms.AddToolStripItem(new ToolStripMenuItem("Copy"), richTextBox.Copy);
+            cms.AddToolStripItem(new ToolStripMenuItem("Paste"), richTextBox.Paste);
+            cms.AddToolStripItem(new ToolStripMenuItem("Select All"), richTextBox.SelectAll);
+            cms.Items.Add(new ToolStripSeparator());
+            cms.AddToolStripItem(new ToolStripMenuItem("Load File"), LoadTextFile, richTextBox, owner);
+            cms.AddToolStripItem(new ToolStripMenuItem("Save All"), SaveTextFile, richTextBox, owner);
+            cms.Items.Add(new ToolStripSeparator());
+            cms.AddToolStripItem(new ToolStripMenuItem("Undo"), richTextBox.Undo);
+            richTextBox.ContextMenuStrip = cms;
+        }
+
+        private static void AddToolStripItem(this ToolStrip toolStrip, ToolStripItem toolStripItem, FileDialogHandler action, Control control, IWin32Window owner = null)
+        {
+            toolStripItem.Click += (s, e) => action(control, owner);
+            toolStrip.Items.Add(toolStripItem);
+        }
+
+        private static void AddToolStripItem(this ToolStrip toolStrip, ToolStripItem toolStripItem, Action action)
+        {
+            toolStripItem.Click += (s, e) => action();
+            toolStrip.Items.Add(toolStripItem);
+        }
+
+        private static void LoadTextFile(Control control, IWin32Window owner = null)
+        {
+            try
+            {
+                using (var dialog = new OpenFileDialog())
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        control.Text = File.ReadAllText(dialog.FileName);
+                        MessageBoxEx.Show(owner, "File successfully loaded!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    else
+                        MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+        }
+
+        private static void SaveTextFile(Control control, IWin32Window owner = null)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(control.Text))
+                    throw new ArgumentException("This field is empty!");
+                using (var dialog = new SaveFileDialog())
+                {
+                    dialog.Filter = @"Text File|*.txt";
+                    dialog.FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt";
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllText(dialog.FileName, control.Text.FormatNewLine());
+                        MessageBoxEx.Show(owner, "File successfully saved!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    else
+                        MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+        }
+
+        private delegate void FileDialogHandler(Control control, IWin32Window owner = null);
     }
 }
