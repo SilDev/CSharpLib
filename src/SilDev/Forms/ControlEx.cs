@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2016-10-24 18:19
+// Version:  2016-10-27 15:01
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,6 +18,7 @@ namespace SilDev.Forms
     using System;
     using System.Drawing;
     using System.Reflection;
+    using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
     /// <summary>
@@ -101,7 +102,13 @@ namespace SilDev.Forms
         /// <param name="color">
         ///     The color for the size grip <see cref="Image"/>, <see cref="Color.White"/> is used by default.
         /// </param>
-        public static void DrawSizeGrip(Control control, Color? color = null)
+        /// <param name="mouseDownEvent">
+        ///     Occurs when the mouse pointer is over the control and a mouse button is pressed.
+        /// </param>
+        /// <param name="mouseEnterEvent">
+        ///     Occurs when the mouse pointer enters the control.
+        /// </param>
+        public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null)
         {
             try
             {
@@ -116,9 +123,52 @@ namespace SilDev.Forms
                     return;
                 if (color != null && color != Color.White)
                     img = img.RecolorPixels(Color.White, (Color)color);
-                control.BackgroundImage = img;
-                control.BackgroundImageLayout = ImageLayout.Center;
-                control.Size = new Size(12, 12);
+                var pb = new PictureBox
+                {
+                    Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
+                    BackColor = Color.Transparent,
+                    BackgroundImage = img,
+                    BackgroundImageLayout = ImageLayout.Center,
+                    Location = new Point(control.Right - 12, control.Bottom - 12),
+                    Size = new Size(12, 12)
+                };
+                if (mouseDownEvent != null)
+                    pb.MouseDown += mouseDownEvent;
+                else
+                {
+                    var c = pb.GetAncestor();
+                    pb.MouseDown += (sender, args) =>
+                    {
+                        try
+                        {
+                            var point = new Point(c.Width - 1, c.Height - 1);
+                            WinApi.UnsafeNativeMethods.ClientToScreen(c.Handle, ref point);
+                            WinApi.UnsafeNativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
+                            var inputMouseDown = new WinApi.INPUT();
+                            inputMouseDown.Data.Mouse.Flags = 0x0002;
+                            inputMouseDown.Type = 0;
+                            var inputMouseUp = new WinApi.INPUT();
+                            inputMouseUp.Data.Mouse.Flags = 0x0004;
+                            inputMouseUp.Type = 0;
+                            WinApi.INPUT[] inputs =
+                            {
+                                inputMouseUp,
+                                inputMouseDown
+                            };
+                            WinApi.UnsafeNativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.INPUT)));
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Write(ex);
+                        }
+                    };
+                }
+                if (mouseEnterEvent != null)
+                    pb.MouseEnter += mouseEnterEvent;
+                else
+                    pb.Cursor = Cursors.SizeNWSE;
+                control.Controls.Add(pb);
+                control.Update();
             }
             catch (Exception ex)
             {
