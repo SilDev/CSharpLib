@@ -43,7 +43,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
@@ -52,11 +51,13 @@
     <Compile Include="SilDev\Forms\ButtonEx.cs" />
     <Compile Include="SilDev\Forms\ContextMenuStripEx.cs" />
     <Compile Include="SilDev\Forms\ControlEx.cs" />
+    <Compile Include="SilDev\Forms\MessageBoxEx.cs" />
     <Compile Include="SilDev\Forms\ProgressBarEx.cs" />
     <Compile Include="SilDev\Forms\RichTextBoxEx.cs" />
     <Compile Include="SilDev\Json.cs" />
     <Compile Include="SilDev\Forms\LinkLabelEx.cs" />
     <Compile Include="SilDev\Forms\ListViewEx.cs" />
+    <Compile Include="SilDev\NotifyBox.cs" />
     <Compile Include="SilDev\QuickWmi\Win32_OperatingSystem.cs" />
     <Compile Include="SilDev\Reorganize.cs" />
     <Compile Include="SilDev\Crypto.cs" />
@@ -67,9 +68,7 @@
     <Compile Include="SilDev\Ini.cs" />
     <Compile Include="SilDev\Log.cs" />
     <Compile Include="SilDev\Media.cs" />
-    <Compile Include="SilDev\MsgBoxEx.cs" />
     <Compile Include="SilDev\NetEx.cs" />
-    <Compile Include="SilDev\NotifyBox.cs" />
     <Compile Include="SilDev\Compaction.cs" />
     <Compile Include="SilDev\PathEx.cs" />
     <Compile Include="SilDev\Reg.cs" />

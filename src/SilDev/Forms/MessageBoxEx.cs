@@ -4,8 +4,8 @@
 // This file is distributed under the MIT License
 // ==============================================
 // 
-// Filename: MsgBoxEx.cs
-// Version:  2016-10-22 07:20
+// Filename: MessageBoxEx.cs
+// Version:  2016-10-27 12:56
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -13,7 +13,7 @@
 
 #endregion
 
-namespace SilDev
+namespace SilDev.Forms
 {
     using System;
     using System.Drawing;
@@ -25,15 +25,15 @@ namespace SilDev
     ///     <para>
     ///         Displays a message window, also known as a dialog box, based on <see cref="MessageBox"/>,
     ///         which presents a message to the user. It is a modal window, blocking other actions in the
-    ///         application until the user closes it. A <see cref="MsgBoxEx"/> can contain text, buttons,
-    ///         and symbols that inform and instruct the user.
+    ///         application until the user closes it. A <see cref="MessageBoxEx"/> can contain text,
+    ///         buttons, and symbols that inform and instruct the user.
     ///     </para>
     ///     <para>
     ///         The difference to <see cref="MessageBox"/> is that the message window displays
     ///         in the center of the specified <see cref="IWin32Window"/> owner object.
     ///     </para>
     /// </summary>
-    public static class MsgBoxEx
+    public static class MessageBoxEx
     {
         private static IWin32Window _owner;
         private static readonly WinApi.HookProc HookProc;
@@ -52,7 +52,7 @@ namespace SilDev
         /// </summary>
         public static bool TopMost = false;
 
-        static MsgBoxEx()
+        static MessageBoxEx()
         {
             HookProc = MessageBoxHookProc;
             EnumProc = MessageBoxEnumProc;
