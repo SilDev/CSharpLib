@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2016-10-20 12:09
+// Version:  2016-10-28 08:27
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -84,7 +84,7 @@ namespace SilDev
             {
                 var path = !string.IsNullOrEmpty(file) ? PathEx.Combine(file) : _iniFile;
                 if (!System.IO.File.Exists(path))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 return WinApi.SafeNativeMethods.WritePrivateProfileSection(section, null, path) != 0;
             }
             catch (Exception ex)
@@ -113,7 +113,7 @@ namespace SilDev
             {
                 var path = !string.IsNullOrEmpty(file) ? PathEx.Combine(file) : _iniFile;
                 if (!System.IO.File.Exists(path))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, null, path) != 0;
             }
             catch (Exception ex)
@@ -139,7 +139,7 @@ namespace SilDev
             {
                 var dest = fileOrContent ?? _iniFile;
                 if (string.IsNullOrWhiteSpace(dest))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(dest));
                 var path = PathEx.Combine(dest);
                 if (System.IO.File.Exists(path))
                 {
@@ -268,10 +268,10 @@ namespace SilDev
                     System.IO.File.WriteAllText(path, source);
                 }
                 if (!System.IO.File.Exists(path))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 var sections = GetSections(path, sorted);
                 if (sections.Count == 0)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(sections));
                 foreach (var section in sections)
                 {
                     var keys = GetKeys(section, path, sorted);
@@ -1219,7 +1219,7 @@ namespace SilDev
             {
                 var path = !string.IsNullOrEmpty(file) ? PathEx.Combine(file) : _iniFile;
                 if (!System.IO.File.Exists(path))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 if (value == null)
                     return RemoveKey(section, key, path);
                 if (value is Image)

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2016-10-25 15:31
+// Version:  2016-10-28 08:02
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -94,7 +95,7 @@ namespace SilDev
             try
             {
                 if (paths.Length == 0 || paths.Count(string.IsNullOrWhiteSpace) == paths.Length)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(paths));
                 var seperator = Path.DirectorySeparatorChar.ToString();
                 if (!paths[0].EndsWith(seperator)) // fix for drive letter only paths
                     paths[0] += seperator;
@@ -201,5 +202,50 @@ namespace SilDev
             }
             return us == 0x8664 || us == 0x200;
         }
+    }
+
+    /// <summary>
+    ///     The exception that is thrown when an attempt to access a target that does not exist
+    ///     fails.
+    /// </summary>
+    public class PathNotFoundException : Exception
+    {
+        /// <summary>
+        ///     Create the exception.
+        /// </summary>
+        public PathNotFoundException() { }
+
+        /// <summary>
+        ///     Create the exception with path.
+        /// </summary>
+        /// <param name="target">
+        ///     Exception target.
+        /// </param>
+        public PathNotFoundException(string target) : base(target)
+        {
+            Message = "Could not find target '" + target + "'.";
+        }
+
+        /// <summary>
+        ///     Create the exception with path and inner cause.
+        /// </summary>
+        /// <param name="target">
+        ///     Exception target.
+        /// </param>
+        /// <param name="innerException">
+        ///     Exception inner cause.
+        /// </param>
+        public PathNotFoundException(string target, Exception innerException) : base(target, innerException)
+        {
+            Message = "Could not find target '" + target + "'.";
+        }
+
+        protected PathNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        /// <summary>
+        ///     Gets the error message and the path, or only the exception message if no path
+        ///     is set.
+        /// </summary>
+        public sealed override string Message { get; } = "Unable to find the target from the specified path.";
     }
 }

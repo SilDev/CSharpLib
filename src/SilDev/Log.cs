@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-28 08:24
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -31,8 +31,7 @@ namespace SilDev
     /// </summary>
     public static class Log
     {
-        private static readonly object ConLocker = new object();
-        private static bool _isRunning, _firstCall, _firstEntry;
+        private static bool _conIsOpen, _firstCall, _firstEntry;
         private static IntPtr _stdHandle = IntPtr.Zero;
         private static SafeFileHandle _sfh;
         private static FileStream _fs;
@@ -60,7 +59,7 @@ namespace SilDev
 
         /// <summary>
         ///     <para>
-        ///         Gets or sets the location of the current log file (environment variables are accepted).
+        ///         Gets or sets the location of the current log file.
         ///     </para>
         ///     <para>
         ///         If the specified path doesn't exist, it is created.
@@ -77,26 +76,6 @@ namespace SilDev
         ///     Gets the full path of the current log file.
         /// </summary>
         public static string FilePath { get; private set; } = Path.Combine(FileDir, FileName);
-
-        private static string AsciiLogo
-        {
-            get
-            {
-                const string s = "2020205f5f5f5f5f5f5f5f5f2e5f5f20205f5f5f5f205f5f" +
-                                 "5f5f5f5f5f5f20202020202020205f5f5f5f5f5f5f5f5f0a" +
-                                 "20202f2020205f5f5f5f5f2f7c5f5f7c2f5f2020207c5c5f" +
-                                 "5f5f5f5f20205c2020205f5f5f5f5c5f5f5f5f5f5f20205c" +
-                                 "0a20205c5f5f5f5f5f20205c207c20207c207c2020207c20" +
-                                 "205f285f5f20203c20202f202020205c2020202f20202020" +
-                                 "2f0a20202f20202020202020205c7c20207c207c2020207c" +
-                                 "202f202020202020205c7c2020207c20205c202f20202020" +
-                                 "2f0a202f5f5f5f5f5f5f5f20202f7c5f5f7c207c5f5f5f7c" +
-                                 "2f5f5f5f5f5f5f20202f7c5f5f5f7c20202f2f5f5f5f5f2f" +
-                                 "0a2020202020202020205c2f202020202020202020202020" +
-                                 "2020202020205c2f2020202020205c2f2020202020202020";
-                return s.FromHexString();
-            }
-        }
 
         /// <summary>
         ///     <para>
@@ -130,9 +109,10 @@ namespace SilDev
             {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 Application.ThreadException += (s, e) => Write(e.Exception, true, true);
-                AppDomain.CurrentDomain.UnhandledException += (s, e) => Write(new ApplicationException(), true, true);
+                AppDomain.CurrentDomain.UnhandledException += (s, e) => WriteUnhandled(
+                    new ApplicationException("Error in the application. Sender object: '" + s + "'; Exception object: '" + e.ExceptionObject + "'"));
+                AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
             }
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
             if (DebugMode <= 0)
                 return;
             try
@@ -192,139 +172,85 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes specified informations to the log file.
+        ///     Writes the specified information into a log file.
         /// </summary>
-        /// <param name="exMsg">
-        ///     The message text.
+        /// <param name="logMessage">
+        ///     The message text to write.
         /// </param>
-        /// <param name="exTra">
-        ///     The extra message which is mostly used for <see cref="Exception.StackTrace"/> logging.
-        /// </param>
-        /// <param name="exit">
+        /// <param name="exitProcess">
         ///     true to terminate this process after logging; otherwise, false.
         /// </param>
-        public static void Write(string exMsg, string exTra = null, bool exit = false)
+        public static void Write(string logMessage, bool exitProcess = false)
         {
-            if (!_firstCall || DebugMode < 1 || string.IsNullOrEmpty(exMsg))
+            if (!_firstCall || DebugMode < 1 || string.IsNullOrEmpty(logMessage))
                 return;
+            var dat = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff zzz") + Environment.NewLine;
+            var log = dat;
             if (!_firstEntry)
             {
                 _firstEntry = true;
-                var separator = true;
-                if (!File.Exists(FilePath))
-                    try
-                    {
-                        separator = false;
-                        if (!Directory.Exists(FileDir))
-                            Directory.CreateDirectory(FileDir);
-                        File.Create(FilePath).Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (DebugMode > 1)
-                        {
-                            DebugMode = 3;
-                            Write(ex);
-                        }
-                    }
-                if (separator)
-                    File.AppendAllText(FilePath, new string('-', 120) + Environment.NewLine + Environment.NewLine);
-                Write("***Logging has been started***", "'" + Environment.OSVersion + "'; '" + AssemblyName + "'; '" + AssemblyVersion + "'; '" + FilePath + "'");
+                if (File.Exists(FilePath))
+                    log = new string('-', 120) + Environment.NewLine + Environment.NewLine + dat;
+                log += "***Logging has been started***" + Environment.NewLine;
+                log += "   '" + Environment.OSVersion + "'; '" + AssemblyName + "'; '" + AssemblyVersion + "'; '" + FilePath + "'" + Environment.NewLine + Environment.NewLine;
+                File.AppendAllText(FilePath, log);
+                log = dat;
             }
-            if (!File.Exists(FilePath) && DebugMode < 1)
-                return;
-            var date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff zzz");
-            string exmsg = $"Time:  {date}\r\nMsg:   {Filter(exMsg)}\r\n";
-            if (!string.IsNullOrWhiteSpace(exTra))
-            {
-                var extra = Filter(exTra);
-                extra = extra.Replace(Environment.NewLine, " - ");
-                exmsg += $"Trace: {extra}\r\n";
-            }
-            if (DebugMode < 3 && File.Exists(FilePath))
-                try
-                {
-                    File.AppendAllText(FilePath, $"{exmsg}\r\n");
-                }
-                catch
-                {
-                    exit = true;
-                }
+            log += logMessage + Environment.NewLine + Environment.NewLine;
+            File.AppendAllText(FilePath, log);
             if (DebugMode <= 1)
             {
-                if (!exit)
+                if (!exitProcess)
                     return;
                 Environment.ExitCode = 1;
                 Environment.Exit(Environment.ExitCode);
             }
-            try
+            if (!_conIsOpen)
             {
-                lock (ConLocker)
+                _conIsOpen = true;
+                WinApi.SafeNativeMethods.AllocConsole();
+                var hWnd = WinApi.SafeNativeMethods.GetConsoleWindow();
+                if (hWnd != IntPtr.Zero)
                 {
-                    if (!_isRunning)
-                    {
-                        WinApi.SafeNativeMethods.AllocConsole();
-                        var hWnd = WinApi.SafeNativeMethods.GetConsoleWindow();
-                        var hMenu = WinApi.UnsafeNativeMethods.GetSystemMenu(hWnd, false);
+                    var hMenu = WinApi.UnsafeNativeMethods.GetSystemMenu(hWnd, false);
+                    if (hMenu != IntPtr.Zero)
                         WinApi.UnsafeNativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
-                        _stdHandle = WinApi.UnsafeNativeMethods.GetStdHandle(-11);
-                        _sfh = new SafeFileHandle(_stdHandle, true);
-                        _fs = new FileStream(_sfh, FileAccess.Write);
-                        if (Console.Title != ConsoleTitle)
-                        {
-                            Console.Title = ConsoleTitle;
-                            Console.BufferHeight = short.MaxValue - 1;
-                            Console.BufferWidth = Console.WindowWidth;
-                            Console.SetWindowSize(Math.Min(100, Console.LargestWindowWidth), Math.Min(40, Console.LargestWindowHeight));
-                            Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.WriteLine(AsciiLogo);
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            Console.Write(new string(' ', 11));
-                            Console.WriteLine("D E B U G    C O N S O L E");
-                            Console.ResetColor();
-                            Console.WriteLine();
-                        }
-                        _isRunning = true;
-                    }
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine(new string('-', Console.BufferWidth - 1));
-                    foreach (var line in exmsg.SplitNewLine())
-                    {
-                        var sa = line.Split(' ');
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(sa[0]);
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.WriteLine($" {sa.Skip(1).ToArray().Join(" ")}");
-                    }
-                    Console.ResetColor();
-                    _sw = new StreamWriter(_fs, Encoding.ASCII) { AutoFlush = true };
-                    Console.SetOut(_sw);
+                }
+                _stdHandle = WinApi.UnsafeNativeMethods.GetStdHandle(-11);
+                _sfh = new SafeFileHandle(_stdHandle, true);
+                _fs = new FileStream(_sfh, FileAccess.Write);
+                if (Console.Title != ConsoleTitle)
+                {
+                    Console.Title = ConsoleTitle;
+                    Console.BufferHeight = short.MaxValue - 1;
+                    Console.BufferWidth = Console.WindowWidth;
+                    Console.SetWindowSize(Math.Min(100, Console.LargestWindowWidth), Math.Min(40, Console.LargestWindowHeight));
                 }
             }
-            catch (Exception ex)
-            {
-                DebugMode = 1;
-                Write(ex);
-            }
-            if (!exit)
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(log);
+            Console.ResetColor();
+            _sw = new StreamWriter(_fs, Encoding.ASCII) { AutoFlush = true };
+            Console.SetOut(_sw);
+            if (!exitProcess)
                 return;
             Environment.ExitCode = 1;
             Environment.Exit(Environment.ExitCode);
         }
 
         /// <summary>
-        ///     Writes important <see cref="Exception"/> informations to the log file.
+        ///     Writes all <see cref="Exception"/> information into a log file.
         /// </summary>
-        /// <param name="ex">
-        ///     The <see cref="Exception"/> to be used.
+        /// <param name="exception">
+        ///     The handled <see cref="Exception"/> to write.
         /// </param>
         /// <param name="forceLogging">
         ///     true to enforce that <see cref="DebugMode"/> is enabled; otherwise, false.
         /// </param>
-        /// <param name="exit">
+        /// <param name="exitProcess">
         ///     true to terminate this process after logging; otherwise, false.
         /// </param>
-        public static void Write(Exception ex, bool forceLogging = false, bool exit = false)
+        public static void Write(Exception exception, bool forceLogging = false, bool exitProcess = false)
         {
             if (DebugMode < 1)
             {
@@ -332,22 +258,13 @@ namespace SilDev
                     return;
                 DebugMode = 1;
             }
-            Write(ex.Message, ex.StackTrace, exit);
+            Write("Handled " + exception, exitProcess);
         }
 
-        private static string Filter(string input)
+        private static void WriteUnhandled(Exception exception)
         {
-            try
-            {
-                var s = input.SplitNewLine().Join(" - ");
-                s = Regex.Replace(s.Trim(), " {2,}", " ", RegexOptions.Singleline);
-                s = char.ToUpper(s[0]) + s.Substring(1);
-                return s;
-            }
-            catch
-            {
-                return input;
-            }
+            DebugMode = 1;
+            Write("Unhandled " + exception, true);
         }
 
         private static void Close()
@@ -403,7 +320,7 @@ namespace SilDev
             form.Shown += (s, e) =>
             {
                 stopwatch.Stop();
-                Write($"{form.Name} loaded in {stopwatch.ElapsedMilliseconds}ms.");
+                Write("Stopwatch: " + form.Name + " loaded in " + stopwatch.ElapsedMilliseconds + "ms.");
             };
             return form;
         }

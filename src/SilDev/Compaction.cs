@@ -100,11 +100,13 @@ namespace SilDev
             try
             {
                 var src = PathEx.Combine(srcPath);
+                if (string.IsNullOrEmpty(src))
+                    throw new ArgumentNullException(nameof(src));
                 if (!File.Exists(src))
                     throw new FileNotFoundException();
                 var dest = PathEx.Combine(destDir);
                 if (string.IsNullOrEmpty(dest))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(dest));
                 using (var zip = ZipFile.OpenRead(src))
                     zip.ExtractToDirectory(dest);
                 if (delSrcPath)

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-28 08:25
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -75,7 +75,7 @@ namespace SilDev
             {
                 htmlColor = htmlColor.ToUpper();
                 if (!htmlColor.StartsWith("#") || htmlColor.Length == 0 || htmlColor.Substring(1).Any(x => !"0123456789ABCDEF".Contains(x)))
-                    throw new ArgumentException();
+                    throw new ArgumentOutOfRangeException(nameof(htmlColor));
                 if (htmlColor.Length < 7)
                 {
                     var s = htmlColor.Substring(1);

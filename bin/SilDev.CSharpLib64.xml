@@ -377,20 +377,15 @@
                 Expands the functionality for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> class.
             </summary>
         </member>
-        <member name="M:SilDev.Forms.ContextMenuStripEx.SetFixedSingle(System.Windows.Forms.ContextMenuStrip,System.Windows.Forms.PaintEventArgs,System.Nullable{System.Drawing.Color})">
+        <member name="M:SilDev.Forms.ContextMenuStripEx.SetFixedSingle(System.Windows.Forms.ContextMenuStrip,System.Nullable{System.Drawing.Color})">
             <summary>
-                Represents the method that is used for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> paint <see cref="T:System.EventHandler"/>
-                which redraws the menu control with a similar border style, which is known from
-                <see cref="F:System.Windows.Forms.BorderStyle.FixedSingle"/>.
+                Sets a single line border style for this <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
             </summary>
             <param name="contextMenuStrip">
                 The <see cref="T:System.Windows.Forms.ContextMenuStrip"/> to redraw.
             </param>
-            <param name="paintEventArgs">
-                The paint event data.
-            </param>
             <param name="borderColor">
-                THe border color.
+                The border color.
             </param>
         </member>
         <member name="T:SilDev.Forms.ControlEx">
@@ -433,7 +428,7 @@
                 true to enable the specified styles; otherwise, false to disable the specified styles.
             </param>
         </member>
-        <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color})">
+        <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color},System.Windows.Forms.MouseEventHandler,System.EventHandler)">
             <summary>
                 Draws a 12px large size grip <see cref="T:System.Drawing.Image"/> in this <see cref="T:System.Windows.Forms.Control"/>.
             </summary>
@@ -443,6 +438,551 @@
             <param name="color">
                 The color for the size grip <see cref="T:System.Drawing.Image"/>, <see cref="P:System.Drawing.Color.White"/> is used by default.
             </param>
+            <param name="mouseDownEvent">
+                Occurs when the mouse pointer is over the control and a mouse button is pressed.
+            </param>
+            <param name="mouseEnterEvent">
+                Occurs when the mouse pointer enters the control.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.MessageBoxEx">
+            <summary>
+                <para>
+                    Displays a message window, also known as a dialog box, based on <see cref="T:System.Windows.Forms.MessageBox"/>,
+                    which presents a message to the user. It is a modal window, blocking other actions in the
+                    application until the user closes it. A <see cref="T:SilDev.Forms.MessageBoxEx"/> can contain text,
+                    buttons, and symbols that inform and instruct the user.
+                </para>
+                <para>
+                    The difference to <see cref="T:System.Windows.Forms.MessageBox"/> is that the message window displays
+                    in the center of the specified <see cref="T:System.Windows.Forms.IWin32Window"/> owner object.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.CenterMousePointer">
+            <summary>
+                Specifies that the mouse pointer moves once to a new dialog box.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.TopMost">
+            <summary>
+                Specifies that the dialog box is placed above all non-topmost windows. This
+                option has no effect if an <see cref="T:System.Windows.Forms.IWin32Window"/> owner is defined.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text, caption, buttons, icon, default button, and options.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <param name="options">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
+                display and association options will be used for the message box. You may pass
+                in 0 if you wish to use the defaults.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
+            <summary>
+                Displays a message box in the center of the specified object and  with the
+                specified text, caption, buttons, icon, default, and button.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text, caption, buttons, and icon.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text, caption, and buttons.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text and caption.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String)">
+            <summary>
+                Displays a message box in the center of the specified object and  with the
+                specified text.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text, buttons, icon, default button, and options.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <param name="options">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
+                display and association options will be used for the message box. You may pass
+                in 0 if you wish to use the defaults.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text, buttons, icon, and default button.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text, buttons, and icon.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons)">
+            <summary>
+                Displays a message box in the center of the specified object and with the
+                specified text, and buttons.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
+            <summary>
+                Displays a message box with the specified text, caption, buttons, icon, default
+                button, and options.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <param name="options">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
+                display and association options will be used for the message box. You may pass
+                in 0 if you wish to use the defaults.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
+            <summary>
+                Displays a message box with the specified text, caption, buttons, icon, default,
+                and button.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
+            <summary>
+                Displays a message box with the specified text, caption, buttons, and icon.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons)">
+            <summary>
+                Displays a message box with the specified text, caption, and buttons.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.String)">
+            <summary>
+                Displays a message box with the specified text and caption.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="caption">
+                The text to display in the title bar of the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String)">
+            <summary>
+                Displays a message box with the specified text.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
+            <summary>
+                Displays a message box with the specified text, buttons, icon, default button,
+                and options.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <param name="options">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
+                display and association options will be used for the message box. You may pass
+                in 0 if you wish to use the defaults.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
+            <summary>
+                Displays a message box with the specified text, buttons, icon, and default
+                button.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <param name="defButton">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
+                the default button for the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
+            <summary>
+                Displays a message box with the specified text, buttons, and icon.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <param name="icon">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
+                to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.MessageBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons)">
+            <summary>
+                Displays a message box with the specified text, and buttons.
+            </summary>
+            <param name="text">
+                The text to display in the message box.
+            </param>
+            <param name="buttons">
+                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
+                buttons to display in the message box.
+            </param>
+            <returns>
+                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
+            </returns>
+        </member>
+        <member name="T:SilDev.Forms.MessageBoxEx.ButtonText">
+            <summary>
+                Specifies button text overrides.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.ButtonText.OK">
+            <summary>
+                The OK button.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.ButtonText.Cancel">
+            <summary>
+                The Cancel button.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.ButtonText.Abort">
+            <summary>
+                The Abort button.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.ButtonText.Retry">
+            <summary>
+                The Retry button.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.ButtonText.Ignore">
+            <summary>
+                The Ignore button.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.ButtonText.Yes">
+            <summary>
+                The Yes button.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.MessageBoxEx.ButtonText.No">
+            <summary>
+                The No button.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.MessageBoxEx.ButtonText.OverrideEnabled">
+            <summary>
+                Gets or sets a value indicating whether the override options to
+                be applied.
+            </summary>
         </member>
         <member name="T:SilDev.Forms.ProgressBarEx">
             <summary>
@@ -480,6 +1020,18 @@
             </param>
             <param name="font">
                 The new font.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.RichTextBoxEx.SetDefaultContextMenuStrip(System.Windows.Forms.RichTextBox,System.Windows.Forms.IWin32Window)">
+            <summary>
+                Sets a default <see cref="T:System.Windows.Forms.ContextMenuStrip"/> to this <see cref="T:System.Windows.Forms.RichTextBox"/> with cut,
+                copy, paste, select all, load file, save file and undo.
+            </summary>
+            <param name="richTextBox">
+                The <see cref="T:System.Windows.Forms.RichTextBox"/> control to add the <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
+            </param>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own modal dialog boxes.
             </param>
         </member>
         <member name="T:SilDev.Forms.LinkLabelEx">
@@ -3805,7 +4357,7 @@
         <member name="P:SilDev.Log.FileDir">
             <summary>
                 <para>
-                    Gets or sets the location of the current log file (environment variables are accepted).
+                    Gets or sets the location of the current log file.
                 </para>
                 <para>
                     If the specified path doesn't exist, it is created.
@@ -3872,31 +4424,28 @@
                 <see cref="P:SilDev.Log.DebugMode"/>.
             </param>
         </member>
-        <member name="M:SilDev.Log.Write(System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.Log.Write(System.String,System.Boolean)">
             <summary>
-                Writes specified informations to the log file.
+                Writes the specified information into a log file.
             </summary>
-            <param name="exMsg">
-                The message text.
+            <param name="logMessage">
+                The message text to write.
             </param>
-            <param name="exTra">
-                The extra message which is mostly used for <see cref="P:System.Exception.StackTrace"/> logging.
-            </param>
-            <param name="exit">
+            <param name="exitProcess">
                 true to terminate this process after logging; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Log.Write(System.Exception,System.Boolean,System.Boolean)">
             <summary>
-                Writes important <see cref="T:System.Exception"/> informations to the log file.
+                Writes all <see cref="T:System.Exception"/> information into a log file.
             </summary>
-            <param name="ex">
-                The <see cref="T:System.Exception"/> to be used.
+            <param name="exception">
+                The handled <see cref="T:System.Exception"/> to write.
             </param>
             <param name="forceLogging">
                 true to enforce that <see cref="P:SilDev.Log.DebugMode"/> is enabled; otherwise, false.
             </param>
-            <param name="exit">
+            <param name="exitProcess">
                 true to terminate this process after logging; otherwise, false.
             </param>
         </member>
@@ -4053,545 +4602,6 @@
                 <para>
                     Please note that this class requires the binaries of the IrrKlang library.
                 </para>
-            </summary>
-        </member>
-        <member name="T:SilDev.MsgBoxEx">
-            <summary>
-                <para>
-                    Displays a message window, also known as a dialog box, based on <see cref="T:System.Windows.Forms.MessageBox"/>,
-                    which presents a message to the user. It is a modal window, blocking other actions in the
-                    application until the user closes it. A <see cref="T:SilDev.MsgBoxEx"/> can contain text, buttons,
-                    and symbols that inform and instruct the user.
-                </para>
-                <para>
-                    The difference to <see cref="T:System.Windows.Forms.MessageBox"/> is that the message window displays
-                    in the center of the specified <see cref="T:System.Windows.Forms.IWin32Window"/> owner object.
-                </para>
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.CenterMousePointer">
-            <summary>
-                Specifies that the mouse pointer moves once to a new dialog box.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.TopMost">
-            <summary>
-                Specifies that the dialog box is placed above all non-topmost windows. This
-                option has no effect if an <see cref="T:System.Windows.Forms.IWin32Window"/> owner is defined.
-            </summary>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text, caption, buttons, icon, default button, and options.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <param name="options">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
-                display and association options will be used for the message box. You may pass
-                in 0 if you wish to use the defaults.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
-            <summary>
-                Displays a message box in the center of the specified object and  with the
-                specified text, caption, buttons, icon, default, and button.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text, caption, buttons, and icon.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String,System.Windows.Forms.MessageBoxButtons)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text, caption, and buttons.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.String)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text and caption.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String)">
-            <summary>
-                Displays a message box in the center of the specified object and  with the
-                specified text.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text, buttons, icon, default button, and options.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <param name="options">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
-                display and association options will be used for the message box. You may pass
-                in 0 if you wish to use the defaults.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text, buttons, icon, and default button.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text, buttons, and icon.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.Windows.Forms.IWin32Window,System.String,System.Windows.Forms.MessageBoxButtons)">
-            <summary>
-                Displays a message box in the center of the specified object and with the
-                specified text, and buttons.
-            </summary>
-            <param name="owner">
-                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
-                dialog box.
-            </param>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
-            <summary>
-                Displays a message box with the specified text, caption, buttons, icon, default
-                button, and options.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <param name="options">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
-                display and association options will be used for the message box. You may pass
-                in 0 if you wish to use the defaults.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
-            <summary>
-                Displays a message box with the specified text, caption, buttons, icon, default,
-                and button.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
-            <summary>
-                Displays a message box with the specified text, caption, buttons, and icon.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.String,System.Windows.Forms.MessageBoxButtons)">
-            <summary>
-                Displays a message box with the specified text, caption, and buttons.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.String)">
-            <summary>
-                Displays a message box with the specified text and caption.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="caption">
-                The text to display in the title bar of the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String)">
-            <summary>
-                Displays a message box with the specified text.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton,System.Windows.Forms.MessageBoxOptions)">
-            <summary>
-                Displays a message box with the specified text, buttons, icon, default button,
-                and options.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <param name="options">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxOptions"/> values that specifies which
-                display and association options will be used for the message box. You may pass
-                in 0 if you wish to use the defaults.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon,System.Windows.Forms.MessageBoxDefaultButton)">
-            <summary>
-                Displays a message box with the specified text, buttons, icon, and default
-                button.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <param name="defButton">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxDefaultButton"/> values that specifies
-                the default button for the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons,System.Windows.Forms.MessageBoxIcon)">
-            <summary>
-                Displays a message box with the specified text, buttons, and icon.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <param name="icon">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxIcon"/> values that specifies which icon
-                to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="M:SilDev.MsgBoxEx.Show(System.String,System.Windows.Forms.MessageBoxButtons)">
-            <summary>
-                Displays a message box with the specified text, and buttons.
-            </summary>
-            <param name="text">
-                The text to display in the message box.
-            </param>
-            <param name="buttons">
-                One of the <see cref="T:System.Windows.Forms.MessageBoxButtons"/> values that specifies which
-                buttons to display in the message box.
-            </param>
-            <returns>
-                One of the <see cref="T:System.Windows.Forms.DialogResult"/> values.
-            </returns>
-        </member>
-        <member name="T:SilDev.MsgBoxEx.ButtonText">
-            <summary>
-                Specifies button text overrides.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.ButtonText.OK">
-            <summary>
-                The OK button.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.ButtonText.Cancel">
-            <summary>
-                The Cancel button.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.ButtonText.Abort">
-            <summary>
-                The Abort button.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.ButtonText.Retry">
-            <summary>
-                The Retry button.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.ButtonText.Ignore">
-            <summary>
-                The Ignore button.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.ButtonText.Yes">
-            <summary>
-                The Yes button.
-            </summary>
-        </member>
-        <member name="F:SilDev.MsgBoxEx.ButtonText.No">
-            <summary>
-                The No button.
-            </summary>
-        </member>
-        <member name="P:SilDev.MsgBoxEx.ButtonText.OverrideEnabled">
-            <summary>
-                Gets or sets a value indicating whether the override options to
-                be applied.
             </summary>
         </member>
         <member name="T:SilDev.NetEx">
@@ -5405,6 +5415,42 @@
             <param name="path">
                 The file to check.
             </param>
+        </member>
+        <member name="T:SilDev.PathNotFoundException">
+            <summary>
+                The exception that is thrown when an attempt to access a target that does not exist
+                fails.
+            </summary>
+        </member>
+        <member name="M:SilDev.PathNotFoundException.#ctor">
+            <summary>
+                Create the exception.
+            </summary>
+        </member>
+        <member name="M:SilDev.PathNotFoundException.#ctor(System.String)">
+            <summary>
+                Create the exception with path.
+            </summary>
+            <param name="target">
+                Exception target.
+            </param>
+        </member>
+        <member name="M:SilDev.PathNotFoundException.#ctor(System.String,System.Exception)">
+            <summary>
+                Create the exception with path and inner cause.
+            </summary>
+            <param name="target">
+                Exception target.
+            </param>
+            <param name="innerException">
+                Exception inner cause.
+            </param>
+        </member>
+        <member name="P:SilDev.PathNotFoundException.Message">
+            <summary>
+                Gets the error message and the path, or only the exception message if no path
+                is set.
+            </summary>
         </member>
         <member name="T:SilDev.Reg">
             <summary>
@@ -8605,6 +8651,13 @@
             <summary>
                 The window has a border with a raised edge.
             </summary>
+        </member>
+        <member name="M:SilDev.WinApi.ThrowLastError">
+            <summary>
+                Throws the last error code returned by the last unmanaged function.
+            </summary>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
         </member>
         <member name="T:SilDev.WinApi.ServiceState">
             <summary>

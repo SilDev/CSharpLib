@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-28 08:29
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -209,13 +209,8 @@ namespace SilDev
                         return RegistryValueKind.None;
                 }
             }
-            catch (ArgumentNullException)
+            catch
             {
-                return RegistryValueKind.None;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
                 return RegistryValueKind.None;
             }
         }
@@ -435,7 +430,7 @@ namespace SilDev
                 {
                     var sKey = rKey?.GetSubKeyNames();
                     if (sKey == null)
-                        throw new ArgumentNullException();
+                        throw new ArgumentNullException(nameof(sKey));
                     keys.AddRange(sKey.Select(e => $"{subKey}\\{e}"));
                 }
                 return keys;
@@ -780,12 +775,12 @@ namespace SilDev
             try
             {
                 if (!SubKeyExist(key, subKey))
-                    throw new KeyNotFoundException();
+                    throw new ArgumentException();
                 using (var rKey = key.AsRegistryKey().OpenSubKey(subKey))
                 {
                     var vNames = rKey?.GetValueNames();
                     if (vNames == null)
-                        throw new ArgumentNullException();
+                        throw new ArgumentNullException(nameof(vNames));
                     foreach (var ent in rKey.GetValueNames())
                         try
                         {
@@ -1322,18 +1317,14 @@ namespace SilDev
             try
             {
                 if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(path));
                 if (!File.Exists(path))
                     throw new FileNotFoundException();
                 if (Path.GetExtension(path).EqualsEx(".ini"))
                 {
-                    using (var p = ProcessEx.Start("%system%\\reg.exe", $"IMPORT \"{path}\"", elevated, ProcessWindowStyle.Hidden))
-                    {
-                        if (p == null)
-                            throw new NullReferenceException();
-                        if (!p.HasExited)
-                            p.WaitForExit(1000);
-                    }
+                    using (var p = ProcessEx.Start("%system%\\reg.exe", $"IMPORT \"{path}\"", elevated, ProcessWindowStyle.Hidden, false))
+                        if (!p?.HasExited == true)
+                            p?.WaitForExit(1000);
                     return true;
                 }
                 var root = Ini.Read("Root", "Sections", path);

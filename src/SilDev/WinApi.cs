@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2016-10-20 11:52
+// Version:  2016-10-28 08:30
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -1779,22 +1779,28 @@ namespace SilDev
             WS_EX_WINDOWEDGE = 0x1
         }
 
-        public static bool DisableWindowMaximizeButton(IntPtr hWnd)
+        /// <summary>
+        ///     Throws the last error code returned by the last unmanaged function.
+        /// </summary>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static void ThrowLastError()
         {
-            var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x10000L);
-            var error = GetLastError("GetWindowLong");
-            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
-            error += GetLastError("SetWindowLong");
-            return error == 0;
+            var code = Marshal.GetLastWin32Error();
+            if (code > 0)
+                throw new Win32Exception(code);
         }
 
-        public static bool DisableWindowMinimizeButton(IntPtr hWnd)
+        public static void DisableWindowMaximizeButton(IntPtr hWnd)
+        {
+            var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x10000L);
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
+        }
+
+        public static void DisableWindowMinimizeButton(IntPtr hWnd)
         {
             var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x20000L);
-            var error = GetLastError("GetWindowLong");
             UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
-            error += GetLastError("SetWindowLong");
-            return error == 0;
         }
 
         public static bool ExistsWindowByCaption(string lpWindowName) =>
@@ -1810,14 +1816,6 @@ namespace SilDev
             return UnsafeNativeMethods.GetWindowText(hWnd, sb, 256) > 0 ? sb.ToString() : string.Empty;
         }
 
-        public static int GetLastError(string trace = null)
-        {
-            var code = Marshal.GetLastWin32Error();
-            if (code > 0)
-                Log.Write(new Win32Exception(code).Message, trace);
-            return code;
-        }
-
         public static PROCESS_BASIC_INFORMATION GetProcessBasicInformation(IntPtr hWnd)
         {
             PROCESS_BASIC_INFORMATION pbi;
@@ -1826,7 +1824,7 @@ namespace SilDev
             try
             {
                 if (status >= 0xc0000000)
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(status));
             }
             catch (Exception ex)
             {
@@ -1859,36 +1857,30 @@ namespace SilDev
             return placement;
         }
 
-        public static int HideWindow(IntPtr hWnd)
+        public static void HideWindow(IntPtr hWnd)
         {
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_MINIMIZE);
-            var error = GetLastError("ShowWindow");
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_HIDE);
-            error += GetLastError("ShowWindow");
-            return error;
         }
 
-        public static bool MoveWindow(IntPtr hWnd, Rectangle nRect)
+        public static void MoveWindow(IntPtr hWnd, Rectangle nRect)
         {
             var cRect = new Rectangle();
             UnsafeNativeMethods.GetWindowRect(hWnd, ref cRect);
-            var error = GetLastError("GetWindowRect");
             if (cRect == nRect)
-                return error == 0;
+                return;
             if (nRect.Width <= 0 || nRect.Height <= 0)
                 nRect.Size = cRect.Size;
             UnsafeNativeMethods.MoveWindow(hWnd, nRect.X, nRect.Y, nRect.Width, nRect.Height, cRect.Size != nRect.Size);
-            error += GetLastError("MoveWindow");
-            return error == 0;
         }
 
-        public static bool MoveWindow(IntPtr hWnd, Point point, Size size) =>
+        public static void MoveWindow(IntPtr hWnd, Point point, Size size) =>
             MoveWindow(hWnd, new Rectangle { Location = point, Size = size });
 
-        public static bool MoveWindow(IntPtr hWnd, Point point) =>
+        public static void MoveWindow(IntPtr hWnd, Point point) =>
             MoveWindow(hWnd, new Rectangle { Location = point, Size = new Size(0, 0) });
 
-        public static bool MoveWindow(IntPtr hWnd, int x, int y) =>
+        public static void MoveWindow(IntPtr hWnd, int x, int y) =>
             MoveWindow(hWnd, new Point(0, 0));
 
         public static bool RefreshVisibleTrayArea()
@@ -1901,56 +1893,15 @@ namespace SilDev
                 foreach (var className in new[] { "TrayNotifyWnd", "SysPager", "ToolbarWindow32" })
                 {
                     hWndTray = UnsafeNativeMethods.FindWindowEx(hWndTray, IntPtr.Zero, className, null);
-                    GetLastError("FindWindowEx");
                     if (hWndTray == IntPtr.Zero)
-                        throw new ArgumentNullException();
+                        throw new ArgumentNullException(nameof(hWndTray));
                 }
                 Rectangle rect;
                 UnsafeNativeMethods.GetClientRect(hWndTray, out rect);
-                GetLastError("GetClientRect");
                 for (var x = 0; x < rect.Right; x += 5)
                     for (var y = 0; y < rect.Bottom; y += 5)
-                    {
                         UnsafeNativeMethods.SendMessage(hWndTray, (uint)WindowMenuFunc.WM_MOUSEMOVE, IntPtr.Zero, (IntPtr)((y << 16) + x));
-                        GetLastError("SendMessage");
-                    }
                 return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool RemoveWindowBorders(IntPtr hWnd)
-        {
-            try
-            {
-                var hMenu = UnsafeNativeMethods.GetMenu(hWnd);
-                var error = GetLastError("GetMenu");
-                var count = UnsafeNativeMethods.GetMenuItemCount(hMenu);
-                error += GetLastError("GetMenuItemCount");
-                for (var i = 0; i < count; i++)
-                {
-                    UnsafeNativeMethods.RemoveMenu(hMenu, 0, ModifyMenuFunc.MF_BYPOSITION | ModifyMenuFunc.MF_REMOVE);
-                    error += GetLastError("RemoveMenu");
-                }
-                UnsafeNativeMethods.DrawMenuBar(hWnd);
-                error += GetLastError();
-                var style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE);
-                error += GetLastError("GetWindowLong");
-                style = style & ~(int)WindowStyleFunc.WS_SYSMENU;
-                style = style & ~(int)WindowStyleFunc.WS_CAPTION;
-                style = style & ~(int)WindowStyleFunc.WS_MINIMIZE;
-                style = style & ~(int)WindowStyleFunc.WS_MAXIMIZEBOX;
-                style = style & ~(int)WindowStyleFunc.WS_THICKFRAME;
-                UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
-                error += GetLastError();
-                style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE) | (int)WindowStyleFunc.WS_EX_DLGMODALFRAME;
-                error += GetLastError("GetWindowLong");
-                UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_EXSTYLE, (IntPtr)style);
-                error += GetLastError("SetWindowLong");
-                return error == 0;
             }
             catch (Exception ex)
             {
@@ -1959,21 +1910,40 @@ namespace SilDev
             }
         }
 
-        public static bool RemoveWindowFromTaskbar(IntPtr hWnd)
+        public static void RemoveWindowBorders(IntPtr hWnd)
         {
-            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_HIDE);
-            var error = GetLastError("ShowWindow");
-            var style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE) | (int)WindowStyleFunc.WS_EX_TOOLWINDOW;
-            error += GetLastError("GetWindowLong");
+            var hMenu = UnsafeNativeMethods.GetMenu(hWnd);
+            if (hMenu != IntPtr.Zero)
+            {
+                var count = UnsafeNativeMethods.GetMenuItemCount(hMenu);
+                for (var i = 0; i < count; i++)
+                    UnsafeNativeMethods.RemoveMenu(hMenu, 0, ModifyMenuFunc.MF_BYPOSITION | ModifyMenuFunc.MF_REMOVE);
+            }
+            UnsafeNativeMethods.DrawMenuBar(hWnd);
+            var style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE);
+            style = style & ~(int)WindowStyleFunc.WS_SYSMENU;
+            style = style & ~(int)WindowStyleFunc.WS_CAPTION;
+            style = style & ~(int)WindowStyleFunc.WS_MINIMIZE;
+            style = style & ~(int)WindowStyleFunc.WS_MAXIMIZEBOX;
+            style = style & ~(int)WindowStyleFunc.WS_THICKFRAME;
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
+            style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE) | (int)WindowStyleFunc.WS_EX_DLGMODALFRAME;
             UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_EXSTYLE, (IntPtr)style);
-            error += GetLastError("SetWindowLong");
-            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_SHOW);
-            error += GetLastError("ShowWindow");
-            return error == 0;
         }
 
-        public static bool RemoveWindowMinMaxButtons(IntPtr hWnd) =>
-            DisableWindowMaximizeButton(hWnd) && DisableWindowMinimizeButton(hWnd);
+        public static void RemoveWindowFromTaskbar(IntPtr hWnd)
+        {
+            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_HIDE);
+            var style = UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_EXSTYLE) | (int)WindowStyleFunc.WS_EX_TOOLWINDOW;
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_EXSTYLE, (IntPtr)style);
+            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_SHOW);
+        }
+
+        public static void RemoveWindowMinMaxButtons(IntPtr hWnd)
+        {
+            DisableWindowMaximizeButton(hWnd);
+            DisableWindowMinimizeButton(hWnd);
+        }
 
         public static bool SendArgs(IntPtr hWnd, string args)
         {
@@ -1997,60 +1967,48 @@ namespace SilDev
             return true;
         }
 
-        public static bool SetCursorPos(IntPtr hWnd, Point point)
+        public static void SetCursorPos(IntPtr hWnd, Point point)
         {
             UnsafeNativeMethods.ClientToScreen(hWnd, ref point);
-            var error = GetLastError("ClientToScreen");
             UnsafeNativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
-            error += GetLastError("SetCursorPos");
-            return error == 0;
         }
 
-        public static bool SetCursorPos(IntPtr hWnd, int x, int y) =>
+        public static void SetCursorPos(IntPtr hWnd, int x, int y) =>
             SetCursorPos(hWnd, new Point(x, y));
 
-        public static bool SetWindowBorderlessFullscreen(IntPtr hWnd) =>
-            RemoveWindowBorders(hWnd) & SetWindowFullscreen(hWnd);
-
-        public static bool SetWindowFullscreen(IntPtr hWnd)
+        public static void SetWindowBorderlessFullscreen(IntPtr hWnd)
         {
-            UnsafeNativeMethods.MoveWindow(hWnd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, true);
-            return GetLastError("MoveWindow") == 0;
+            RemoveWindowBorders(hWnd);
+            SetWindowFullscreen(hWnd);
         }
 
-        public static bool SetWindowPos(IntPtr hWnd, Point point)
+        public static void SetWindowFullscreen(IntPtr hWnd) =>
+            UnsafeNativeMethods.MoveWindow(hWnd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, true);
+
+        public static void SetWindowPos(IntPtr hWnd, Point point)
         {
             var rect = new Rectangle();
             UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
-            var error = GetLastError("GetWindowRect");
             UnsafeNativeMethods.MoveWindow(hWnd, point.X, point.Y, rect.Width, rect.Height, false);
-            error += GetLastError("MoveWindow");
-            return error == 0;
         }
 
-        public static bool SetWindowPos(IntPtr hWnd, int x, int y) =>
+        public static void SetWindowPos(IntPtr hWnd, int x, int y) =>
             SetWindowPos(hWnd, new Point(x, y));
 
-        public static bool SetWindowSize(IntPtr hWnd, Size size)
+        public static void SetWindowSize(IntPtr hWnd, Size size)
         {
             var rect = new Rectangle();
             UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
-            var error = GetLastError("GetWindowRect");
             UnsafeNativeMethods.MoveWindow(hWnd, rect.X, rect.Y, size.Width, size.Height, true);
-            error += GetLastError("MoveWindow");
-            return error == 0;
         }
 
-        public static bool SetWindowSize(IntPtr hWnd, int width, int height) =>
+        public static void SetWindowSize(IntPtr hWnd, int width, int height) =>
             SetWindowSize(hWnd, new Size(width, height));
 
-        public static int ShowWindow(IntPtr hWnd)
+        public static void ShowWindow(IntPtr hWnd)
         {
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_RESTORE);
-            var error = GetLastError("ShowWindow");
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_SHOW);
-            error += GetLastError("ShowWindow");
-            return error;
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-28 08:25
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -251,7 +251,7 @@ namespace SilDev
                 {
                     var s = PathEx.Combine(path);
                     if (!File.Exists(s))
-                        throw new FileNotFoundException();
+                        throw new PathNotFoundException(s);
                     byte[] ba;
                     using (var fs = new FileStream(s, FileMode.Open))
                     {
@@ -537,7 +537,7 @@ namespace SilDev
                             if (c == (char)0x7a)
                             {
                                 if (n != 0)
-                                    throw new ArgumentException();
+                                    throw new EncoderFallbackException();
                                 for (var i = 0; i < 4; i++)
                                     DecodeBlock[i] = 0;
                                 ms.Write(DecodeBlock, 0, DecodeBlock.Length);
@@ -546,7 +546,7 @@ namespace SilDev
                             if (ca.Contains(c))
                                 continue;
                             if (c < (char)0x21 || c > (char)0x75)
-                                throw new ArgumentOutOfRangeException();
+                                throw new EncoderFallbackException();
                             t += (uint)((c - 33) * P85[n]);
                             n++;
                             if (n != EncodeBlock.Length)
@@ -560,7 +560,7 @@ namespace SilDev
                         if (n != 0)
                         {
                             if (n == 1)
-                                throw new NotSupportedException();
+                                throw new EncoderFallbackException();
                             n--;
                             t += P85[n];
                             for (var i = 0; i < n; i++)
@@ -856,7 +856,7 @@ namespace SilDev
                         foreach (var c in code)
                         {
                             if (_encodeTable.Count(e => e == (byte)c) == 0)
-                                throw new ArgumentOutOfRangeException();
+                                throw new EncoderFallbackException();
                             ia[0] = _decodeTable[(byte)c];
                             if (ia[0] == -1)
                                 continue;
@@ -1169,7 +1169,7 @@ namespace SilDev
                 {
                     var s = PathEx.Combine(path);
                     if (!File.Exists(s))
-                        throw new FileNotFoundException();
+                        throw new PathNotFoundException(s);
                     var ba = File.ReadAllBytes(s);
                     return EncryptByteArray(ba, password, salt, keySize);
                 }
@@ -1362,7 +1362,7 @@ namespace SilDev
                 {
                     var s = PathEx.Combine(path);
                     if (!File.Exists(s))
-                        throw new FileNotFoundException();
+                        throw new PathNotFoundException(s);
                     var ba = File.ReadAllBytes(s);
                     return DecryptByteArray(ba, password, salt, keySize);
                 }

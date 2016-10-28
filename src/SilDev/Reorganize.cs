@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-28 08:30
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -323,8 +323,9 @@ namespace SilDev
                 s = ba.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')).Join(s);
                 return s;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return string.Empty;
             }
         }
@@ -340,16 +341,17 @@ namespace SilDev
             try
             {
                 var s = str.RemoveChar(' ', ':', '\r', '\n');
-                if (s.Count(c => !"01".Contains(c)) > 0)
-                    throw new ArgumentException();
+                if (s.Any(c => !"01".Contains(c)))
+                    throw new ArgumentOutOfRangeException(nameof(s));
                 var bl = new List<byte>();
                 for (var i = 0; i < s.Length; i += 8)
                     bl.Add(Convert.ToByte(s.Substring(i, 8), 2));
                 s = Encoding.UTF8.GetString(bl.ToArray());
                 return s;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return string.Empty;
             }
         }
@@ -383,8 +385,9 @@ namespace SilDev
                     s = s.ToUpper();
                 return s;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return string.Empty;
             }
         }
@@ -433,8 +436,9 @@ namespace SilDev
                 var ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
                 return ba;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return null;
             }
         }
@@ -458,13 +462,16 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(nameof(str));
                 var ba = str.FromHexStringToByteArray();
                 if (ba == null)
-                    throw new ArgumentException();
+                    throw new ArgumentNullException(nameof(ba));
                 return Encoding.UTF8.GetString(ba);
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return string.Empty;
             }
         }
@@ -480,18 +487,21 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(nameof(str));
                 var s = str;
                 if (s.StartsWith("{") && s.EndsWith("}"))
                     s = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
                 var rc = new RectangleConverter();
                 var obj = rc.ConvertFrom(s);
                 if (obj == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(s));
                 var rect = (Rectangle)obj;
                 return rect;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return Rectangle.Empty;
             }
         }
@@ -507,18 +517,21 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(nameof(str));
                 var s = str;
                 if (s.StartsWith("{") && s.EndsWith("}"))
                     s = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
                 var pc = new PointConverter();
                 var obj = pc.ConvertFrom(s);
                 if (obj == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(obj));
                 var point = (Point)obj;
                 return point;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return new Point(int.MinValue, int.MinValue);
             }
         }
@@ -534,19 +547,20 @@ namespace SilDev
             try
             {
                 if (string.IsNullOrWhiteSpace(str))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(str));
                 var s = str;
                 if (s.StartsWith("{") && s.EndsWith("}"))
                     s = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
                 var sc = new SizeConverter();
                 var obj = sc.ConvertFrom(s);
                 if (obj == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(obj));
                 var size = (Size)obj;
                 return size;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return Size.Empty;
             }
         }
@@ -586,8 +600,9 @@ namespace SilDev
                 var ba = Encoding.UTF8.GetBytes(str);
                 return ba;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return null;
             }
         }
@@ -613,8 +628,9 @@ namespace SilDev
                 }
                 return ba;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return null;
             }
         }
@@ -632,8 +648,9 @@ namespace SilDev
                 var s = Encoding.UTF8.GetString(bytes);
                 return s;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return string.Empty;
             }
         }
@@ -653,8 +670,9 @@ namespace SilDev
                     img = Image.FromStream(ms);
                 return img;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex);
                 return null;
             }
         }
@@ -693,7 +711,7 @@ namespace SilDev
                         match = 0;
                 index = match;
                 if (index < 0)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(index));
                 var ba = new byte[bytes.Length - oldValue.Length + newValue.Length];
                 Buffer.BlockCopy(bytes, 0, ba, 0, index);
                 Buffer.BlockCopy(newValue, 0, ba, index, newValue.Length);

@@ -40,7 +40,7 @@ namespace SilDev.Forms
             try
             {
                 if (string.IsNullOrWhiteSpace(text))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(text));
                 var start = 0;
                 int index;
                 while ((index = linkLabel.Text.IndexOf(text, start, StringComparison.Ordinal)) > -1)

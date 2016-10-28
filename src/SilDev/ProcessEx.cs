@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2016-10-24 09:58
+// Version:  2016-10-28 08:29
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -86,9 +86,9 @@ namespace SilDev
             {
                 process.StartInfo.FileName = PathEx.Combine(process.StartInfo.FileName);
                 if (string.IsNullOrEmpty(process.StartInfo.FileName))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(process.StartInfo.FileName));
                 if (!File.Exists(process.StartInfo.FileName))
-                    throw new FileNotFoundException("File '" + process.StartInfo.FileName + "' not found.");
+                    throw new PathNotFoundException(process.StartInfo.FileName);
                 if (process.StartInfo.FileName.EndsWithEx(".lnk"))
                     process.Start();
                 else
@@ -98,7 +98,7 @@ namespace SilDev
                     {
                         var path = Path.GetDirectoryName(process.StartInfo.FileName);
                         if (string.IsNullOrEmpty(path))
-                            throw new ArgumentNullException();
+                            throw new ArgumentNullException(nameof(path));
                         process.StartInfo.WorkingDirectory = path;
                     }
                     if (!process.StartInfo.UseShellExecute && !process.StartInfo.CreateNoWindow && process.StartInfo.WindowStyle == ProcessWindowStyle.Hidden)
@@ -317,7 +317,7 @@ namespace SilDev
                 if (!cmd.StartsWithEx("/C"))
                     cmd = $"/C {cmd}";
                 if (cmd.Length <= 3)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(cmd));
                 var psi = new ProcessStartInfo
                 {
                     Arguments = cmd,

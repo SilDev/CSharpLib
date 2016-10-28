@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2016-10-21 08:27
+// Version:  2016-10-28 08:30
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -122,32 +122,24 @@ namespace SilDev
             {
                 path = PathEx.Combine(path);
                 if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(path));
                 if (!File.Exists(path))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 var ptrs = new IntPtr[1];
                 var file = PathEx.Combine(path);
                 if (!File.Exists(file))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(file);
                 WinApi.UnsafeNativeMethods.ExtractIconEx(file, index, large ? ptrs : new IntPtr[1], !large ? ptrs : new IntPtr[1], 1);
                 var ptr = ptrs[0];
                 if (ptr == IntPtr.Zero)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(ptr));
                 var ico = (Icon)Icon.FromHandle(ptr).Clone();
                 WinApi.UnsafeNativeMethods.DestroyIcon(ptr);
                 return ico;
             }
-            catch (ArgumentNullException ex)
-            {
-                Log.Write(ex);
-            }
-            catch (FileNotFoundException ex)
-            {
-                Log.Write(ex.Message + " (Path: '" + path + "'; Index: '" + index + "')", ex.StackTrace);
-            }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (Path: '" + path + "'; Index: '" + index + "')", ex.StackTrace);
+                Log.Write(ex);
             }
             return null;
         }
@@ -175,7 +167,7 @@ namespace SilDev
                 if (!File.Exists(path))
                     path = PathEx.Combine("%system%\\imageres.dll");
                 if (!File.Exists(path))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 var ico = GetIconFromFile(path, (int)index, large);
                 return ico;
             }
@@ -218,9 +210,9 @@ namespace SilDev
             {
                 path = PathEx.Combine(path);
                 if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(path));
                 if (!File.Exists(path))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 var shfi = new WinApi.SHFILEINFO();
                 var flags = WinApi.GetFileInfoFunc.SHGFI_ICON | WinApi.GetFileInfoFunc.SHGFI_USEFILEATTRIBUTES;
                 flags |= large ? WinApi.GetFileInfoFunc.SHGFI_LARGEICON : WinApi.GetFileInfoFunc.SHGFI_SMALLICON;
@@ -229,17 +221,9 @@ namespace SilDev
                 WinApi.UnsafeNativeMethods.DestroyIcon(shfi.hIcon);
                 return ico;
             }
-            catch (ArgumentNullException ex)
-            {
-                Log.Write(ex);
-            }
-            catch (FileNotFoundException ex)
-            {
-                Log.Write(ex.Message + " (Path: '" + path + "')", ex.StackTrace);
-            }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (Path: '" + path + "')", ex.StackTrace);
+                Log.Write(ex);
             }
             return null;
         }
@@ -263,10 +247,10 @@ namespace SilDev
             {
                 var path = PathEx.Combine(destPath);
                 if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(path));
                 var dir = Path.GetDirectoryName(path);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(dir));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 using (var ms = new MemoryStream(resData))

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2016-10-25 15:31
+// Version:  2016-10-28 08:25
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -225,7 +225,7 @@ namespace SilDev
             try
             {
                 if (string.IsNullOrWhiteSpace(newName))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(newName));
                 IntPtr offset, buffer;
                 GetPrincipalPointers(out offset, out buffer);
                 var len = Marshal.ReadInt16(offset);
@@ -233,7 +233,7 @@ namespace SilDev
                     PrincipalName = Marshal.PtrToStringUni(buffer, len / 2);
                 var principalDir = Path.GetDirectoryName(PrincipalName);
                 if (string.IsNullOrEmpty(principalDir))
-                    throw new DirectoryNotFoundException();
+                    throw new PathNotFoundException(principalDir);
                 var newPrincipalName = Path.Combine(principalDir, newName);
                 if (newPrincipalName.Length > PrincipalName.Length)
                     throw new ArgumentException("The new principal name cannot be longer than the original one.");
@@ -282,7 +282,7 @@ namespace SilDev
             try
             {
                 if (!File.Exists(PathEx.Combine(path)))
-                    throw new FileNotFoundException();
+                    throw new PathNotFoundException(path);
                 if (Environment.OSVersion.Version.Major >= 10)
                     ChangePrincipalName("explorer.exe");
                 var sb = new StringBuilder(255);
@@ -615,7 +615,7 @@ namespace SilDev
                 var src = PathEx.Combine(srcDir);
                 var di = new DirectoryInfo(src);
                 if (!di.Exists)
-                    throw new DirectoryNotFoundException();
+                    throw new PathNotFoundException(di.FullName);
                 var dest = PathEx.Combine(destDir);
                 if (!Directory.Exists(dest))
                     Directory.CreateDirectory(dest);
@@ -629,7 +629,7 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (Source: '" + srcDir + "'; Destination: '" + destDir + "')", ex.StackTrace);
+                Log.Write(ex);
                 return false;
             }
         }

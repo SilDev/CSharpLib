@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2016-10-20 12:09
+// Version:  2016-10-28 08:27
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -180,7 +180,7 @@ namespace SilDev
             try
             {
                 if (string.IsNullOrWhiteSpace(variable))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(variable));
                 variable = variable.RemoveChar('%');
                 if (variable.EqualsEx("currentdir", "curdir"))
                     value = PathEx.LocalDir;
@@ -202,8 +202,6 @@ namespace SilDev
                 if (lower)
                     value = value?.ToLower();
             }
-            catch (ArgumentNullException) { }
-            catch (ArgumentException) { }
             catch (Exception ex)
             {
                 Log.Write(ex);
@@ -223,7 +221,7 @@ namespace SilDev
             try
             {
                 if (string.IsNullOrWhiteSpace(path))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(path));
                 if (path.EqualsEx(GetVariableValue("curdir")))
                     variable = "CurDir";
                 else
@@ -244,8 +242,6 @@ namespace SilDev
                 if (!string.IsNullOrWhiteSpace(variable))
                     variable = $"%{variable}%";
             }
-            catch (ArgumentNullException) { }
-            catch (ArgumentException) { }
             catch (Exception ex)
             {
                 Log.Write(ex);

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-28 08:27
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Web.Script.Serialization;
 
@@ -38,9 +39,11 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                if (obj == null)
+                    throw new ArgumentNullException(nameof(obj));
                 var s = PathEx.Combine(path);
-                if (string.IsNullOrEmpty(s))
-                    throw new ArgumentNullException();
                 var json = new JavaScriptSerializer().Serialize(obj);
                 File.WriteAllText(s, json);
                 return json;
@@ -83,6 +86,7 @@ namespace SilDev
         /// <param name="keys">
         ///     An array of keys to navigate to the exact position of the value.
         /// </param>
+        [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
         public static string Read(string path, params string[] keys)
         {
             try
@@ -90,7 +94,6 @@ namespace SilDev
                 var s = PathEx.Combine(path);
                 s = File.ReadAllText(s);
                 dynamic json = new JavaScriptSerializer().DeserializeObject(s);
-                // ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (var k in keys)
                     json = json[k];
                 return json;

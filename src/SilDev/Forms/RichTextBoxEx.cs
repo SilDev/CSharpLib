@@ -48,7 +48,7 @@ namespace SilDev.Forms
             try
             {
                 if (string.IsNullOrWhiteSpace(text))
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(text));
                 var selected = new Point(richTextBox.SelectionStart, richTextBox.SelectionLength);
                 var startIndex = 0;
                 int start;

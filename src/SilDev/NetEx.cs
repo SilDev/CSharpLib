@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-28 08:28
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -99,7 +99,7 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (URI: '" + uri + "')", ex.StackTrace);
+                Log.Write(ex);
             }
             return roundtripTime;
         }
@@ -188,7 +188,7 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (URI: '" + uri + "')", ex.StackTrace);
+                Log.Write(ex);
             }
             return statusCode >= 100 && statusCode < 400;
         }
@@ -219,7 +219,7 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (URI: '" + srcUri + "')", ex.StackTrace);
+                Log.Write(ex);
             }
             return contentLength > 0;
         }
@@ -265,7 +265,7 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (URI: '" + srcUri + "')", ex.StackTrace);
+                Log.Write(ex);
             }
             return lastModified;
         }
@@ -310,7 +310,7 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex.Message + " (URI: '" + srcUri + "')", ex.StackTrace);
+                Log.Write(ex);
             }
             return name;
         }
@@ -352,7 +352,7 @@ namespace SilDev
                     if (File.Exists(path))
                         File.Delete(path);
                     if (!FileIsAvailable(srcUri, userName, password))
-                        throw new FileNotFoundException();
+                        throw new PathNotFoundException(srcUri.ToString());
                     using (var wc = new WebClient())
                     {
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
@@ -363,7 +363,7 @@ namespace SilDev
                 }
                 catch (Exception ex)
                 {
-                    Log.Write(ex.Message + " (URI: '" + srcUri + "')", ex.StackTrace);
+                    Log.Write(ex);
                     return false;
                 }
             }
@@ -410,12 +410,12 @@ namespace SilDev
                         ba = wc.DownloadData(srcUri);
                     }
                     if (ba == null)
-                        throw new Exception("No downloadable data found.");
+                        throw new ArgumentNullException(nameof(ba));
                     return ba;
                 }
                 catch (Exception ex)
                 {
-                    Log.Write(ex.Message + " (URI: '" + srcUri + "')", ex.StackTrace);
+                    Log.Write(ex);
                     return null;
                 }
             }
@@ -459,12 +459,12 @@ namespace SilDev
                         s = wc.DownloadString(srcUri);
                     }
                     if (string.IsNullOrEmpty(s))
-                        throw new Exception("No downloadable string found.");
+                        throw new ArgumentNullException(nameof(s));
                     return s;
                 }
                 catch (Exception ex)
                 {
-                    Log.Write(ex.Message + " (URI: '" + srcUri + "')", ex.StackTrace);
+                    Log.Write(ex);
                     return string.Empty;
                 }
             }
@@ -606,7 +606,7 @@ namespace SilDev
                 }
                 catch (Exception ex)
                 {
-                    Log.Write(ex.Message + " (URI: '" + srcUri + "')", ex.StackTrace);
+                    Log.Write(ex);
                     HasCanceled = true;
                     _stopwatch.Reset();
                 }
