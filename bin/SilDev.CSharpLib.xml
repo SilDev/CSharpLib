@@ -9,169 +9,19 @@
                 Provides static methods and base classes used for the comparison of two or more objects.
             </summary>
         </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String[])">
+        <member name="M:SilDev.Comparison.IndexOf``1(``0[],``0[])">
             <summary>
-                Determines whether a specified string occurs within this sequence of strings. A
-                parameter specifies the culture, case, and sort rules used in the comparison.
+                Searches for the specified one-dimensional array and returns the index of its first
+                occurrence in another one-dimensional array.
             </summary>
-            <param name="a">
-                The sequence to browse.
+            <typeparam name="T">
+                The type of the elements of the array.
+            </typeparam>
+            <param name="source">
+                The one-dimensional array to search.
             </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="bs">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.String[])">
-            <summary>
-                Determines whether a specified string occurs within this sequence of strings. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="a">
-                The sequence to browse.
-            </param>
-            <param name="bs">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether a specified substring occurs within this string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="a">
-                The string to browse.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="ba">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.String[])">
-            <summary>
-                Determines whether a specified substring occurs within this string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="a">
-                The string to browse.
-            </param>
-            <param name="ba">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.Char[])">
-            <summary>
-                Determines whether a specified characters occurs within this string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="a">
-                The string to browse.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="ba">
-                The sequence of characters to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.Char[])">
-            <summary>
-                Determines whether a specified characters occurs within this string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="a">
-                The string to browse.
-            </param>
-            <param name="ba">
-                The sequence of characters to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether the beginning of this string matches a string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="a">
-                The string to check.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="bs">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.String[])">
-            <summary>
-                Determines whether the beginning of this string matches a string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="a">
-                The string to check.
-            </param>
-            <param name="bs">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether the end of this string matches a string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="a">
-                The string to check.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="bs">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String[])">
-            <summary>
-                Determines whether the end of this string matches a string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="a">
-                The string to check.
-            </param>
-            <param name="bs">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether this string instance is the same as a string of the specified string
-                array. A parameter specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="a">
-                The first string to compare.
-            </param>
-            <param name="bs">
-                The sequence of strings to compare with the first.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.String[])">
-            <summary>
-                Determines whether this string instance is the same as a string of the specified string
-                array. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="a">
-                The first string to compare.
-            </param>
-            <param name="bs">
-                The sequence of strings to compare with the first.
+            <param name="target">
+                The one-dimensional array to locate.
             </param>
         </member>
         <member name="M:SilDev.Comparison.IsBetween``1(``0,``0,``0)">
@@ -191,6 +41,185 @@
                 The end index value.
             </param>
         </member>
+        <member name="M:SilDev.Comparison.ContainsEx``1(System.Collections.Generic.IEnumerable{``0},``0[][])">
+            <summary>
+                Determines whether a specified sequence of elements occurs within this sequence of
+                elements.
+            </summary>
+            <typeparam name="T">
+                The type of the elements of the array.
+            </typeparam>
+            <param name="source">
+                The sequence of elements to browse.
+            </param>
+            <param name="targets">
+                The sequence of elements to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String[])">
+            <summary>
+                Determines whether a specified string occurs within this sequence of strings. A
+                parameter specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The sequence to browse.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.String[])">
+            <summary>
+                Determines whether a specified string occurs within this sequence of strings. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The sequence to browse.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether a specified substring occurs within this string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.String[])">
+            <summary>
+                Determines whether a specified substring occurs within this string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.Char[])">
+            <summary>
+                Determines whether a specified characters occurs within this string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of characters to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.Char[])">
+            <summary>
+                Determines whether a specified characters occurs within this string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="targets">
+                The sequence of characters to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether the beginning of this string matches a string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.String[])">
+            <summary>
+                Determines whether the beginning of this string matches a string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether the end of this string matches a string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String[])">
+            <summary>
+                Determines whether the end of this string matches a string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether this string instance is the same as a string of the specified string
+                array. A parameter specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The first string to compare.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.String[])">
+            <summary>
+                Determines whether this string instance is the same as a string of the specified string
+                array. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The first string to compare.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare with the first.
+            </param>
+        </member>
         <member name="T:SilDev.Comparison.AlphanumericComparer">
             <summary>
                 Provides a base class for comparison.
@@ -207,8 +236,8 @@
         </member>
         <member name="M:SilDev.Comparison.AlphanumericComparer.Compare(System.Object,System.Object)">
             <summary>
-                Compare two specified objects and returns an integer that indicates their
-                relative position in the sort order.
+                Compare two specified objects and returns an integer that indicates their relative
+                position in the sort order.
             </summary>
             <param name="a">
                 The first object to compare.
