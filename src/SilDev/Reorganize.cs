@@ -692,32 +692,30 @@ namespace SilDev
         /// <param name="newValue">
         ///     The sequence of bytes to replace all occurrences of oldValue.
         /// </param>
-        public static byte[] ReplaceBytes(this byte[] bytes, byte[] oldValue, byte[] newValue)
+        public static byte[] Replace(this byte[] bytes, byte[] oldValue, byte[] newValue)
         {
             try
             {
-                var index = -1;
-                var match = 0;
-                for (var i = 0; i < bytes.Length; i++)
-                    if (bytes[i] == oldValue[match])
-                    {
-                        if (match == oldValue.Length - 1)
+                if (bytes.Length == 0)
+                    throw new ArgumentNullException(nameof(bytes));
+                if (oldValue.Length == 0)
+                    throw new ArgumentNullException(nameof(oldValue));
+                byte[] ba;
+                using (var ms = new MemoryStream())
+                {
+                    int i;
+                    for (i = 0; i <= bytes.Length - oldValue.Length; i++)
+                        if (!oldValue.Where((t, j) => bytes[i + j] != t).Any())
                         {
-                            // ReSharper disable RedundantAssignment
-                            index += i - match;
-                            break;
+                            ms.Write(newValue, 0, newValue.Length);
+                            i += oldValue.Length - 1;
                         }
-                        match++;
-                    }
-                    else
-                        match = 0;
-                index = match;
-                if (index < 0)
-                    throw new ArgumentNullException(nameof(index));
-                var ba = new byte[bytes.Length - oldValue.Length + newValue.Length];
-                Buffer.BlockCopy(bytes, 0, ba, 0, index);
-                Buffer.BlockCopy(newValue, 0, ba, index, newValue.Length);
-                Buffer.BlockCopy(bytes, index + oldValue.Length, ba, index + newValue.Length, bytes.Length - (index + oldValue.Length));
+                        else
+                            ms.WriteByte(bytes[i]);
+                    for (; i < bytes.Length; i++)
+                        ms.WriteByte(bytes[i]);
+                    ba = ms.ToArray();
+                }
                 return ba;
             }
             catch (Exception ex)
