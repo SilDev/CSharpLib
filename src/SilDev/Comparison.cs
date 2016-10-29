@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2016-10-18 23:33
+// Version:  2016-10-29 11:31
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -25,241 +25,26 @@ namespace SilDev
     public static class Comparison
     {
         /// <summary>
-        ///     Determines whether a specified string occurs within this sequence of strings. A
-        ///     parameter specifies the culture, case, and sort rules used in the comparison.
+        ///     Searches for the specified one-dimensional array and returns the index of its first
+        ///     occurrence in another one-dimensional array.
         /// </summary>
-        /// <param name="a">
-        ///     The sequence to browse.
+        /// <typeparam name="T">
+        ///     The type of the elements of the array.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The one-dimensional array to search.
         /// </param>
-        /// <param name="comparisonType">
-        ///     One of the enumeration values that specifies the rules for the search.
+        /// <param name="target">
+        ///     The one-dimensional array to locate.
         /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this IEnumerable<string> a, StringComparison comparisonType, params string[] bs)
+        public static IEnumerable<int> IndexOf<T>(T[] source, T[] target)
         {
-            try
-            {
-                var r = a.Any(x => bs.Any(y => string.Equals(x, y, comparisonType)));
-                return r;
-            }
-            catch
-            {
-                return false;
-            }
+            if (target == null || source.Length < target.Length)
+                yield break;
+            for (var i = 0; i < source.Length - target.Length + 1; i++)
+                if (!target.Where((data, index) => !source[i + index].Equals(data)).Any())
+                    yield return i;
         }
-
-        /// <summary>
-        ///     Determines whether a specified string occurs within this sequence of strings. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The sequence to browse.
-        /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this IEnumerable<string> a, params string[] bs) =>
-            a.ContainsEx(StringComparison.OrdinalIgnoreCase, bs);
-
-        /// <summary>
-        ///     Determines whether a specified substring occurs within this string. A parameter
-        ///     specifies the culture, case, and sort rules used in the comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to browse.
-        /// </param>
-        /// <param name="comparisonType">
-        ///     One of the enumeration values that specifies the rules for the search.
-        /// </param>
-        /// <param name="ba">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this string a, StringComparison comparisonType, params string[] ba)
-        {
-            try
-            {
-                var r = ba.Any(x => a.IndexOf(x, 0, comparisonType) != -1);
-                return r;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether a specified substring occurs within this string. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to browse.
-        /// </param>
-        /// <param name="ba">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this string a, params string[] ba) =>
-            a.ContainsEx(StringComparison.OrdinalIgnoreCase, ba);
-
-        /// <summary>
-        ///     Determines whether a specified characters occurs within this string. A parameter
-        ///     specifies the culture, case, and sort rules used in the comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to browse.
-        /// </param>
-        /// <param name="comparisonType">
-        ///     One of the enumeration values that specifies the rules for the search.
-        /// </param>
-        /// <param name="ba">
-        ///     The sequence of characters to seek.
-        /// </param>
-        public static bool ContainsEx(this string a, StringComparison comparisonType, params char[] ba)
-        {
-            try
-            {
-                var r = ba.Any(x => a.IndexOf(x.ToString(), 0, comparisonType) != -1);
-                return r;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether a specified characters occurs within this string. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to browse.
-        /// </param>
-        /// <param name="ba">
-        ///     The sequence of characters to seek.
-        /// </param>
-        public static bool ContainsEx(this string a, params char[] ba) =>
-            a.ContainsEx(StringComparison.OrdinalIgnoreCase, ba);
-
-        /// <summary>
-        ///     Determines whether the beginning of this string matches a string. A parameter
-        ///     specifies the culture, case, and sort rules used in the comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to check.
-        /// </param>
-        /// <param name="comparisonType">
-        ///     One of the enumeration values that specifies the rules for the search.
-        /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to compare seek.
-        /// </param>
-        public static bool StartsWithEx(this string a, StringComparison comparisonType, params string[] bs)
-        {
-            try
-            {
-                var r = bs.Any(b => a.StartsWith(b, comparisonType));
-                return r;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether the beginning of this string matches a string. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to check.
-        /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to compare seek.
-        /// </param>
-        public static bool StartsWithEx(this string a, params string[] bs) =>
-            a.StartsWithEx(StringComparison.OrdinalIgnoreCase, bs);
-
-        /// <summary>
-        ///     Determines whether the end of this string matches a string. A parameter
-        ///     specifies the culture, case, and sort rules used in the comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to check.
-        /// </param>
-        /// <param name="comparisonType">
-        ///     One of the enumeration values that specifies the rules for the search.
-        /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to compare seek.
-        /// </param>
-        public static bool EndsWithEx(this string a, StringComparison comparisonType, params string[] bs)
-        {
-            try
-            {
-                var r = bs.Any(b => a.EndsWith(b, comparisonType));
-                return r;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether the end of this string matches a string. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The string to check.
-        /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to compare seek.
-        /// </param>
-        public static bool EndsWithEx(this string a, params string[] bs) =>
-            a.EndsWithEx(StringComparison.OrdinalIgnoreCase, bs);
-
-        /// <summary>
-        ///     Determines whether this string instance is the same as a string of the specified string
-        ///     array. A parameter specifies the culture, case, and sort rules used in the comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The first string to compare.
-        /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to compare with the first.
-        /// </param>
-        public static bool EqualsEx(this string a, StringComparison comparisonType, params string[] bs)
-        {
-            try
-            {
-                var r = bs.Any(b => string.Equals(a, b, comparisonType));
-                return r;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether this string instance is the same as a string of the specified string
-        ///     array. The <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="a">
-        ///     The first string to compare.
-        /// </param>
-        /// <param name="bs">
-        ///     The sequence of strings to compare with the first.
-        /// </param>
-        public static bool EqualsEx(this string a, params string[] bs) =>
-            a.EqualsEx(StringComparison.OrdinalIgnoreCase, bs);
 
         /// <summary>
         ///     Determines whether the value of this object instance is between two specified values.
@@ -292,6 +77,268 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Determines whether a specified sequence of elements occurs within this sequence of
+        ///     elements.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The type of the elements of the array.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The sequence of elements to browse.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of elements to seek.
+        /// </param>
+        public static bool ContainsEx<T>(this IEnumerable<T> source, params T[][] targets)
+        {
+            try
+            {
+                var r = targets.Any(x => IndexOf(source.ToArray(), x).Any(y => y >= 0));
+                return r;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether a specified string occurs within this sequence of strings. A
+        ///     parameter specifies the culture, case, and sort rules used in the comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The sequence to browse.
+        /// </param>
+        /// <param name="comparisonType">
+        ///     One of the enumeration values that specifies the rules for the search.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to seek.
+        /// </param>
+        public static bool ContainsEx(this IEnumerable<string> source, StringComparison comparisonType, params string[] targets)
+        {
+            try
+            {
+                var r = source.Any(x => targets.Any(y => string.Equals(x, y, comparisonType)));
+                return r;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether a specified string occurs within this sequence of strings. The
+        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+        ///     comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The sequence to browse.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to seek.
+        /// </param>
+        public static bool ContainsEx(this IEnumerable<string> source, params string[] targets) =>
+            source.ContainsEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
+        ///     Determines whether a specified substring occurs within this string. A parameter
+        ///     specifies the culture, case, and sort rules used in the comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to browse.
+        /// </param>
+        /// <param name="comparisonType">
+        ///     One of the enumeration values that specifies the rules for the search.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to seek.
+        /// </param>
+        public static bool ContainsEx(this string source, StringComparison comparisonType, params string[] targets)
+        {
+            try
+            {
+                var r = targets.Any(x => source.IndexOf(x, 0, comparisonType) != -1);
+                return r;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether a specified substring occurs within this string. The
+        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+        ///     comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to browse.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to seek.
+        /// </param>
+        public static bool ContainsEx(this string source, params string[] targets) =>
+            source.ContainsEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
+        ///     Determines whether a specified characters occurs within this string. A parameter
+        ///     specifies the culture, case, and sort rules used in the comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to browse.
+        /// </param>
+        /// <param name="comparisonType">
+        ///     One of the enumeration values that specifies the rules for the search.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of characters to seek.
+        /// </param>
+        public static bool ContainsEx(this string source, StringComparison comparisonType, params char[] targets)
+        {
+            try
+            {
+                var r = targets.Any(x => source.IndexOf(x.ToString(), 0, comparisonType) != -1);
+                return r;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether a specified characters occurs within this string. The
+        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+        ///     comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to browse.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of characters to seek.
+        /// </param>
+        public static bool ContainsEx(this string source, params char[] targets) =>
+            source.ContainsEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
+        ///     Determines whether the beginning of this string matches a string. A parameter
+        ///     specifies the culture, case, and sort rules used in the comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to check.
+        /// </param>
+        /// <param name="comparisonType">
+        ///     One of the enumeration values that specifies the rules for the search.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to compare seek.
+        /// </param>
+        public static bool StartsWithEx(this string source, StringComparison comparisonType, params string[] targets)
+        {
+            try
+            {
+                var r = targets.Any(b => source.StartsWith(b, comparisonType));
+                return r;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether the beginning of this string matches a string. The
+        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+        ///     comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to check.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to compare seek.
+        /// </param>
+        public static bool StartsWithEx(this string source, params string[] targets) =>
+            source.StartsWithEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
+        ///     Determines whether the end of this string matches a string. A parameter
+        ///     specifies the culture, case, and sort rules used in the comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to check.
+        /// </param>
+        /// <param name="comparisonType">
+        ///     One of the enumeration values that specifies the rules for the search.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to compare seek.
+        /// </param>
+        public static bool EndsWithEx(this string source, StringComparison comparisonType, params string[] targets)
+        {
+            try
+            {
+                var r = targets.Any(b => source.EndsWith(b, comparisonType));
+                return r;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether the end of this string matches a string. The
+        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to check.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to compare seek.
+        /// </param>
+        public static bool EndsWithEx(this string source, params string[] targets) =>
+            source.EndsWithEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
+        ///     Determines whether this string instance is the same as a string of the specified string
+        ///     array. A parameter specifies the culture, case, and sort rules used in the comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The first string to compare.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to compare with the first.
+        /// </param>
+        public static bool EqualsEx(this string source, StringComparison comparisonType, params string[] targets)
+        {
+            try
+            {
+                var r = targets.Any(b => string.Equals(source, b, comparisonType));
+                return r;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether this string instance is the same as a string of the specified string
+        ///     array. The <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+        ///     comparison.
+        /// </summary>
+        /// <param name="source">
+        ///     The first string to compare.
+        /// </param>
+        /// <param name="targets">
+        ///     The sequence of strings to compare with the first.
+        /// </param>
+        public static bool EqualsEx(this string source, params string[] targets) =>
+            source.EqualsEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
         ///     Provides a base class for comparison.
         /// </summary>
         public class AlphanumericComparer : IComparer<object>
@@ -311,8 +358,8 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Compare two specified objects and returns an integer that indicates their
-            ///     relative position in the sort order.
+            ///     Compare two specified objects and returns an integer that indicates their relative
+            ///     position in the sort order.
             /// </summary>
             /// <param name="a">
             ///     The first object to compare.
