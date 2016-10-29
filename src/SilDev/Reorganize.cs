@@ -343,10 +343,12 @@ namespace SilDev
                 var s = str.RemoveChar(' ', ':', '\r', '\n');
                 if (s.Any(c => !"01".Contains(c)))
                     throw new ArgumentOutOfRangeException(nameof(s));
-                var bl = new List<byte>();
-                for (var i = 0; i < s.Length; i += 8)
-                    bl.Add(Convert.ToByte(s.Substring(i, 8), 2));
-                s = Encoding.UTF8.GetString(bl.ToArray());
+                using (var ms = new MemoryStream())
+                {
+                    for (var i = 0; i < s.Length; i += 8)
+                        ms.WriteByte(Convert.ToByte(s.Substring(i, 8), 2));
+                    s = Encoding.UTF8.GetString(ms.ToArray());
+                }
                 return s;
             }
             catch (Exception ex)
