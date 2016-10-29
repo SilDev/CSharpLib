@@ -1801,7 +1801,7 @@
                 The sequence of bytes to convert.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ReplaceBytes(System.Byte[],System.Byte[],System.Byte[])">
+        <member name="M:SilDev.Reorganize.Replace(System.Byte[],System.Byte[],System.Byte[])">
             <summary>
                 Returns a new sequence of bytes in which all occurrences of a specified sequence of bytes
                 in this instance are replaced with another specified sequence of bytes.
