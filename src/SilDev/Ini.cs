@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2016-10-28 08:27
+// Version:  2016-10-30 20:21
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -452,7 +452,7 @@ namespace SilDev
                             output = sizeParser;
                         break;
                     case IniValueKind.StringArray:
-                        var stringsParser = value.FromHexString()?.Split("\0\0\0")?.Reverse().Skip(1).Reverse().Select(x => x?.ToString().FromHexString()).ToArray();
+                        var stringsParser = value.FromHexStringToByteArray()?.TextFromZip()?.Split('\0').Reverse().Skip(1).Reverse().Select(x => x?.ToString().FromHexString()).ToArray();
                         if (stringsParser?.Length > 0)
                             output = stringsParser;
                         break;
@@ -1238,11 +1238,10 @@ namespace SilDev
                     sb.Append(((byte[])value).ToHexString());
                 if (value is string[])
                 {
-                    const string separator = "\0\0\0";
                     var sa = (string[])value;
                     for (var i = 0; i < sa.Length; i++)
                         sa[i] = sa[i].ToHexString();
-                    sb.Append((sa.Join(separator) + separator).ToHexString());
+                    sb.Append((sa.Join('\0') + '\0').TextToZip().ToHexString());
                 }
                 if (sb.Length == 0)
                     sb.Append(value);
