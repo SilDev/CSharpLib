@@ -401,6 +401,48 @@
                 The drop down menu that opens for the splitted area.
             </param>
         </member>
+        <member name="T:SilDev.Forms.ColorDialogEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.ColorDialog"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ColorDialogEx.#ctor(System.Windows.Forms.IWin32Window,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Forms.ColorDialogEx"/> class.
+            </summary>
+            <param name="owner">
+                An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own the modal
+                dialog box.
+            </param>
+            <param name="title">
+                The new title of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ColorDialogEx.#ctor(System.Drawing.Point,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Forms.ColorDialogEx"/> class.
+            </summary>
+            <param name="point">
+                The new position of the window.
+            </param>
+            <param name="title">
+                The new title of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ColorDialogEx.#ctor(System.Int32,System.Int32,System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Forms.ColorDialogEx"/> class.
+            </summary>
+            <param name="x">
+                The new position of the left side of the window.
+            </param>
+            <param name="y">
+                The new position of the top of the window.
+            </param>
+            <param name="title">
+                The new title of the window.
+            </param>
+        </member>
         <member name="T:SilDev.Forms.ContextMenuStripEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> class.
@@ -8677,6 +8719,257 @@
             <exception cref="T:System.ComponentModel.Win32Exception">
             </exception>
         </member>
+        <member name="M:SilDev.WinApi.SendArgs(System.IntPtr,System.String)">
+            <summary>
+                Sends the specified arguments to the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="args">
+                The arguments to send.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.GetSystemThemeColor(System.Boolean)">
+            <summary>
+                Gets the current theme color of the operating system.
+            </summary>
+            <param name="alpha">
+                true to get also the alpha channel; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.RefreshVisibleTrayArea">
+            <summary>
+                Refreshes the visible notification area of the taskbar.
+            </summary>
+        </member>
+        <member name="M:SilDev.WinApi.GetActiveWindowTitle">
+            <summary>
+                Gets the window title from the foreground window (the window with which the user is currently working).
+            </summary>
+        </member>
+        <member name="M:SilDev.WinApi.FindWindowByCaption(System.String)">
+            <summary>
+                Retrieves a handle to the top-level window whose window name match the specified strings. This
+                function does not search child windows. This function does not perform a case-sensitive search.
+            </summary>
+            <param name="lpWindowName">
+                The window name (the window's title). If this parameter is NULL, all window names match.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.GetProcessBasicInformation(System.IntPtr)">
+            <summary>
+                Gets basic process information about the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.GetWindowPlacement(System.IntPtr)">
+            <summary>
+                Gets information about the placement of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.MoveWindow(System.IntPtr,System.Drawing.Rectangle)">
+            <summary>
+                Changes the position and dimensions of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="nRect">
+                The new position and size of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.MoveWindow(System.IntPtr,System.Drawing.Point,System.Drawing.Size)">
+            <summary>
+                Changes the position and dimensions of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="point">
+                The new position of the window.
+            </param>
+            <param name="size">
+                The new size of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.MoveWindow(System.IntPtr,System.Drawing.Point)">
+            <summary>
+                Changes the position of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="point">
+                The new position of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.MoveWindow(System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+                Changes the position of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="x">
+                The new position of the left side of the window.
+            </param>
+            <param name="y">
+                The new position of the top of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.RemoveWindowBorders(System.IntPtr)">
+            <summary>
+                Removes the borders and title bar of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.RemoveWindowFromTaskbar(System.IntPtr)">
+            <summary>
+                Removes specified window from taskbar.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.DisableWindowMaximizeButton(System.IntPtr)">
+            <summary>
+                Disables the maximize button of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.DisableWindowMinimizeButton(System.IntPtr)">
+            <summary>
+                Disables the minimize button of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.RemoveWindowMinMaxButtons(System.IntPtr)">
+            <summary>
+                Removes the maximize and minimize button of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetCursorPos(System.IntPtr,System.Drawing.Point)">
+            <summary>
+                Moves the cursor to the specified coordinates.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="point">
+                The new coordinates of the cursor.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetCursorPos(System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+                Moves the cursor to the specified coordinates.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="x">
+                The new x-coordinate of the cursor.
+            </param>
+            <param name="y">
+                The new y-coordinate of the cursor.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetWindowBorderlessFullscreen(System.IntPtr)">
+            <summary>
+                Changes the position and dimensions of the specified window to fill the entire screen.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetWindowFullscreen(System.IntPtr)">
+            <summary>
+                Changes the position and dimensions of the specified window to fill the entire screen.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetWindowPos(System.IntPtr,System.Drawing.Point)">
+            <summary>
+                Changes the position of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="point">
+                The new position of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetWindowPos(System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+                Changes the position of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="x">
+                The new position of the left side of the window.
+            </param>
+            <param name="y">
+                The new position of the top of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetWindowSize(System.IntPtr,System.Drawing.Size)">
+            <summary>
+                Changes the dimensions of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="size">
+                The new size of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.SetWindowSize(System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+                Changes the dimensions of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="width">
+                The new width of the window.
+            </param>
+            <param name="height">
+                The new height of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.HideWindow(System.IntPtr)">
+            <summary>
+                Minimizes and hides the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.ShowWindow(System.IntPtr)">
+            <summary>
+                Activates the window and displays it.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
         <member name="T:SilDev.WinApi.ServiceState">
             <summary>
                 Provides enumerated values of the current state of the service.
@@ -10373,7 +10666,7 @@
                 the terminating null character, or zero if the string resource does not exist.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.UnsafeNativeMethods.LocalAlloc(System.Int32,System.UIntPtr)">
+        <member name="M:SilDev.WinApi.UnsafeNativeMethods.LocalAlloc(SilDev.WinApi.LocalAllocFuncAttr,System.UIntPtr)">
             <summary>
                 Allocates the specified number of bytes from the heap.
             </summary>
@@ -10397,7 +10690,7 @@
             </summary>
             <param name="hMem">
                 A handle to the local memory object. This handle is returned by either the
-                <see cref="M:SilDev.WinApi.UnsafeNativeMethods.LocalAlloc(System.Int32,System.UIntPtr)"/> function.
+                <see cref="M:SilDev.WinApi.UnsafeNativeMethods.LocalAlloc(SilDev.WinApi.LocalAllocFuncAttr,System.UIntPtr)"/> function.
             </param>
             <returns>
                 If the function succeeds, the return value is NULL.
