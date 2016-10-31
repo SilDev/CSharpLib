@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2016-10-28 08:30
+// Version:  2016-10-31 16:15
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -1791,56 +1791,52 @@ namespace SilDev
                 throw new Win32Exception(code);
         }
 
-        public static void DisableWindowMaximizeButton(IntPtr hWnd)
+        /// <summary>
+        ///     Sends the specified arguments to the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="args">
+        ///     The arguments to send.
+        /// </param>
+        public static bool SendArgs(IntPtr hWnd, string args)
         {
-            var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x10000L);
-            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
-        }
-
-        public static void DisableWindowMinimizeButton(IntPtr hWnd)
-        {
-            var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x20000L);
-            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
-        }
-
-        public static bool ExistsWindowByCaption(string lpWindowName) =>
-            UnsafeNativeMethods.FindWindowByCaption(IntPtr.Zero, lpWindowName) != IntPtr.Zero;
-
-        public static IntPtr FindWindowByCaption(string lpWindowName) =>
-            UnsafeNativeMethods.FindWindowByCaption(IntPtr.Zero, lpWindowName);
-
-        public static string GetActiveWindowTitle()
-        {
-            var sb = new StringBuilder(256);
-            var hWnd = UnsafeNativeMethods.GetForegroundWindow();
-            return UnsafeNativeMethods.GetWindowText(hWnd, sb, 256) > 0 ? sb.ToString() : string.Empty;
-        }
-
-        public static PROCESS_BASIC_INFORMATION GetProcessBasicInformation(IntPtr hWnd)
-        {
-            PROCESS_BASIC_INFORMATION pbi;
-            IntPtr retLen;
-            var status = UnsafeNativeMethods.NtQueryInformationProcess(hWnd, 0, out pbi, (uint)Marshal.SizeOf(typeof(PROCESS_BASIC_INFORMATION)), out retLen);
+            var cds = new COPYDATASTRUCT();
             try
             {
-                if (status >= 0xc0000000)
-                    throw new ArgumentOutOfRangeException(nameof(status));
+                cds.cbData = (args.Length + 1) * 2;
+                cds.lpData = UnsafeNativeMethods.LocalAlloc(LocalAllocFuncAttr.LMEM_ZEROINIT, (UIntPtr)cds.cbData);
+                Marshal.Copy(args.ToCharArray(), 0, cds.lpData, args.Length);
+                cds.dwData = new IntPtr(1);
+                UnsafeNativeMethods.SendMessage(hWnd, (int)WindowMenuFunc.WM_COPYDATA, IntPtr.Zero, ref cds);
+                return true;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
+                return false;
             }
-            return pbi;
+            finally
+            {
+                cds.Dispose();
+            }
         }
 
-        public static Color GetSystemThemeColor(bool alphaChannel = false)
+        /// <summary>
+        ///     Gets the current theme color of the operating system.
+        /// </summary>
+        /// <param name="alpha">
+        ///     true to get also the alpha channel; otherwise, false.
+        /// </param>
+        public static Color GetSystemThemeColor(bool alpha = false)
         {
             try
             {
                 DWM_COLORIZATION_PARAMS parameters;
                 SafeNativeMethods.DwmGetColorizationParameters(out parameters);
                 var color = Color.FromArgb(int.Parse(parameters.clrColor.ToString("X"), NumberStyles.HexNumber));
-                if (!alphaChannel)
+                if (!alpha)
                     color = Color.FromArgb(color.R, color.G, color.B);
                 return color;
             }
@@ -1850,39 +1846,9 @@ namespace SilDev
             }
         }
 
-        public static WINDOWPLACEMENT GetWindowPlacement(IntPtr hWnd)
-        {
-            var placement = new WINDOWPLACEMENT();
-            UnsafeNativeMethods.GetWindowPlacement(hWnd, ref placement);
-            return placement;
-        }
-
-        public static void HideWindow(IntPtr hWnd)
-        {
-            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_MINIMIZE);
-            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_HIDE);
-        }
-
-        public static void MoveWindow(IntPtr hWnd, Rectangle nRect)
-        {
-            var cRect = new Rectangle();
-            UnsafeNativeMethods.GetWindowRect(hWnd, ref cRect);
-            if (cRect == nRect)
-                return;
-            if (nRect.Width <= 0 || nRect.Height <= 0)
-                nRect.Size = cRect.Size;
-            UnsafeNativeMethods.MoveWindow(hWnd, nRect.X, nRect.Y, nRect.Width, nRect.Height, cRect.Size != nRect.Size);
-        }
-
-        public static void MoveWindow(IntPtr hWnd, Point point, Size size) =>
-            MoveWindow(hWnd, new Rectangle { Location = point, Size = size });
-
-        public static void MoveWindow(IntPtr hWnd, Point point) =>
-            MoveWindow(hWnd, new Rectangle { Location = point, Size = new Size(0, 0) });
-
-        public static void MoveWindow(IntPtr hWnd, int x, int y) =>
-            MoveWindow(hWnd, new Point(0, 0));
-
+        /// <summary>
+        ///     Refreshes the visible notification area of the taskbar.
+        /// </summary>
         public static bool RefreshVisibleTrayArea()
         {
             try
@@ -1910,6 +1876,130 @@ namespace SilDev
             }
         }
 
+        /// <summary>
+        ///     Gets the window title from the foreground window (the window with which the user is currently working).
+        /// </summary>
+        public static string GetActiveWindowTitle()
+        {
+            var sb = new StringBuilder(256);
+            var hWnd = UnsafeNativeMethods.GetForegroundWindow();
+            return UnsafeNativeMethods.GetWindowText(hWnd, sb, 256) > 0 ? sb.ToString() : string.Empty;
+        }
+
+        /// <summary>
+        ///     Retrieves a handle to the top-level window whose window name match the specified strings. This
+        ///     function does not search child windows. This function does not perform a case-sensitive search.
+        /// </summary>
+        /// <param name="lpWindowName">
+        ///     The window name (the window's title). If this parameter is NULL, all window names match.
+        /// </param>
+        public static IntPtr FindWindowByCaption(string lpWindowName) =>
+            UnsafeNativeMethods.FindWindowByCaption(IntPtr.Zero, lpWindowName);
+
+        /// <summary>
+        ///     Gets basic process information about the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        public static PROCESS_BASIC_INFORMATION GetProcessBasicInformation(IntPtr hWnd)
+        {
+            PROCESS_BASIC_INFORMATION pbi;
+            IntPtr retLen;
+            var status = UnsafeNativeMethods.NtQueryInformationProcess(hWnd, 0, out pbi, (uint)Marshal.SizeOf(typeof(PROCESS_BASIC_INFORMATION)), out retLen);
+            try
+            {
+                if (status >= 0xc0000000)
+                    throw new ArgumentOutOfRangeException(nameof(status));
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return pbi;
+        }
+
+        /// <summary>
+        ///     Gets information about the placement of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        public static WINDOWPLACEMENT GetWindowPlacement(IntPtr hWnd)
+        {
+            var placement = new WINDOWPLACEMENT();
+            UnsafeNativeMethods.GetWindowPlacement(hWnd, ref placement);
+            return placement;
+        }
+
+        /// <summary>
+        ///     Changes the position and dimensions of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="nRect">
+        ///     The new position and size of the window.
+        /// </param>
+        public static void MoveWindow(IntPtr hWnd, Rectangle nRect)
+        {
+            var cRect = new Rectangle();
+            UnsafeNativeMethods.GetWindowRect(hWnd, ref cRect);
+            if (cRect == nRect)
+                return;
+            if (nRect.Width <= 0 || nRect.Height <= 0)
+                nRect.Size = cRect.Size;
+            UnsafeNativeMethods.MoveWindow(hWnd, nRect.X, nRect.Y, nRect.Width, nRect.Height, cRect.Size != nRect.Size);
+        }
+
+        /// <summary>
+        ///     Changes the position and dimensions of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="point">
+        ///     The new position of the window.
+        /// </param>
+        /// <param name="size">
+        ///     The new size of the window.
+        /// </param>
+        public static void MoveWindow(IntPtr hWnd, Point point, Size size) =>
+            MoveWindow(hWnd, new Rectangle { Location = point, Size = size });
+
+        /// <summary>
+        ///     Changes the position of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="point">
+        ///     The new position of the window.
+        /// </param>
+        public static void MoveWindow(IntPtr hWnd, Point point) =>
+            MoveWindow(hWnd, new Rectangle { Location = point, Size = new Size(0, 0) });
+
+        /// <summary>
+        ///     Changes the position of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="x">
+        ///     The new position of the left side of the window.
+        /// </param>
+        /// <param name="y">
+        ///     The new position of the top of the window.
+        /// </param>
+        public static void MoveWindow(IntPtr hWnd, int x, int y) =>
+            MoveWindow(hWnd, new Point(x, y));
+
+        /// <summary>
+        ///     Removes the borders and title bar of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
         public static void RemoveWindowBorders(IntPtr hWnd)
         {
             var hMenu = UnsafeNativeMethods.GetMenu(hWnd);
@@ -1931,6 +2021,12 @@ namespace SilDev
             UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_EXSTYLE, (IntPtr)style);
         }
 
+        /// <summary>
+        ///     Removes specified window from taskbar.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
         public static void RemoveWindowFromTaskbar(IntPtr hWnd)
         {
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_HIDE);
@@ -1939,52 +2035,102 @@ namespace SilDev
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_SHOW);
         }
 
+        /// <summary>
+        ///     Disables the maximize button of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        public static void DisableWindowMaximizeButton(IntPtr hWnd)
+        {
+            var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x10000L);
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
+        }
+
+        /// <summary>
+        ///     Disables the minimize button of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        public static void DisableWindowMinimizeButton(IntPtr hWnd)
+        {
+            var style = (int)(UnsafeNativeMethods.GetWindowLong(hWnd, WindowLongFunc.GWL_STYLE) & ~0x20000L);
+            UnsafeNativeMethods.SetWindowLongPtr(hWnd, WindowLongFunc.GWL_STYLE, (IntPtr)style);
+        }
+
+        /// <summary>
+        ///     Removes the maximize and minimize button of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
         public static void RemoveWindowMinMaxButtons(IntPtr hWnd)
         {
             DisableWindowMaximizeButton(hWnd);
             DisableWindowMinimizeButton(hWnd);
         }
 
-        public static bool SendArgs(IntPtr hWnd, string args)
-        {
-            var cds = new COPYDATASTRUCT();
-            try
-            {
-                cds.cbData = (args.Length + 1) * 2;
-                cds.lpData = UnsafeNativeMethods.LocalAlloc(0x40, (UIntPtr)cds.cbData);
-                Marshal.Copy(args.ToCharArray(), 0, cds.lpData, args.Length);
-                cds.dwData = (IntPtr)1;
-                UnsafeNativeMethods.SendMessage(hWnd, (int)WindowMenuFunc.WM_COPYDATA, IntPtr.Zero, ref cds);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            finally
-            {
-                cds.Dispose();
-            }
-            return true;
-        }
-
+        /// <summary>
+        ///     Moves the cursor to the specified coordinates.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="point">
+        ///     The new coordinates of the cursor.
+        /// </param>
         public static void SetCursorPos(IntPtr hWnd, Point point)
         {
             UnsafeNativeMethods.ClientToScreen(hWnd, ref point);
             UnsafeNativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
         }
 
+        /// <summary>
+        ///     Moves the cursor to the specified coordinates.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="x">
+        ///     The new x-coordinate of the cursor.
+        /// </param>
+        /// <param name="y">
+        ///     The new y-coordinate of the cursor.
+        /// </param>
         public static void SetCursorPos(IntPtr hWnd, int x, int y) =>
             SetCursorPos(hWnd, new Point(x, y));
 
+        /// <summary>
+        ///     Changes the position and dimensions of the specified window to fill the entire screen.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
         public static void SetWindowBorderlessFullscreen(IntPtr hWnd)
         {
             RemoveWindowBorders(hWnd);
             SetWindowFullscreen(hWnd);
         }
 
+        /// <summary>
+        ///     Changes the position and dimensions of the specified window to fill the entire screen.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
         public static void SetWindowFullscreen(IntPtr hWnd) =>
             UnsafeNativeMethods.MoveWindow(hWnd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, true);
 
+        /// <summary>
+        ///     Changes the position of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="point">
+        ///     The new position of the window.
+        /// </param>
         public static void SetWindowPos(IntPtr hWnd, Point point)
         {
             var rect = new Rectangle();
@@ -1992,19 +2138,71 @@ namespace SilDev
             UnsafeNativeMethods.MoveWindow(hWnd, point.X, point.Y, rect.Width, rect.Height, false);
         }
 
+        /// <summary>
+        ///     Changes the position of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="x">
+        ///     The new position of the left side of the window.
+        /// </param>
+        /// <param name="y">
+        ///     The new position of the top of the window.
+        /// </param>
         public static void SetWindowPos(IntPtr hWnd, int x, int y) =>
             SetWindowPos(hWnd, new Point(x, y));
 
+        /// <summary>
+        ///     Changes the dimensions of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="size">
+        ///     The new size of the window.
+        /// </param>
         public static void SetWindowSize(IntPtr hWnd, Size size)
         {
             var rect = new Rectangle();
             UnsafeNativeMethods.GetWindowRect(hWnd, ref rect);
-            UnsafeNativeMethods.MoveWindow(hWnd, rect.X, rect.Y, size.Width, size.Height, true);
+            if (rect.Size != size)
+                UnsafeNativeMethods.MoveWindow(hWnd, rect.X, rect.Y, size.Width, size.Height, true);
         }
 
+        /// <summary>
+        ///     Changes the dimensions of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        /// <param name="width">
+        ///     The new width of the window.
+        /// </param>
+        /// <param name="height">
+        ///     The new height of the window.
+        /// </param>
         public static void SetWindowSize(IntPtr hWnd, int width, int height) =>
             SetWindowSize(hWnd, new Size(width, height));
 
+        /// <summary>
+        ///     Minimizes and hides the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
+        public static void HideWindow(IntPtr hWnd)
+        {
+            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_MINIMIZE);
+            UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_HIDE);
+        }
+
+        /// <summary>
+        ///     Activates the window and displays it.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window.
+        /// </param>
         public static void ShowWindow(IntPtr hWnd)
         {
             UnsafeNativeMethods.ShowWindow(hWnd, ShowWindowFunc.SW_RESTORE);
@@ -3807,7 +4005,7 @@ namespace SilDev
             ///     memory object.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
-            public static extern IntPtr LocalAlloc(int flag, UIntPtr size);
+            public static extern IntPtr LocalAlloc(LocalAllocFuncAttr flag, UIntPtr size);
 
             /// <summary>
             ///     Frees the specified local memory object and invalidates its handle.
