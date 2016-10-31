@@ -46,6 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="SilDev\Forms\ColorDialogEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SilDev\Comparison.cs" />
     <Compile Include="SilDev\EnvironmentEx.cs" />
     <Compile Include="SilDev\Forms\ButtonEx.cs" />

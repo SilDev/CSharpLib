@@ -49,6 +49,9 @@
     <Compile Include="SilDev\Comparison.cs" />
     <Compile Include="SilDev\EnvironmentEx.cs" />
     <Compile Include="SilDev\Forms\ButtonEx.cs" />
+    <Compile Include="SilDev\Forms\ColorDialogEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SilDev\Forms\ContextMenuStripEx.cs" />
     <Compile Include="SilDev\Forms\ControlEx.cs" />
     <Compile Include="SilDev\Forms\MessageBoxEx.cs" />
