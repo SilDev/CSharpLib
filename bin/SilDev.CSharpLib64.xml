@@ -5899,72 +5899,6 @@
                 The value type.
             </param>
         </member>
-        <member name="M:SilDev.Reg.GetAllTreeValues(SilDev.Reg.RegKey,System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.Dictionary`2"/> with all subkey entries
-                and values of the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetAllTreeValues(System.String,System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.Dictionary`2"/> with all subkeys entries
-                and values of the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetAllTreeValues(System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.Dictionary`2"/> with all subkeys entries
-                and values of the specified registry path.
-            </summary>
-            <param name="keyPath">
-                The full path of the key to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetValues(SilDev.Reg.RegKey,System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.Dictionary`2"/> with all entries
-                and values of the top subkey of the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetValues(System.String,System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.Dictionary`2"/> with all entries
-                and values of the top subkey of the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetValues(System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.Dictionary`2"/> with all entries
-                and values of the top subkey of the specified registry path.
-            </summary>
-            <param name="keyPath">
-                The full path of the key to read.
-            </param>
-        </member>
         <member name="M:SilDev.Reg.ReadValue(SilDev.Reg.RegKey,System.String,System.String,SilDev.Reg.RegValueKind)">
             <summary>
                 Retrives the value associated with the specified entry of the specified registry path.
@@ -6303,7 +6237,7 @@
             <param name="path">
                 The full path of the file to import.
             </param>
-            <param name="contents">
+            <param name="content">
                 The full content of the file to import.
             </param>
             <param name="elevated">
@@ -6315,70 +6249,36 @@
                 Creates a new REG file with the specified content, imports it into the registry, and then
                 deletes the file.
             </summary>
-            <param name="contents">
+            <param name="content">
                 The full content of the file to import.
             </param>
             <param name="elevated">
                 true to import with highest user permissions; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Reg.ImportFromIniFile(System.String)">
+        <member name="M:SilDev.Reg.ExportKeys(System.String,System.Boolean,System.String[])">
             <summary>
-                Imports the content of an INI file, created by <see cref="M:SilDev.Reg.ExportToIniFile(SilDev.Reg.RegKey,System.String,System.String)"/>,
-                to the registry.
+                Exports the full content of the specified registry paths into an REG file.
             </summary>
-            <param name="path">
-                The full path of the file to import.
+            <param name="keyPaths">
+                The full paths of the keys to export.
             </param>
-        </member>
-        <member name="M:SilDev.Reg.ExportToIniFile(SilDev.Reg.RegKey,System.String,System.String)">
-            <summary>
-                Exports the full content of the specified registry path into an INI file.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey to export.
-            </param>
-            <param name="subKey">
-                The path of the subkey to to export.
-            </param>
-            <param name="destIniPath">
-                The full path of the file to create or override.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ExportToIniFile(System.String,System.String,System.String)">
-            <summary>
-                Exports the full content of the specified registry path into an INI file.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey to export.
-            </param>
-            <param name="subKey">
-                The path of the subkey to to export.
-            </param>
-            <param name="destIniPath">
-                The full path of the file to create or override.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ExportToIniFile(System.String)">
-            <summary>
-                Exports the full content of the specified registry path into an INI file.
-            </summary>
-            <param name="keyPath">
-                The full path of the key to export.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ExportFile(System.String,System.String,System.Boolean)">
-            <summary>
-                Exports the full content of the specified registry path into an REG file.
-            </summary>
-            <param name="keyPath">
-                The full path of the key to export.
-            </param>
-            <param name="destFilePath">
+            <param name="destPath">
                 The full path of the file to create or override.
             </param>
             <param name="elevated">
                 true to export with highest user permissions; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.ExportKeys(System.String,System.String[])">
+            <summary>
+                Exports the full content of the specified registry paths into an REG file.
+            </summary>
+            <param name="keyPaths">
+                The full paths of the keys to export.
+            </param>
+            <param name="destPath">
+                The full path of the file to create or override.
             </param>
         </member>
         <member name="T:SilDev.ResourcesEx">

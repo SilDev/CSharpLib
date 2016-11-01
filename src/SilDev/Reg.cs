@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2016-10-28 08:29
+// Version:  2016-11-01 14:27
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,7 +21,7 @@ namespace SilDev
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
+    using System.Text;
     using Microsoft.Win32;
 
     /// <summary>
@@ -708,137 +708,6 @@ namespace SilDev
         public static bool ValueExist(string keyPath, string entry, RegValueKind type = RegValueKind.None) =>
             ValueExist(keyPath.GetKey(), keyPath.GetSubKey(), entry, type);
 
-        private static Dictionary<string, string> GetAllTreeValues(object key, string subKey)
-        {
-            var tree = new Dictionary<string, string>();
-            foreach (var sKey in GetSubKeyTree(key, subKey))
-            {
-                if (string.IsNullOrEmpty(sKey))
-                    continue;
-                var entries = GetValues(key, sKey);
-                if (entries.Keys.Count <= 0)
-                    continue;
-                if (!tree.ContainsKey(sKey))
-                    tree.Add(sKey, sKey.EncryptToMd5());
-                foreach (var entry in entries)
-                    try
-                    {
-                        tree.Add(entry.Key, entry.Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
-            }
-            return tree;
-        }
-
-        /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="Dictionary{T,T}"/> with all subkey entries
-        ///     and values of the specified registry path.
-        /// </summary>
-        /// <param name="key">
-        ///     The root key that contains the subkey.
-        /// </param>
-        /// <param name="subKey">
-        ///     The path of the subkey to read.
-        /// </param>
-        public static Dictionary<string, string> GetAllTreeValues(RegKey key, string subKey) =>
-            GetAllTreeValues(key as object, subKey);
-
-        /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="Dictionary{T,T}"/> with all subkeys entries
-        ///     and values of the specified registry path.
-        /// </summary>
-        /// <param name="key">
-        ///     The root key that contains the subkey.
-        /// </param>
-        /// <param name="subKey">
-        ///     The path of the subkey to read.
-        /// </param>
-        public static Dictionary<string, string> GetAllTreeValues(string key, string subKey) =>
-            GetAllTreeValues(key as object, subKey);
-
-        /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="Dictionary{T,T}"/> with all subkeys entries
-        ///     and values of the specified registry path.
-        /// </summary>
-        /// <param name="keyPath">
-        ///     The full path of the key to read.
-        /// </param>
-        public static Dictionary<string, string> GetAllTreeValues(string keyPath) =>
-            GetAllTreeValues(keyPath.GetKey(), keyPath.GetSubKey());
-
-        private static Dictionary<string, string> GetValues(object key, string subKey)
-        {
-            var values = new Dictionary<string, string>();
-            try
-            {
-                if (!SubKeyExist(key, subKey))
-                    throw new ArgumentException();
-                using (var rKey = key.AsRegistryKey().OpenSubKey(subKey))
-                {
-                    var vNames = rKey?.GetValueNames();
-                    if (vNames == null)
-                        throw new ArgumentNullException(nameof(vNames));
-                    foreach (var ent in rKey.GetValueNames())
-                        try
-                        {
-                            var value = ReadStringValue(key, subKey, ent);
-                            if (string.IsNullOrWhiteSpace(value))
-                                continue;
-                            var type = rKey.GetValueKind(ent);
-                            values.Add(ent, $"ValueKind_{type}::{(type == RegistryValueKind.MultiString ? value.ToHexString() : value)}");
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Write(ex);
-                        }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return values;
-        }
-
-        /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="Dictionary{T,T}"/> with all entries
-        ///     and values of the top subkey of the specified registry path.
-        /// </summary>
-        /// <param name="key">
-        ///     The root key that contains the subkey.
-        /// </param>
-        /// <param name="subKey">
-        ///     The path of the subkey to read.
-        /// </param>
-        public static Dictionary<string, string> GetValues(RegKey key, string subKey) =>
-            GetValues(key as object, subKey);
-
-        /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="Dictionary{T,T}"/> with all entries
-        ///     and values of the top subkey of the specified registry path.
-        /// </summary>
-        /// <param name="key">
-        ///     The root key that contains the subkey.
-        /// </param>
-        /// <param name="subKey">
-        ///     The path of the subkey to read.
-        /// </param>
-        public static Dictionary<string, string> GetValues(string key, string subKey) =>
-            GetValues(key as object, subKey);
-
-        /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="Dictionary{T,T}"/> with all entries
-        ///     and values of the top subkey of the specified registry path.
-        /// </summary>
-        /// <param name="keyPath">
-        ///     The full path of the key to read.
-        /// </param>
-        public static Dictionary<string, string> GetValues(string keyPath) =>
-            GetValues(keyPath.GetKey(), keyPath.GetSubKey());
-
         private static object ReadValue(object key, string subKey, string entry, object type = null)
         {
             if (!SubKeyExist(key, subKey))
@@ -1011,35 +880,6 @@ namespace SilDev
             using (var rKey = key.AsRegistryKey().OpenSubKey(subKey, true))
                 try
                 {
-                    if (value is string)
-                        if ((value as string).StartsWith("ValueKind") && type.AsRegistryValueKind() == RegistryValueKind.None)
-                        {
-                            var valKind = Regex.Match(value.ToString(), "ValueKind_(.+?)::").Groups[1].Value;
-                            var val = (value as string).RemoveText($"ValueKind_{valKind}::");
-                            switch (valKind)
-                            {
-                                case "String":
-                                    rKey?.SetValue(entry, val, RegistryValueKind.String);
-                                    return;
-                                case "Binary":
-                                    rKey?.SetValue(entry, val.FromHexStringToByteArray(), RegistryValueKind.Binary);
-                                    return;
-                                case "DWord":
-                                    rKey?.SetValue(entry, val, RegistryValueKind.DWord);
-                                    return;
-                                case "QWord":
-                                    rKey?.SetValue(entry, val, RegistryValueKind.QWord);
-                                    return;
-                                case "ExpandString":
-                                    rKey?.SetValue(entry, val, RegistryValueKind.ExpandString);
-                                    return;
-                                case "MultiString":
-                                    rKey?.SetValue(entry, val.FromHexString().SplitNewLine(), RegistryValueKind.MultiString);
-                                    return;
-                                default:
-                                    return;
-                            }
-                        }
                     if (type.AsRegistryValueKind() == RegistryValueKind.None)
                         if (value is string)
                             rKey?.SetValue(entry, value, RegistryValueKind.String);
@@ -1320,29 +1160,10 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(path));
                 if (!File.Exists(path))
                     throw new FileNotFoundException();
-                if (Path.GetExtension(path).EqualsEx(".ini"))
-                {
-                    using (var p = ProcessEx.Start("%system%\\reg.exe", $"IMPORT \"{path}\"", elevated, ProcessWindowStyle.Hidden, false))
-                        if (!p?.HasExited == true)
-                            p?.WaitForExit(1000);
-                    return true;
-                }
-                var root = Ini.Read("Root", "Sections", path);
-                if (!root.Contains(","))
-                    return false;
-                foreach (var section in root.Split(','))
-                {
-                    var rootKey = Ini.Read(section, $"{section}_RootKey", path);
-                    var subKey = Ini.Read(section, $"{section}_SubKey", path);
-                    var values = Ini.Read(section, $"{section}_Values", path);
-                    if (string.IsNullOrWhiteSpace(rootKey) || string.IsNullOrWhiteSpace(subKey) || string.IsNullOrWhiteSpace(values))
-                        continue;
-                    foreach (var value in values.Split(','))
-                    {
-                        CreateNewSubKey(rootKey.AsRegistryKey(), subKey);
-                        WriteValue(rootKey.AsRegistryKey(), subKey, value, Ini.Read(section, value, path));
-                    }
-                }
+                Log.Write($"IMPORT: \"{path}\"");
+                using (var p = ProcessEx.Start("%system%\\reg.exe", $"IMPORT \"{path}\"", elevated, ProcessWindowStyle.Hidden, false))
+                    if (!p?.HasExited == true)
+                        p?.WaitForExit(3000);
                 return true;
             }
             catch (Exception ex)
@@ -1359,19 +1180,19 @@ namespace SilDev
         /// <param name="path">
         ///     The full path of the file to import.
         /// </param>
-        /// <param name="contents">
+        /// <param name="content">
         ///     The full content of the file to import.
         /// </param>
         /// <param name="elevated">
         ///     true to import with highest user permissions; otherwise, false.
         /// </param>
-        public static bool ImportFile(string path, string[] contents, bool elevated = false)
+        public static bool ImportFile(string path, string[] content, bool elevated = false)
         {
             try
             {
                 if (File.Exists(path))
                     File.Delete(path);
-                File.WriteAllLines(path, contents);
+                File.WriteAllLines(path, content);
                 var imported = ImportFile(path, elevated);
                 if (File.Exists(path))
                     File.Delete(path);
@@ -1388,17 +1209,17 @@ namespace SilDev
         ///     Creates a new REG file with the specified content, imports it into the registry, and then
         ///     deletes the file.
         /// </summary>
-        /// <param name="contents">
+        /// <param name="content">
         ///     The full content of the file to import.
         /// </param>
         /// <param name="elevated">
         ///     true to import with highest user permissions; otherwise, false.
         /// </param>
-        public static bool ImportFile(string[] contents, bool elevated = false)
+        public static bool ImportFile(string[] content, bool elevated = false)
         {
             try
             {
-                return ImportFile(Path.Combine(Path.GetTempPath(), $"{PathEx.GetTempDirName()}.reg"), contents, elevated);
+                return ImportFile(Path.Combine(Path.GetTempPath(), $"{PathEx.GetTempDirName()}.reg"), content, elevated);
             }
             catch (Exception ex)
             {
@@ -1408,121 +1229,61 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Imports the content of an INI file, created by <see cref="ExportToIniFile(RegKey, string, string)"/>,
-        ///     to the registry.
+        ///     Exports the full content of the specified registry paths into an REG file.
         /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to import.
+        /// <param name="keyPaths">
+        ///     The full paths of the keys to export.
         /// </param>
-        public static bool ImportFromIniFile(string path)
-        {
-            try
-            {
-                if (Path.GetExtension(path).EqualsEx("ini"))
-                    return ImportFile(path);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return false;
-        }
-
-        private static void ExportToIniFile(object key, string subKey, string destIniPath = null)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(destIniPath))
-                    destIniPath = PathEx.Combine(PathEx.LocalDir, $"{Process.GetCurrentProcess().ProcessName}.ini");
-                var path = Path.GetDirectoryName(destIniPath);
-                if (!string.IsNullOrEmpty(path) && !Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                if (File.Exists(destIniPath))
-                    File.Delete(destIniPath);
-                File.Create(destIniPath).Close();
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return;
-            }
-            var section = string.Empty;
-            foreach (var ent in GetAllTreeValues(key, subKey))
-            {
-                if (ent.Value == ent.Key.EncryptToMd5())
-                {
-                    var sections = Ini.Read("Root", "Sections", destIniPath);
-                    section = ent.Value;
-                    Ini.Write("Root", "Sections", $"{(!string.IsNullOrEmpty(sections) ? $"{sections}," : string.Empty)}{section}", destIniPath);
-                    Ini.Write(section, $"{section}_RootKey", key.AsRegistryKey(), destIniPath);
-                    Ini.Write(section, $"{section}_SubKey", ent.Key, destIniPath);
-                    continue;
-                }
-                if (string.IsNullOrWhiteSpace(section))
-                    continue;
-                var values = Ini.Read(section, $"{section}_Values", destIniPath);
-                Ini.Write(section, $"{section}_Values", $"{(!string.IsNullOrEmpty(values) ? $"{values}," : string.Empty)}{ent.Key}", destIniPath);
-                Ini.Write(section, ent.Key, ent.Value, destIniPath);
-            }
-        }
-
-        /// <summary>
-        ///     Exports the full content of the specified registry path into an INI file.
-        /// </summary>
-        /// <param name="key">
-        ///     The root key that contains the subkey to export.
-        /// </param>
-        /// <param name="subKey">
-        ///     The path of the subkey to to export.
-        /// </param>
-        /// <param name="destIniPath">
-        ///     The full path of the file to create or override.
-        /// </param>
-        public static void ExportToIniFile(RegKey key, string subKey, string destIniPath = null) =>
-            ExportToIniFile(key as object, subKey, destIniPath);
-
-        /// <summary>
-        ///     Exports the full content of the specified registry path into an INI file.
-        /// </summary>
-        /// <param name="key">
-        ///     The root key that contains the subkey to export.
-        /// </param>
-        /// <param name="subKey">
-        ///     The path of the subkey to to export.
-        /// </param>
-        /// <param name="destIniPath">
-        ///     The full path of the file to create or override.
-        /// </param>
-        public static void ExportToIniFile(string key, string subKey, string destIniPath = null) =>
-            ExportToIniFile(key as object, subKey, destIniPath);
-
-        /// <summary>
-        ///     Exports the full content of the specified registry path into an INI file.
-        /// </summary>
-        /// <param name="keyPath">
-        ///     The full path of the key to export.
-        /// </param>
-        public static void ExportToIniFile(string keyPath) =>
-            ExportToIniFile(keyPath.GetKey(), keyPath.GetSubKey());
-
-        /// <summary>
-        ///     Exports the full content of the specified registry path into an REG file.
-        /// </summary>
-        /// <param name="keyPath">
-        ///     The full path of the key to export.
-        /// </param>
-        /// <param name="destFilePath">
+        /// <param name="destPath">
         ///     The full path of the file to create or override.
         /// </param>
         /// <param name="elevated">
         ///     true to export with highest user permissions; otherwise, false.
         /// </param>
-        public static void ExportFile(string keyPath, string destFilePath, bool elevated = false)
+        public static void ExportKeys(string destPath, bool elevated, params string[] keyPaths)
         {
-            var dir = Path.GetDirectoryName(destFilePath);
-            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-            ProcessEx.Start("%system32%\\reg.exe", $"EXPORT \"{keyPath}\" \"{destFilePath}\" /y", elevated, ProcessWindowStyle.Hidden);
+            try
+            {
+                var destDir = Path.GetDirectoryName(destPath);
+                if (string.IsNullOrEmpty(destDir))
+                    throw new ArgumentNullException(nameof(destDir));
+                if (!Directory.Exists(destDir))
+                    Directory.CreateDirectory(destDir);
+                File.WriteAllText(destPath, "Windows Registry Editor Version 5.00" + Environment.NewLine, Encoding.GetEncoding(1252));
+                foreach (var key in keyPaths)
+                {
+                    var path = Path.Combine(Path.GetTempPath(), PathEx.GetTempFileName("reg", 8));
+                    Log.Write($"EXPORT: \"{key}\" TO \"{path}\"");
+                    using (var p = ProcessEx.Start("%system%\\reg.exe", $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
+                        if (!p?.HasExited == true)
+                            p?.WaitForExit(3000);
+                    File.AppendAllText(destPath, File.ReadAllLines(path).Skip(1).Join(Environment.NewLine), Encoding.GetEncoding(1252));
+                    try
+                    {
+                        File.Delete(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
         }
+
+        /// <summary>
+        ///     Exports the full content of the specified registry paths into an REG file.
+        /// </summary>
+        /// <param name="keyPaths">
+        ///     The full paths of the keys to export.
+        /// </param>
+        /// <param name="destPath">
+        ///     The full path of the file to create or override.
+        /// </param>
+        public static void ExportKeys(string destPath, params string[] keyPaths) =>
+            ExportKeys(destPath, false, keyPaths);
     }
 }
