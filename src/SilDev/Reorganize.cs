@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2016-10-29 10:27
+// Version:  2016-11-02 20:25
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
@@ -25,14 +26,14 @@ namespace SilDev
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     Provides static methods for converting or reorganizing data.
+    ///     Provides static methods for converting or reorganizing of data.
     /// </summary>
     public static class Reorganize
     {
         /// <summary>
-        ///     Provides enumerated values of various new line formats.
+        ///     Provides enumerated values of new line formats.
         /// </summary>
-        public enum NewLineFormat
+        public enum NewLineFormats
         {
             CarriageReturn = '\u000d',
             FormFeed = '\u000c',
@@ -51,7 +52,110 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the current <see cref="NewLineFormat"/> to another <see cref="NewLineFormat"/>.
+        ///     Provides units of digital information.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum SizeUnits
+        {
+            /// <summary>
+            ///     Stands for byte.
+            /// </summary>
+            Byte = 0,
+
+            /// <summary>
+            ///     Stands for kilobyte or kibibyte.
+            /// </summary>
+            KB = 1,
+
+            /// <summary>
+            ///     Stands for megabyte or mebibyte.
+            /// </summary>
+            MB = 2,
+
+            /// <summary>
+            ///     Stands for gigabyte or gibibyte.
+            /// </summary>
+            GB = 3,
+
+            /// <summary>
+            ///     Stands for terabyte or tebibyte.
+            /// </summary>
+            TB = 4,
+
+            /// <summary>
+            ///     Stands for petabyte or pebibyte.
+            /// </summary>
+            PB = 5,
+
+            /// <summary>
+            ///     Stands for exabyte or exbibyte.
+            /// </summary>
+            EB = 6,
+
+            /// <summary>
+            ///     Stands for zettabyte or zebibyte.
+            /// </summary>
+            ZB = 7,
+
+            /// <summary>
+            ///     Stands for yottabyte or yobibyte.
+            /// </summary>
+            YB = 8
+        }
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in the specified <see cref="SizeUnits"/>. 
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="unit">
+        ///     The new unit.
+        /// </param>
+        /// <param name="binary">
+        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        /// </param>
+        /// <param name="suffix">
+        ///     true to show the size unit suffix; otherwise, false.
+        /// </param>
+        public static string FormatDataSize(this long value, SizeUnits unit, bool binary = true, bool suffix = true)
+        {
+            if (value < 0)
+                return "-" + FormatDataSize(Math.Abs(value), unit, binary, suffix);
+            if (value == 0)
+                return "0,00 bytes";
+            string s = $"{value / Math.Pow(binary ? 1024 : 1000, (int)unit):0.00} {unit}";
+            if (unit == 0)
+                s += "s";
+            return s;
+        }
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, zettabyte,
+        ///     yottabyte, depending on the size. 
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="binary">
+        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        /// </param>
+        /// <param name="suffix">
+        ///     true to show the size unit suffix; otherwise, false.
+        /// </param>
+        public static string FormatDataSize(this long value, bool binary = true, bool suffix = true)
+        {
+            if (value == 0)
+                return value.FormatDataSize(SizeUnits.Byte, binary, suffix);
+            var i = (int)Math.Log(Math.Abs(value), binary ? 1024 : 1000);
+            var s = value.FormatDataSize((SizeUnits)i, binary, suffix);
+            return s;
+        }
+
+        /// <summary>
+        ///     Converts the current <see cref="NewLineFormats"/> to another format.
         /// </summary>
         /// <param name="str">
         ///     The text to change.
@@ -59,13 +163,13 @@ namespace SilDev
         /// <param name="newLineFormat">
         ///     The new format to be applied.
         /// </param>
-        public static string FormatNewLine(this string str, NewLineFormat newLineFormat = NewLineFormat.WindowsDefault)
+        public static string FormatNewLine(this string str, NewLineFormats newLineFormat = NewLineFormats.WindowsDefault)
         {
             try
             {
-                var sa = Enum.GetValues(typeof(NewLineFormat)).Cast<NewLineFormat>().Select(c => (int)c == -1 ? null : $"{(char)c.GetHashCode()}").ToArray();
+                var sa = Enum.GetValues(typeof(NewLineFormats)).Cast<NewLineFormats>().Select(c => (int)c == -1 ? null : $"{(char)c.GetHashCode()}").ToArray();
                 var f = (int)newLineFormat == -1 ? Environment.NewLine : $"{(char)newLineFormat.GetHashCode()}";
-                var s = str.Replace(Environment.NewLine, $"{(char)NewLineFormat.LineFeed}");
+                var s = str.Replace(Environment.NewLine, $"{(char)NewLineFormats.LineFeed}");
                 return s.Split(sa, StringSplitOptions.None).Join(f);
             }
             catch (Exception ex)

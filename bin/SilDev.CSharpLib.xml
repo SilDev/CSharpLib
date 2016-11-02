@@ -1576,24 +1576,108 @@
         </member>
         <member name="T:SilDev.Reorganize">
             <summary>
-                Provides static methods for converting or reorganizing data.
+                Provides static methods for converting or reorganizing of data.
             </summary>
         </member>
-        <member name="T:SilDev.Reorganize.NewLineFormat">
+        <member name="T:SilDev.Reorganize.NewLineFormats">
             <summary>
-                Provides enumerated values of various new line formats.
+                Provides enumerated values of new line formats.
             </summary>
         </member>
-        <member name="F:SilDev.Reorganize.NewLineFormat.WindowsDefault">
+        <member name="F:SilDev.Reorganize.NewLineFormats.WindowsDefault">
             <summary>
-                Returns -1 because Windows combines <see cref="F:SilDev.Reorganize.NewLineFormat.CarriageReturn"/>
-                with <see cref="F:SilDev.Reorganize.NewLineFormat.LineFeed"/>, which are not convertible to an
+                Returns -1 because Windows combines <see cref="F:SilDev.Reorganize.NewLineFormats.CarriageReturn"/>
+                with <see cref="F:SilDev.Reorganize.NewLineFormats.LineFeed"/>, which are not convertible to an
                 single enumerated value.
             </summary>
         </member>
-        <member name="M:SilDev.Reorganize.FormatNewLine(System.String,SilDev.Reorganize.NewLineFormat)">
+        <member name="T:SilDev.Reorganize.SizeUnits">
             <summary>
-                Converts the current <see cref="T:SilDev.Reorganize.NewLineFormat"/> to another <see cref="T:SilDev.Reorganize.NewLineFormat"/>.
+                Provides units of digital information.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.Byte">
+            <summary>
+                Stands for byte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.KB">
+            <summary>
+                Stands for kilobyte or kibibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.MB">
+            <summary>
+                Stands for megabyte or mebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.GB">
+            <summary>
+                Stands for gigabyte or gibibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.TB">
+            <summary>
+                Stands for terabyte or tebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.PB">
+            <summary>
+                Stands for petabyte or pebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.EB">
+            <summary>
+                Stands for exabyte or exbibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.ZB">
+            <summary>
+                Stands for zettabyte or zebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.YB">
+            <summary>
+                Stands for yottabyte or yobibyte.
+            </summary>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>. 
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="unit">
+                The new unit.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="suffix">
+                true to show the size unit suffix; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,System.Boolean,System.Boolean)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, zettabyte,
+                yottabyte, depending on the size. 
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="suffix">
+                true to show the size unit suffix; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatNewLine(System.String,SilDev.Reorganize.NewLineFormats)">
+            <summary>
+                Converts the current <see cref="T:SilDev.Reorganize.NewLineFormats"/> to another format.
             </summary>
             <param name="str">
                 The text to change.
@@ -5283,6 +5367,11 @@
         <member name="P:SilDev.NetEx.AsyncTransfer.TransferSpeed">
             <summary>
                 Gets the megabyte per second of the asynchronous transfer.
+            </summary>
+        </member>
+        <member name="P:SilDev.NetEx.AsyncTransfer.TransferSpeedAd">
+            <summary>
+                Gets the string representation of the speed of the asynchronous transfer.
             </summary>
         </member>
         <member name="P:SilDev.NetEx.AsyncTransfer.TimeElapsed">

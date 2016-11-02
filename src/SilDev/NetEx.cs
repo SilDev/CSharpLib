@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2016-10-28 08:28
+// Version:  2016-11-02 21:26
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -521,9 +521,9 @@ namespace SilDev
             {
                 get
                 {
-                    var current = (BytesReceived / 1024f / 1024f).ToString("0.00");
-                    var total = (TotalBytesToReceive / 1024f / 1024f).ToString("0.00");
-                    return $"{current} MB / {total} MB";
+                    var current = BytesReceived.FormatDataSize(Reorganize.SizeUnits.MB);
+                    var total = TotalBytesToReceive.FormatDataSize(Reorganize.SizeUnits.MB);
+                    return current + " / " + total;
                 }
             }
 
@@ -536,6 +536,11 @@ namespace SilDev
             ///     Gets the megabyte per second of the asynchronous transfer.
             /// </summary>
             public double TransferSpeed { get; private set; }
+
+            /// <summary>
+            ///     Gets the string representation of the speed of the asynchronous transfer.
+            /// </summary>
+            public string TransferSpeedAd { get; private set; } = "0,00 bit/s";
 
             /// <summary>
             ///     Gets the total elapsed time.
@@ -639,8 +644,10 @@ namespace SilDev
                     ProgressPercentage = e.ProgressPercentage;
                     TimeElapsed = _stopwatch.Elapsed;
                     TransferSpeed = e.BytesReceived;
-                    if (e.BytesReceived > 0)
-                        TransferSpeed = TransferSpeed / 1000 / TimeElapsed.TotalSeconds;
+                    if (e.BytesReceived <= 0)
+                        return;
+                    TransferSpeed = TransferSpeed / 1000 / TimeElapsed.TotalSeconds;
+                    TransferSpeedAd = $"{((long)(e.BytesReceived / TimeElapsed.TotalSeconds)).FormatDataSize(false).ToLower()}it/s";
                 }
                 catch (Exception ex)
                 {
