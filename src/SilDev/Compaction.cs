@@ -141,21 +141,21 @@ namespace SilDev
                 public const string Ultra = "-t7z -mx -m0=lzma -md=128m -mfb=256 -ms";
             }
 
-            public static Process Zip(string srcDirOrFile, string destFile, string args = null, ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden)
+            public static Process Zip(string srcDirOrFile, string destFile, string args = null, ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden, bool dispose = false)
             {
                 args = args ?? CompressTemplates.Default;
                 var prfx = Data.IsDir(srcDirOrFile) ? "\\*" : string.Empty;
                 args = $"a {args} \"\"\"{destFile}\"\"\" \"\"\"{srcDirOrFile}{prfx}\"\"\"";
-                return ProcessEx.Start(ExePath, args, false, windowStyle, false);
+                return ProcessEx.Start(ExePath, args, false, windowStyle, dispose);
             }
 
             public static Process Zip(string srcDirOrFile, string destFile, ProcessWindowStyle windowStyle) =>
                 Zip(srcDirOrFile, destFile, null, windowStyle);
 
-            public static Process Unzip(string srcFile, string destDir, ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden)
+            public static Process Unzip(string srcFile, string destDir, ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden, bool dispose = false)
             {
                 var args = $"x \"\"\"{srcFile}\"\"\" -o\"\"\"{destDir}\"\"\" -y";
-                return ProcessEx.Start(ExePath, args, false, windowStyle, false);
+                return ProcessEx.Start(ExePath, args, false, windowStyle, dispose);
             }
         }
 
