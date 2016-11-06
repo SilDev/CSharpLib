@@ -91,16 +91,6 @@ namespace SilDev
             ///     Stands for exabyte or exbibyte.
             /// </summary>
             EB = 6,
-
-            /// <summary>
-            ///     Stands for zettabyte or zebibyte.
-            /// </summary>
-            ZB = 7,
-
-            /// <summary>
-            ///     Stands for yottabyte or yobibyte.
-            /// </summary>
-            YB = 8
         }
 
         /// <summary>
@@ -119,13 +109,17 @@ namespace SilDev
         /// <param name="suffix">
         ///     true to show the size unit suffix; otherwise, false.
         /// </param>
-        public static string FormatDataSize(this long value, SizeUnits unit, bool binary = true, bool suffix = true)
+        /// <param name="trim">
+        ///     true to remove all zeros after the comma; otherwise, false.
+        /// </param>
+        public static string FormatDataSize(this long value, SizeUnits unit, bool binary = true, bool suffix = true, bool trim = false)
         {
             if (value < 0)
                 return "-" + FormatDataSize(Math.Abs(value), unit, binary, suffix);
             if (value == 0)
-                return "0,00 bytes";
-            string s = $"{value / Math.Pow(binary ? 1024 : 1000, (int)unit):0.00} {unit}";
+                return value.ToString(trim ? "0.##" : "0.00") + " bytes";
+            var d = value / Math.Pow(binary ? 1024 : 1000, (int)unit);
+            var s = d.ToString(trim ? "0.##" : "0.00") + " " + unit;
             if (unit == 0)
                 s += "s";
             return s;
@@ -133,8 +127,8 @@ namespace SilDev
 
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, zettabyte,
-        ///     yottabyte, depending on the size. 
+        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+        ///     on the size. 
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -145,12 +139,15 @@ namespace SilDev
         /// <param name="suffix">
         ///     true to show the size unit suffix; otherwise, false.
         /// </param>
-        public static string FormatDataSize(this long value, bool binary = true, bool suffix = true)
+        /// <param name="trim">
+        ///     true to remove all zeros after the comma; otherwise, false.
+        /// </param>
+        public static string FormatDataSize(this long value, bool binary = true, bool suffix = true, bool trim = false)
         {
             if (value == 0)
-                return value.FormatDataSize(SizeUnits.Byte, binary, suffix);
+                return value.FormatDataSize(SizeUnits.Byte, binary, suffix, trim);
             var i = (int)Math.Log(Math.Abs(value), binary ? 1024 : 1000);
-            var s = value.FormatDataSize((SizeUnits)i, binary, suffix);
+            var s = value.FormatDataSize((SizeUnits)i, binary, suffix, trim);
             return s;
         }
 

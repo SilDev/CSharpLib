@@ -1291,17 +1291,7 @@
                 Stands for exabyte or exbibyte.
             </summary>
         </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.ZB">
-            <summary>
-                Stands for zettabyte or zebibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.YB">
-            <summary>
-                Stands for yottabyte or yobibyte.
-            </summary>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>. 
@@ -1318,12 +1308,15 @@
             <param name="suffix">
                 true to show the size unit suffix; otherwise, false.
             </param>
+            <param name="trim">
+                true to remove all zeros after the comma; otherwise, false.
+            </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, zettabyte,
-                yottabyte, depending on the size. 
+                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+                on the size. 
             </summary>
             <param name="value">
                 The value to be converted.
@@ -1333,6 +1326,9 @@
             </param>
             <param name="suffix">
                 true to show the size unit suffix; otherwise, false.
+            </param>
+            <param name="trim">
+                true to remove all zeros after the comma; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.FormatNewLine(System.String,SilDev.Reorganize.NewLineFormats)">
