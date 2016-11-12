@@ -359,7 +359,7 @@ namespace SilDev
         ///     if the process has been started; otherwise, false.
         /// </param>
         public static Process Send(string command, bool runAsAdmin, bool dispose) =>
-            Send(command, false, ProcessWindowStyle.Hidden, dispose);
+            Send(command, runAsAdmin, ProcessWindowStyle.Hidden, dispose);
 
         /// <summary>
         ///     <para>
