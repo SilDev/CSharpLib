@@ -480,20 +480,20 @@ namespace SilDev
             if (PathEx.DirOrFileExists(link))
             {
                 if (!string.IsNullOrEmpty(cmd))
-                    cmd += " && ";
+                    cmd += " & ";
                 cmd += $"{(destIsDir ? "RD /S /Q" : "DEL / F / Q")} \"{link}\"";
             }
             if (PathEx.DirOrFileExists(dest))
             {
                 if (!string.IsNullOrEmpty(cmd))
-                    cmd += " && ";
+                    cmd += " & ";
                 cmd += $"MKLINK {(destIsDir ? "/J " : string.Empty)}\"{link}\" \"{dest}\" && ATTRIB +H \"{link}\" /L";
             }
             if (string.IsNullOrEmpty(cmd))
                 return;
             using (var p = ProcessEx.Send(cmd, elevated, false))
-                if (p != null && !p.HasExited)
-                    p.WaitForExit();
+                if (!p?.HasExited == true)
+                    p?.WaitForExit();
         }
 
         /// <summary>
@@ -539,27 +539,14 @@ namespace SilDev
         private static void UnLinker(string path, bool pathIsDir, bool backup = false, bool elevated = false)
         {
             var link = PathEx.Combine(path);
-            var cmd = string.Empty;
-            if (backup)
-                if (PathEx.DirOrFileExists($"{link}.SI13N7-BACKUP"))
-                {
-                    if (PathEx.DirOrFileExists(link))
-                        cmd += $"{(pathIsDir ? "RD /S /Q" : "DEL / F / Q")} \"{link}\"";
-                    if (!string.IsNullOrEmpty(cmd))
-                        cmd += " && ";
-                    cmd += $"MOVE /Y \"{link}.SI13N7-BACKUP\" \"{link}\"";
-                }
-            if (link.DirOrFileIsLink())
-            {
-                if (!string.IsNullOrEmpty(cmd))
-                    cmd += " && ";
-                cmd += $"{(pathIsDir ? "RD /S /Q" : "DEL /F /Q /A:L")} \"{link}\"";
-            }
+            var cmd = $"{(pathIsDir ? "RD /S /Q" : "DEL /F /Q")}{(link.DirOrFileIsLink() ? " /A:L" : string.Empty)} \"{link}\"";
+            if (backup && PathEx.DirOrFileExists($"{link}.SI13N7-BACKUP"))
+                cmd += $" & MOVE /Y \"{link}.SI13N7-BACKUP\" \"{link}\"";
             if (string.IsNullOrEmpty(cmd))
                 return;
             using (var p = ProcessEx.Send(cmd, elevated, false))
-                if (p != null && !p.HasExited)
-                    p.WaitForExit();
+                if (!p?.HasExited == true)
+                    p?.WaitForExit();
         }
 
         /// <summary>
@@ -713,8 +700,8 @@ namespace SilDev
         private class ShellLink { }
 
         [ComImport]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         [Guid("000214F9-0000-0000-C000-000000000046")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IShellLink
         {
             void GetPath([Out][MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, out IntPtr pfd, int fFlags);
