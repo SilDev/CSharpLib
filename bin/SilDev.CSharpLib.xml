@@ -7227,6 +7227,67 @@
                 Allocates memory using large page support.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.AnimateWindowFlags">
+            <summary>
+                Provides enumerated values of window animations.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_ACTIVATE">
+            <summary>
+                Activates the window. Do not use this value with <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_HIDE"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_BLEND">
+            <summary>
+                Uses a fade effect. This flag can be used only if hwnd is a top-level window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_CENTER">
+            <summary>
+                Makes the window appear to collapse inward if <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_HIDE"/> is
+                used or expand outward if the <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_HIDE"/> is not used. The
+                various direction flags have no effect.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_HIDE">
+            <summary>
+                Hides the window. By default, the window is shown.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_HOR_POSITIVE">
+            <summary>
+                Animates the window from left to right. This flag can be used with roll or slide
+                animation. It is ignored when used with <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_CENTER"/> or
+                <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_BLEND"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_HOR_NEGATIVE">
+            <summary>
+                Animates the window from right to left. This flag can be used with roll or slide
+                animation. It is ignored when used with <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_CENTER"/>
+                or <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_BLEND"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_SLIDE">
+            <summary>
+                Uses slide animation. By default, roll animation is used. This flag is ignored
+                when used with <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_CENTER"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_VER_POSITIVE">
+            <summary>
+                Animates the window from top to bottom. This flag can be used with roll or slide
+                animation. It is ignored when used with <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_CENTER"/> or
+                <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_BLEND"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AnimateWindowFlags.AW_VER_NEGATIVE">
+            <summary>
+                Animates the window from bottom to top. This flag can be used with roll or slide
+                animation. It is ignored when used with <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_CENTER"/> or
+                <see cref="F:SilDev.WinApi.AnimateWindowFlags.AW_BLEND"/>.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.AppBarMessageFunc">
             <summary>
                 Provides enumerated values of appbar messages.
@@ -9968,6 +10029,25 @@
                     analysis outputs a CA1401 (P/Invokes should not be visible) warning.
                 </para>
             </summary>
+        </member>
+        <member name="M:SilDev.WinApi.UnsafeNativeMethods.AnimateWindow(System.IntPtr,System.Int32,SilDev.WinApi.AnimateWindowFlags)">
+            <summary>
+                Enables you to produce special effects when showing or hiding windows. There are four types of
+                animation: roll, slide, collapse or expand, and alpha-blended fade.
+            </summary>
+            <param name="hwnd">
+                A handle to the window to animate. The calling thread must own this window.
+            </param>
+            <param name="time">
+                The time it takes to play the animation, in milliseconds. Typically, an animation takes 200
+                milliseconds to play.
+            </param>
+            <param name="flags">
+                The type of animation.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
+            </returns>
         </member>
         <member name="M:SilDev.WinApi.UnsafeNativeMethods.CallNextHookEx(System.IntPtr,System.Int32,System.IntPtr,System.IntPtr)">
             <summary>

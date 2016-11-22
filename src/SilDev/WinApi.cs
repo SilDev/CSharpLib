@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2016-10-31 16:15
+// Version:  2016-11-22 03:52
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -251,6 +251,69 @@ namespace SilDev
             ///     Allocates memory using large page support.
             /// </summary>
             MEM_LARGE_PAGES = 0x20000000
+        }
+
+        /// <summary>
+        ///     Provides enumerated values of window animations.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum AnimateWindowFlags : uint
+        {
+            /// <summary>
+            ///     Activates the window. Do not use this value with <see cref="AnimateWindowFlags.AW_HIDE"/>.
+            /// </summary>
+            AW_ACTIVATE = 0x20000,
+
+            /// <summary>
+            ///     Uses a fade effect. This flag can be used only if hwnd is a top-level window.
+            /// </summary>
+            AW_BLEND = 0x80000,
+
+            /// <summary>
+            ///     Makes the window appear to collapse inward if <see cref="AnimateWindowFlags.AW_HIDE"/> is
+            ///     used or expand outward if the <see cref="AnimateWindowFlags.AW_HIDE"/> is not used. The
+            ///     various direction flags have no effect.
+            /// </summary>
+            AW_CENTER = 0x10,
+
+            /// <summary>
+            ///     Hides the window. By default, the window is shown.
+            /// </summary>
+            AW_HIDE = 0x10000,
+
+            /// <summary>
+            ///     Animates the window from left to right. This flag can be used with roll or slide
+            ///     animation. It is ignored when used with <see cref="AnimateWindowFlags.AW_CENTER"/> or
+            ///     <see cref="AnimateWindowFlags.AW_BLEND"/>.
+            /// </summary>
+            AW_HOR_POSITIVE = 0x1,
+
+            /// <summary>
+            ///     Animates the window from right to left. This flag can be used with roll or slide
+            ///     animation. It is ignored when used with <see cref="AnimateWindowFlags.AW_CENTER"/>
+            ///     or <see cref="AnimateWindowFlags.AW_BLEND"/>.
+            /// </summary>
+            AW_HOR_NEGATIVE = 0x2,
+
+            /// <summary>
+            ///     Uses slide animation. By default, roll animation is used. This flag is ignored
+            ///     when used with <see cref="AnimateWindowFlags.AW_CENTER"/>.
+            /// </summary>
+            AW_SLIDE = 0x40000,
+
+            /// <summary>
+            ///     Animates the window from top to bottom. This flag can be used with roll or slide
+            ///     animation. It is ignored when used with <see cref="AnimateWindowFlags.AW_CENTER"/> or
+            ///     <see cref="AnimateWindowFlags.AW_BLEND"/>.
+            /// </summary>
+            AW_VER_POSITIVE = 0x4,
+
+            /// <summary>
+            ///     Animates the window from bottom to top. This flag can be used with roll or slide
+            ///     animation. It is ignored when used with <see cref="AnimateWindowFlags.AW_CENTER"/> or
+            ///     <see cref="AnimateWindowFlags.AW_BLEND"/>.
+            /// </summary>
+            AW_VER_NEGATIVE = 0x8
         }
 
         /// <summary>
@@ -1540,7 +1603,7 @@ namespace SilDev
             ///     The window is an overlapped window. Same as the <see cref="WS_TILEDWINDOW"/> style.
             /// </summary>
             WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
-#           if x64
+#if x64
             /// <summary>
             ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
             /// </summary>
@@ -1551,7 +1614,7 @@ namespace SilDev
             ///     must be combined to make the window menu visible.
             /// </summary>
             WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU,
-#           endif
+#endif
 
             /// <summary>
             ///     The window has a sizing border. Same as the <see cref="WS_THICKFRAME"/> style.
@@ -3268,6 +3331,26 @@ namespace SilDev
         [SuppressUnmanagedCodeSecurity]
         public static class UnsafeNativeMethods
         {
+            /// <summary>
+            ///     Enables you to produce special effects when showing or hiding windows. There are four types of
+            ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
+            /// </summary>
+            /// <param name="hwnd">
+            ///     A handle to the window to animate. The calling thread must own this window.
+            /// </param>
+            /// <param name="time">
+            ///     The time it takes to play the animation, in milliseconds. Typically, an animation takes 200
+            ///     milliseconds to play.
+            /// </param>
+            /// <param name="flags">
+            ///     The type of animation.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            public static extern bool AnimateWindow(IntPtr hwnd, int time, AnimateWindowFlags flags);
+
             /// <summary>
             ///     Passes the hook information to the next hook procedure in the current hook chain. A hook
             ///     procedure can call this function either before or after processing the hook information.
