@@ -256,6 +256,7 @@ namespace SilDev
         /// <summary>
         ///     Provides enumerated values of window animations.
         /// </summary>
+        [Flags]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum AnimateWindowFlags : uint
         {
