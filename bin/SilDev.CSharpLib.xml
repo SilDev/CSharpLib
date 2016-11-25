@@ -448,6 +448,71 @@
                 Expands the functionality for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> class.
             </summary>
         </member>
+        <member name="T:SilDev.Forms.ContextMenuStripEx.Animations">
+            <summary>
+                Provides enumerated values of <see cref="T:System.Windows.Forms.ContextMenuStrip"/> animations.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.Default">
+            <summary>
+                Smooth fade in animation.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.Blend">
+            <summary>
+                Fade in animation.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.Center">
+            <summary>
+                Makes the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> appear to collapse inward.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideHorPositive">
+            <summary>
+                Slide animation from left to right.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideHorNegative">
+            <summary>
+                Slide animation from right to left.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideVerPositive">
+            <summary>
+                Slide animation from top to bottom.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideVerNegative">
+            <summary>
+                Slide animation from bottom to top.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ContextMenuStripEx.CloseOnMouseLeave(System.Windows.Forms.ContextMenuStrip,System.Int32)">
+            <summary>
+                Closes this <see cref="T:System.Windows.Forms.ContextMenuStrip"/> when the mouse cursor leaves it.
+            </summary>
+            <param name="contextMenuStrip">
+                The <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
+            </param>
+            <param name="toleration">
+                The toleration in pixel.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ContextMenuStripEx.EnableAnimation(System.Windows.Forms.ContextMenuStrip,SilDev.Forms.ContextMenuStripEx.Animations,System.Int32)">
+            <summary>
+                Enables you to produce special effects when showing this <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
+            </summary>
+            <param name="contextMenuStrip">
+                The <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
+            </param>
+            <param name="animation">
+                The type of animation.
+            </param>
+            <param name="time">
+                The time it takes to play the animation, in milliseconds.
+            </param>
+        </member>
         <member name="M:SilDev.Forms.ContextMenuStripEx.SetFixedSingle(System.Windows.Forms.ContextMenuStrip,System.Nullable{System.Drawing.Color})">
             <summary>
                 Sets a single line border style for this <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
