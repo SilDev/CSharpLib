@@ -4,7 +4,7 @@
 
 # Si13n7 Dev. ® CSharp Library
 
-*(Description comes... sometime...)*
+A simple library that provides a lot of basic functions. The idea behind this library is to reduce the amount of time to create new programs.
 
 ***
 
