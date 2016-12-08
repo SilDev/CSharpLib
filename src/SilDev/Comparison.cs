@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2016-10-29 11:31
+// Version:  2016-12-01 14:56
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -386,10 +386,9 @@ namespace SilDev
                     {
                         ca1[l1++] = c1;
                         i1++;
-                        if (i1 < s1.Length)
-                            c1 = s1[i1];
-                        else
+                        if (i1 >= s1.Length)
                             break;
+                        c1 = s1[i1];
                     }
                     while (char.IsDigit(c1) == char.IsDigit(ca1[0]));
                     var c2 = s2[i2];
@@ -399,10 +398,9 @@ namespace SilDev
                     {
                         ca2[l2++] = c2;
                         i2++;
-                        if (i2 < s2.Length)
-                            c2 = s2[i2];
-                        else
+                        if (i2 >= s2.Length)
                             break;
+                        c2 = s2[i2];
                     }
                     while (char.IsDigit(c2) == char.IsDigit(ca2[0]));
                     var str1 = new string(ca1);
