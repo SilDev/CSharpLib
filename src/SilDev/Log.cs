@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2016-10-28 08:24
+// Version:  2016-12-20 04:30
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -160,7 +160,11 @@ namespace SilDev
             var mode = 0;
             if (!string.IsNullOrEmpty(iniPath))
                 if (File.Exists(iniPath))
+                {
                     mode = Ini.ReadInteger(section, key, iniPath);
+                    if (mode > 0)
+                        goto ACTIVATE;
+                }
             if (new Regex("/debug [0-2]|/debug \"[0-2]\"").IsMatch(Environment.CommandLine))
             {
                 int i;
@@ -168,6 +172,7 @@ namespace SilDev
                                                              .Groups[1].ToString(), out i) && i > mode)
                     mode = i;
             }
+            ACTIVATE:
             ActivateLogging(mode);
         }
 
