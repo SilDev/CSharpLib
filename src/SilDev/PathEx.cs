@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2016-10-28 08:02
+// Version:  2016-12-29 05:05
 // 
 // Copyright (c) 2016, Si13n7 Developments (r)
 // All rights reserved.
@@ -177,7 +177,7 @@ namespace SilDev
             GetTempFileName("tmp", len);
 
         /// <summary>
-        ///     Determines whether the specified file was compiled for a 64-bit platform environments
+        ///     Determines whether the specified file was compiled for a 64-bit platform environments.
         /// </summary>
         /// <param name="path">
         ///     The file to check.
@@ -208,6 +208,7 @@ namespace SilDev
     ///     The exception that is thrown when an attempt to access a target that does not exist
     ///     fails.
     /// </summary>
+    [Serializable]
     public class PathNotFoundException : Exception
     {
         /// <summary>
