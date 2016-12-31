@@ -11591,8 +11591,7 @@
         </member>
         <member name="M:SilDev.WinApi.UnsafeNativeMethods.ShellExecute(System.IntPtr,System.String,System.String,System.String,System.String,SilDev.WinApi.ShowWindowFunc)">
             <summary>
-                A handle to the parent window used for displaying a UI or error messages. This value can be NULL if
-                the operation is not associated with a window.
+                Performs an operation on a specified file.
             </summary>
             <param name="hwnd">
                 A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the

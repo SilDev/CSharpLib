@@ -4904,8 +4904,7 @@ namespace SilDev
             public static extern UIntPtr SHAppBarMessage(AppBarMessageFunc dwMessage, ref APPBARDATA pData);
 
             /// <summary>
-            ///     A handle to the parent window used for displaying a UI or error messages. This value can be NULL if
-            ///     the operation is not associated with a window.
+            ///     Performs an operation on a specified file.
             /// </summary>
             /// <param name="hwnd">
             ///     A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the
