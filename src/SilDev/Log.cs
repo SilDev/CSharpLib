@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2016-12-20 04:30
+// Version:  2017-01-02 10:31
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -158,20 +158,17 @@ namespace SilDev
         public static void AllowLogging(string iniPath = null, string section = null, string key = "DebugMode")
         {
             var mode = 0;
-            if (!string.IsNullOrEmpty(iniPath))
-                if (File.Exists(iniPath))
-                {
-                    mode = Ini.ReadInteger(section, key, iniPath);
-                    if (mode > 0)
-                        goto ACTIVATE;
-                }
             if (new Regex("/debug [0-2]|/debug \"[0-2]\"").IsMatch(Environment.CommandLine))
             {
                 int i;
                 if (int.TryParse(new Regex("/debug ([0-2]?)").Match(Environment.CommandLine.RemoveChar('\"'))
                                                              .Groups[1].ToString(), out i) && i > mode)
                     mode = i;
+                if (mode > 0)
+                    goto ACTIVATE;
             }
+            if (!string.IsNullOrEmpty(iniPath) && File.Exists(iniPath))
+                mode = Ini.ReadInteger(section, key, iniPath);
             ACTIVATE:
             ActivateLogging(mode);
         }
