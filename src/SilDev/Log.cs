@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-01-02 10:31
+// Version:  2017-01-02 10:41
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,11 +17,13 @@ namespace SilDev
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading;
     using System.Windows.Forms;
     using Microsoft.Win32.SafeHandles;
 
@@ -45,6 +47,11 @@ namespace SilDev
         ///     true to enable the catching of unhandled <see cref="Exception"/>'s; otherwise, false.
         /// </summary>
         public static bool CatchUnhandledExceptions { get; set; } = true;
+
+        /// <summary>
+        ///     Gets or sets the culture for the current thread.
+        /// </summary>
+        public static CultureInfo CurrentCulture { get; set; } = CultureInfo.InvariantCulture;
 
         /// <summary>
         ///     Gets the current <see cref="DebugMode"/> option how <see cref="Exception"/>'s are handled. For
@@ -115,6 +122,8 @@ namespace SilDev
             }
             if (DebugMode <= 0)
                 return;
+            Thread.CurrentThread.CurrentCulture = CurrentCulture;
+            Thread.CurrentThread.CurrentUICulture = CurrentCulture;
             try
             {
                 FileDir = Path.GetFullPath(FileDir);
@@ -133,7 +142,7 @@ namespace SilDev
 
         /// <summary>
         ///     <para>
-        ///         Checks the command line argument for an valid command, "/debug 2" - for example, or checks the
+        ///         Checks the command line argument for a valid command, "/debug 2" - for example, or checks the
         ///         content of the specified configuration file to specify the current <see cref="DebugMode"/>.
         ///         For more informations see <see cref="ActivateLogging(int)"/>.
         ///     </para>
