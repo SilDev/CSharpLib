@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2016-10-28 08:25
+// Version:  2017-01-02 10:23
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -349,6 +349,54 @@ namespace SilDev
             {
                 var src = PathEx.Combine(path);
                 var fa = File.GetAttributes(src);
+                return (fa & attr) != 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether the specified path specifies the specified
+        ///     file attributes.
+        /// </summary>
+        /// <param name="dirInfo">
+        ///     The directory to check.
+        /// </param>
+        /// <param name="attr">
+        ///     The attributes to match.
+        /// </param>
+        public static bool MatchAttributes(this DirectoryInfo dirInfo, FileAttributes attr)
+        {
+            try
+            {
+                var da = dirInfo.Attributes;
+                return (da & attr) != 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether the specified path specifies the specified
+        ///     file attributes.
+        /// </summary>
+        /// <param name="fileInfo">
+        ///     The file to check.
+        /// </param>
+        /// <param name="attr">
+        ///     The attributes to match.
+        /// </param>
+        public static bool MatchAttributes(this FileInfo fileInfo, FileAttributes attr)
+        {
+            try
+            {
+                var fa = fileInfo.Attributes;
                 return (fa & attr) != 0;
             }
             catch (Exception ex)
