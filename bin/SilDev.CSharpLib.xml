@@ -3558,6 +3558,30 @@
                 The attributes to match.
             </param>
         </member>
+        <member name="M:SilDev.Data.MatchAttributes(System.IO.DirectoryInfo,System.IO.FileAttributes)">
+            <summary>
+                Determines whether the specified path specifies the specified
+                file attributes.
+            </summary>
+            <param name="dirInfo">
+                The directory to check.
+            </param>
+            <param name="attr">
+                The attributes to match.
+            </param>
+        </member>
+        <member name="M:SilDev.Data.MatchAttributes(System.IO.FileInfo,System.IO.FileAttributes)">
+            <summary>
+                Determines whether the specified path specifies the specified
+                file attributes.
+            </summary>
+            <param name="fileInfo">
+                The file to check.
+            </param>
+            <param name="attr">
+                The attributes to match.
+            </param>
+        </member>
         <member name="M:SilDev.Data.DirOrFileIsLink(System.String)">
             <summary>
                 Determines whether the specified path is specified as reparse
@@ -4899,6 +4923,11 @@
                 true to enable the catching of unhandled <see cref="T:System.Exception"/>'s; otherwise, false.
             </summary>
         </member>
+        <member name="P:SilDev.Log.CurrentCulture">
+            <summary>
+                Gets or sets the culture for the current thread.
+            </summary>
+        </member>
         <member name="P:SilDev.Log.DebugMode">
             <summary>
                 Gets the current <see cref="P:SilDev.Log.DebugMode"/> option how <see cref="T:System.Exception"/>'s are handled. For
@@ -4957,7 +4986,7 @@
         <member name="M:SilDev.Log.AllowLogging(System.String,System.String,System.String)">
             <summary>
                 <para>
-                    Checks the command line argument for an valid command, "/debug 2" - for example, or checks the
+                    Checks the command line argument for a valid command, "/debug 2" - for example, or checks the
                     content of the specified configuration file to specify the current <see cref="P:SilDev.Log.DebugMode"/>.
                     For more informations see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
                 </para>
