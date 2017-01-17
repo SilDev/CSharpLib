@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-01-02 10:23
+// Version:  2017-01-17 19:27
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -587,7 +587,7 @@ namespace SilDev
         private static void UnLinker(string path, bool pathIsDir, bool backup = false, bool elevated = false)
         {
             var link = PathEx.Combine(path);
-            var cmd = $"{(pathIsDir ? "RD /S /Q" : "DEL /F /Q")}{(link.DirOrFileIsLink() ? " /A:L" : string.Empty)} \"{link}\"";
+            var cmd = $"{(pathIsDir ? "RD /Q" : "DEL /F /Q")}{(!pathIsDir && link.DirOrFileIsLink() ? " /A:L" : string.Empty)} \"{link}\"";
             if (backup && PathEx.DirOrFileExists($"{link}.SI13N7-BACKUP"))
                 cmd += $" & MOVE /Y \"{link}.SI13N7-BACKUP\" \"{link}\"";
             if (string.IsNullOrEmpty(cmd))
