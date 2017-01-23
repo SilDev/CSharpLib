@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2016-10-28 08:29
+// Version:  2017-01-23 14:17
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -29,6 +29,36 @@ namespace SilDev
     /// </summary>
     public static class ProcessEx
     {
+        /// <summary>
+        ///     <para>
+        ///         Determines whether this <see cref="Process"/> is running in a sandboxed
+        ///         environment.
+        ///     </para>
+        ///     <para>
+        ///         Hint: This function supports only Sandboxie.
+        ///     </para>
+        /// </summary>
+        /// <param name="process">
+        ///     The <see cref="Process"/> to check.
+        /// </param>
+        public static bool IsSandboxed(this Process process)
+        {
+            try
+            {
+                var modules = process.Modules.Cast<ProcessModule>().ToList();
+                var path = modules.First(m => Path.GetFileName(m.FileName).EqualsEx("SbieDll.dll"))?.FileName;
+                if (string.IsNullOrEmpty(path) || !File.Exists(path))
+                    return false;
+                var info = FileVersionInfo.GetVersionInfo(path);
+                return info.FileDescription.EqualsEx("Sandboxie User Mode DLL");
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return false;
+        }
+
         /// <summary>
         ///     Returns a string array containing the command-line arguments for this
         ///     <see cref="Process"/>.
