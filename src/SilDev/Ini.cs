@@ -33,7 +33,8 @@ namespace SilDev
 
         /// <summary>
         ///     Specifies an initialization file to use as the default file if no other file is
-        ///     specified for a called <see cref="Ini"/> method.
+        ///     specified for a called <see cref="Ini"/> method. if the file doesn't exists
+        ///     it's created.
         /// </summary>
         /// <param name="paths">
         ///     An array of parts of the path (environment variables are accepted).
