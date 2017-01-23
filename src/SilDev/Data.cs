@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-01-23 11:02
+// Version:  2017-01-23 14:14
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -750,7 +750,7 @@ namespace SilDev
                     f.CopyTo(Path.Combine(dest, f.Name), overwrite);
                 if (!subDirs)
                     return true;
-                foreach (var d in di.GetDirectories())
+                foreach (var d in di.GetDirectories("*", SearchOption.TopDirectoryOnly))
                     DirCopy(d.FullName, Path.Combine(dest, d.Name), true, overwrite);
                 return true;
             }
