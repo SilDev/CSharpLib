@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-01-17 19:27
+// Version:  2017-01-23 07:15
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -643,7 +643,10 @@ namespace SilDev
         /// <param name="subDirs">
         ///     true to inlcude subdirectories; otherwise, false.
         /// </param>
-        public static bool DirCopy(string srcDir, string destDir, bool subDirs = true)
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool DirCopy(string srcDir, string destDir, bool subDirs = true, bool overwrite = false)
         {
             try
             {
@@ -655,11 +658,11 @@ namespace SilDev
                 if (!Directory.Exists(dest))
                     Directory.CreateDirectory(dest);
                 foreach (var f in di.GetFiles())
-                    f.CopyTo(Path.Combine(dest, f.Name), false);
+                    f.CopyTo(Path.Combine(dest, f.Name), overwrite);
                 if (!subDirs)
                     return true;
                 foreach (var d in di.GetDirectories())
-                    DirCopy(d.FullName, Path.Combine(dest, d.Name));
+                    DirCopy(d.FullName, Path.Combine(dest, d.Name), true, overwrite);
                 return true;
             }
             catch (Exception ex)
