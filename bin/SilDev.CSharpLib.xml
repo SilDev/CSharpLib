@@ -3697,7 +3697,7 @@
                 true to remove this link with highest privileges; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Data.DirCopy(System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.Data.DirCopy(System.String,System.String,System.Boolean,System.Boolean)">
             <summary>
                 Copies an existing directory to a new location.
             </summary>
@@ -3710,6 +3710,9 @@
             </param>
             <param name="subDirs">
                 true to inlcude subdirectories; otherwise, false.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Data.DirSafeMove(System.String,System.String)">
@@ -4014,7 +4017,8 @@
         <member name="M:SilDev.Ini.File(System.String[])">
             <summary>
                 Specifies an initialization file to use as the default file if no other file is
-                specified for a called <see cref="T:SilDev.Ini"/> method.
+                specified for a called <see cref="T:SilDev.Ini"/> method. if the file doesn't exists
+                it's created.
             </summary>
             <param name="paths">
                 An array of parts of the path (environment variables are accepted).
@@ -9110,6 +9114,21 @@
                 A handle to the window.
             </param>
         </member>
+        <member name="T:SilDev.WinApi.SymbolicLinkFlags">
+            <summary>
+                Provides enumerated values of the current type of the link target.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SymbolicLinkFlags.File">
+            <summary>
+                The link target is a file.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SymbolicLinkFlags.Directory">
+            <summary>
+                The link target is a directory.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.ServiceState">
             <summary>
                 Provides enumerated values of the current state of the service.
@@ -9535,6 +9554,23 @@
             </summary>
             <returns>
                 If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.SafeNativeMethods.CreateSymbolicLink(System.String,System.String,SilDev.WinApi.SymbolicLinkFlags)">
+            <summary>
+                Creates a symbolic link.
+            </summary>
+            <param name="lpSymlinkFileName">
+                The symbolic link to be created.
+            </param>
+            <param name="lpTargetFileName">
+                The name of the target for the symbolic link to be created.
+            </param>
+            <param name="dwFlags">
+                Indicates whether the link target, lpTargetFileName, is a directory.
+            </param>
+            <returns>
+                If the function succeeds, the return value is TRUE.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.SafeNativeMethods.GetConsoleWindow">
