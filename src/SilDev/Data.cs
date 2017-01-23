@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-01-23 07:15
+// Version:  2017-01-23 11:02
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -484,8 +484,81 @@ namespace SilDev
             }
         }
 
-        private static void Linker(string linkPath, string destPath, bool destIsDir, bool backup = false, bool elevated = false)
+        private static bool Linker(string linkPath, string destPath, bool destIsDir, bool backup = false, bool elevated = false)
         {
+            /*
+             * The idea was to replace the code below with this code that uses the
+             * p/invoke method to create symbolic links. But this doesn't work
+             * without administrator privileges...
+
+            var dest = PathEx.Combine(targetPath);
+            try
+            {
+                if (targetIsDir)
+                {
+                    if (!Directory.Exists(dest))
+                        Directory.CreateDirectory(dest);
+                }
+                else
+                {
+                    if (!File.Exists(dest))
+                        File.Create(dest).Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+
+            var link = PathEx.Combine(linkPath);
+            try
+            {
+                var linkDir = Path.GetDirectoryName(link);
+                if (linkDir != null && !Directory.Exists(linkDir))
+                    Directory.CreateDirectory(linkDir);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+
+            if (PathEx.DirOrFileExists(link))
+                if (!DirIsLink(link) && backup)
+                    try
+                    {
+                        File.Move(link, link + ".SI13N7-BACKUP");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                        return false;
+                    }
+                else
+                    try
+                    {
+                        if (Directory.Exists(link))
+                            Directory.Delete(link);
+                        if (File.Exists(link))
+                            File.Delete(link);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+
+
+            if (!PathEx.DirOrFileExists(dest) || PathEx.DirOrFileExists(link))
+                return false;
+
+            var created = WinApi.SafeNativeMethods.CreateSymbolicLink(link, dest, (WinApi.SymbolicLinkFlags)Convert.ToInt32(targetIsDir));
+            if (created)
+                SetAttributes(link, FileAttributes.Hidden);
+
+            return created;
+            */
+
             var dest = PathEx.Combine(destPath);
             try
             {
@@ -503,8 +576,9 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return;
+                return false;
             }
+
             var link = PathEx.Combine(linkPath);
             try
             {
@@ -516,8 +590,9 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return;
+                return false;
             }
+
             var cmd = string.Empty;
             if (backup)
                 if (PathEx.DirOrFileExists(link))
@@ -525,23 +600,32 @@ namespace SilDev
                         cmd += $"MOVE /Y \"{link}\" \"{link}.SI13N7-BACKUP\"";
                     else
                         UnLinker(link, true, true, elevated);
+
             if (PathEx.DirOrFileExists(link))
             {
                 if (!string.IsNullOrEmpty(cmd))
                     cmd += " & ";
                 cmd += $"{(destIsDir ? "RD /S /Q" : "DEL / F / Q")} \"{link}\"";
             }
+
             if (PathEx.DirOrFileExists(dest))
             {
                 if (!string.IsNullOrEmpty(cmd))
                     cmd += " & ";
                 cmd += $"MKLINK {(destIsDir ? "/J " : string.Empty)}\"{link}\" \"{dest}\" && ATTRIB +H \"{link}\" /L";
             }
+
             if (string.IsNullOrEmpty(cmd))
-                return;
+                return false;
+
+            int? exitCode;
             using (var p = ProcessEx.Send(cmd, elevated, false))
+            {
                 if (!p?.HasExited == true)
                     p?.WaitForExit();
+                exitCode = p?.ExitCode;
+            }
+            return exitCode == 0;
         }
 
         /// <summary>
@@ -561,7 +645,7 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to create this link with highest privileges; otherwise, false.
         /// </param>
-        public static void DirLink(string linkPath, string destDir, bool backup = false, bool elevated = false) =>
+        public static bool DirLink(string linkPath, string destDir, bool backup = false, bool elevated = false) =>
             Linker(linkPath, destDir, true, backup, elevated);
 
         /// <summary>
@@ -581,20 +665,25 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to create this link with highest privileges; otherwise, false.
         /// </param>
-        public static void FileLink(string linkPath, string destFile, bool backup = false, bool elevated = false) =>
+        public static bool FileLink(string linkPath, string destFile, bool backup = false, bool elevated = false) =>
             Linker(linkPath, destFile, false, backup, elevated);
 
-        private static void UnLinker(string path, bool pathIsDir, bool backup = false, bool elevated = false)
+        private static bool UnLinker(string path, bool pathIsDir, bool backup = false, bool elevated = false)
         {
             var link = PathEx.Combine(path);
             var cmd = $"{(pathIsDir ? "RD /Q" : "DEL /F /Q")}{(!pathIsDir && link.DirOrFileIsLink() ? " /A:L" : string.Empty)} \"{link}\"";
             if (backup && PathEx.DirOrFileExists($"{link}.SI13N7-BACKUP"))
                 cmd += $" & MOVE /Y \"{link}.SI13N7-BACKUP\" \"{link}\"";
             if (string.IsNullOrEmpty(cmd))
-                return;
+                return false;
+            int? exitCode;
             using (var p = ProcessEx.Send(cmd, elevated, false))
+            {
                 if (!p?.HasExited == true)
                     p?.WaitForExit();
+                exitCode = p?.ExitCode;
+            }
+            return exitCode == 0;
         }
 
         /// <summary>
@@ -611,7 +700,7 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to remove this link with highest privileges; otherwise, false.
         /// </param>
-        public static void DirUnLink(string path, bool backup = false, bool elevated = false) =>
+        public static bool DirUnLink(string path, bool backup = false, bool elevated = false) =>
             UnLinker(path, true, backup, elevated);
 
         /// <summary>
@@ -627,7 +716,7 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to remove this link with highest privileges; otherwise, false.
         /// </param>
-        public static void FileUnLink(string path, bool backup = false, bool elevated = false) =>
+        public static bool FileUnLink(string path, bool backup = false, bool elevated = false) =>
             UnLinker(path, false, backup, elevated);
 
         /// <summary>
