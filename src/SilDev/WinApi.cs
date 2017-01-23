@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2016-12-29 05:04
+// Version:  2017-01-23 10:41
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -2274,6 +2274,22 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides enumerated values of the current type of the link target.
+        /// </summary>
+        internal enum SymbolicLinkFlags
+        {
+            /// <summary>
+            ///     The link target is a file.
+            /// </summary>
+            File = 0x0,
+
+            /// <summary>
+            ///     The link target is a directory.
+            /// </summary>
+            Directory = 0x1
+        }
+
+        /// <summary>
         ///     Provides enumerated values of the current state of the service.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -2720,6 +2736,25 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, EntryPoint = "AllocConsole", SetLastError = true)]
             internal static extern int AllocConsole();
+
+            /// <summary>
+            ///     Creates a symbolic link.
+            /// </summary>
+            /// <param name="lpSymlinkFileName">
+            ///     The symbolic link to be created.
+            /// </param>
+            /// <param name="lpTargetFileName">
+            ///     The name of the target for the symbolic link to be created.
+            /// </param>
+            /// <param name="dwFlags">
+            ///     Indicates whether the link target, lpTargetFileName, is a directory.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is TRUE.
+            /// </returns>
+            [DllImport(DllNames.Kernel32, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
+            [return: MarshalAs(UnmanagedType.I1)]
+            internal static extern bool CreateSymbolicLink([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string lpSymlinkFileName, [MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string lpTargetFileName, SymbolicLinkFlags dwFlags);
 
             /// <summary>
             ///     Retrieves the window handle used by the console associated with the calling
