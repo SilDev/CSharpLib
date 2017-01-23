@@ -6577,6 +6577,20 @@
                 local system processes.
             </summary>
         </member>
+        <member name="M:SilDev.ProcessEx.IsSandboxed(System.Diagnostics.Process)">
+            <summary>
+                <para>
+                    Determines whether this <see cref="T:System.Diagnostics.Process"/> is running in a sandboxed
+                    environment.
+                </para>
+                <para>
+                    Hint: This function supports only Sandboxie.
+                </para>
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> to check.
+            </param>
+        </member>
         <member name="M:SilDev.ProcessEx.GetCommandLineArgs(System.Diagnostics.Process)">
             <summary>
                 Returns a string array containing the command-line arguments for this
