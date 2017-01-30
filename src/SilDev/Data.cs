@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-01-23 14:14
+// Version:  2017-01-30 11:39
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -802,7 +802,7 @@ namespace SilDev
             {
                 var sb = new StringBuilder();
                 long len = 0;
-                foreach (var fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
+                foreach (var fi in dirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
                 {
                     sb.Append(fi.Name);
                     len += fi.Length;
