@@ -3388,12 +3388,15 @@
                 (environment variables are accepted).
             </param>
         </member>
-        <member name="M:SilDev.Data.GetFullHashCode(System.IO.DirectoryInfo)">
+        <member name="M:SilDev.Data.GetFullHashCode(System.IO.DirectoryInfo,System.Boolean)">
             <summary>
                 Returns the hash code for the specified directory instance member.
             </summary>
             <param name="dirInfo">
                 The directory instance member to get the hash code.
+            </param>
+            <param name="size">
+                true to include the size of each file; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Data.GetSize(System.IO.DirectoryInfo)">
