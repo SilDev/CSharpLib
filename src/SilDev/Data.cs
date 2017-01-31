@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-01-30 11:39
+// Version:  2017-01-31 10:02
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -796,7 +796,10 @@ namespace SilDev
         /// <param name="dirInfo">
         ///     The directory instance member to get the hash code.
         /// </param>
-        public static int GetFullHashCode(this DirectoryInfo dirInfo)
+        /// <param name="size">
+        ///     true to include the size of each file; otherwise, false.
+        /// </param>
+        public static int GetFullHashCode(this DirectoryInfo dirInfo, bool size = true)
         {
             try
             {
@@ -805,9 +808,10 @@ namespace SilDev
                 foreach (var fi in dirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
                 {
                     sb.Append(fi.Name);
-                    len += fi.Length;
+                    if (size)
+                        len += fi.Length;
                 }
-                return $"{len}{sb}".GetHashCode();
+                return size ? $"{len}{sb}".GetHashCode() : sb.ToString().GetHashCode();
             }
             catch (Exception ex)
             {
