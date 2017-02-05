@@ -5250,15 +5250,21 @@
                 The <see cref="T:System.String"/> to convert.
             </param>
         </member>
-        <member name="M:SilDev.NetEx.IsValid(System.Uri)">
+        <member name="M:SilDev.NetEx.IsValid(System.Uri,System.Int32,System.String)">
             <summary>
                 Determines the availability of the specified internet address.
             </summary>
             <param name="uri">
                 The address to check.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.FileIsAvailable(System.Uri,System.String,System.String)">
+        <member name="M:SilDev.NetEx.FileIsAvailable(System.Uri,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Determines the availability of the specified internet resource.
             </summary>
@@ -5271,8 +5277,28 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.FileIsAvailable(System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.FileIsAvailable(System.Uri,System.Int32,System.String)">
+            <summary>
+                Determines the availability of the specified internet resource.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to access.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.FileIsAvailable(System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Determines the availability of the specified internet resource.
             </summary>
@@ -5285,8 +5311,28 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.GetFileDate(System.Uri,System.String,System.String)">
+        <member name="M:SilDev.NetEx.FileIsAvailable(System.String,System.Int32,System.String)">
+            <summary>
+                Determines the availability of the specified internet resource.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to access.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.GetFileDate(System.Uri,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Gets the last date and time of the specified internet resource.
             </summary>
@@ -5299,8 +5345,28 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.GetFileDate(System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.GetFileDate(System.Uri,System.Int32,System.String)">
+            <summary>
+                Gets the last date and time of the specified internet resource.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to access.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.GetFileDate(System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Gets the last date and time of the specified internet resource.
             </summary>
@@ -5313,21 +5379,47 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.GetFileName(System.Uri)">
+        <member name="M:SilDev.NetEx.GetFileDate(System.String,System.Int32,System.String)">
+            <summary>
+                Gets the last date and time of the specified internet resource.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to access.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.GetFileName(System.Uri,System.String)">
             <summary>
                 Gets the filename of the specified internet resource.
             </summary>
             <param name="srcUri">
                 The full path of the resource to access.
             </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.GetFileName(System.String)">
+        <member name="M:SilDev.NetEx.GetFileName(System.String,System.String)">
             <summary>
                 Gets the filename of the specified internet resource.
             </summary>
             <param name="srcUri">
                 The full path of the resource to access.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
             </param>
         </member>
         <member name="T:SilDev.NetEx.Transfer">
@@ -5335,7 +5427,7 @@
                 Provides static methods for downloading internet resources.
             </summary>
         </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource to a local file.
             </summary>
@@ -5351,8 +5443,31 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file (environment variables are accepted).
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource to a local file.
             </summary>
@@ -5368,8 +5483,31 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.String,System.String)">
+        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file (environment variables are accepted).
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
             </summary>
@@ -5382,8 +5520,28 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
             </summary>
@@ -5396,8 +5554,28 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.String,System.String)">
+        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource as a <see cref="T:System.String"/>.
             </summary>
@@ -5410,8 +5588,28 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource as a <see cref="T:System.String"/>.
             </summary>
@@ -5423,6 +5621,23 @@
             </param>
             <param name="password">
                 The password associated with the credential.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
             </param>
         </member>
         <member name="T:SilDev.NetEx.AsyncTransfer">
@@ -5486,7 +5701,7 @@
                 Gets whether a transfer is in progress.
             </summary>
         </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource to a local file.
             </summary>
@@ -5501,9 +5716,32 @@
             </param>
             <param name="password">
                 The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
             </param>
         </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.String,System.String)">
+        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file (environment variables are accepted).
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Int32,System.String)">
             <summary>
                 Downloads the specified internet resource to a local file.
             </summary>
@@ -5518,6 +5756,29 @@
             </param>
             <param name="password">
                 The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file (environment variables are accepted).
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
             </param>
         </member>
         <member name="M:SilDev.NetEx.AsyncTransfer.CancelAsync">
