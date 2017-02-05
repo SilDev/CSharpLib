@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2016-11-02 21:26
+// Version:  2017-02-05 07:44
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -44,8 +44,7 @@ namespace SilDev
             bool isAvailable;
             try
             {
-                isAvailable = NetworkInterface.GetAllNetworkInterfaces()
-                                              .Any(x => x.OperationalStatus == OperationalStatus.Up);
+                isAvailable = NetworkInterface.GetAllNetworkInterfaces().Any(x => x.OperationalStatus == OperationalStatus.Up);
                 if (!isAvailable)
                     return false;
             }
@@ -173,13 +172,16 @@ namespace SilDev
         /// <param name="uri">
         ///     The address to check.
         /// </param>
-        public static bool IsValid(this Uri uri)
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static bool IsValid(this Uri uri, int timeout = 3000)
         {
             var statusCode = 500;
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(uri);
-                request.Timeout = 3000;
+                request.Timeout = timeout;
                 request.Method = "HEAD";
                 using (var response = (HttpWebResponse)request.GetResponse())
                     statusCode = (int)response.StatusCode;
@@ -205,13 +207,16 @@ namespace SilDev
         /// <param name="password">
         ///     The password associated with the credential.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, string userName = null, string password = null)
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static bool FileIsAvailable(this Uri srcUri, string userName = null, string password = null, int timeout = 3000)
         {
             long contentLength = 0;
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(srcUri);
-                request.Timeout = 3000;
+                request.Timeout = timeout;
                 if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                     request.Credentials = new NetworkCredential(userName, password);
                 using (var response = (HttpWebResponse)request.GetResponse())
@@ -230,14 +235,41 @@ namespace SilDev
         /// <param name="srcUri">
         ///     The full path of the resource to access.
         /// </param>
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static bool FileIsAvailable(this Uri srcUri, int timeout) =>
+            srcUri.FileIsAvailable(null, null, timeout);
+
+        /// <summary>
+        ///     Determines the availability of the specified internet resource.
+        /// </summary>
+        /// <param name="srcUri">
+        ///     The full path of the resource to access.
+        /// </param>
         /// <param name="userName">
         ///     The username associated with the credential.
         /// </param>
         /// <param name="password">
         ///     The password associated with the credential.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, string userName = null, string password = null) =>
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static bool FileIsAvailable(string srcUri, string userName = null, string password = null, int timeout = 3000) =>
             srcUri.ToHttpUri().FileIsAvailable(userName, password);
+
+        /// <summary>
+        ///     Determines the availability of the specified internet resource.
+        /// </summary>
+        /// <param name="srcUri">
+        ///     The full path of the resource to access.
+        /// </param>
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static bool FileIsAvailable(string srcUri, int timeout) =>
+            srcUri.ToHttpUri().FileIsAvailable(null, null, timeout);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -251,13 +283,16 @@ namespace SilDev
         /// <param name="password">
         ///     The password associated with the credential.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, string userName = null, string password = null)
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static DateTime GetFileDate(this Uri srcUri, string userName = null, string password = null, int timeout = 3000)
         {
             var lastModified = DateTime.Now;
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(srcUri);
-                request.Timeout = 3000;
+                request.Timeout = timeout;
                 if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                     request.Credentials = new NetworkCredential(userName, password);
                 using (var response = (HttpWebResponse)request.GetResponse())
@@ -276,14 +311,41 @@ namespace SilDev
         /// <param name="srcUri">
         ///     The full path of the resource to access.
         /// </param>
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static DateTime GetFileDate(this Uri srcUri, int timeout) =>
+            srcUri.GetFileDate(null, null, timeout);
+
+        /// <summary>
+        ///     Gets the last date and time of the specified internet resource.
+        /// </summary>
+        /// <param name="srcUri">
+        ///     The full path of the resource to access.
+        /// </param>
         /// <param name="userName">
         ///     The username associated with the credential.
         /// </param>
         /// <param name="password">
         ///     The password associated with the credential.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, string userName = null, string password = null) =>
-            srcUri.ToHttpUri().GetFileDate(userName, password);
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static DateTime GetFileDate(string srcUri, string userName = null, string password = null, int timeout = 3000) =>
+            srcUri.ToHttpUri().GetFileDate(userName, password, timeout);
+
+        /// <summary>
+        ///     Gets the last date and time of the specified internet resource.
+        /// </summary>
+        /// <param name="srcUri">
+        ///     The full path of the resource to access.
+        /// </param>
+        /// <param name="timeout">
+        ///     The time-out value in milliseconds.
+        /// </param>
+        public static DateTime GetFileDate(string srcUri, int timeout) =>
+            srcUri.ToHttpUri().GetFileDate(null, null, timeout);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -329,6 +391,25 @@ namespace SilDev
         /// </summary>
         public static class Transfer
         {
+            private class InternWebClient : WebClient
+            {
+                private int Timeout { get; }
+                public InternWebClient() : this(60000) { }
+
+                public InternWebClient(int timeout)
+                {
+                    Timeout = timeout;
+                }
+
+                protected override WebRequest GetWebRequest(Uri address)
+                {
+                    var request = base.GetWebRequest(address);
+                    if (request != null)
+                        request.Timeout = Timeout;
+                    return request;
+                }
+            }
+
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
             /// </summary>
@@ -344,7 +425,10 @@ namespace SilDev
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null)
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, int timeout = 60000)
             {
                 try
                 {
@@ -353,7 +437,7 @@ namespace SilDev
                         File.Delete(path);
                     if (!FileIsAvailable(srcUri, userName, password))
                         throw new PathNotFoundException(srcUri.ToString());
-                    using (var wc = new WebClient())
+                    using (var wc = new InternWebClient(timeout))
                     {
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                             wc.Credentials = new NetworkCredential(userName, password);
@@ -377,14 +461,47 @@ namespace SilDev
             /// <param name="destPath">
             ///     The local destination path of the file (environment variables are accepted).
             /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, int timeout) =>
+                DownloadFile(srcUri, destPath, null, null, timeout);
+
+            /// <summary>
+            ///     Downloads the specified internet resource to a local file.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
+            /// <param name="destPath">
+            ///     The local destination path of the file (environment variables are accepted).
+            /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
             /// </param>
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName = null, string password = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password);
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, string userName = null, string password = null, int timeout = 60000) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, timeout);
+
+            /// <summary>
+            ///     Downloads the specified internet resource to a local file.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
+            /// <param name="destPath">
+            ///     The local destination path of the file (environment variables are accepted).
+            /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, int timeout) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, timeout);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -398,12 +515,15 @@ namespace SilDev
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, string userName = null, string password = null)
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static byte[] DownloadData(Uri srcUri, string userName = null, string password = null, int timeout = 60000)
             {
                 try
                 {
                     byte[] ba;
-                    using (var wc = new WebClient())
+                    using (var wc = new InternWebClient(timeout))
                     {
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                             wc.Credentials = new NetworkCredential(userName, password);
@@ -426,14 +546,41 @@ namespace SilDev
             /// <param name="srcUri">
             ///     The full path of the resource to download.
             /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static byte[] DownloadData(Uri srcUri, int timeout) =>
+                DownloadData(srcUri, null, null, timeout);
+
+            /// <summary>
+            ///     Downloads the specified internet resource as a <see cref="byte"/> array.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
             /// </param>
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public static byte[] DownloadData(string srcUri, string userName = null, string password = null) =>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static byte[] DownloadData(string srcUri, string userName = null, string password = null, int timeout = 60000) =>
                 DownloadData(srcUri.ToHttpUri(), userName, password);
+
+            /// <summary>
+            ///     Downloads the specified internet resource as a <see cref="byte"/> array.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static byte[] DownloadData(string srcUri, int timeout) =>
+                DownloadData(srcUri.ToHttpUri(), null, null, timeout);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -447,7 +594,10 @@ namespace SilDev
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public static string DownloadString(Uri srcUri, string userName = null, string password = null)
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static string DownloadString(Uri srcUri, string userName = null, string password = null, int timeout = 60000)
             {
                 try
                 {
@@ -475,14 +625,38 @@ namespace SilDev
             /// <param name="srcUri">
             ///     The full path of the resource to download.
             /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static string DownloadString(Uri srcUri, int timeout) =>
+                DownloadString(srcUri, null, null, timeout);
+
+            /// <summary>
+            ///     Downloads the specified internet resource as a <see cref="string"/>.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
             /// </param>
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public static string DownloadString(string srcUri, string userName = null, string password = null) =>
+            public static string DownloadString(string srcUri, string userName = null, string password = null, int timeout = 60000) =>
                 DownloadString(srcUri.ToHttpUri(), userName, password);
+
+            /// <summary>
+            ///     Downloads the specified internet resource as a <see cref="string"/>.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            public static string DownloadString(string srcUri, int timeout) =>
+                DownloadString(srcUri.ToHttpUri(), null, null, timeout);
         }
 
         /// <summary>
