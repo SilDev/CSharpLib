@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-02-05 07:44
+// Version:  2017-02-05 09:20
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -28,6 +28,25 @@ namespace SilDev
     /// </summary>
     public static class NetEx
     {
+        private class WebClientEx : WebClient
+        {
+            private int Timeout { get; }
+            internal WebClientEx() : this(60000) { }
+
+            internal WebClientEx(int timeout)
+            {
+                Timeout = timeout;
+            }
+
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                var request = base.GetWebRequest(address);
+                if (request != null)
+                    request.Timeout = Timeout;
+                return request;
+            }
+        }
+
         /// <summary>
         ///     Gets the last result defined in the previous call to the <see cref="Ping(Uri)"/> function.
         /// </summary>
@@ -175,14 +194,19 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static bool IsValid(this Uri uri, int timeout = 3000)
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static bool IsValid(this Uri uri, int timeout = 3000, string userAgent = null)
         {
             var statusCode = 500;
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(uri);
-                request.Timeout = timeout;
                 request.Method = "HEAD";
+                if (!string.IsNullOrEmpty(userAgent))
+                    request.UserAgent = userAgent;
+                request.Timeout = timeout;
                 using (var response = (HttpWebResponse)request.GetResponse())
                     statusCode = (int)response.StatusCode;
                 if (statusCode >= 500 && statusCode <= 510)
@@ -210,12 +234,17 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, string userName = null, string password = null, int timeout = 3000)
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static bool FileIsAvailable(this Uri srcUri, string userName = null, string password = null, int timeout = 3000, string userAgent = null)
         {
             long contentLength = 0;
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(srcUri);
+                if (!string.IsNullOrEmpty(userAgent))
+                    request.UserAgent = userAgent;
                 request.Timeout = timeout;
                 if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                     request.Credentials = new NetworkCredential(userName, password);
@@ -238,8 +267,11 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, int timeout) =>
-            srcUri.FileIsAvailable(null, null, timeout);
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static bool FileIsAvailable(this Uri srcUri, int timeout, string userAgent = null) =>
+            srcUri.FileIsAvailable(null, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -256,8 +288,11 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, string userName = null, string password = null, int timeout = 3000) =>
-            srcUri.ToHttpUri().FileIsAvailable(userName, password);
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static bool FileIsAvailable(string srcUri, string userName = null, string password = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(userName, password, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -268,8 +303,11 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, int timeout) =>
-            srcUri.ToHttpUri().FileIsAvailable(null, null, timeout);
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static bool FileIsAvailable(string srcUri, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(null, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -286,12 +324,17 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, string userName = null, string password = null, int timeout = 3000)
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static DateTime GetFileDate(this Uri srcUri, string userName = null, string password = null, int timeout = 3000, string userAgent = null)
         {
             var lastModified = DateTime.Now;
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(srcUri);
+                if (!string.IsNullOrEmpty(userAgent))
+                    request.UserAgent = userAgent;
                 request.Timeout = timeout;
                 if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                     request.Credentials = new NetworkCredential(userName, password);
@@ -314,8 +357,11 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, int timeout) =>
-            srcUri.GetFileDate(null, null, timeout);
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static DateTime GetFileDate(this Uri srcUri, int timeout, string userAgent = null) =>
+            srcUri.GetFileDate(null, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -332,8 +378,11 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, string userName = null, string password = null, int timeout = 3000) =>
-            srcUri.ToHttpUri().GetFileDate(userName, password, timeout);
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static DateTime GetFileDate(string srcUri, string userName = null, string password = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(userName, password, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -344,8 +393,11 @@ namespace SilDev
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, int timeout) =>
-            srcUri.ToHttpUri().GetFileDate(null, null, timeout);
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static DateTime GetFileDate(string srcUri, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(null, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -353,12 +405,18 @@ namespace SilDev
         /// <param name="srcUri">
         ///     The full path of the resource to access.
         /// </param>
-        public static string GetFileName(this Uri srcUri)
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static string GetFileName(this Uri srcUri, string userAgent = null)
         {
             var name = string.Empty;
             try
             {
                 using (var client = new WebClient())
+                {
+                    if (!string.IsNullOrEmpty(userAgent))
+                        client.Headers.Add("User-Agent", userAgent);
                     using (client.OpenRead(srcUri))
                     {
                         var cd = client.ResponseHeaders["content-disposition"];
@@ -369,6 +427,7 @@ namespace SilDev
                                 name = cd.Substring(i + 10);
                         }
                     }
+                }
             }
             catch (Exception ex)
             {
@@ -383,33 +442,17 @@ namespace SilDev
         /// <param name="srcUri">
         ///     The full path of the resource to access.
         /// </param>
-        public static string GetFileName(string srcUri) =>
-            srcUri.ToHttpUri().GetFileName();
+        /// <param name="userAgent">
+        ///     The value of the User-agent HTTP header.
+        /// </param>
+        public static string GetFileName(string srcUri, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileName(userAgent);
 
         /// <summary>
         ///     Provides static methods for downloading internet resources.
         /// </summary>
         public static class Transfer
         {
-            private class InternWebClient : WebClient
-            {
-                private int Timeout { get; }
-                public InternWebClient() : this(60000) { }
-
-                public InternWebClient(int timeout)
-                {
-                    Timeout = timeout;
-                }
-
-                protected override WebRequest GetWebRequest(Uri address)
-                {
-                    var request = base.GetWebRequest(address);
-                    if (request != null)
-                        request.Timeout = Timeout;
-                    return request;
-                }
-            }
-
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
             /// </summary>
@@ -428,17 +471,22 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, int timeout = 60000)
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
                     var path = PathEx.Combine(destPath);
                     if (File.Exists(path))
                         File.Delete(path);
-                    if (!FileIsAvailable(srcUri, userName, password))
+                    if (!FileIsAvailable(srcUri, userName, password, timeout, userAgent))
                         throw new PathNotFoundException(srcUri.ToString());
-                    using (var wc = new InternWebClient(timeout))
+                    using (var wc = new WebClientEx(timeout))
                     {
+                        if (!string.IsNullOrEmpty(userAgent))
+                            wc.Headers.Add("User-Agent", userAgent);
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                             wc.Credentials = new NetworkCredential(userName, password);
                         wc.DownloadFile(srcUri, path);
@@ -464,8 +512,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, int timeout) =>
-                DownloadFile(srcUri, destPath, null, null, timeout);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -485,8 +536,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName = null, string password = null, int timeout = 60000) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, timeout);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, string userName = null, string password = null, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -500,8 +554,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, int timeout) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, timeout);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -518,13 +575,18 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, string userName = null, string password = null, int timeout = 60000)
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static byte[] DownloadData(Uri srcUri, string userName = null, string password = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
                     byte[] ba;
-                    using (var wc = new InternWebClient(timeout))
+                    using (var wc = new WebClientEx(timeout))
                     {
+                        if (!string.IsNullOrEmpty(userAgent))
+                            wc.Headers.Add("User-Agent", userAgent);
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                             wc.Credentials = new NetworkCredential(userName, password);
                         ba = wc.DownloadData(srcUri);
@@ -549,8 +611,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, int timeout) =>
-                DownloadData(srcUri, null, null, timeout);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static byte[] DownloadData(Uri srcUri, int timeout, string userAgent = null) =>
+                DownloadData(srcUri, null, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -567,8 +632,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static byte[] DownloadData(string srcUri, string userName = null, string password = null, int timeout = 60000) =>
-                DownloadData(srcUri.ToHttpUri(), userName, password);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static byte[] DownloadData(string srcUri, string userName = null, string password = null, int timeout = 60000, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), userName, password, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -579,8 +647,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static byte[] DownloadData(string srcUri, int timeout) =>
-                DownloadData(srcUri.ToHttpUri(), null, null, timeout);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static byte[] DownloadData(string srcUri, int timeout, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), null, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -597,13 +668,18 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static string DownloadString(Uri srcUri, string userName = null, string password = null, int timeout = 60000)
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static string DownloadString(Uri srcUri, string userName = null, string password = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
                     string s;
                     using (var wc = new WebClient())
                     {
+                        if (!string.IsNullOrEmpty(userAgent))
+                            wc.Headers.Add("User-Agent", userAgent);
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                             wc.Credentials = new NetworkCredential(userName, password);
                         s = wc.DownloadString(srcUri);
@@ -628,8 +704,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static string DownloadString(Uri srcUri, int timeout) =>
-                DownloadString(srcUri, null, null, timeout);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static string DownloadString(Uri srcUri, int timeout, string userAgent = null) =>
+                DownloadString(srcUri, null, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -643,8 +722,11 @@ namespace SilDev
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public static string DownloadString(string srcUri, string userName = null, string password = null, int timeout = 60000) =>
-                DownloadString(srcUri.ToHttpUri(), userName, password);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static string DownloadString(string srcUri, string userName = null, string password = null, int timeout = 60000, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), userName, password, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -655,8 +737,11 @@ namespace SilDev
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
             /// </param>
-            public static string DownloadString(string srcUri, int timeout) =>
-                DownloadString(srcUri.ToHttpUri(), null, null, timeout);
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public static string DownloadString(string srcUri, int timeout, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), null, null, timeout, userAgent);
         }
 
         /// <summary>
@@ -759,7 +844,13 @@ namespace SilDev
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null)
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
@@ -768,15 +859,17 @@ namespace SilDev
                     var path = PathEx.Combine(destPath);
                     if (File.Exists(path))
                         File.Delete(path);
-                    using (_webClient = new WebClient())
+                    using (_webClient = new WebClientEx(timeout))
                     {
+                        if (!string.IsNullOrEmpty(userAgent))
+                            _webClient.Headers.Add("User-Agent", userAgent);
                         _webClient.DownloadFileCompleted += DownloadFile_Completed;
                         _webClient.DownloadProgressChanged += DownloadFile_ProgressChanged;
                         Address = srcUri;
                         FilePath = path;
-                        var exists = FileIsAvailable(Address, userName, password);
+                        var exists = FileIsAvailable(Address, userName, password, timeout, userAgent);
                         if (!exists)
-                            throw new FileNotFoundException();
+                            throw new PathNotFoundException(srcUri.ToString());
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                             _webClient.Credentials = new NetworkCredential(userName, password);
                         _webClient.DownloadFileAsync(Address, FilePath);
@@ -800,14 +893,56 @@ namespace SilDev
             /// <param name="destPath">
             ///     The local destination path of the file (environment variables are accepted).
             /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, timeout, userAgent);
+
+            /// <summary>
+            ///     Downloads the specified internet resource to a local file.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
+            /// <param name="destPath">
+            ///     The local destination path of the file (environment variables are accepted).
+            /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
             /// </param>
             /// <param name="password">
             ///     The password associated with the credential.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName = null, string password = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password);
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, string userName = null, string password = null, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, timeout, userAgent);
+
+            /// <summary>
+            ///     Downloads the specified internet resource to a local file.
+            /// </summary>
+            /// <param name="srcUri">
+            ///     The full path of the resource to download.
+            /// </param>
+            /// <param name="destPath">
+            ///     The local destination path of the file (environment variables are accepted).
+            /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
+            /// </param>
+            /// <param name="userAgent">
+            ///     The value of the User-agent HTTP header.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, timeout, userAgent);
 
             private void DownloadFile_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
             {
