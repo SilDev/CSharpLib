@@ -1606,9 +1606,9 @@ namespace SilDev
             /// </summary>
             WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
 #if x64
-/// <summary>
-///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
-/// </summary>
+            /// <summary>
+            ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
+            /// </summary>
             WS_POPUP = 0x80000000,
 
             /// <summary>
