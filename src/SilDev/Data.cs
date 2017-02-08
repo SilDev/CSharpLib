@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-01-31 10:02
+// Version:  2017-02-08 14:24
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -837,6 +838,141 @@ namespace SilDev
             {
                 return -1;
             }
+        }
+
+        /// <summary>
+        ///     Find out which processes have a lock on this file instance member.
+        /// </summary>
+        /// <param name="fileInfo">
+        ///     The file instance member to check.
+        /// </param>
+        public static List<string> GetLocks(this FileInfo fileInfo)
+        {
+            var list = new List<string>();
+            try
+            {
+                var path = fileInfo.FullName;
+                if (!File.Exists(path))
+                    throw new PathNotFoundException(path);
+                uint handle;
+                var res = WinApi.SafeNativeMethods.RmStartSession(out handle, 0, Guid.NewGuid().ToString());
+                if (res != 0)
+                    throw new Exception("Could not begin restart session. Unable to determine file locker.");
+                try
+                {
+                    uint pnProcInfoNeeded;
+                    uint pnProcInfo = 0;
+                    uint lpdwRebootReasons = 0;
+                    string[] resources = { path };
+                    res = WinApi.SafeNativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
+                    if (res != 0)
+                        throw new Exception("Could not register resource.");
+
+                    res = WinApi.SafeNativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
+                    if (res == 234)
+                    {
+                        var processInfo = new WinApi.RM_PROCESS_INFO[pnProcInfoNeeded];
+                        pnProcInfo = pnProcInfoNeeded;
+                        res = WinApi.SafeNativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons);
+                        if (res == 0)
+                        {
+                            list = new List<string>((int)pnProcInfo);
+                            for (var i = 0; i < pnProcInfo; i++)
+                                try
+                                {
+                                    var p = Process.GetProcessById(processInfo[i].Process.dwProcessId);
+                                    if (!list.Contains(p.ProcessName))
+                                        list.Add(p.ProcessName);
+                                }
+                                catch (ArgumentException)
+                                {
+                                    // ignored
+                                }
+                        }
+                        else
+                            throw new Exception("Could not list processes locking resource.");
+                    }
+                    else if (res != 0)
+                        throw new Exception("Could not list processes locking resource. Failed to get size of result.");
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+                finally
+                {
+                    WinApi.SafeNativeMethods.RmEndSession(handle);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return list;
+        }
+
+        /// <summary>
+        ///     Find out which processes have a lock on the files of this directory instance member.
+        /// </summary>
+        /// <param name="dirInfo">
+        ///     The directory instance member to check.
+        /// </param>
+        public static List<string> GetLocks(this DirectoryInfo dirInfo)
+        {
+            var list = new List<string>();
+            try
+            {
+                foreach (var fi in dirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
+                    try
+                    {
+                        var pList = fi.GetLocks();
+                        if (pList.Count > 0)
+                            list.AddRange(pList);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+                if (list.Count > 0)
+                    list = list.Distinct().ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return list;
+        }
+
+        /// <summary>
+        ///     Find out which processes have a lock on the specified path.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path to check.
+        /// </param>
+        public static List<string> GetLocks(string path)
+        {
+            var list = new List<string>();
+            try
+            {
+                var s = PathEx.Combine(path);
+                if (!PathEx.DirOrFileExists(s))
+                    throw new PathNotFoundException(s);
+                if (IsDir(s))
+                {
+                    var di = new DirectoryInfo(s);
+                    list = di.GetLocks();
+                }
+                else
+                {
+                    var fi = new FileInfo(s);
+                    list = fi.GetLocks();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return list;
         }
 
         [ComImport]

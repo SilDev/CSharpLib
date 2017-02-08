@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-01-23 10:41
+// Version:  2017-02-08 13:39
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev
     using System.Security;
     using System.Text;
     using System.Windows.Forms;
+    using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
     /// <summary>
     ///     An overkill class that provides a lot of Windows API (Application Programming Interface)
@@ -1605,9 +1606,9 @@ namespace SilDev
             /// </summary>
             WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
 #if x64
-            /// <summary>
-            ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
-            /// </summary>
+/// <summary>
+///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
+/// </summary>
             WS_POPUP = 0x80000000,
 
             /// <summary>
@@ -2780,6 +2781,107 @@ namespace SilDev
             /// </summary>
             [DllImport(DllNames.Dwmapi, EntryPoint = "#131", PreserveSig = false, SetLastError = true)]
             internal static extern void DwmSetColorizationParameters(ref DWM_COLORIZATION_PARAMS parameters, bool unknown);
+
+            /// <summary>
+            ///     Registers resources to a Restart Manager session. The Restart Manager uses the list of
+            ///     resources registered with the session to determine which applications and services must
+            ///     be shut down and restarted. Resources can be identified by filenames, service short names,
+            ///     or RM_UNIQUE_PROCESS structures that describe running applications. The RmRegisterResources
+            ///     function can be used by a primary or secondary installer.
+            /// </summary>
+            /// <param name="dwSessionHandle">
+            ///     A handle to an existing Restart Manager session.
+            /// </param>
+            /// <param name="nFiles">
+            ///     The number of files being registered.
+            /// </param>
+            /// <param name="rgsFilenames">
+            ///     An array of null-terminated strings of full filename paths.
+            /// </param>
+            /// <param name="nApplications">
+            ///     The number of processes being registered.
+            /// </param>
+            /// <param name="rgApplications">
+            ///     An array of RM_UNIQUE_PROCESS structures.
+            /// </param>
+            /// <param name="nServices">
+            ///     The number of services to be registered.
+            /// </param>
+            /// <param name="rgsServiceNames">
+            ///     An array of null-terminated strings of service short names.
+            /// </param>
+            /// <returns>
+            ///     This is the most recent error received.
+            /// </returns>
+            [DllImport(DllNames.Rstrtmgr, CharSet = CharSet.Unicode)]
+            internal static extern int RmRegisterResources(uint dwSessionHandle, uint nFiles, string[] rgsFilenames, uint nApplications, [In] RM_UNIQUE_PROCESS[] rgApplications, uint nServices, string[] rgsServiceNames);
+
+            /// <summary>
+            ///     Starts a new Restart Manager session. A maximum of 64 Restart Manager sessions per user
+            ///     session can be open on the system at the same time. When this function starts a session,
+            ///     it returns a session handle and session key that can be used in subsequent calls to the
+            ///     Restart Manager API.
+            /// </summary>
+            /// <param name="pSessionHandle">
+            ///     A pointer to the handle of a Restart Manager session. The session handle can be passed in
+            ///     subsequent calls to the Restart Manager API.
+            /// </param>
+            /// <param name="dwSessionFlags">
+            ///     Reserved. This parameter should be 0.
+            /// </param>
+            /// <param name="strSessionKey">
+            ///     A null-terminated string that contains the session key to the new session. The string must
+            ///     be allocated before calling the RmStartSession function.
+            /// </param>
+            /// <returns>
+            ///     This is the most recent error received.
+            /// </returns>
+            [DllImport(DllNames.Rstrtmgr, CharSet = CharSet.Unicode)]
+            internal static extern int RmStartSession(out uint pSessionHandle, int dwSessionFlags, string strSessionKey);
+
+            /// <summary>
+            ///     Ends the Restart Manager session. This function should be called by the primary installer
+            ///     that has previously started the session by calling the RmStartSession function. The
+            ///     RmEndSession function can be called by a secondary installer that is joined to the session
+            ///     once no more resources need to be registered by the secondary installer.
+            /// </summary>
+            /// <param name="pSessionHandle">
+            ///     A handle to an existing Restart Manager session.
+            /// </param>
+            /// <returns>
+            ///     This is the most recent error received.
+            /// </returns>
+            [DllImport(DllNames.Rstrtmgr)]
+            internal static extern int RmEndSession(uint pSessionHandle);
+
+            /// <summary>
+            ///     Gets a list of all applications and services that are currently using resources that have
+            ///     been registered with the Restart Manager session.
+            /// </summary>
+            /// <param name="dwSessionHandle">
+            ///     A handle to an existing Restart Manager session.
+            /// </param>
+            /// <param name="pnProcInfoNeeded">
+            ///     A pointer to an array size necessary to receive RM_PROCESS_INFO structures required to
+            ///     return information for all affected applications and services.
+            /// </param>
+            /// <param name="pnProcInfo">
+            ///     A pointer to the total number of RM_PROCESS_INFO structures in an array and number of
+            ///     structures filled.
+            /// </param>
+            /// <param name="rgAffectedApps">
+            ///     An array of RM_PROCESS_INFO structures that list the applications and services using
+            ///     resources that have been registered with the session.
+            /// </param>
+            /// <param name="lpdwRebootReasons">
+            ///     Pointer to location that receives a value of the RM_REBOOT_REASON enumeration that
+            ///     describes the reason a system restart is needed.
+            /// </param>
+            /// <returns>
+            ///     This is the most recent error received.
+            /// </returns>
+            [DllImport(DllNames.Rstrtmgr)]
+            internal static extern int RmGetList(uint dwSessionHandle, out uint pnProcInfoNeeded, ref uint pnProcInfo, [In][Out] RM_PROCESS_INFO[] rgAffectedApps, ref uint lpdwRebootReasons);
 
             /// <summary>
             ///     Retrieves information about an object in the file system, such as a file, folder, directory, or
@@ -5184,6 +5286,7 @@ namespace SilDev
         {
             internal const string Advapi32 = "advapi32.dll";
             internal const string Dwmapi = "dwmapi.dll";
+            internal const string Rstrtmgr = "rstrtmgr.dll";
             internal const string Winmm = "winmm.dll";
             public const string Kernel32 = "kernel32.dll";
             public const string Ntdll = "ntdll.dll";
@@ -5365,6 +5468,53 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Specifies the type of application that is described by the RM_PROCESS_INFO structure.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        internal enum RM_APP_TYPE
+        {
+            /// <summary>
+            ///     The application cannot be classified as any other type. An application of this type can
+            ///     only be shut down by a forced shutdown.
+            /// </summary>
+            RmUnknownApp = 0,
+
+            /// <summary>
+            ///     A Windows application run as a stand-alone process that displays a top-level window.
+            /// </summary>
+            RmMainWindow = 1,
+
+            /// <summary>
+            ///     A Windows application that does not run as a stand-alone process and does not display a
+            ///     top-level window.
+            /// </summary>
+            RmOtherWindow = 2,
+
+            /// <summary>
+            ///     The application is a Windows service.
+            /// </summary>
+            RmService = 3,
+
+            /// <summary>
+            ///     The application is Windows Explorer.
+            /// </summary>
+            RmExplorer = 4,
+
+            /// <summary>
+            ///     The application is a stand-alone console application.
+            /// </summary>
+            RmConsole = 5,
+
+            /// <summary>
+            ///     A system restart is required to complete the installation because a process cannot be shut
+            ///     down. The process cannot be shut down because of the following reasons. The process may be
+            ///     a critical process. The current user may not have permission to shut down the process. The
+            ///     process may belong to the primary installer that started the Restart Manager.
+            /// </summary>
+            RmCritical = 1000
+        }
+
+        /// <summary>
         ///     Contains information about a system appbar message.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
@@ -5537,6 +5687,82 @@ namespace SilDev
             public uint clrBlurBalance;
             public uint clrGlassReflectionIntensity;
             public bool fOpaque;
+        }
+
+        /// <summary>
+        ///     Describes an application that is to be registered with the Restart Manager.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        internal struct RM_PROCESS_INFO
+        {
+            /// <summary>
+            ///     Contains an RM_UNIQUE_PROCESS structure that uniquely identifies the application
+            ///     by its PID and the time the process began.
+            /// </summary>
+            public RM_UNIQUE_PROCESS Process;
+
+            /// <summary>
+            ///     If the process is a service, this parameter returns the long name for the service. If
+            ///     the process is not a service, this parameter returns the user-friendly name for the
+            ///     application. If the process is a critical process, and the installer is run with
+            ///     elevated privileges, this parameter returns the name of the executable file of the
+            ///     critical process. If the process is a critical process, and the installer is run as a
+            ///     service, this parameter returns the long name of the critical process.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] public string strAppName;
+
+            /// <summary>
+            ///     If the process is a service, this is the short name for the service. This member is
+            ///     not used if the process is not a service.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)] public string strServiceShortName;
+
+            /// <summary>
+            ///     Contains an RM_APP_TYPE enumeration value that specifies the type of application as
+            ///     RmUnknownApp, RmMainWindow, RmOtherWindow, RmService, RmExplorer or RmCritical.
+            /// </summary>
+            public RM_APP_TYPE ApplicationType;
+
+            /// <summary>
+            ///     Contains a bit mask that describes the current status of the application. See the
+            ///     RM_APP_STATUS enumeration.
+            /// </summary>
+            public uint AppStatus;
+
+            /// <summary>
+            ///     Contains the Terminal Services session ID of the process. If the terminal session of
+            ///     the process cannot be determined, the value of this member is set to RM_INVALID_SESSION
+            ///     (-1). This member is not used if the process is a service or a system critical process.
+            /// </summary>
+            public uint TSSessionId;
+
+            /// <summary>
+            ///     TRUE if the application can be restarted by the Restart Manager; otherwise, FALSE. This
+            ///     member is always TRUE if the process is a service. This member is always FALSE if the
+            ///     process is a critical system process.
+            /// </summary>
+            [MarshalAs(UnmanagedType.Bool)] public bool bRestartable;
+        }
+
+        /// <summary>
+        ///     Uniquely identifies a process by its PID and the time the process began. An array of
+        ///     RM_UNIQUE_PROCESS structures can be passed to the RmRegisterResources function.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        internal struct RM_UNIQUE_PROCESS
+        {
+            /// <summary>
+            ///     The product identifier (PID).
+            /// </summary>
+            public int dwProcessId;
+
+            /// <summary>
+            ///     The creation time of the process. The time is provided as a FILETIME structure that is
+            ///     returned by the lpCreationTime parameter of the GetProcessTimes function.
+            /// </summary>
+            public FILETIME ProcessStartTime;
         }
 
         /// <summary>
