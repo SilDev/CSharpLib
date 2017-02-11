@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-02-08 14:24
+// Version:  2017-02-11 00:45
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -843,50 +843,49 @@ namespace SilDev
         /// <summary>
         ///     Find out which processes have a lock on this file instance member.
         /// </summary>
-        /// <param name="fileInfo">
-        ///     The file instance member to check.
+        /// <param name="paths">
+        ///     An array that contains the file paths to check
+        ///     (environment variables are accepted).
         /// </param>
-        public static List<string> GetLocks(this FileInfo fileInfo)
+        public static List<Process> GetLocks(IList<string> paths)
         {
-            var list = new List<string>();
+            var list = new List<Process>();
             try
             {
-                var path = fileInfo.FullName;
-                if (!File.Exists(path))
-                    throw new PathNotFoundException(path);
                 uint handle;
                 var res = WinApi.SafeNativeMethods.RmStartSession(out handle, 0, Guid.NewGuid().ToString());
                 if (res != 0)
                     throw new Exception("Could not begin restart session. Unable to determine file locker.");
                 try
                 {
+                    if (paths == null || !paths.Any())
+                        throw new ArgumentNullException(nameof(paths));
                     uint pnProcInfoNeeded;
                     uint pnProcInfo = 0;
                     uint lpdwRebootReasons = 0;
-                    string[] resources = { path };
+                    var resources = paths.Select(s => PathEx.Combine(s)).Where(File.Exists).ToArray();
+                    if (resources.Length == 0)
+                        throw new PathNotFoundException(paths.Join("'; '"));
                     res = WinApi.SafeNativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
                     if (res != 0)
                         throw new Exception("Could not register resource.");
-
                     res = WinApi.SafeNativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
-                    if (res == 234)
+                    if (res == 0xea)
                     {
                         var processInfo = new WinApi.RM_PROCESS_INFO[pnProcInfoNeeded];
                         pnProcInfo = pnProcInfoNeeded;
                         res = WinApi.SafeNativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons);
                         if (res == 0)
                         {
-                            list = new List<string>((int)pnProcInfo);
-                            for (var i = 0; i < pnProcInfo; i++)
+                            var ids = processInfo.Select(e => e.Process.dwProcessId).Distinct().ToList();
+                            foreach (var id in ids)
                                 try
                                 {
-                                    var p = Process.GetProcessById(processInfo[i].Process.dwProcessId);
-                                    if (!list.Contains(p.ProcessName))
-                                        list.Add(p.ProcessName);
+                                    list.Add(Process.GetProcessById(id));
                                 }
-                                catch (ArgumentException)
+                                catch (Exception ex)
                                 {
-                                    // ignored
+                                    Log.Write(ex);
                                 }
                         }
                         else
@@ -912,27 +911,27 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Find out which processes have a lock on this file instance member.
+        /// </summary>
+        /// <param name="fileInfo">
+        ///     The file instance member to check.
+        /// </param>
+        public static List<Process> GetLocks(this FileInfo fileInfo) =>
+            GetLocks(new[] { fileInfo.FullName });
+
+        /// <summary>
         ///     Find out which processes have a lock on the files of this directory instance member.
         /// </summary>
         /// <param name="dirInfo">
         ///     The directory instance member to check.
         /// </param>
-        public static List<string> GetLocks(this DirectoryInfo dirInfo)
+        public static List<Process> GetLocks(this DirectoryInfo dirInfo)
         {
-            var list = new List<string>();
+            var list = new List<Process>();
             try
             {
-                foreach (var fi in dirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
-                    try
-                    {
-                        var pList = fi.GetLocks();
-                        if (pList.Count > 0)
-                            list.AddRange(pList);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
+                var sa = Directory.GetFiles(dirInfo.FullName, "*", SearchOption.AllDirectories);
+                list = GetLocks(sa);
                 if (list.Count > 0)
                     list = list.Distinct().ToList();
             }
@@ -947,11 +946,11 @@ namespace SilDev
         ///     Find out which processes have a lock on the specified path.
         /// </summary>
         /// <param name="path">
-        ///     The full path to check.
+        ///     The full path to check (environment variables are accepted).
         /// </param>
-        public static List<string> GetLocks(string path)
+        public static List<Process> GetLocks(string path)
         {
-            var list = new List<string>();
+            var list = new List<Process>();
             try
             {
                 var s = PathEx.Combine(path);
