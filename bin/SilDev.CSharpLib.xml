@@ -3747,6 +3747,15 @@
                 The directory instance to get the size.
             </param>
         </member>
+        <member name="M:SilDev.Data.GetLocks(System.Collections.Generic.IList{System.String})">
+            <summary>
+                Find out which processes have a lock on this file instance member.
+            </summary>
+            <param name="paths">
+                An array that contains the file paths to check
+                (environment variables are accepted).
+            </param>
+        </member>
         <member name="M:SilDev.Data.GetLocks(System.IO.FileInfo)">
             <summary>
                 Find out which processes have a lock on this file instance member.
@@ -3768,7 +3777,7 @@
                 Find out which processes have a lock on the specified path.
             </summary>
             <param name="path">
-                The full path to check.
+                The full path to check (environment variables are accepted).
             </param>
         </member>
         <member name="T:SilDev.Depiction">
