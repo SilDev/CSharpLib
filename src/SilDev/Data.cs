@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-02-11 00:45
+// Version:  2017-02-15 15:18
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -26,7 +26,8 @@ namespace SilDev
     using System.Text;
 
     /// <summary>
-    ///     Provides static methods for the creation, copying and linking of data.
+    ///     Provides static methods for the creation, copying, linking of data and to handle file
+    ///     information.
     /// </summary>
     public static class Data
     {
@@ -972,6 +973,55 @@ namespace SilDev
                 Log.Write(ex);
             }
             return list;
+        }
+
+        /// <summary>
+        ///     Returns the version information associated with this file instance member.
+        /// </summary>
+        /// <param name="fileInfo">
+        ///     The file instance member to check.
+        /// </param>
+        public static Version GetVersion(this FileInfo fileInfo)
+        {
+            Version v;
+            try
+            {
+                var fvi = FileVersionInfo.GetVersionInfo(fileInfo.FullName);
+                v = Version.Parse(fvi.ProductVersion);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                v = Version.Parse("0.0.0.0");
+            }
+            return v;
+        }
+
+        /// <summary>
+        ///     Returns the version information associated with the specified file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check (environment variables are accepted).
+        /// </param>
+        public static Version GetVersion(string path)
+        {
+            Version v;
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var s = PathEx.Combine(path);
+                if (!File.Exists(s))
+                    throw new PathNotFoundException(s);
+                var fvi = FileVersionInfo.GetVersionInfo(s);
+                v = Version.Parse(fvi.ProductVersion);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                v = Version.Parse("0.0.0.0");
+            }
+            return v;
         }
 
         [ComImport]
