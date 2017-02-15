@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-02-15 15:18
+// Version:  2017-02-15 15:24
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1008,8 +1008,6 @@ namespace SilDev
             Version v;
             try
             {
-                if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException(nameof(path));
                 var s = PathEx.Combine(path);
                 if (!File.Exists(s))
                     throw new PathNotFoundException(s);
