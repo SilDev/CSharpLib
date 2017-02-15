@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-02-11 00:34
+// Version:  2017-02-15 14:42
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -3650,6 +3650,35 @@ namespace SilDev
             public static extern bool DuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle, uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions);
 
             /// <summary>
+            ///     Extends the window frame into the client area.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     The handle to the window in which the frame will be extended into the client area.
+            /// </param>
+            /// <param name="pMarInset">
+            ///     A pointer to a MARGINS structure that describes the margins to use when extending the frame
+            ///     into the client area.
+            /// </param>
+            /// <returns>
+            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            /// </returns>
+            [DllImport(DllNames.Dwmapi, SetLastError = true)]
+            public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
+
+            /// <summary>
+            ///     Obtains a value that indicates whether Desktop Window Manager (DWM) composition is enabled.
+            /// </summary>
+            /// <param name="pfEnabled">
+            ///     A pointer to a value that, when this function returns successfully, receives TRUE if DWM
+            ///     composition is enabled; otherwise, FALSE.
+            /// </param>
+            /// <returns>
+            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            /// </returns>
+            [DllImport(DllNames.Dwmapi, SetLastError = true)]
+            public static extern int DwmIsCompositionEnabled(ref int pfEnabled);
+
+            /// <summary>
             ///     Destroys a modal dialog box, causing the system to end any processing for the dialog box.
             /// </summary>
             /// <param name="hDlg">
@@ -5688,6 +5717,35 @@ namespace SilDev
             public uint clrBlurBalance;
             public uint clrGlassReflectionIntensity;
             public bool fOpaque;
+        }
+
+        /// <summary>
+        ///     Returned by the GetThemeMargins function to define the margins of windows that have visual
+        ///     styles applied.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public struct MARGINS
+        {
+            /// <summary>
+            ///     Width of the left border that retains its size.
+            /// </summary>
+            public int cxLeftWidth;
+
+            /// <summary>
+            ///     Width of the right border that retains its size.
+            /// </summary>
+            public int cxRightWidth;
+
+            /// <summary>
+            ///     Height of the top border that retains its size.
+            /// </summary>
+            public int cyTopHeight;
+
+            /// <summary>
+            ///     Height of the bottom border that retains its size.
+            /// </summary>
+            public int cyBottomHeight;
         }
 
         /// <summary>
