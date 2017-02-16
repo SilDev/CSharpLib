@@ -1133,6 +1133,73 @@
                 The <see cref="T:System.Windows.Forms.ProgressBar"/> to progress.
             </param>
         </member>
+        <member name="T:SilDev.Forms.ProgressCircle">
+            <summary>
+                Represents a <see cref="T:SilDev.Forms.ProgressCircle"/> control.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.ProgressCircle.Active">
+            <summary>
+                Gets or sets a value indicating whether this <see cref="T:SilDev.Forms.ProgressCircle"/>
+                is active.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.ProgressCircle.Spokes">
+            <summary>
+                Gets or sets the number of spokes.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.ProgressCircle.Thickness">
+            <summary>
+                Gets or sets the spoke thickness.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.ProgressCircle.InnerRadius">
+            <summary>
+                Gets or sets the inner circle radius.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.ProgressCircle.OuterRadius">
+            <summary>
+                Gets or sets the outer circle radius.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.ProgressCircle.RotationSpeed">
+            <summary>
+                Gets or sets the rotation speed.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ProgressCircle.SetAppearance(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Sets the circle appearance.
+            </summary>
+            <param name="spokes">
+                The number of spokes.
+            </param>
+            <param name="thickness">
+                The spoke thickness.
+            </param>
+            <param name="innerRadius">
+                The inner circle radius.
+            </param>
+            <param name="outerRadius">
+                The outer circle radius.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ProgressCircle.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Forms.ProgressCircle"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ProgressCircle.GetPreferredSize(System.Drawing.Size)">
+            <summary>
+                Retrieves the size of a rectangular area into which a control can be
+                fitted.
+            </summary>
+            <param name="size">
+                The custom-sized area for a control.
+            </param>
+        </member>
         <member name="T:SilDev.Forms.RichTextBoxEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.RichTextBox"/> class.
@@ -3418,7 +3485,8 @@
         </member>
         <member name="T:SilDev.Data">
             <summary>
-                Provides static methods for the creation, copying and linking of data.
+                Provides static methods for the creation, copying, linking of data and to handle file
+                information.
             </summary>
         </member>
         <member name="P:SilDev.Data.PrincipalName">
@@ -3778,6 +3846,22 @@
             </summary>
             <param name="path">
                 The full path to check (environment variables are accepted).
+            </param>
+        </member>
+        <member name="M:SilDev.Data.GetVersion(System.IO.FileInfo)">
+            <summary>
+                Returns the version information associated with this file instance member.
+            </summary>
+            <param name="fileInfo">
+                The file instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Data.GetVersion(System.String)">
+            <summary>
+                Returns the version information associated with the specified file.
+            </summary>
+            <param name="path">
+                The file to check (environment variables are accepted).
             </param>
         </member>
         <member name="T:SilDev.Depiction">
@@ -10738,6 +10822,33 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.UnsafeNativeMethods.DwmExtendFrameIntoClientArea(System.IntPtr,SilDev.WinApi.MARGINS@)">
+            <summary>
+                Extends the window frame into the client area.
+            </summary>
+            <param name="hWnd">
+                The handle to the window in which the frame will be extended into the client area.
+            </param>
+            <param name="pMarInset">
+                A pointer to a MARGINS structure that describes the margins to use when extending the frame
+                into the client area.
+            </param>
+            <returns>
+                If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.UnsafeNativeMethods.DwmIsCompositionEnabled(System.Int32@)">
+            <summary>
+                Obtains a value that indicates whether Desktop Window Manager (DWM) composition is enabled.
+            </summary>
+            <param name="pfEnabled">
+                A pointer to a value that, when this function returns successfully, receives TRUE if DWM
+                composition is enabled; otherwise, FALSE.
+            </param>
+            <returns>
+                If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.UnsafeNativeMethods.EndDialog(System.IntPtr,System.IntPtr)">
             <summary>
                 Destroys a modal dialog box, causing the system to end any processing for the dialog box.
@@ -12647,6 +12758,32 @@
         <member name="T:SilDev.WinApi.DWM_COLORIZATION_PARAMS">
             <summary>
                 Contains information about the colorization of a Windows.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.MARGINS">
+            <summary>
+                Returned by the GetThemeMargins function to define the margins of windows that have visual
+                styles applied.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MARGINS.cxLeftWidth">
+            <summary>
+                Width of the left border that retains its size.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MARGINS.cxRightWidth">
+            <summary>
+                Width of the right border that retains its size.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MARGINS.cyTopHeight">
+            <summary>
+                Height of the top border that retains its size.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MARGINS.cyBottomHeight">
+            <summary>
+                Height of the bottom border that retains its size.
             </summary>
         </member>
         <member name="T:SilDev.WinApi.RM_PROCESS_INFO">
