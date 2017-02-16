@@ -56,6 +56,9 @@
     <Compile Include="SilDev\Forms\ControlEx.cs" />
     <Compile Include="SilDev\Forms\MessageBoxEx.cs" />
     <Compile Include="SilDev\Forms\ProgressBarEx.cs" />
+    <Compile Include="SilDev\Forms\ProgressCircle.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SilDev\Forms\RichTextBoxEx.cs" />
     <Compile Include="SilDev\Json.cs" />
     <Compile Include="SilDev\Forms\LinkLabelEx.cs" />
