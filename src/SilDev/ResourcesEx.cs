@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2016-10-28 08:30
+// Version:  2017-02-17 20:36
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -73,7 +73,7 @@ namespace SilDev
             Install = 0x52,
             JpgFile = 0x43,
             Key = 0x4d,
-            Network = 0xaa,
+            Network = 0x14,
             OneDrive = 0xdc,
             Play = 0x118,
             Pin = 0xea,
