@@ -7038,6 +7038,14 @@
                 local system processes.
             </summary>
         </member>
+        <member name="M:SilDev.ProcessEx.IsRunning(System.String)">
+            <summary>
+                Determines whether the specified file is matched with a running process.
+            </summary>
+            <param name="nameOrPath">
+                The filename without extension or the path to the file to check.
+            </param>
+        </member>
         <member name="M:SilDev.ProcessEx.IsSandboxed(System.Diagnostics.Process)">
             <summary>
                 <para>
