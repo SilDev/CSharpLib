@@ -30,6 +30,32 @@ namespace SilDev
     public static class ProcessEx
     {
         /// <summary>
+        ///     Determines whether the specified file is matched with a running process.
+        /// </summary>
+        /// <param name="nameOrPath">
+        ///     The filename without extension or the path to the file to check.
+        /// </param>
+        public static bool IsRunning(string nameOrPath)
+        {
+            try
+            {
+                bool isRunning;
+                var path = nameOrPath;
+                var name = Path.GetFileNameWithoutExtension(path);
+                if (path.Contains("\\") && File.Exists(path))
+                    isRunning = Process.GetProcesses().Any(p => p.ProcessName.EqualsEx(name) && p.MainModule.FileName.EqualsEx(path));
+                else
+                    isRunning = Process.GetProcessesByName(name).Length > 0;
+                return isRunning;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return false;
+        }
+
+        /// <summary>
         ///     <para>
         ///         Determines whether this <see cref="Process"/> is running in a sandboxed
         ///         environment.
