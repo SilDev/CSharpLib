@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2017-02-16 04:25
+// Version:  2017-04-10 12:26
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -35,6 +35,7 @@ namespace SilDev.Forms
         private int _innerRadius = 6;
         private int _outerRadius = 7;
         private PointF _centerPoint;
+        private Color _foreColor;
         private Color[] _colors;
         private double[] _angles;
 
@@ -166,6 +167,19 @@ namespace SilDev.Forms
         }
 
         /// <summary>
+        ///     Gets or sets the foreground color of the control.
+        /// </summary>
+        public override Color ForeColor
+        {
+            get { return _foreColor; }
+            set
+            {
+                _foreColor = value;
+                GenerateColorsPallet();
+            }
+        }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="ProgressCircle"/> class.
         /// </summary>
         public ProgressCircle()
@@ -254,8 +268,7 @@ namespace SilDev.Forms
         private static PointF GetCoordinate(PointF circleCenter, int radius, double angle)
         {
             var d = Math.PI * angle / 180d;
-            return new PointF(circleCenter.X + radius * (float)Math.Cos(d),
-                circleCenter.Y + radius * (float)Math.Sin(d));
+            return new PointF(circleCenter.X + radius * (float)Math.Cos(d), circleCenter.Y + radius * (float)Math.Sin(d));
         }
 
         private void GetSpokesAngles()
