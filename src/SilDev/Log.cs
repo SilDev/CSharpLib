@@ -302,7 +302,7 @@ namespace SilDev
 
         /// <summary>
         ///     <para>
-        ///         Initializes a ne instance of the <see cref="Stopwatch"/> class to determine the loading time
+        ///         Initializes a new instance of the <see cref="Stopwatch"/> class to determine the loading time
         ///         of the specified <see cref="Form"/> window.
         ///     </para>
         ///     <para>
