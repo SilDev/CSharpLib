@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-02-15 14:42
+// Version:  2017-04-10 13:28
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -2757,6 +2757,27 @@ namespace SilDev
             [DllImport(DllNames.Kernel32, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool CreateSymbolicLink([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string lpSymlinkFileName, [MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string lpTargetFileName, SymbolicLinkFlags dwFlags);
+
+            /// <summary>
+            ///     Determines whether a key is up or down at the time the function is called, and whether the
+            ///     key was pressed after a previous call to <see cref="GetAsyncKeyState"/>.
+            /// </summary>
+            /// <param name="vKey">
+            ///     The virtual-key code.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value specifies whether the key was pressed since the
+            ///     last call to <see cref="GetAsyncKeyState"/>, and whether the key is currently up or down.
+            ///     If the most significant bit is set, the key is down, and if the least significant bit is
+            ///     set, the key was pressed after the previous call to <see cref="GetAsyncKeyState"/>.
+            ///     <para>
+            ///         The return value is zero if the current desktop is not the active desktop, or if the
+            ///         foreground thread belongs to another process and the desktop does not allow the hook or
+            ///         the journal record.
+            ///     </para>
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern short GetAsyncKeyState(ushort vKey);
 
             /// <summary>
             ///     Retrieves the window handle used by the console associated with the calling
