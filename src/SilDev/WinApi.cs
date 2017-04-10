@@ -1913,12 +1913,17 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Refreshes the visible notification area of the taskbar.
+        ///     Refreshes the visible notification area of the taskbar (disabled on Windows 10).
         /// </summary>
-        public static bool RefreshVisibleTrayArea()
+        /// <param name="force">
+        ///     Allows the usage on an unsupported OS.
+        /// </param>
+        public static bool RefreshVisibleTrayArea(bool force = false)
         {
             try
             {
+                if (!force && Environment.OSVersion.Version.Major >= 10)
+                    throw new NotSupportedException("This function is no longer supported on Windows 10.");
                 var hWndTray = UnsafeNativeMethods.FindWindow("Shell_TrayWnd", null);
                 if (hWndTray == IntPtr.Zero)
                     return false;
