@@ -72,6 +72,7 @@
     <Compile Include="SilDev\Elevation.cs" />
     <Compile Include="SilDev\Forms\TextBoxEx.cs" />
     <Compile Include="SilDev\Ini.cs" />
+    <Compile Include="SilDev\KeyState.cs" />
     <Compile Include="SilDev\Log.cs" />
     <Compile Include="SilDev\Media.cs" />
     <Compile Include="SilDev\NetEx.cs" />
