@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-04-12 16:53
+// Version:  2017-04-12 17:17
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1913,42 +1913,25 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Refreshes the visible notification area of the taskbar (disabled on Windows 10).
+        ///     ***This function is disabled by default and has been moved to <see cref="Tray.RefreshVisibleArea"/>,
+        ///     because it cause some critical issues in some cases.
         /// </summary>
         /// <param name="force">
-        ///     Allows the usage on an unsupported OS.
+        ///     true to call <see cref="Tray.RefreshVisibleArea"/> (not recommended); otherwise, false.
         /// </param>
         public static bool RefreshVisibleTrayArea(bool force = false)
         {
             try
             {
-                if (!force && Environment.OSVersion.Version.Major >= 10)
-                    throw new NotSupportedException("This function is no longer supported on Windows 10.");
-                var hWnd = IntPtr.Zero;
-                var classNames = new[]
-                {
-                    "Shell_TrayWnd",
-                    "TrayNotifyWnd",
-                    "SysPager",
-                    "ToolbarWindow32"
-                };
-                foreach (var className in classNames)
-                {
-                    FindNestedWindow(ref hWnd, className);
-                    if (hWnd == IntPtr.Zero)
-                        throw new ArgumentNullException(nameof(hWnd));
-                }
-                Rectangle rect;
-                UnsafeNativeMethods.GetClientRect(hWnd, out rect);
-                for (var x = 0; x < rect.Right; x += 5)
-                    for (var y = 0; y < rect.Bottom; y += 5)
-                        UnsafeNativeMethods.SendMessage(hWnd, (uint)WindowMenuFunc.WM_MOUSEMOVE, IntPtr.Zero, new IntPtr((y << 16) + x));
+                if (!force)
+                    throw new NotSupportedException();
+                Tray.RefreshVisibleArea();
                 return true;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return false;
+                return true;
             }
         }
 
