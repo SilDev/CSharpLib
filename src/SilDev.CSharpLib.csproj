@@ -63,6 +63,7 @@
     <Compile Include="SilDev\Json.cs" />
     <Compile Include="SilDev\Forms\LinkLabelEx.cs" />
     <Compile Include="SilDev\Forms\ListViewEx.cs" />
+    <Compile Include="SilDev\Memory.cs" />
     <Compile Include="SilDev\NotifyBox.cs" />
     <Compile Include="SilDev\QuickWmi\Win32_OperatingSystem.cs" />
     <Compile Include="SilDev\Reorganize.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="SilDev\ProcessEx.cs" />
     <Compile Include="SilDev\Service.cs" />
     <Compile Include="SilDev\TaskBar.cs" />
+    <Compile Include="SilDev\Tray.cs" />
     <Compile Include="SilDev\WinApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
