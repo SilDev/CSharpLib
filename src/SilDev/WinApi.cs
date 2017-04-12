@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-04-10 13:28
+// Version:  2017-04-12 16:53
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1924,26 +1924,55 @@ namespace SilDev
             {
                 if (!force && Environment.OSVersion.Version.Major >= 10)
                     throw new NotSupportedException("This function is no longer supported on Windows 10.");
-                var hWndTray = UnsafeNativeMethods.FindWindow("Shell_TrayWnd", null);
-                if (hWndTray == IntPtr.Zero)
-                    return false;
-                foreach (var className in new[] { "TrayNotifyWnd", "SysPager", "ToolbarWindow32" })
+                var hWnd = IntPtr.Zero;
+                var classNames = new[]
                 {
-                    hWndTray = UnsafeNativeMethods.FindWindowEx(hWndTray, IntPtr.Zero, className, null);
-                    if (hWndTray == IntPtr.Zero)
-                        throw new ArgumentNullException(nameof(hWndTray));
+                    "Shell_TrayWnd",
+                    "TrayNotifyWnd",
+                    "SysPager",
+                    "ToolbarWindow32"
+                };
+                foreach (var className in classNames)
+                {
+                    FindNestedWindow(ref hWnd, className);
+                    if (hWnd == IntPtr.Zero)
+                        throw new ArgumentNullException(nameof(hWnd));
                 }
                 Rectangle rect;
-                UnsafeNativeMethods.GetClientRect(hWndTray, out rect);
+                UnsafeNativeMethods.GetClientRect(hWnd, out rect);
                 for (var x = 0; x < rect.Right; x += 5)
                     for (var y = 0; y < rect.Bottom; y += 5)
-                        UnsafeNativeMethods.SendMessage(hWndTray, (uint)WindowMenuFunc.WM_MOUSEMOVE, IntPtr.Zero, (IntPtr)((y << 16) + x));
+                        UnsafeNativeMethods.SendMessage(hWnd, (uint)WindowMenuFunc.WM_MOUSEMOVE, IntPtr.Zero, new IntPtr((y << 16) + x));
                 return true;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
                 return false;
+            }
+        }
+
+        /// <summary>
+        ///     Retrieves a handle to a window whose class name is matched.
+        /// </summary>
+        /// <param name="hWndParent">
+        ///     A handle to the parent window whose child windows are to be searched.
+        /// </param>
+        /// <param name="className">
+        ///     The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx
+        ///     function.
+        /// </param>
+        public static void FindNestedWindow(ref IntPtr hWndParent, string className)
+        {
+            try
+            {
+                hWndParent = hWndParent == IntPtr.Zero ? UnsafeNativeMethods.FindWindow(className, null) : UnsafeNativeMethods.FindWindowEx(hWndParent, IntPtr.Zero, className, null);
+                if (hWndParent == IntPtr.Zero)
+                    throw new ArgumentException("Failed to locate window (class: '" + className + "').");
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
             }
         }
 
@@ -2782,7 +2811,7 @@ namespace SilDev
             ///     </para>
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern short GetAsyncKeyState(ushort vKey);
+            internal static extern short GetAsyncKeyState(int vKey);
 
             /// <summary>
             ///     Retrieves the window handle used by the console associated with the calling
@@ -3805,8 +3834,8 @@ namespace SilDev
             ///     If the function succeeds, the return value is a handle to the window that has the specified class
             ///     name and window name.
             /// </returns>
-            [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Unicode)]
-            public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+            [DllImport(DllNames.User32, EntryPoint = "FindWindowA", CallingConvention = CallingConvention.StdCall, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
+            public static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPWStr)] string lpClassName, [MarshalAs(UnmanagedType.LPWStr)] string lpWindowName);
 
             /// <summary>
             ///     Retrieves a handle to the top-level window whose window name match the specified strings. This
@@ -3869,8 +3898,8 @@ namespace SilDev
             ///     If the function succeeds, the return value is a handle to the window that has the specified class and
             ///     window names.
             /// </returns>
-            [DllImport(DllNames.User32, EntryPoint = "FindWindowEx", SetLastError = true, CharSet = CharSet.Unicode)]
-            public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+            [DllImport(DllNames.User32, EntryPoint = "FindWindowExA", CallingConvention = CallingConvention.StdCall, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
+            public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, [MarshalAs(UnmanagedType.LPWStr)] string lpszClass, [MarshalAs(UnmanagedType.LPWStr)] string lpszWindow);
 
             /// <summary>
             ///     Retrieves the name of the class to which the specified window belongs.
@@ -4561,7 +4590,7 @@ namespace SilDev
             ///     The return value specifies the result of the message processing; it depends on the
             ///     message sent.
             /// </returns>
-            [DllImport(DllNames.User32, SetLastError = true)]
+            [DllImport(DllNames.User32, EntryPoint = "SendMessageA", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
             public static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
             /// <summary>
@@ -4588,7 +4617,7 @@ namespace SilDev
             ///     The return value specifies the result of the message processing; it depends on the
             ///     message sent.
             /// </returns>
-            [DllImport(DllNames.User32, SetLastError = true)]
+            [DllImport(DllNames.User32, EntryPoint = "SendMessageA", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
             public static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, ref COPYDATASTRUCT lParam);
 
             /// <summary>
