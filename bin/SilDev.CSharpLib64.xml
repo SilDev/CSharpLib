@@ -1445,6 +1445,122 @@
                 An array of keys to navigate to the exact position of the value.
             </param>
         </member>
+        <member name="P:SilDev.MemoryPinner.Pointer">
+            <summary>
+                Returns the pointer to the pinned object.
+            </summary>
+        </member>
+        <member name="M:SilDev.MemoryPinner.#ctor(System.Object)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.MemoryPinner"/> class with
+                the specified object to pin.
+            </summary>
+            <param name="value">
+                The object to pin.
+            </param>
+        </member>
+        <member name="M:SilDev.MemoryPinner.Finalize">
+            <summary>
+                Undoes the pinning.
+            </summary>
+        </member>
+        <member name="M:SilDev.MemoryPinner.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.MemoryPinner"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessMemory.#ctor(System.IntPtr)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.ProcessMemory"/> class with
+                the specified window handle.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Finalize">
+            <summary>
+                Undoes the process memory.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessMemory.GetImageFileName">
+            <summary>
+                Gets the file name of the process image.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Allocate(System.Object)">
+            <summary>
+                Allocates a chunck of memory in the process.
+            </summary>
+            <param name="value">
+                The structure to be allocated.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Read(System.Object,System.IntPtr)">
+            <summary>
+                Reads data from an area of memory in a specified process.
+            </summary>
+            <param name="value">
+                The structure to be allocated.
+            </param>
+            <param name="address">
+                A pointer to the base address in the specified process from which to read.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.ReadString(System.Int32,System.IntPtr)">
+            <summary>
+                Reads a string from an area of memory in a specified process.
+            </summary>
+            <param name="size">
+                The number of bytes to be read from the specified process.
+            </param>
+            <param name="address">
+                A pointer to the base address in the specified process from which to read.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Write(System.Object,System.Int32,System.IntPtr)">
+            <summary>
+                Writes data to an area of memory in a specified process.
+            </summary>
+            <param name="value">
+                The structure to be allocated.
+            </param>
+            <param name="size">
+                The number of bytes to be written to the specified process.
+            </param>
+            <param name="buffer">
+                A pointer to the buffer that contains data to be written in the address
+                space of the specified process.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
+            </summary>
+        </member>
+        <member name="T:SilDev.MemoryException">
+            <summary>
+                The exception that is thrown when an attempt to access some data in memory.
+            </summary>
+        </member>
+        <member name="M:SilDev.MemoryException.#ctor">
+            <summary>
+                Create the exception.
+            </summary>
+        </member>
+        <member name="M:SilDev.MemoryException.#ctor(System.String)">
+            <summary>
+                Create the exception with a specified error message.
+            </summary>
+            <param name="message">
+                Exception message.
+            </param>
+        </member>
+        <member name="P:SilDev.MemoryException.Message">
+            <summary>
+                Gets the error message.
+            </summary>
+        </member>
         <member name="T:SilDev.QuickWmi.Win32_OperatingSystem">
             <summary>
                 ***This is an undocumented class and can be changed or removed in the future
@@ -8558,6 +8674,24 @@
                 operation is complete.
             </param>
         </member>
+        <member name="T:SilDev.Tray">
+            <summary>
+                Provides the functionality to manage the items of the system tray area
+                of the taskbar.
+            </summary>
+        </member>
+        <member name="M:SilDev.Tray.RefreshVisibleArea">
+            <summary>
+                Refreshes the visible system tray area of the taskbar (experimental
+                function).
+            </summary>
+        </member>
+        <member name="M:SilDev.Tray.RemovePhantomIcons">
+            <summary>
+                Removes invalid icons of the visible and hidden system tray area of
+                the taskbar (experimental function).
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi">
             <summary>
                 An overkill class that provides a lot of Windows API (Application Programming Interface)
@@ -10350,10 +10484,23 @@
         </member>
         <member name="M:SilDev.WinApi.RefreshVisibleTrayArea(System.Boolean)">
             <summary>
-                Refreshes the visible notification area of the taskbar (disabled on Windows 10).
+                ***This function is disabled by default and has been moved to <see cref="M:SilDev.Tray.RefreshVisibleArea"/>,
+                because it cause some critical issues in some cases.
             </summary>
             <param name="force">
-                Allows the usage on an unsupported OS.
+                true to call <see cref="M:SilDev.Tray.RefreshVisibleArea"/> (not recommended); otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.FindNestedWindow(System.IntPtr@,System.String)">
+            <summary>
+                Retrieves a handle to a window whose class name is matched.
+            </summary>
+            <param name="hWndParent">
+                A handle to the parent window whose child windows are to be searched.
+            </param>
+            <param name="className">
+                The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx
+                function.
             </param>
         </member>
         <member name="M:SilDev.WinApi.GetActiveWindowTitle">
@@ -11042,19 +11189,19 @@
                 If the function succeeds, the return value is TRUE.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.UInt16)">
+        <member name="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.Int32)">
             <summary>
                 Determines whether a key is up or down at the time the function is called, and whether the
-                key was pressed after a previous call to <see cref="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.UInt16)"/>.
+                key was pressed after a previous call to <see cref="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.Int32)"/>.
             </summary>
             <param name="vKey">
                 The virtual-key code.
             </param>
             <returns>
                 If the function succeeds, the return value specifies whether the key was pressed since the
-                last call to <see cref="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.UInt16)"/>, and whether the key is currently up or down.
+                last call to <see cref="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.Int32)"/>, and whether the key is currently up or down.
                 If the most significant bit is set, the key is down, and if the least significant bit is
-                set, the key was pressed after the previous call to <see cref="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.UInt16)"/>.
+                set, the key was pressed after the previous call to <see cref="M:SilDev.WinApi.SafeNativeMethods.GetAsyncKeyState(System.Int32)"/>.
                 <para>
                     The return value is zero if the current desktop is not the active desktop, or if the
                     foreground thread belongs to another process and the desktop does not allow the hook or
