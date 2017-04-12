@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-04-12 17:17
+// Version:  2017-04-12 17:32
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -3818,7 +3818,7 @@ namespace SilDev
             ///     name and window name.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "FindWindowA", CallingConvention = CallingConvention.StdCall, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
-            public static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPWStr)] string lpClassName, [MarshalAs(UnmanagedType.LPWStr)] string lpWindowName);
+            public static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPStr)] string lpClassName, [MarshalAs(UnmanagedType.LPStr)] string lpWindowName);
 
             /// <summary>
             ///     Retrieves a handle to the top-level window whose window name match the specified strings. This
@@ -3882,7 +3882,7 @@ namespace SilDev
             ///     window names.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "FindWindowExA", CallingConvention = CallingConvention.StdCall, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
-            public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, [MarshalAs(UnmanagedType.LPWStr)] string lpszClass, [MarshalAs(UnmanagedType.LPWStr)] string lpszWindow);
+            public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, [MarshalAs(UnmanagedType.LPStr)] string lpszClass, [MarshalAs(UnmanagedType.LPStr)] string lpszWindow);
 
             /// <summary>
             ///     Retrieves the name of the class to which the specified window belongs.
