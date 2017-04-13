@@ -8682,8 +8682,7 @@
         </member>
         <member name="M:SilDev.Tray.RefreshVisibleArea">
             <summary>
-                Refreshes the visible system tray area of the taskbar (experimental
-                function).
+                Refreshes the visible system tray area of the taskbar.
             </summary>
         </member>
         <member name="M:SilDev.Tray.RemovePhantomIcons">
