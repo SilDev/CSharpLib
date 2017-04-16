@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-01-23 14:17
+// Version:  2017-04-16 16:58
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Management;
@@ -439,5 +440,64 @@ namespace SilDev
         /// </param>
         public static Process Send(string command, ProcessWindowStyle processWindowStyle, bool dispose = true) =>
             Send(command, false, processWindowStyle, dispose);
+
+        /// <summary>
+        ///     <para>
+        ///         Immediately stops all specified processes.
+        ///     </para>
+        ///     <para>
+        ///         If the current process doesn't have enough privileges to stop a specified process
+        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///     </para>
+        /// </summary>
+        /// <param name="processes">
+        ///     The <see cref="Process"/>/es to kill.
+        /// </param>
+        public static bool Terminate(params Process[] processes)
+        {
+            var count = 0;
+            var list = new List<string>();
+            foreach (var p in processes)
+            {
+                try
+                {
+                    if (!p.HasExited)
+                    {
+                        count++;
+                        p.Kill();
+                    }
+                    if (p.HasExited)
+                        continue;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+                var s = p.ProcessName + ".exe";
+                if (!list.ContainsEx(s))
+                    list.Add(s);
+            }
+            if (list.Count == 0)
+                return count > 0;
+            using (var p = Send($"TASKKILL /F /IM \"{list.Join("\" && TASKKILL /F /IM \"")}\"", true, false))
+                if (p != null && !p.HasExited)
+                    p.WaitForExit();
+            return count > 0;
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Immediately stops all specified processes.
+        ///     </para>
+        ///     <para>
+        ///         If the current process doesn't have enough privileges to stop a specified process
+        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///     </para>
+        /// </summary>
+        /// <param name="processes">
+        ///     The collection of processes to kill.
+        /// </param>
+        public static bool Terminate(IEnumerable<Process> processes) =>
+            Terminate(processes.ToArray());
     }
 }
