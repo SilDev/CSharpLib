@@ -129,11 +129,11 @@ namespace SilDev
         public static class Zip7Helper
         {
             public static string ExePath { get; set; } =
-#               if x64
+#if x64
                 PathEx.Combine(PathEx.LocalDir, "Helper\\7z\\x64\\7zG.exe");
-#               else
+#else
                 PathEx.Combine(PathEx.LocalDir, "Helper\\7z\\7zG.exe");
-#               endif
+#endif
 
             public struct CompressTemplates
             {
