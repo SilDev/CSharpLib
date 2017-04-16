@@ -6204,6 +6204,11 @@
                 The <see cref="T:SilDev.KeyState.VKey"/> value to send.
             </param>
         </member>
+        <member name="M:SilDev.KeyState.SendMouseClick">
+            <summary>
+                Synthesizes a left mouse button click to the active window.
+            </summary>
+        </member>
         <member name="T:SilDev.Log">
             <summary>
                 Provides functionality for the catching and logging of handled or unhandled
@@ -8393,6 +8398,34 @@
             <param name="dispose">
                 true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
                 if the process has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Terminate(System.Diagnostics.Process[])">
+            <summary>
+                <para>
+                    Immediately stops all specified processes.
+                </para>
+                <para>
+                    If the current process doesn't have enough privileges to stop a specified process
+                    it starts an invisible elevated instance of the command prompt to run taskkill.
+                </para>
+            </summary>
+            <param name="processes">
+                The <see cref="T:System.Diagnostics.Process"/>/es to kill.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Terminate(System.Collections.Generic.IEnumerable{System.Diagnostics.Process})">
+            <summary>
+                <para>
+                    Immediately stops all specified processes.
+                </para>
+                <para>
+                    If the current process doesn't have enough privileges to stop a specified process
+                    it starts an invisible elevated instance of the command prompt to run taskkill.
+                </para>
+            </summary>
+            <param name="processes">
+                The collection of processes to kill.
             </param>
         </member>
         <member name="T:SilDev.Service">
