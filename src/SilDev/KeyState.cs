@@ -1060,5 +1060,18 @@ namespace SilDev
         /// </param>
         public static void SendState(IntPtr hWnd, VKey key) =>
             SendState(new HandleRef(null, hWnd), key);
+
+        /// <summary>
+        ///     Synthesizes a left mouse button click to the active window.
+        /// </summary>
+        public static void SendMouseClick()
+        {
+            var inputMouseDown = new WinApi.INPUT { Type = 0 };
+            inputMouseDown.Data.Mouse.Flags = 0x2;
+            var inputMouseUp = new WinApi.INPUT { Type = 0 };
+            inputMouseUp.Data.Mouse.Flags = 0x4;
+            var inputs = new[] { inputMouseDown, inputMouseUp };
+            WinApi.UnsafeNativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.INPUT)));
+        }
     }
 }
