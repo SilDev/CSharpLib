@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-01-02 10:41
+// Version:  2017-04-16 01:46
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -33,11 +33,11 @@ namespace SilDev
     /// </summary>
     public static class Log
     {
-        private static bool _conIsOpen, _firstCall, _firstEntry;
-        private static IntPtr _stdHandle = IntPtr.Zero;
-        private static SafeFileHandle _sfh;
-        private static FileStream _fs;
-        private static StreamWriter _sw;
+        private static volatile bool _conIsOpen, _firstCall, _firstEntry;
+        private static volatile IntPtr _stdHandle = IntPtr.Zero;
+        private static volatile SafeFileHandle _sfh;
+        private static volatile FileStream _fs;
+        private static volatile StreamWriter _sw;
         private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly().GetName();
         private static readonly string AssemblyName = AssemblyEntryName.Name;
         private static readonly Version AssemblyVersion = AssemblyEntryName.Version;
