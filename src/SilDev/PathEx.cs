@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2016-12-29 05:05
+// Version:  2017-05-02 02:03
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -111,10 +111,42 @@ namespace SilDev
                     path = path.Replace(seperator + seperator, seperator);
                 if (path.EndsWith(seperator))
                     path = path.Substring(0, path.Length - seperator.Length);
-                path = Path.GetFullPath(path);
+                if (path.Contains(".."))
+                    path = Path.GetFullPath(path);
             }
             catch (ArgumentNullException) { }
             catch (ArgumentException) { }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return path;
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Combines an array of strings, based on <see cref="Combine(string[])"/>, into a
+        ///         path.
+        ///     </para>
+        ///     <para>
+        ///         <c>
+        ///             Hint:
+        ///         </c>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="paths">
+        ///     An array of parts of the path.
+        /// </param>
+        public static string AltCombine(params string[] paths)
+        {
+            var path = Combine(paths);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new ArgumentNullException(nameof(paths));
+                path = path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            }
             catch (Exception ex)
             {
                 Log.Write(ex);
