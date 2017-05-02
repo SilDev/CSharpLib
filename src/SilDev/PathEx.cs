@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-05-02 02:03
+// Version:  2017-05-02 18:48
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -97,9 +97,12 @@ namespace SilDev
                 if (paths.Length == 0 || paths.Count(string.IsNullOrWhiteSpace) == paths.Length)
                     throw new ArgumentNullException(nameof(paths));
                 var seperator = Path.DirectorySeparatorChar.ToString();
+                for (var i = 0; i < paths.Length; i++)
+                    paths[i] = paths[i].Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
                 if (!paths[0].EndsWith(seperator)) // fix for drive letter only paths
                     paths[0] += seperator;
                 path = Path.Combine(paths);
+                path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
                 path = path.Trim().RemoveChar(Path.GetInvalidPathChars());
                 if (path.StartsWith("%") && (path.Contains("%\\") || path.EndsWith("%")))
                 {
@@ -145,7 +148,21 @@ namespace SilDev
             {
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(paths));
-                path = path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                var seperator = Path.AltDirectorySeparatorChar;
+                path = path.Replace(Path.DirectorySeparatorChar, seperator);
+                var schemes = new[]
+                {
+                    "file",
+                    "ftp",
+                    "http",
+                    "https"
+                };
+                for (var i = 0; i < schemes.Length; i++)
+                {
+                    var scheme = schemes[i] + ":" + seperator;
+                    if (path.StartsWithEx(scheme))
+                        path = path.Replace(scheme, scheme + new string(seperator, i < 1 ? 2 : 1));
+                }
             }
             catch (Exception ex)
             {
