@@ -7178,6 +7178,23 @@
                 An array of parts of the path.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.AltCombine(System.String[])">
+            <summary>
+                <para>
+                    Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a
+                    path.
+                </para>
+                <para>
+                    <c>
+                        Hint:
+                    </c>
+                    <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                </para>
+            </summary>
+            <param name="paths">
+                An array of parts of the path.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.GetTempDirName(System.String,System.Int32)">
             <summary>
                 Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
