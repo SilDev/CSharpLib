@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-02-05 09:20
+// Version:  2017-05-03 05:26
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -162,11 +162,11 @@ namespace SilDev
         {
             try
             {
-                var u = str.ToUri();
+                var s = str;
+                var u = s.ToUri();
                 if (u.Scheme.EqualsEx("https", "http"))
                     return u;
-                var s = u.Host + u.PathAndQuery;
-                s = "http://" + s;
+                s = PathEx.AltCombine("http:", u.Host, u.PathAndQuery);
                 u = s.ToUri();
                 return u;
             }
@@ -174,7 +174,14 @@ namespace SilDev
             {
                 try
                 {
-                    var u = ("http://" + str).ToUri();
+                    var s = str;
+                    if (s.Contains(":/"))
+                    {
+                        var i = s.IndexOf(":/", StringComparison.Ordinal) + 1;
+                        if (i.IsBetween(4, 6) && i < s.Length)
+                            s = s.Substring(i).TrimStart('/');
+                    }
+                    var u = PathEx.AltCombine("http:", s).ToUri();
                     return u;
                 }
                 catch (Exception ex)
