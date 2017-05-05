@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-05-02 18:48
+// Version:  2017-05-04 21:50
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -28,6 +29,48 @@ namespace SilDev
     /// </summary>
     public static class PathEx
     {
+        private static readonly char[] InvalidPathChars =
+        {
+            '\u0000', '\u0001', '\u0002', '\u0003',
+            '\u0004', '\u0005', '\u0006', '\u0007',
+            '\u0008', '\u0009', '\u000a', '\u000b',
+            '\u000c', '\u000d', '\u000e', '\u000f',
+            '\u0010', '\u0011', '\u0012', '\u0013',
+            '\u0014', '\u0015', '\u0016', '\u0017',
+            '\u0018', '\u0019', '\u001a', '\u001b',
+            '\u001c', '\u001d', '\u001e', '\u001f',
+            '\u0022', '\u002a', '\u003c', '\u003e',
+            '\u003f', '\u007c'
+        };
+
+        /// <summary>
+        ///     Provides enumerated values of PE (Portable Executable) headers.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum Headers : ushort
+        {
+            Unknown = 0x0,
+            AM33 = 0x1d3,
+            AMD64 = 0x8664,
+            ARM = 0x1c0,
+            EBC = 0xebc,
+            I386 = 0x14c,
+            IA64 = 0x200,
+            M32R = 0x9041,
+            MIPS16 = 0x266,
+            MIPSFPU = 0x366,
+            MIPSFPU16 = 0x466,
+            POWERPC = 0x1f0,
+            POWERPCFP = 0x1f1,
+            R4000 = 0x166,
+            SH3 = 0x1a2,
+            SH3DSP = 0x1a3,
+            SH4 = 0x1a6,
+            SH5 = 0x1a8,
+            THUMB = 0x1c2,
+            WCEMIPSV2 = 0x169
+        }
+
         /// <summary>
         ///     Gets the full process executable path of the assembly based on
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
@@ -82,43 +125,143 @@ namespace SilDev
         ///             Hint:
         ///         </c>
         ///         Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>,
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
         ///         for example, write <code>"%Desktop%"</code>, cases are ignored as well.
         ///     </para>
         /// </summary>
         /// <param name="paths">
         ///     An array of parts of the path.
         /// </param>
-        public static string Combine(params string[] paths)
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, params string[] paths)
         {
             var path = string.Empty;
             try
             {
                 if (paths.Length == 0 || paths.Count(string.IsNullOrWhiteSpace) == paths.Length)
                     throw new ArgumentNullException(nameof(paths));
-                var seperator = Path.DirectorySeparatorChar.ToString();
-                for (var i = 0; i < paths.Length; i++)
-                    paths[i] = paths[i].Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-                if (!paths[0].EndsWith(seperator)) // fix for drive letter only paths
-                    paths[0] += seperator;
-                path = Path.Combine(paths);
-                path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-                path = path.Trim().RemoveChar(Path.GetInvalidPathChars());
-                if (path.StartsWith("%") && (path.Contains("%\\") || path.EndsWith("%")))
+                var levels = paths;
+                var sepChar = Path.DirectorySeparatorChar;
+                var sepStr = sepChar.ToString();
+                for (var i = 0; i < levels.Length; i++)
+                {
+                    if (i > 0)
+                        levels[i] = levels[i].RemoveChar(Path.VolumeSeparatorChar);
+                    if (invalidPathChars != null)
+                        levels[i] = levels[i].RemoveChar(invalidPathChars);
+                    levels[i] = levels[i].Replace(Path.AltDirectorySeparatorChar, sepChar);
+                    if (levels[i].Contains(sepChar))
+                        levels[i] = levels[i].Split(sepChar).Where(s => !string.IsNullOrEmpty(s)).Select(s => s.Trim()).Join(sepChar);
+                    if (i == 0 && levels[i].EndsWith(Path.VolumeSeparatorChar.ToString()))
+                        levels[i] += sepStr;
+                }
+                path = Path.Combine(levels);
+                if (path.StartsWith("%") && (path.Contains("%" + sepStr) || path.EndsWith("%")))
                 {
                     var variable = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase).Groups[1].Value;
                     var value = EnvironmentEx.GetVariableValue(variable);
-                    path = path.Replace($"%{variable}%", value);
+                    if (!string.IsNullOrEmpty(variable) && !string.IsNullOrEmpty(value))
+                        path = path.Replace("%" + variable + "%", value);
                 }
-                while (path.Contains(seperator + seperator))
-                    path = path.Replace(seperator + seperator, seperator);
-                if (path.EndsWith(seperator))
-                    path = path.Substring(0, path.Length - seperator.Length);
-                if (path.Contains(".."))
+                if (path.Contains(sepStr + ".."))
                     path = Path.GetFullPath(path);
+                if (path.Contains('.'))
+                    path = path.TrimEnd('.');
             }
-            catch (ArgumentNullException) { }
-            catch (ArgumentException) { }
+            catch (ArgumentNullException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (ArgumentException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return path;
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Combines an array of strings, based on <see cref="Path.Combine(string[])"/>,
+        ///         <see cref="Path.GetFullPath(string)"/>,
+        ///         <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/>,
+        ///         <see cref="Environment.GetEnvironmentVariable(string)"/> and
+        ///         <see cref="Regex.Match(string, string, RegexOptions)"/>, into a path.
+        ///     </para>
+        ///     <para>
+        ///         <c>
+        ///             Hint:
+        ///         </c>
+        ///         Allows superordinate directory navigation and environment variables
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
+        ///         for example, write <code>"%Desktop%"</code>, cases are ignored as well.
+        ///     </para>
+        /// </summary>
+        /// <param name="paths">
+        ///     An array of parts of the path.
+        /// </param>
+        public static string Combine(params string[] paths) =>
+            Combine(InvalidPathChars, paths);
+
+        /// <summary>
+        ///     <para>
+        ///         Combines an array of strings, based on <see cref="Combine(string[])"/>, into a
+        ///         path.
+        ///     </para>
+        ///     <para>
+        ///         <c>
+        ///             Hint:
+        ///         </c>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="paths">
+        ///     An array of parts of the path.
+        /// </param>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        public static string AltCombine(char[] invalidPathChars, params string[] paths)
+        {
+            var path = Combine(invalidPathChars, paths);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new ArgumentNullException(nameof(path));
+                path = path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                var schemes = new[]
+                {
+                    "file:",
+                    "ftp:",
+                    "http:",
+                    "https:"
+                };
+                for (var i = 0; i < schemes.Length; i++)
+                {
+                    var scheme = schemes[i] + Path.AltDirectorySeparatorChar;
+                    if (!path.StartsWithEx(scheme))
+                        continue;
+                    path = path.Replace(scheme, scheme + new string(Path.AltDirectorySeparatorChar, i < 1 ? 2 : 1));
+                    break;
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (ArgumentException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
             catch (Exception ex)
             {
                 Log.Write(ex);
@@ -141,35 +284,8 @@ namespace SilDev
         /// <param name="paths">
         ///     An array of parts of the path.
         /// </param>
-        public static string AltCombine(params string[] paths)
-        {
-            var path = Combine(paths);
-            try
-            {
-                if (string.IsNullOrWhiteSpace(path))
-                    throw new ArgumentNullException(nameof(paths));
-                var seperator = Path.AltDirectorySeparatorChar;
-                path = path.Replace(Path.DirectorySeparatorChar, seperator);
-                var schemes = new[]
-                {
-                    "file",
-                    "ftp",
-                    "http",
-                    "https"
-                };
-                for (var i = 0; i < schemes.Length; i++)
-                {
-                    var scheme = schemes[i] + ":" + seperator;
-                    if (path.StartsWithEx(scheme))
-                        path = path.Replace(scheme, scheme + new string(seperator, i < 1 ? 2 : 1));
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return path;
-        }
+        public static string AltCombine(params string[] paths) =>
+            AltCombine(InvalidPathChars, paths);
 
         /// <summary>
         ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()"/>.
@@ -226,14 +342,14 @@ namespace SilDev
             GetTempFileName("tmp", len);
 
         /// <summary>
-        ///     Determines whether the specified file was compiled for a 64-bit platform environments.
+        ///     Determines the PE (Portable Executable) header of the specified file.
         /// </summary>
         /// <param name="path">
         ///     The file to check.
         /// </param>
-        public static bool FileIs64Bit(string path)
+        public static Headers GetHeader(string path)
         {
-            ushort us = 0x0;
+            var pe = Headers.Unknown;
             try
             {
                 using (var fs = new FileStream(Combine(path), FileMode.Open, FileAccess.Read))
@@ -242,14 +358,26 @@ namespace SilDev
                     fs.Seek(0x3c, SeekOrigin.Begin);
                     fs.Seek(br.ReadInt32(), SeekOrigin.Begin);
                     br.ReadUInt32();
-                    us = br.ReadUInt16();
+                    pe = (Headers)br.ReadUInt16();
                 }
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return us == 0x8664 || us == 0x200;
+            return pe;
+        }
+
+        /// <summary>
+        ///     Determines whether the specified file was compiled for a 64-bit platform environments.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check.
+        /// </param>
+        public static bool FileIs64Bit(string path)
+        {
+            var pe = GetHeader(path);
+            return pe == Headers.AMD64 || pe == Headers.IA64;
         }
     }
 
