@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2016-10-30 20:21
+// Version:  2017-05-05 11:57
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Imaging;
@@ -378,102 +379,73 @@ namespace SilDev
             return output;
         }
 
-        [SuppressMessage("ReSharper", "TryCastAlwaysSucceeds")]
-        private static object ReadObject(string section, string key, object defValue, IniValueKind valkind, string fileOrContent)
+        /// <summary>
+        ///     Retrieves a <see cref="string"/> value from the specified section in an INI file
+        ///     or an INI file formatted string value.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The value <see cref="Type"/>.
+        /// </typeparam>
+        /// <param name="section">
+        ///     The name of the section containing the key name. The value must be NULL for a
+        ///     non-section key.
+        /// </param>
+        /// <param name="key">
+        ///     The name of the key whose associated value is to be retrieved.
+        /// </param>
+        /// <param name="defValue">
+        /// </param>
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static T Read<T>(string section, string key, T defValue = default(T), string fileOrContent = null)
         {
-            object output = null;
+            dynamic output = defValue;
             try
             {
-                var value = Read(section, key, fileOrContent);
-                switch (valkind)
+                dynamic d;
+                var s = Read(section, key, fileOrContent);
+                if (string.IsNullOrEmpty(s))
                 {
-                    case IniValueKind.Boolean:
-                        bool boolParser;
-                        if (bool.TryParse(Read(section, key, fileOrContent), out boolParser))
-                            output = boolParser;
-                        break;
-                    case IniValueKind.Byte:
-                        byte byteParser;
-                        if (byte.TryParse(Read(section, key, fileOrContent), out byteParser))
-                            output = byteParser;
-                        break;
-                    case IniValueKind.ByteArray:
-                        var bytesParser = value.FromHexStringToByteArray();
-                        if (bytesParser.Length > 0)
-                            output = bytesParser;
-                        break;
-                    case IniValueKind.DateTime:
-                        DateTime dateTimeParser;
-                        if (DateTime.TryParse(Read(section, key, fileOrContent), out dateTimeParser))
-                            output = dateTimeParser;
-                        break;
-                    case IniValueKind.Double:
-                        double doubleParser;
-                        if (double.TryParse(Read(section, key, fileOrContent), out doubleParser))
-                            output = doubleParser;
-                        break;
-                    case IniValueKind.Float:
-                        float floatParser;
-                        if (float.TryParse(Read(section, key, fileOrContent), out floatParser))
-                            output = floatParser;
-                        break;
-                    case IniValueKind.Image:
-                        var imageParser = value.FromHexStringToImage();
-                        if (imageParser != null)
-                            output = imageParser;
-                        break;
-                    case IniValueKind.Integer:
-                        int intParser;
-                        if (int.TryParse(Read(section, key, fileOrContent), out intParser))
-                            output = intParser;
-                        break;
-                    case IniValueKind.Long:
-                        long longParser;
-                        if (long.TryParse(Read(section, key, fileOrContent), out longParser))
-                            output = longParser;
-                        break;
-                    case IniValueKind.Point:
-                        var pointParser = Read(section, key, fileOrContent).ToPoint();
-                        if (pointParser != new Point(int.MinValue, int.MinValue))
-                            output = pointParser;
-                        break;
-                    case IniValueKind.Rectangle:
-                        var rectParser = Read(section, key, fileOrContent).ToRectangle();
-                        if (rectParser != Rectangle.Empty)
-                            output = rectParser;
-                        break;
-                    case IniValueKind.Short:
-                        short shortParser;
-                        if (short.TryParse(Read(section, key, fileOrContent), out shortParser))
-                            output = shortParser;
-                        break;
-                    case IniValueKind.Size:
-                        var sizeParser = Read(section, key, fileOrContent).ToSize();
-                        if (sizeParser != Size.Empty)
-                            output = sizeParser;
-                        break;
-                    case IniValueKind.StringArray:
-                        var stringsParser = value.FromHexStringToByteArray()?.TextFromZip()?.Split('\0').Reverse().Skip(1).Reverse().Select(x => x?.ToString().FromHexString()).ToArray();
-                        if (stringsParser?.Length > 0)
-                            output = stringsParser;
-                        break;
-                    case IniValueKind.Version:
-                        Version versionParser;
-                        if (Version.TryParse(Read(section, key, fileOrContent), out versionParser))
-                            output = versionParser;
-                        break;
-                    default:
-                        output = Read(section, key, fileOrContent);
-                        if (string.IsNullOrWhiteSpace(output as string))
-                            output = null;
-                        break;
+                    if (Log.DebugMode > 1)
+                    {
+                        var message = "The value is not defined. (Section: '" + (string.IsNullOrEmpty(section) ? "NULL" : section) + "'; Key: '" + (string.IsNullOrEmpty(key) ? "NULL" : key) + "'; File: '" + (string.IsNullOrEmpty(fileOrContent) ? File() : PathEx.DirOrFileExists(fileOrContent) ? fileOrContent : "CONTENT" + fileOrContent.EncodeToBase85()) + "';)";
+                        throw new WarningException(message);
+                    }
+                    d = defValue;
                 }
+                else if (typeof(T) == typeof(string))
+                    d = string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(defValue as string) ? (dynamic)defValue : s;
+                else if (typeof(T) == typeof(string[]))
+                    d = s.FromHexStringToByteArray()?.TextFromZip()?
+                         .Split('\0').Reverse().Skip(1).Reverse()
+                         .Select(x => x?.ToString().FromHexString()).ToArray();
+                else if (typeof(T) == typeof(byte[]))
+                    d = s.FromHexStringToByteArray();
+                else if (typeof(T) == typeof(Image))
+                    d = s.FromHexStringToImage();
+                else if (typeof(T) == typeof(Rectangle))
+                    d = s.ToRectangle();
+                else if (typeof(T) == typeof(Point))
+                    d = s.ToPoint();
+                else if (typeof(T) == typeof(Size))
+                    d = s.ToSize();
+                else if (!s.TryParse<T>(out d))
+                    d = defValue;
+                output = d;
+            }
+            catch (WarningException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return output ?? defValue;
+            return output;
         }
 
         /// <summary>
@@ -494,7 +466,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static bool ReadBoolean(string section, string key, bool defValue = false, string fileOrContent = null) =>
-            Convert.ToBoolean(ReadObject(section, key, defValue, IniValueKind.Boolean, fileOrContent ?? _iniFile));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="bool"/> value from the specified section in an INI file
@@ -531,7 +503,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static byte ReadByte(string section, string key, byte defValue = 0x0, string fileOrContent = null) =>
-            Convert.ToByte(ReadObject(section, key, defValue, IniValueKind.Byte, fileOrContent ?? _iniFile));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="byte"/> value from the specified section in an INI file
@@ -574,7 +546,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static byte[] ReadByteArray(string section, string key, byte[] defValue = null, string fileOrContent = null) =>
-            ReadObject(section, key, defValue, IniValueKind.ByteArray, fileOrContent ?? _iniFile) as byte[];
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     <para>
@@ -617,7 +589,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static DateTime ReadDateTime(string section, string key, DateTime defValue, string fileOrContent = null) =>
-            Convert.ToDateTime(ReadObject(section, key, defValue, IniValueKind.DateTime, fileOrContent ?? _iniFile));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="DateTime"/> value from the specified section in an INI file
@@ -668,7 +640,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static double ReadDouble(string section, string key, double defValue = 0d, string fileOrContent = null) =>
-            Convert.ToDouble(ReadObject(section, key, defValue, IniValueKind.Double, fileOrContent ?? _iniFile));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="double"/> value from the specified section in an INI file
@@ -705,7 +677,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static float ReadFloat(string section, string key, float defValue = 0f, string fileOrContent = null) =>
-            Convert.ToSingle(ReadObject(section, key, defValue, IniValueKind.Float, fileOrContent ?? _iniFile));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="float"/> value from the specified section in an INI file
@@ -748,7 +720,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static Image ReadImage(string section, string key, Image defValue = null, string fileOrContent = null) =>
-            ReadObject(section, key, null, IniValueKind.Image, fileOrContent ?? _iniFile) as Image;
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     <para>
@@ -791,7 +763,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static int ReadInteger(string section, string key, int defValue = 0, string fileOrContent = null) =>
-            Convert.ToInt32(ReadObject(section, key, defValue, IniValueKind.Integer, fileOrContent ?? _iniFile));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="int"/> value from the specified section in an INI file
@@ -827,8 +799,8 @@ namespace SilDev
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        public static long ReadLong(string section, string key, long defValue = 0, string fileOrContent = null) =>
-            Convert.ToInt64(ReadObject(section, key, defValue, IniValueKind.Long, fileOrContent ?? _iniFile));
+        public static long ReadLong(string section, string key, long defValue = 0L, string fileOrContent = null) =>
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="long"/> value from the specified section in an INI file
@@ -865,7 +837,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static Point ReadPoint(string section, string key, Point defValue, string fileOrContent = null) =>
-            ReadObject(section, key, defValue, IniValueKind.Point, fileOrContent ?? _iniFile).ToString().ToPoint();
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="Point"/> value pair from the specified section in an INI
@@ -916,7 +888,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static Rectangle ReadRectangle(string section, string key, Rectangle defValue, string fileOrContent = null) =>
-            ReadObject(section, key, defValue, IniValueKind.Rectangle, fileOrContent ?? _iniFile).ToString().ToRectangle();
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="Rectangle"/> from the specified section in an INI file or
@@ -967,7 +939,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static short ReadShort(string section, string key, short defValue = 0, string fileOrContent = null) =>
-            Convert.ToInt16(ReadObject(section, key, defValue, IniValueKind.Short, fileOrContent ?? _iniFile));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="short"/> value from the specified section in an INI file
@@ -1004,7 +976,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static Size ReadSize(string section, string key, Size defValue, string fileOrContent = null) =>
-            ReadObject(section, key, defValue, IniValueKind.Size, fileOrContent ?? _iniFile).ToString().ToSize();
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="Size"/> value pair from the specified section in an INI
@@ -1055,7 +1027,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static string ReadString(string section, string key, string defValue = "", string fileOrContent = null) =>
-            Convert.ToString(ReadObject(section, key, defValue, IniValueKind.String, fileOrContent));
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     <para>
@@ -1081,7 +1053,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static string[] ReadStringArray(string section, string key, string[] defValue = null, string fileOrContent = null) =>
-            ReadObject(section, key, defValue, IniValueKind.StringArray, fileOrContent ?? _iniFile) as string[];
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     <para>
@@ -1124,7 +1096,7 @@ namespace SilDev
         ///     The full file path or content of an INI file.
         /// </param>
         public static Version ReadVersion(string section, string key, Version defValue, string fileOrContent = null) =>
-            Version.Parse(ReadObject(section, key, defValue, IniValueKind.Version, fileOrContent ?? _iniFile).ToString());
+            Read(section, key, defValue, fileOrContent);
 
         /// <summary>
         ///     Retrieves a <see cref="Version"/> from the specified section in an INI file or
@@ -1309,25 +1281,5 @@ namespace SilDev
         /// </param>
         public static bool Write(string section, string key, object value, bool forceOverwrite, bool skipExistValue = false) =>
             Write(section, key, value, _iniFile, forceOverwrite, skipExistValue);
-
-        private enum IniValueKind
-        {
-            Boolean,
-            Byte,
-            ByteArray,
-            DateTime,
-            Double,
-            Float,
-            Image,
-            Integer,
-            Long,
-            Point,
-            Rectangle,
-            Short,
-            Size,
-            String,
-            StringArray,
-            Version
-        }
     }
 }
