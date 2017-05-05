@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2017-04-12 16:48
+// Version:  2017-05-04 16:37
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -44,9 +44,6 @@ namespace SilDev
             Pointer = _handle.AddrOfPinnedObject();
         }
 
-        /// <summary>
-        ///     Undoes the pinning.
-        /// </summary>
         ~MemoryPinner()
         {
             Dispose(false);
@@ -91,9 +88,6 @@ namespace SilDev
             _hProcess = WinApi.UnsafeNativeMethods.OpenProcess((uint)(WinApi.AccessRights.PROCESS_VM_OPERATION | WinApi.AccessRights.PROCESS_VM_READ | WinApi.AccessRights.PROCESS_VM_WRITE | WinApi.AccessRights.PROCESS_QUERY_INFORMATION), false, ownerProcessId);
         }
 
-        /// <summary>
-        ///     Undoes the process memory.
-        /// </summary>
         ~ProcessMemory()
         {
             Dispose(false);
