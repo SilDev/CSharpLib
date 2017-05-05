@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-03-11 12:50
+// Version:  2017-05-04 15:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,6 +18,8 @@ namespace SilDev
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
     using System.Linq;
     using System.Management;
     using System.Reflection;
@@ -164,7 +166,7 @@ namespace SilDev
         ///         <c>
         ///             Hint:
         ///         </c>
-        ///         Allows <see cref="Environment.SpecialFolder"/> names inlcuding an
+        ///         Allows <see cref="Environment.SpecialFolder"/> names inlcuding a
         ///         keyword "CurDir" to get the current code base location based
         ///         on <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         ///     </para>
@@ -177,14 +179,14 @@ namespace SilDev
         /// </param>
         public static string GetVariableValue(string variable, bool lower = false)
         {
-            var value = string.Empty;
+            var output = string.Empty;
             try
             {
                 if (string.IsNullOrWhiteSpace(variable))
                     throw new ArgumentNullException(nameof(variable));
                 variable = variable.RemoveChar('%');
-                if (variable.EqualsEx("currentdir", "curdir"))
-                    value = PathEx.LocalDir;
+                if (variable.EqualsEx("CurrentDir", "CurDir"))
+                    output = PathEx.LocalDir;
                 else
                     try
                     {
@@ -193,21 +195,31 @@ namespace SilDev
                         Environment.SpecialFolder specialFolder;
                         if (!Enum.TryParse(match, out specialFolder))
                             throw new ArgumentException();
-                        value = Environment.GetFolderPath(specialFolder);
+                        output = Environment.GetFolderPath(specialFolder);
                     }
                     catch
                     {
-                        value = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
-                                           .First(x => variable.EqualsEx(x.Key.ToString())).Value.ToString();
+                        output = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
+                                            .First(x => variable.EqualsEx(x.Key.ToString())).Value.ToString();
                     }
                 if (lower)
-                    value = value?.ToLower();
+                    output = output?.ToLower();
+            }
+            catch (ArgumentNullException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return value;
+            return output;
         }
 
         /// <summary>
@@ -216,38 +228,103 @@ namespace SilDev
         /// <param name="path">
         ///     The path to convert.
         /// </param>
-        public static string GetVariablePath(string path)
+        /// <param name="curDir">
+        ///     true to consider the <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value;
+        ///     otherwise, false.
+        /// </param>
+        public static string GetVariablePath(string path, bool curDir = true)
         {
-            var variable = string.Empty;
+            var output = string.Empty;
             try
             {
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(path));
-                if (path.EqualsEx(GetVariableValue("curdir")))
-                    variable = "CurDir";
-                else
-                    try
-                    {
-                        variable = Enum.GetValues(typeof(Environment.SpecialFolder))
-                                       .Cast<Environment.SpecialFolder>()
-                                       .First(s => path.EqualsEx(Environment.GetFolderPath(s)))
-                                       .ToString();
-                    }
-                    catch
-                    {
-                        variable = Environment.GetEnvironmentVariables()
-                                              .Cast<DictionaryEntry>()
-                                              .First(x => path.EqualsEx(x.Value.ToString()))
-                                              .Key.ToString();
-                    }
-                if (!string.IsNullOrWhiteSpace(variable))
-                    variable = $"%{variable}%";
+                var current = path.TrimEnd(Path.DirectorySeparatorChar);
+                for (var i = 0; i < 2; i++)
+                {
+                    if (curDir && current.EqualsEx(GetVariableValue("CurDir")))
+                        output = "CurDir";
+                    else
+                        try
+                        {
+                            output = Enum.GetValues(typeof(Environment.SpecialFolder))
+                                         .Cast<Environment.SpecialFolder>()
+                                         .First(s => current.EqualsEx(Environment.GetFolderPath(s)))
+                                         .ToString();
+                        }
+                        catch
+                        {
+                            output = Environment.GetEnvironmentVariables()
+                                                .Cast<DictionaryEntry>()
+                                                .First(x => current.EqualsEx(x.Value.ToString()))
+                                                .Key.ToString();
+                        }
+                    if (!string.IsNullOrWhiteSpace(output))
+                        break;
+                    current += Path.DirectorySeparatorChar;
+                }
+                if (!string.IsNullOrWhiteSpace(output))
+                    output = $"%{output}%";
+            }
+            catch (ArgumentNullException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return variable;
+            return output;
+        }
+
+        /// <summary>
+        ///     Returns a new string in which all occurrences in this instance are replaced
+        ///     with a valid environment variable.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to convert.
+        /// </param>
+        /// <param name="curDir">
+        ///     true to consider the <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value;
+        ///     otherwise, false.
+        /// </param>
+        public static string GetVariablePathFull(string path, bool curDir = true)
+        {
+            var output = string.Empty;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new ArgumentNullException(nameof(path));
+                var levels = path.Count(c => c == Path.DirectorySeparatorChar) + 1;
+                var current = PathEx.Combine(path);
+                for (var i = 0; i < levels; i++)
+                {
+                    output = GetVariablePath(current, curDir);
+                    if (!string.IsNullOrEmpty(output))
+                        break;
+                    current = PathEx.Combine(current, "..").Trim(Path.DirectorySeparatorChar);
+                }
+                if (string.IsNullOrEmpty(output))
+                    throw new ArgumentNullException(nameof(output));
+                output += Path.DirectorySeparatorChar;
+                output += path.Substring(current.Length).Trim(Path.DirectorySeparatorChar);
+            }
+            catch (ArgumentNullException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return !string.IsNullOrWhiteSpace(output) ? output.Trim(Path.DirectorySeparatorChar) : path;
         }
 
         /// <summary>
@@ -350,7 +427,7 @@ namespace SilDev
             try
             {
                 if (!SystemRestoringIsEnabled)
-                    throw new Exception("System restoring is disabled.");
+                    throw new WarningException("System restoring is disabled.");
                 var mScope = new ManagementScope("\\\\localhost\\root\\default");
                 var mPath = new ManagementPath("SystemRestore");
                 var options = new ObjectGetOptions();
