@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2016-10-28 08:25
+// Version:  2017-05-05 14:32
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -24,6 +24,7 @@ namespace SilDev
     using System.Linq;
     using System.Runtime.InteropServices;
     using Microsoft.Win32.SafeHandles;
+    using Properties;
 
     /// <summary>
     ///     Provides functionality for the <see cref="Color"/>, <see cref="Image"/> descended classes.
@@ -31,31 +32,16 @@ namespace SilDev
     public static class Depiction
     {
         private static readonly Dictionary<object, ImagePair> SwitcherCache = new Dictionary<object, ImagePair>();
-        private static Image _dimEmpty;
-        private static Image _defaultSearchSymbol;
 
         /// <summary>
         ///     Gets an <see cref="Image"/> object which consists of a semi-transparent black color.
         /// </summary>
-        public static Image DimEmpty => _dimEmpty ?? (_dimEmpty = Color.FromArgb(140, 0, 0, 0).ToImage());
+        public static Image DimEmpty => Resources.DimEmptyImage;
 
         /// <summary>
         ///     Gets an <see cref="Image"/> object that contains a white 16px large search symbol.
         /// </summary>
-        public static Image DefaultSearchSymbol =>
-            _defaultSearchSymbol ?? (_defaultSearchSymbol =
-            ("89504e470d0a1a0a0000000d494844520000000d0000000d0806000" +
-             "00072ebe47c0000000467414d410000b18f0bfc6105000000097048" +
-             "597300000b1100000b11017f645f910000000774494d4507e0081f1" +
-             "20d0c4120f852000000d84944415428537dd1b16ac25018c5f1e82c" +
-             "38e813742e4e7d0d411d1cb58b42a18b4bc15570f501dc04272711f" +
-             "a08ae22bab44d870ea520940c2e8282f17fc40fae37d103bf0b39f9" +
-             "6e127283388e6fa9618d0dfe30421141dab0b4a18cd144079ff8462" +
-             "16dc3038ee8399de4f083895b1a3df51719a733fa82c82fa58f85d7" +
-             "990afed36e94b1c3a3d3992142bf34213ef074b9cee2154ac31fae6" +
-             "28a25beb0c51c2b286fb8fae52deca1bc230f9dd5005d94709eb50d" +
-             "3a0b377aa3dd4bd052c701961724065d5a2258740e89219f9619b4f" +
-             "1d9cafbe2e004e0e3287fbb6e47ff0000000049454e44ae426082").FromHexStringToImage());
+        public static Image DefaultSearchSymbol => Resources.SearchImage;
 
         /// <summary>
         ///     Translates an HTML color representation to a GDI+ <see cref="Color"/> structure.
