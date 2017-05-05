@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2016-11-02 20:25
+// Version:  2017-05-04 08:20
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Imaging;
@@ -44,11 +45,11 @@ namespace SilDev
             VerticalTab = '\u000b',
 
             /// <summary>
-            ///     Returns -1 because Windows combines <see cref="CarriageReturn"/>
-            ///     with <see cref="LineFeed"/>, which are not convertible to an
-            ///     single enumerated value.
+            ///     An aggregated <see cref="Enum"/> value of <see cref="CarriageReturn"/>
+            ///     and <see cref="LineFeed"/>, which is not convertable to a single
+            ///     <see cref="char"/> value.
             /// </summary>
-            WindowsDefault = -1
+            WindowsDefault = CarriageReturn + LineFeed
         }
 
         /// <summary>
@@ -90,12 +91,12 @@ namespace SilDev
             /// <summary>
             ///     Stands for exabyte or exbibyte.
             /// </summary>
-            EB = 6,
+            EB = 6
         }
 
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnits"/>. 
+        ///     value in the specified <see cref="SizeUnits"/>.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -120,7 +121,7 @@ namespace SilDev
                 return value.ToString(trim ? "0.##" : "0.00") + " bytes";
             var d = value / Math.Pow(binary ? 1024 : 1000, (int)unit);
             var s = d.ToString(trim ? "0.##" : "0.00") + " " + unit;
-            if (unit == 0)
+            if (unit == 0 && !Math.Abs(d).Equals(1d))
                 s += "s";
             return s;
         }
@@ -128,7 +129,7 @@ namespace SilDev
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
         ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-        ///     on the size. 
+        ///     on the size.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -164,9 +165,20 @@ namespace SilDev
         {
             try
             {
-                var sa = Enum.GetValues(typeof(NewLineFormats)).Cast<NewLineFormats>().Select(c => (int)c == -1 ? null : $"{(char)c.GetHashCode()}").ToArray();
-                var f = (int)newLineFormat == -1 ? Environment.NewLine : $"{(char)newLineFormat.GetHashCode()}";
-                var s = str.Replace(Environment.NewLine, $"{(char)NewLineFormats.LineFeed}");
+                var sa = Enum.GetValues(typeof(NewLineFormats))
+                             .Cast<NewLineFormats>()
+                             .Where(x => x != NewLineFormats.WindowsDefault)
+                             .Select(x => new string((char)x.GetHashCode(), 1))
+                             .ToArray();
+                string f;
+                if (newLineFormat != NewLineFormats.WindowsDefault)
+                    f = new string((char)newLineFormat.GetHashCode(), 1);
+                else
+                {
+                    f = new string((char)NewLineFormats.CarriageReturn, 1);
+                    f += new string((char)NewLineFormats.LineFeed, 1);
+                }
+                var s = str.Replace(Environment.NewLine, new string((char)NewLineFormats.LineFeed, 1));
                 return s.Split(sa, StringSplitOptions.None).Join(f);
             }
             catch (Exception ex)
@@ -314,7 +326,7 @@ namespace SilDev
             str.Split(Environment.NewLine);
 
         /// <summary>
-        ///     Converts the specified strings in an string to lowercase.
+        ///     Converts the specified strings in a string to lowercase.
         /// </summary>
         /// <param name="str">
         ///     The string to change.
@@ -337,7 +349,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified strings in an string to uppercase.
+        ///     Converts the specified strings in a string to uppercase.
         /// </summary>
         /// <param name="str">
         ///     The string to change.
@@ -360,7 +372,30 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Removes the specified characters in an string.
+        ///     Removes the specified characters in a char array.
+        /// </summary>
+        /// <param name="array">
+        ///     The char array to change.
+        /// </param>
+        /// <param name="chrs">
+        ///     The sequence of characters to remove.
+        /// </param>
+        public static char[] RemoveChar(this char[] array, params char[] chrs)
+        {
+            try
+            {
+                var ca = array.Where(c => !chrs.Contains(c)).ToArray();
+                return ca;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return array;
+            }
+        }
+
+        /// <summary>
+        ///     Removes the specified characters in a string.
         /// </summary>
         /// <param name="str">
         ///     The string to change.
@@ -383,7 +418,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Removes the specified strings in an string.
+        ///     Removes the specified strings in a string.
         /// </summary>
         /// <param name="str">
         ///     The string to change.
@@ -773,11 +808,16 @@ namespace SilDev
                     img = Image.FromStream(ms);
                 return img;
             }
+            catch (ArgumentException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return null;
             }
+            return null;
         }
 
         /// <summary>
@@ -845,6 +885,60 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return new IntPtr(IntPtr.Size == sizeof(int) ? int.MaxValue : long.MaxValue);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The value <see cref="Type"/>.
+        /// </typeparam>
+        /// <param name="value">
+        ///     The value to convert.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        public static T Parse<T>(this object value, T defValue = default(T))
+        {
+            var result = defValue;
+            try
+            {
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                result = (T)converter.ConvertFrom(value);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return result;
+        }
+
+        /// <summary>
+        ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The value <see cref="Type"/>.
+        /// </typeparam>
+        /// <param name="value">
+        ///     The value to convert.
+        /// </param>
+        /// <param name="result">
+        ///     The result value.
+        /// </param>
+        public static bool TryParse<T>(this object value, out dynamic result, T defValue = default(T))
+        {
+            result = defValue;
+            try
+            {
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                result = (T)converter.ConvertFrom(value);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

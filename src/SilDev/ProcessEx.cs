@@ -152,10 +152,10 @@ namespace SilDev
                     process.StartInfo.WorkingDirectory = PathEx.Combine(process.StartInfo.WorkingDirectory);
                     if (!Directory.Exists(process.StartInfo.WorkingDirectory))
                     {
-                        var path = Path.GetDirectoryName(process.StartInfo.FileName);
-                        if (string.IsNullOrEmpty(path))
-                            throw new ArgumentNullException(nameof(path));
-                        process.StartInfo.WorkingDirectory = path;
+                        var workingDirectory = Path.GetDirectoryName(process.StartInfo.FileName);
+                        if (string.IsNullOrEmpty(workingDirectory))
+                            throw new ArgumentNullException(nameof(workingDirectory));
+                        process.StartInfo.WorkingDirectory = workingDirectory;
                     }
                     if (!process.StartInfo.UseShellExecute && !process.StartInfo.CreateNoWindow && process.StartInfo.WindowStyle == ProcessWindowStyle.Hidden)
                         process.StartInfo.CreateNoWindow = true;
@@ -367,10 +367,9 @@ namespace SilDev
             try
             {
                 var cmd = command.Trim();
-                if (cmd.StartsWithEx("/K"))
-                    cmd = cmd.Substring(2)
-                             .TrimStart();
-                if (!cmd.StartsWithEx("/C"))
+                if (cmd.StartsWithEx("/K "))
+                    cmd = cmd.Substring(2).TrimStart();
+                if (!cmd.StartsWithEx("/C "))
                     cmd = $"/C {cmd}";
                 if (cmd.Length <= 3)
                     throw new ArgumentNullException(nameof(cmd));
@@ -479,8 +478,8 @@ namespace SilDev
             if (list.Count == 0)
                 return count > 0;
             using (var p = Send($"TASKKILL /F /IM \"{list.Join("\" && TASKKILL /F /IM \"")}\"", true, false))
-                if (p != null && !p.HasExited)
-                    p.WaitForExit();
+                if (!p?.HasExited == true)
+                    p?.WaitForExit();
             return count > 0;
         }
 
