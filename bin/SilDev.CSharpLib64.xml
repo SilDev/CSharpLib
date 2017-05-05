@@ -4,6 +4,32 @@
         <name>SilDev.CSharpLib64</name>
     </assembly>
     <members>
+        <member name="T:SilDev.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.DimEmptyImage">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.SearchImage">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="T:SilDev.Forms.ColorDialogEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.ColorDialog"/> class.
@@ -1310,7 +1336,7 @@
                     <c>
                         Hint:
                     </c>
-                    Allows <see cref="T:System.Environment.SpecialFolder"/> names inlcuding an
+                    Allows <see cref="T:System.Environment.SpecialFolder"/> names inlcuding a
                     keyword "CurDir" to get the current code base location based
                     on <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
                 </para>
@@ -1322,12 +1348,29 @@
                 true to convert the result to lowercase; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariablePath(System.String)">
+        <member name="M:SilDev.EnvironmentEx.GetVariablePath(System.String,System.Boolean)">
             <summary>
                 Converts the specified path to an existing environment variable, if possible.
             </summary>
             <param name="path">
                 The path to convert.
+            </param>
+            <param name="curDir">
+                true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
+                otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.GetVariablePathFull(System.String,System.Boolean)">
+            <summary>
+                Returns a new string in which all occurrences in this instance are replaced
+                with a valid environment variable.
+            </summary>
+            <param name="path">
+                The path to convert.
+            </param>
+            <param name="curDir">
+                true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
+                otherwise, false.
             </param>
         </member>
         <member name="P:SilDev.EnvironmentEx.SystemRestoringIsEnabled">
@@ -1459,11 +1502,6 @@
                 The object to pin.
             </param>
         </member>
-        <member name="M:SilDev.MemoryPinner.Finalize">
-            <summary>
-                Undoes the pinning.
-            </summary>
-        </member>
         <member name="M:SilDev.MemoryPinner.Dispose">
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.MemoryPinner"/>.
@@ -1477,11 +1515,6 @@
             <param name="hWnd">
                 A handle to the window.
             </param>
-        </member>
-        <member name="M:SilDev.ProcessMemory.Finalize">
-            <summary>
-                Undoes the process memory.
-            </summary>
         </member>
         <member name="M:SilDev.ProcessMemory.GetImageFileName">
             <summary>
@@ -1579,9 +1612,9 @@
         </member>
         <member name="F:SilDev.Reorganize.NewLineFormats.WindowsDefault">
             <summary>
-                Returns -1 because Windows combines <see cref="F:SilDev.Reorganize.NewLineFormats.CarriageReturn"/>
-                with <see cref="F:SilDev.Reorganize.NewLineFormats.LineFeed"/>, which are not convertible to an
-                single enumerated value.
+                An aggregated <see cref="T:System.Enum"/> value of <see cref="F:SilDev.Reorganize.NewLineFormats.CarriageReturn"/>
+                and <see cref="F:SilDev.Reorganize.NewLineFormats.LineFeed"/>, which is not convertable to a single
+                <see cref="T:System.Char"/> value.
             </summary>
         </member>
         <member name="T:SilDev.Reorganize.SizeUnits">
@@ -1627,7 +1660,7 @@
         <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>. 
+                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -1649,7 +1682,7 @@
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-                on the size. 
+                on the size.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -1747,7 +1780,7 @@
         </member>
         <member name="M:SilDev.Reorganize.LowerText(System.String,System.String[])">
             <summary>
-                Converts the specified strings in an string to lowercase.
+                Converts the specified strings in a string to lowercase.
             </summary>
             <param name="str">
                 The string to change.
@@ -1758,7 +1791,7 @@
         </member>
         <member name="M:SilDev.Reorganize.UpperText(System.String,System.String[])">
             <summary>
-                Converts the specified strings in an string to uppercase.
+                Converts the specified strings in a string to uppercase.
             </summary>
             <param name="str">
                 The string to change.
@@ -1767,9 +1800,20 @@
                 The sequence of strings to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.RemoveChar(System.Char[],System.Char[])">
+            <summary>
+                Removes the specified characters in a char array.
+            </summary>
+            <param name="array">
+                The char array to change.
+            </param>
+            <param name="chrs">
+                The sequence of characters to remove.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.RemoveChar(System.String,System.Char[])">
             <summary>
-                Removes the specified characters in an string.
+                Removes the specified characters in a string.
             </summary>
             <param name="str">
                 The string to change.
@@ -1780,7 +1824,7 @@
         </member>
         <member name="M:SilDev.Reorganize.RemoveText(System.String,System.String[])">
             <summary>
-                Removes the specified strings in an string.
+                Removes the specified strings in a string.
             </summary>
             <param name="str">
                 The string to change.
@@ -1969,6 +2013,34 @@
             </param>
             <param name="value">
                 The number to be incremented.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
+            <summary>
+                Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+            </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="value">
+                The value to convert.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.TryParse``1(System.Object,System.Object@,``0)">
+            <summary>
+                Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+            </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="value">
+                The value to convert.
+            </param>
+            <param name="result">
+                The result value.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Base64">
@@ -4145,6 +4217,29 @@
             <param name="fileOrContent">
                 The full file path or content of an INI file.
             </param>
+        </member>
+        <member name="M:SilDev.Ini.Read``1(System.String,System.String,``0,System.String)">
+            <summary>
+                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file
+                or an INI file formatted string value.
+            </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="section">
+                The name of the section containing the key name. The value must be NULL for a
+                non-section key.
+            </param>
+            <param name="key">
+                The name of the key whose associated value is to be retrieved.
+            </param>
+            <param name="defValue">
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <returns>
+            </returns>
         </member>
         <member name="M:SilDev.Ini.ReadBoolean(System.String,System.String,System.Boolean,System.String)">
             <summary>
@@ -7126,6 +7221,11 @@
                 <see cref="T:System.String"/> instances that contain file or directory path information.
             </summary>
         </member>
+        <member name="T:SilDev.PathEx.Headers">
+            <summary>
+                Provides enumerated values of PE (Portable Executable) headers.
+            </summary>
+        </member>
         <member name="P:SilDev.PathEx.LocalPath">
             <summary>
                 Gets the full process executable path of the assembly based on
@@ -7156,6 +7256,31 @@
                 An array of files and directories to check.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.Combine(System.Char[],System.String[])">
+            <summary>
+                <para>
+                    Combines an array of strings, based on <see cref="M:System.IO.Path.Combine(System.String[])"/>,
+                    <see cref="M:System.IO.Path.GetFullPath(System.String)"/>,
+                    <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>,
+                    <see cref="M:System.Environment.GetEnvironmentVariable(System.String)"/> and
+                    <see cref="M:System.Text.RegularExpressions.Regex.Match(System.String,System.String,System.Text.RegularExpressions.RegexOptions)"/>, into a path.
+                </para>
+                <para>
+                    <c>
+                        Hint:
+                    </c>
+                    Allows superordinate directory navigation and environment variables
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
+                    for example, write <code>"%Desktop%"</code>, cases are ignored as well.
+                </para>
+            </summary>
+            <param name="paths">
+                An array of parts of the path.
+            </param>
+            <param name="invalidPathChars">
+                A sequence of invalid chars used as a filter.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.Combine(System.String[])">
             <summary>
                 <para>
@@ -7170,12 +7295,32 @@
                         Hint:
                     </c>
                     Allows superordinate directory navigation and environment variables
-                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>,
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
                     for example, write <code>"%Desktop%"</code>, cases are ignored as well.
                 </para>
             </summary>
             <param name="paths">
                 An array of parts of the path.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.AltCombine(System.Char[],System.String[])">
+            <summary>
+                <para>
+                    Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a
+                    path.
+                </para>
+                <para>
+                    <c>
+                        Hint:
+                    </c>
+                    <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                </para>
+            </summary>
+            <param name="paths">
+                An array of parts of the path.
+            </param>
+            <param name="invalidPathChars">
+                A sequence of invalid chars used as a filter.
             </param>
         </member>
         <member name="M:SilDev.PathEx.AltCombine(System.String[])">
@@ -7231,6 +7376,14 @@
             </summary>
             <param name="len">
                 The length of the hash. Valid values are 4 through 24.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.GetHeader(System.String)">
+            <summary>
+                Determines the PE (Portable Executable) header of the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
             </param>
         </member>
         <member name="M:SilDev.PathEx.FileIs64Bit(System.String)">
