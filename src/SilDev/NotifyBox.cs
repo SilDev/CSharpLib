@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2016-10-23 05:42
+// Version:  2017-05-04 13:27
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -325,19 +325,17 @@ namespace SilDev
 
         private sealed class NotifyForm : Form
         {
-            private readonly BackgroundWorker _asyncWait = new BackgroundWorker();
-            private readonly IContainer _components = null;
-            private readonly int _duration;
-            private readonly Timer _loadingDots = new Timer();
+            private readonly IContainer _components;
             private readonly Label _textLabel;
+            private readonly BackgroundWorker _bgWorker;
+            private readonly Timer _timer;
+            private readonly int _duration;
 
             public NotifyForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool borders, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor, bool topMost)
             {
+                _components = new Container();
+                _duration = duration;
                 SuspendLayout();
-                _asyncWait.DoWork += AsyncWait_DoWork;
-                _asyncWait.RunWorkerCompleted += AsyncWait_RunWorkerCompleted;
-                _loadingDots.Interval = 256;
-                _loadingDots.Tick += LoadingDots_Tick;
                 var titleLabel = new Label
                 {
                     AutoSize = true,
@@ -368,6 +366,14 @@ namespace SilDev
                             Location = new Point(0, 0),
                             Size = new Size(1, 1)
                         });
+                _bgWorker = new BackgroundWorker();
+                _bgWorker.DoWork += (sender, args) => Thread.Sleep(_duration);
+                _bgWorker.RunWorkerCompleted += (sender, args) => Close();
+                _timer = new Timer(_components)
+                {
+                    Interval = 256
+                };
+                _timer.Tick += Timer_Tick;
                 AutoScaleDimensions = new SizeF(6f, 13f);
                 AutoScaleMode = AutoScaleMode.Font;
                 BackColor = backColor;
@@ -417,36 +423,33 @@ namespace SilDev
                 Shown += NotifyForm_Shown;
                 ResumeLayout(false);
                 PerformLayout();
-                _duration = duration;
             }
 
             protected override void Dispose(bool disposing)
             {
-                if (disposing)
-                    _components?.Dispose();
-                base.Dispose(disposing);
+                if (!disposing)
+                    return;
+                _components?.Dispose();
+                base.Dispose(true);
             }
 
             private void NotifyForm_Shown(object sender, EventArgs e)
             {
                 if (_textLabel.Text.EndsWith(" . . ."))
-                    _loadingDots.Enabled = true;
+                    _timer.Enabled = true;
                 if (_duration > 0)
-                    _asyncWait.RunWorkerAsync();
+                    _bgWorker.RunWorkerAsync();
             }
 
-            private void AsyncWait_DoWork(object sender, DoWorkEventArgs e) =>
-                Thread.Sleep(_duration);
-
-            private void AsyncWait_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) =>
-                Close();
-
-            private void LoadingDots_Tick(object sender, EventArgs e)
+            private void Timer_Tick(object sender, EventArgs e)
             {
+                var timer = sender as Timer;
+                if (timer == null)
+                    return;
                 var s = _textLabel.Text;
                 if (!s.EndsWith(" ."))
                 {
-                    ((Timer)sender).Enabled = false;
+                    timer.Enabled = false;
                     return;
                 }
                 if (s.EndsWith(" . . ."))

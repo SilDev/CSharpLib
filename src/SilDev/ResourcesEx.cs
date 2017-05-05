@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2017-02-17 20:36
+// Version:  2017-05-04 17:17
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,12 +16,14 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
+    using Forms;
 
     /// <summary>
     ///     Provides static methods for the usage of data resources.
@@ -137,6 +139,16 @@ namespace SilDev
                 WinApi.UnsafeNativeMethods.DestroyIcon(ptr);
                 return ico;
             }
+            catch (ArgumentNullException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (ArgumentException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
             catch (Exception ex)
             {
                 Log.Write(ex);
@@ -162,8 +174,10 @@ namespace SilDev
             try
             {
                 var path = PathEx.Combine(location);
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new ArgumentNullException(nameof(path));
                 if (Data.IsDir(path))
-                    path = PathEx.Combine(path, "imageres.dll");
+                    path = Path.Combine(path, "imageres.dll");
                 if (!File.Exists(path))
                     path = PathEx.Combine("%system%\\imageres.dll");
                 if (!File.Exists(path))
@@ -171,15 +185,20 @@ namespace SilDev
                 var ico = GetIconFromFile(path, (int)index, large);
                 return ico;
             }
-            catch (FileNotFoundException ex)
+            catch (ArgumentNullException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (PathNotFoundException ex)
             {
                 Log.Write(ex);
-                return null;
             }
             catch
             {
-                return null;
+                // ignored
             }
+            return null;
         }
 
         /// <summary>
@@ -274,10 +293,16 @@ namespace SilDev
         /// </summary>
         public sealed class IconBrowserDialog : Form
         {
-            private readonly Button _button;
-            private readonly IContainer _components = null;
+            private readonly IContainer _components;
+            private string _path;
+            private readonly List<IconBox> _boxes = new List<IconBox>();
             private readonly Panel _panel;
             private readonly TextBox _textBox;
+            private readonly Panel _buttonPanel;
+            private readonly Button _button;
+            private readonly ProgressCircle _progressCircle;
+            private readonly Timer _timer;
+            private static readonly object Locker = new object();
 
             /// <summary>
             ///     Initializes an instance of the <see cref="IconBrowserDialog"/> class.
@@ -302,6 +327,7 @@ namespace SilDev
             /// </param>
             public IconBrowserDialog(string path = "%system%\\imageres.dll", Color? backColor = null, Color? foreColor = null, Color? buttonFace = null, Color? buttonText = null, Color? buttonHighlight = null)
             {
+                _components = new Container();
                 SuspendLayout();
                 var resPath = PathEx.Combine(path);
                 if (Data.IsDir(resPath))
@@ -338,12 +364,13 @@ namespace SilDev
                     AutoScroll = true,
                     BackColor = buttonFace ?? SystemColors.ButtonFace,
                     BorderStyle = BorderStyle.FixedSingle,
+                    Enabled = false,
                     ForeColor = buttonText ?? SystemColors.ControlText,
                     Dock = DockStyle.Fill,
                     Name = "panel",
                     TabIndex = 0
                 };
-                _panel.Scroll += (s, e) => ((Panel)s).Update();
+                _panel.Scroll += (s, e) => (s as Panel)?.Update();
                 tableLayoutPanel.Controls.Add(_panel, 0, 0);
                 var innerTableLayoutPanel = new TableLayoutPanel
                 {
@@ -366,7 +393,7 @@ namespace SilDev
                 };
                 _textBox.TextChanged += TextBox_TextChanged;
                 innerTableLayoutPanel.Controls.Add(_textBox, 0, 0);
-                var buttonPanel = new Panel
+                _buttonPanel = new Panel
                 {
                     Anchor = AnchorStyles.Top | AnchorStyles.Right,
                     BackColor = Color.Transparent,
@@ -374,7 +401,7 @@ namespace SilDev
                     Name = "buttonPanel",
                     Size = new Size(20, 20)
                 };
-                innerTableLayoutPanel.Controls.Add(buttonPanel, 1, 0);
+                innerTableLayoutPanel.Controls.Add(_buttonPanel, 1, 0);
                 _button = new Button
                 {
                     BackColor = buttonFace ?? SystemColors.ButtonFace,
@@ -391,28 +418,61 @@ namespace SilDev
                 _button.FlatAppearance.BorderSize = 0;
                 _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? ProfessionalColors.ButtonSelectedHighlight;
                 _button.Click += Button_Click;
-                buttonPanel.Controls.Add(_button);
+                _buttonPanel.Controls.Add(_button);
+                _progressCircle = new ProgressCircle
+                {
+                    Active = false,
+                    Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                    BackColor = Color.Transparent,
+                    Dock = DockStyle.Fill,
+                    ForeColor = (backColor ?? SystemColors.Control).InvertRgb().ToGrayScale(),
+                    RotationSpeed = 80,
+                    Thickness = 2,
+                    Visible = true
+                };
+                _timer = new Timer(_components)
+                {
+                    Interval = 1
+                };
+                _timer.Tick += Timer_Tick;
+                Shown += (sender, args) => TaskBar.Progress.SetState(Handle, TaskBar.Progress.Flags.Indeterminate);
                 ResumeLayout(false);
                 PerformLayout();
-                _textBox.Text = PathEx.Combine(path);
-                if (!File.Exists(_textBox.Text))
-                    _textBox.Text = resPath;
-                if (File.Exists(_textBox.Text))
-                    ShowIconResources(_textBox.Text);
+                var curPath = PathEx.Combine(path);
+                if (!File.Exists(curPath))
+                    curPath = resPath;
+                if (!File.Exists(curPath))
+                    return;
+                _textBox.Text = curPath;
             }
 
             protected override void Dispose(bool disposing)
             {
-                if (disposing)
-                    _components?.Dispose();
-                base.Dispose(disposing);
+                if (!disposing)
+                    return;
+                _components?.Dispose();
+                base.Dispose(true);
             }
 
             private void TextBox_TextChanged(object sender, EventArgs e)
             {
-                var path = PathEx.Combine(((TextBox)sender).Text);
-                if (path.EndsWithEx(".ico", ".exe", ".dll") && File.Exists(path))
-                    ShowIconResources(path);
+                var textBox = sender as TextBox;
+                if (textBox == null)
+                    return;
+                var path = PathEx.Combine(textBox.Text);
+                if (string.IsNullOrWhiteSpace(path) || _path == path || !File.Exists(path) || GetIconFromFile(path, 0, true) == null)
+                    return;
+                TaskBar.Progress.SetState(Handle, TaskBar.Progress.Flags.Indeterminate);
+                _path = path;
+                _panel.Enabled = false;
+                _textBox.Enabled = false;
+                _buttonPanel.SuspendLayout();
+                _buttonPanel.BorderStyle = BorderStyle.None;
+                _buttonPanel.Controls.Clear();
+                _buttonPanel.Controls.Add(_progressCircle);
+                _buttonPanel.ResumeLayout(false);
+                _progressCircle.Active = true;
+                _timer.Enabled = true;
             }
 
             private void Button_Click(object sender, EventArgs e)
@@ -424,46 +484,68 @@ namespace SilDev
                     RestoreDirectory = false
                 })
                 {
-                    dialog.ShowDialog(new Form { ShowIcon = false, TopMost = true });
-                    if (!string.IsNullOrWhiteSpace(dialog.FileName))
+                    dialog.ShowDialog(new Form
+                    {
+                        ShowIcon = false,
+                        TopMost = true
+                    });
+                    if (File.Exists(dialog.FileName))
                         _textBox.Text = dialog.FileName;
                 }
-                if (!_panel.Focus())
-                    _panel.Select();
             }
 
-            private void ShowIconResources(string path)
+            private void Timer_Tick(object sender, EventArgs e)
             {
-                try
+                lock (Locker)
                 {
-                    var boxes = new IconBox[short.MaxValue];
-                    if (_panel.Controls.Count > 0)
+                    var timer = sender as Timer;
+                    if (timer == null)
+                        return;
+                    if (_boxes.Count == 0 && _panel.Controls.Count > 0)
                         _panel.Controls.Clear();
-                    for (var i = 0; i < short.MaxValue; i++)
+                    const int speed = 3; // Higher value loads the icons faster, but hangs more the UI while loading
+                    for (var i = 0; i < speed; i++)
                         try
                         {
-                            boxes[i] = new IconBox(path, i, _button.BackColor, _button.ForeColor, _button.FlatAppearance.MouseOverBackColor);
-                            _panel.Controls.Add(boxes[i]);
+                            _boxes.Add(new IconBox(_path, _boxes.Count, _button.BackColor, _button.ForeColor, _button.FlatAppearance.MouseOverBackColor));
+                            if (_boxes.Count <= 0)
+                                continue;
+                            var last = _boxes.Last();
+                            if (_panel.Controls.Contains(last))
+                                continue;
+                            _panel.SuspendLayout();
+                            _panel.Controls.Add(last);
+                            _panel.ResumeLayout(false);
                         }
                         catch
                         {
+                            timer.Enabled = false;
+                            if (_boxes.Count > 0)
+                                _boxes.Clear();
                             break;
                         }
-                    if (boxes[0] == null)
-                        return;
-                    var max = _panel.Width / boxes[0].Width;
-                    for (var i = 0; i < boxes.Length; i++)
+                    var max = _panel.Width / _panel.Controls[0].Width;
+                    for (var i = 0; i < _panel.Controls.Count; i++)
                     {
-                        if (boxes[i] == null)
+                        if (_panel.Controls[i] == null)
                             continue;
                         var line = i / max;
                         var column = i - line * max;
-                        boxes[i].Location = new Point(column * boxes[i].Width, line * boxes[i].Height);
+                        _panel.Controls[i].Location = new Point(column * _panel.Controls[i].Width, line * _panel.Controls[i].Height);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
+                    if (timer.Enabled || _panel.Enabled)
+                        return;
+                    _panel.Enabled = true;
+                    _textBox.Enabled = true;
+                    _progressCircle.Active = false;
+                    _buttonPanel.SuspendLayout();
+                    _buttonPanel.Controls.Clear();
+                    _buttonPanel.Controls.Add(_button);
+                    _buttonPanel.BorderStyle = BorderStyle.FixedSingle;
+                    _buttonPanel.ResumeLayout(false);
+                    TaskBar.Progress.SetState(Handle, TaskBar.Progress.Flags.NoProgress);
+                    if (!_panel.Focus())
+                        _panel.Select();
                 }
             }
 
