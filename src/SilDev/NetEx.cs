@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-05-03 05:26
+// Version:  2017-05-05 14:31
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -108,6 +108,8 @@ namespace SilDev
             long roundtripTime = 3000;
             try
             {
+                if (uri == null)
+                    throw new ArgumentNullException(nameof(uri));
                 using (var ping = new Ping())
                 {
                     LastPingReply = ping.Send(uri.Host, 3000);
@@ -160,13 +162,14 @@ namespace SilDev
         /// </param>
         public static Uri ToHttpUri(this string str)
         {
+            var s = PathEx.AltCombine(default(char[]), str);
             try
             {
-                var s = str;
                 var u = s.ToUri();
                 if (u.Scheme.EqualsEx("https", "http"))
                     return u;
-                s = PathEx.AltCombine("http:", u.Host, u.PathAndQuery);
+                s = "http://" + u.Host + u.PathAndQuery;
+                Log.Write(s);
                 u = s.ToUri();
                 return u;
             }
@@ -174,14 +177,10 @@ namespace SilDev
             {
                 try
                 {
-                    var s = str;
-                    if (s.Contains(":/"))
-                    {
-                        var i = s.IndexOf(":/", StringComparison.Ordinal) + 1;
-                        if (i.IsBetween(4, 6) && i < s.Length)
-                            s = s.Substring(i).TrimStart('/');
-                    }
-                    var u = PathEx.AltCombine("http:", s).ToUri();
+                    if (s.Contains("://"))
+                        s = s.Split("://").Last();
+                    s = "http://" + s;
+                    var u = s.ToUri();
                     return u;
                 }
                 catch (Exception ex)
