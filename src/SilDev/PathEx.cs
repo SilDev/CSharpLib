@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-05-04 21:50
+// Version:  2017-05-06 22:32
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -144,7 +144,6 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(paths));
                 var levels = paths;
                 var sepChar = Path.DirectorySeparatorChar;
-                var sepStr = sepChar.ToString();
                 for (var i = 0; i < levels.Length; i++)
                 {
                     if (i > 0)
@@ -154,18 +153,27 @@ namespace SilDev
                     levels[i] = levels[i].Replace(Path.AltDirectorySeparatorChar, sepChar);
                     if (levels[i].Contains(sepChar))
                         levels[i] = levels[i].Split(sepChar).Where(s => !string.IsNullOrEmpty(s)).Select(s => s.Trim()).Join(sepChar);
-                    if (i == 0 && levels[i].EndsWith(Path.VolumeSeparatorChar.ToString()))
-                        levels[i] += sepStr;
+                    if (i > 0)
+                        continue;
+                    if (levels[i].EndsWith(Path.VolumeSeparatorChar.ToString()))
+                        levels[i] += sepChar;
                 }
                 path = Path.Combine(levels);
-                if (path.StartsWith("%") && (path.Contains("%" + sepStr) || path.EndsWith("%")))
+                if (path.StartsWith("%") && (path.Contains("%" + sepChar) || path.EndsWith("%")))
                 {
-                    var variable = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase).Groups[1].Value;
-                    var value = EnvironmentEx.GetVariableValue(variable);
-                    if (!string.IsNullOrEmpty(variable) && !string.IsNullOrEmpty(value))
-                        path = path.Replace("%" + variable + "%", value);
+                    var regex = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase);
+                    if (regex.Groups.Count > 1)
+                    {
+                        var variable = regex.Groups[1].Value;
+                        if (!string.IsNullOrEmpty(variable))
+                        {
+                            var value = EnvironmentEx.GetVariableValue(variable);
+                            if (!string.IsNullOrEmpty(value))
+                                path = path.Replace("%" + variable + "%", value);
+                        }
+                    }
                 }
-                if (path.Contains(sepStr + ".."))
+                if (path.Contains(sepChar + ".."))
                     path = Path.GetFullPath(path);
                 if (path.Contains('.'))
                     path = path.TrimEnd('.');
