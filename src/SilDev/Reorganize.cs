@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-08 11:47
+// Version:  2017-05-12 12:01
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -946,6 +946,53 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return new IntPtr(IntPtr.Size == sizeof(int) ? int.MaxValue : long.MaxValue);
+            }
+        }
+
+        /// <summary>
+        ///     Projects each element of a sequence into a new form.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values to invoke a transform function on.
+        /// </param>
+        /// <param name="selector">
+        ///     A transform function to apply to each element.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        public static IEnumerable<TSource> RecursiveSelect<TSource>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TSource>> selector)
+        {
+            var stack = new Stack<IEnumerator<TSource>>();
+            var enumerator = source.GetEnumerator();
+            try
+            {
+                while (true)
+                    if (enumerator.MoveNext())
+                    {
+                        var element = enumerator.Current;
+                        yield return element;
+                        stack.Push(enumerator);
+                        enumerator = selector(element).GetEnumerator();
+                    }
+                    else if (stack.Count > 0)
+                    {
+                        enumerator.Dispose();
+                        enumerator = stack.Pop();
+                    }
+                    else
+                        yield break;
+            }
+            finally
+            {
+                enumerator.Dispose();
+                while (stack.Count > 0)
+                {
+                    enumerator = stack.Pop();
+                    enumerator.Dispose();
+                }
             }
         }
 
