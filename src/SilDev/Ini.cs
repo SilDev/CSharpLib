@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-12 15:32
+// Version:  2017-05-12 16:43
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -623,9 +623,15 @@ namespace SilDev
                     d = s.ToPoint();
                 else if (t == typeof(Size))
                     d = s.ToSize();
+                else if (t == typeof(Version))
+                    d = Version.Parse(s);
                 else if (!s.TryParse<TValue>(out d))
                     d = defValue;
                 output = d;
+            }
+            catch (FormatException)
+            {
+                // ignored
             }
             catch (Exception ex)
             {
