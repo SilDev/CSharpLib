@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2016-12-01 14:56
+// Version:  2017-05-12 11:39
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -375,49 +375,56 @@ namespace SilDev
                 var s2 = !_d ? b as string : a as string;
                 if (s2 == null)
                     return 0;
-                var i1 = 0;
-                var i2 = 0;
-                while (i1 < s1.Length && i2 < s2.Length)
+                try
                 {
-                    var c1 = s1[i1];
-                    var ca1 = new char[s1.Length];
-                    var l1 = 0;
-                    do
+                    var i1 = 0;
+                    var i2 = 0;
+                    while (i1 < s1.Length && i2 < s2.Length)
                     {
-                        ca1[l1++] = c1;
-                        i1++;
-                        if (i1 >= s1.Length)
-                            break;
-                        c1 = s1[i1];
+                        var c1 = s1[i1];
+                        var ca1 = new char[s1.Length];
+                        var l1 = 0;
+                        do
+                        {
+                            ca1[l1++] = c1;
+                            i1++;
+                            if (i1 >= s1.Length)
+                                break;
+                            c1 = s1[i1];
+                        }
+                        while (char.IsDigit(c1) == char.IsDigit(ca1[0]));
+                        var c2 = s2[i2];
+                        var ca2 = new char[s2.Length];
+                        var l2 = 0;
+                        do
+                        {
+                            ca2[l2++] = c2;
+                            i2++;
+                            if (i2 >= s2.Length)
+                                break;
+                            c2 = s2[i2];
+                        }
+                        while (char.IsDigit(c2) == char.IsDigit(ca2[0]));
+                        var str1 = new string(ca1);
+                        var str2 = new string(ca2);
+                        int r;
+                        if (char.IsDigit(ca1[0]) && char.IsDigit(ca2[0]))
+                        {
+                            var ch1 = int.Parse(str1);
+                            var ch2 = int.Parse(str2);
+                            r = ch1.CompareTo(ch2);
+                        }
+                        else
+                            r = string.Compare(str1, str2, StringComparison.InvariantCulture);
+                        if (r != 0)
+                            return r;
                     }
-                    while (char.IsDigit(c1) == char.IsDigit(ca1[0]));
-                    var c2 = s2[i2];
-                    var ca2 = new char[s2.Length];
-                    var l2 = 0;
-                    do
-                    {
-                        ca2[l2++] = c2;
-                        i2++;
-                        if (i2 >= s2.Length)
-                            break;
-                        c2 = s2[i2];
-                    }
-                    while (char.IsDigit(c2) == char.IsDigit(ca2[0]));
-                    var str1 = new string(ca1);
-                    var str2 = new string(ca2);
-                    int r;
-                    if (char.IsDigit(ca1[0]) && char.IsDigit(ca2[0]))
-                    {
-                        var ch1 = int.Parse(str1);
-                        var ch2 = int.Parse(str2);
-                        r = ch1.CompareTo(ch2);
-                    }
-                    else
-                        r = string.Compare(str1, str2, StringComparison.InvariantCulture);
-                    if (r != 0)
-                        return r;
+                    return s1.Length - s2.Length;
                 }
-                return s1.Length - s2.Length;
+                catch
+                {
+                    return string.Compare(s1, s2, StringComparison.InvariantCulture);
+                }
             }
         }
     }
