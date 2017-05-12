@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-04-16 18:01
+// Version:  2017-05-12 16:01
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -133,8 +133,8 @@ namespace SilDev
         ///     The <see cref="Process"/> component to start.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process has
+        ///     been started; otherwise, false.
         /// </param>
         public static Process Start(Process process, bool dispose = true)
         {
@@ -188,8 +188,8 @@ namespace SilDev
         ///     The <see cref="ProcessStartInfo"/> component to initialize a new <see cref="Process"/>.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process has
+        ///     been started; otherwise, false.
         /// </param>
         public static Process Start(ProcessStartInfo processStartInfo, bool dispose = true)
         {
@@ -217,8 +217,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process
+        ///     has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string workingDirectory, string arguments, bool verbRunAs = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true)
         {
@@ -253,8 +253,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process
+        ///     has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string workingDirectory, string arguments, bool verbRunAs, bool dispose) =>
             Start(fileName, workingDirectory, arguments, verbRunAs, ProcessWindowStyle.Normal, dispose);
@@ -276,8 +276,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/> if the process
+        ///     has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string arguments = null, bool verbRunAs = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true) =>
             Start(fileName, null, arguments, verbRunAs, processWindowStyle, dispose);
@@ -296,8 +296,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process
+        ///     has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string arguments, bool verbRunAs, bool dispose) =>
             Start(fileName, null, arguments, verbRunAs, ProcessWindowStyle.Normal, dispose);
@@ -316,8 +316,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process
+        ///     has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, bool verbRunAs, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true) =>
             Start(fileName, null, null, verbRunAs, processWindowStyle, dispose);
@@ -333,8 +333,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process
+        ///     has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, bool verbRunAs, bool dispose) =>
             Start(fileName, null, null, verbRunAs, dispose);
@@ -359,8 +359,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process has
+        ///     been started; otherwise, false.
         /// </param>
         public static Process Send(string command, bool runAsAdmin = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Hidden, bool dispose = true)
         {
@@ -410,8 +410,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process has
+        ///     been started; otherwise, false.
         /// </param>
         public static Process Send(string command, bool runAsAdmin, bool dispose) =>
             Send(command, runAsAdmin, ProcessWindowStyle.Hidden, dispose);
@@ -433,8 +433,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component.Dispose()"/>
-        ///     if the process has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Component"/>, if the process has
+        ///     been started; otherwise, false.
         /// </param>
         public static Process Send(string command, ProcessWindowStyle processWindowStyle, bool dispose = true) =>
             Send(command, false, processWindowStyle, dispose);
@@ -451,7 +451,7 @@ namespace SilDev
         /// <param name="processes">
         ///     The <see cref="Process"/>/es to kill.
         /// </param>
-        public static bool Terminate(params Process[] processes)
+        public static bool Terminate(IEnumerable<Process> processes)
         {
             var count = 0;
             var list = new List<string>();
@@ -495,7 +495,7 @@ namespace SilDev
         /// <param name="processes">
         ///     The collection of processes to kill.
         /// </param>
-        public static bool Terminate(IEnumerable<Process> processes) =>
-            Terminate(processes.ToArray());
+        public static bool Terminate(params Process[] processes) =>
+            Terminate(processes.ToList());
     }
 }

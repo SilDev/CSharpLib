@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-05-05 14:31
+// Version:  2017-05-12 16:01
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -85,7 +85,7 @@ namespace SilDev
                     "[2001:4860:4860::8844]"
                 }
             };
-            for (var i = 0; i < dns.GetLength(0); i++)
+            for (var i = 0; i < dns.Rank; i++)
             {
                 var s = dns[Convert.ToByte(iPv6), i];
                 isAvailable = Ping(s) < 3000;

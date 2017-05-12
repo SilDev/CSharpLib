@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-02-15 15:24
+// Version:  2017-05-12 16:01
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -193,7 +193,7 @@ namespace SilDev
                     var begin = targetPath.IndexOf("\0\0", StringComparison.Ordinal);
                     if (begin <= -1)
                         return targetPath;
-                    var end = targetPath.IndexOf(string.Format("{0}{0}", Path.DirectorySeparatorChar), begin + 2, StringComparison.Ordinal) + 2;
+                    var end = targetPath.IndexOf(new string(Path.DirectorySeparatorChar, 2), begin + 2, StringComparison.Ordinal) + 2;
                     end = targetPath.IndexOf('\0', end) + 1;
                     targetPath = Path.Combine(targetPath.Substring(0, begin), targetPath.Substring(end));
                 }

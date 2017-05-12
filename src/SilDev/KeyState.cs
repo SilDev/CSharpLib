@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: KeyState.cs
-// Version:  2017-04-10 16:19
+// Version:  2017-05-12 15:48
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -886,17 +886,8 @@ namespace SilDev
         /// <param name="key">
         ///     The <see cref="VKey"/> value.
         /// </param>
-        public static VKey GetVKeyValue(ushort key)
-        {
-            try
-            {
-                return (VKey)key;
-            }
-            catch
-            {
-                return 0x0;
-            }
-        }
+        public static VKey GetVKeyValue(ushort key) =>
+            (VKey)key;
 
         /// <summary>
         ///     Returns the <see cref="VKey"/> of the <see cref="string"/> representation of a
@@ -905,17 +896,8 @@ namespace SilDev
         /// <param name="key">
         ///     The <see cref="string"/> representation of a Virtual-Key code.
         /// </param>
-        public static VKey GetVKeyValue(string key)
-        {
-            try
-            {
-                return (VKey)GetVKeyCode(key);
-            }
-            catch
-            {
-                return 0x0;
-            }
-        }
+        public static VKey GetVKeyValue(string key) =>
+            (VKey)GetVKeyCode(key);
 
         /// <summary>
         ///     Returns the <see cref="ushort"/> representation of the <see cref="VKey"/> value.
@@ -923,17 +905,8 @@ namespace SilDev
         /// <param name="key">
         ///     The <see cref="VKey"/> value.
         /// </param>
-        public static ushort GetVKeyCode(VKey key)
-        {
-            try
-            {
-                return Convert.ToUInt16(key);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
+        public static ushort GetVKeyCode(VKey key) =>
+            (ushort)key;
 
         /// <summary>
         ///     Returns the <see cref="ushort"/> representation of the <see cref="string"/> representation
@@ -944,14 +917,10 @@ namespace SilDev
         /// </param>
         public static ushort GetVKeyCode(string key)
         {
-            try
-            {
-                return Convert.ToUInt16(Enum.Parse(typeof(VKey), key));
-            }
-            catch
-            {
-                return 0;
-            }
+            VKey vkey;
+            if (Enum.TryParse(key, out vkey))
+                return (ushort)vkey;
+            return 0;
         }
 
         /// <summary>
@@ -960,17 +929,8 @@ namespace SilDev
         /// <param name="key">
         ///     The <see cref="VKey"/> value.
         /// </param>
-        public static string GetVKeyString(VKey key)
-        {
-            try
-            {
-                return Enum.GetName(typeof(VKey), key);
-            }
-            catch
-            {
-                return null;
-            }
-        }
+        public static string GetVKeyString(VKey key) =>
+            Enum.GetName(typeof(VKey), key);
 
         /// <summary>
         ///     Returns the <see cref="string"/> representation of the <see cref="ushort"/> representation
@@ -980,7 +940,7 @@ namespace SilDev
         ///     The <see cref="ushort"/> representation of a Virtual-Key code.
         /// </param>
         public static string GetVKeyString(ushort key) =>
-            ((VKey)key).ToString();
+            GetVKeyValue(key).ToString();
 
         /// <summary>
         ///     Determines whether a key is up or down at the time the function is called, and whether the
@@ -1016,18 +976,12 @@ namespace SilDev
         ///     Determines which keys were up or down at the time the function is called, and which keys
         ///     were pressed.
         /// </summary>
-        public static List<VKey> GetStates()
+        public static IEnumerable<VKey> GetStates()
         {
-            var list = new List<VKey>();
-            try
-            {
-                list = Enum.GetValues(typeof(VKey)).Cast<VKey>().Where(x => WinApi.SafeNativeMethods.GetAsyncKeyState(GetVKeyCode(x)) < 0).ToList();
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return list;
+            var keys = Enum.GetValues(typeof(VKey)).Cast<VKey>();
+            foreach (var key in keys)
+                if (WinApi.SafeNativeMethods.GetAsyncKeyState(GetVKeyCode(key)) < 0)
+                    yield return key;
         }
 
         /// <summary>
