@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-05-12 11:39
+// Version:  2017-05-12 11:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -37,6 +37,10 @@ namespace SilDev
         /// <param name="target">
         ///     The one-dimensional array to locate.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        /// <exception cref="OverflowException">
+        /// </exception>
         public static IEnumerable<int> IndexOf<T>(T[] source, T[] target)
         {
             if (target == null || source.Length < target.Length)
