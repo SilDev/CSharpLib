@@ -49,6 +49,10 @@
             <param name="target">
                 The one-dimensional array to locate.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+            </exception>
+            <exception cref="T:System.OverflowException">
+            </exception>
         </member>
         <member name="M:SilDev.Comparison.IsBetween``1(``0,``0,``0)">
             <summary>
@@ -2251,6 +2255,14 @@
                 The string to reconvert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.FromHexStringToIcon(System.String)">
+            <summary>
+                Converts the specified hexadecimal sequence back to <see cref="T:System.Drawing.Icon"/>.
+            </summary>
+            <param name="str">
+                The string to reconvert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.FromHexString(System.String)">
             <summary>
                 Converts the specified hexadecimal sequence back to string.
@@ -2313,6 +2325,14 @@
                 An <see cref="T:System.Drawing.Imaging.ImageFormat"/> that specifies the format of the saved image.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToByteArray(System.Drawing.Icon)">
+            <summary>
+                Converts the specified icon into a sequence of bytes.
+            </summary>
+            <param name="icon">
+                The icon to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.FromByteArrayToString(System.Byte[])">
             <summary>
                 Converts the specified sequence of bytes into a string.
@@ -2324,6 +2344,14 @@
         <member name="M:SilDev.Reorganize.FromByteArrayToImage(System.Byte[])">
             <summary>
                 Converts the specified sequence of bytes to <see cref="T:System.Drawing.Image"/>.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromByteArrayToIcon(System.Byte[])">
+            <summary>
+                Converts the specified sequence of bytes to <see cref="T:System.Drawing.Icon"/>.
             </summary>
             <param name="bytes">
                 The sequence of bytes to convert.
@@ -2354,6 +2382,22 @@
             <param name="value">
                 The number to be incremented.
             </param>
+        </member>
+        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+                Projects each element of a sequence into a new form.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                A sequence of values to invoke a transform function on.
+            </param>
+            <param name="selector">
+                A transform function to apply to each element.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            </exception>
         </member>
         <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
             <summary>
@@ -4407,20 +4451,31 @@
                 Provides static methods for the handling of initialization files.
             </summary>
         </member>
-        <member name="M:SilDev.Ini.File(System.String[])">
+        <member name="P:SilDev.Ini.FilePath">
             <summary>
-                Specifies an initialization file to use as the default file if no other file is
-                specified for a called <see cref="T:SilDev.Ini"/> method. if the file doesn't exists
-                it's created.
+                Gets or sets a default INI file.
+            </summary>
+        </member>
+        <member name="M:SilDev.Ini.GetFile">
+            <summary>
+                Gets the full path of the default INI file.
+            </summary>
+        </member>
+        <member name="M:SilDev.Ini.SetFile(System.String[])">
+            <summary>
+                Specifies an INI file to use as default.
             </summary>
             <param name="paths">
                 An array of parts of the path (environment variables are accepted).
             </param>
         </member>
-        <member name="M:SilDev.Ini.File">
+        <member name="M:SilDev.Ini.Detach(System.String)">
             <summary>
-                Gets the full path of the default initialization file.
+                Removes the read content of an INI file from cache.
             </summary>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
         </member>
         <member name="M:SilDev.Ini.RemoveSection(System.String,System.String)">
             <summary>
@@ -4430,8 +4485,8 @@
             <param name="section">
                 The name of the section to remove.
             </param>
-            <param name="file">
-                The full file path of an INI file.
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
             </param>
         </member>
         <member name="M:SilDev.Ini.RemoveKey(System.String,System.String,System.String)">
@@ -4445,8 +4500,8 @@
             <param name="key">
                 The name of the key to remove.
             </param>
-            <param name="file">
-                The full file path of an INI file.
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
             </param>
         </member>
         <member name="M:SilDev.Ini.GetSections(System.String,System.Boolean)">
@@ -4497,13 +4552,7 @@
         </member>
         <member name="M:SilDev.Ini.ReadAll(System.String,System.Boolean)">
             <summary>
-                <para>
-                    Retrieves the full content of an INI file or an INI file formatted string value.
-                    The result is saved in an <see cref="T:System.Collections.Generic.Dictionary`2"/>.
-                </para>
-                <para>
-                    Please note that values are stored as <see cref="T:System.String"/>.
-                </para>
+                Retrieves the full content of an INI file or an INI file formatted string value.
             </summary>
             <param name="fileOrContent">
                 The full file path or content of an INI file.
@@ -4514,35 +4563,13 @@
         </member>
         <member name="M:SilDev.Ini.ReadAll(System.Boolean)">
             <summary>
-                <para>
-                    Retrieves the full content of an INI file or an INI file formatted string value.
-                    The result is saved in an <see cref="T:System.Collections.Generic.Dictionary`2"/>.
-                </para>
-                <para>
-                    Please note that values are stored as <see cref="T:System.String"/>.
-                </para>
+                Retrieves the full content of an INI file or an INI file formatted string value.
             </summary>
             <param name="sorted">
                 true to sort the sections and keys; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Ini.ValueExists(System.String,System.String,System.String)">
-            <summary>
-                Determines whether the specified section, of an INI file or an INI file formatted
-                string value, contains a key with a valid value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.Read(System.String,System.String,System.String)">
+        <member name="M:SilDev.Ini.Read(System.String,System.String,System.String,System.Boolean)">
             <summary>
                 Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file
                 or an INI file formatted string value.
@@ -4556,89 +4583,59 @@
             </param>
             <param name="fileOrContent">
                 The full file path or content of an INI file.
+            </param>
+            <param name="reread">
+                true to reread the INI file; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Ini.Read``1(System.String,System.String,``0,System.String)">
             <summary>
-                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file
-                or an INI file formatted string value.
+                Retrieves a value from the specified section in an INI file or an INI file
+                formatted string value.
             </summary>
-            <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
+            <typeparam name="TValue">
+                The value type.
             </typeparam>
             <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
+                The name of the section containing the key name.
             </param>
             <param name="key">
                 The name of the key whose associated value is to be retrieved.
             </param>
             <param name="defValue">
+                The value that is used as default.
             </param>
             <param name="fileOrContent">
                 The full file path or content of an INI file.
             </param>
-            <returns>
-            </returns>
         </member>
-        <member name="M:SilDev.Ini.ReadBoolean(System.String,System.String,System.Boolean,System.String)">
+        <member name="M:SilDev.Ini.ReadOnly``1(System.String,System.String,``0,System.String)">
             <summary>
-                Retrieves a <see cref="T:System.Boolean"/> value from the specified section in an INI file
-                or an INI file formatted string value.
+                Retrieves a value from the specified section in an INI file or an INI file
+                formatted string value and release all cached resources used by the
+                specified INI file or the INI file formatted string value.
             </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
             <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
+                The name of the section containing the key name.
             </param>
             <param name="key">
                 The name of the key whose associated value is to be retrieved.
             </param>
             <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
+                The value that is used as default.
             </param>
             <param name="fileOrContent">
                 The full file path or content of an INI file.
             </param>
         </member>
-        <member name="M:SilDev.Ini.ReadBoolean(System.String,System.String,System.String)">
+        <member name="M:SilDev.Ini.ReadOnly(System.String,System.String,System.String)">
             <summary>
-                Retrieves a <see cref="T:System.Boolean"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated string is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadByte(System.String,System.String,System.Byte,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Byte"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadByte(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Byte"/> value from the specified section in an INI file
-                or an INI file formatted string value.
+                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file
+                or an INI file formatted string value and release all cached resources used by
+                the specified INI file or the INI file formatted string value.
             </summary>
             <param name="section">
                 The name of the section containing the key name. The value must be NULL for a
@@ -4651,684 +4648,166 @@
                 The full file path or content of an INI file.
             </param>
         </member>
-        <member name="M:SilDev.Ini.ReadByteArray(System.String,System.String,System.Byte[],System.String)">
+        <member name="M:SilDev.Ini.ReadDirect(System.String,System.String,System.String)">
             <summary>
                 <para>
-                    Retrieves a sequence of bytes from the specified section in an INI file or
-                    an INI file formatted string value.
+                    Retrieves a <see cref="T:System.String"/> value from the specified section in an INI
+                    file.
                 </para>
                 <para>
-                    Please note that the associated key value must be a hexadecimal string of a
-                    sequence of bytes.
+                    The Win32-API without file caching is used for reading in this case.
                 </para>
             </summary>
             <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
+                The name of the section containing the key name.
             </param>
             <param name="key">
                 The name of the key whose associated value is to be retrieved.
             </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
+            <param name="file">
+                The full file path of an INI file.
             </param>
         </member>
-        <member name="M:SilDev.Ini.ReadByteArray(System.String,System.String,System.String)">
+        <member name="M:SilDev.Ini.WriteAll(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}},System.String,System.Boolean,System.Boolean)">
             <summary>
+                Writes the specifed content to an INI file on the disk.
+            </summary>
+            <param name="content">
                 <para>
-                    Retrieves a sequence of bytes from the specified section in an INI file or
-                    an INI file formatted string value.
+                    The content based on <see cref="M:SilDev.Ini.ReadAll(System.String,System.Boolean)"/>.
                 </para>
                 <para>
-                    Please note that the associated key value must be a hexadecimal string of a
-                    sequence of bytes.
+                    If this parameter is NULL, the function writes all the cached data from the
+                    specified INI file to the disk.
                 </para>
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
             </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
+            <param name="file">
+                The full file path of an INI file.
             </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
+            <param name="sorted">
+                true to sort the sections and keys; otherwise, false.
+            </param>
+            <param name="detach">
+                true to release all cached resources used by the specified INI file; otherwise,
+                false.
             </param>
         </member>
-        <member name="M:SilDev.Ini.ReadDateTime(System.String,System.String,System.DateTime,System.String)">
+        <member name="M:SilDev.Ini.WriteAll(System.String,System.Boolean,System.Boolean)">
             <summary>
-                Retrieves a <see cref="T:System.DateTime"/> value from the specified section in an INI file
-                or an INI file formatted string value.
+                Writes all the cached data from the specified INI file to the disk.
             </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
+            <param name="file">
+                The full file path of an INI file.
             </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
+            <param name="sorted">
+                true to sort the sections and keys; otherwise, false.
             </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
+            <param name="detach">
+                true to release all cached resources used by the specified INI file; otherwise,
+                false.
             </param>
         </member>
-        <member name="M:SilDev.Ini.ReadDateTime(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.DateTime"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadDateTime(System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.DateTime"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadDouble(System.String,System.String,System.Double,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Double"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadDouble(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Double"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadFloat(System.String,System.String,System.Single,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Single"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadFloat(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Single"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadImage(System.String,System.String,System.Drawing.Image,System.String)">
+        <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.String,System.Boolean,System.Boolean,System.UInt32)">
             <summary>
                 <para>
-                    Retrieves an <see cref="T:System.Drawing.Image"/> from the specified section in an INI file
-                    or an INI file formatted string value.
+                    Copies the specified value into the specified section of an INI file.
                 </para>
                 <para>
-                    Please note that the associated key value must be a hexadecimal string of a
-                    sequence of bytes which represent a valid picture.
+                    This function updates only the cache and has no effect on the file until
+                    <see cref="M:SilDev.Ini.WriteAll(System.String,System.Boolean,System.Boolean)"/> is called.
                 </para>
             </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
             <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
+                The name of the section to which the string will be copied.
             </param>
             <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadImage(System.String,System.String,System.String)">
-            <summary>
-                <para>
-                    Retrieves an <see cref="T:System.Drawing.Image"/> from the specified section in an INI file
-                    or an INI file formatted string value.
-                </para>
-                <para>
-                    Please note that the associated key value must be a hexadecimal string of a
-                    sequence of bytes which represent a valid picture.
-                </para>
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadInteger(System.String,System.String,System.Int32,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Int32"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadInteger(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Int32"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadLong(System.String,System.String,System.Int64,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Int64"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadLong(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Int64"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadPoint(System.String,System.String,System.Drawing.Point,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Point"/> value pair from the specified section in an INI
-                file or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadPoint(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Point"/> value pair from the specified section in an INI
-                file or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadPoint(System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Point"/> value pair from the specified section in an INI
-                file or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadRectangle(System.String,System.String,System.Drawing.Rectangle,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Rectangle"/> from the specified section in an INI file or
-                an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadRectangle(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Rectangle"/> from the specified section in an INI file or
-                an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadRectangle(System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Rectangle"/> from the specified section in an INI file or
-                an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadShort(System.String,System.String,System.Int16,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Int16"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadShort(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Int16"/> value from the specified section in an INI file
-                or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadSize(System.String,System.String,System.Drawing.Size,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Size"/> value pair from the specified section in an INI
-                file or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadSize(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Size"/> value pair from the specified section in an INI
-                file or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadSize(System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Drawing.Size"/> value pair from the specified section in an INI
-                file or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadString(System.String,System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI
-                file or an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadStringArray(System.String,System.String,System.String[],System.String)">
-            <summary>
-                <para>
-                    Retrieves an <see cref="T:System.String"/> array from the specified section in an INI
-                    file or an INI file formatted string value.
-                </para>
-                <para>
-                    Please note that the associated key value must be a hexadecimal string of an
-                    <see cref="T:System.String"/> array.
-                </para>
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadStringArray(System.String,System.String,System.String)">
-            <summary>
-                <para>
-                    Retrieves an <see cref="T:System.String"/> array from the specified section in an INI
-                    file or an INI file formatted string value.
-                </para>
-                <para>
-                    Please note that the associated key value must be a hexadecimal string of an
-                    <see cref="T:System.String"/> array.
-                </para>
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadVersion(System.String,System.String,System.Version,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Version"/> from the specified section in an INI file or
-                an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="defValue">
-                The default value which returns if there is no valid value to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadVersion(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Version"/> from the specified section in an INI file or
-                an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadVersion(System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.Version"/> from the specified section in an INI file or
-                an INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.Write(System.String,System.String,System.Object,System.String,System.Boolean,System.Boolean)">
-            <summary>
-                <para>
-                    Copies an <see cref="T:System.Object"/> into the specified section of an initialization
-                    file. The following types are valid:
-                </para>
-                <para>
-                    <see cref="T:System.Boolean"/>,
-                    <see cref="T:System.Byte"/>,
-                    <see cref="T:System.Byte"/>[],
-                    <see cref="T:System.DateTime"/>,
-                    <see cref="T:System.Double"/>,
-                    <see cref="T:System.Single"/>,
-                    <see cref="T:System.Drawing.Image"/>,
-                    <see cref="T:System.Int32"/>,
-                    <see cref="T:System.Int64"/>,
-                    <see cref="T:System.Drawing.Point"/>,
-                    <see cref="T:System.Drawing.Rectangle"/>,
-                    <see cref="T:System.Int16"/>,
-                    <see cref="T:System.Drawing.Size"/>,
-                    <see cref="T:System.String"/>,
-                    <see cref="T:System.String"/>[],
-                    <see cref="T:System.Version"/>,
-                    and all other types convertible with <see cref="T:System.Object"/>.ToString().
-                </para>
-            </summary>
-            <param name="section">
-                The name of the section to which the string will be copied. If the section does
-                not exist, it is created. The name of the section is case-independent; the
-                string can be any combination of uppercase and lowercase letters.
-            </param>
-            <param name="key">
-                The name of the key to be associated with a string. If the key does not exist in
-                the specified section, it is created. If this parameter is NULL, the entire
-                section, including all entries within the section, is deleted.
+                The name of the key to be associated with the value.
             </param>
             <param name="value">
-                The <see cref="T:System.Object"/> to be written to the file. If this parameter is NULL,
+                The value to be written to the file.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="forceOverwrite">
+                true to enable overwriting of a key with the same value as specified; otherwise,
+                false.
+            </param>
+            <param name="skipExistValue">
+                true to skip an existing value, even it is not the same value as specified;
+                otherwise, false.
+            </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.Boolean,System.Boolean,System.UInt32)">
+            <summary>
+                <para>
+                    Copies the specified value into the specified section of an INI file.
+                </para>
+                <para>
+                    This function updates only the cache and has no effect on the file until
+                    <see cref="M:SilDev.Ini.WriteAll(System.String,System.Boolean,System.Boolean)"/> is called.
+                </para>
+            </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="section">
+                The name of the section to which the string will be copied.
+            </param>
+            <param name="key">
+                The name of the key to be associated with the value.
+            </param>
+            <param name="value">
+                The value to be written to the file.
+            </param>
+            <param name="forceOverwrite">
+                true to enable overwriting of a key with the same value as specified; otherwise,
+                false.
+            </param>
+            <param name="skipExistValue">
+                true to skip an existing value, even it is not the same value as specified;
+                otherwise, false.
+            </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.WriteDirect(System.String,System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                <para>
+                    Copies an <see cref="T:System.String"/> value into the specified section of an INI file.
+                </para>
+                <para>
+                    The Win32-API is used for writing in this case. Please note that this function
+                    writes the changes directly on the disk. This causes a lot of write accesses if
+                    it is used incorrectly.
+                </para>
+            </summary>
+            <param name="section">
+                The name of the section to which the string will be copied.
+            </param>
+            <param name="key">
+                The name of the key to be associated with a string.
+            </param>
+            <param name="value">
+                The <see cref="T:System.String"/> value to be written to the file. If this parameter is NULL,
                 the key pointed to by the key parameter is deleted.
             </param>
             <param name="file">
-                <para>
-                    The name of the initialization file.
-                </para>
-                <para>
-                    If the file was created using Unicode characters, the function writes Unicode
-                    characters to the file. Otherwise, the function writes ANSI characters.
-                </para>
+                The full path of an INI file.
             </param>
             <param name="forceOverwrite">
                 true to enable overwriting of a key with the same value as specified; otherwise,
                 false.
             </param>
             <param name="skipExistValue">
-                true to skip a existing value, even it is not the same value as specified;
-                otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.Write(System.String,System.String,System.Object,System.Boolean,System.Boolean)">
-            <summary>
-                <para>
-                    Copies an <see cref="T:System.Object"/> into the specified section of an initialization
-                    file. The following objects are valid:
-                </para>
-                <para>
-                    <see cref="T:System.Boolean"/>,
-                    <see cref="T:System.Byte"/>,
-                    <see cref="T:System.Byte"/>[],
-                    <see cref="T:System.DateTime"/>,
-                    <see cref="T:System.Double"/>,
-                    <see cref="T:System.Single"/>,
-                    <see cref="T:System.Drawing.Image"/>,
-                    <see cref="T:System.Int32"/>,
-                    <see cref="T:System.Int64"/>,
-                    <see cref="T:System.Drawing.Point"/>,
-                    <see cref="T:System.Drawing.Rectangle"/>,
-                    <see cref="T:System.Int16"/>,
-                    <see cref="T:System.Drawing.Size"/>,
-                    <see cref="T:System.String"/>,
-                    <see cref="T:System.String"/>[], and
-                    <see cref="T:System.Version"/>
-                </para>
-            </summary>
-            <param name="section">
-                The name of the section to which the string will be copied. If the section does
-                not exist, it is created. The name of the section is case-independent; the
-                string can be any combination of uppercase and lowercase letters.
-            </param>
-            <param name="key">
-                The name of the key to be associated with a string. If the key does not exist in
-                the specified section, it is created. If this parameter is NULL, the entire
-                section, including all entries within the section, is deleted.
-            </param>
-            <param name="value">
-                The <see cref="T:System.Object"/> to be written to the file. If this parameter is NULL,
-                the key pointed to by the key parameter is deleted.
-            </param>
-            <param name="forceOverwrite">
-                true to enable overwriting of a key with the same value as specified; otherwise,
-                false.
-            </param>
-            <param name="skipExistValue">
-                true to skip a existing value, even it is not the same value as specified;
+                true to skip an existing value, even it is not the same value as specified;
                 otherwise, false.
             </param>
         </member>
@@ -6383,18 +5862,11 @@
                     For more informations see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
                 </para>
             </summary>
-            <param name="iniPath">
-                <para>
-                    The full path of the configuration file.
-                </para>
-                <para>
-                    Please note that only the INI file format is accepted. This can be changed in the future to
-                    add frequently used formats, such as the XML file format - for example.
-                </para>
+            <param name="path">
+                The full path of the configuration file.
             </param>
-            <param name="section">
-                The section of the configuration file which hold the key with the value to specify the current
-                <see cref="P:SilDev.Log.DebugMode"/>. The value must be NULL for a non-section key.
+            <param name="pattern">
+                The regular expression pattern to match.
             </param>
             <param name="key">
                 The key of the configuration file which hold the value, to specify the current
@@ -7435,96 +6907,18 @@
                 Provides functionality for the Windows registry database.
             </summary>
         </member>
-        <member name="T:SilDev.Reg.RegKey">
+        <member name="M:SilDev.Reg.SubKeyExists(Microsoft.Win32.RegistryKey,System.String)">
             <summary>
-                Provides enumerated values which present the root keys of the Windows registry.
+                Determines whether the specified subkey exists.
             </summary>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey.
+            </param>
+            <param name="subKey">
+                The path of the subkey to check.
+            </param>
         </member>
-        <member name="F:SilDev.Reg.RegKey.ClassesRoot">
-            <summary>
-                Defines the types (or classes) of documents and the properties associated withthose types.
-                This field reads the Windows registry base key HKEY_CLASSES_ROOT.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegKey.CurrentConfig">
-            <summary>
-                Contains configuration information pertaining to the hardware that is not specific to the
-                user. This field reads the Windows registry base key HKEY_CURRENT_CONFIG.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegKey.CurrentUser">
-            <summary>
-                Contains information about the current user preferences. This field reads the Windows
-                registry base key HKEY_CURRENT_USER.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegKey.LocalMachine">
-            <summary>
-                Contains the configuration data for the local machine. This field reads the Windows
-                registry base key HKEY_LOCAL_MACHINE.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegKey.PerformanceData">
-            <summary>
-                Contains performance information for software components. This field reads the Windows
-                registry base key HKEY_PERFORMANCE_DATA.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegKey.Users">
-            <summary>
-                Contains information about the default user configuration. This field reads the Windows
-                registry base key HKEY_USERS.
-            </summary>
-        </member>
-        <member name="T:SilDev.Reg.RegValueKind">
-            <summary>
-                Specifies the data types to use when storing values in the registry, or identifies the
-                data type of a value in the registry.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegValueKind.None">
-            <summary>
-                No data type.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegValueKind.String">
-            <summary>
-                A null-terminated string. This value is equivalent to the Win32 API registry data type
-                REG_SZ.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegValueKind.Binary">
-            <summary>
-                Binary data in any form. This value is equivalent to the Win32 API registry data type
-                REG_BINARY.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegValueKind.DWord">
-            <summary>
-                A 32-bit binary number. This value is equivalent to the Win32 API registry data type
-                REG_DWORD.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegValueKind.QWord">
-            <summary>
-                A 64-bit binary number. This value is equivalent to the Win32 API registry data type
-                REG_QWORD.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegValueKind.ExpandString">
-            <summary>
-                A null-terminated string that contains unexpanded references to environment variables,
-                such as %PATH%, that are expanded when the value is retrieved. This value is equivalent
-                to the Win32 API registry data type REG_EXPAND_SZ.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reg.RegValueKind.MultiString">
-            <summary>
-                An array of null-terminated strings, terminated by two null characters. This value is
-                equivalent to the Win32 API registry data type REG_MULTI_SZ.
-            </summary>
-        </member>
-        <member name="M:SilDev.Reg.SubKeyExist(SilDev.Reg.RegKey,System.String)">
+        <member name="M:SilDev.Reg.SubKeyExists(System.String,System.String)">
             <summary>
                 Determines whether the specified subkey exists.
             </summary>
@@ -7535,18 +6929,7 @@
                 The path of the subkey to check.
             </param>
         </member>
-        <member name="M:SilDev.Reg.SubKeyExist(System.String,System.String)">
-            <summary>
-                Determines whether the specified subkey exists.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.SubKeyExist(System.String)">
+        <member name="M:SilDev.Reg.SubKeyExists(System.String)">
             <summary>
                 Determines whether the specified subkey exists.
             </summary>
@@ -7554,7 +6937,21 @@
                 The full path of the key to check.
             </param>
         </member>
-        <member name="M:SilDev.Reg.CreateNewSubKey(SilDev.Reg.RegKey,System.String)">
+        <member name="M:SilDev.Reg.CreateNewSubKey(Microsoft.Win32.RegistryKey,System.String,System.Boolean)">
+            <summary>
+                Creates a new subkey.
+            </summary>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that receives the subkey.
+            </param>
+            <param name="subKey">
+                The path of the subkey to create.
+            </param>
+            <param name="overwrite">
+                true to remove an existing target before creating; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.CreateNewSubKey(System.String,System.String,System.Boolean)">
             <summary>
                 Creates a new subkey.
             </summary>
@@ -7564,27 +6961,33 @@
             <param name="subKey">
                 The path of the subkey to create.
             </param>
-        </member>
-        <member name="M:SilDev.Reg.CreateNewSubKey(System.String,System.String)">
-            <summary>
-                Creates a new subkey.
-            </summary>
-            <param name="key">
-                The root key that receives the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to create.
+            <param name="overwrite">
+                true to remove an existing target before creating; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Reg.CreateNewSubKey(System.String)">
+        <member name="M:SilDev.Reg.CreateNewSubKey(System.String,System.Boolean)">
             <summary>
                 Creates a new subkey.
             </summary>
             <param name="keyPath">
                 The full path of the key to create.
             </param>
+            <param name="overwrite">
+                true to remove an existing target before creating; otherwise, false.
+            </param>
         </member>
-        <member name="M:SilDev.Reg.RemoveExistSubKey(SilDev.Reg.RegKey,System.String)">
+        <member name="M:SilDev.Reg.RemoveSubKey(Microsoft.Win32.RegistryKey,System.String)">
+            <summary>
+                Removes an existing subkey.
+            </summary>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey.
+            </param>
+            <param name="subKey">
+                The path of the subkey to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.RemoveSubKey(System.String,System.String)">
             <summary>
                 Removes an existing subkey.
             </summary>
@@ -7595,18 +6998,7 @@
                 The path of the subkey to remove.
             </param>
         </member>
-        <member name="M:SilDev.Reg.RemoveExistSubKey(System.String,System.String)">
-            <summary>
-                Removes an existing subkey.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.RemoveExistSubKey(System.String)">
+        <member name="M:SilDev.Reg.RemoveSubKey(System.String)">
             <summary>
                 Removes an existing subkey.
             </summary>
@@ -7614,46 +7006,13 @@
                 The full path of the key to remove.
             </param>
         </member>
-        <member name="M:SilDev.Reg.GetSubKeyTree(SilDev.Reg.RegKey,System.String)">
+        <member name="M:SilDev.Reg.GetSubKeys(Microsoft.Win32.RegistryKey,System.String)">
             <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.List`1"/> with the full subkey tree of
+                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with all subkeys of
                 the specified registry path.
             </summary>
             <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetSubKeyTree(System.String,System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.List`1"/> with the full subkey tree of
-                the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetSubKeyTree(System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.List`1"/> with the full subkey tree of
-                the specified registry path.
-            </summary>
-            <param name="keyPath">
-                The full path of the key to read.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.GetSubKeys(SilDev.Reg.RegKey,System.String)">
-            <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.List`1"/> with all subkeys of the
-                specified registry path.
-            </summary>
-            <param name="key">
-                The root key which contains the subkey.
+                The root <see cref="T:Microsoft.Win32.Registry"/> key which contains the subkey.
             </param>
             <param name="subKey">
                 The path of the subkey to read.
@@ -7661,8 +7020,8 @@
         </member>
         <member name="M:SilDev.Reg.GetSubKeys(System.String,System.String)">
             <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.List`1"/> with all subkeys of the
-                specified registry path.
+                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with all subkeys of
+                the specified registry path.
             </summary>
             <param name="key">
                 The root key which contains the subkey.
@@ -7673,94 +7032,171 @@
         </member>
         <member name="M:SilDev.Reg.GetSubKeys(System.String)">
             <summary>
-                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.List`1"/> with all subkeys of the
-                specified registry path.
+                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with all subkeys of
+                the specified registry path.
             </summary>
             <param name="keyPath">
                 The full path of the key to read.
             </param>
         </member>
-        <member name="M:SilDev.Reg.MoveSubKey(SilDev.Reg.RegKey,System.String,System.String)">
+        <member name="M:SilDev.Reg.GetSubKeyTree(Microsoft.Win32.RegistryKey,System.String)">
             <summary>
-                Moves an existing subkey to a new location.
+                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with the full subkey
+                tree of the specified registry path.
+            </summary>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey.
+            </param>
+            <param name="subKey">
+                The path of the subkey to read.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.GetSubKeyTree(System.String,System.String)">
+            <summary>
+                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with the full subkey
+                tree of the specified registry path.
             </summary>
             <param name="key">
                 The root key that contains the subkey.
             </param>
             <param name="subKey">
-                The path of the subkey to move.
-            </param>
-            <param name="newSubKeyName">
-                The destination subkey.
+                The path of the subkey to read.
             </param>
         </member>
-        <member name="M:SilDev.Reg.MoveSubKey(System.String,System.String,System.String)">
+        <member name="M:SilDev.Reg.GetSubKeyTree(System.String)">
             <summary>
-                Moves an existing subkey to a new location.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to move.
-            </param>
-            <param name="newSubKeyName">
-                The destination subkey.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.MoveSubKey(System.String,System.String)">
-            <summary>
-                Moves an existing subkey to a new location.
+                Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with the full subkey
+                tree of the specified registry path.
             </summary>
             <param name="keyPath">
-                The full path of the key to move.
-            </param>
-            <param name="newSubKeyName">
-                The destination subkey.
+                The full path of the key to read.
             </param>
         </member>
-        <member name="M:SilDev.Reg.CopyKey(SilDev.Reg.RegKey,System.String,System.String)">
+        <member name="M:SilDev.Reg.CopySubKey(Microsoft.Win32.RegistryKey,System.String,Microsoft.Win32.RegistryKey,System.String,System.Boolean)">
             <summary>
                 Copies an existing subkey to a new location.
+            </summary>
+            <param name="srcKey">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the source subkey.
+            </param>
+            <param name="srcSubKey">
+                The name of the subkey to copy.
+            </param>
+            <param name="destKey">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that should contain the new subkey.
+            </param>
+            <param name="destSubKey">
+                The new path and name of the destination subkey.
+            </param>
+            <param name="overwrite">
+                true to remove an existing target before copying; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.CopySubKey(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Copies an existing subkey to a new location.
+            </summary>
+            <param name="srcKey">
+                The root key that contains the source subkey.
+            </param>
+            <param name="srcSubKey">
+                The name of the subkey to copy.
+            </param>
+            <param name="destKey">
+                The root key that should contain the new subkey.
+            </param>
+            <param name="destSubKey">
+                The new path and name of the destination subkey.
+            </param>
+            <param name="overwrite">
+                true to remove an existing target before copying; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.CopySubKey(System.String,System.String,System.Boolean)">
+            <summary>
+                Copies an existing subkey to a new location.
+            </summary>
+            <param name="srcKeyPath">
+                The full path of the source key to copy.
+            </param>
+            <param name="destKeyPath">
+                The full path of the destination key.
+            </param>
+            <param name="overwrite">
+                true to remove an existing target before copying; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.MoveSubKey(Microsoft.Win32.RegistryKey,System.String,Microsoft.Win32.RegistryKey,System.String,System.Boolean)">
+            <summary>
+                Moves an existing subkey to a new location.
+            </summary>
+            <param name="oldKey">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the source subkey.
+            </param>
+            <param name="oldSubKey">
+                The name of the subkey to move.
+            </param>
+            <param name="newKey">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that should contain the new subkey.
+            </param>
+            <param name="newSubKey">
+                The new path and name of the subkey.
+            </param>
+            <param name="overwrite">
+                true to remove an existing target before moving; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.MoveSubKey(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Moves an existing subkey to a new location.
+            </summary>
+            <param name="oldKey">
+                The root key that contains the source subkey.
+            </param>
+            <param name="oldSubKey">
+                The name of the subkey to move.
+            </param>
+            <param name="newKey">
+                The root key that should contain the new subkey.
+            </param>
+            <param name="newSubKey">
+                The new path and name of the subkey.
+            </param>
+            <param name="overwrite">
+                true to remove an existing target before moving; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.MoveSubKey(System.String,System.String,System.Boolean)">
+            <summary>
+                Moves an existing subkey to a new location.
+            </summary>
+            <param name="oldKeyPath">
+                The full path of the source key to copy.
+            </param>
+            <param name="newKeyPath">
+                The full path of the destination key.
+            </param>
+            <param name="overwrite">
+                true to remove an existing target before moving; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.EntryExists(Microsoft.Win32.RegistryKey,System.String,System.String)">
+            <summary>
+                Determines whether the specified entry exists.
             </summary>
             <param name="key">
-                The root key that contains the subkey.
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey.
             </param>
             <param name="subKey">
-                The path of the subkey to copy.
+                The path of the subkey which contains the entry.
             </param>
-            <param name="newSubKeyName">
-                The destination subkey.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.CopyKey(System.String,System.String,System.String)">
-            <summary>
-                Copies an existing subkey to a new location.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey to copy.
-            </param>
-            <param name="newSubKeyName">
-                The destination subkey.
+            <param name="entry">
+                The entry to check.
             </param>
         </member>
-        <member name="M:SilDev.Reg.CopyKey(System.String,System.String)">
+        <member name="M:SilDev.Reg.EntryExists(System.String,System.String,System.String)">
             <summary>
-                Copies an existing subkey to a new location.
-            </summary>
-            <param name="keyPath">
-                The full path of the key to move.
-            </param>
-            <param name="newSubKeyName">
-                The destination subkey.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ValueExist(SilDev.Reg.RegKey,System.String,System.String,SilDev.Reg.RegValueKind)">
-            <summary>
-                Determines whether the specified subkey exists.
+                Determines whether the specified entry exists.
             </summary>
             <param name="key">
                 The root key that contains the subkey.
@@ -7771,30 +7207,10 @@
             <param name="entry">
                 The entry to check.
             </param>
-            <param name="type">
-                The value type.
-            </param>
         </member>
-        <member name="M:SilDev.Reg.ValueExist(System.String,System.String,System.String,SilDev.Reg.RegValueKind)">
+        <member name="M:SilDev.Reg.EntryExists(System.String,System.String)">
             <summary>
-                Determines whether the specified subkey exists.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey.
-            </param>
-            <param name="subKey">
-                The path of the subkey which contains the entry.
-            </param>
-            <param name="entry">
-                The entry to check.
-            </param>
-            <param name="type">
-                The value type.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ValueExist(System.String,System.String,SilDev.Reg.RegValueKind)">
-            <summary>
-                Determines whether the specified subkey exists.
+                Determines whether the specified entry exists.
             </summary>
             <param name="keyPath">
                 The full path of the key which contains the entry.
@@ -7802,13 +7218,94 @@
             <param name="entry">
                 The entry to check.
             </param>
-            <param name="type">
+        </member>
+        <member name="M:SilDev.Reg.Read``1(Microsoft.Win32.RegistryKey,System.String,System.String,``0)">
+            <summary>
+                Retrives the value associated with the specified entry of the specified registry path.
+            </summary>
+            <typeparam name="TValue">
                 The value type.
+            </typeparam>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey to open.
+            </param>
+            <param name="subKey">
+                The path of the subkey that contains the entry to read.
+            </param>
+            <param name="entry">
+                The entry to read
+            </param>
+            <param name="defValue">
+                The value that is used as default.
             </param>
         </member>
-        <member name="M:SilDev.Reg.ReadValue(SilDev.Reg.RegKey,System.String,System.String,SilDev.Reg.RegValueKind)">
+        <member name="M:SilDev.Reg.Read``1(System.String,System.String,System.String,``0)">
             <summary>
                 Retrives the value associated with the specified entry of the specified registry path.
+            </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="key">
+                The root key that contains the subkey to open.
+            </param>
+            <param name="subKey">
+                The path of the subkey that contains the entry to read.
+            </param>
+            <param name="entry">
+                The entry to read
+            </param>
+            <param name="defValue">
+                The value that is used as default.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.Read``1(System.String,System.String,``0)">
+            <summary>
+                Retrives the value associated with the specified entry of the specified registry path.
+            </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="keyPath">
+                The full path of the key that contains the entry to read.
+            </param>
+            <param name="entry">
+                The entry to read
+            </param>
+            <param name="defValue">
+                The value that is used as default.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.ReadString(Microsoft.Win32.RegistryKey,System.String,System.String,System.String)">
+            <summary>
+                <para>
+                    Retrives the value associated with the specified entry of the specified registry path.
+                </para>
+                <para>
+                    A non-string value is converted to a valid <see cref="T:System.String"/>.
+                </para>
+            </summary>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey to open.
+            </param>
+            <param name="subKey">
+                The path of the subkey that contains the entry to read.
+            </param>
+            <param name="entry">
+                The entry to read
+            </param>
+            <param name="defValue">
+                The value that is used as default.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.ReadString(System.String,System.String,System.String,System.String)">
+            <summary>
+                <para>
+                    Retrives the value associated with the specified entry of the specified registry path.
+                </para>
+                <para>
+                    A non-string value is converted to a valid <see cref="T:System.String"/>.
+                </para>
             </summary>
             <param name="key">
                 The root key that contains the subkey to open.
@@ -7819,30 +7316,18 @@
             <param name="entry">
                 The entry to read
             </param>
-            <param name="type">
-                The data type of the value.
+            <param name="defValue">
+                The value that is used as default.
             </param>
         </member>
-        <member name="M:SilDev.Reg.ReadValue(System.String,System.String,System.String,SilDev.Reg.RegValueKind)">
+        <member name="M:SilDev.Reg.ReadString(System.String,System.String,System.String)">
             <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey to open.
-            </param>
-            <param name="subKey">
-                The path of the subkey that contains the entry to read.
-            </param>
-            <param name="entry">
-                The entry to read
-            </param>
-            <param name="type">
-                The data type of the value.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ReadValue(System.String,System.String,SilDev.Reg.RegValueKind)">
-            <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
+                <para>
+                    Retrives the value associated with the specified entry of the specified registry path.
+                </para>
+                <para>
+                    A non-string value is converted to a valid <see cref="T:System.String"/>.
+                </para>
             </summary>
             <param name="keyPath">
                 The full path of the key that contains the entry to read.
@@ -7850,115 +7335,39 @@
             <param name="entry">
                 The entry to read
             </param>
-            <param name="type">
-                The data type of the value.
+            <param name="defValue">
+                The value that is used as default.
             </param>
         </member>
-        <member name="M:SilDev.Reg.ReadStringValue(SilDev.Reg.RegKey,System.String,System.String,SilDev.Reg.RegValueKind)">
-            <summary>
-                <para>
-                    Retrives the value associated with the specified entry of the specified registry path.
-                </para>
-                <para>
-                    A non-string value is converted to <see cref="T:System.String"/> before returning it.
-                </para>
-            </summary>
-            <param name="key">
-                The root key that contains the subkey to open.
-            </param>
-            <param name="subKey">
-                The path of the subkey that contains the entry to read.
-            </param>
-            <param name="entry">
-                The entry to read
-            </param>
-            <param name="type">
-                The data type of the value.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ReadStringValue(System.String,System.String,System.String,SilDev.Reg.RegValueKind)">
-            <summary>
-                <para>
-                    Retrives the value associated with the specified entry of the specified registry path.
-                </para>
-                <para>
-                    A non-string value is converted to <see cref="T:System.String"/> before returning it.
-                </para>
-            </summary>
-            <param name="key">
-                The root key that contains the subkey to open.
-            </param>
-            <param name="subKey">
-                The path of the subkey that contains the entry to read.
-            </param>
-            <param name="entry">
-                The entry to read
-            </param>
-            <param name="type">
-                The data type of the value.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.ReadStringValue(System.String,System.String,SilDev.Reg.RegValueKind)">
-            <summary>
-                <para>
-                    Retrives the value associated with the specified entry of the specified registry path.
-                </para>
-                <para>
-                    A non-string value is converted to <see cref="T:System.String"/> before returning it.
-                </para>
-            </summary>
-            <param name="keyPath">
-                The full path of the key that contains the entry to read.
-            </param>
-            <param name="entry">
-                The entry to read
-            </param>
-            <param name="type">
-                The data type of the value.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.WriteValue``1(SilDev.Reg.RegKey,System.String,System.String,``0,SilDev.Reg.RegValueKind)">
+        <member name="M:SilDev.Reg.Write``1(Microsoft.Win32.RegistryKey,System.String,System.String,``0,Microsoft.Win32.RegistryValueKind)">
             <summary>
                 Copies an object into the specified entry of the registry database.
             </summary>
-            <typeparam name="T">
-                <para>
-                    The data type of the value. If no <see cref="T:SilDev.Reg.RegValueKind"/> is not definied the following types
-                    are auto declared:
-                </para>
-                <para>
-                    <see cref="T:System.Boolean"/> as <see cref="F:SilDev.Reg.RegValueKind.String"/>
-                </para>
-                <para>
-                    <see cref="T:System.Byte"/> as <see cref="F:SilDev.Reg.RegValueKind.DWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Byte"/>[] as <see cref="F:SilDev.Reg.RegValueKind.Binary"/>
-                </para>
-                <para>
-                    <see cref="T:System.Double"/> as <see cref="F:SilDev.Reg.RegValueKind.Binary"/>
-                </para>
-                <para>
-                    <see cref="T:System.Single"/> as <see cref="F:SilDev.Reg.RegValueKind.Binary"/>
-                </para>
-                <para>
-                    <see cref="T:System.IntPtr"/> as <see cref="F:SilDev.Reg.RegValueKind.QWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Int32"/> as <see cref="F:SilDev.Reg.RegValueKind.DWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Int64"/> as <see cref="F:SilDev.Reg.RegValueKind.QWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Int16"/> as <see cref="F:SilDev.Reg.RegValueKind.DWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.String"/> as <see cref="F:SilDev.Reg.RegValueKind.String"/>
-                </para>
-                <para>
-                    <see cref="T:System.String"/>[] as <see cref="F:SilDev.Reg.RegValueKind.MultiString"/>
-                </para>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey to create or override.
+            </param>
+            <param name="subKey">
+                The path of the subkey to create or override.
+            </param>
+            <param name="entry">
+                The entry to create or override.
+            </param>
+            <param name="value">
+                The <see cref="T:System.Object"/> to be written.
+            </param>
+            <param name="type">
+                The data type of the value to write.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.Write``1(System.String,System.String,System.String,``0,Microsoft.Win32.RegistryValueKind)">
+            <summary>
+                Copies an object into the specified entry of the registry database.
+            </summary>
+            <typeparam name="TValue">
+                The value type.
             </typeparam>
             <param name="key">
                 The root key that contains the subkey to create or override.
@@ -7976,89 +7385,13 @@
                 The data type of the value to write.
             </param>
         </member>
-        <member name="M:SilDev.Reg.WriteValue``1(System.String,System.String,System.String,``0,SilDev.Reg.RegValueKind)">
+        <member name="M:SilDev.Reg.Write``1(System.String,System.String,``0,Microsoft.Win32.RegistryValueKind)">
             <summary>
                 Copies an object into the specified entry of the registry database.
             </summary>
-            <typeparam name="T">
-                <para>
-                    The data type of the value. If <see cref="T:SilDev.Reg.RegValueKind"/> is not definied the following types
-                    are auto declared:
-                </para>
-                <para>
-                    <see cref="T:System.Boolean"/> as <see cref="F:SilDev.Reg.RegValueKind.String"/>
-                </para>
-                <para>
-                    <see cref="T:System.Byte"/> as <see cref="F:SilDev.Reg.RegValueKind.DWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Byte"/>[] as <see cref="F:SilDev.Reg.RegValueKind.Binary"/>
-                </para>
-                <para>
-                    <see cref="T:System.Double"/> as <see cref="F:SilDev.Reg.RegValueKind.Binary"/>
-                </para>
-                <para>
-                    <see cref="T:System.Single"/> as <see cref="F:SilDev.Reg.RegValueKind.Binary"/>
-                </para>
-                <para>
-                    <see cref="T:System.IntPtr"/> as <see cref="F:SilDev.Reg.RegValueKind.QWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Int32"/> as <see cref="F:SilDev.Reg.RegValueKind.DWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Int64"/> as <see cref="F:SilDev.Reg.RegValueKind.QWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.Int16"/> as <see cref="F:SilDev.Reg.RegValueKind.DWord"/>
-                </para>
-                <para>
-                    <see cref="T:System.String"/> as <see cref="F:SilDev.Reg.RegValueKind.String"/>
-                </para>
-                <para>
-                    <see cref="T:System.String"/>[] as <see cref="F:SilDev.Reg.RegValueKind.MultiString"/>
-                </para>
+            <typeparam name="TValue">
+                The value type.
             </typeparam>
-            <param name="key">
-                The root key that contains the subkey to create or override.
-            </param>
-            <param name="subKey">
-                The path of the subkey to create or override.
-            </param>
-            <param name="entry">
-                The entry to create or override.
-            </param>
-            <param name="value">
-                The <see cref="T:System.Object"/> to be written.
-            </param>
-            <param name="type">
-                The data type of the value to write.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.WriteValue(SilDev.Reg.RegKey,System.String,System.String,System.Object,SilDev.Reg.RegValueKind)">
-            <summary>
-                Copies an object into the specified entry of the registry database.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey to create or override.
-            </param>
-            <param name="subKey">
-                The path of the subkey to create or override.
-            </param>
-            <param name="entry">
-                The entry to create or override.
-            </param>
-            <param name="value">
-                The <see cref="T:System.Object"/> to be written.
-            </param>
-            <param name="type">
-                The data type of the value to write.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.WriteValue(System.String,System.String,System.Object,SilDev.Reg.RegValueKind)">
-            <summary>
-                Copies an object into the specified entry of the registry database.
-            </summary>
             <param name="keyPath">
                 The full path of the key to create or override.
             </param>
@@ -8072,7 +7405,21 @@
                 The data type of the value to write.
             </param>
         </member>
-        <member name="M:SilDev.Reg.RemoveValue(System.Object,System.String,System.String)">
+        <member name="M:SilDev.Reg.RemoveEntry(Microsoft.Win32.RegistryKey,System.String,System.String)">
+            <summary>
+                Removes the specified entry from the specified registry path.
+            </summary>
+            <param name="key">
+                The root <see cref="T:Microsoft.Win32.Registry"/> key that contains the subkey with the entry to remove.
+            </param>
+            <param name="subKey">
+                The path of the subkey with the entry to remove.
+            </param>
+            <param name="entry">
+                The entry to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.RemoveEntry(System.String,System.String,System.String)">
             <summary>
                 Removes the specified entry from the specified registry path.
             </summary>
@@ -8086,37 +7433,9 @@
                 The entry to remove.
             </param>
         </member>
-        <member name="M:SilDev.Reg.RemoveValue(SilDev.Reg.RegKey,System.String,System.String)">
+        <member name="M:SilDev.Reg.RemoveEntry(System.String,System.String)">
             <summary>
-                Removes the specified entry from the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey with the entry to remove.
-            </param>
-            <param name="subKey">
-                The path of the subkey with the entry to remove.
-            </param>
-            <param name="entry">
-                The entry to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.RemoveValue(System.String,System.String,System.String)">
-            <summary>
-                Removes the specified entry from the specified registry path.
-            </summary>
-            <param name="key">
-                The root key that contains the subkey with the entry to remove.
-            </param>
-            <param name="subKey">
-                The path of the subkey with the entry to remove.
-            </param>
-            <param name="entry">
-                The entry to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reg.RemoveValue(System.String,System.String)">
-            <summary>
-                Removes the specified entry from the specified registry path.
+                Removes the specified entry from the specified <see cref="T:Microsoft.Win32.Registry"/> path.
             </summary>
             <param name="keyPath">
                 The full path of the key with the entry to remove.
@@ -8130,7 +7449,7 @@
                 Imports the specified REG file to the registry.
             </summary>
             <param name="path">
-                The full path of the file to import.
+                The full path of the file to import (environment variables are accepted).
             </param>
             <param name="elevated">
                 true to import with highest user permissions; otherwise, false.
@@ -8142,7 +7461,7 @@
                 deletes the file.
             </summary>
             <param name="path">
-                The full path of the file to import.
+                The full path of the file to import (environment variables are accepted).
             </param>
             <param name="content">
                 The full content of the file to import.
@@ -8167,25 +7486,25 @@
             <summary>
                 Exports the full content of the specified registry paths into an REG file.
             </summary>
-            <param name="keyPaths">
-                The full paths of the keys to export.
-            </param>
             <param name="destPath">
-                The full path of the file to create or override.
+                The full path of the file to create or override (environment variables are accepted).
             </param>
             <param name="elevated">
                 true to export with highest user permissions; otherwise, false.
+            </param>
+            <param name="keyPaths">
+                The full paths of the keys to export.
             </param>
         </member>
         <member name="M:SilDev.Reg.ExportKeys(System.String,System.String[])">
             <summary>
                 Exports the full content of the specified registry paths into an REG file.
             </summary>
-            <param name="keyPaths">
-                The full paths of the keys to export.
-            </param>
             <param name="destPath">
                 The full path of the file to create or override.
+            </param>
+            <param name="keyPaths">
+                The full paths of the keys to export (environment variables are accepted).
             </param>
         </member>
         <member name="T:SilDev.ResourcesEx">
@@ -8356,8 +7675,8 @@
                 The <see cref="T:System.Diagnostics.Process"/> component to start.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.ProcessStartInfo,System.Boolean)">
@@ -8374,8 +7693,8 @@
                 The <see cref="T:System.Diagnostics.ProcessStartInfo"/> component to initialize a new <see cref="T:System.Diagnostics.Process"/>.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -8399,8 +7718,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Boolean)">
@@ -8421,8 +7740,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -8443,8 +7762,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/> if the process
+                has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Boolean)">
@@ -8462,8 +7781,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -8481,8 +7800,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Boolean)">
@@ -8497,8 +7816,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -8522,8 +7841,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Boolean)">
@@ -8544,8 +7863,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -8566,11 +7885,11 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="M:System.ComponentModel.Component.Dispose"/>
-                if the process has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.ProcessEx.Terminate(System.Diagnostics.Process[])">
+        <member name="M:SilDev.ProcessEx.Terminate(System.Collections.Generic.IEnumerable{System.Diagnostics.Process})">
             <summary>
                 <para>
                     Immediately stops all specified processes.
@@ -8584,7 +7903,7 @@
                 The <see cref="T:System.Diagnostics.Process"/>/es to kill.
             </param>
         </member>
-        <member name="M:SilDev.ProcessEx.Terminate(System.Collections.Generic.IEnumerable{System.Diagnostics.Process})">
+        <member name="M:SilDev.ProcessEx.Terminate(System.Diagnostics.Process[])">
             <summary>
                 <para>
                     Immediately stops all specified processes.
