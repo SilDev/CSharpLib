@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-05-12 12:14
+// Version:  2017-05-12 12:15
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,6 +23,7 @@ namespace SilDev
     using System.Linq;
     using System.Management;
     using System.Reflection;
+    using Microsoft.Win32;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Environment"/> class to provide informations
@@ -315,22 +316,8 @@ namespace SilDev
         /// <summary>
         ///     Determines whether the system restoring is enabled.
         /// </summary>
-        public static bool SystemRestoringIsEnabled
-        {
-            get
-            {
-                try
-                {
-                    var dword = Reg.ReadValue(@"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore", "RPSessionInterval", Reg.RegValueKind.DWord) as int?;
-                    return dword > 0;
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return false;
-                }
-            }
-        }
+        public static bool SystemRestoringIsEnabled =>
+            Reg.Read(Registry.LocalMachine, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore", "RPSessionInterval", 0) > 0;
 
         /// <summary>
         ///     The type of event. For more information, see <see cref="CreateSystemRestorePoint"/>.
