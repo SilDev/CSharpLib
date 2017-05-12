@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-05 11:57
+// Version:  2017-05-12 15:32
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,57 +18,117 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
-    using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Provides static methods for the handling of initialization files.
     /// </summary>
     public static class Ini
     {
-        private static string _iniFile;
+        private const int MaxCacheSize = 8;
+        private static volatile Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> _cachedFiles;
+
+        private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles
+        {
+            get { return _cachedFiles; }
+            set { _cachedFiles = value; }
+        }
+
+        private static volatile string _tmpFileGuid;
+
+        private static string TmpFileGuid
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_tmpFileGuid))
+                    return _tmpFileGuid;
+                _tmpFileGuid = Guid.NewGuid().ToString();
+                return _tmpFileGuid;
+            }
+        }
+
+        private static volatile string _filePath;
 
         /// <summary>
-        ///     Specifies an initialization file to use as the default file if no other file is
-        ///     specified for a called <see cref="Ini"/> method. if the file doesn't exists
-        ///     it's created.
+        ///     Gets or sets a default INI file.
+        /// </summary>
+        public static string FilePath
+        {
+            get { return _filePath ?? string.Empty; }
+            set
+            {
+                _filePath = PathEx.Combine(value);
+                if (File.Exists(_filePath))
+                    return;
+                try
+                {
+                    var fileDir = Path.GetDirectoryName(_filePath);
+                    if (!Directory.Exists(fileDir))
+                    {
+                        if (string.IsNullOrEmpty(fileDir))
+                            return;
+                        Directory.CreateDirectory(fileDir);
+                    }
+                    File.Create(_filePath).Close();
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+            }
+        }
+
+        private static int GetCode(this string str) =>
+            str?.ToLower().GetHashCode() ?? -1;
+
+        /// <summary>
+        ///     Gets the full path of the default INI file.
+        /// </summary>
+        public static string GetFile() =>
+            FilePath;
+
+        /// <summary>
+        ///     Specifies an INI file to use as default.
         /// </summary>
         /// <param name="paths">
         ///     An array of parts of the path (environment variables are accepted).
         /// </param>
-        public static bool File(params string[] paths)
+        public static bool SetFile(params string[] paths) =>
+            File.Exists(FilePath = PathEx.Combine(paths));
+
+        /// <summary>
+        ///     Removes the read content of an INI file from cache.
+        /// </summary>
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
+        /// </param>
+        public static bool Detach(string fileOrContent = null)
         {
             try
             {
-                _iniFile = PathEx.Combine(paths);
-                if (System.IO.File.Exists(_iniFile))
-                    return true;
-                var iniDir = Path.GetDirectoryName(_iniFile);
-                if (!Directory.Exists(iniDir))
-                {
-                    if (string.IsNullOrEmpty(iniDir))
-                        return false;
-                    Directory.CreateDirectory(iniDir);
-                }
-                System.IO.File.Create(_iniFile).Close();
+                var source = fileOrContent ?? GetFile();
+                if (string.IsNullOrWhiteSpace(source))
+                    throw new ArgumentNullException(nameof(source));
+                var path = PathEx.Combine(source);
+                if (!File.Exists(path))
+                    path = TmpFileGuid;
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                if (CachedFiles?.ContainsKey(code) == true)
+                    CachedFiles.Remove(code);
                 return true;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return false;
             }
+            return false;
         }
-
-        /// <summary>
-        ///     Gets the full path of the default initialization file.
-        /// </summary>
-        public static string File() =>
-            _iniFile ?? string.Empty;
 
         /// <summary>
         ///     Removes the full specified section of an INI file or an INI file formatted
@@ -77,23 +137,45 @@ namespace SilDev
         /// <param name="section">
         ///     The name of the section to remove.
         /// </param>
-        /// <param name="file">
-        ///     The full file path of an INI file.
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
         /// </param>
-        public static bool RemoveSection(string section, string file = null)
+        public static bool RemoveSection(string section, string fileOrContent = null)
         {
             try
             {
-                var path = !string.IsNullOrEmpty(file) ? PathEx.Combine(file) : _iniFile;
-                if (!System.IO.File.Exists(path))
-                    throw new PathNotFoundException(path);
-                return WinApi.SafeNativeMethods.WritePrivateProfileSection(section, null, path) != 0;
+                var source = fileOrContent ?? GetFile();
+                if (string.IsNullOrWhiteSpace(source))
+                    throw new ArgumentNullException(nameof(source));
+                var s = section?.Trim();
+                if (string.IsNullOrWhiteSpace(section))
+                    throw new ArgumentNullException(nameof(section));
+                var path = PathEx.Combine(source);
+                if (!File.Exists(path))
+                    path = TmpFileGuid;
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
+                if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
+                    return true;
+                if (!d.ContainsKey(s))
+                {
+                    var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
+                    if (!string.IsNullOrEmpty(newSection))
+                        s = newSection;
+                }
+                if (!d.ContainsKey(s))
+                    return true;
+                d.Remove(s);
+                CachedFiles[code] = d;
+                return true;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return false;
             }
+            return false;
         }
 
         /// <summary>
@@ -106,23 +188,54 @@ namespace SilDev
         /// <param name="key">
         ///     The name of the key to remove.
         /// </param>
-        /// <param name="file">
-        ///     The full file path of an INI file.
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
         /// </param>
-        public static bool RemoveKey(string section, string key, string file = null)
+        public static bool RemoveKey(string section, string key, string fileOrContent = null)
         {
             try
             {
-                var path = !string.IsNullOrEmpty(file) ? PathEx.Combine(file) : _iniFile;
-                if (!System.IO.File.Exists(path))
-                    throw new PathNotFoundException(path);
-                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, null, path) != 0;
+                var source = fileOrContent ?? GetFile();
+                if (string.IsNullOrWhiteSpace(source))
+                    throw new ArgumentNullException(nameof(source));
+                var s = section?.Trim();
+                if (string.IsNullOrWhiteSpace(section))
+                    throw new ArgumentNullException(nameof(section));
+                var k = key?.Trim();
+                if (string.IsNullOrWhiteSpace(key))
+                    throw new ArgumentNullException(nameof(key));
+                var path = PathEx.Combine(source);
+                if (!File.Exists(path))
+                    path = TmpFileGuid;
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
+                if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
+                    return true;
+                if (!d.ContainsKey(s))
+                {
+                    var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
+                    if (!string.IsNullOrEmpty(newSection))
+                        s = newSection;
+                }
+                if (d.ContainsKey(s) && !d[s].ContainsKey(k))
+                {
+                    var newKey = d[s].Keys.FirstOrDefault(x => x.EqualsEx(k));
+                    if (!string.IsNullOrEmpty(newKey))
+                        k = newKey;
+                }
+                if (!d.ContainsKey(s) || !d[s].ContainsKey(k))
+                    return true;
+                d[s].Remove(k);
+                CachedFiles[code] = d;
+                return true;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return false;
             }
+            return false;
         }
 
         /// <summary>
@@ -139,28 +252,20 @@ namespace SilDev
             var output = new List<string>();
             try
             {
-                var dest = fileOrContent ?? _iniFile;
-                if (string.IsNullOrWhiteSpace(dest))
-                    throw new ArgumentNullException(nameof(dest));
-                var path = PathEx.Combine(dest);
-                if (System.IO.File.Exists(path))
+                var source = fileOrContent ?? GetFile();
+                if (string.IsNullOrWhiteSpace(source))
+                    throw new ArgumentNullException(nameof(source));
+                var d = ReadAll(fileOrContent);
+                if (d.Count > 0)
                 {
-                    var buffer = new byte[short.MaxValue];
-                    if (WinApi.SafeNativeMethods.GetPrivateProfileSectionNames(buffer, short.MaxValue, path) != 0)
-                        output = Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0').ToList();
-                }
-                else
-                {
-                    path = Path.GetTempFileName();
-                    System.IO.File.WriteAllText(path, dest);
-                    if (System.IO.File.Exists(path))
+                    output = d.Keys.ToList();
+                    if (sorted)
                     {
-                        output = GetSections(path, false);
-                        System.IO.File.Delete(path);
+                        var comparer = new Comparison.AlphanumericComparer();
+                        var sort = output.OrderBy(x => x, comparer).ToList();
+                        output = sort;
                     }
                 }
-                if (sorted)
-                    output = output.OrderBy(x => x, new Comparison.AlphanumericComparer()).ToList();
             }
             catch (Exception ex)
             {
@@ -176,7 +281,7 @@ namespace SilDev
         ///     true to sort the sections; otherwise, false.
         /// </param>
         public static List<string> GetSections(bool sorted) =>
-            GetSections(_iniFile, sorted);
+            GetSections(null, sorted);
 
         /// <summary>
         ///     Retrieves all key names of an INI file or an INI file formatted string value.
@@ -196,29 +301,32 @@ namespace SilDev
             var output = new List<string>();
             try
             {
-                var dest = fileOrContent ?? _iniFile;
-                var path = PathEx.Combine(dest);
-                if (System.IO.File.Exists(dest))
+                var source = fileOrContent ?? GetFile();
+                if (string.IsNullOrWhiteSpace(source))
+                    throw new ArgumentNullException(nameof(source));
+                var d = ReadAll(fileOrContent);
+                if (d.Count > 0)
                 {
-                    var tmp = new string(' ', short.MaxValue);
-                    if (WinApi.SafeNativeMethods.GetPrivateProfileString(section, null, string.Empty, tmp, short.MaxValue, path) != 0)
+                    var s = section?.Trim();
+                    if (string.IsNullOrEmpty(s))
+                        throw new ArgumentNullException(nameof(section));
+                    if (!d.ContainsKey(s))
                     {
-                        output = new List<string>(tmp.Split('\0'));
-                        output.RemoveRange(output.Count - 2, 2);
+                        var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
+                        if (!string.IsNullOrEmpty(newSection))
+                            s = newSection;
+                    }
+                    if (d.ContainsKey(s) && d[s].Count > 0)
+                    {
+                        output = d[s].Keys.ToList();
+                        if (sorted)
+                        {
+                            var comparer = new Comparison.AlphanumericComparer();
+                            var sort = output.OrderBy(x => x, comparer).ToList();
+                            output = sort;
+                        }
                     }
                 }
-                else
-                {
-                    path = Path.GetTempFileName();
-                    System.IO.File.WriteAllText(path, dest);
-                    if (System.IO.File.Exists(path))
-                    {
-                        output = GetKeys(section, path, false);
-                        System.IO.File.Delete(path);
-                    }
-                }
-                if (sorted)
-                    output = output.OrderBy(x => x, new Comparison.AlphanumericComparer()).ToList();
             }
             catch (Exception ex)
             {
@@ -238,16 +346,10 @@ namespace SilDev
         ///     true to sort keys; otherwise, false.
         /// </param>
         public static List<string> GetKeys(string section, bool sorted) =>
-            GetKeys(section, _iniFile, sorted);
+            GetKeys(section, null, sorted);
 
         /// <summary>
-        ///     <para>
-        ///         Retrieves the full content of an INI file or an INI file formatted string value.
-        ///         The result is saved in an <see cref="Dictionary{TKey,TValue}"/>.
-        ///     </para>
-        ///     <para>
-        ///         Please note that values are stored as <see cref="string"/>.
-        ///     </para>
+        ///     Retrieves the full content of an INI file or an INI file formatted string value.
         /// </summary>
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
@@ -255,45 +357,116 @@ namespace SilDev
         /// <param name="sorted">
         ///     true to sort the sections and keys; otherwise, false.
         /// </param>
-        public static Dictionary<string, Dictionary<string, string>> ReadAll(string fileOrContent = null, bool sorted = true)
+        public static Dictionary<string, Dictionary<string, List<string>>> ReadAll(string fileOrContent = null, bool sorted = false)
         {
-            var output = new Dictionary<string, Dictionary<string, string>>();
+            var output = new Dictionary<string, Dictionary<string, List<string>>>();
             try
             {
-                var isContent = false;
-                var source = fileOrContent ?? _iniFile;
+                var source = fileOrContent ?? GetFile();
+                if (string.IsNullOrEmpty(source))
+                    throw new ArgumentNullException(nameof(source));
                 var path = PathEx.Combine(source);
-                if (!System.IO.File.Exists(path))
+                if (File.Exists(path))
+                    source = File.ReadAllText(path);
+                else
+                    path = TmpFileGuid;
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+
+                // Enforce INI format rules
+                source = source.FormatNewLine()
+                               .SplitNewLine()
+                               .Select(s => s.Trim())
+                               .Where(LineHasIniFormat)
+                               .Join(Environment.NewLine);
+                if (string.IsNullOrWhiteSpace(source))
+                    throw new ArgumentNullException(nameof(source));
+                if (!source.EndsWith(Environment.NewLine))
+                    source += Environment.NewLine;
+
+                var matches = Regex.Matches(source,
+                    @"^                        # Beginning of the line
+                      ((?:\[)                  # Section Start
+                           (?<Section>[^\]]*)  # Actual Section text into Section Group
+                       (?:\])                  # Section End then EOL/EOB
+                       (?:[\r\n]{0,}|\Z))      # Match but don't capture the CRLF or EOB
+                      (                        # Begin capture groups (Key Value Pairs)
+                       (?!\[)                  # Stop capture groups if a [ is found; new section
+                       (?<Key>[^=]*?)          # Any text before the =, matched few as possible
+                       (?:=)                   # Get the = now
+                       (?<Value>[^\r\n]*)      # Get everything that is not an Line Changes
+                       (?:[\r\n]{0,4})         # MBDC \r\n
+                      )*                       # End Capture groups",
+                    RegexOptions.IgnoreCase |
+                    RegexOptions.Multiline |
+                    RegexOptions.IgnorePatternWhitespace);
+
+                var sections = new Dictionary<string, Dictionary<string, List<string>>>();
+                foreach (Match match in matches)
                 {
-                    isContent = true;
-                    path = Path.GetTempFileName();
-                    System.IO.File.WriteAllText(path, source);
-                }
-                if (!System.IO.File.Exists(path))
-                    throw new PathNotFoundException(path);
-                var sections = GetSections(path, sorted);
-                if (sections.Count == 0)
-                    throw new ArgumentNullException(nameof(sections));
-                foreach (var section in sections)
-                {
-                    var keys = GetKeys(section, path, sorted);
-                    if (keys.Count == 0)
+                    var section = match.Groups["Section"]?.Value.Trim();
+                    if (string.IsNullOrEmpty(section))
                         continue;
-                    var values = new Dictionary<string, string>();
-                    foreach (var key in keys)
+                    if (!sections.ContainsKey(section))
                     {
-                        var value = Read(section, key, path);
-                        if (string.IsNullOrWhiteSpace(value))
-                            continue;
-                        values.Add(key, value);
+                        if (sections.Count > 0)
+                        {
+                            var newSection = sections.Keys.FirstOrDefault(x => x.EqualsEx(section));
+                            if (!string.IsNullOrEmpty(newSection))
+                                section = newSection;
+                        }
+                        if (!sections.ContainsKey(section))
+                            sections.Add(section, new Dictionary<string, List<string>>());
                     }
-                    if (values.Count == 0)
-                        continue;
-                    if (!output.ContainsKey(section))
-                        output.Add(section, values);
+                    var keys = new Dictionary<string, List<string>>();
+                    for (var i = 0; i < match.Groups["Key"].Captures.Count; i++)
+                    {
+                        var key = match.Groups["Key"]?.Captures[i].Value.Trim();
+                        if (string.IsNullOrEmpty(key))
+                            continue;
+                        var value = match.Groups["Value"]?.Captures[i].Value.Trim();
+                        if (string.IsNullOrEmpty(value))
+                            continue;
+                        if (!keys.ContainsKey(key))
+                        {
+                            if (keys.Count > 0)
+                            {
+                                var newKey = keys.Keys.FirstOrDefault(x => x.EqualsEx(key));
+                                if (!string.IsNullOrEmpty(newKey))
+                                    key = newKey;
+                            }
+                            if (!keys.ContainsKey(key))
+                                keys.Add(key, new List<string>());
+                        }
+                        keys[key].Add(value);
+                    }
+                    if (sorted)
+                    {
+                        var comparer = new Comparison.AlphanumericComparer();
+                        var sort = keys.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
+                        keys = sort;
+                    }
+                    sections[section] = keys;
                 }
-                if (isContent)
-                    System.IO.File.Delete(path);
+                if (sorted)
+                {
+                    var comparer = new Comparison.AlphanumericComparer();
+                    var sort = sections.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
+                    sections = sort;
+                }
+                output = sections;
+                if (output.Count > 0)
+                {
+                    if (CachedFiles == null)
+                        CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
+                    if (CachedFiles.Count >= MaxCacheSize)
+                    {
+                        var defCode = FilePath.GetCode();
+                        CachedFiles.Remove(CachedFiles.Keys.First(x => x != defCode));
+                    }
+                    CachedFiles[code] = output;
+                }
             }
             catch (Exception ex)
             {
@@ -302,37 +475,24 @@ namespace SilDev
             return output;
         }
 
+        private static bool LineHasIniFormat(this string str)
+        {
+            var s = str;
+            if (string.IsNullOrWhiteSpace(s))
+                return false;
+            if (s.StartsWith("[") && s.EndsWith("]") && s.Count(c => c == '[') == 1 && s.Count(c => c == ']') == 1 && s.Count(char.IsLetterOrDigit) > 0)
+                return true;
+            return !s.StartsWith("=") && s.Contains('=') && s.IndexOf('=') + 1 < s.Length;
+        }
+
         /// <summary>
-        ///     <para>
-        ///         Retrieves the full content of an INI file or an INI file formatted string value.
-        ///         The result is saved in an <see cref="Dictionary{TKey,TValue}"/>.
-        ///     </para>
-        ///     <para>
-        ///         Please note that values are stored as <see cref="string"/>.
-        ///     </para>
+        ///     Retrieves the full content of an INI file or an INI file formatted string value.
         /// </summary>
         /// <param name="sorted">
         ///     true to sort the sections and keys; otherwise, false.
         /// </param>
-        public static Dictionary<string, Dictionary<string, string>> ReadAll(bool sorted) =>
-            ReadAll(_iniFile, sorted);
-
-        /// <summary>
-        ///     Determines whether the specified section, of an INI file or an INI file formatted
-        ///     string value, contains a key with a valid value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static bool ValueExists(string section, string key, string fileOrContent = null) =>
-            !string.IsNullOrWhiteSpace(Read(section, key, fileOrContent ?? _iniFile));
+        public static Dictionary<string, Dictionary<string, List<string>>> ReadAll(bool sorted) =>
+            ReadAll(null, sorted);
 
         /// <summary>
         ///     Retrieves a <see cref="string"/> value from the specified section in an INI file
@@ -348,27 +508,46 @@ namespace SilDev
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        public static string Read(string section, string key, string fileOrContent = null)
+        /// <param name="reread">
+        ///     true to reread the INI file; otherwise, false.
+        /// </param>
+        public static string Read(string section, string key, string fileOrContent = null, bool reread = false)
         {
             var output = string.Empty;
             try
             {
-                var source = fileOrContent ?? _iniFile;
+                var source = fileOrContent ?? GetFile();
+                if (string.IsNullOrEmpty(source))
+                    throw new ArgumentNullException(nameof(source));
+                var k = key?.Trim();
+                if (string.IsNullOrEmpty(k))
+                    throw new ArgumentNullException(nameof(key));
+                var s = section?.Trim() ?? string.Empty;
                 var path = PathEx.Combine(source);
-                if (System.IO.File.Exists(source))
+                if (!File.Exists(path))
+                    path = TmpFileGuid;
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                var d = !reread && CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
+                if (d.Count > 0)
                 {
-                    var tmp = new StringBuilder(short.MaxValue);
-                    if (WinApi.SafeNativeMethods.GetPrivateProfileString(section, key, string.Empty, tmp, tmp.Capacity, path) != 0)
-                        output = tmp.ToString();
-                }
-                else
-                {
-                    path = Path.GetTempFileName();
-                    System.IO.File.WriteAllText(path, source);
-                    if (System.IO.File.Exists(path))
+                    if (!d.ContainsKey(s))
                     {
-                        output = Read(section, key, path);
-                        System.IO.File.Delete(path);
+                        var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
+                        if (!string.IsNullOrEmpty(newSection))
+                            s = newSection;
+                    }
+                    if (d.ContainsKey(s))
+                    {
+                        if (!d[s].ContainsKey(k))
+                        {
+                            var newKey = d[s].Keys.FirstOrDefault(x => x.EqualsEx(k));
+                            if (!string.IsNullOrEmpty(newKey))
+                                k = newKey;
+                        }
+                        if (d[s].ContainsKey(k) && d[s][k].Count > 0)
+                            output = d[s][k].FirstOrDefault() ?? string.Empty;
                     }
                 }
             }
@@ -380,66 +559,73 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Retrieves a <see cref="string"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
+        ///     Retrieves a value from the specified section in an INI file or an INI file
+        ///     formatted string value.
         /// </summary>
-        /// <typeparam name="T">
-        ///     The value <see cref="Type"/>.
+        /// <typeparam name="TValue">
+        ///     The value type.
         /// </typeparam>
         /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
+        ///     The name of the section containing the key name.
         /// </param>
         /// <param name="key">
         ///     The name of the key whose associated value is to be retrieved.
         /// </param>
         /// <param name="defValue">
+        ///     The value that is used as default.
         /// </param>
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        /// <returns>
-        /// </returns>
-        public static T Read<T>(string section, string key, T defValue = default(T), string fileOrContent = null)
+        public static TValue Read<TValue>(string section, string key, TValue defValue = default(TValue), string fileOrContent = null)
         {
             dynamic output = defValue;
             try
             {
                 dynamic d;
                 var s = Read(section, key, fileOrContent);
+                var t = typeof(TValue);
                 if (string.IsNullOrEmpty(s))
                 {
                     if (Log.DebugMode > 1)
                     {
-                        var message = "The value is not defined. (Section: '" + (string.IsNullOrEmpty(section) ? "NULL" : section) + "'; Key: '" + (string.IsNullOrEmpty(key) ? "NULL" : key) + "'; File: '" + (string.IsNullOrEmpty(fileOrContent) ? File() : PathEx.DirOrFileExists(fileOrContent) ? fileOrContent : "CONTENT" + fileOrContent.EncodeToBase85()) + "';)";
+                        var message = $"The value is not defined. (Section: '{(string.IsNullOrEmpty(section) ? "NULL" : section)}'; Key: '{(string.IsNullOrEmpty(key) ? "NULL" : key)}'; File: '{(string.IsNullOrEmpty(fileOrContent) ? GetFile() : PathEx.DirOrFileExists(fileOrContent) ? fileOrContent : "CONTENT" + fileOrContent.EncodeToBase85())}';)";
                         throw new WarningException(message);
                     }
                     d = defValue;
                 }
-                else if (typeof(T) == typeof(string))
+                else if (t == typeof(string))
                     d = string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(defValue as string) ? (dynamic)defValue : s;
-                else if (typeof(T) == typeof(string[]))
-                    d = s.FromHexStringToByteArray()?.TextFromZip()?
-                         .Split('\0').Reverse().Skip(1).Reverse()
-                         .Select(x => x?.ToString().FromHexString()).ToArray();
-                else if (typeof(T) == typeof(byte[]))
+                else if (t == typeof(string[]) ||
+                         t == typeof(List<string>) ||
+                         t == typeof(IEnumerable<string>))
+                {
+                    var tmp = s.FromHexStringToByteArray()?.TextFromZip()?
+                               .Split('\0').Reverse().Skip(1).Reverse()
+                               .Select(x => x?.FromHexString());
+                    if (t == typeof(string[]))
+                        d = tmp?.ToArray();
+                    else if (t == typeof(List<string>))
+                        d = tmp?.ToList();
+                    else
+                        d = tmp;
+                }
+                else if (t == typeof(byte[]))
                     d = s.FromHexStringToByteArray();
-                else if (typeof(T) == typeof(Image))
+                else if (t == typeof(Bitmap) ||
+                         t == typeof(Image))
                     d = s.FromHexStringToImage();
-                else if (typeof(T) == typeof(Rectangle))
+                else if (t == typeof(Icon))
+                    d = s.FromHexStringToIcon();
+                else if (t == typeof(Rectangle))
                     d = s.ToRectangle();
-                else if (typeof(T) == typeof(Point))
+                else if (t == typeof(Point))
                     d = s.ToPoint();
-                else if (typeof(T) == typeof(Size))
+                else if (t == typeof(Size))
                     d = s.ToSize();
-                else if (!s.TryParse<T>(out d))
+                else if (!s.TryParse<TValue>(out d))
                     d = defValue;
                 output = d;
-            }
-            catch (WarningException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
             }
             catch (Exception ex)
             {
@@ -449,65 +635,36 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Retrieves a <see cref="bool"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
+        ///     Retrieves a value from the specified section in an INI file or an INI file
+        ///     formatted string value and release all cached resources used by the
+        ///     specified INI file or the INI file formatted string value.
         /// </summary>
+        /// <typeparam name="TValue">
+        ///     The value type.
+        /// </typeparam>
         /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
+        ///     The name of the section containing the key name.
         /// </param>
         /// <param name="key">
         ///     The name of the key whose associated value is to be retrieved.
         /// </param>
         /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
+        ///     The value that is used as default.
         /// </param>
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        public static bool ReadBoolean(string section, string key, bool defValue = false, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
+        public static TValue ReadOnly<TValue>(string section, string key, TValue defValue = default(TValue), string fileOrContent = null)
+        {
+            var output = Read(section, key, defValue, fileOrContent);
+            Detach(fileOrContent);
+            return output;
+        }
 
         /// <summary>
-        ///     Retrieves a <see cref="bool"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated string is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static bool ReadBoolean(string section, string key, string fileOrContent) =>
-            ReadBoolean(section, key, false, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="byte"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static byte ReadByte(string section, string key, byte defValue = 0x0, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="byte"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
+        ///     Retrieves a <see cref="string"/> value from the specified section in an INI file
+        ///     or an INI file formatted string value and release all cached resources used by
+        ///     the specified INI file or the INI file formatted string value.
         /// </summary>
         /// <param name="section">
         ///     The name of the section containing the key name. The value must be NULL for a
@@ -519,712 +676,423 @@ namespace SilDev
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        public static byte ReadByte(string section, string key, string fileOrContent) =>
-            ReadByte(section, key, 0x0, fileOrContent);
+        public static string ReadOnly(string section, string key, string fileOrContent = null)
+        {
+            var output = Read(section, key, fileOrContent);
+            Detach(fileOrContent);
+            return output;
+        }
 
         /// <summary>
         ///     <para>
-        ///         Retrieves a sequence of bytes from the specified section in an INI file or
-        ///         an INI file formatted string value.
+        ///         Retrieves a <see cref="string"/> value from the specified section in an INI
+        ///         file.
         ///     </para>
         ///     <para>
-        ///         Please note that the associated key value must be a hexadecimal string of a
-        ///         sequence of bytes.
+        ///         The Win32-API without file caching is used for reading in this case.
         ///     </para>
         /// </summary>
         /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
+        ///     The name of the section containing the key name.
         /// </param>
         /// <param name="key">
         ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static byte[] ReadByteArray(string section, string key, byte[] defValue = null, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     <para>
-        ///         Retrieves a sequence of bytes from the specified section in an INI file or
-        ///         an INI file formatted string value.
-        ///     </para>
-        ///     <para>
-        ///         Please note that the associated key value must be a hexadecimal string of a
-        ///         sequence of bytes.
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static byte[] ReadByteArray(string section, string key, string fileOrContent) =>
-            ReadByteArray(section, key, null, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="DateTime"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static DateTime ReadDateTime(string section, string key, DateTime defValue, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="DateTime"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static DateTime ReadDateTime(string section, string key, string fileOrContent) =>
-            ReadDateTime(section, key, DateTime.Now, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="DateTime"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        public static DateTime ReadDateTime(string section, string key) =>
-            ReadDateTime(section, key, DateTime.Now, _iniFile);
-
-        /// <summary>
-        ///     Retrieves a <see cref="double"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static double ReadDouble(string section, string key, double defValue = 0d, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="double"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static double ReadDouble(string section, string key, string fileOrContent) =>
-            ReadDouble(section, key, 0d, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="float"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static float ReadFloat(string section, string key, float defValue = 0f, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="float"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static float ReadFloat(string section, string key, string fileOrContent) =>
-            ReadFloat(section, key, 0f, fileOrContent);
-
-        /// <summary>
-        ///     <para>
-        ///         Retrieves an <see cref="Image"/> from the specified section in an INI file
-        ///         or an INI file formatted string value.
-        ///     </para>
-        ///     <para>
-        ///         Please note that the associated key value must be a hexadecimal string of a
-        ///         sequence of bytes which represent a valid picture.
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Image ReadImage(string section, string key, Image defValue = null, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     <para>
-        ///         Retrieves an <see cref="Image"/> from the specified section in an INI file
-        ///         or an INI file formatted string value.
-        ///     </para>
-        ///     <para>
-        ///         Please note that the associated key value must be a hexadecimal string of a
-        ///         sequence of bytes which represent a valid picture.
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Image ReadImage(string section, string key, string fileOrContent) =>
-            ReadImage(section, key, null, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="int"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static int ReadInteger(string section, string key, int defValue = 0, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="int"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static int ReadInteger(string section, string key, string fileOrContent) =>
-            ReadInteger(section, key, 0, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="long"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static long ReadLong(string section, string key, long defValue = 0L, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="long"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static long ReadLong(string section, string key, string fileOrContent) =>
-            ReadLong(section, key, 0, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Point"/> value pair from the specified section in an INI
-        ///     file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Point ReadPoint(string section, string key, Point defValue, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Point"/> value pair from the specified section in an INI
-        ///     file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Point ReadPoint(string section, string key, string fileOrContent) =>
-            ReadPoint(section, key, Point.Empty, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Point"/> value pair from the specified section in an INI
-        ///     file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        public static Point ReadPoint(string section, string key) =>
-            ReadPoint(section, key, Point.Empty, _iniFile);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Rectangle"/> from the specified section in an INI file or
-        ///     an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Rectangle ReadRectangle(string section, string key, Rectangle defValue, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Rectangle"/> from the specified section in an INI file or
-        ///     an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Rectangle ReadRectangle(string section, string key, string fileOrContent) =>
-            ReadRectangle(section, key, Rectangle.Empty, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Rectangle"/> from the specified section in an INI file or
-        ///     an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        public static Rectangle ReadRectangle(string section, string key) =>
-            ReadRectangle(section, key, Rectangle.Empty, _iniFile);
-
-        /// <summary>
-        ///     Retrieves a <see cref="short"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static short ReadShort(string section, string key, short defValue = 0, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="short"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static short ReadShort(string section, string key, string fileOrContent) =>
-            ReadShort(section, key, 0, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Size"/> value pair from the specified section in an INI
-        ///     file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Size ReadSize(string section, string key, Size defValue, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Size"/> value pair from the specified section in an INI
-        ///     file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Size ReadSize(string section, string key, string fileOrContent) =>
-            ReadSize(section, key, Size.Empty, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Size"/> value pair from the specified section in an INI
-        ///     file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        public static Size ReadSize(string section, string key) =>
-            ReadSize(section, key, Size.Empty, _iniFile);
-
-        /// <summary>
-        ///     Retrieves a <see cref="string"/> value from the specified section in an INI
-        ///     file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static string ReadString(string section, string key, string defValue = "", string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     <para>
-        ///         Retrieves an <see cref="string"/> array from the specified section in an INI
-        ///         file or an INI file formatted string value.
-        ///     </para>
-        ///     <para>
-        ///         Please note that the associated key value must be a hexadecimal string of an
-        ///         <see cref="string"/> array.
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static string[] ReadStringArray(string section, string key, string[] defValue = null, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     <para>
-        ///         Retrieves an <see cref="string"/> array from the specified section in an INI
-        ///         file or an INI file formatted string value.
-        ///     </para>
-        ///     <para>
-        ///         Please note that the associated key value must be a hexadecimal string of an
-        ///         <see cref="string"/> array.
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static string[] ReadStringArray(string section, string key, string fileOrContent) =>
-            ReadStringArray(section, key, null, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Version"/> from the specified section in an INI file or
-        ///     an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value which returns if there is no valid value to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Version ReadVersion(string section, string key, Version defValue, string fileOrContent = null) =>
-            Read(section, key, defValue, fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Version"/> from the specified section in an INI file or
-        ///     an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static Version ReadVersion(string section, string key, string fileOrContent) =>
-            ReadVersion(section, key, Version.Parse("0.0.0.0"), fileOrContent);
-
-        /// <summary>
-        ///     Retrieves a <see cref="Version"/> from the specified section in an INI file or
-        ///     an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        public static Version ReadVersion(string section, string key) =>
-            ReadVersion(section, key, Version.Parse("0.0.0.0"), _iniFile);
-
-        /// <summary>
-        ///     <para>
-        ///         Copies an <see cref="object"/> into the specified section of an initialization
-        ///         file. The following types are valid:
-        ///     </para>
-        ///     <para>
-        ///         <see cref="bool"/>,
-        ///         <see cref="byte"/>,
-        ///         <see cref="byte"/>[],
-        ///         <see cref="DateTime"/>,
-        ///         <see cref="double"/>,
-        ///         <see cref="float"/>,
-        ///         <see cref="Image"/>,
-        ///         <see cref="int"/>,
-        ///         <see cref="long"/>,
-        ///         <see cref="Point"/>,
-        ///         <see cref="Rectangle"/>,
-        ///         <see cref="short"/>,
-        ///         <see cref="Size"/>,
-        ///         <see cref="string"/>,
-        ///         <see cref="string"/>[],
-        ///         <see cref="Version"/>,
-        ///         and all other types convertible with <see cref="object"/>.ToString().
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section to which the string will be copied. If the section does
-        ///     not exist, it is created. The name of the section is case-independent; the
-        ///     string can be any combination of uppercase and lowercase letters.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key to be associated with a string. If the key does not exist in
-        ///     the specified section, it is created. If this parameter is NULL, the entire
-        ///     section, including all entries within the section, is deleted.
-        /// </param>
-        /// <param name="value">
-        ///     The <see cref="object"/> to be written to the file. If this parameter is NULL,
-        ///     the key pointed to by the key parameter is deleted.
         /// </param>
         /// <param name="file">
+        ///     The full file path of an INI file.
+        /// </param>
+        public static string ReadDirect(string section, string key, string file = null)
+        {
+            var output = string.Empty;
+            try
+            {
+                var path = PathEx.Combine(file ?? GetFile());
+                if (!File.Exists(path))
+                    throw new PathNotFoundException(path);
+                var sb = new StringBuilder(short.MaxValue);
+                if (WinApi.SafeNativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
+                    output = sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return output;
+        }
+
+        /// <summary>
+        ///     Writes the specifed content to an INI file on the disk.
+        /// </summary>
+        /// <param name="content">
         ///     <para>
-        ///         The name of the initialization file.
+        ///         The content based on <see cref="ReadAll(string,bool)"/>.
         ///     </para>
         ///     <para>
-        ///         If the file was created using Unicode characters, the function writes Unicode
-        ///         characters to the file. Otherwise, the function writes ANSI characters.
+        ///         If this parameter is NULL, the function writes all the cached data from the
+        ///         specified INI file to the disk.
         ///     </para>
+        /// </param>
+        /// <param name="file">
+        ///     The full file path of an INI file.
+        /// </param>
+        /// <param name="sorted">
+        ///     true to sort the sections and keys; otherwise, false.
+        /// </param>
+        /// <param name="detach">
+        ///     true to release all cached resources used by the specified INI file; otherwise,
+        ///     false.
+        /// </param>
+        public static bool WriteAll(Dictionary<string, Dictionary<string, List<string>>> content = null, string file = null, bool sorted = true, bool detach = false)
+        {
+            try
+            {
+                var source = content ?? new Dictionary<string, Dictionary<string, List<string>>>();
+                var path = PathEx.Combine(file ?? GetFile());
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                if (source.Count == 0 && CachedFiles?.ContainsKey(code) == true)
+                    source = CachedFiles[code];
+                if (source.Count == 0 && File.Exists(path))
+                    source = ReadAll(path);
+                if (source.Count == 0 || source.Values.Count == 0)
+                    throw new ArgumentNullException(nameof(source));
+                if (!File.Exists(path))
+                    File.Create(path).Close();
+                if (sorted)
+                {
+                    var comparer = new Comparison.AlphanumericComparer();
+                    var sort = source.OrderBy(d => d.Key, comparer)
+                                     .ToDictionary(d => d.Key, d => d.Value
+                                                                     .OrderBy(p => p.Key, comparer)
+                                                                     .ToDictionary(p => p.Key, p => p.Value));
+                    source = sort;
+                }
+                var sb = new StringBuilder();
+                foreach (var dict in source)
+                {
+                    if (string.IsNullOrWhiteSpace(dict.Key) || dict.Value.Count == 0)
+                        continue;
+                    sb.Append('[');
+                    sb.Append(dict.Key.Trim());
+                    sb.Append(']');
+                    sb.AppendLine();
+                    foreach (var pair in dict.Value)
+                    {
+                        if (string.IsNullOrWhiteSpace(pair.Key) || pair.Value.Count == 0)
+                            continue;
+                        var key = pair.Key.Trim();
+                        foreach (var value in pair.Value)
+                        {
+                            if (string.IsNullOrWhiteSpace(value))
+                                continue;
+                            sb.Append(key);
+                            sb.Append('=');
+                            sb.Append(value.Trim());
+                            sb.AppendLine();
+                        }
+                    }
+                    sb.AppendLine();
+                }
+                File.WriteAllText(path, sb.ToString());
+                if (detach)
+                    Detach(path);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///     Writes all the cached data from the specified INI file to the disk.
+        /// </summary>
+        /// <param name="file">
+        ///     The full file path of an INI file.
+        /// </param>
+        /// <param name="sorted">
+        ///     true to sort the sections and keys; otherwise, false.
+        /// </param>
+        /// <param name="detach">
+        ///     true to release all cached resources used by the specified INI file; otherwise,
+        ///     false.
+        /// </param>
+        public static bool WriteAll(string file, bool sorted = true, bool detach = false) =>
+            WriteAll(null, file, sorted);
+
+        /// <summary>
+        ///     <para>
+        ///         Copies the specified value into the specified section of an INI file.
+        ///     </para>
+        ///     <para>
+        ///         This function updates only the cache and has no effect on the file until
+        ///         <see cref="WriteAll(string,bool,bool)"/> is called.
+        ///     </para>
+        /// </summary>
+        /// <typeparam name="TValue">
+        ///     The value type.
+        /// </typeparam>
+        /// <param name="section">
+        ///     The name of the section to which the string will be copied.
+        /// </param>
+        /// <param name="key">
+        ///     The name of the key to be associated with the value.
+        /// </param>
+        /// <param name="value">
+        ///     The value to be written to the file.
+        /// </param>
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
         /// </param>
         /// <param name="forceOverwrite">
         ///     true to enable overwriting of a key with the same value as specified; otherwise,
         ///     false.
         /// </param>
         /// <param name="skipExistValue">
-        ///     true to skip a existing value, even it is not the same value as specified;
+        ///     true to skip an existing value, even it is not the same value as specified;
         ///     otherwise, false.
         /// </param>
-        [SuppressMessage("ReSharper", "CanBeReplacedWithTryCastAndCheckForNull")]
-        public static bool Write(string section, string key, object value, string file = null, bool forceOverwrite = true, bool skipExistValue = false)
+        /// <param name="index">
+        ///     The value index used to handle multiple key value pairs.
+        /// </param>
+        public static bool Write<TValue>(string section, string key, TValue value, string fileOrContent = null, bool forceOverwrite = true, bool skipExistValue = false, uint index = 0)
         {
             try
             {
-                var path = !string.IsNullOrEmpty(file) ? PathEx.Combine(file) : _iniFile;
-                if (!System.IO.File.Exists(path))
-                    throw new PathNotFoundException(path);
-                if (value == null)
-                    return RemoveKey(section, key, path);
-                if (value is Image)
+                var s = section?.Trim();
+                if (string.IsNullOrEmpty(s))
+                    throw new ArgumentNullException(nameof(section));
+
+                int code;
+                var path = PathEx.Combine(fileOrContent ?? GetFile());
+                if (File.Exists(path))
                 {
-                    var img = (Image)value;
-                    using (var ms = new MemoryStream())
-                    {
-                        img.Save(ms, ImageFormat.Png);
-                        value = ms.ToArray();
-                    }
+                    code = path.GetCode();
+                    if (code == -1)
+                        throw new ArgumentOutOfRangeException(nameof(code));
+                    if (CachedFiles?.ContainsKey(code) != true)
+                        ReadAll(fileOrContent);
                 }
-                if (value is List<string>)
-                    value = ((List<string>)value).ToArray();
+                else
+                {
+                    path = TmpFileGuid;
+                    code = path.GetCode();
+                    if (code == -1)
+                        throw new ArgumentOutOfRangeException(nameof(code));
+                }
+
                 var sb = new StringBuilder();
-                if (value is byte[])
-                    sb.Append(((byte[])value).ToHexString());
-                if (value is string[])
+                var v = string.Empty;
+                if (value != null)
                 {
-                    var sa = (string[])value;
-                    for (var i = 0; i < sa.Length; i++)
-                        sa[i] = sa[i].ToHexString();
-                    sb.Append((sa.Join('\0') + '\0').TextToZip().ToHexString());
+                    // To allow the saving of a sequence of strings,
+                    // it's required to bring it in a single string
+                    var t = typeof(TValue);
+                    if (t == typeof(string[]) ||
+                        t == typeof(List<string>) ||
+                        t == typeof(IEnumerable<string>))
+                    {
+                        var sa = t == typeof(string[]) ? value as string[] : (value as IEnumerable<string>)?.ToArray();
+                        if (sa != null)
+                        {
+                            // Convert each part into hexadecimal to make sure there are no null
+                            // terminated character in it; concatenates the result using the null
+                            // terminated character as separator, in the next step
+                            var str = sa.Select(x => x.ToHexString()).Join('\0');
+                            if (!str.Contains('\0'))
+                                str += '\0';
+                            // To shorten it, zip the result and save it in hexadecimal
+                            sb.Append(str.TextToZip().ToHexString());
+                        }
+                    }
+                    // No special conversion for anything else
+                    else if (t == typeof(Bitmap) ||
+                             t == typeof(Image) ||
+                             t == typeof(Icon) ||
+                             t == typeof(byte[]))
+                    {
+                        byte[] ba;
+                        if (t == typeof(Bitmap) ||
+                            t == typeof(Image))
+                            ba = (value as Bitmap)?.ToByteArray();
+                        else if (t == typeof(Icon))
+                            ba = (value as Icon)?.ToByteArray();
+                        else
+                            ba = value as byte[];
+                        if (ba != null)
+                            sb.Append(ba.ToHexString());
+                    }
+                    else
+                        sb.Append(value);
+
+                    if (sb.Length > 0)
+                        v = sb.ToString();
                 }
-                if (sb.Length == 0)
-                    sb.Append(value);
-                var newValue = sb.ToString();
+
+                if (!forceOverwrite || skipExistValue)
+                {
+                    var c = Read(section, key, fileOrContent);
+                    if (!forceOverwrite && c == v || skipExistValue && !string.IsNullOrWhiteSpace(c))
+                        return false;
+                }
+
+                var i = (int)index;
+                var k = key?.Trim();
+                if (CachedFiles?.ContainsKey(code) == true && CachedFiles[code].Count > 0)
+                {
+                    // To find the correct section
+                    if (!CachedFiles[code].ContainsKey(s))
+                    {
+                        var newSection = CachedFiles[code].Keys.FirstOrDefault(x => x.EqualsEx(s));
+                        if (!string.IsNullOrEmpty(newSection))
+                            s = newSection;
+                    }
+
+                    // To remove key value pairs
+                    if (string.IsNullOrEmpty(k) || string.IsNullOrEmpty(v))
+                    {
+                        if (!CachedFiles[code].ContainsKey(s))
+                            return true;
+                        if (string.IsNullOrEmpty(k))
+                            CachedFiles[code][s].Clear();
+                        else if (string.IsNullOrEmpty(v))
+                        {
+                            if (!CachedFiles[code][s].ContainsKey(k))
+                                return true;
+                            if (CachedFiles[code][s][k].Count > 1 && CachedFiles[code][s][k].Count > i)
+                                CachedFiles[code][s][k] = CachedFiles[code][s][k].Skip(i).ToList();
+                            else
+                                CachedFiles[code][s].Remove(k);
+                        }
+                        return true;
+                    }
+
+                    // To find the correct key
+                    if (CachedFiles[code].ContainsKey(s))
+                        if (!CachedFiles[code][s].ContainsKey(k))
+                        {
+                            var newKey = CachedFiles[code][s].Keys.FirstOrDefault(x => x.EqualsEx(k));
+                            if (!string.IsNullOrEmpty(newKey))
+                                k = newKey;
+                        }
+                }
+
+                if (string.IsNullOrEmpty(k))
+                    throw new ArgumentNullException(nameof(key));
+                if (string.IsNullOrEmpty(v))
+                    throw new ArgumentNullException(nameof(value));
+
+                // To write or overwrite the value
+                if (CachedFiles == null)
+                    CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
+                if (!CachedFiles.ContainsKey(code))
+                    CachedFiles.Add(code, new Dictionary<string, Dictionary<string, List<string>>>());
+                if (!CachedFiles[code].ContainsKey(s))
+                    CachedFiles[code].Add(s, new Dictionary<string, List<string>>());
+                if (!CachedFiles[code][s].ContainsKey(k))
+                    CachedFiles[code][s].Add(k, new List<string>());
+                if (CachedFiles[code][s][k].Count > i)
+                {
+                    CachedFiles[code][s][k][i] = v;
+                    return true;
+                }
+                if (CachedFiles[code][s][k].Count != i)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                CachedFiles[code][s][k].Add(v);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Copies the specified value into the specified section of an INI file.
+        ///     </para>
+        ///     <para>
+        ///         This function updates only the cache and has no effect on the file until
+        ///         <see cref="WriteAll(string,bool,bool)"/> is called.
+        ///     </para>
+        /// </summary>
+        /// <typeparam name="TValue">
+        ///     The value type.
+        /// </typeparam>
+        /// <param name="section">
+        ///     The name of the section to which the string will be copied.
+        /// </param>
+        /// <param name="key">
+        ///     The name of the key to be associated with the value.
+        /// </param>
+        /// <param name="value">
+        ///     The value to be written to the file.
+        /// </param>
+        /// <param name="forceOverwrite">
+        ///     true to enable overwriting of a key with the same value as specified; otherwise,
+        ///     false.
+        /// </param>
+        /// <param name="skipExistValue">
+        ///     true to skip an existing value, even it is not the same value as specified;
+        ///     otherwise, false.
+        /// </param>
+        /// <param name="index">
+        ///     The value index used to handle multiple key value pairs.
+        /// </param>
+        public static bool Write<TValue>(string section, string key, TValue value, bool forceOverwrite, bool skipExistValue = false, uint index = 0) =>
+            Write(section, key, value, null, forceOverwrite, skipExistValue);
+
+        /// <summary>
+        ///     <para>
+        ///         Copies an <see cref="string"/> value into the specified section of an INI file.
+        ///     </para>
+        ///     <para>
+        ///         The Win32-API is used for writing in this case. Please note that this function
+        ///         writes the changes directly on the disk. This causes a lot of write accesses if
+        ///         it is used incorrectly.
+        ///     </para>
+        /// </summary>
+        /// <param name="section">
+        ///     The name of the section to which the string will be copied.
+        /// </param>
+        /// <param name="key">
+        ///     The name of the key to be associated with a string.
+        /// </param>
+        /// <param name="value">
+        ///     The <see cref="string"/> value to be written to the file. If this parameter is NULL,
+        ///     the key pointed to by the key parameter is deleted.
+        /// </param>
+        /// <param name="file">
+        ///     The full path of an INI file.
+        /// </param>
+        /// <param name="forceOverwrite">
+        ///     true to enable overwriting of a key with the same value as specified; otherwise,
+        ///     false.
+        /// </param>
+        /// <param name="skipExistValue">
+        ///     true to skip an existing value, even it is not the same value as specified;
+        ///     otherwise, false.
+        /// </param>
+        public static bool WriteDirect(string section, string key, string value, string file = null, bool forceOverwrite = true, bool skipExistValue = false)
+        {
+            try
+            {
+                var path = PathEx.Combine(file ?? GetFile());
+                if (!File.Exists(path))
+                    throw new PathNotFoundException(path);
+                if (string.IsNullOrWhiteSpace(section))
+                    throw new ArgumentNullException(nameof(section));
+                if (string.IsNullOrWhiteSpace(key))
+                    throw new ArgumentNullException(nameof(key));
                 if (forceOverwrite && !skipExistValue)
-                    return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, newValue, path) != 0;
-                var curValue = Read(section, key, path);
-                if (!forceOverwrite && curValue == newValue || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
+                    return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, value, path) != 0;
+                var curValue = ReadDirect(section, key, path);
+                if (!forceOverwrite && curValue == value || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
                     return false;
-                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, newValue, path) != 0;
+                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, value, path) != 0;
             }
             catch (Exception ex)
             {
@@ -1232,54 +1100,5 @@ namespace SilDev
                 return false;
             }
         }
-
-        /// <summary>
-        ///     <para>
-        ///         Copies an <see cref="object"/> into the specified section of an initialization
-        ///         file. The following objects are valid:
-        ///     </para>
-        ///     <para>
-        ///         <see cref="bool"/>,
-        ///         <see cref="byte"/>,
-        ///         <see cref="byte"/>[],
-        ///         <see cref="DateTime"/>,
-        ///         <see cref="double"/>,
-        ///         <see cref="float"/>,
-        ///         <see cref="Image"/>,
-        ///         <see cref="int"/>,
-        ///         <see cref="long"/>,
-        ///         <see cref="Point"/>,
-        ///         <see cref="Rectangle"/>,
-        ///         <see cref="short"/>,
-        ///         <see cref="Size"/>,
-        ///         <see cref="string"/>,
-        ///         <see cref="string"/>[], and
-        ///         <see cref="Version"/>
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section to which the string will be copied. If the section does
-        ///     not exist, it is created. The name of the section is case-independent; the
-        ///     string can be any combination of uppercase and lowercase letters.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key to be associated with a string. If the key does not exist in
-        ///     the specified section, it is created. If this parameter is NULL, the entire
-        ///     section, including all entries within the section, is deleted.
-        /// </param>
-        /// <param name="value">
-        ///     The <see cref="object"/> to be written to the file. If this parameter is NULL,
-        ///     the key pointed to by the key parameter is deleted.
-        /// </param>
-        /// <param name="forceOverwrite">
-        ///     true to enable overwriting of a key with the same value as specified; otherwise,
-        ///     false.
-        /// </param>
-        /// <param name="skipExistValue">
-        ///     true to skip a existing value, even it is not the same value as specified;
-        ///     otherwise, false.
-        /// </param>
-        public static bool Write(string section, string key, object value, bool forceOverwrite, bool skipExistValue = false) =>
-            Write(section, key, value, _iniFile, forceOverwrite, skipExistValue);
     }
 }
