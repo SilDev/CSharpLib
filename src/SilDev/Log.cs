@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-04-16 01:46
+// Version:  2017-05-12 12:04
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -147,37 +148,51 @@ namespace SilDev
         ///         For more informations see <see cref="ActivateLogging(int)"/>.
         ///     </para>
         /// </summary>
-        /// <param name="iniPath">
-        ///     <para>
-        ///         The full path of the configuration file.
-        ///     </para>
-        ///     <para>
-        ///         Please note that only the INI file format is accepted. This can be changed in the future to
-        ///         add frequently used formats, such as the XML file format - for example.
-        ///     </para>
+        /// <param name="path">
+        ///     The full path of the configuration file.
         /// </param>
-        /// <param name="section">
-        ///     The section of the configuration file which hold the key with the value to specify the current
-        ///     <see cref="DebugMode"/>. The value must be NULL for a non-section key.
+        /// <param name="pattern">
+        ///     The regular expression pattern to match.
         /// </param>
         /// <param name="key">
         ///     The key of the configuration file which hold the value, to specify the current
         ///     <see cref="DebugMode"/>.
         /// </param>
-        public static void AllowLogging(string iniPath = null, string section = null, string key = "DebugMode")
+        public static void AllowLogging(string path = null, string pattern = null, string key = nameof(DebugMode))
         {
             var mode = 0;
-            if (new Regex("/debug [0-2]|/debug \"[0-2]\"").IsMatch(Environment.CommandLine))
+            var regex = new Regex("/debug [0-2]", RegexOptions.IgnoreCase);
+            var cmdLine = Environment.CommandLine.RemoveChar('\"');
+            if (regex.IsMatch(cmdLine))
             {
                 int i;
-                if (int.TryParse(new Regex("/debug ([0-2]?)").Match(Environment.CommandLine.RemoveChar('\"'))
-                                                             .Groups[1].ToString(), out i) && i > mode)
+                if (int.TryParse(regex.Match(cmdLine).Groups[1].ToString(), out i) && i > mode)
                     mode = i;
                 if (mode > 0)
                     goto ACTIVATE;
             }
-            if (!string.IsNullOrEmpty(iniPath) && File.Exists(iniPath))
-                mode = Ini.ReadInteger(section, key, iniPath);
+            if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrEmpty(path) && File.Exists(path))
+                try
+                {
+                    var lines = File.ReadAllLines(path);
+                    foreach (var line in lines)
+                    {
+                        var match = Regex.Match(line, pattern, RegexOptions.IgnoreCase).Groups;
+                        if (match.Count < 3)
+                            continue;
+                        if (!match[1].Value.EqualsEx(key))
+                            continue;
+                        int i;
+                        if (!int.TryParse(match[2].Value, out i))
+                            continue;
+                        mode = i;
+                        break;
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
             ACTIVATE:
             ActivateLogging(mode);
         }
