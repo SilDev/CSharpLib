@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2017-05-04 17:17
+// Version:  2017-05-12 12:17
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -139,11 +139,6 @@ namespace SilDev
                 WinApi.UnsafeNativeMethods.DestroyIcon(ptr);
                 return ico;
             }
-            catch (ArgumentNullException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
-            }
             catch (ArgumentException ex)
             {
                 if (Log.DebugMode > 1)
@@ -184,11 +179,6 @@ namespace SilDev
                     throw new PathNotFoundException(path);
                 var ico = GetIconFromFile(path, (int)index, large);
                 return ico;
-            }
-            catch (ArgumentNullException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
             }
             catch (PathNotFoundException ex)
             {
@@ -347,7 +337,7 @@ namespace SilDev
                 Size = MinimumSize;
                 SizeGripStyle = SizeGripStyle.Hide;
                 StartPosition = FormStartPosition.CenterScreen;
-                Text = "Icon Resource Browser";
+                Text = @"Icon Resource Browser";
                 var tableLayoutPanel = new TableLayoutPanel
                 {
                     BackColor = Color.Transparent,

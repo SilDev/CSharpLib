@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-05-06 22:32
+// Version:  2017-05-12 12:16
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -178,11 +178,6 @@ namespace SilDev
                 if (path.Contains('.'))
                     path = path.TrimEnd('.');
             }
-            catch (ArgumentNullException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
-            }
             catch (ArgumentException ex)
             {
                 if (Log.DebugMode > 1)
@@ -259,11 +254,6 @@ namespace SilDev
                     path = path.Replace(scheme, scheme + new string(Path.AltDirectorySeparatorChar, i < 1 ? 2 : 1));
                     break;
                 }
-            }
-            catch (ArgumentNullException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
             }
             catch (ArgumentException ex)
             {

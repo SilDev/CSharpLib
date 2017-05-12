@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-05-04 15:55
+// Version:  2017-05-12 12:14
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -205,11 +205,6 @@ namespace SilDev
                 if (lower)
                     output = output?.ToLower();
             }
-            catch (ArgumentNullException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
-            }
             catch (InvalidOperationException ex)
             {
                 if (Log.DebugMode > 1)
@@ -266,11 +261,6 @@ namespace SilDev
                 if (!string.IsNullOrWhiteSpace(output))
                     output = $"%{output}%";
             }
-            catch (ArgumentNullException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
-            }
             catch (InvalidOperationException ex)
             {
                 if (Log.DebugMode > 1)
@@ -314,11 +304,6 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(output));
                 output += Path.DirectorySeparatorChar;
                 output += path.Substring(current.Length).Trim(Path.DirectorySeparatorChar);
-            }
-            catch (ArgumentNullException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
             }
             catch (Exception ex)
             {
