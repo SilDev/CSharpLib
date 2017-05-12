@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2017-05-12 13:06
+// Version:  2017-05-12 15:04
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -95,7 +95,7 @@ namespace SilDev
                 if (CachedKeyFilters == null)
                     CachedKeyFilters = new Dictionary<int, string>();
                 if (CachedKeyFilters.Count > MaxCacheSize)
-                    CachedKeyFilters.Remove(CachedKeyFilters.Keys.Last());
+                    CachedKeyFilters.Remove(CachedKeyFilters.Keys.First());
                 CachedKeyFilters[hashCode] = newSubKey;
                 return newSubKey;
             }
