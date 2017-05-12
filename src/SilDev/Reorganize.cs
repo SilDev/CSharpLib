@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-04 08:20
+// Version:  2017-05-08 11:47
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -591,6 +591,15 @@ namespace SilDev
             str.FromHexStringToByteArray().FromByteArrayToImage();
 
         /// <summary>
+        ///     Converts the specified hexadecimal sequence back to <see cref="Icon"/>.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to reconvert.
+        /// </param>
+        public static Icon FromHexStringToIcon(this string str) =>
+            str.FromHexStringToByteArray().FromByteArrayToIcon();
+
+        /// <summary>
         ///     Converts the specified hexadecimal sequence back to string.
         /// </summary>
         /// <param name="str">
@@ -774,6 +783,31 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Converts the specified icon into a sequence of bytes.
+        /// </summary>
+        /// <param name="icon">
+        ///     The icon to convert.
+        /// </param>
+        public static byte[] ToByteArray(this Icon icon)
+        {
+            try
+            {
+                byte[] ba;
+                using (var ms = new MemoryStream())
+                {
+                    icon.Save(ms);
+                    ba = ms.ToArray();
+                }
+                return ba;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
         ///     Converts the specified sequence of bytes into a string.
         /// </summary>
         /// <param name="bytes">
@@ -807,6 +841,33 @@ namespace SilDev
                 using (var ms = new MemoryStream(bytes))
                     img = Image.FromStream(ms);
                 return img;
+            }
+            catch (ArgumentException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Converts the specified sequence of bytes to <see cref="Icon"/>.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to convert.
+        /// </param>
+        public static Icon FromByteArrayToIcon(this byte[] bytes)
+        {
+            try
+            {
+                Icon ico;
+                using (var ms = new MemoryStream(bytes))
+                    ico = new Icon(ms);
+                return ico;
             }
             catch (ArgumentException ex)
             {
