@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-05-12 12:12
+// Version:  2017-05-13 04:35
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,10 +17,8 @@ namespace SilDev
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -315,42 +313,6 @@ namespace SilDev
             {
                 // ignored
             }
-        }
-
-        /// <summary>
-        ///     <para>
-        ///         Initializes a new instance of the <see cref="Stopwatch"/> class to determine the loading time
-        ///         of the specified <see cref="Form"/> window.
-        ///     </para>
-        ///     <para>
-        ///         This function is ignored if <see cref="DebugMode"/> is disabled or the specified
-        ///         <see cref="Form"/> is already visible.
-        ///     </para>
-        /// </summary>
-        /// <param name="form">
-        ///     The form window to determine the loading time.
-        /// </param>
-        public static Form AddLoadingTimeStopwatch(this Form form)
-        {
-            if (DebugMode <= 0)
-                return form;
-            try
-            {
-                if (Application.OpenForms.Cast<Form>().Any(x => x == form))
-                    return form;
-            }
-            catch
-            {
-                return form;
-            }
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            form.Shown += (s, e) =>
-            {
-                stopwatch.Stop();
-                Write("Stopwatch: " + form.Name + " loaded in " + stopwatch.ElapsedMilliseconds + "ms.");
-            };
-            return form;
         }
     }
 }
