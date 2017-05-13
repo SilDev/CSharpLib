@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-12 16:43
+// Version:  2017-05-13 03:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1053,7 +1053,8 @@ namespace SilDev
 
         /// <summary>
         ///     <para>
-        ///         Copies an <see cref="string"/> value into the specified section of an INI file.
+        ///         Copies the <see cref="string"/> representation of the specified <see cref="object"/>
+        ///         into the specified section of an INI file.
         ///     </para>
         ///     <para>
         ///         The Win32-API is used for writing in this case. Please note that this function
@@ -1065,7 +1066,8 @@ namespace SilDev
         ///     The name of the section to which the string will be copied.
         /// </param>
         /// <param name="key">
-        ///     The name of the key to be associated with a string.
+        ///     The name of the key to be associated with a string. If this parameter is NULL, the
+        ///     section pointed to by the key parameter is deleted.
         /// </param>
         /// <param name="value">
         ///     The <see cref="string"/> value to be written to the file. If this parameter is NULL,
@@ -1082,7 +1084,7 @@ namespace SilDev
         ///     true to skip an existing value, even it is not the same value as specified;
         ///     otherwise, false.
         /// </param>
-        public static bool WriteDirect(string section, string key, string value, string file = null, bool forceOverwrite = true, bool skipExistValue = false)
+        public static bool WriteDirect(string section, string key, object value, string file = null, bool forceOverwrite = true, bool skipExistValue = false)
         {
             try
             {
@@ -1091,14 +1093,13 @@ namespace SilDev
                     throw new PathNotFoundException(path);
                 if (string.IsNullOrWhiteSpace(section))
                     throw new ArgumentNullException(nameof(section));
-                if (string.IsNullOrWhiteSpace(key))
-                    throw new ArgumentNullException(nameof(key));
+                var strValue = value?.ToString();
                 if (forceOverwrite && !skipExistValue)
-                    return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, value, path) != 0;
+                    return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
                 var curValue = ReadDirect(section, key, path);
-                if (!forceOverwrite && curValue == value || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
+                if (!forceOverwrite && curValue.Equals(strValue) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
                     return false;
-                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, value, path) != 0;
+                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
             }
             catch (Exception ex)
             {
