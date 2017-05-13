@@ -246,6 +246,37 @@
                 Occurs when the mouse pointer enters the control.
             </param>
         </member>
+        <member name="T:SilDev.Forms.FormEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.Form"/> class.
+            </summary>
+        </member>
+        <member name="T:SilDev.Forms.FormEx.PlusSettings">
+            <summary>
+                Provides special <see cref="T:System.Windows.Forms.Form"/> settings.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.PlusSettings.LogLoadingTime">
+            <summary>
+                Logs the loading time of the specified <see cref="T:System.Windows.Forms.Form"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.Plus(System.Windows.Forms.Form,SilDev.Forms.FormEx.PlusSettings)">
+            <summary>
+                <para>
+                    Determines special settings for the specified <see cref="T:System.Windows.Forms.Form"/>.
+                </para>
+                <para>
+                    Hint: This function should be called before the <see cref="T:System.Windows.Forms.Form"/> is created.
+                </para>
+            </summary>
+            <param name="form">
+                The form window to determine the settings.
+            </param>
+            <param name="settings">
+                The settings to be applied.
+            </param>
+        </member>
         <member name="T:SilDev.Forms.MessageBoxEx">
             <summary>
                 <para>
@@ -4438,10 +4469,11 @@
                 The value index used to handle multiple key value pairs.
             </param>
         </member>
-        <member name="M:SilDev.Ini.WriteDirect(System.String,System.String,System.String,System.String,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.Ini.WriteDirect(System.String,System.String,System.Object,System.String,System.Boolean,System.Boolean)">
             <summary>
                 <para>
-                    Copies an <see cref="T:System.String"/> value into the specified section of an INI file.
+                    Copies the <see cref="T:System.String"/> representation of the specified <see cref="T:System.Object"/>
+                    into the specified section of an INI file.
                 </para>
                 <para>
                     The Win32-API is used for writing in this case. Please note that this function
@@ -4453,7 +4485,8 @@
                 The name of the section to which the string will be copied.
             </param>
             <param name="key">
-                The name of the key to be associated with a string.
+                The name of the key to be associated with a string. If this parameter is NULL, the
+                section pointed to by the key parameter is deleted.
             </param>
             <param name="value">
                 The <see cref="T:System.String"/> value to be written to the file. If this parameter is NULL,
@@ -5556,21 +5589,6 @@
             </param>
             <param name="exitProcess">
                 true to terminate this process after logging; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Log.AddLoadingTimeStopwatch(System.Windows.Forms.Form)">
-            <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Stopwatch"/> class to determine the loading time
-                    of the specified <see cref="T:System.Windows.Forms.Form"/> window.
-                </para>
-                <para>
-                    This function is ignored if <see cref="P:SilDev.Log.DebugMode"/> is disabled or the specified
-                    <see cref="T:System.Windows.Forms.Form"/> is already visible.
-                </para>
-            </summary>
-            <param name="form">
-                The form window to determine the loading time.
             </param>
         </member>
         <member name="T:SilDev.Media">
