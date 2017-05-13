@@ -59,6 +59,7 @@
     <Compile Include="SilDev\Forms\ButtonEx.cs" />
     <Compile Include="SilDev\Forms\ContextMenuStripEx.cs" />
     <Compile Include="SilDev\Forms\ControlEx.cs" />
+    <Compile Include="SilDev\Forms\FormEx.cs" />
     <Compile Include="SilDev\Forms\MessageBoxEx.cs" />
     <Compile Include="SilDev\Forms\ProgressBarEx.cs" />
     <Compile Include="SilDev\Forms\ProgressCircle.cs">
