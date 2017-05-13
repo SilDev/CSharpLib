@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-13 03:55
+// Version:  2017-05-13 06:18
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -145,7 +145,7 @@ namespace SilDev
             try
             {
                 var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrWhiteSpace(source))
+                if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
                 var s = section?.Trim();
                 if (string.IsNullOrWhiteSpace(section))
@@ -196,13 +196,13 @@ namespace SilDev
             try
             {
                 var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrWhiteSpace(source))
+                if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
                 var s = section?.Trim();
                 if (string.IsNullOrWhiteSpace(section))
                     throw new ArgumentNullException(nameof(section));
                 var k = key?.Trim();
-                if (string.IsNullOrWhiteSpace(key))
+                if (string.IsNullOrEmpty(k))
                     throw new ArgumentNullException(nameof(key));
                 var path = PathEx.Combine(source);
                 if (!File.Exists(path))
@@ -253,9 +253,15 @@ namespace SilDev
             try
             {
                 var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrWhiteSpace(source))
+                if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var d = ReadAll(fileOrContent);
+                var path = PathEx.Combine(source);
+                if (!File.Exists(path))
+                    path = TmpFileGuid;
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (d.Count > 0)
                 {
                     output = d.Keys.ToList();
@@ -302,14 +308,20 @@ namespace SilDev
             try
             {
                 var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrWhiteSpace(source))
+                if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var d = ReadAll(fileOrContent);
+                var s = section?.Trim();
+                if (string.IsNullOrEmpty(s))
+                    throw new ArgumentNullException(nameof(section));
+                var path = PathEx.Combine(source);
+                if (!File.Exists(path))
+                    path = TmpFileGuid;
+                var code = path.GetCode();
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (d.Count > 0)
                 {
-                    var s = section?.Trim();
-                    if (string.IsNullOrEmpty(s))
-                        throw new ArgumentNullException(nameof(section));
                     if (!d.ContainsKey(s))
                     {
                         var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
