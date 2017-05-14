@@ -4826,7 +4826,7 @@
             </param>
             <param name="key">
                 The name of the key to be associated with a string. If this parameter is NULL, the
-                section pointed to by the key parameter is deleted.
+                section pointed to by the section parameter is deleted.
             </param>
             <param name="value">
                 The <see cref="T:System.String"/> value to be written to the file. If this parameter is NULL,
@@ -7638,12 +7638,29 @@
                 local system processes.
             </summary>
         </member>
+        <member name="M:SilDev.ProcessEx.GetInstances(System.String)">
+            <summary>
+                Gets all active instances associated with the specified application.
+            </summary>
+            <param name="nameOrPath">
+                The filename or the full path to the application to check.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.InstancesCount(System.String)">
+            <summary>
+                Returns the number of all active instances associated with the specified
+                application.
+            </summary>
+            <param name="nameOrPath">
+                The filename or the full path to the application to check.
+            </param>
+        </member>
         <member name="M:SilDev.ProcessEx.IsRunning(System.String)">
             <summary>
                 Determines whether the specified file is matched with a running process.
             </summary>
             <param name="nameOrPath">
-                The filename without extension or the path to the file to check.
+                The filename or the full path to the application to check.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.IsSandboxed(System.Diagnostics.Process)">
@@ -7653,7 +7670,7 @@
                     environment.
                 </para>
                 <para>
-                    Hint: This function supports only Sandboxie.
+                    Hint: This function supports only the program Sandboxie.
                 </para>
             </summary>
             <param name="process">
