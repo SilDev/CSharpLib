@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-13 06:18
+// Version:  2017-05-14 07:32
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -29,7 +29,6 @@ namespace SilDev
     /// </summary>
     public static class Ini
     {
-        private const int MaxCacheSize = 8;
         private static volatile Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> _cachedFiles;
 
         private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles
@@ -37,6 +36,8 @@ namespace SilDev
             get { return _cachedFiles; }
             set { _cachedFiles = value; }
         }
+
+        private const int MaxCacheSize = 8;
 
         private static volatile string _tmpFileGuid;
 
@@ -1079,7 +1080,7 @@ namespace SilDev
         /// </param>
         /// <param name="key">
         ///     The name of the key to be associated with a string. If this parameter is NULL, the
-        ///     section pointed to by the key parameter is deleted.
+        ///     section pointed to by the section parameter is deleted.
         /// </param>
         /// <param name="value">
         ///     The <see cref="string"/> value to be written to the file. If this parameter is NULL,
