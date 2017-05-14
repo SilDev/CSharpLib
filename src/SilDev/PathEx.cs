@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-05-12 12:16
+// Version:  2017-05-15 01:27
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -110,6 +110,43 @@ namespace SilDev
                     break;
             }
             return exists;
+        }
+
+        /// <summary>
+        ///     Determines whether the specified path has a valid format.
+        /// </summary>
+        /// <param name="path">
+        ///     The specified path to check.
+        /// </param>
+        public static bool IsValidPath(string path)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new ArgumentNullException(nameof(path));
+                if (path.Length < 3)
+                    throw new ArgumentException("The path length is lower than 3 characters.");
+                if (Path.HasExtension(path) && path.Length > 260)
+                    throw new PathTooLongException("The specified path is longer than 260 characters.");
+                if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
+                    throw new ArgumentException("The path cannot contain several consecutive separators.");
+                var drive = path.Substring(0, 3);
+                if (!Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
+                    throw new DriveNotFoundException("The path does not contain any drive.");
+                if (!DriveInfo.GetDrives().Select(di => di.Name).Contains(drive))
+                    throw new DriveNotFoundException("The path does not contain a valid drive.");
+                var subPath = path.Substring(3);
+                if (subPath.Any(c => c != Path.DirectorySeparatorChar && Path.GetInvalidFileNameChars().Contains(c)))
+                    throw new ArgumentException("The path contains invalid characters.");
+                if (!Path.HasExtension(path) && path.Split(Path.DirectorySeparatorChar).Any(s => s.Length > 248))
+                    throw new PathTooLongException("The directory or file name must be less than 248 characters.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
         }
 
         /// <summary>
