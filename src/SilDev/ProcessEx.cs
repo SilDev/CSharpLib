@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-05-12 16:01
+// Version:  2017-05-14 07:30
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,30 +30,64 @@ namespace SilDev
     public static class ProcessEx
     {
         /// <summary>
-        ///     Determines whether the specified file is matched with a running process.
+        ///     Gets all active instances associated with the specified application.
         /// </summary>
         /// <param name="nameOrPath">
-        ///     The filename without extension or the path to the file to check.
+        ///     The filename or the full path to the application to check.
         /// </param>
-        public static bool IsRunning(string nameOrPath)
+        public static IEnumerable<Process> GetInstances(string nameOrPath)
         {
             try
             {
-                bool isRunning;
+                IEnumerable<Process> instances;
                 var path = nameOrPath;
                 var name = Path.GetFileNameWithoutExtension(path);
-                if (path.Contains("\\") && File.Exists(path))
-                    isRunning = Process.GetProcesses().Any(p => p.ProcessName.EqualsEx(name) && p.MainModule.FileName.EqualsEx(path));
+                if (path.ContainsEx(Path.DirectorySeparatorChar) && File.Exists(path))
+                    instances = Process.GetProcesses().Where(p => p.ProcessName.EqualsEx(name) && p.MainModule.FileName.EqualsEx(path));
                 else
-                    isRunning = Process.GetProcessesByName(name).Length > 0;
-                return isRunning;
+                    instances = Process.GetProcessesByName(name);
+                return instances;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the number of all active instances associated with the specified
+        ///     application.
+        /// </summary>
+        /// <param name="nameOrPath">
+        ///     The filename or the full path to the application to check.
+        /// </param>
+        public static int InstancesCount(string nameOrPath)
+        {
+            var count = 0;
+            try
+            {
+                foreach (var p in GetInstances(nameOrPath))
+                {
+                    count++;
+                    p?.Dispose();
+                }
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return false;
+            return count;
         }
+
+        /// <summary>
+        ///     Determines whether the specified file is matched with a running process.
+        /// </summary>
+        /// <param name="nameOrPath">
+        ///     The filename or the full path to the application to check.
+        /// </param>
+        public static bool IsRunning(string nameOrPath) =>
+            InstancesCount(nameOrPath) > 0;
 
         /// <summary>
         ///     <para>
@@ -61,7 +95,7 @@ namespace SilDev
         ///         environment.
         ///     </para>
         ///     <para>
-        ///         Hint: This function supports only Sandboxie.
+        ///         Hint: This function supports only the program Sandboxie.
         ///     </para>
         /// </summary>
         /// <param name="process">
@@ -382,7 +416,7 @@ namespace SilDev
                     WindowStyle = processWindowStyle
                 };
                 var p = Start(psi, dispose);
-                if (Log.DebugMode > 0)
+                if (Log.DebugMode > 1)
                     Log.Write($"COMMAND EXECUTED: {cmd.Substring(3)}");
                 return p;
             }
@@ -456,25 +490,26 @@ namespace SilDev
             var count = 0;
             var list = new List<string>();
             foreach (var p in processes)
-            {
-                try
+                using (p)
                 {
-                    if (!p.HasExited)
+                    try
                     {
-                        count++;
-                        p.Kill();
+                        if (!p.HasExited)
+                        {
+                            count++;
+                            p.Kill();
+                        }
+                        if (p.HasExited)
+                            continue;
                     }
-                    if (p.HasExited)
-                        continue;
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+                    var s = p.ProcessName + ".exe";
+                    if (!list.ContainsEx(s))
+                        list.Add(s);
                 }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                }
-                var s = p.ProcessName + ".exe";
-                if (!list.ContainsEx(s))
-                    list.Add(s);
-            }
             if (list.Count == 0)
                 return count > 0;
             using (var p = Send($"TASKKILL /F /IM \"{list.Join("\" && TASKKILL /F /IM \"")}\"", true, false))
