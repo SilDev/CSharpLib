@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-05-12 16:01
+// Version:  2017-05-14 08:47
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -627,7 +627,7 @@ namespace SilDev
                     p?.WaitForExit();
                 exitCode = p?.ExitCode;
             }
-            return exitCode == 0;
+            return exitCode == 0 && DirOrFileIsLink(link);
         }
 
         /// <summary>
@@ -673,7 +673,8 @@ namespace SilDev
         private static bool UnLinker(string path, bool pathIsDir, bool backup = false, bool elevated = false)
         {
             var link = PathEx.Combine(path);
-            var cmd = $"{(pathIsDir ? "RD /Q" : "DEL /F /Q")}{(!pathIsDir && link.DirOrFileIsLink() ? " /A:L" : string.Empty)} \"{link}\"";
+            var isLink = link.DirOrFileIsLink();
+            var cmd = $"{(pathIsDir ? "RD /Q" : "DEL /F /Q")}{(!pathIsDir && isLink ? " /A:L" : string.Empty)} \"{link}\"";
             if (backup && PathEx.DirOrFileExists($"{link}.SI13N7-BACKUP"))
                 cmd += $" & MOVE /Y \"{link}.SI13N7-BACKUP\" \"{link}\"";
             if (string.IsNullOrEmpty(cmd))
@@ -685,7 +686,7 @@ namespace SilDev
                     p?.WaitForExit();
                 exitCode = p?.ExitCode;
             }
-            return exitCode == 0;
+            return exitCode == 0 && isLink;
         }
 
         /// <summary>
