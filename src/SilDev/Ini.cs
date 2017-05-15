@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-14 07:32
+// Version:  2017-05-15 01:52
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -854,13 +854,24 @@ namespace SilDev
         ///     The value type.
         /// </typeparam>
         /// <param name="section">
-        ///     The name of the section to which the string will be copied.
+        ///     The name of the section to which the value will be copied.
         /// </param>
         /// <param name="key">
-        ///     The name of the key to be associated with the value.
+        ///     <para>
+        ///         The name of the key to be associated with a value.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the entire section, including all entries within the
+        ///         section, is deleted.
+        ///     </para>
         /// </param>
         /// <param name="value">
-        ///     The value to be written to the file.
+        ///     <para>
+        ///         The value to be written to the file.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the key pointed to by the key parameter is deleted.
+        ///     </para>
         /// </param>
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
@@ -1003,7 +1014,7 @@ namespace SilDev
                 if (string.IsNullOrEmpty(v))
                     throw new ArgumentNullException(nameof(value));
 
-                // To write or overwrite the value
+                // To write or overwrite the value to the cache
                 if (CachedFiles == null)
                     CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
                 if (!CachedFiles.ContainsKey(code))
@@ -1042,13 +1053,24 @@ namespace SilDev
         ///     The value type.
         /// </typeparam>
         /// <param name="section">
-        ///     The name of the section to which the string will be copied.
+        ///     The name of the section to which the value will be copied.
         /// </param>
         /// <param name="key">
-        ///     The name of the key to be associated with the value.
+        ///     <para>
+        ///         The name of the key to be associated with a value.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the entire section, including all entries within the
+        ///         section, is deleted.
+        ///     </para>
         /// </param>
         /// <param name="value">
-        ///     The value to be written to the file.
+        ///     <para>
+        ///         The value to be written to the file.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the key pointed to by the key parameter is deleted.
+        ///     </para>
         /// </param>
         /// <param name="forceOverwrite">
         ///     true to enable overwriting of a key with the same value as specified; otherwise,
@@ -1067,7 +1089,8 @@ namespace SilDev
         /// <summary>
         ///     <para>
         ///         Copies the <see cref="string"/> representation of the specified <see cref="object"/>
-        ///         into the specified section of an INI file.
+        ///         value into the specified section of an INI file. If the file does not exist, it is
+        ///         created.
         ///     </para>
         ///     <para>
         ///         The Win32-API is used for writing in this case. Please note that this function
@@ -1076,15 +1099,24 @@ namespace SilDev
         ///     </para>
         /// </summary>
         /// <param name="section">
-        ///     The name of the section to which the string will be copied.
+        ///     The name of the section to which the value will be copied.
         /// </param>
         /// <param name="key">
-        ///     The name of the key to be associated with a string. If this parameter is NULL, the
-        ///     section pointed to by the section parameter is deleted.
+        ///     <para>
+        ///         The name of the key to be associated with a value.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the entire section, including all entries within the
+        ///         section, is deleted.
+        ///     </para>
         /// </param>
         /// <param name="value">
-        ///     The <see cref="string"/> value to be written to the file. If this parameter is NULL,
-        ///     the key pointed to by the key parameter is deleted.
+        ///     <para>
+        ///         The value to be written to the file.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the key pointed to by the key parameter is deleted.
+        ///     </para>
         /// </param>
         /// <param name="file">
         ///     The full path of an INI file.
@@ -1102,10 +1134,14 @@ namespace SilDev
             try
             {
                 var path = PathEx.Combine(file ?? GetFile());
-                if (!File.Exists(path))
-                    throw new PathNotFoundException(path);
                 if (string.IsNullOrWhiteSpace(section))
                     throw new ArgumentNullException(nameof(section));
+                if (!File.Exists(path))
+                {
+                    if (string.IsNullOrWhiteSpace(key) || value == null || !PathEx.IsValidPath(path))
+                        throw new PathNotFoundException(path);
+                    File.Create(path).Close();
+                }
                 var strValue = value?.ToString();
                 if (forceOverwrite && !skipExistValue)
                     return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
