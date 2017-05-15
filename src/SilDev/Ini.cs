@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-15 01:52
+// Version:  2017-05-15 07:20
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -29,6 +29,8 @@ namespace SilDev
     /// </summary>
     public static class Ini
     {
+        private const string NonSectionGuid = "{4EC6358E-5AA1-4F79-A26B-647E2FA8F2C6}";
+
         private static volatile Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> _cachedFiles;
 
         private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles
@@ -148,8 +150,8 @@ namespace SilDev
                 var source = fileOrContent ?? GetFile();
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim();
-                if (string.IsNullOrWhiteSpace(section))
+                var s = section?.Trim() ?? NonSectionGuid;
+                if (string.IsNullOrEmpty(section))
                     throw new ArgumentNullException(nameof(section));
                 var path = PathEx.Combine(source);
                 if (!File.Exists(path))
@@ -160,7 +162,7 @@ namespace SilDev
                 var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
                     return true;
-                if (!d.ContainsKey(s))
+                if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
                 {
                     var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                     if (!string.IsNullOrEmpty(newSection))
@@ -199,8 +201,8 @@ namespace SilDev
                 var source = fileOrContent ?? GetFile();
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim();
-                if (string.IsNullOrWhiteSpace(section))
+                var s = section?.Trim() ?? NonSectionGuid;
+                if (string.IsNullOrEmpty(section))
                     throw new ArgumentNullException(nameof(section));
                 var k = key?.Trim();
                 if (string.IsNullOrEmpty(k))
@@ -214,7 +216,7 @@ namespace SilDev
                 var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
                     return true;
-                if (!d.ContainsKey(s))
+                if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
                 {
                     var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                     if (!string.IsNullOrEmpty(newSection))
@@ -266,6 +268,8 @@ namespace SilDev
                 if (d.Count > 0)
                 {
                     output = d.Keys.ToList();
+                    if (output.Contains(NonSectionGuid))
+                        output.Remove(NonSectionGuid);
                     if (sorted)
                     {
                         var comparer = new Comparison.AlphanumericComparer();
@@ -311,7 +315,7 @@ namespace SilDev
                 var source = fileOrContent ?? GetFile();
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim();
+                var s = section?.Trim() ?? NonSectionGuid;
                 if (string.IsNullOrEmpty(s))
                     throw new ArgumentNullException(nameof(section));
                 var path = PathEx.Combine(source);
@@ -323,7 +327,7 @@ namespace SilDev
                 var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (d.Count > 0)
                 {
-                    if (!d.ContainsKey(s))
+                    if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
                     {
                         var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                         if (!string.IsNullOrEmpty(newSection))
@@ -388,13 +392,20 @@ namespace SilDev
                     throw new ArgumentOutOfRangeException(nameof(code));
 
                 // Enforce INI format rules
-                source = source.FormatNewLine()
-                               .SplitNewLine()
-                               .Select(s => s.Trim())
-                               .Where(LineHasIniFormat)
-                               .Join(Environment.NewLine);
+                var lines = source.FormatNewLine().SplitNewLine();
+                for (var i = 0; i < lines.Length; i++)
+                {
+                    var line = lines[i].Trim();
+                    if (line.StartsWith("[") && !line.EndsWith("]") && line.Contains("]") && line.IndexOf(']') > 1)
+                        lines[i] = line.Substring(0, line.IndexOf(']') + 1);
+                    else
+                        lines[i] = line;
+                }
+                source = lines.Where(LineHasIniFormat).Join(Environment.NewLine);
                 if (string.IsNullOrWhiteSpace(source))
                     throw new ArgumentNullException(nameof(source));
+                if (!source.StartsWith("["))
+                    source = $"[{NonSectionGuid}]{Environment.NewLine}{source}";
                 if (!source.EndsWith(Environment.NewLine))
                     source += Environment.NewLine;
 
@@ -465,7 +476,9 @@ namespace SilDev
                 if (sorted)
                 {
                     var comparer = new Comparison.AlphanumericComparer();
-                    var sort = sections.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
+                    var sort = sections.OrderBy(d => !d.Key.Equals(NonSectionGuid))
+                                       .ThenBy(d => d.Key, comparer)
+                                       .ToDictionary(d => d.Key, d => d.Value);
                     sections = sort;
                 }
                 output = sections;
@@ -535,7 +548,7 @@ namespace SilDev
                 var k = key?.Trim();
                 if (string.IsNullOrEmpty(k))
                     throw new ArgumentNullException(nameof(key));
-                var s = section?.Trim() ?? string.Empty;
+                var s = section?.Trim() ?? NonSectionGuid;
                 var path = PathEx.Combine(source);
                 if (!File.Exists(path))
                     path = TmpFileGuid;
@@ -545,7 +558,7 @@ namespace SilDev
                 var d = !reread && CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (d.Count > 0)
                 {
-                    if (!d.ContainsKey(s))
+                    if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
                     {
                         var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                         if (!string.IsNullOrEmpty(newSection))
@@ -781,7 +794,8 @@ namespace SilDev
                 if (sorted)
                 {
                     var comparer = new Comparison.AlphanumericComparer();
-                    var sort = source.OrderBy(d => d.Key, comparer)
+                    var sort = source.OrderBy(d => !d.Key.Equals(NonSectionGuid))
+                                     .ThenBy(d => d.Key, comparer)
                                      .ToDictionary(d => d.Key, d => d.Value
                                                                      .OrderBy(p => p.Key, comparer)
                                                                      .ToDictionary(p => p.Key, p => p.Value));
@@ -792,10 +806,13 @@ namespace SilDev
                 {
                     if (string.IsNullOrWhiteSpace(dict.Key) || dict.Value.Count == 0)
                         continue;
-                    sb.Append('[');
-                    sb.Append(dict.Key.Trim());
-                    sb.Append(']');
-                    sb.AppendLine();
+                    if (!dict.Key.Equals(NonSectionGuid))
+                    {
+                        sb.Append('[');
+                        sb.Append(dict.Key.Trim());
+                        sb.Append(']');
+                        sb.AppendLine();
+                    }
                     foreach (var pair in dict.Value)
                     {
                         if (string.IsNullOrWhiteSpace(pair.Key) || pair.Value.Count == 0)
@@ -891,7 +908,7 @@ namespace SilDev
         {
             try
             {
-                var s = section?.Trim();
+                var s = section?.Trim() ?? NonSectionGuid;
                 if (string.IsNullOrEmpty(s))
                     throw new ArgumentNullException(nameof(section));
 
@@ -973,7 +990,7 @@ namespace SilDev
                 if (CachedFiles?.ContainsKey(code) == true && CachedFiles[code].Count > 0)
                 {
                     // To find the correct section
-                    if (!CachedFiles[code].ContainsKey(s))
+                    if (!s.Equals(NonSectionGuid) && !CachedFiles[code].ContainsKey(s))
                     {
                         var newSection = CachedFiles[code].Keys.FirstOrDefault(x => x.EqualsEx(s));
                         if (!string.IsNullOrEmpty(newSection))
@@ -1140,7 +1157,7 @@ namespace SilDev
                 {
                     if (string.IsNullOrWhiteSpace(key) || value == null || !PathEx.IsValidPath(path))
                         throw new PathNotFoundException(path);
-                    File.Create(path).Close();
+                    new StreamWriter(File.Open(path, FileMode.Create), Encoding.Unicode).Close();
                 }
                 var strValue = value?.ToString();
                 if (forceOverwrite && !skipExistValue)
