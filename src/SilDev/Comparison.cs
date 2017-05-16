@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-05-12 11:54
+// Version:  2017-05-16 08:41
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -267,8 +267,27 @@ namespace SilDev
             source.StartsWithEx(StringComparison.OrdinalIgnoreCase, targets);
 
         /// <summary>
-        ///     Determines whether the end of this string matches a string. A parameter
-        ///     specifies the culture, case, and sort rules used in the comparison.
+        ///     Determines whether the beginning of this sequence of bytes matches the specified
+        ///     sequence of bytes
+        /// </summary>
+        /// <param name="source">
+        ///     The first sequence of bytes to compare.
+        /// </param>
+        /// <param name="target">
+        ///     The sequence of bytes to compare with the first.
+        /// </param>
+        public static bool StartWith(this IEnumerable<byte> source, params byte[] target)
+        {
+            var ba = source?.ToArray();
+            if (ba == null || target == null || ba.Length < target.Length)
+                return false;
+            var r = !target.Where((t, i) => t != ba[i]).Any();
+            return r;
+        }
+
+        /// <summary>
+        ///     Determines whether the end of this string matches a string. A parameter specifies the
+        ///     culture, case, and sort rules used in the comparison.
         /// </summary>
         /// <param name="source">
         ///     The string to check.
@@ -294,7 +313,7 @@ namespace SilDev
 
         /// <summary>
         ///     Determines whether the end of this string matches a string. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this comparison.
+        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used forthis comparison.
         /// </summary>
         /// <param name="source">
         ///     The string to check.
@@ -304,6 +323,27 @@ namespace SilDev
         /// </param>
         public static bool EndsWithEx(this string source, params string[] targets) =>
             source.EndsWithEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
+        ///     Determines whether the end of this sequence of bytes matches the specified sequence of
+        ///     bytes.
+        /// </summary>
+        /// <param name="source">
+        ///     The first sequence of bytes to compare.
+        /// </param>
+        /// <param name="target">
+        ///     The sequence of bytes to compare with the first.
+        /// </param>
+        public static bool EndsWith(this IEnumerable<byte> source, params byte[] target)
+        {
+            var ba = source?.ToArray();
+            if (ba == null || target == null || ba.Length < target.Length)
+                return false;
+            for (var i = target.Length - 1; i >= 0; i--)
+                if (target[i] != ba[i])
+                    return false;
+            return true;
+        }
 
         /// <summary>
         ///     Determines whether this string instance is the same as a string of the specified string
@@ -341,6 +381,41 @@ namespace SilDev
         /// </param>
         public static bool EqualsEx(this string source, params string[] targets) =>
             source.EqualsEx(StringComparison.OrdinalIgnoreCase, targets);
+
+        /// <summary>
+        ///     Determines whether this sequence of bytes the same as the specified sequence of
+        ///     bytes.
+        /// </summary>
+        /// <param name="source">
+        ///     The first sequence of bytes to compare.
+        /// </param>
+        /// <param name="target">
+        ///     The sequence of bytes to compare with the first.
+        /// </param>
+        public static bool EqualsEx(this IEnumerable<byte> source, params byte[] target)
+        {
+            var ba = source?.ToArray();
+            if (ba == null && target == null)
+                return true;
+            if (ba == null || target == null || ba.Length != target.Length)
+                return false;
+            var r = !ba.Where((t, i) => t != target[i]).Any();
+            return r;
+        }
+
+        /// <summary>
+        ///     Determines whether this string instance contains only ASCII characters.
+        /// </summary>
+        /// <param name="source">
+        ///     The string to compare.
+        /// </param>
+        public static bool IsAscii(this string source)
+        {
+            if (source == null)
+                return false;
+            var r = source.All(c => c <= sbyte.MaxValue);
+            return r;
+        }
 
         /// <summary>
         ///     Provides a base class for comparison.
