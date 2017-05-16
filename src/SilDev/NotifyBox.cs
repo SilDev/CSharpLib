@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2017-05-04 13:27
+// Version:  2017-05-16 15:15
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -315,7 +315,7 @@ namespace SilDev
             try
             {
                 if (IsAlive)
-                    NotifyThread.Abort();
+                    NotifyThread?.Abort();
             }
             catch (Exception ex)
             {
@@ -328,13 +328,16 @@ namespace SilDev
             private readonly IContainer _components;
             private readonly Label _textLabel;
             private readonly BackgroundWorker _bgWorker;
-            private readonly Timer _timer;
+            private readonly Timer _timer, _timer2;
             private readonly int _duration;
+            private readonly double _opacity;
+            private bool _visible;
 
             public NotifyForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool borders, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor, bool topMost)
             {
                 _components = new Container();
-                _duration = duration;
+                _duration = ((int)duration).IsBetween(1, 999) ? 1000 : duration;
+                _opacity = opacity;
                 SuspendLayout();
                 var titleLabel = new Label
                 {
@@ -367,13 +370,21 @@ namespace SilDev
                             Size = new Size(1, 1)
                         });
                 _bgWorker = new BackgroundWorker();
-                _bgWorker.DoWork += (sender, args) => Thread.Sleep(_duration);
-                _bgWorker.RunWorkerCompleted += (sender, args) => Close();
+                if (_duration > 0)
+                {
+                    _bgWorker.DoWork += (sender, args) => Thread.Sleep(_duration - 20);
+                    _bgWorker.RunWorkerCompleted += (sender, args) => Close();
+                }
                 _timer = new Timer(_components)
                 {
-                    Interval = 256
+                    Interval = 1
                 };
-                _timer.Tick += Timer_Tick;
+                _timer.Tick += FadeInOutTimer_Tick;
+                _timer2 = new Timer(_components)
+                {
+                    Interval = byte.MaxValue
+                };
+                _timer2.Tick += ProgressDotsTimer_Tick;
                 AutoScaleDimensions = new SizeF(6f, 13f);
                 AutoScaleMode = AutoScaleMode.Font;
                 BackColor = backColor;
@@ -381,7 +392,7 @@ namespace SilDev
                 Font = new Font("Tahoma", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
                 ForeColor = textColor;
                 FormBorderStyle = FormBorderStyle.None;
-                Opacity = opacity;
+                Opacity = 0d;
                 ShowIcon = false;
                 ShowInTaskbar = false;
                 Size = new Size((titleLabel.Size.Width < _textLabel.Size.Width ? _textLabel.Size.Width : titleLabel.Size.Width) + 12, titleLabel.Size.Height + _textLabel.Size.Height + 12);
@@ -421,6 +432,7 @@ namespace SilDev
                 }
                 TopMost = topMost;
                 Shown += NotifyForm_Shown;
+                FormClosing += NotifyForm_FormClosing;
                 ResumeLayout(false);
                 PerformLayout();
             }
@@ -435,13 +447,43 @@ namespace SilDev
 
             private void NotifyForm_Shown(object sender, EventArgs e)
             {
+                _timer.Enabled = true;
                 if (_textLabel.Text.EndsWith(" . . ."))
-                    _timer.Enabled = true;
+                    _timer2.Enabled = true;
                 if (_duration > 0)
                     _bgWorker.RunWorkerAsync();
             }
 
-            private void Timer_Tick(object sender, EventArgs e)
+            private void NotifyForm_FormClosing(object sender, FormClosingEventArgs e)
+            {
+                if (!_visible)
+                    return;
+                _timer.Enabled = true;
+                e.Cancel = true;
+            }
+
+            private void FadeInOutTimer_Tick(object sender, EventArgs e)
+            {
+                var timer = sender as Timer;
+                if (timer == null)
+                    return;
+                if (!_visible && Opacity < _opacity)
+                {
+                    Opacity += .025d;
+                    return;
+                }
+                if (_visible && Opacity > 0)
+                {
+                    Opacity -= .05d;
+                    return;
+                }
+                _visible = !_visible;
+                if (!_visible)
+                    Close();
+                timer.Enabled = false;
+            }
+
+            private void ProgressDotsTimer_Tick(object sender, EventArgs e)
             {
                 var timer = sender as Timer;
                 if (timer == null)
