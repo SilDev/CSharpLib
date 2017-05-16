@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2017-05-16 09:47
+// Version:  2017-05-16 10:52
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -433,12 +433,7 @@ namespace SilDev
         /// </summary>
         public static class IrrKlangPlayer
         {
-            private static bool AssemblyFinalizer { get; set; }
-
-            /// <summary>
-            ///     Returns a string 
-            /// </summary>
-            public static string ValidAssemblyDirs => Properties.Resources.ReferenceDirs;
+            private static bool _assemblyFinalizer;
 
             /// <summary>
             ///     Plays the specified sound file.
@@ -462,7 +457,7 @@ namespace SilDev
                     if (!File.Exists(path))
                         throw new PathNotFoundException(path);
                     string curDir = null;
-                    if (!AssemblyFinalizer)
+                    if (!_assemblyFinalizer)
                     {
                         curDir = Directory.GetCurrentDirectory();
                         Directory.SetCurrentDirectory(Intern.IrrKlangInitializer.AssemblyDirectory);
@@ -473,7 +468,7 @@ namespace SilDev
                     if (curDir == null)
                         return;
                     Directory.SetCurrentDirectory(curDir);
-                    AssemblyFinalizer = true;
+                    _assemblyFinalizer = true;
                 }
                 catch (Exception ex)
                 {
