@@ -71,6 +71,29 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to %CurrentDir%\Bin
+        ///%CurrentDir%\Binaries
+        ///%ApplicationData%\References
+        ///%LocalApplicationData%\References
+        ///%CommonApplicationData%\References
+        ///%CommonProgramFiles%\References
+        ///%ProgramFiles%\References
+        ///%UserProfile%\References
+        ///%MyDocuments%\References
+        ///%MyDocuments%\Visual Studio\References
+        ///%MyDocuments%\Visual Studio 2010\References
+        ///%MyDocuments%\Visual Studio 2012\References
+        ///%MyDocuments%\Visual Studio 2013\References
+        ///%MyDocuments%\Visual Studio 2015\References
+        ///%MyDocuments%\Visual Studio 2017\Refer [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ReferenceDirs {
+            get {
+                return ResourceManager.GetString("ReferenceDirs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap SearchImage {

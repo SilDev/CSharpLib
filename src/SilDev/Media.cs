@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2016-10-18 23:33
+// Version:  2017-05-16 09:47
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -433,27 +433,82 @@ namespace SilDev
         /// </summary>
         public static class IrrKlangPlayer
         {
-#if irrKlang
-            protected static IrrKlang.ISoundEngine Engine = new IrrKlang.ISoundEngine();
-            protected static IrrKlang.ISound _player;
+            private static bool AssemblyFinalizer { get; set; }
 
+            /// <summary>
+            ///     Returns a string 
+            /// </summary>
+            public static string ValidAssemblyDirs => Properties.Resources.ReferenceDirs;
+
+            /// <summary>
+            ///     Plays the specified sound file.
+            /// </summary>
+            /// <param name="path">
+            ///     THe full path of the sound file to play.
+            /// </param>
+            /// <param name="loop">
+            ///     true to repeat the sound track; otherwise, false.
+            /// </param>
+            /// <param name="volume">
+            ///     The sound volume value, in percent.
+            /// </param>
             public static void Play(string path, bool loop = false, int volume = 100)
             {
-                if (!File.Exists(path))
-                    return;
-                if (WindowsPlayer.GetSoundVolume() != volume)
-                    WindowsPlayer.SetSoundVolume(volume);
-                Stop();
-                _player = Engine.Play2D(path, loop);
-                _player.Volume = 1F;
+                try
+                {
+                    if (!Intern.IrrKlangInitializer.AssemblyLoaded && !Intern.IrrKlangInitializer.LoadAssembly())
+                        throw new NotSupportedException("The required assembly could not be found.");
+                    var file = PathEx.Combine(path);
+                    if (!File.Exists(path))
+                        throw new PathNotFoundException(path);
+                    string curDir = null;
+                    if (!AssemblyFinalizer)
+                    {
+                        curDir = Directory.GetCurrentDirectory();
+                        Directory.SetCurrentDirectory(Intern.IrrKlangInitializer.AssemblyDirectory);
+                    }
+                    if (WindowsPlayer.GetSoundVolume() != volume)
+                        WindowsPlayer.SetSoundVolume(volume);
+                    Intern.IrrKlangEngine.Player.Play(file, loop);
+                    if (curDir == null)
+                        return;
+                    Directory.SetCurrentDirectory(curDir);
+                    AssemblyFinalizer = true;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
             }
 
+            /// <summary>
+            ///     Plays the specified sound file.
+            /// </summary>
+            /// <param name="path">
+            ///     THe full path of the sound file to play.
+            /// </param>
+            /// <param name="volume">
+            ///     The sound volume value, in percent.
+            /// </param>
             public static void Play(string path, int volume) =>
                 Play(path, false, volume);
 
-            public static void Stop() =>
-                _player?.Stop();
-#endif
+            /// <summary>
+            ///     Stops playing sounds.
+            /// </summary>
+            public static void Stop()
+            {
+                try
+                {
+                    if (!Intern.IrrKlangInitializer.AssemblyLoaded)
+                        throw new NotSupportedException();
+                    Intern.IrrKlangEngine.Player.Stop();
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+            }
         }
     }
 }
