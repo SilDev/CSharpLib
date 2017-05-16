@@ -25,472 +25,29 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:SilDev.Properties.Resources.ReferenceDirs">
+             <summary>
+               Looks up a localized string similar to %CurrentDir%\Bin
+            %CurrentDir%\Binaries
+            %ApplicationData%\References
+            %LocalApplicationData%\References
+            %CommonApplicationData%\References
+            %CommonProgramFiles%\References
+            %ProgramFiles%\References
+            %UserProfile%\References
+            %MyDocuments%\References
+            %MyDocuments%\Visual Studio\References
+            %MyDocuments%\Visual Studio 2010\References
+            %MyDocuments%\Visual Studio 2012\References
+            %MyDocuments%\Visual Studio 2013\References
+            %MyDocuments%\Visual Studio 2015\References
+            %MyDocuments%\Visual Studio 2017\Refer [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
         <member name="P:SilDev.Properties.Resources.SearchImage">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
-        </member>
-        <member name="T:SilDev.Comparison">
-            <summary>
-                Provides static methods and base classes used for the comparison of two or more objects.
-            </summary>
-        </member>
-        <member name="M:SilDev.Comparison.IndexOf``1(``0[],``0[])">
-            <summary>
-                Searches for the specified one-dimensional array and returns the index of its first
-                occurrence in another one-dimensional array.
-            </summary>
-            <typeparam name="T">
-                The type of the elements of the array.
-            </typeparam>
-            <param name="source">
-                The one-dimensional array to search.
-            </param>
-            <param name="target">
-                The one-dimensional array to locate.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-            </exception>
-            <exception cref="T:System.OverflowException">
-            </exception>
-        </member>
-        <member name="M:SilDev.Comparison.IsBetween``1(``0,``0,``0)">
-            <summary>
-                Determines whether the value of this object instance is between two specified values.
-            </summary>
-            <typeparam name="T">
-                The type of the object.
-            </typeparam>
-            <param name="item">
-                The object value to compare.
-            </param>
-            <param name="start">
-                The start index value.
-            </param>
-            <param name="end">
-                The end index value.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx``1(System.Collections.Generic.IEnumerable{``0},``0[][])">
-            <summary>
-                Determines whether a specified sequence of elements occurs within this sequence of
-                elements.
-            </summary>
-            <typeparam name="T">
-                The type of the elements of the array.
-            </typeparam>
-            <param name="source">
-                The sequence of elements to browse.
-            </param>
-            <param name="targets">
-                The sequence of elements to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String[])">
-            <summary>
-                Determines whether a specified string occurs within this sequence of strings. A
-                parameter specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="source">
-                The sequence to browse.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="targets">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.String[])">
-            <summary>
-                Determines whether a specified string occurs within this sequence of strings. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="source">
-                The sequence to browse.
-            </param>
-            <param name="targets">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether a specified substring occurs within this string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="source">
-                The string to browse.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="targets">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.String[])">
-            <summary>
-                Determines whether a specified substring occurs within this string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="source">
-                The string to browse.
-            </param>
-            <param name="targets">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.Char[])">
-            <summary>
-                Determines whether a specified characters occurs within this string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="source">
-                The string to browse.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="targets">
-                The sequence of characters to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.Char[])">
-            <summary>
-                Determines whether a specified characters occurs within this string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="source">
-                The string to browse.
-            </param>
-            <param name="targets">
-                The sequence of characters to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether the beginning of this string matches a string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="source">
-                The string to check.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="targets">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.String[])">
-            <summary>
-                Determines whether the beginning of this string matches a string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="source">
-                The string to check.
-            </param>
-            <param name="targets">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether the end of this string matches a string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="source">
-                The string to check.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="targets">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String[])">
-            <summary>
-                Determines whether the end of this string matches a string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this comparison.
-            </summary>
-            <param name="source">
-                The string to check.
-            </param>
-            <param name="targets">
-                The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.StringComparison,System.String[])">
-            <summary>
-                Determines whether this string instance is the same as a string of the specified string
-                array. A parameter specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="source">
-                The first string to compare.
-            </param>
-            <param name="targets">
-                The sequence of strings to compare with the first.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.String[])">
-            <summary>
-                Determines whether this string instance is the same as a string of the specified string
-                array. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="source">
-                The first string to compare.
-            </param>
-            <param name="targets">
-                The sequence of strings to compare with the first.
-            </param>
-        </member>
-        <member name="T:SilDev.Comparison.AlphanumericComparer">
-            <summary>
-                Provides a base class for comparison.
-            </summary>
-        </member>
-        <member name="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)">
-            <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/> class. A
-                parameter specifies whether the order is descended.
-            </summary>
-            <param name="descendent">
-                true to enable the descending order; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.AlphanumericComparer.Compare(System.Object,System.Object)">
-            <summary>
-                Compare two specified objects and returns an integer that indicates their relative
-                position in the sort order.
-            </summary>
-            <param name="a">
-                The first object to compare.
-            </param>
-            <param name="b">
-                The second object to compare.
-            </param>
-        </member>
-        <member name="T:SilDev.EnvironmentEx">
-            <summary>
-                Provides static methods based on the <see cref="T:System.Environment"/> class to provide informations
-                about the current environment.
-            </summary>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Boolean,System.Int32,System.Boolean)">
-            <summary>
-                Provides filtering and sorting options, and returns a string <see cref="T:System.Collections.Generic.List`1"/>
-                containing the command-line arguments for the current process.
-            </summary>
-            <param name="sort">
-                true to sort the arguments ascended with the rules of
-                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
-                otherwise, false.
-            </param>
-            <param name="skip">
-                The number of arguments to skip before returning the remaining arguments.
-            </param>
-            <param name="quotes">
-                true to store the arguments in quotation marks which containing spaces; otherwise,
-                false.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Boolean,System.Boolean)">
-            <summary>
-                Provides filtering and sorting options, and returns a string <see cref="T:System.Collections.Generic.List`1"/>
-                containing the command-line arguments for the current process.
-            </summary>
-            <param name="sort">
-                true to sort the arguments ascended with the rules of
-                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
-                otherwise, false.
-            </param>
-            <param name="quotes">
-                true to store the arguments in quotation marks which containing spaces; otherwise,
-                false.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Int32)">
-            <summary>
-                Provides filtering and sorting options, and returns a string <see cref="T:System.Collections.Generic.List`1"/>
-                containing the command-line arguments for the current process.
-            </summary>
-            <param name="skip">
-                The number of arguments to skip before returning the remaining arguments.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.CommandLine(System.Boolean,System.Int32,System.Boolean)">
-            <summary>
-                Provides filtering and sorting options, and returns a string containing the
-                command-line arguments for the current process.
-            </summary>
-            <param name="sort">
-                true to sort the arguments ascended with the rules of
-                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
-                otherwise, false.
-            </param>
-            <param name="skip">
-                The number of arguments to skip before returning the remaining arguments.
-            </param>
-            <param name="quotes">
-                true to store the arguments in quotation marks which containing spaces; otherwise,
-                false.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.CommandLine(System.Boolean,System.Boolean)">
-            <summary>
-                Provides filtering and sorting options, and returns a string containing the
-                command-line arguments for the current process.
-            </summary>
-            <param name="sort">
-                true to sort the arguments ascended with the rules of
-                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
-                otherwise, false.
-            </param>
-            <param name="quotes">
-                true to store the arguments in quotation marks which containing spaces; otherwise,
-                false.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.CommandLine(System.Int32)">
-            <summary>
-                Provides filtering and sorting options, and returns a string containing the
-                command-line arguments for the current process.
-            </summary>
-            <param name="skip">
-                The number of arguments to skip before returning the remaining arguments.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)">
-            <summary>
-                <para>
-                    Retrieves the value of an environment variable from the current process.
-                </para>
-                <para>
-                    <c>
-                        Hint:
-                    </c>
-                    Allows <see cref="T:System.Environment.SpecialFolder"/> names inlcuding a
-                    keyword "CurDir" to get the current code base location based
-                    on <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
-                </para>
-            </summary>
-            <param name="variable">
-                The name of the environment variable.
-            </param>
-            <param name="lower">
-                true to convert the result to lowercase; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariablePath(System.String,System.Boolean)">
-            <summary>
-                Converts the specified path to an existing environment variable, if possible.
-            </summary>
-            <param name="path">
-                The path to convert.
-            </param>
-            <param name="curDir">
-                true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
-                otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariablePathFull(System.String,System.Boolean)">
-            <summary>
-                Returns a new string in which all occurrences in this instance are replaced
-                with a valid environment variable.
-            </summary>
-            <param name="path">
-                The path to convert.
-            </param>
-            <param name="curDir">
-                true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
-                otherwise, false.
-            </param>
-        </member>
-        <member name="P:SilDev.EnvironmentEx.SystemRestoringIsEnabled">
-            <summary>
-                Determines whether the system restoring is enabled.
-            </summary>
-        </member>
-        <member name="T:SilDev.EnvironmentEx.EventType">
-            <summary>
-                The type of event. For more information, see <see cref="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)"/>.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.BeginNestedSystemChange">
-            <summary>
-                A system change has begun. A subsequent nested call does not create a new restore
-                point.
-                <para>
-                    Subsequent calls must use <see cref="F:SilDev.EnvironmentEx.EventType.EndNestedSystemChange"/>, not
-                    <see cref="F:SilDev.EnvironmentEx.EventType.EndSystemChange"/>.
-                </para>
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.BeginSystemChange">
-            <summary>
-                A system change has begun.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.EndNestedSystemChange">
-            <summary>
-                A system change has ended.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.EndSystemChange">
-            <summary>
-                A system change has ended.
-            </summary>
-        </member>
-        <member name="T:SilDev.EnvironmentEx.RestorePointType">
-            <summary>
-                The type of restore point. For more information, see <see cref="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)"/>.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationInstall">
-            <summary>
-                An application has been installed.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationUninstall">
-            <summary>
-                An application has been uninstalled.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.CancelledOperation">
-            <summary>
-                An application needs to delete the restore point it created. For example, an
-                application would use this flag when a user cancels an installation.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.DeviceDriverInstall">
-            <summary>
-                A device driver has been installed.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.ModifySettings">
-            <summary>
-                An application has had features added or removed.
-            </summary>
-        </member>
-        <member name="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)">
-            <summary>
-                Creates a restore point on the local system.
-            </summary>
-            <param name="description">
-                The description to be displayed so the user can easily identify a restore point.
-            </param>
-            <param name="eventType">
-                The type of event.
-            </param>
-            <param name="restorePointType">
-                The type of restore point.
-            </param>
         </member>
         <member name="T:SilDev.Forms.ButtonEx">
             <summary>
@@ -737,6 +294,78 @@
             </param>
             <param name="settings">
                 The settings to be applied.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.LinkLabelEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.LinkLabel"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.Uri)">
+            <summary>
+                Creates a link for the specified text and associates it with the specified link.
+            </summary>
+            <param name="linkLabel">
+                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
+            </param>
+            <param name="text">
+                The text to link.
+            </param>
+            <param name="uri">
+                The link to associate.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.String)">
+            <summary>
+                Creates a link for the specified text and associates it with the specified link.
+            </summary>
+            <param name="linkLabel">
+                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
+            </param>
+            <param name="text">
+                The text to link.
+            </param>
+            <param name="uri">
+                The link to associate.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.ListViewEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.ListView"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.ItemFromPoint(System.Windows.Forms.ListView)">
+            <summary>
+                Retrives the <see cref="T:System.Windows.Forms.ListViewItem"/> at the current cursor's position.
+            </summary>
+            <param name="listView">
+                The <see cref="T:System.Windows.Forms.ListView"/> control to check.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.ListViewEx.AlphanumericComparer">
+            <summary>
+                Provides a base class for comparison.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.#ctor(System.Boolean)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.Forms.ListViewEx.AlphanumericComparer"/> class. A
+                parameter specifies whether the order is descended.
+            </summary>
+            <param name="descendent">
+                true to enable the descending order; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.Compare(System.Object,System.Object)">
+            <summary>
+                Compare two specified objects and returns an integer that indicates their
+                relative position in the sort order.
+            </summary>
+            <param name="a">
+                The first object to compare.
+            </param>
+            <param name="b">
+                The second object to compare.
             </param>
         </member>
         <member name="T:SilDev.Forms.MessageBoxEx">
@@ -1400,78 +1029,6 @@
                 An implementation of <see cref="T:System.Windows.Forms.IWin32Window"/> that will own modal dialog boxes.
             </param>
         </member>
-        <member name="T:SilDev.Forms.LinkLabelEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.LinkLabel"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.Uri)">
-            <summary>
-                Creates a link for the specified text and associates it with the specified link.
-            </summary>
-            <param name="linkLabel">
-                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
-            </param>
-            <param name="text">
-                The text to link.
-            </param>
-            <param name="uri">
-                The link to associate.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.String)">
-            <summary>
-                Creates a link for the specified text and associates it with the specified link.
-            </summary>
-            <param name="linkLabel">
-                The <see cref="T:System.Windows.Forms.LinkLabel"/> control to change.
-            </param>
-            <param name="text">
-                The text to link.
-            </param>
-            <param name="uri">
-                The link to associate.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ListViewEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.ListView"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ListViewEx.ItemFromPoint(System.Windows.Forms.ListView)">
-            <summary>
-                Retrives the <see cref="T:System.Windows.Forms.ListViewItem"/> at the current cursor's position.
-            </summary>
-            <param name="listView">
-                The <see cref="T:System.Windows.Forms.ListView"/> control to check.
-            </param>
-        </member>
-        <member name="T:SilDev.Forms.ListViewEx.AlphanumericComparer">
-            <summary>
-                Provides a base class for comparison.
-            </summary>
-        </member>
-        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.#ctor(System.Boolean)">
-            <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Forms.ListViewEx.AlphanumericComparer"/> class. A
-                parameter specifies whether the order is descended.
-            </summary>
-            <param name="descendent">
-                true to enable the descending order; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.Compare(System.Object,System.Object)">
-            <summary>
-                Compare two specified objects and returns an integer that indicates their
-                relative position in the sort order.
-            </summary>
-            <param name="a">
-                The first object to compare.
-            </param>
-            <param name="b">
-                The second object to compare.
-            </param>
-        </member>
         <member name="T:SilDev.Forms.TextBoxEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.TextBox"/> class.
@@ -1488,974 +1045,344 @@
                 The search symbol color, <see cref="T:System.Windows.Forms.TextBox"/>.ForeColor is used by default.
             </param>
         </member>
-        <member name="T:SilDev.Json">
-            <summary>
-                Provides basic functionality for the JSON format.
-            </summary>
-        </member>
-        <member name="M:SilDev.Json.Create(System.String,System.Object)">
-            <summary>
-                Creates a new JSON file with the specified object data.
-            </summary>
-            <param name="path">
-                The full path of the file to read (environment variables are accepted).
-            </param>
-            <param name="obj">
-                The object to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Json.ReadAll(System.String)">
-            <summary>
-                Retrieves the full content of the specified JSON file.
-            </summary>
-            <param name="path">
-                The full path of the file to read (environment variables are accepted).
-            </param>
-        </member>
-        <member name="M:SilDev.Json.Read(System.String,System.String[])">
-            <summary>
-                Retrieves a value from the specified key in a JSON file.
-            </summary>
-            <param name="path">
-                The full path of the file to read (environment variables are accepted).
-            </param>
-            <param name="keys">
-                An array of keys to navigate to the exact position of the value.
-            </param>
-        </member>
-        <member name="P:SilDev.MemoryPinner.Pointer">
-            <summary>
-                Returns the pointer to the pinned object.
-            </summary>
-        </member>
-        <member name="M:SilDev.MemoryPinner.#ctor(System.Object)">
-            <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.MemoryPinner"/> class with
-                the specified object to pin.
-            </summary>
-            <param name="value">
-                The object to pin.
-            </param>
-        </member>
-        <member name="M:SilDev.MemoryPinner.Dispose">
-            <summary>
-                Releases all resources used by this <see cref="T:SilDev.MemoryPinner"/>.
-            </summary>
-        </member>
-        <member name="M:SilDev.ProcessMemory.#ctor(System.IntPtr)">
-            <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.ProcessMemory"/> class with
-                the specified window handle.
-            </summary>
-            <param name="hWnd">
-                A handle to the window.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessMemory.GetImageFileName">
-            <summary>
-                Gets the file name of the process image.
-            </summary>
-        </member>
-        <member name="M:SilDev.ProcessMemory.Allocate(System.Object)">
-            <summary>
-                Allocates a chunck of memory in the process.
-            </summary>
-            <param name="value">
-                The structure to be allocated.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessMemory.Read(System.Object,System.IntPtr)">
-            <summary>
-                Reads data from an area of memory in a specified process.
-            </summary>
-            <param name="value">
-                The structure to be allocated.
-            </param>
-            <param name="address">
-                A pointer to the base address in the specified process from which to read.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessMemory.ReadString(System.Int32,System.IntPtr)">
-            <summary>
-                Reads a string from an area of memory in a specified process.
-            </summary>
-            <param name="size">
-                The number of bytes to be read from the specified process.
-            </param>
-            <param name="address">
-                A pointer to the base address in the specified process from which to read.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessMemory.Write(System.Object,System.Int32,System.IntPtr)">
-            <summary>
-                Writes data to an area of memory in a specified process.
-            </summary>
-            <param name="value">
-                The structure to be allocated.
-            </param>
-            <param name="size">
-                The number of bytes to be written to the specified process.
-            </param>
-            <param name="buffer">
-                A pointer to the buffer that contains data to be written in the address
-                space of the specified process.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessMemory.Dispose">
-            <summary>
-                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
-            </summary>
-        </member>
-        <member name="T:SilDev.MemoryException">
-            <summary>
-                The exception that is thrown when an attempt to access some data in memory.
-            </summary>
-        </member>
-        <member name="M:SilDev.MemoryException.#ctor">
-            <summary>
-                Create the exception.
-            </summary>
-        </member>
-        <member name="M:SilDev.MemoryException.#ctor(System.String)">
-            <summary>
-                Create the exception with a specified error message.
-            </summary>
-            <param name="message">
-                Exception message.
-            </param>
-        </member>
-        <member name="P:SilDev.MemoryException.Message">
-            <summary>
-                Gets the error message.
-            </summary>
-        </member>
-        <member name="T:SilDev.NotifyBox">
-            <summary>
-                Represents a notification window, simliar with a system tray notification, which presents a
-                notification to the user.
-            </summary>
-        </member>
-        <member name="T:SilDev.NotifyBox.NotifyBoxSound">
-            <summary>
-                Provides enumerated constants used to retrieves the play sound of the notify box.
-            </summary>
-        </member>
-        <member name="T:SilDev.NotifyBox.NotifyBoxStartPosition">
-            <summary>
-                Provides enumerated constants used to retrieves the start position of the notify box.
-            </summary>
-        </member>
-        <member name="M:SilDev.NotifyBox.#ctor">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.NotifyBox"/> class.
-            </summary>
-        </member>
-        <member name="P:SilDev.NotifyBox.Opacity">
-            <summary>
-                Gets or sets the opacity level for the notify box.
-            </summary>
-        </member>
-        <member name="P:SilDev.NotifyBox.BackColor">
-            <summary>
-                Gets or sets the background color for the notify box.
-            </summary>
-        </member>
-        <member name="P:SilDev.NotifyBox.BorderColor">
-            <summary>
-                Gets or sets the border color for the notify box.
-            </summary>
-        </member>
-        <member name="P:SilDev.NotifyBox.CaptionColor">
-            <summary>
-                Gets or sets the caption color for the notify box.
-            </summary>
-        </member>
-        <member name="P:SilDev.NotifyBox.TextColor">
-            <summary>
-                Gets or sets the text color for the notify box.
-            </summary>
-        </member>
-        <member name="P:SilDev.NotifyBox.TopMost">
-            <summary>
-                Specifies that the notify box is placed above all non-topmost windows.
-            </summary>
-        </member>
-        <member name="P:SilDev.NotifyBox.IsAlive">
-            <summary>
-                Gets a value indicating the execution status of the current notify box.
-            </summary>
-        </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, sound, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, sound, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, sound, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, sound, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBox.Close">
-            <summary>
-                Closes the current notify box.
-            </summary>
-        </member>
-        <member name="M:SilDev.NotifyBox.Abort">
-            <summary>
-                Terminates the current notify box.
-            </summary>
-        </member>
-        <member name="T:SilDev.NotifyBoxEx">
-            <summary>
-                Displays a notification window, simliar with a system tray notification, which presents a
-                notification to the user.
-            </summary>
-        </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, sound, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, sound, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, position, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="position">
-                The window position for the notify box.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, sound, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, sound, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="sound">
-                The play sound for the notify box.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,System.UInt16,System.Boolean)">
-            <summary>
-                Displays a notify box with the specified text, caption, duration, and borders.
-            </summary>
-            <param name="text">
-                The notification text to display in the notify box.
-            </param>
-            <param name="caption">
-                The caption text to display in the notify box.
-            </param>
-            <param name="duration">
-                The duration of the time, in milliseconds, which the notify box remains active.
-            </param>
-            <param name="borders">
-                true to visible the window borders; otherwise, false.
-            </param>
-        </member>
         <member name="T:SilDev.QuickWmi.Win32_OperatingSystem">
             <summary>
                 ***This is an undocumented class and can be changed or removed in the future
                 without futher notice.
             </summary>
         </member>
-        <member name="T:SilDev.Reorganize">
+        <member name="T:SilDev.Compaction">
             <summary>
-                Provides static methods for converting or reorganizing of data.
+                Provides static methods for compressing and decompressing of data.
             </summary>
         </member>
-        <member name="T:SilDev.Reorganize.NewLineFormats">
+        <member name="M:SilDev.Compaction.TextToZip(System.String)">
             <summary>
-                Provides enumerated values of new line formats.
+                Compresses the specifed <see cref="T:System.String"/> value to zip.
             </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.NewLineFormats.WindowsDefault">
-            <summary>
-                An aggregated <see cref="T:System.Enum"/> value of <see cref="F:SilDev.Reorganize.NewLineFormats.CarriageReturn"/>
-                and <see cref="F:SilDev.Reorganize.NewLineFormats.LineFeed"/>, which is not convertable to a single
-                <see cref="T:System.Char"/> value.
-            </summary>
-        </member>
-        <member name="T:SilDev.Reorganize.SizeUnits">
-            <summary>
-                Provides units of digital information.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.Byte">
-            <summary>
-                Stands for byte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.KB">
-            <summary>
-                Stands for kilobyte or kibibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.MB">
-            <summary>
-                Stands for megabyte or mebibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.GB">
-            <summary>
-                Stands for gigabyte or gibibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.TB">
-            <summary>
-                Stands for terabyte or tebibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.PB">
-            <summary>
-                Stands for petabyte or pebibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.EB">
-            <summary>
-                Stands for exabyte or exbibyte.
-            </summary>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-                Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
-            </summary>
-            <param name="value">
-                The value to be converted.
-            </param>
-            <param name="unit">
-                The new unit.
-            </param>
-            <param name="binary">
-                true for the binary numeral system; otherwise, false for the decimal numeral system.
-            </param>
-            <param name="suffix">
-                true to show the size unit suffix; otherwise, false.
-            </param>
-            <param name="trim">
-                true to remove all zeros after the comma; otherwise, false.
+            <param name="text">
+                The string to compress.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.Compaction.TextFromZip(System.Byte[])">
             <summary>
-                Converts this numeric value into a string that represents the number expressed as a size
-                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-                on the size.
-            </summary>
-            <param name="value">
-                The value to be converted.
-            </param>
-            <param name="binary">
-                true for the binary numeral system; otherwise, false for the decimal numeral system.
-            </param>
-            <param name="suffix">
-                true to show the size unit suffix; otherwise, false.
-            </param>
-            <param name="trim">
-                true to remove all zeros after the comma; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatNewLine(System.String,SilDev.Reorganize.NewLineFormats)">
-            <summary>
-                Converts the current <see cref="T:SilDev.Reorganize.NewLineFormats"/> to another format.
-            </summary>
-            <param name="str">
-                The text to change.
-            </param>
-            <param name="newLineFormat">
-                The new format to be applied.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToLogStringArray(System.String)">
-            <summary>
-                Creates a sequence of strings based on natural (base e) logarithm of a count
-                of all the characters in the specified string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Reverse(System.String)">
-            <summary>
-                Reverses the sequence of all characters in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
-            <summary>
-                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
-                <see cref="T:System.String"/>, using the specified separator between each number.
-            </summary>
-            <param name="values">
-                An array that contains the elements to concatenate.
-            </param>
-            <param name="separator">
-                The string to use as a separator.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Join(System.Collections.Generic.IEnumerable{System.String},System.Char)">
-            <summary>
-                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
-                <see cref="T:System.String"/>, using the specified separator between each number.
-            </summary>
-            <param name="values">
-                An array that contains the elements to concatenate.
-            </param>
-            <param name="separator">
-                The character to use as a separator.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Sort(System.String[])">
-            <summary>
-                Sorts the elements in an entire string array using the <see cref="T:System.IComparable`1"/> generic
-                interface implementation of each element of the string array.
-            </summary>
-            <param name="strs">
-                The sequence of strings to sort.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Split(System.String,System.String,System.StringSplitOptions)">
-            <summary>
-                Splits a string into substrings based on the strings in an array. You can specify whether
-                the substrings inlcude empty array elements.
-            </summary>
-            <param name="str">
-                The string to split.
-            </param>
-            <param name="separator">
-                The string to use as a separator.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.SplitNewLine(System.String)">
-            <summary>
-                Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
-            </summary>
-            <param name="str">
-                The string to split.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.LowerText(System.String,System.String[])">
-            <summary>
-                Converts the specified strings in a string to lowercase.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="strs">
-                The sequence of strings to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.UpperText(System.String,System.String[])">
-            <summary>
-                Converts the specified strings in a string to uppercase.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="strs">
-                The sequence of strings to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.RemoveChar(System.Char[],System.Char[])">
-            <summary>
-                Removes the specified characters in a char array.
-            </summary>
-            <param name="array">
-                The char array to change.
-            </param>
-            <param name="chrs">
-                The sequence of characters to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.RemoveChar(System.String,System.Char[])">
-            <summary>
-                Removes the specified characters in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="chrs">
-                The sequence of characters to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.RemoveText(System.String,System.String[])">
-            <summary>
-                Removes the specified strings in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="strs">
-                The sequence of strings to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToBinaryString(System.String,System.Boolean)">
-            <summary>
-                Converts the specified string to base-2 binary sequence.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-            <param name="separator">
-                true to add a single space character as a separator between every single byte;
-                otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromBinaryString(System.String)">
-            <summary>
-                Converts the specified base-2 binary sequence back to string.
-            </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToHexString(System.Byte[],System.Nullable{System.Char},System.Boolean)">
-            <summary>
-                Converts the specified sequence of bytes into a hexadecimal sequence.
+                Decompresses a compressed sequence of bytes back to a <see cref="T:System.String"/>
+                value.
             </summary>
             <param name="bytes">
-                The sequence of bytes to convert.
-            </param>
-            <param name="separator">
-                A single space character used as a separator.
-            </param>
-            <param name="upper">
-                true to convert the result to uppercase; otherwise, false.
+                The sequence of bytes to decompress.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToHexString(System.Drawing.Image,System.Nullable{System.Char},System.Boolean)">
+        <member name="M:SilDev.Compaction.Unzip(System.String,System.String,System.Boolean)">
             <summary>
-                Converts the specified image to hexadecimal sequence.
+                Extracts all the files in the specified zip archive to the specified directory on
+                the file system.
             </summary>
-            <param name="image">
-                The image to convert.
+            <param name="srcPath">
+                The path of the zip archive to extract (environment variables are accepted).
             </param>
-            <param name="separator">
-                A single space character used as a separator.
+            <param name="destDir">
+                The path to the directory to place the extracted files in (environment variables
+                are accepted).
             </param>
-            <param name="upper">
-                true to convert the result to uppercase; otherwise, false.
+            <param name="delSrcPath">
+                true to delete the source archive after extracting; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToHexString(System.String,System.Nullable{System.Char},System.Boolean)">
+        <member name="T:SilDev.Compaction.Zip7Helper">
             <summary>
-                Converts the specified string to hexadecimal sequence.
+                ***This is an undocumented class and can be changed or removed in the future
+                without futher notice.
             </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-            <param name="separator">
-                A single space character used as a separator.
-            </param>
-            <param name="upper">
-                true to convert the result to uppercase; otherwise, false.
-            </param>
         </member>
-        <member name="M:SilDev.Reorganize.FromHexStringToByteArray(System.String)">
+        <member name="T:SilDev.Comparison">
             <summary>
-                Converts the specified hexadecimal sequence back into a sequence of bytes.
+                Provides static methods and base classes used for the comparison of two or more objects.
             </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
         </member>
-        <member name="M:SilDev.Reorganize.FromHexStringToImage(System.String)">
+        <member name="M:SilDev.Comparison.IndexOf``1(``0[],``0[])">
             <summary>
-                Converts the specified hexadecimal sequence back to <see cref="T:System.Drawing.Image"/>.
+                Searches for the specified one-dimensional array and returns the index of its first
+                occurrence in another one-dimensional array.
             </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromHexStringToIcon(System.String)">
-            <summary>
-                Converts the specified hexadecimal sequence back to <see cref="T:System.Drawing.Icon"/>.
-            </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromHexString(System.String)">
-            <summary>
-                Converts the specified hexadecimal sequence back to string.
-            </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToRectangle(System.String)">
-            <summary>
-                Converts the specified string, which stores a set of four integers that represent the
-                location and size of a rectangle, to <see cref="T:System.Drawing.Rectangle"/>.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToPoint(System.String)">
-            <summary>
-                Converts the specified string, which stores an ordered pair of integer x- and y-coordinates,
-                to <see cref="T:System.Drawing.Point"/>.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToSize(System.String)">
-            <summary>
-                Converts the specified string, which stores an ordered pair of integers, to <see cref="T:System.Drawing.Size"/>.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToBoolean(System.String)">
-            <summary>
-                Converts the specified string to an equivalent Boolean value, which returns always false
-                for unsupported string values.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToByteArray(System.String)">
-            <summary>
-                Converts all the characters in the specified string into a sequence of bytes.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToByteArray(System.Drawing.Image,System.Drawing.Imaging.ImageFormat)">
-            <summary>
-                Converts the specified image into a sequence of bytes.
-            </summary>
-            <param name="image">
-                The image to convert.
-            </param>
-            <param name="imageFormat">
-                An <see cref="T:System.Drawing.Imaging.ImageFormat"/> that specifies the format of the saved image.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToByteArray(System.Drawing.Icon)">
-            <summary>
-                Converts the specified icon into a sequence of bytes.
-            </summary>
-            <param name="icon">
-                The icon to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromByteArrayToString(System.Byte[])">
-            <summary>
-                Converts the specified sequence of bytes into a string.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromByteArrayToImage(System.Byte[])">
-            <summary>
-                Converts the specified sequence of bytes to <see cref="T:System.Drawing.Image"/>.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromByteArrayToIcon(System.Byte[])">
-            <summary>
-                Converts the specified sequence of bytes to <see cref="T:System.Drawing.Icon"/>.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Replace(System.Byte[],System.Byte[],System.Byte[])">
-            <summary>
-                Returns a new sequence of bytes in which all occurrences of a specified sequence of bytes
-                in this instance are replaced with another specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to change.
-            </param>
-            <param name="oldValue">
-                The sequence of bytes to be replaced.
-            </param>
-            <param name="newValue">
-                The sequence of bytes to replace all occurrences of oldValue.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Increment(System.IntPtr,System.IntPtr)">
-            <summary>
-                Increments the length of a platform-specific type number with the specified value.
-            </summary>
-            <param name="ptr">
-                The platform-specific type to change.
-            </param>
-            <param name="value">
-                The number to be incremented.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
-            <summary>
-                Projects each element of a sequence into a new form.
-            </summary>
-            <typeparam name="TSource">
-                The type of the elements of source.
+            <typeparam name="T">
+                The type of the elements of the array.
             </typeparam>
             <param name="source">
-                A sequence of values to invoke a transform function on.
+                The one-dimensional array to search.
             </param>
-            <param name="selector">
-                A transform function to apply to each element.
+            <param name="target">
+                The one-dimensional array to locate.
             </param>
             <exception cref="T:System.ArgumentNullException">
             </exception>
+            <exception cref="T:System.OverflowException">
+            </exception>
         </member>
-        <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
+        <member name="M:SilDev.Comparison.IsBetween``1(``0,``0,``0)">
             <summary>
-                Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+                Determines whether the value of this object instance is between two specified values.
             </summary>
             <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
+                The type of the object.
             </typeparam>
-            <param name="value">
-                The value to convert.
+            <param name="item">
+                The object value to compare.
             </param>
-            <param name="defValue">
-                The default value.
+            <param name="start">
+                The start index value.
+            </param>
+            <param name="end">
+                The end index value.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.TryParse``1(System.Object,System.Object@,``0)">
+        <member name="M:SilDev.Comparison.ContainsEx``1(System.Collections.Generic.IEnumerable{``0},``0[][])">
             <summary>
-                Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+                Determines whether a specified sequence of elements occurs within this sequence of
+                elements.
             </summary>
             <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
+                The type of the elements of the array.
             </typeparam>
-            <param name="value">
-                The value to convert.
+            <param name="source">
+                The sequence of elements to browse.
             </param>
-            <param name="result">
-                The result value.
+            <param name="targets">
+                The sequence of elements to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String[])">
+            <summary>
+                Determines whether a specified string occurs within this sequence of strings. A
+                parameter specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The sequence to browse.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.String[])">
+            <summary>
+                Determines whether a specified string occurs within this sequence of strings. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The sequence to browse.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether a specified substring occurs within this string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.String[])">
+            <summary>
+                Determines whether a specified substring occurs within this string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.Char[])">
+            <summary>
+                Determines whether a specified characters occurs within this string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of characters to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.Char[])">
+            <summary>
+                Determines whether a specified characters occurs within this string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="targets">
+                The sequence of characters to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether the beginning of this string matches a string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.String[])">
+            <summary>
+                Determines whether the beginning of this string matches a string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.StartWith(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
+            <summary>
+                Determines whether the beginning of this sequence of bytes matches the specified
+                sequence of bytes
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether the end of this string matches a string. A parameter specifies the
+                culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String[])">
+            <summary>
+                Determines whether the end of this string matches a string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used forthis comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare seek.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWith(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
+            <summary>
+                Determines whether the end of this sequence of bytes matches the specified sequence of
+                bytes.
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether this string instance is the same as a string of the specified string
+                array. A parameter specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The first string to compare.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.String[])">
+            <summary>
+                Determines whether this string instance is the same as a string of the specified string
+                array. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The first string to compare.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EqualsEx(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
+            <summary>
+                Determines whether this sequence of bytes the same as the specified sequence of
+                bytes.
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.IsAscii(System.String)">
+            <summary>
+                Determines whether this string instance contains only ASCII characters.
+            </summary>
+            <param name="source">
+                The string to compare.
+            </param>
+        </member>
+        <member name="T:SilDev.Comparison.AlphanumericComparer">
+            <summary>
+                Provides a base class for comparison.
+            </summary>
+        </member>
+        <member name="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/> class. A
+                parameter specifies whether the order is descended.
+            </summary>
+            <param name="descendent">
+                true to enable the descending order; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.AlphanumericComparer.Compare(System.Object,System.Object)">
+            <summary>
+                Compare two specified objects and returns an integer that indicates their relative
+                position in the sort order.
+            </summary>
+            <param name="a">
+                The first object to compare.
+            </param>
+            <param name="b">
+                The second object to compare.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Base64">
@@ -4477,6 +3404,222 @@
                 the current arguments, which are already in use.
             </param>
         </member>
+        <member name="T:SilDev.EnvironmentEx">
+            <summary>
+                Provides static methods based on the <see cref="T:System.Environment"/> class to provide informations
+                about the current environment.
+            </summary>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Boolean,System.Int32,System.Boolean)">
+            <summary>
+                Provides filtering and sorting options, and returns a string <see cref="T:System.Collections.Generic.List`1"/>
+                containing the command-line arguments for the current process.
+            </summary>
+            <param name="sort">
+                true to sort the arguments ascended with the rules of
+                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
+                otherwise, false.
+            </param>
+            <param name="skip">
+                The number of arguments to skip before returning the remaining arguments.
+            </param>
+            <param name="quotes">
+                true to store the arguments in quotation marks which containing spaces; otherwise,
+                false.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Boolean,System.Boolean)">
+            <summary>
+                Provides filtering and sorting options, and returns a string <see cref="T:System.Collections.Generic.List`1"/>
+                containing the command-line arguments for the current process.
+            </summary>
+            <param name="sort">
+                true to sort the arguments ascended with the rules of
+                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
+                otherwise, false.
+            </param>
+            <param name="quotes">
+                true to store the arguments in quotation marks which containing spaces; otherwise,
+                false.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Int32)">
+            <summary>
+                Provides filtering and sorting options, and returns a string <see cref="T:System.Collections.Generic.List`1"/>
+                containing the command-line arguments for the current process.
+            </summary>
+            <param name="skip">
+                The number of arguments to skip before returning the remaining arguments.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.CommandLine(System.Boolean,System.Int32,System.Boolean)">
+            <summary>
+                Provides filtering and sorting options, and returns a string containing the
+                command-line arguments for the current process.
+            </summary>
+            <param name="sort">
+                true to sort the arguments ascended with the rules of
+                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
+                otherwise, false.
+            </param>
+            <param name="skip">
+                The number of arguments to skip before returning the remaining arguments.
+            </param>
+            <param name="quotes">
+                true to store the arguments in quotation marks which containing spaces; otherwise,
+                false.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.CommandLine(System.Boolean,System.Boolean)">
+            <summary>
+                Provides filtering and sorting options, and returns a string containing the
+                command-line arguments for the current process.
+            </summary>
+            <param name="sort">
+                true to sort the arguments ascended with the rules of
+                <see cref="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)"/> before returning the arguments;
+                otherwise, false.
+            </param>
+            <param name="quotes">
+                true to store the arguments in quotation marks which containing spaces; otherwise,
+                false.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.CommandLine(System.Int32)">
+            <summary>
+                Provides filtering and sorting options, and returns a string containing the
+                command-line arguments for the current process.
+            </summary>
+            <param name="skip">
+                The number of arguments to skip before returning the remaining arguments.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)">
+            <summary>
+                <para>
+                    Retrieves the value of an environment variable from the current process.
+                </para>
+                <para>
+                    <c>
+                        Hint:
+                    </c>
+                    Allows <see cref="T:System.Environment.SpecialFolder"/> names inlcuding a
+                    keyword "CurDir" to get the current code base location based
+                    on <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
+                </para>
+            </summary>
+            <param name="variable">
+                The name of the environment variable.
+            </param>
+            <param name="lower">
+                true to convert the result to lowercase; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.GetVariablePath(System.String,System.Boolean)">
+            <summary>
+                Converts the specified path to an existing environment variable, if possible.
+            </summary>
+            <param name="path">
+                The path to convert.
+            </param>
+            <param name="curDir">
+                true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
+                otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.GetVariablePathFull(System.String,System.Boolean)">
+            <summary>
+                Returns a new string in which all occurrences in this instance are replaced
+                with a valid environment variable.
+            </summary>
+            <param name="path">
+                The path to convert.
+            </param>
+            <param name="curDir">
+                true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
+                otherwise, false.
+            </param>
+        </member>
+        <member name="P:SilDev.EnvironmentEx.SystemRestoringIsEnabled">
+            <summary>
+                Determines whether the system restoring is enabled.
+            </summary>
+        </member>
+        <member name="T:SilDev.EnvironmentEx.EventType">
+            <summary>
+                The type of event. For more information, see <see cref="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.EventType.BeginNestedSystemChange">
+            <summary>
+                A system change has begun. A subsequent nested call does not create a new restore
+                point.
+                <para>
+                    Subsequent calls must use <see cref="F:SilDev.EnvironmentEx.EventType.EndNestedSystemChange"/>, not
+                    <see cref="F:SilDev.EnvironmentEx.EventType.EndSystemChange"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.EventType.BeginSystemChange">
+            <summary>
+                A system change has begun.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.EventType.EndNestedSystemChange">
+            <summary>
+                A system change has ended.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.EventType.EndSystemChange">
+            <summary>
+                A system change has ended.
+            </summary>
+        </member>
+        <member name="T:SilDev.EnvironmentEx.RestorePointType">
+            <summary>
+                The type of restore point. For more information, see <see cref="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationInstall">
+            <summary>
+                An application has been installed.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationUninstall">
+            <summary>
+                An application has been uninstalled.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.CancelledOperation">
+            <summary>
+                An application needs to delete the restore point it created. For example, an
+                application would use this flag when a user cancels an installation.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.DeviceDriverInstall">
+            <summary>
+                A device driver has been installed.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.ModifySettings">
+            <summary>
+                An application has had features added or removed.
+            </summary>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)">
+            <summary>
+                Creates a restore point on the local system.
+            </summary>
+            <param name="description">
+                The description to be displayed so the user can easily identify a restore point.
+            </param>
+            <param name="eventType">
+                The type of event.
+            </param>
+            <param name="restorePointType">
+                The type of restore point.
+            </param>
+        </member>
         <member name="T:SilDev.Ini">
             <summary>
                 Provides static methods for the handling of initialization files.
@@ -4752,13 +3895,24 @@
                 The value type.
             </typeparam>
             <param name="section">
-                The name of the section to which the string will be copied.
+                The name of the section to which the value will be copied.
             </param>
             <param name="key">
-                The name of the key to be associated with the value.
+                <para>
+                    The name of the key to be associated with a value.
+                </para>
+                <para>
+                    If this parameter is NULL, the entire section, including all entries within the
+                    section, is deleted.
+                </para>
             </param>
             <param name="value">
-                The value to be written to the file.
+                <para>
+                    The value to be written to the file.
+                </para>
+                <para>
+                    If this parameter is NULL, the key pointed to by the key parameter is deleted.
+                </para>
             </param>
             <param name="fileOrContent">
                 The full file path or content of an INI file.
@@ -4789,13 +3943,24 @@
                 The value type.
             </typeparam>
             <param name="section">
-                The name of the section to which the string will be copied.
+                The name of the section to which the value will be copied.
             </param>
             <param name="key">
-                The name of the key to be associated with the value.
+                <para>
+                    The name of the key to be associated with a value.
+                </para>
+                <para>
+                    If this parameter is NULL, the entire section, including all entries within the
+                    section, is deleted.
+                </para>
             </param>
             <param name="value">
-                The value to be written to the file.
+                <para>
+                    The value to be written to the file.
+                </para>
+                <para>
+                    If this parameter is NULL, the key pointed to by the key parameter is deleted.
+                </para>
             </param>
             <param name="forceOverwrite">
                 true to enable overwriting of a key with the same value as specified; otherwise,
@@ -4813,7 +3978,8 @@
             <summary>
                 <para>
                     Copies the <see cref="T:System.String"/> representation of the specified <see cref="T:System.Object"/>
-                    into the specified section of an INI file.
+                    value into the specified section of an INI file. If the file does not exist, it is
+                    created.
                 </para>
                 <para>
                     The Win32-API is used for writing in this case. Please note that this function
@@ -4822,15 +3988,24 @@
                 </para>
             </summary>
             <param name="section">
-                The name of the section to which the string will be copied.
+                The name of the section to which the value will be copied.
             </param>
             <param name="key">
-                The name of the key to be associated with a string. If this parameter is NULL, the
-                section pointed to by the section parameter is deleted.
+                <para>
+                    The name of the key to be associated with a value.
+                </para>
+                <para>
+                    If this parameter is NULL, the entire section, including all entries within the
+                    section, is deleted.
+                </para>
             </param>
             <param name="value">
-                The <see cref="T:System.String"/> value to be written to the file. If this parameter is NULL,
-                the key pointed to by the key parameter is deleted.
+                <para>
+                    The value to be written to the file.
+                </para>
+                <para>
+                    If this parameter is NULL, the key pointed to by the key parameter is deleted.
+                </para>
             </param>
             <param name="file">
                 The full path of an INI file.
@@ -4842,6 +4017,41 @@
             <param name="skipExistValue">
                 true to skip an existing value, even it is not the same value as specified;
                 otherwise, false.
+            </param>
+        </member>
+        <member name="T:SilDev.Json">
+            <summary>
+                Provides basic functionality for the JSON format.
+            </summary>
+        </member>
+        <member name="M:SilDev.Json.Create(System.String,System.Object)">
+            <summary>
+                Creates a new JSON file with the specified object data.
+            </summary>
+            <param name="path">
+                The full path of the file to read (environment variables are accepted).
+            </param>
+            <param name="obj">
+                The object to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Json.ReadAll(System.String)">
+            <summary>
+                Retrieves the full content of the specified JSON file.
+            </summary>
+            <param name="path">
+                The full path of the file to read (environment variables are accepted).
+            </param>
+        </member>
+        <member name="M:SilDev.Json.Read(System.String,System.String[])">
+            <summary>
+                Retrieves a value from the specified key in a JSON file.
+            </summary>
+            <param name="path">
+                The full path of the file to read (environment variables are accepted).
+            </param>
+            <param name="keys">
+                An array of keys to navigate to the exact position of the value.
             </param>
         </member>
         <member name="T:SilDev.KeyState">
@@ -6071,6 +5281,147 @@
                 </para>
             </summary>
         </member>
+        <member name="P:SilDev.Media.IrrKlangPlayer.ValidAssemblyDirs">
+            <summary>
+                Returns a string 
+            </summary>
+        </member>
+        <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.String,System.Boolean,System.Int32)">
+            <summary>
+                Plays the specified sound file.
+            </summary>
+            <param name="path">
+                THe full path of the sound file to play.
+            </param>
+            <param name="loop">
+                true to repeat the sound track; otherwise, false.
+            </param>
+            <param name="volume">
+                The sound volume value, in percent.
+            </param>
+        </member>
+        <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.String,System.Int32)">
+            <summary>
+                Plays the specified sound file.
+            </summary>
+            <param name="path">
+                THe full path of the sound file to play.
+            </param>
+            <param name="volume">
+                The sound volume value, in percent.
+            </param>
+        </member>
+        <member name="M:SilDev.Media.IrrKlangPlayer.Stop">
+            <summary>
+                Stops playing sounds.
+            </summary>
+        </member>
+        <member name="P:SilDev.MemoryPinner.Pointer">
+            <summary>
+                Returns the pointer to the pinned object.
+            </summary>
+        </member>
+        <member name="M:SilDev.MemoryPinner.#ctor(System.Object)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.MemoryPinner"/> class with
+                the specified object to pin.
+            </summary>
+            <param name="value">
+                The object to pin.
+            </param>
+        </member>
+        <member name="M:SilDev.MemoryPinner.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.MemoryPinner"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessMemory.#ctor(System.IntPtr)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.ProcessMemory"/> class with
+                the specified window handle.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.GetImageFileName">
+            <summary>
+                Gets the file name of the process image.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Allocate(System.Object)">
+            <summary>
+                Allocates a chunck of memory in the process.
+            </summary>
+            <param name="value">
+                The structure to be allocated.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Read(System.Object,System.IntPtr)">
+            <summary>
+                Reads data from an area of memory in a specified process.
+            </summary>
+            <param name="value">
+                The structure to be allocated.
+            </param>
+            <param name="address">
+                A pointer to the base address in the specified process from which to read.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.ReadString(System.Int32,System.IntPtr)">
+            <summary>
+                Reads a string from an area of memory in a specified process.
+            </summary>
+            <param name="size">
+                The number of bytes to be read from the specified process.
+            </param>
+            <param name="address">
+                A pointer to the base address in the specified process from which to read.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Write(System.Object,System.Int32,System.IntPtr)">
+            <summary>
+                Writes data to an area of memory in a specified process.
+            </summary>
+            <param name="value">
+                The structure to be allocated.
+            </param>
+            <param name="size">
+                The number of bytes to be written to the specified process.
+            </param>
+            <param name="buffer">
+                A pointer to the buffer that contains data to be written in the address
+                space of the specified process.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
+            </summary>
+        </member>
+        <member name="T:SilDev.MemoryException">
+            <summary>
+                The exception that is thrown when an attempt to access some data in memory.
+            </summary>
+        </member>
+        <member name="M:SilDev.MemoryException.#ctor">
+            <summary>
+                Create the exception.
+            </summary>
+        </member>
+        <member name="M:SilDev.MemoryException.#ctor(System.String)">
+            <summary>
+                Create the exception with a specified error message.
+            </summary>
+            <param name="message">
+                Exception message.
+            </param>
+        </member>
+        <member name="P:SilDev.MemoryException.Message">
+            <summary>
+                Gets the error message.
+            </summary>
+        </member>
         <member name="T:SilDev.NetEx">
             <summary>
                 Provides functionality for the access of internet resources.
@@ -6661,49 +6012,345 @@
                 Cancels a pending asynchonous transfer.
             </summary>
         </member>
-        <member name="T:SilDev.Compaction">
+        <member name="T:SilDev.NotifyBox">
             <summary>
-                Provides static methods for compressing and decompressing of data.
+                Represents a notification window, simliar with a system tray notification, which presents a
+                notification to the user.
             </summary>
         </member>
-        <member name="M:SilDev.Compaction.TextToZip(System.String)">
+        <member name="T:SilDev.NotifyBox.NotifyBoxSound">
             <summary>
-                Compresses the specifed <see cref="T:System.String"/> value to zip.
+                Provides enumerated constants used to retrieves the play sound of the notify box.
+            </summary>
+        </member>
+        <member name="T:SilDev.NotifyBox.NotifyBoxStartPosition">
+            <summary>
+                Provides enumerated constants used to retrieves the start position of the notify box.
+            </summary>
+        </member>
+        <member name="M:SilDev.NotifyBox.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.NotifyBox"/> class.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.Opacity">
+            <summary>
+                Gets or sets the opacity level for the notify box.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.BackColor">
+            <summary>
+                Gets or sets the background color for the notify box.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.BorderColor">
+            <summary>
+                Gets or sets the border color for the notify box.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.CaptionColor">
+            <summary>
+                Gets or sets the caption color for the notify box.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.TextColor">
+            <summary>
+                Gets or sets the text color for the notify box.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.TopMost">
+            <summary>
+                Specifies that the notify box is placed above all non-topmost windows.
+            </summary>
+        </member>
+        <member name="P:SilDev.NotifyBox.IsAlive">
+            <summary>
+                Gets a value indicating the execution status of the current notify box.
+            </summary>
+        </member>
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, sound, duration, and borders.
             </summary>
             <param name="text">
-                The string to compress.
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Compaction.TextFromZip(System.Byte[])">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
             <summary>
-                Decompresses a compressed sequence of bytes back to a <see cref="T:System.String"/>
-                value.
+                Displays a notify box with the specified text, caption, position, sound, and borders.
             </summary>
-            <param name="bytes">
-                The sequence of bytes to decompress.
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Compaction.Unzip(System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
             <summary>
-                Extracts all the files in the specified zip archive to the specified directory on
-                the file system.
+                Displays a notify box with the specified text, caption, position, duration, and borders.
             </summary>
-            <param name="srcPath">
-                The path of the zip archive to extract (environment variables are accepted).
+            <param name="text">
+                The notification text to display in the notify box.
             </param>
-            <param name="destDir">
-                The path to the directory to place the extracted files in (environment variables
-                are accepted).
+            <param name="caption">
+                The caption text to display in the notify box.
             </param>
-            <param name="delSrcPath">
-                true to delete the source archive after extracting; otherwise, false.
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="T:SilDev.Compaction.Zip7Helper">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.Boolean)">
             <summary>
-                ***This is an undocumented class and can be changed or removed in the future
-                without futher notice.
+                Displays a notify box with the specified text, caption, position, and borders.
             </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, sound, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, sound, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBox.Close">
+            <summary>
+                Closes the current notify box.
+            </summary>
+        </member>
+        <member name="M:SilDev.NotifyBox.Abort">
+            <summary>
+                Terminates the current notify box.
+            </summary>
+        </member>
+        <member name="T:SilDev.NotifyBoxEx">
+            <summary>
+                Displays a notification window, simliar with a system tray notification, which presents a
+                notification to the user.
+            </summary>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, sound, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, sound, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, position, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="position">
+                The window position for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, sound, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, sound, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="sound">
+                The play sound for the notify box.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,System.UInt16,System.Boolean)">
+            <summary>
+                Displays a notify box with the specified text, caption, duration, and borders.
+            </summary>
+            <param name="text">
+                The notification text to display in the notify box.
+            </param>
+            <param name="caption">
+                The caption text to display in the notify box.
+            </param>
+            <param name="duration">
+                The duration of the time, in milliseconds, which the notify box remains active.
+            </param>
+            <param name="borders">
+                true to visible the window borders; otherwise, false.
+            </param>
         </member>
         <member name="T:SilDev.PathEx">
             <summary>
@@ -6744,6 +6391,14 @@
             </summary>
             <param name="paths">
                 An array of files and directories to check.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.IsValidPath(System.String)">
+            <summary>
+                Determines whether the specified path has a valid format.
+            </summary>
+            <param name="path">
+                The specified path to check.
             </param>
         </member>
         <member name="M:SilDev.PathEx.Combine(System.Char[],System.String[])">
@@ -6919,6 +6574,326 @@
                 Gets the error message and the path, or only the exception message if no path
                 is set.
             </summary>
+        </member>
+        <member name="T:SilDev.ProcessEx">
+            <summary>
+                Provides static methods based on the <see cref="T:System.Diagnostics.Process"/> class to enable you to start
+                local system processes.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessEx.GetInstances(System.String)">
+            <summary>
+                Gets all active instances associated with the specified application.
+            </summary>
+            <param name="nameOrPath">
+                The filename or the full path to the application to check.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.InstancesCount(System.String)">
+            <summary>
+                Returns the number of all active instances associated with the specified
+                application.
+            </summary>
+            <param name="nameOrPath">
+                The filename or the full path to the application to check.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.IsRunning(System.String)">
+            <summary>
+                Determines whether the specified file is matched with a running process.
+            </summary>
+            <param name="nameOrPath">
+                The filename or the full path to the application to check.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.IsSandboxed(System.Diagnostics.Process)">
+            <summary>
+                <para>
+                    Determines whether this <see cref="T:System.Diagnostics.Process"/> is running in a sandboxed
+                    environment.
+                </para>
+                <para>
+                    Hint: This function supports only the program Sandboxie.
+                </para>
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> to check.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.GetCommandLineArgs(System.Diagnostics.Process)">
+            <summary>
+                Returns a string array containing the command-line arguments for this
+                <see cref="T:System.Diagnostics.Process"/>.
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> component.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.GetCommandLine(System.Diagnostics.Process)">
+            <summary>
+                Returns the command-line arguments for this process.
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> component.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.Process,System.Boolean)">
+            <summary>
+                <para>
+                    Starts (or reuses) the process resource that is specified by the current
+                    <see cref="T:System.Diagnostics.Process"/>.StartInfo property of this <see cref="T:System.Diagnostics.Process"/> and
+                    associates it with the component.
+                </para>
+                <para>
+                    If the <see cref="T:System.Diagnostics.Process"/>.StartInfo.WorkingDirectory parameter is undefined,
+                    it is created by <see cref="T:System.Diagnostics.Process"/>.StartInfo.FileName parameter.
+                </para>
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> component to start.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.ProcessStartInfo,System.Boolean)">
+            <summary>
+                <para>
+                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                    <see cref="T:System.Diagnostics.ProcessStartInfo"/> and starts (or reuses) the process component.
+                </para>
+                <para>
+                    If WorkingDirectory parameter is undefined, it is created by the FileName parameter.
+                </para>
+            </summary>
+            <param name="processStartInfo">
+                The <see cref="T:System.Diagnostics.ProcessStartInfo"/> component to initialize a new <see cref="T:System.Diagnostics.Process"/>.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                parameters and starts (or reuses) the process component.
+            </summary>
+            <param name="fileName">
+                The application to start.
+            </param>
+            <param name="workingDirectory">
+                The working directory for the process to be started.
+            </param>
+            <param name="arguments">
+                The command-line arguments to use when starting the application.
+            </param>
+            <param name="verbRunAs">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="processWindowStyle">
+                The window state to use when the process is started.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                parameters and starts (or reuses) the process component.
+            </summary>
+            <param name="fileName">
+                The application to start.
+            </param>
+            <param name="workingDirectory">
+                The working directory for the process to be started.
+            </param>
+            <param name="arguments">
+                The command-line arguments to use when starting the application.
+            </param>
+            <param name="verbRunAs">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                parameters and starts (or reuses) the process component.
+            </summary>
+            <param name="fileName">
+                The application to start.
+            </param>
+            <param name="arguments">
+                The command-line arguments to use when starting the application.
+            </param>
+            <param name="verbRunAs">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="processWindowStyle">
+                The window state to use when the process is started.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/> if the process
+                has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                parameters and starts (or reuses) the process component.
+            </summary>
+            <param name="fileName">
+                The application to start.
+            </param>
+            <param name="arguments">
+                The command-line arguments to use when starting the application.
+            </param>
+            <param name="verbRunAs">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                parameters and starts (or reuses) the process component.
+            </summary>
+            <param name="fileName">
+                The application to start.
+            </param>
+            <param name="verbRunAs">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="processWindowStyle">
+                The window state to use when the process is started.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                parameters to starts (or reuses) the process component.
+            </summary>
+            <param name="fileName">
+                The application to start.
+            </param>
+            <param name="verbRunAs">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
+                has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
+            <summary>
+                <para>
+                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
+                    commands using the system command prompt ("cmd.exe").
+                </para>
+                <para>
+                    This can be useful for an unprivileged application as a simple way to execute a
+                    command with the highest user permissions, for example.
+                </para>
+            </summary>
+            <param name="command">
+                The application to start.
+            </param>
+            <param name="runAsAdmin">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="processWindowStyle">
+                The window state to use when the process is started.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                <para>
+                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
+                    commands using the system command prompt ("cmd.exe").
+                </para>
+                <para>
+                    This can be useful for an unprivileged application as a simple way to execute a
+                    command with the highest user permissions, for example.
+                </para>
+            </summary>
+            <param name="command">
+                The application to start.
+            </param>
+            <param name="runAsAdmin">
+                true to start the application with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Send(System.String,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
+            <summary>
+                <para>
+                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
+                    commands using the system command prompt ("cmd.exe").
+                </para>
+                <para>
+                    This can be useful for an unprivileged application as a simple way to execute a
+                    command with the highest user permissions, for example.
+                </para>
+            </summary>
+            <param name="command">
+                The application to start.
+            </param>
+            <param name="processWindowStyle">
+                The window state to use when the process is started.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Terminate(System.Collections.Generic.IEnumerable{System.Diagnostics.Process})">
+            <summary>
+                <para>
+                    Immediately stops all specified processes.
+                </para>
+                <para>
+                    If the current process doesn't have enough privileges to stop a specified process
+                    it starts an invisible elevated instance of the command prompt to run taskkill.
+                </para>
+            </summary>
+            <param name="processes">
+                The <see cref="T:System.Diagnostics.Process"/>/es to kill.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.Terminate(System.Diagnostics.Process[])">
+            <summary>
+                <para>
+                    Immediately stops all specified processes.
+                </para>
+                <para>
+                    If the current process doesn't have enough privileges to stop a specified process
+                    it starts an invisible elevated instance of the command prompt to run taskkill.
+                </para>
+            </summary>
+            <param name="processes">
+                The collection of processes to kill.
+            </param>
         </member>
         <member name="T:SilDev.Reg">
             <summary>
@@ -7525,6 +7500,489 @@
                 The full paths of the keys to export (environment variables are accepted).
             </param>
         </member>
+        <member name="T:SilDev.Reorganize">
+            <summary>
+                Provides static methods for converting or reorganizing of data.
+            </summary>
+        </member>
+        <member name="T:SilDev.Reorganize.NewLineFormats">
+            <summary>
+                Provides enumerated values of new line formats.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.NewLineFormats.WindowsDefault">
+            <summary>
+                An aggregated <see cref="T:System.Enum"/> value of <see cref="F:SilDev.Reorganize.NewLineFormats.CarriageReturn"/>
+                and <see cref="F:SilDev.Reorganize.NewLineFormats.LineFeed"/>, which is not convertable to a single
+                <see cref="T:System.Char"/> value.
+            </summary>
+        </member>
+        <member name="T:SilDev.Reorganize.SizeUnits">
+            <summary>
+                Provides units of digital information.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.Byte">
+            <summary>
+                Stands for byte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.KB">
+            <summary>
+                Stands for kilobyte or kibibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.MB">
+            <summary>
+                Stands for megabyte or mebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.GB">
+            <summary>
+                Stands for gigabyte or gibibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.TB">
+            <summary>
+                Stands for terabyte or tebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.PB">
+            <summary>
+                Stands for petabyte or pebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeUnits.EB">
+            <summary>
+                Stands for exabyte or exbibyte.
+            </summary>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="unit">
+                The new unit.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="suffix">
+                true to show the size unit suffix; otherwise, false.
+            </param>
+            <param name="trim">
+                true to remove all zeros after the comma; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+                on the size.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="suffix">
+                true to show the size unit suffix; otherwise, false.
+            </param>
+            <param name="trim">
+                true to remove all zeros after the comma; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatNewLine(System.String,SilDev.Reorganize.NewLineFormats)">
+            <summary>
+                Converts the current <see cref="T:SilDev.Reorganize.NewLineFormats"/> to another format.
+            </summary>
+            <param name="str">
+                The text to change.
+            </param>
+            <param name="newLineFormat">
+                The new format to be applied.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToLogStringArray(System.String)">
+            <summary>
+                Creates a sequence of strings based on natural (base e) logarithm of a count
+                of all the characters in the specified string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Reverse(System.String)">
+            <summary>
+                Reverses the sequence of all characters in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
+                <see cref="T:System.String"/>, using the specified separator between each number.
+            </summary>
+            <param name="values">
+                An array that contains the elements to concatenate.
+            </param>
+            <param name="separator">
+                The string to use as a separator.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Join(System.Collections.Generic.IEnumerable{System.String},System.Char)">
+            <summary>
+                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
+                <see cref="T:System.String"/>, using the specified separator between each number.
+            </summary>
+            <param name="values">
+                An array that contains the elements to concatenate.
+            </param>
+            <param name="separator">
+                The character to use as a separator.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Sort(System.String[])">
+            <summary>
+                Sorts the elements in an entire string array using the <see cref="T:System.IComparable`1"/> generic
+                interface implementation of each element of the string array.
+            </summary>
+            <param name="strs">
+                The sequence of strings to sort.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Split(System.String,System.String,System.StringSplitOptions)">
+            <summary>
+                Splits a string into substrings based on the strings in an array. You can specify whether
+                the substrings inlcude empty array elements.
+            </summary>
+            <param name="str">
+                The string to split.
+            </param>
+            <param name="separator">
+                The string to use as a separator.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.SplitNewLine(System.String)">
+            <summary>
+                Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
+            </summary>
+            <param name="str">
+                The string to split.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.LowerText(System.String,System.String[])">
+            <summary>
+                Converts the specified strings in a string to lowercase.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="strs">
+                The sequence of strings to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.UpperText(System.String,System.String[])">
+            <summary>
+                Converts the specified strings in a string to uppercase.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="strs">
+                The sequence of strings to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.RemoveChar(System.Char[],System.Char[])">
+            <summary>
+                Removes the specified characters in a char array.
+            </summary>
+            <param name="array">
+                The char array to change.
+            </param>
+            <param name="chrs">
+                The sequence of characters to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.RemoveChar(System.String,System.Char[])">
+            <summary>
+                Removes the specified characters in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="chrs">
+                The sequence of characters to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.RemoveText(System.String,System.String[])">
+            <summary>
+                Removes the specified strings in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="strs">
+                The sequence of strings to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToBinaryString(System.String,System.Boolean)">
+            <summary>
+                Converts the specified string to base-2 binary sequence.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+            <param name="separator">
+                true to add a single space character as a separator between every single byte;
+                otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromBinaryString(System.String)">
+            <summary>
+                Converts the specified base-2 binary sequence back to string.
+            </summary>
+            <param name="str">
+                The string to reconvert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToHexString(System.Byte[],System.Nullable{System.Char},System.Boolean)">
+            <summary>
+                Converts the specified sequence of bytes into a hexadecimal sequence.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
+            <param name="separator">
+                A single space character used as a separator.
+            </param>
+            <param name="upper">
+                true to convert the result to uppercase; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToHexString(System.Drawing.Image,System.Nullable{System.Char},System.Boolean)">
+            <summary>
+                Converts the specified image to hexadecimal sequence.
+            </summary>
+            <param name="image">
+                The image to convert.
+            </param>
+            <param name="separator">
+                A single space character used as a separator.
+            </param>
+            <param name="upper">
+                true to convert the result to uppercase; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToHexString(System.String,System.Nullable{System.Char},System.Boolean)">
+            <summary>
+                Converts the specified string to hexadecimal sequence.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+            <param name="separator">
+                A single space character used as a separator.
+            </param>
+            <param name="upper">
+                true to convert the result to uppercase; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromHexStringToByteArray(System.String)">
+            <summary>
+                Converts the specified hexadecimal sequence back into a sequence of bytes.
+            </summary>
+            <param name="str">
+                The string to reconvert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromHexStringToImage(System.String)">
+            <summary>
+                Converts the specified hexadecimal sequence back to <see cref="T:System.Drawing.Image"/>.
+            </summary>
+            <param name="str">
+                The string to reconvert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromHexStringToIcon(System.String)">
+            <summary>
+                Converts the specified hexadecimal sequence back to <see cref="T:System.Drawing.Icon"/>.
+            </summary>
+            <param name="str">
+                The string to reconvert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromHexString(System.String)">
+            <summary>
+                Converts the specified hexadecimal sequence back to string.
+            </summary>
+            <param name="str">
+                The string to reconvert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToRectangle(System.String)">
+            <summary>
+                Converts the specified string, which stores a set of four integers that represent the
+                location and size of a rectangle, to <see cref="T:System.Drawing.Rectangle"/>.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToPoint(System.String)">
+            <summary>
+                Converts the specified string, which stores an ordered pair of integer x- and y-coordinates,
+                to <see cref="T:System.Drawing.Point"/>.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToSize(System.String)">
+            <summary>
+                Converts the specified string, which stores an ordered pair of integers, to <see cref="T:System.Drawing.Size"/>.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToBoolean(System.String)">
+            <summary>
+                Converts the specified string to an equivalent Boolean value, which returns always false
+                for unsupported string values.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToByteArray(System.String)">
+            <summary>
+                Converts all the characters in the specified string into a sequence of bytes.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToByteArray(System.Drawing.Image,System.Drawing.Imaging.ImageFormat)">
+            <summary>
+                Converts the specified image into a sequence of bytes.
+            </summary>
+            <param name="image">
+                The image to convert.
+            </param>
+            <param name="imageFormat">
+                An <see cref="T:System.Drawing.Imaging.ImageFormat"/> that specifies the format of the saved image.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToByteArray(System.Drawing.Icon)">
+            <summary>
+                Converts the specified icon into a sequence of bytes.
+            </summary>
+            <param name="icon">
+                The icon to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromByteArrayToString(System.Byte[])">
+            <summary>
+                Converts the specified sequence of bytes into a string.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromByteArrayToImage(System.Byte[])">
+            <summary>
+                Converts the specified sequence of bytes to <see cref="T:System.Drawing.Image"/>.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FromByteArrayToIcon(System.Byte[])">
+            <summary>
+                Converts the specified sequence of bytes to <see cref="T:System.Drawing.Icon"/>.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Replace(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+                Returns a new sequence of bytes in which all occurrences of a specified sequence of bytes
+                in this instance are replaced with another specified sequence of bytes.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to change.
+            </param>
+            <param name="oldValue">
+                The sequence of bytes to be replaced.
+            </param>
+            <param name="newValue">
+                The sequence of bytes to replace all occurrences of oldValue.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Increment(System.IntPtr,System.IntPtr)">
+            <summary>
+                Increments the length of a platform-specific type number with the specified value.
+            </summary>
+            <param name="ptr">
+                The platform-specific type to change.
+            </param>
+            <param name="value">
+                The number to be incremented.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+                Projects each element of a sequence into a new form.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                A sequence of values to invoke a transform function on.
+            </param>
+            <param name="selector">
+                A transform function to apply to each element.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            </exception>
+        </member>
+        <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
+            <summary>
+                Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+            </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="value">
+                The value to convert.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.TryParse``1(System.Object,System.Object@,``0)">
+            <summary>
+                Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+            </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="value">
+                The value to convert.
+            </param>
+            <param name="result">
+                The result value.
+            </param>
+        </member>
         <member name="T:SilDev.ResourcesEx">
             <summary>
                 Provides static methods for the usage of data resources.
@@ -7630,326 +8088,6 @@
             </param>
             <param name="buttonHighlight">
                 The button highlight color of the dialog box.
-            </param>
-        </member>
-        <member name="T:SilDev.ProcessEx">
-            <summary>
-                Provides static methods based on the <see cref="T:System.Diagnostics.Process"/> class to enable you to start
-                local system processes.
-            </summary>
-        </member>
-        <member name="M:SilDev.ProcessEx.GetInstances(System.String)">
-            <summary>
-                Gets all active instances associated with the specified application.
-            </summary>
-            <param name="nameOrPath">
-                The filename or the full path to the application to check.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.InstancesCount(System.String)">
-            <summary>
-                Returns the number of all active instances associated with the specified
-                application.
-            </summary>
-            <param name="nameOrPath">
-                The filename or the full path to the application to check.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.IsRunning(System.String)">
-            <summary>
-                Determines whether the specified file is matched with a running process.
-            </summary>
-            <param name="nameOrPath">
-                The filename or the full path to the application to check.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.IsSandboxed(System.Diagnostics.Process)">
-            <summary>
-                <para>
-                    Determines whether this <see cref="T:System.Diagnostics.Process"/> is running in a sandboxed
-                    environment.
-                </para>
-                <para>
-                    Hint: This function supports only the program Sandboxie.
-                </para>
-            </summary>
-            <param name="process">
-                The <see cref="T:System.Diagnostics.Process"/> to check.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.GetCommandLineArgs(System.Diagnostics.Process)">
-            <summary>
-                Returns a string array containing the command-line arguments for this
-                <see cref="T:System.Diagnostics.Process"/>.
-            </summary>
-            <param name="process">
-                The <see cref="T:System.Diagnostics.Process"/> component.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.GetCommandLine(System.Diagnostics.Process)">
-            <summary>
-                Returns the command-line arguments for this process.
-            </summary>
-            <param name="process">
-                The <see cref="T:System.Diagnostics.Process"/> component.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.Process,System.Boolean)">
-            <summary>
-                <para>
-                    Starts (or reuses) the process resource that is specified by the current
-                    <see cref="T:System.Diagnostics.Process"/>.StartInfo property of this <see cref="T:System.Diagnostics.Process"/> and
-                    associates it with the component.
-                </para>
-                <para>
-                    If the <see cref="T:System.Diagnostics.Process"/>.StartInfo.WorkingDirectory parameter is undefined,
-                    it is created by <see cref="T:System.Diagnostics.Process"/>.StartInfo.FileName parameter.
-                </para>
-            </summary>
-            <param name="process">
-                The <see cref="T:System.Diagnostics.Process"/> component to start.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.ProcessStartInfo,System.Boolean)">
-            <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                    <see cref="T:System.Diagnostics.ProcessStartInfo"/> and starts (or reuses) the process component.
-                </para>
-                <para>
-                    If WorkingDirectory parameter is undefined, it is created by the FileName parameter.
-                </para>
-            </summary>
-            <param name="processStartInfo">
-                The <see cref="T:System.Diagnostics.ProcessStartInfo"/> component to initialize a new <see cref="T:System.Diagnostics.Process"/>.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
-            <summary>
-                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                parameters and starts (or reuses) the process component.
-            </summary>
-            <param name="fileName">
-                The application to start.
-            </param>
-            <param name="workingDirectory">
-                The working directory for the process to be started.
-            </param>
-            <param name="arguments">
-                The command-line arguments to use when starting the application.
-            </param>
-            <param name="verbRunAs">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="processWindowStyle">
-                The window state to use when the process is started.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                parameters and starts (or reuses) the process component.
-            </summary>
-            <param name="fileName">
-                The application to start.
-            </param>
-            <param name="workingDirectory">
-                The working directory for the process to be started.
-            </param>
-            <param name="arguments">
-                The command-line arguments to use when starting the application.
-            </param>
-            <param name="verbRunAs">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
-            <summary>
-                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                parameters and starts (or reuses) the process component.
-            </summary>
-            <param name="fileName">
-                The application to start.
-            </param>
-            <param name="arguments">
-                The command-line arguments to use when starting the application.
-            </param>
-            <param name="verbRunAs">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="processWindowStyle">
-                The window state to use when the process is started.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/> if the process
-                has been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                parameters and starts (or reuses) the process component.
-            </summary>
-            <param name="fileName">
-                The application to start.
-            </param>
-            <param name="arguments">
-                The command-line arguments to use when starting the application.
-            </param>
-            <param name="verbRunAs">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
-            <summary>
-                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                parameters and starts (or reuses) the process component.
-            </summary>
-            <param name="fileName">
-                The application to start.
-            </param>
-            <param name="verbRunAs">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="processWindowStyle">
-                The window state to use when the process is started.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                parameters to starts (or reuses) the process component.
-            </summary>
-            <param name="fileName">
-                The application to start.
-            </param>
-            <param name="verbRunAs">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
-            <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
-                    commands using the system command prompt ("cmd.exe").
-                </para>
-                <para>
-                    This can be useful for an unprivileged application as a simple way to execute a
-                    command with the highest user permissions, for example.
-                </para>
-            </summary>
-            <param name="command">
-                The application to start.
-            </param>
-            <param name="runAsAdmin">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="processWindowStyle">
-                The window state to use when the process is started.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Boolean)">
-            <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
-                    commands using the system command prompt ("cmd.exe").
-                </para>
-                <para>
-                    This can be useful for an unprivileged application as a simple way to execute a
-                    command with the highest user permissions, for example.
-                </para>
-            </summary>
-            <param name="command">
-                The application to start.
-            </param>
-            <param name="runAsAdmin">
-                true to start the application with administrator privileges; otherwise, false.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Send(System.String,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
-            <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
-                    commands using the system command prompt ("cmd.exe").
-                </para>
-                <para>
-                    This can be useful for an unprivileged application as a simple way to execute a
-                    command with the highest user permissions, for example.
-                </para>
-            </summary>
-            <param name="command">
-                The application to start.
-            </param>
-            <param name="processWindowStyle">
-                The window state to use when the process is started.
-            </param>
-            <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Terminate(System.Collections.Generic.IEnumerable{System.Diagnostics.Process})">
-            <summary>
-                <para>
-                    Immediately stops all specified processes.
-                </para>
-                <para>
-                    If the current process doesn't have enough privileges to stop a specified process
-                    it starts an invisible elevated instance of the command prompt to run taskkill.
-                </para>
-            </summary>
-            <param name="processes">
-                The <see cref="T:System.Diagnostics.Process"/>/es to kill.
-            </param>
-        </member>
-        <member name="M:SilDev.ProcessEx.Terminate(System.Diagnostics.Process[])">
-            <summary>
-                <para>
-                    Immediately stops all specified processes.
-                </para>
-                <para>
-                    If the current process doesn't have enough privileges to stop a specified process
-                    it starts an invisible elevated instance of the command prompt to run taskkill.
-                </para>
-            </summary>
-            <param name="processes">
-                The collection of processes to kill.
             </param>
         </member>
         <member name="T:SilDev.Service">
