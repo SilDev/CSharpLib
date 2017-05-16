@@ -8,7 +8,7 @@ A simple library that provides a lot of basic functions. The idea behind this li
 
 ***
 
-###Requirements:
+### Requirements:
 - Microsoft Windows 7 or higher (64-bit)
 - [Microsoft Visual Studio 2015 + .NET Framework 4.6.1 SDK](https://www.visualstudio.com/downloads/)
 
