@@ -5281,11 +5281,6 @@
                 </para>
             </summary>
         </member>
-        <member name="P:SilDev.Media.IrrKlangPlayer.ValidAssemblyDirs">
-            <summary>
-                Returns a string 
-            </summary>
-        </member>
         <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.String,System.Boolean,System.Int32)">
             <summary>
                 Plays the specified sound file.
