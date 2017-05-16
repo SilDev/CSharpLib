@@ -313,7 +313,7 @@ namespace SilDev
 
         /// <summary>
         ///     Determines whether the end of this string matches a string. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used forthis comparison.
+        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this comparison.
         /// </summary>
         /// <param name="source">
         ///     The string to check.

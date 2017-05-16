@@ -1293,7 +1293,7 @@
         <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String[])">
             <summary>
                 Determines whether the end of this string matches a string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used forthis comparison.
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this comparison.
             </summary>
             <param name="source">
                 The string to check.
