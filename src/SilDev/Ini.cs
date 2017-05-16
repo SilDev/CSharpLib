@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-15 07:20
+// Version:  2017-05-16 08:43
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1155,17 +1155,47 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(section));
                 if (!File.Exists(path))
                 {
-                    if (string.IsNullOrWhiteSpace(key) || value == null || !PathEx.IsValidPath(path))
+                    if (string.IsNullOrWhiteSpace(key) || value == null || !Path.HasExtension(path) || !PathEx.IsValidPath(path))
                         throw new PathNotFoundException(path);
-                    new StreamWriter(File.Open(path, FileMode.Create), Encoding.Unicode).Close();
+                    var dir = Path.GetDirectoryName(path);
+                    if (string.IsNullOrWhiteSpace(dir))
+                        throw new ArgumentNullException(nameof(dir));
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+                    File.Create(path).Close();
                 }
                 var strValue = value?.ToString();
                 if (forceOverwrite && !skipExistValue)
-                    return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
+                {
+                    // Writes into the INI file if the value contains only ASCII characters
+                    if (string.Concat(section, key, value).IsAscii())
+                        return WriteDirectIntern(section, key, strValue, path);
+
+                    // Check the file encoding type to be sure we will not lose any data
+                    var head = new byte[2];
+                    long len;
+                    using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    {
+                        len = fs.Length;
+                        if (len >= 2)
+                            fs.Read(head, 0, 2);
+                    }
+
+                    // Writes into the INI file if the encoding type is already unicode
+                    if (head.EqualsEx(0xff, 0xfe) || head.EqualsEx(0xfe, 0xff))
+                        return WriteDirectIntern(section, key, strValue, path);
+
+                    // Change the encoding type of the file
+                    var text = len > 0 ? File.ReadAllText(path) : string.Empty;
+                    File.WriteAllText(path, text, Encoding.Unicode);
+
+                    // Finally writes into the INI file
+                    return WriteDirectIntern(section, key, strValue, path);
+                }
                 var curValue = ReadDirect(section, key, path);
                 if (!forceOverwrite && curValue.Equals(strValue) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
                     return false;
-                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
+                return WriteDirectIntern(section, key, strValue, path);
             }
             catch (Exception ex)
             {
@@ -1173,5 +1203,8 @@ namespace SilDev
                 return false;
             }
         }
+
+        private static bool WriteDirectIntern(string section, string key, string value, string file) =>
+            WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, value, file) != 0;
     }
 }
