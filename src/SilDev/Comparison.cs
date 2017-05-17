@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-05-16 08:41
+// Version:  2017-05-17 07:03
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,13 +17,46 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
     ///     Provides static methods and base classes used for the comparison of two or more objects.
     /// </summary>
     public static class Comparison
     {
+        /// <summary>
+        ///     Determines whether the specified object is not empty.
+        /// </summary>
+        /// <param name="value">
+        ///     The object to check.
+        /// </param>
+        public static bool IsNotEmpty(object value)
+        {
+            try
+            {
+                if (value == null)
+                    return false;
+                var asStr = value as string;
+                if (asStr != null)
+                    return !string.IsNullOrWhiteSpace(asStr);
+                bool r;
+                using (var ms = new MemoryStream())
+                {
+                    var bf = new BinaryFormatter();
+                    bf.Serialize(ms, value);
+                    r = ms.Length > 0;
+                }
+                return r;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
         /// <summary>
         ///     Searches for the specified one-dimensional array and returns the index of its first
         ///     occurrence in another one-dimensional array.
