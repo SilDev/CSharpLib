@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-05-14 07:30
+// Version:  2017-05-17 03:27
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -29,6 +29,23 @@ namespace SilDev
     /// </summary>
     public static class ProcessEx
     {
+        private static string _currentName;
+
+        /// <summary>
+        ///     Gets the name of the current process instance.
+        /// </summary>
+        public static string GetCurrentName
+        {
+            get
+            {
+                if (_currentName != null)
+                    return _currentName;
+                using (var p = Process.GetCurrentProcess())
+                    _currentName = p.ProcessName;
+                return _currentName;
+            }
+        }
+
         /// <summary>
         ///     Gets all active instances associated with the specified application.
         /// </summary>
