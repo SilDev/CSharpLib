@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2017-05-18 14:21
+// Version:  2017-05-18 15:03
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -88,8 +88,8 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(text))
                 return text;
-            var current = text.Where(IsLineSeparator).Distinct().ToArray();
             var newText = text.Replace(NewLineFormats.WindowsDefault, NewLineFormats.LineFeed);
+            var current = text.Where(IsLineSeparator).Distinct().ToArray();
             newText = newText.Split(current, StringSplitOptions.None).Join(newLineFormat);
             return newText;
         }
