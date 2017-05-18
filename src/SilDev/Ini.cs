@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-16 08:43
+// Version:  2017-05-18 14:21
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,14 +23,13 @@ namespace SilDev
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods for the handling of initialization files.
     /// </summary>
     public static class Ini
     {
-        private const string NonSectionGuid = "{4EC6358E-5AA1-4F79-A26B-647E2FA8F2C6}";
-
         private static volatile Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> _cachedFiles;
 
         private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles
@@ -40,6 +39,50 @@ namespace SilDev
         }
 
         private const int MaxCacheSize = 8;
+
+        private static void InitializeCache(int code, string section = null, string key = null)
+        {
+            if (CachedFiles == null)
+                CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
+
+            if (!CachedFiles.ContainsKey(code))
+                CachedFiles[code] = new Dictionary<string, Dictionary<string, List<string>>>();
+
+            if (string.IsNullOrEmpty(section))
+                return;
+
+            if (!CachedFiles[code].ContainsKey(section))
+                CachedFiles[code][section] = new Dictionary<string, List<string>>();
+
+            if (string.IsNullOrEmpty(key))
+                return;
+
+            if (!CachedFiles[code][section].ContainsKey(key))
+                CachedFiles[code][section][key] = new List<string>();
+        }
+
+        private static Dictionary<string, Dictionary<string, List<string>>> SortHelper(this Dictionary<string, Dictionary<string, List<string>>> source)
+        {
+            var comparer = new Comparison.AlphanumericComparer();
+            var sorted = source.OrderBy(x => !x.Key.Equals(Resources.Ini_NonSection)).ThenBy(x => x.Key, comparer)
+                               .ToDictionary(x => x.Key, x => x.Value.OrderBy(y => y.Key, comparer)
+                                                               .ToDictionary(y => y.Key, y => y.Value));
+            return sorted;
+        }
+
+        private static Dictionary<string, List<string>> SortHelper(this Dictionary<string, List<string>> source)
+        {
+            var comparer = new Comparison.AlphanumericComparer();
+            var sorted = source.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
+            return sorted;
+        }
+
+        private static List<string> SortHelper(this IEnumerable<string> source)
+        {
+            var comparer = new Comparison.AlphanumericComparer();
+            var sorted = source.OrderBy(x => x, comparer).ToList();
+            return sorted;
+        }
 
         private static volatile string _tmpFileGuid;
 
@@ -150,7 +193,7 @@ namespace SilDev
                 var source = fileOrContent ?? GetFile();
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim() ?? NonSectionGuid;
+                var s = section?.Trim() ?? Resources.Ini_NonSection;
                 if (string.IsNullOrEmpty(section))
                     throw new ArgumentNullException(nameof(section));
                 var path = PathEx.Combine(source);
@@ -162,7 +205,7 @@ namespace SilDev
                 var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
                     return true;
-                if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
+                if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
                 {
                     var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                     if (!string.IsNullOrEmpty(newSection))
@@ -201,7 +244,7 @@ namespace SilDev
                 var source = fileOrContent ?? GetFile();
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim() ?? NonSectionGuid;
+                var s = section?.Trim() ?? Resources.Ini_NonSection;
                 if (string.IsNullOrEmpty(section))
                     throw new ArgumentNullException(nameof(section));
                 var k = key?.Trim();
@@ -216,7 +259,7 @@ namespace SilDev
                 var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
                     return true;
-                if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
+                if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
                 {
                     var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                     if (!string.IsNullOrEmpty(newSection))
@@ -268,14 +311,10 @@ namespace SilDev
                 if (d.Count > 0)
                 {
                     output = d.Keys.ToList();
-                    if (output.Contains(NonSectionGuid))
-                        output.Remove(NonSectionGuid);
+                    if (output.Contains(Resources.Ini_NonSection))
+                        output.Remove(Resources.Ini_NonSection);
                     if (sorted)
-                    {
-                        var comparer = new Comparison.AlphanumericComparer();
-                        var sort = output.OrderBy(x => x, comparer).ToList();
-                        output = sort;
-                    }
+                        output = output.SortHelper();
                 }
             }
             catch (Exception ex)
@@ -315,7 +354,7 @@ namespace SilDev
                 var source = fileOrContent ?? GetFile();
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim() ?? NonSectionGuid;
+                var s = section?.Trim() ?? Resources.Ini_NonSection;
                 if (string.IsNullOrEmpty(s))
                     throw new ArgumentNullException(nameof(section));
                 var path = PathEx.Combine(source);
@@ -327,7 +366,7 @@ namespace SilDev
                 var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (d.Count > 0)
                 {
-                    if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
+                    if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
                     {
                         var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                         if (!string.IsNullOrEmpty(newSection))
@@ -337,11 +376,7 @@ namespace SilDev
                     {
                         output = d[s].Keys.ToList();
                         if (sorted)
-                        {
-                            var comparer = new Comparison.AlphanumericComparer();
-                            var sort = output.OrderBy(x => x, comparer).ToList();
-                            output = sort;
-                        }
+                            output = output.SortHelper();
                     }
                 }
             }
@@ -392,7 +427,7 @@ namespace SilDev
                     throw new ArgumentOutOfRangeException(nameof(code));
 
                 // Enforce INI format rules
-                var lines = source.FormatNewLine().SplitNewLine();
+                var lines = TextEx.FormatNewLine(source).SplitNewLine();
                 for (var i = 0; i < lines.Length; i++)
                 {
                     var line = lines[i].Trim();
@@ -405,7 +440,7 @@ namespace SilDev
                 if (string.IsNullOrWhiteSpace(source))
                     throw new ArgumentNullException(nameof(source));
                 if (!source.StartsWith("["))
-                    source = $"[{NonSectionGuid}]{Environment.NewLine}{source}";
+                    source = $"[{Resources.Ini_NonSection}]{Environment.NewLine}{source}";
                 if (!source.EndsWith(Environment.NewLine))
                     source += Environment.NewLine;
 
@@ -466,26 +501,15 @@ namespace SilDev
                         keys[key].Add(value);
                     }
                     if (sorted)
-                    {
-                        var comparer = new Comparison.AlphanumericComparer();
-                        var sort = keys.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
-                        keys = sort;
-                    }
+                        keys = keys.SortHelper();
                     sections[section] = keys;
                 }
                 if (sorted)
-                {
-                    var comparer = new Comparison.AlphanumericComparer();
-                    var sort = sections.OrderBy(d => !d.Key.Equals(NonSectionGuid))
-                                       .ThenBy(d => d.Key, comparer)
-                                       .ToDictionary(d => d.Key, d => d.Value);
-                    sections = sort;
-                }
+                    sections = sections.SortHelper();
                 output = sections;
                 if (output.Count > 0)
                 {
-                    if (CachedFiles == null)
-                        CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
+                    InitializeCache(code);
                     if (CachedFiles.Count >= MaxCacheSize)
                     {
                         var defCode = FilePath.GetCode();
@@ -548,7 +572,7 @@ namespace SilDev
                 var k = key?.Trim();
                 if (string.IsNullOrEmpty(k))
                     throw new ArgumentNullException(nameof(key));
-                var s = section?.Trim() ?? NonSectionGuid;
+                var s = section?.Trim() ?? Resources.Ini_NonSection;
                 var path = PathEx.Combine(source);
                 if (!File.Exists(path))
                     path = TmpFileGuid;
@@ -558,7 +582,7 @@ namespace SilDev
                 var d = !reread && CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
                 if (d.Count > 0)
                 {
-                    if (!s.Equals(NonSectionGuid) && !d.ContainsKey(s))
+                    if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
                     {
                         var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
                         if (!string.IsNullOrEmpty(newSection))
@@ -608,52 +632,48 @@ namespace SilDev
             dynamic output = defValue;
             try
             {
-                dynamic d;
-                var s = Read(section, key, fileOrContent);
-                var t = typeof(TValue);
-                if (string.IsNullOrEmpty(s))
+                dynamic newValue;
+                var strValue = Read(section, key, fileOrContent);
+                var type = typeof(TValue);
+                if (string.IsNullOrEmpty(strValue))
                 {
                     if (Log.DebugMode > 1)
                     {
-                        var message = $"The value is not defined. (Section: '{(string.IsNullOrEmpty(section) ? "NULL" : section)}'; Key: '{(string.IsNullOrEmpty(key) ? "NULL" : key)}'; File: '{(string.IsNullOrEmpty(fileOrContent) ? GetFile() : PathEx.DirOrFileExists(fileOrContent) ? fileOrContent : "CONTENT" + fileOrContent.EncodeToBase85())}';)";
+                        var message = $"The value is not defined. (Section: '{section}'; Key: '{key}'; File: '{(fileOrContent ?? GetFile())?.EncodeToBase85()}';)";
                         throw new WarningException(message);
                     }
-                    d = defValue;
+                    newValue = defValue;
                 }
-                else if (t == typeof(string))
-                    d = string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(defValue as string) ? (dynamic)defValue : s;
-                else if (t == typeof(string[]) ||
-                         t == typeof(List<string>) ||
-                         t == typeof(IEnumerable<string>))
+                else if (type == typeof(string))
+                    newValue = string.IsNullOrEmpty(strValue) && !string.IsNullOrEmpty(defValue as string) ? (dynamic)defValue : strValue;
+                else if (type == typeof(string[]) || type == typeof(List<string>) || type == typeof(IEnumerable<string>))
                 {
-                    var tmp = s.FromHexStringToByteArray()?.TextFromZip()?
-                               .Split('\0').Reverse().Skip(1).Reverse()
-                               .Select(x => x?.FromHexString());
-                    if (t == typeof(string[]))
-                        d = tmp?.ToArray();
-                    else if (t == typeof(List<string>))
-                        d = tmp?.ToList();
+                    var sequence = strValue.FromHexStringToByteArray()?.TextFromZip()?.Split('\0')
+                                           .Reverse().Skip(1).Reverse().Select(x => x?.FromHexString());
+                    if (type == typeof(string[]))
+                        newValue = sequence?.ToArray();
+                    else if (type == typeof(List<string>))
+                        newValue = sequence?.ToList();
                     else
-                        d = tmp;
+                        newValue = sequence;
                 }
-                else if (t == typeof(byte[]))
-                    d = s.FromHexStringToByteArray();
-                else if (t == typeof(Bitmap) ||
-                         t == typeof(Image))
-                    d = s.FromHexStringToImage();
-                else if (t == typeof(Icon))
-                    d = s.FromHexStringToIcon();
-                else if (t == typeof(Rectangle))
-                    d = s.ToRectangle();
-                else if (t == typeof(Point))
-                    d = s.ToPoint();
-                else if (t == typeof(Size))
-                    d = s.ToSize();
-                else if (t == typeof(Version))
-                    d = Version.Parse(s);
-                else if (!s.TryParse<TValue>(out d))
-                    d = defValue;
-                output = d;
+                else if (type == typeof(byte[]))
+                    newValue = strValue.FromHexStringToByteArray();
+                else if (type == typeof(Bitmap) || type == typeof(Image))
+                    newValue = strValue.FromHexStringToImage();
+                else if (type == typeof(Icon))
+                    newValue = strValue.FromHexStringToIcon();
+                else if (type == typeof(Rectangle))
+                    newValue = strValue.ToRectangle();
+                else if (type == typeof(Point))
+                    newValue = strValue.ToPoint();
+                else if (type == typeof(Size))
+                    newValue = strValue.ToSize();
+                else if (type == typeof(Version))
+                    newValue = Version.Parse(strValue);
+                else if (!strValue.TryParse<TValue>(out newValue))
+                    newValue = defValue;
+                output = newValue;
             }
             catch (FormatException)
             {
@@ -794,13 +814,56 @@ namespace SilDev
                 if (sorted)
                 {
                     var comparer = new Comparison.AlphanumericComparer();
-                    var sort = source.OrderBy(d => !d.Key.Equals(NonSectionGuid))
+                    var sort = source.OrderBy(d => !d.Key.Equals(Resources.Ini_NonSection))
                                      .ThenBy(d => d.Key, comparer)
                                      .ToDictionary(d => d.Key, d => d.Value
                                                                      .OrderBy(p => p.Key, comparer)
                                                                      .ToDictionary(p => p.Key, p => p.Value));
                     source = sort;
                 }
+
+                var hash = new Crypto.Md5().EncryptFile(path);
+                var temp = path + ".new";
+                File.CreateText(temp).Close();
+                using (var sw = new StreamWriter(temp, true))
+                    foreach (var dict in source)
+                    {
+                        if (string.IsNullOrWhiteSpace(dict.Key) || dict.Value.Count == 0)
+                            continue;
+                        if (!dict.Key.Equals(Resources.Ini_NonSection))
+                        {
+                            sw.Write('[');
+                            sw.Write(dict.Key.Trim());
+                            sw.Write(']');
+                            sw.WriteLine();
+                        }
+                        foreach (var pair in dict.Value)
+                        {
+                            if (string.IsNullOrWhiteSpace(pair.Key) || pair.Value.Count == 0)
+                                continue;
+                            var key = pair.Key.Trim();
+                            foreach (var value in pair.Value)
+                            {
+                                if (string.IsNullOrWhiteSpace(value))
+                                    continue;
+                                sw.Write(key);
+                                sw.Write('=');
+                                sw.Write(value.Trim());
+                                sw.WriteLine();
+                            }
+                        }
+                        sw.WriteLine();
+                    }
+                if (hash.Equals(new Crypto.Md5().EncryptFile(temp)))
+                {
+                    File.Delete(temp);
+                    return true;
+                }
+                File.Delete(path);
+                File.Move(temp, path);
+                Data.SetAttributes(path, FileAttributes.Normal);
+
+                /*
                 var sb = new StringBuilder();
                 foreach (var dict in source)
                 {
@@ -831,6 +894,8 @@ namespace SilDev
                     sb.AppendLine();
                 }
                 File.WriteAllText(path, sb.ToString());
+                */
+
                 if (detach)
                     Detach(path);
                 return true;
@@ -908,7 +973,7 @@ namespace SilDev
         {
             try
             {
-                var s = section?.Trim() ?? NonSectionGuid;
+                var s = section?.Trim() ?? Resources.Ini_NonSection;
                 if (string.IsNullOrEmpty(s))
                     throw new ArgumentNullException(nameof(section));
 
@@ -930,18 +995,15 @@ namespace SilDev
                         throw new ArgumentOutOfRangeException(nameof(code));
                 }
 
-                var sb = new StringBuilder();
-                var v = string.Empty;
+                var newValue = string.Empty;
                 if (value != null)
                 {
                     // To allow the saving of a sequence of strings,
                     // it's required to bring it in a single string
-                    var t = typeof(TValue);
-                    if (t == typeof(string[]) ||
-                        t == typeof(List<string>) ||
-                        t == typeof(IEnumerable<string>))
+                    var type = typeof(TValue);
+                    if (type == typeof(string[]) || type == typeof(List<string>) || type == typeof(IEnumerable<string>))
                     {
-                        var sa = t == typeof(string[]) ? value as string[] : (value as IEnumerable<string>)?.ToArray();
+                        var sa = type == typeof(string[]) ? value as string[] : (value as IEnumerable<string>)?.ToArray();
                         if (sa != null)
                         {
                             // Convert each part into hexadecimal to make sure there are no null
@@ -951,37 +1013,30 @@ namespace SilDev
                             if (!str.Contains('\0'))
                                 str += '\0';
                             // To shorten it, zip the result and save it in hexadecimal
-                            sb.Append(str.TextToZip().ToHexString());
+                            newValue = str.TextToZip().ToHexString();
                         }
                     }
                     // No special conversion for anything else
-                    else if (t == typeof(Bitmap) ||
-                             t == typeof(Image) ||
-                             t == typeof(Icon) ||
-                             t == typeof(byte[]))
+                    else if (type == typeof(Bitmap) || type == typeof(Image) || type == typeof(Icon) || type == typeof(byte[]))
                     {
                         byte[] ba;
-                        if (t == typeof(Bitmap) ||
-                            t == typeof(Image))
+                        if (type == typeof(Bitmap) || type == typeof(Image))
                             ba = (value as Bitmap)?.ToByteArray();
-                        else if (t == typeof(Icon))
+                        else if (type == typeof(Icon))
                             ba = (value as Icon)?.ToByteArray();
                         else
                             ba = value as byte[];
                         if (ba != null)
-                            sb.Append(ba.ToHexString());
+                            newValue = ba.ToHexString();
                     }
                     else
-                        sb.Append(value);
-
-                    if (sb.Length > 0)
-                        v = sb.ToString();
+                        newValue = value.ToString();
                 }
 
                 if (!forceOverwrite || skipExistValue)
                 {
                     var c = Read(section, key, fileOrContent);
-                    if (!forceOverwrite && c == v || skipExistValue && !string.IsNullOrWhiteSpace(c))
+                    if (!forceOverwrite && c == newValue || skipExistValue && !string.IsNullOrWhiteSpace(c))
                         return false;
                 }
 
@@ -989,22 +1044,22 @@ namespace SilDev
                 var k = key?.Trim();
                 if (CachedFiles?.ContainsKey(code) == true && CachedFiles[code].Count > 0)
                 {
-                    // To find the correct section
-                    if (!s.Equals(NonSectionGuid) && !CachedFiles[code].ContainsKey(s))
+                    // Find the correct section
+                    if (!s.Equals(Resources.Ini_NonSection) && !CachedFiles[code].ContainsKey(s))
                     {
                         var newSection = CachedFiles[code].Keys.FirstOrDefault(x => x.EqualsEx(s));
                         if (!string.IsNullOrEmpty(newSection))
                             s = newSection;
                     }
 
-                    // To remove key value pairs
-                    if (string.IsNullOrEmpty(k) || string.IsNullOrEmpty(v))
+                    // Remove key value pairs
+                    if (string.IsNullOrEmpty(k) || string.IsNullOrEmpty(newValue))
                     {
                         if (!CachedFiles[code].ContainsKey(s))
                             return true;
                         if (string.IsNullOrEmpty(k))
                             CachedFiles[code][s].Clear();
-                        else if (string.IsNullOrEmpty(v))
+                        else if (string.IsNullOrEmpty(newValue))
                         {
                             if (!CachedFiles[code][s].ContainsKey(k))
                                 return true;
@@ -1016,7 +1071,7 @@ namespace SilDev
                         return true;
                     }
 
-                    // To find the correct key
+                    // Find the correct key
                     if (CachedFiles[code].ContainsKey(s))
                         if (!CachedFiles[code][s].ContainsKey(k))
                         {
@@ -1028,26 +1083,19 @@ namespace SilDev
 
                 if (string.IsNullOrEmpty(k))
                     throw new ArgumentNullException(nameof(key));
-                if (string.IsNullOrEmpty(v))
+                if (string.IsNullOrEmpty(newValue))
                     throw new ArgumentNullException(nameof(value));
 
-                // To write or overwrite the value to the cache
-                if (CachedFiles == null)
-                    CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
-                if (!CachedFiles.ContainsKey(code))
-                    CachedFiles.Add(code, new Dictionary<string, Dictionary<string, List<string>>>());
-                if (!CachedFiles[code].ContainsKey(s))
-                    CachedFiles[code].Add(s, new Dictionary<string, List<string>>());
-                if (!CachedFiles[code][s].ContainsKey(k))
-                    CachedFiles[code][s].Add(k, new List<string>());
+                // Finally write the value in cache
+                InitializeCache(code, s, k);
                 if (CachedFiles[code][s][k].Count > i)
                 {
-                    CachedFiles[code][s][k][i] = v;
+                    CachedFiles[code][s][k][i] = newValue;
                     return true;
                 }
                 if (CachedFiles[code][s][k].Count != i)
                     throw new ArgumentOutOfRangeException(nameof(index));
-                CachedFiles[code][s][k].Add(v);
+                CachedFiles[code][s][k].Add(newValue);
                 return true;
             }
             catch (Exception ex)
@@ -1167,35 +1215,19 @@ namespace SilDev
                 var strValue = value?.ToString();
                 if (forceOverwrite && !skipExistValue)
                 {
-                    // Writes into the INI file if the value contains only ASCII characters
-                    if (string.Concat(section, key, value).IsAscii())
-                        return WriteDirectIntern(section, key, strValue, path);
-
-                    // Check the file encoding type to be sure we will not lose any data
-                    var head = new byte[2];
-                    long len;
-                    using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                    {
-                        len = fs.Length;
-                        if (len >= 2)
-                            fs.Read(head, 0, 2);
-                    }
-
-                    // Writes into the INI file if the encoding type is already unicode
-                    if (head.EqualsEx(0xff, 0xfe) || head.EqualsEx(0xfe, 0xff))
-                        return WriteDirectIntern(section, key, strValue, path);
-
-                    // Change the encoding type of the file
-                    var text = len > 0 ? File.ReadAllText(path) : string.Empty;
-                    File.WriteAllText(path, text, Encoding.Unicode);
-
-                    // Finally writes into the INI file
-                    return WriteDirectIntern(section, key, strValue, path);
+                    if (string.Concat(section, key, value).All(TextEx.IsAscii))
+                        goto Write;
+                    var encoding = TextEx.GetEncoding(path);
+                    if (encoding.Equals(Encoding.Unicode) || encoding.Equals(Encoding.BigEndianUnicode))
+                        goto Write;
+                    TextEx.ChangeEncoding(path, Encoding.Unicode);
+                    goto Write;
                 }
                 var curValue = ReadDirect(section, key, path);
                 if (!forceOverwrite && curValue.Equals(strValue) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
                     return false;
-                return WriteDirectIntern(section, key, strValue, path);
+                Write:
+                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, file) != 0;
             }
             catch (Exception ex)
             {
@@ -1203,8 +1235,5 @@ namespace SilDev
                 return false;
             }
         }
-
-        private static bool WriteDirectIntern(string section, string key, string value, string file) =>
-            WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, value, file) != 0;
     }
 }

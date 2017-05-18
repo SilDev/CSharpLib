@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-05-17 07:03
+// Version:  2017-05-18 14:16
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -130,6 +130,8 @@ namespace SilDev
         {
             try
             {
+                if (source == null || targets == null || targets.Length == 0 || targets.All(x => x == null || x.Length == 0))
+                    return false;
                 var r = targets.Any(x => IndexOf(source.ToArray(), x).Any(y => y >= 0));
                 return r;
             }
@@ -154,15 +156,10 @@ namespace SilDev
         /// </param>
         public static bool ContainsEx(this IEnumerable<string> source, StringComparison comparisonType, params string[] targets)
         {
-            try
-            {
-                var r = source.Any(x => targets.Any(y => string.Equals(x, y, comparisonType)));
-                return r;
-            }
-            catch
-            {
+            if (source == null || targets == null || targets.All(string.IsNullOrEmpty))
                 return false;
-            }
+            var r = source.Any(x => targets.Any(y => string.Equals(x, y, comparisonType)));
+            return r;
         }
 
         /// <summary>
@@ -194,15 +191,10 @@ namespace SilDev
         /// </param>
         public static bool ContainsEx(this string source, StringComparison comparisonType, params string[] targets)
         {
-            try
-            {
-                var r = targets.Any(x => source.IndexOf(x, 0, comparisonType) != -1);
-                return r;
-            }
-            catch
-            {
+            if (string.IsNullOrEmpty(source) || targets == null || targets.All(string.IsNullOrEmpty))
                 return false;
-            }
+            var r = targets.Any(x => source.IndexOf(x, 0, comparisonType) != -1);
+            return r;
         }
 
         /// <summary>
@@ -234,15 +226,10 @@ namespace SilDev
         /// </param>
         public static bool ContainsEx(this string source, StringComparison comparisonType, params char[] targets)
         {
-            try
-            {
-                var r = targets.Any(x => source.IndexOf(x.ToString(), 0, comparisonType) != -1);
-                return r;
-            }
-            catch
-            {
+            if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            }
+            var r = targets.Any(x => source.IndexOf(x.ToString(), 0, comparisonType) != -1);
+            return r;
         }
 
         /// <summary>
@@ -274,15 +261,10 @@ namespace SilDev
         /// </param>
         public static bool StartsWithEx(this string source, StringComparison comparisonType, params string[] targets)
         {
-            try
-            {
-                var r = targets.Any(b => source.StartsWith(b, comparisonType));
-                return r;
-            }
-            catch
-            {
+            if (string.IsNullOrEmpty(source) || targets == null || targets.All(string.IsNullOrEmpty))
                 return false;
-            }
+            var r = targets.Any(b => source.StartsWith(b, comparisonType));
+            return r;
         }
 
         /// <summary>
@@ -319,6 +301,19 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Determines whether the beginning of this sequence of bytes matches the specified
+        ///     sequence of bytes
+        /// </summary>
+        /// <param name="source">
+        ///     The first sequence of bytes to compare.
+        /// </param>
+        /// <param name="target">
+        ///     The sequence of bytes to compare with the first.
+        /// </param>
+        public static bool StartWith(this IEnumerable<byte> source, IEnumerable<byte> target) =>
+            source.StartWith(target.ToArray());
+
+        /// <summary>
         ///     Determines whether the end of this string matches a string. A parameter specifies the
         ///     culture, case, and sort rules used in the comparison.
         /// </summary>
@@ -333,15 +328,10 @@ namespace SilDev
         /// </param>
         public static bool EndsWithEx(this string source, StringComparison comparisonType, params string[] targets)
         {
-            try
-            {
-                var r = targets.Any(b => source.EndsWith(b, comparisonType));
-                return r;
-            }
-            catch
-            {
+            if (string.IsNullOrEmpty(source) || targets == null || targets.All(string.IsNullOrEmpty))
                 return false;
-            }
+            var r = targets.Any(b => source.EndsWith(b, comparisonType));
+            return r;
         }
 
         /// <summary>
@@ -379,6 +369,19 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Determines whether the end of this sequence of bytes matches the specified sequence of
+        ///     bytes.
+        /// </summary>
+        /// <param name="source">
+        ///     The first sequence of bytes to compare.
+        /// </param>
+        /// <param name="target">
+        ///     The sequence of bytes to compare with the first.
+        /// </param>
+        public static bool EndsWith(this IEnumerable<byte> source, IEnumerable<byte> target) =>
+            source.EndsWith(target.ToArray());
+
+        /// <summary>
         ///     Determines whether this string instance is the same as a string of the specified string
         ///     array. A parameter specifies the culture, case, and sort rules used in the comparison.
         /// </summary>
@@ -390,15 +393,12 @@ namespace SilDev
         /// </param>
         public static bool EqualsEx(this string source, StringComparison comparisonType, params string[] targets)
         {
-            try
-            {
-                var r = targets.Any(b => string.Equals(source, b, comparisonType));
-                return r;
-            }
-            catch
-            {
+            if (source == null && (targets == null || targets.All(x => x == null)) || source == string.Empty && targets.All(x => x == string.Empty))
+                return true;
+            if (string.IsNullOrEmpty(source) || targets == null || targets.All(string.IsNullOrEmpty))
                 return false;
-            }
+            var r = targets.Any(b => string.Equals(source, b, comparisonType));
+            return r;
         }
 
         /// <summary>
@@ -433,20 +433,6 @@ namespace SilDev
             if (ba == null || target == null || ba.Length != target.Length)
                 return false;
             var r = !ba.Where((t, i) => t != target[i]).Any();
-            return r;
-        }
-
-        /// <summary>
-        ///     Determines whether this string instance contains only ASCII characters.
-        /// </summary>
-        /// <param name="source">
-        ///     The string to compare.
-        /// </param>
-        public static bool IsAscii(this string source)
-        {
-            if (source == null)
-                return false;
-            var r = source.All(c => c <= sbyte.MaxValue);
             return r;
         }
 

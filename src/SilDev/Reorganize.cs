@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-12 12:01
+// Version:  2017-05-18 14:21
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -32,24 +32,96 @@ namespace SilDev
     public static class Reorganize
     {
         /// <summary>
-        ///     Provides enumerated values of new line formats.
+        ///     Projects each element of a sequence into a new form.
         /// </summary>
-        public enum NewLineFormats
+        /// <typeparam name="TSource">
+        ///     The type of the elements of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values to invoke a transform function on.
+        /// </param>
+        /// <param name="selector">
+        ///     A transform function to apply to each element.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// </exception>
+        public static IEnumerable<TSource> RecursiveSelect<TSource>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TSource>> selector)
         {
-            CarriageReturn = '\u000d',
-            FormFeed = '\u000c',
-            LineFeed = '\u000a',
-            LineSeparator = '\u2028',
-            NextLine = '\u0085',
-            ParagraphSeparator = '\u2029',
-            VerticalTab = '\u000b',
+            var stack = new Stack<IEnumerator<TSource>>();
+            var enumerator = source.GetEnumerator();
+            try
+            {
+                while (true)
+                    if (enumerator.MoveNext())
+                    {
+                        var element = enumerator.Current;
+                        yield return element;
+                        stack.Push(enumerator);
+                        enumerator = selector(element).GetEnumerator();
+                    }
+                    else if (stack.Count > 0)
+                    {
+                        enumerator.Dispose();
+                        enumerator = stack.Pop();
+                    }
+                    else
+                        yield break;
+            }
+            finally
+            {
+                enumerator.Dispose();
+                while (stack.Count > 0)
+                {
+                    enumerator = stack.Pop();
+                    enumerator.Dispose();
+                }
+            }
+        }
 
-            /// <summary>
-            ///     An aggregated <see cref="Enum"/> value of <see cref="CarriageReturn"/>
-            ///     and <see cref="LineFeed"/>, which is not convertable to a single
-            ///     <see cref="char"/> value.
-            /// </summary>
-            WindowsDefault = CarriageReturn + LineFeed
+        /// <summary>
+        ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The value <see cref="Type"/>.
+        /// </typeparam>
+        /// <param name="value">
+        ///     The value to convert.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        public static T Parse<T>(this object value, T defValue = default(T))
+        {
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            var result = (T)converter.ConvertFrom(value);
+            return Comparison.IsNotEmpty(result) ? result : defValue;
+        }
+
+        /// <summary>
+        ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The value <see cref="Type"/>.
+        /// </typeparam>
+        /// <param name="value">
+        ///     The value to convert.
+        /// </param>
+        /// <param name="result">
+        ///     The result value.
+        /// </param>
+        public static bool TryParse<T>(this object value, out dynamic result, T defValue = default(T))
+        {
+            result = defValue;
+            try
+            {
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                result = (T)converter.ConvertFrom(value);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -153,42 +225,6 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the current <see cref="NewLineFormats"/> to another format.
-        /// </summary>
-        /// <param name="str">
-        ///     The text to change.
-        /// </param>
-        /// <param name="newLineFormat">
-        ///     The new format to be applied.
-        /// </param>
-        public static string FormatNewLine(this string str, NewLineFormats newLineFormat = NewLineFormats.WindowsDefault)
-        {
-            try
-            {
-                var sa = Enum.GetValues(typeof(NewLineFormats))
-                             .Cast<NewLineFormats>()
-                             .Where(x => x != NewLineFormats.WindowsDefault)
-                             .Select(x => new string((char)x.GetHashCode(), 1))
-                             .ToArray();
-                string f;
-                if (newLineFormat != NewLineFormats.WindowsDefault)
-                    f = new string((char)newLineFormat.GetHashCode(), 1);
-                else
-                {
-                    f = new string((char)NewLineFormats.CarriageReturn, 1);
-                    f += new string((char)NewLineFormats.LineFeed, 1);
-                }
-                var s = str.Replace(Environment.NewLine, new string((char)NewLineFormats.LineFeed, 1));
-                return s.Split(sa, StringSplitOptions.None).Join(f);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return str;
-            }
-        }
-
-        /// <summary>
         ///     Creates a sequence of strings based on natural (base e) logarithm of a count
         ///     of all the characters in the specified string.
         /// </summary>
@@ -197,17 +233,11 @@ namespace SilDev
         /// </param>
         public static string[] ToLogStringArray(this string str)
         {
-            try
-            {
-                var i = 0;
-                var b = Math.Floor(Math.Log(str.Length));
-                return str.ToLookup(c => Math.Floor(i++ / b)).Select(e => new string(e.ToArray())).ToArray();
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
+            if (string.IsNullOrEmpty(str) || str.Length < 8)
+                return new[] { str };
+            var i = 0;
+            var b = Math.Floor(Math.Log(str.Length));
+            return str.ToLookup(c => Math.Floor(i++ / b)).Select(e => new string(e.ToArray())).ToArray();
         }
 
         /// <summary>
@@ -218,19 +248,12 @@ namespace SilDev
         /// </param>
         public static string Reverse(this string str)
         {
-            try
-            {
-                var s = str;
-                var ca = s.ToCharArray();
-                Array.Reverse(ca);
-                s = new string(ca);
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (string.IsNullOrWhiteSpace(str))
                 return str;
-            }
+            var ca = str.ToCharArray();
+            Array.Reverse(ca);
+            var s = new string(ca);
+            return s;
         }
 
         /// <summary>
@@ -245,16 +268,10 @@ namespace SilDev
         /// </param>
         public static string Join(this IEnumerable<string> values, string separator = null)
         {
-            try
-            {
-                var s = string.Join(separator, values);
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (values == null)
                 return null;
-            }
+            var s = string.Join(separator, values);
+            return s;
         }
 
         /// <summary>
@@ -279,17 +296,11 @@ namespace SilDev
         /// </param>
         public static string[] Sort(this string[] strs)
         {
-            try
-            {
-                var sa = strs;
-                Array.Sort(sa);
-                return sa;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
+            if (strs == null || strs.All(string.IsNullOrWhiteSpace))
+                return strs;
+            var sa = strs;
+            Array.Sort(sa);
+            return sa;
         }
 
         /// <summary>
@@ -302,18 +313,12 @@ namespace SilDev
         /// <param name="separator">
         ///     The string to use as a separator.
         /// </param>
-        public static string[] Split(this string str, string separator = "\r\n", StringSplitOptions splitOptions = StringSplitOptions.None)
+        public static string[] Split(this string str, string separator = TextEx.NewLineFormats.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None)
         {
-            try
-            {
-                var sa = str.Split(new[] { separator }, splitOptions);
-                return sa;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (string.IsNullOrEmpty(str))
                 return null;
-            }
+            var sa = str.Split(new[] { separator }, splitOptions);
+            return sa;
         }
 
         /// <summary>
@@ -336,16 +341,10 @@ namespace SilDev
         /// </param>
         public static string LowerText(this string str, params string[] strs)
         {
-            try
-            {
-                var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToLower(), RegexOptions.IgnoreCase));
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
                 return str;
-            }
+            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToLower(), RegexOptions.IgnoreCase));
+            return s;
         }
 
         /// <summary>
@@ -359,16 +358,10 @@ namespace SilDev
         /// </param>
         public static string UpperText(this string str, params string[] strs)
         {
-            try
-            {
-                var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToUpper(), RegexOptions.IgnoreCase));
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
                 return str;
-            }
+            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToUpper(), RegexOptions.IgnoreCase));
+            return s;
         }
 
         /// <summary>
@@ -382,16 +375,10 @@ namespace SilDev
         /// </param>
         public static char[] RemoveChar(this char[] array, params char[] chrs)
         {
-            try
-            {
-                var ca = array.Where(c => !chrs.Contains(c)).ToArray();
-                return ca;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (array == null || chrs == null)
                 return array;
-            }
+            var ca = array.Where(c => !chrs.Contains(c)).ToArray();
+            return ca;
         }
 
         /// <summary>
@@ -405,16 +392,10 @@ namespace SilDev
         /// </param>
         public static string RemoveChar(this string str, params char[] chrs)
         {
-            try
-            {
-                var s = new string(str.Where(c => !chrs.Contains(c)).ToArray());
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (string.IsNullOrEmpty(str) || chrs == null)
                 return str;
-            }
+            var s = new string(str.Where(c => !chrs.Contains(c)).ToArray());
+            return s;
         }
 
         /// <summary>
@@ -428,16 +409,10 @@ namespace SilDev
         /// </param>
         public static string RemoveText(this string str, params string[] strs)
         {
-            try
-            {
-                var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (string.IsNullOrEmpty(str) || strs == null || strs.All(string.IsNullOrEmpty))
                 return str;
-            }
+            var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
+            return s;
         }
 
         /// <summary>
@@ -454,6 +429,8 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrEmpty(str))
+                    throw new ArgumentNullException(nameof(str));
                 var ba = Encoding.UTF8.GetBytes(str);
                 var s = separator ? " " : string.Empty;
                 s = ba.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')).Join(s);
@@ -476,6 +453,8 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(nameof(str));
                 var s = str.RemoveChar(' ', ':', '\r', '\n');
                 if (s.Any(c => !"01".Contains(c)))
                     throw new ArgumentOutOfRangeException(nameof(s));
@@ -510,6 +489,8 @@ namespace SilDev
         {
             try
             {
+                if (bytes == null)
+                    throw new ArgumentNullException(nameof(bytes));
                 var sb = new StringBuilder(bytes.Length * 2);
                 foreach (var b in bytes)
                     sb.Append(b.ToString("x2"));
@@ -570,6 +551,8 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrEmpty(str))
+                    throw new ArgumentNullException(nameof(str));
                 var s = new string(str.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
                 var ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
                 return ba;
@@ -723,9 +706,7 @@ namespace SilDev
         {
             try
             {
-                bool b;
-                if (!bool.TryParse(str, out b))
-                    throw new ArgumentException();
+                var b = bool.Parse(str);
                 return b;
             }
             catch
@@ -744,6 +725,8 @@ namespace SilDev
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(nameof(str));
                 var ba = Encoding.UTF8.GetBytes(str);
                 return ba;
             }
@@ -767,6 +750,8 @@ namespace SilDev
         {
             try
             {
+                if (image == null)
+                    throw new ArgumentNullException(nameof(image));
                 byte[] ba;
                 using (var ms = new MemoryStream())
                 {
@@ -792,6 +777,8 @@ namespace SilDev
         {
             try
             {
+                if (icon == null)
+                    throw new ArgumentNullException(nameof(icon));
                 byte[] ba;
                 using (var ms = new MemoryStream())
                 {
@@ -817,6 +804,8 @@ namespace SilDev
         {
             try
             {
+                if (bytes == null)
+                    throw new ArgumentNullException(nameof(bytes));
                 var s = Encoding.UTF8.GetString(bytes);
                 return s;
             }
@@ -837,6 +826,8 @@ namespace SilDev
         {
             try
             {
+                if (bytes == null)
+                    throw new ArgumentNullException(nameof(bytes));
                 Image img;
                 using (var ms = new MemoryStream(bytes))
                     img = Image.FromStream(ms);
@@ -864,6 +855,8 @@ namespace SilDev
         {
             try
             {
+                if (bytes == null)
+                    throw new ArgumentNullException(nameof(bytes));
                 Icon ico;
                 using (var ms = new MemoryStream(bytes))
                     ico = new Icon(ms);
@@ -898,9 +891,9 @@ namespace SilDev
         {
             try
             {
-                if (bytes.Length == 0)
+                if (bytes == null || bytes.Length == 0)
                     throw new ArgumentNullException(nameof(bytes));
-                if (oldValue.Length == 0)
+                if (oldValue == null || oldValue.Length == 0)
                     throw new ArgumentNullException(nameof(oldValue));
                 byte[] ba;
                 using (var ms = new MemoryStream())
@@ -946,107 +939,6 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return new IntPtr(IntPtr.Size == sizeof(int) ? int.MaxValue : long.MaxValue);
-            }
-        }
-
-        /// <summary>
-        ///     Projects each element of a sequence into a new form.
-        /// </summary>
-        /// <typeparam name="TSource">
-        ///     The type of the elements of source.
-        /// </typeparam>
-        /// <param name="source">
-        ///     A sequence of values to invoke a transform function on.
-        /// </param>
-        /// <param name="selector">
-        ///     A transform function to apply to each element.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        public static IEnumerable<TSource> RecursiveSelect<TSource>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TSource>> selector)
-        {
-            var stack = new Stack<IEnumerator<TSource>>();
-            var enumerator = source.GetEnumerator();
-            try
-            {
-                while (true)
-                    if (enumerator.MoveNext())
-                    {
-                        var element = enumerator.Current;
-                        yield return element;
-                        stack.Push(enumerator);
-                        enumerator = selector(element).GetEnumerator();
-                    }
-                    else if (stack.Count > 0)
-                    {
-                        enumerator.Dispose();
-                        enumerator = stack.Pop();
-                    }
-                    else
-                        yield break;
-            }
-            finally
-            {
-                enumerator.Dispose();
-                while (stack.Count > 0)
-                {
-                    enumerator = stack.Pop();
-                    enumerator.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
-        /// </summary>
-        /// <typeparam name="T">
-        ///     The value <see cref="Type"/>.
-        /// </typeparam>
-        /// <param name="value">
-        ///     The value to convert.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value.
-        /// </param>
-        public static T Parse<T>(this object value, T defValue = default(T))
-        {
-            var result = defValue;
-            try
-            {
-                var converter = TypeDescriptor.GetConverter(typeof(T));
-                result = (T)converter.ConvertFrom(value);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return result;
-        }
-
-        /// <summary>
-        ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
-        /// </summary>
-        /// <typeparam name="T">
-        ///     The value <see cref="Type"/>.
-        /// </typeparam>
-        /// <param name="value">
-        ///     The value to convert.
-        /// </param>
-        /// <param name="result">
-        ///     The result value.
-        /// </param>
-        public static bool TryParse<T>(this object value, out dynamic result, T defValue = default(T))
-        {
-            result = defValue;
-            try
-            {
-                var converter = TypeDescriptor.GetConverter(typeof(T));
-                result = (T)converter.ConvertFrom(value);
-                return true;
-            }
-            catch
-            {
-                return false;
             }
         }
     }
