@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-05-14 08:47
+// Version:  2017-05-18 14:53
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev
     using System.Runtime.InteropServices;
     using System.Runtime.InteropServices.ComTypes;
     using System.Text;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods for the creation, copying, linking of data and to handle file
@@ -974,6 +975,103 @@ namespace SilDev
                 Log.Write(ex);
             }
             return list;
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Deletes any file or directory.
+        ///     </para>
+        ///     <para>
+        ///         Immediately stops all specified processes that are locking this file or directory.
+        ///     </para>
+        /// </summary>
+        /// <param name="path">
+        ///     The path of the file or directory to be deleted.
+        /// </param>
+        public static bool ForceDelete(string path, bool elevated = false)
+        {
+            var target = PathEx.Combine(path);
+            try
+            {
+                if (!PathEx.DirOrFileExists(target))
+                    throw new PathNotFoundException(target);
+                var locked = false;
+                using (var current = Process.GetCurrentProcess())
+                {
+                    var locks = GetLocks(target);
+                    if (locks != null)
+                        foreach (var p in locks)
+                        {
+                            if (p != current)
+                                continue;
+                            locked = true;
+                            p.Dispose();
+                            break;
+                        }
+                    locks = GetLocks(target)?.Where(p => p != current).ToList();
+                    if (locks?.Any() == true)
+                        ProcessEx.Terminate(locks);
+                    if (!locked)
+                        locks = GetLocks(target);
+                    if (locks?.Any() == true)
+                    {
+                        locked = true;
+                        foreach (var p in locks)
+                            p?.Dispose();
+                    }
+                }
+                var curName = $"{ProcessEx.CurrentName}.exe";
+                if (IsDir(target))
+                {
+                    var tmpDir = PathEx.Combine(Path.GetTempPath(), PathEx.GetTempDirName());
+                    if (!Directory.Exists(tmpDir))
+                        Directory.CreateDirectory(tmpDir);
+                    var helper = PathEx.Combine(Path.GetTempPath(), PathEx.GetTempFileName("tmp", ".cmd"));
+                    var content = string.Format(Resources.Cmd_DeleteForce, tmpDir, target);
+                    File.WriteAllText(helper, content);
+                    var command = string.Format(Resources.Cmd_Call, helper);
+                    if (locked)
+                    {
+                        command = string.Format(Resources.Cmd_WaitForProcThenCmd, curName, command);
+                        ProcessEx.Send(command, elevated);
+                    }
+                    else
+                        using (var p = ProcessEx.Send(command, elevated, false))
+                            if (!p?.HasExited == true)
+                                p?.WaitForExit();
+                    if (Directory.Exists(tmpDir))
+                        Directory.Delete(tmpDir, true);
+                    if (Directory.Exists(target))
+                        Directory.Delete(target, true);
+                    command = string.Format(Resources.Cmd_DeleteFile, helper);
+                    command = string.Format(Resources.Cmd_WaitThenCmd, 5, command);
+                    command = string.Format(Resources.Cmd_WaitForProcThenCmd, curName, command);
+                    ProcessEx.Send(command);
+                }
+                else
+                    try
+                    {
+                        File.Delete(target);
+                    }
+                    catch
+                    {
+                        var command = string.Format(Resources.Cmd_DeleteFile, target);
+                        if (locked)
+                        {
+                            command = string.Format(Resources.Cmd_WaitForProcThenCmd, curName, command);
+                            ProcessEx.Send(command, true);
+                        }
+                        else
+                            using (var p = ProcessEx.Send(command, elevated, false))
+                                if (!p?.HasExited == true)
+                                    p?.WaitForExit();
+                    }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return !PathEx.DirOrFileExists(target);
         }
 
         /// <summary>
