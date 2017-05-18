@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2016-10-27 13:54
+// Version:  2017-05-18 14:21
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -147,7 +147,7 @@ namespace SilDev.Forms
                     dialog.FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt";
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
-                        File.WriteAllText(dialog.FileName, control.Text.FormatNewLine());
+                        File.WriteAllText(dialog.FileName, TextEx.FormatNewLine(control.Text));
                         MessageBoxEx.Show(owner, "File successfully saved!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
                     else
