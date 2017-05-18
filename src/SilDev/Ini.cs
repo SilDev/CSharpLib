@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-18 14:21
+// Version:  2017-05-18 17:25
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -530,9 +530,13 @@ namespace SilDev
             var s = str;
             if (string.IsNullOrWhiteSpace(s))
                 return false;
-            if (s.StartsWith("[") && s.EndsWith("]") && s.Count(c => c == '[') == 1 && s.Count(c => c == ']') == 1 && s.Count(char.IsLetterOrDigit) > 0)
+            if (s.StartsWith("[") && s.EndsWith("]") && s.Count(x => x == '[') == 1 && s.Count(x => x == ']') == 1 && s.Any(char.IsLetterOrDigit))
                 return true;
-            return !s.StartsWith("=") && s.Contains('=') && s.IndexOf('=') + 1 < s.Length;
+            var c = s.First();
+            if (!char.IsLetterOrDigit(c) && !c.IsBetween('$', '/') && !c.IsBetween('<', '@') && !c.IsBetween('{', '~') && c != '!' && c != '"' && c != ':' && c != '^' && c != '_')
+                return false;
+            var i = s.IndexOf('=');
+            return i > 0 && s.Substring(0, i).Any(char.IsLetterOrDigit) && s.Contains('=') && i + 1 < s.Length;
         }
 
         /// <summary>
