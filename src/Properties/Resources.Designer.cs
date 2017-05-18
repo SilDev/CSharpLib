@@ -61,12 +61,135 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CALL &quot;{0}&quot;.
+        /// </summary>
+        internal static string Cmd_Call {
+            get {
+                return ResourceManager.GetString("Cmd_Call", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /C CALL &quot;{0}&quot;.
+        /// </summary>
+        internal static string Cmd_CallPre {
+            get {
+                return ResourceManager.GetString("Cmd_CallPre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RMDIR /S /Q &quot;{0}&quot;.
+        /// </summary>
+        internal static string Cmd_DeleteDir {
+            get {
+                return ResourceManager.GetString("Cmd_DeleteDir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DEL /F /Q &quot;{0}&quot;.
+        /// </summary>
+        internal static string Cmd_DeleteFile {
+            get {
+                return ResourceManager.GetString("Cmd_DeleteFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @ECHO OFF
+        ///ROBOCOPY &quot;{0}&quot; &quot;{1}&quot; /MIR
+        ///RMDIR /S /Q &quot;{0}&quot;
+        ///RMDIR /S /Q &quot;{1}&quot;
+        ///EXIT.
+        /// </summary>
+        internal static string Cmd_DeleteForce {
+            get {
+                return ResourceManager.GetString("Cmd_DeleteForce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @ECHO OFF
+        ///{0}
+        ///EXIT.
+        /// </summary>
+        internal static string Cmd_Script {
+            get {
+                return ResourceManager.GetString("Cmd_Script", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TASKKILL /F /IM &quot;{0}&quot;.
+        /// </summary>
+        internal static string Cmd_Terminate {
+            get {
+                return ResourceManager.GetString("Cmd_Terminate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot; &amp;&amp; TASKKILL /F /IM &quot;.
+        /// </summary>
+        internal static string Cmd_TerminateJoin {
+            get {
+                return ResourceManager.GetString("Cmd_TerminateJoin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FOR /L %X in (1,0,2) DO (TASKLIST | FIND /I &quot;{0}&quot; &amp; IF ERRORLEVEL 1 ({1} &amp;&amp; EXIT)).
+        /// </summary>
+        internal static string Cmd_WaitForProcThenCmd {
+            get {
+                return ResourceManager.GetString("Cmd_WaitForProcThenCmd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PING LOCALHOST -n {0} &gt; NUL &amp;&amp; {1}.
+        /// </summary>
+        internal static string Cmd_WaitThenCmd {
+            get {
+                return ResourceManager.GetString("Cmd_WaitThenCmd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to cmd.exe.
+        /// </summary>
+        internal static string CmdFile {
+            get {
+                return ResourceManager.GetString("CmdFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to %System%\cmd.exe.
+        /// </summary>
+        internal static string CmdPath {
+            get {
+                return ResourceManager.GetString("CmdPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap DimEmptyImage {
             get {
                 object obj = ResourceManager.GetObject("DimEmptyImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {4EC6358E-5AA1-4F79-A26B-647E2FA8F2C6}.
+        /// </summary>
+        internal static string Ini_NonSection {
+            get {
+                return ResourceManager.GetString("Ini_NonSection", resourceCulture);
             }
         }
         
@@ -100,6 +223,15 @@ namespace SilDev.Properties {
             get {
                 object obj = ResourceManager.GetObject("SearchImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to %TEMP%\tmp-{0}.
+        /// </summary>
+        internal static string TempDir {
+            get {
+                return ResourceManager.GetString("TempDir", resourceCulture);
             }
         }
     }
