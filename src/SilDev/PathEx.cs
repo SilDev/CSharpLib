@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-05-15 01:27
+// Version:  2017-05-17 15:45
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -72,6 +72,45 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Determines the PE (Portable Executable) header of the specified file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check.
+        /// </param>
+        public static Headers GetHeader(string path)
+        {
+            var pe = Headers.Unknown;
+            try
+            {
+                using (var fs = new FileStream(Combine(path), FileMode.Open, FileAccess.Read))
+                {
+                    var br = new BinaryReader(fs);
+                    fs.Seek(0x3c, SeekOrigin.Begin);
+                    fs.Seek(br.ReadInt32(), SeekOrigin.Begin);
+                    br.ReadUInt32();
+                    pe = (Headers)br.ReadUInt16();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return pe;
+        }
+
+        /// <summary>
+        ///     Determines whether the specified file was compiled for a 64-bit platform environments.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check.
+        /// </param>
+        public static bool FileIs64Bit(string path)
+        {
+            var pe = GetHeader(path);
+            return pe == Headers.AMD64 || pe == Headers.IA64;
+        }
+
+        /// <summary>
         ///     Gets the full process executable path of the assembly based on
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
@@ -125,21 +164,21 @@ namespace SilDev
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(path));
                 if (path.Length < 3)
-                    throw new ArgumentException("The path length is lower than 3 characters.");
+                    throw new ArgumentException("The path length is lower than 3 characters. - PATH: '" + path + "'");
                 if (Path.HasExtension(path) && path.Length > 260)
-                    throw new PathTooLongException("The specified path is longer than 260 characters.");
+                    throw new PathTooLongException("The specified path is longer than 260 characters. - PATH: '" + path + "'");
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
-                    throw new ArgumentException("The path cannot contain several consecutive separators.");
+                    throw new ArgumentException("The path cannot contain several consecutive separators. - PATH: '" + path + "'");
                 var drive = path.Substring(0, 3);
                 if (!Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
-                    throw new DriveNotFoundException("The path does not contain any drive.");
+                    throw new DriveNotFoundException("The path does not contain any drive. - PATH: '" + path + "'");
                 if (!DriveInfo.GetDrives().Select(di => di.Name).Contains(drive))
-                    throw new DriveNotFoundException("The path does not contain a valid drive.");
+                    throw new DriveNotFoundException("The path does not contain a valid drive. - PATH: '" + path + "'");
                 var subPath = path.Substring(3);
                 if (subPath.Any(c => c != Path.DirectorySeparatorChar && Path.GetInvalidFileNameChars().Contains(c)))
                     throw new ArgumentException("The path contains invalid characters.");
                 if (!Path.HasExtension(path) && path.Split(Path.DirectorySeparatorChar).Any(s => s.Length > 248))
-                    throw new PathTooLongException("The directory or file name must be less than 248 characters.");
+                    throw new PathTooLongException("The directory or file name must be less than 248 characters. - PATH: '" + path + "'");
                 return true;
             }
             catch (Exception ex)
@@ -325,15 +364,15 @@ namespace SilDev
         /// <summary>
         ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()"/>.
         /// </summary>
-        /// <param name="label">
+        /// <param name="prefix">
         ///     This text is at the beginning of the name.
         /// </param>
         /// <param name="len">
         ///     The length of the hash. Valid values are 4 through 24.
         /// </param>
-        public static string GetTempDirName(string label = "tmp", int len = 4)
+        public static string GetTempDirName(string prefix = "tmp", int len = 4)
         {
-            var s = label;
+            var s = prefix;
             try
             {
                 var g = new string(Guid.NewGuid().ToString().Where(char.IsLetterOrDigit).ToArray());
@@ -358,14 +397,29 @@ namespace SilDev
         /// <summary>
         ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
         /// </summary>
-        /// <param name="label">
+        /// <param name="prefix">
+        ///     This text is at the beginning of the name.
+        /// </param>
+        /// <param name="suffix">
+        ///     This text is at the end of the name.
+        /// </param>
+        /// <param name="len">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        public static string GetTempFileName(string prefix, string suffix = ".tmp", int len = 4) =>
+            GetTempDirName(prefix, len) + suffix;
+
+        /// <summary>
+        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
+        /// </summary>
+        /// <param name="prefix">
         ///     This text is at the beginning of the name.
         /// </param>
         /// <param name="len">
         ///     The length of the hash. Valid values are 4 through 24.
         /// </param>
-        public static string GetTempFileName(string label = "tmp", int len = 4) =>
-            GetTempDirName(label, len) + ".tmp";
+        public static string GetTempFileName(string prefix = "tmp", int len = 4) =>
+            GetTempFileName(prefix, ".tmp", len);
 
         /// <summary>
         ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
@@ -375,45 +429,6 @@ namespace SilDev
         /// </param>
         public static string GetTempFileName(int len) =>
             GetTempFileName("tmp", len);
-
-        /// <summary>
-        ///     Determines the PE (Portable Executable) header of the specified file.
-        /// </summary>
-        /// <param name="path">
-        ///     The file to check.
-        /// </param>
-        public static Headers GetHeader(string path)
-        {
-            var pe = Headers.Unknown;
-            try
-            {
-                using (var fs = new FileStream(Combine(path), FileMode.Open, FileAccess.Read))
-                {
-                    var br = new BinaryReader(fs);
-                    fs.Seek(0x3c, SeekOrigin.Begin);
-                    fs.Seek(br.ReadInt32(), SeekOrigin.Begin);
-                    br.ReadUInt32();
-                    pe = (Headers)br.ReadUInt16();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return pe;
-        }
-
-        /// <summary>
-        ///     Determines whether the specified file was compiled for a 64-bit platform environments.
-        /// </summary>
-        /// <param name="path">
-        ///     The file to check.
-        /// </param>
-        public static bool FileIs64Bit(string path)
-        {
-            var pe = GetHeader(path);
-            return pe == Headers.AMD64 || pe == Headers.IA64;
-        }
     }
 
     /// <summary>
