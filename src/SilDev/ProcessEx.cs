@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-05-17 03:27
+// Version:  2017-05-18 14:19
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,6 +22,7 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Management;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Process"/> class to enable you to start
@@ -34,7 +35,7 @@ namespace SilDev
         /// <summary>
         ///     Gets the name of the current process instance.
         /// </summary>
-        public static string GetCurrentName
+        public static string CurrentName
         {
             get
             {
@@ -419,15 +420,26 @@ namespace SilDev
             {
                 var cmd = command.Trim();
                 if (cmd.StartsWithEx("/K "))
-                    cmd = cmd.Substring(2).TrimStart();
+                    cmd = cmd.Substring(3).TrimStart();
                 if (!cmd.StartsWithEx("/C "))
                     cmd = $"/C {cmd}";
-                if (cmd.Length <= 3)
+                if (cmd.Length < 16)
                     throw new ArgumentNullException(nameof(cmd));
+                var path = PathEx.Combine(Resources.CmdPath);
+                if ((path + cmd).Length > 8192)
+                {
+                    var batch = PathEx.Combine(Path.GetTempPath(), PathEx.GetTempFileName("tmp", ".cmd"));
+                    var content = cmd.Substring(3)
+                                     .Replace("FOR /L %", "FOR /L %%")
+                                     .Replace("EXIT /B", "EXIT");
+                    content = string.Format(Resources.Cmd_Script, content);
+                    File.WriteAllText(batch, content);
+                    cmd = string.Format(Resources.Cmd_CallPre, batch);
+                }
                 var psi = new ProcessStartInfo
                 {
                     Arguments = cmd,
-                    FileName = "%System%\\cmd.exe",
+                    FileName = path,
                     UseShellExecute = runAsAdmin,
                     Verb = runAsAdmin ? "runas" : string.Empty,
                     WindowStyle = processWindowStyle
@@ -491,6 +503,194 @@ namespace SilDev
             Send(command, false, processWindowStyle, dispose);
 
         /// <summary>
+        ///     Provides basic functionality based on <see cref="Send(string,bool,bool)"/>.
+        /// </summary>
+        public static class SendHelper
+        {
+            /// <summary>
+            ///     Waits before the system is instructed to delete the target at the specified path.
+            /// </summary>
+            /// <param name="path">
+            ///     The path to the file or directory to be deleted.
+            /// </param>
+            /// <param name="seconds">
+            ///     The time to wait in seconds.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitThenDelete(string path, int seconds = 5, bool runAsAdmin = false, bool dispose = true)
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    return null;
+                var fullPath = PathEx.Combine(path);
+                if (!PathEx.DirOrFileExists(fullPath))
+                    return null;
+                var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
+                var command = string.Format(Data.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
+                command = string.Format(Resources.Cmd_WaitThenCmd, time, command);
+                return Send(command, runAsAdmin, dispose);
+            }
+
+            /// <summary>
+            ///     <para>
+            ///         Deletes the target at the specified path if there is no process running that
+            ///         is matched with the specified process name.
+            ///     </para>
+            ///     <para>
+            ///         If a matched process is still running, the task will wait until all matched
+            ///         processes has been closed.
+            ///     </para>
+            /// </summary>
+            /// <param name="path">
+            ///     The path to the file or directory to be deleted.
+            /// </param>
+            /// <param name="processName">
+            ///     The name of the process to be waited.
+            /// </param>
+            /// <param name="extension">
+            ///     The file extension of the specified process.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitForExitThenDelete(string path, string processName, string extension, bool runAsAdmin = false, bool dispose = true)
+            {
+                if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(processName))
+                    return null;
+                var fullPath = PathEx.Combine(path);
+                if (!PathEx.DirOrFileExists(fullPath))
+                    return null;
+                var name = processName;
+                if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
+                    name += extension;
+                var command = string.Format(Data.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
+                command = string.Format(Resources.Cmd_WaitForProcThenCmd, name, command);
+                return Send(command, runAsAdmin, dispose);
+            }
+
+            /// <summary>
+            ///     <para>
+            ///         Deletes the target at the specified path if there is no process running that
+            ///         is matched with the specified process name.
+            ///     </para>
+            ///     <para>
+            ///         If a matched process is still running, the task will wait until all matched
+            ///         processes has been closed.
+            ///     </para>
+            /// </summary>
+            /// <param name="path">
+            ///     The path to the file or directory to be deleted.
+            /// </param>
+            /// <param name="processName">
+            ///     The name of the process to be waited.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitForExitThenDelete(string path, string processName, bool runAsAdmin = false, bool dispose = true) =>
+                WaitForExitThenDelete(path, processName, ".exe", runAsAdmin, dispose);
+
+            /// <summary>
+            ///     Ends all processes matched by the specified process name.
+            /// </summary>
+            /// <param name="processName">
+            ///     The name of the process to be killed.
+            /// </param>
+            /// <param name="extension">
+            ///     The file extension of the specified process.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process KillTask(string processName, string extension, bool runAsAdmin = false, bool dispose = true)
+            {
+                if (string.IsNullOrWhiteSpace(processName))
+                    return null;
+                var name = processName;
+                if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
+                    name += extension;
+                var command = string.Format(Resources.Cmd_Terminate, name);
+                return Send(command, runAsAdmin, dispose);
+            }
+
+            /// <summary>
+            ///     Ends all processes matched by the specified process name.
+            /// </summary>
+            /// <param name="processName">
+            ///     The name of the process to be killed.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process KillTask(string processName, bool runAsAdmin = false, bool dispose = true) =>
+                KillTask(processName, ".exe", runAsAdmin, dispose);
+
+            /// <summary>
+            ///     Ends all processes matched by all the specified process names.
+            /// </summary>
+            /// <param name="processNames">
+            ///     A list of the process names to be killed.
+            /// </param>
+            /// <param name="extension">
+            ///     The file extension of the specified processes.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process KillAllTasks(IEnumerable<string> processNames, string extension, bool runAsAdmin = false, bool dispose = true)
+            {
+                if (processNames == null)
+                    return null;
+                var names = processNames.Where(Comparison.IsNotEmpty);
+                if (!string.IsNullOrWhiteSpace(extension))
+                    names = names.Select(x => !x.EndsWithEx(extension) ? x + extension : x);
+                var command = string.Format(Resources.Cmd_Terminate, names.Join(Resources.Cmd_TerminateJoin));
+                return Send(command, runAsAdmin, dispose);
+            }
+
+            /// <summary>
+            ///     Ends all processes matched by all the specified process names.
+            /// </summary>
+            /// <param name="processNames">
+            ///     A list of the process names to be killed.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process KillAllTasks(IEnumerable<string> processNames, bool runAsAdmin = false, bool dispose = true) =>
+                KillAllTasks(processNames, ".exe", runAsAdmin, dispose);
+        }
+
+        /// <summary>
         ///     <para>
         ///         Immediately stops all specified processes.
         ///     </para>
@@ -523,13 +723,13 @@ namespace SilDev
                     {
                         Log.Write(ex);
                     }
-                    var s = p.ProcessName + ".exe";
+                    var s = p.ProcessName;
                     if (!list.ContainsEx(s))
                         list.Add(s);
                 }
             if (list.Count == 0)
                 return count > 0;
-            using (var p = Send($"TASKKILL /F /IM \"{list.Join("\" && TASKKILL /F /IM \"")}\"", true, false))
+            using (var p = SendHelper.KillAllTasks(list, true, false))
                 if (!p?.HasExited == true)
                     p?.WaitForExit();
             return count > 0;
