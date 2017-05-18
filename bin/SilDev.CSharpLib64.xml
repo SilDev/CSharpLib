@@ -20,9 +20,80 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_Call">
+            <summary>
+              Looks up a localized string similar to CALL &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_CallPre">
+            <summary>
+              Looks up a localized string similar to /C CALL &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_DeleteDir">
+            <summary>
+              Looks up a localized string similar to RMDIR /S /Q &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_DeleteFile">
+            <summary>
+              Looks up a localized string similar to DEL /F /Q &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_DeleteForce">
+             <summary>
+               Looks up a localized string similar to @ECHO OFF
+            ROBOCOPY &quot;{0}&quot; &quot;{1}&quot; /MIR
+            RMDIR /S /Q &quot;{0}&quot;
+            RMDIR /S /Q &quot;{1}&quot;
+            EXIT.
+             </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_Script">
+             <summary>
+               Looks up a localized string similar to @ECHO OFF
+            {0}
+            EXIT.
+             </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_Terminate">
+            <summary>
+              Looks up a localized string similar to TASKKILL /F /IM &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_TerminateJoin">
+            <summary>
+              Looks up a localized string similar to &quot; &amp;&amp; TASKKILL /F /IM &quot;.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_WaitForProcThenCmd">
+            <summary>
+              Looks up a localized string similar to FOR /L %X in (1,0,2) DO (TASKLIST | FIND /I &quot;{0}&quot; &amp; IF ERRORLEVEL 1 ({1} &amp;&amp; EXIT)).
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_WaitThenCmd">
+            <summary>
+              Looks up a localized string similar to PING LOCALHOST -n {0} &gt; NUL &amp;&amp; {1}.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.CmdFile">
+            <summary>
+              Looks up a localized string similar to cmd.exe.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.CmdPath">
+            <summary>
+              Looks up a localized string similar to %System%\cmd.exe.
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.Resources.DimEmptyImage">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.Ini_NonSection">
+            <summary>
+              Looks up a localized string similar to {4EC6358E-5AA1-4F79-A26B-647E2FA8F2C6}.
             </summary>
         </member>
         <member name="P:SilDev.Properties.Resources.ReferenceDirs">
@@ -47,6 +118,11 @@
         <member name="P:SilDev.Properties.Resources.SearchImage">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.Resources.TempDir">
+            <summary>
+              Looks up a localized string similar to %TEMP%\tmp-{0}.
             </summary>
         </member>
         <member name="T:SilDev.Forms.ButtonEx">
@@ -1100,6 +1176,14 @@
                 Provides static methods and base classes used for the comparison of two or more objects.
             </summary>
         </member>
+        <member name="M:SilDev.Comparison.IsNotEmpty(System.Object)">
+            <summary>
+                Determines whether the specified object is not empty.
+            </summary>
+            <param name="value">
+                The object to check.
+            </param>
+        </member>
         <member name="M:SilDev.Comparison.IndexOf``1(``0[],``0[])">
             <summary>
                 Searches for the specified one-dimensional array and returns the index of its first
@@ -1275,6 +1359,18 @@
                 The sequence of bytes to compare with the first.
             </param>
         </member>
+        <member name="M:SilDev.Comparison.StartWith(System.Collections.Generic.IEnumerable{System.Byte},System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+                Determines whether the beginning of this sequence of bytes matches the specified
+                sequence of bytes
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
         <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
             <summary>
                 Determines whether the end of this string matches a string. A parameter specifies the
@@ -1303,6 +1399,18 @@
             </param>
         </member>
         <member name="M:SilDev.Comparison.EndsWith(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
+            <summary>
+                Determines whether the end of this sequence of bytes matches the specified sequence of
+                bytes.
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWith(System.Collections.Generic.IEnumerable{System.Byte},System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
                 Determines whether the end of this sequence of bytes matches the specified sequence of
                 bytes.
@@ -1349,14 +1457,6 @@
             </param>
             <param name="target">
                 The sequence of bytes to compare with the first.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.IsAscii(System.String)">
-            <summary>
-                Determines whether this string instance contains only ASCII characters.
-            </summary>
-            <param name="source">
-                The string to compare.
             </param>
         </member>
         <member name="T:SilDev.Comparison.AlphanumericComparer">
@@ -3121,6 +3221,19 @@
             </summary>
             <param name="path">
                 The full path to check (environment variables are accepted).
+            </param>
+        </member>
+        <member name="M:SilDev.Data.ForceDelete(System.String,System.Boolean)">
+            <summary>
+                <para>
+                    Deletes any file or directory.
+                </para>
+                <para>
+                    Immediately stops all specified processes that are locking this file or directory.
+                </para>
+            </summary>
+            <param name="path">
+                The path of the file or directory to be deleted.
             </param>
         </member>
         <member name="M:SilDev.Data.GetVersion(System.IO.FileInfo)">
@@ -6358,6 +6471,22 @@
                 Provides enumerated values of PE (Portable Executable) headers.
             </summary>
         </member>
+        <member name="M:SilDev.PathEx.GetHeader(System.String)">
+            <summary>
+                Determines the PE (Portable Executable) header of the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.FileIs64Bit(System.String)">
+            <summary>
+                Determines whether the specified file was compiled for a 64-bit platform environments.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
         <member name="P:SilDev.PathEx.LocalPath">
             <summary>
                 Gets the full process executable path of the assembly based on
@@ -6484,7 +6613,7 @@
             <summary>
                 Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
             </summary>
-            <param name="label">
+            <param name="prefix">
                 This text is at the beginning of the name.
             </param>
             <param name="len">
@@ -6499,11 +6628,25 @@
                 The length of the hash. Valid values are 4 through 24.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.GetTempFileName(System.String,System.String,System.Int32)">
+            <summary>
+                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
+            </summary>
+            <param name="prefix">
+                This text is at the beginning of the name.
+            </param>
+            <param name="suffix">
+                This text is at the end of the name.
+            </param>
+            <param name="len">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.GetTempFileName(System.String,System.Int32)">
             <summary>
                 Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
             </summary>
-            <param name="label">
+            <param name="prefix">
                 This text is at the beginning of the name.
             </param>
             <param name="len">
@@ -6516,22 +6659,6 @@
             </summary>
             <param name="len">
                 The length of the hash. Valid values are 4 through 24.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.GetHeader(System.String)">
-            <summary>
-                Determines the PE (Portable Executable) header of the specified file.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.FileIs64Bit(System.String)">
-            <summary>
-                Determines whether the specified file was compiled for a 64-bit platform environments.
-            </summary>
-            <param name="path">
-                The file to check.
             </param>
         </member>
         <member name="T:SilDev.PathNotFoundException">
@@ -6574,6 +6701,11 @@
             <summary>
                 Provides static methods based on the <see cref="T:System.Diagnostics.Process"/> class to enable you to start
                 local system processes.
+            </summary>
+        </member>
+        <member name="P:SilDev.ProcessEx.CurrentName">
+            <summary>
+                Gets the name of the current process instance.
             </summary>
         </member>
         <member name="M:SilDev.ProcessEx.GetInstances(System.String)">
@@ -6859,6 +6991,148 @@
             </param>
             <param name="dispose">
                 true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="T:SilDev.ProcessEx.SendHelper">
+            <summary>
+                Provides basic functionality based on <see cref="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Boolean)"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitThenDelete(System.String,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+                Waits before the system is instructed to delete the target at the specified path.
+            </summary>
+            <param name="path">
+                The path to the file or directory to be deleted.
+            </param>
+            <param name="seconds">
+                The time to wait in seconds.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenDelete(System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                <para>
+                    Deletes the target at the specified path if there is no process running that
+                    is matched with the specified process name.
+                </para>
+                <para>
+                    If a matched process is still running, the task will wait until all matched
+                    processes has been closed.
+                </para>
+            </summary>
+            <param name="path">
+                The path to the file or directory to be deleted.
+            </param>
+            <param name="processName">
+                The name of the process to be waited.
+            </param>
+            <param name="extension">
+                The file extension of the specified process.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenDelete(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                <para>
+                    Deletes the target at the specified path if there is no process running that
+                    is matched with the specified process name.
+                </para>
+                <para>
+                    If a matched process is still running, the task will wait until all matched
+                    processes has been closed.
+                </para>
+            </summary>
+            <param name="path">
+                The path to the file or directory to be deleted.
+            </param>
+            <param name="processName">
+                The name of the process to be waited.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.KillTask(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Ends all processes matched by the specified process name.
+            </summary>
+            <param name="processName">
+                The name of the process to be killed.
+            </param>
+            <param name="extension">
+                The file extension of the specified process.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.KillTask(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Ends all processes matched by the specified process name.
+            </summary>
+            <param name="processName">
+                The name of the process to be killed.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.KillAllTasks(System.Collections.Generic.IEnumerable{System.String},System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Ends all processes matched by all the specified process names.
+            </summary>
+            <param name="processNames">
+                A list of the process names to be killed.
+            </param>
+            <param name="extension">
+                The file extension of the specified processes.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.KillAllTasks(System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Boolean)">
+            <summary>
+                Ends all processes matched by all the specified process names.
+            </summary>
+            <param name="processNames">
+                A list of the process names to be killed.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
                 been started; otherwise, false.
             </param>
         </member>
@@ -7500,17 +7774,49 @@
                 Provides static methods for converting or reorganizing of data.
             </summary>
         </member>
-        <member name="T:SilDev.Reorganize.NewLineFormats">
+        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
             <summary>
-                Provides enumerated values of new line formats.
+                Projects each element of a sequence into a new form.
             </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                A sequence of values to invoke a transform function on.
+            </param>
+            <param name="selector">
+                A transform function to apply to each element.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            </exception>
         </member>
-        <member name="F:SilDev.Reorganize.NewLineFormats.WindowsDefault">
+        <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
             <summary>
-                An aggregated <see cref="T:System.Enum"/> value of <see cref="F:SilDev.Reorganize.NewLineFormats.CarriageReturn"/>
-                and <see cref="F:SilDev.Reorganize.NewLineFormats.LineFeed"/>, which is not convertable to a single
-                <see cref="T:System.Char"/> value.
+                Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
             </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="value">
+                The value to convert.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.TryParse``1(System.Object,System.Object@,``0)">
+            <summary>
+                Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+            </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="value">
+                The value to convert.
+            </param>
+            <param name="result">
+                The result value.
+            </param>
         </member>
         <member name="T:SilDev.Reorganize.SizeUnits">
             <summary>
@@ -7590,17 +7896,6 @@
             </param>
             <param name="trim">
                 true to remove all zeros after the comma; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatNewLine(System.String,SilDev.Reorganize.NewLineFormats)">
-            <summary>
-                Converts the current <see cref="T:SilDev.Reorganize.NewLineFormats"/> to another format.
-            </summary>
-            <param name="str">
-                The text to change.
-            </param>
-            <param name="newLineFormat">
-                The new format to be applied.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.ToLogStringArray(System.String)">
@@ -7932,50 +8227,6 @@
             </param>
             <param name="value">
                 The number to be incremented.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
-            <summary>
-                Projects each element of a sequence into a new form.
-            </summary>
-            <typeparam name="TSource">
-                The type of the elements of source.
-            </typeparam>
-            <param name="source">
-                A sequence of values to invoke a transform function on.
-            </param>
-            <param name="selector">
-                A transform function to apply to each element.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
-            <summary>
-                Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
-            </summary>
-            <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
-            </typeparam>
-            <param name="value">
-                The value to convert.
-            </param>
-            <param name="defValue">
-                The default value.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.TryParse``1(System.Object,System.Object@,``0)">
-            <summary>
-                Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
-            </summary>
-            <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
-            </typeparam>
-            <param name="value">
-                The value to convert.
-            </param>
-            <param name="result">
-                The result value.
             </param>
         </member>
         <member name="T:SilDev.ResourcesEx">
@@ -8362,6 +8613,69 @@
             <param name="progressMax">
                 An application-defined value that specifies the value ullCompleted will have when the
                 operation is complete.
+            </param>
+        </member>
+        <member name="T:SilDev.TextEx">
+            <summary>
+                Provides static methods for converting or reorganizing of data.
+            </summary>
+        </member>
+        <member name="M:SilDev.TextEx.IsLineSeparator(System.Char)">
+            <summary>
+                Indicates whether the specified character is categorized as a line separator
+                character.
+            </summary>
+            <param name="ch">
+                The character to evaluate.
+            </param>
+        </member>
+        <member name="M:SilDev.TextEx.IsAscii(System.Char)">
+            <summary>
+                Indicates whether the specified character is categorized as an ASCII character.
+            </summary>
+            <param name="ch">
+                The character to evaluate.
+            </param>
+        </member>
+        <member name="T:SilDev.TextEx.NewLineFormats">
+            <summary>
+                Provides <see cref="T:System.String"/> values of line separator characters.
+            </summary>
+        </member>
+        <member name="M:SilDev.TextEx.FormatNewLine(System.String,System.String)">
+            <summary>
+                Converts the current <see cref="T:SilDev.TextEx.NewLineFormats"/> of the specified
+                <see cref="T:System.String"/> to another format.
+            </summary>
+            <param name="text">
+                The text to change.
+            </param>
+            <param name="newLineFormat">
+                The new format to be applied.
+            </param>
+        </member>
+        <member name="M:SilDev.TextEx.GetEncoding(System.String,System.Text.Encoding)">
+            <summary>
+                Gets the character encoding of the specified file.
+            </summary>
+            <param name="file">
+                The file to check.
+            </param>
+            <param name="defEncoding">
+                The default character encoding, which is returned if no character encoding
+                was found. If the value is NULL it returns <see cref="P:System.Text.Encoding.Default"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.TextEx.ChangeEncoding(System.String,System.Text.Encoding)">
+            <summary>
+                Changes the character encoding of the specified file. This function supports
+                big files as well.
+            </summary>
+            <param name="file">
+                The file to change.
+            </param>
+            <param name="encoding">
+                The new character encoding.
             </param>
         </member>
         <member name="T:SilDev.Tray">
