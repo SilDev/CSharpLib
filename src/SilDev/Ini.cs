@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-18 17:25
+// Version:  2017-05-19 05:42
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1217,21 +1217,19 @@ namespace SilDev
                     File.Create(path).Close();
                 }
                 var strValue = value?.ToString();
-                if (forceOverwrite && !skipExistValue)
+                if (!forceOverwrite || skipExistValue)
                 {
-                    if (string.Concat(section, key, value).All(TextEx.IsAscii))
-                        goto Write;
-                    var encoding = TextEx.GetEncoding(path);
-                    if (encoding.Equals(Encoding.Unicode) || encoding.Equals(Encoding.BigEndianUnicode))
-                        goto Write;
-                    TextEx.ChangeEncoding(path, Encoding.Unicode);
-                    goto Write;
+                    var curValue = ReadDirect(section, key, path);
+                    if (!forceOverwrite && curValue.Equals(strValue) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
+                        return false;
                 }
-                var curValue = ReadDirect(section, key, path);
-                if (!forceOverwrite && curValue.Equals(strValue) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
-                    return false;
+                if (string.Concat(section, key, value).All(TextEx.IsAscii))
+                    goto Write;
+                var encoding = TextEx.GetEncoding(path);
+                if (!encoding.Equals(Encoding.Unicode) && !encoding.Equals(Encoding.BigEndianUnicode))
+                    TextEx.ChangeEncoding(path, Encoding.Unicode);
                 Write:
-                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, file) != 0;
+                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
             }
             catch (Exception ex)
             {
