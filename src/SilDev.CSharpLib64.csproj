@@ -119,7 +119,9 @@
   <ItemGroup>
     <None Include="Resources\DimEmptyImage.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\SizeGripImage.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(SolutionDir).helper\AssemblyDateVersion.exe" "$(SolutionDir).helper\AssemblyDateVersion.exe" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
