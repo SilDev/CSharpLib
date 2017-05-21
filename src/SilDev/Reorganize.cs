@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-21 10:27
+// Version:  2017-05-21 10:39
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,6 +22,7 @@ namespace SilDev
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -30,6 +31,59 @@ namespace SilDev
     /// </summary>
     public static class Reorganize
     {
+        /// <summary>
+        ///     Serializes this object graph into a sequence of bytes.
+        /// </summary>
+        /// <param name="value">
+        ///     The object graph to convert.
+        /// </param>
+        public static byte[] SerializeObject<T>(this T value)
+        {
+            try
+            {
+                byte[] ba;
+                using (var ms = new MemoryStream())
+                {
+                    var bf = new BinaryFormatter();
+                    bf.Serialize(ms, value);
+                    ba = ms.ToArray();
+                }
+                return ba;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Deserializes this sequence of bytes into an object graph.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to convert.
+        /// </param>
+        public static T DeserializeObject<T>(this byte[] bytes, T defValue = default(T))
+        {
+            try
+            {
+                object obj;
+                using (var ms = new MemoryStream())
+                {
+                    var bf = new BinaryFormatter();
+                    ms.Write(bytes, 0, bytes.Length);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    obj = bf.Deserialize(ms);
+                }
+                return (T)obj;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return defValue;
+            }
+        }
+
         /// <summary>
         ///     Projects each element of a sequence into a new form.
         /// </summary>
