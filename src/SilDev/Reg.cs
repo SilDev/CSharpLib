@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2017-05-16 08:57
+// Version:  2017-05-21 10:46
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -88,10 +88,8 @@ namespace SilDev
                     return CachedKeyFilters[hashCode];
                 var newSubKey = subKey;
                 if (newSubKey.Contains(Path.DirectorySeparatorChar))
-                    newSubKey = newSubKey.Split(Path.DirectorySeparatorChar)
-                                         .Where(s => !string.IsNullOrEmpty(s))
-                                         .Select(s => s.Trim())
-                                         .Join(Path.DirectorySeparatorChar);
+                    newSubKey = newSubKey.Split(Path.DirectorySeparatorChar).Where(s => !string.IsNullOrEmpty(s))
+                                         .Select(s => s.Trim()).Join(Path.DirectorySeparatorChar);
                 if (CachedKeyFilters == null)
                     CachedKeyFilters = new Dictionary<int, string>();
                 if (CachedKeyFilters.Count > MaxCacheSize)
@@ -590,7 +588,18 @@ namespace SilDev
                     using (var rKey = key.OpenSubKey(subKey.KeyFilter()))
                         objValue = rKey?.GetValue(entry, value);
                     if (objValue != null)
+                    {
+                        var valueType = typeof(TValue);
+                        var objType = objValue.GetType();
+                        if (valueType != objType && valueType.IsSerializable && objType == typeof(byte[]))
+                        {
+                            var bytes = objValue as byte[];
+                            var obj = bytes?.DeserializeObject<object>();
+                            if (obj != null)
+                                objValue = obj;
+                        }
                         value = (TValue)objValue;
+                    }
                 }
             }
             catch (Exception ex)
@@ -670,7 +679,7 @@ namespace SilDev
                 if (objValue is string[])
                     value = (objValue as string[]).Join(Environment.NewLine);
                 else if (objValue is byte[])
-                    value = (objValue as byte[]).ToHexString();
+                    value = (objValue as byte[]).ToHexa();
                 else
                     value = objValue.ToString();
             }
@@ -752,55 +761,32 @@ namespace SilDev
                 if (!SubKeyExists(key, subKey) && !CreateNewSubKey(key, subKey))
                     throw new PathNotFoundException(string.Concat(key, Path.DirectorySeparatorChar, subKey));
                 using (var rKey = key.OpenSubKey(subKey.KeyFilter(), true))
-                {
                     try
                     {
-                        dynamic newValue = value;
+                        object newValue = value;
                         var valueType = typeof(TValue);
-                        if (type == RegistryValueKind.None)
+                        if (type == RegistryValueKind.None || type == RegistryValueKind.Binary)
                         {
-                            if (valueType == typeof(ulong))
-                                newValue = BitConverter.GetBytes((ulong)newValue);
-                            else if (valueType == typeof(float))
-                                newValue = BitConverter.GetBytes((float)newValue);
-                            else if (valueType == typeof(double))
-                                newValue = BitConverter.GetBytes((double)newValue);
-                            else if (valueType == typeof(decimal))
+                            if (type == RegistryValueKind.None && valueType == typeof(string))
                             {
-                                var bits = decimal.GetBits((decimal)newValue);
-                                newValue = new byte[bits.Length * sizeof(int)];
-                                Buffer.BlockCopy(bits, 0, newValue, 0, newValue.Length);
-                            }
-                            else if (valueType == typeof(List<string>))
-                                newValue = ((List<string>)newValue).ToArray();
-                            else if (valueType == typeof(IEnumerable<string>))
-                                newValue = ((IEnumerable<string>)newValue).ToArray();
-
-                            if (valueType == typeof(string))
                                 rKey?.SetValue(entry, newValue, RegistryValueKind.String);
-                            else if (valueType == typeof(byte[]))
+                                return true;
+                            }
+                            if (valueType.IsSerializable && valueType != typeof(byte[]))
+                            {
+                                newValue = value.SerializeObject();
                                 rKey?.SetValue(entry, newValue, RegistryValueKind.Binary);
-                            else if (valueType == typeof(sbyte) || valueType == typeof(byte) ||
-                                     valueType == typeof(short) || valueType == typeof(ushort) ||
-                                     valueType == typeof(int))
-                                rKey?.SetValue(entry, newValue, RegistryValueKind.DWord);
-                            else if (valueType == typeof(uint) || valueType == typeof(long))
-                                rKey?.SetValue(entry, newValue, RegistryValueKind.QWord);
-                            else if (valueType == typeof(string[]))
-                                rKey?.SetValue(entry, newValue, RegistryValueKind.MultiString);
-                            else
-                                rKey?.SetValue(entry, newValue, RegistryValueKind.Unknown);
+                                return true;
+                            }
                         }
-                        else
-                            rKey?.SetValue(entry, newValue, type);
+                        rKey?.SetValue(entry, newValue, type);
+                        return true;
                     }
                     catch (Exception ex)
                     {
                         Log.Write(ex);
-                        rKey?.SetValue(entry, value, RegistryValueKind.String);
+                        return false;
                     }
-                }
-                return true;
             }
             catch (Exception ex)
             {
