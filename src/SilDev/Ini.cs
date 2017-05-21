@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-21 10:47
+// Version:  2017-05-21 20:08
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -196,12 +196,10 @@ namespace SilDev
                 try
                 {
                     var fileDir = Path.GetDirectoryName(_filePath);
+                    if (string.IsNullOrEmpty(fileDir))
+                        return;
                     if (!Directory.Exists(fileDir))
-                    {
-                        if (string.IsNullOrEmpty(fileDir))
-                            return;
                         Directory.CreateDirectory(fileDir);
-                    }
                     File.Create(_filePath).Close();
                 }
                 catch (Exception ex)
@@ -1024,7 +1022,7 @@ namespace SilDev
                 if (sct.Any(TextEx.IsLineSeparator))
                     throw new ArgumentOutOfRangeException(nameof(section));
 
-                var ke = FindSection(code, key);
+                var ke = FindKey(code, sct, key);
                 if (ke.Any(TextEx.IsLineSeparator))
                     throw new ArgumentOutOfRangeException(nameof(key));
 
