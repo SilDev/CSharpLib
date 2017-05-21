@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2016-10-18 23:33
+// Version:  2017-05-21 06:59
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -27,24 +27,23 @@ namespace SilDev
     public static class Compaction
     {
         /// <summary>
-        ///     Compresses the specifed <see cref="string"/> value to zip.
+        ///     Compresses the specifed sequence of bytes.
         /// </summary>
-        /// <param name="text">
-        ///     The string to compress.
+        /// <param name="bytes">
+        ///     The sequence of bytes to compress.
         /// </param>
-        public static byte[] TextToZip(this string text)
+        public static byte[] Zip(this byte[] bytes)
         {
             try
             {
-                var ba = Encoding.UTF8.GetBytes(text);
-                using (var msi = new MemoryStream(ba))
+                using (var msi = new MemoryStream(bytes))
                 {
                     var mso = new MemoryStream();
                     using (var gs = new GZipStream(mso, CompressionMode.Compress))
                         msi.CopyTo(gs);
-                    ba = mso.ToArray();
+                    bytes = mso.ToArray();
                 }
-                return ba;
+                return bytes;
             }
             catch (Exception ex)
             {
@@ -54,29 +53,47 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Decompresses a compressed sequence of bytes back to a <see cref="string"/>
-        ///     value.
+        ///     Compresses the specifed <see cref="string"/> value.
+        /// </summary>
+        /// <param name="text">
+        ///     The string to compress.
+        /// </param>
+        public static byte[] ZipText(this string text)
+        {
+            try
+            {
+                var ba = Encoding.UTF8.GetBytes(text);
+                ba = ba.Zip();
+                return ba;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Decompresses a compressed sequence of bytes.
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to decompress.
         /// </param>
-        public static string TextFromZip(this byte[] bytes)
+        public static byte[] Unzip(this byte[] bytes)
         {
             try
             {
-                string s;
+                byte[] ba;
                 using (var mso = new MemoryStream())
                 {
                     var msi = new MemoryStream(bytes);
                     using (var gs = new GZipStream(msi, CompressionMode.Decompress))
                         gs.CopyTo(mso);
-                    s = Encoding.UTF8.GetString(mso.ToArray());
+                    ba = mso.ToArray();
                 }
-                return s;
+                return ba;
             }
-            catch (Exception ex)
+            catch
             {
-                Log.Write(ex);
                 return null;
             }
         }
@@ -86,11 +103,10 @@ namespace SilDev
         ///     the file system.
         /// </summary>
         /// <param name="srcPath">
-        ///     The path of the zip archive to extract (environment variables are accepted).
+        ///     The path of the zip archive to extract.
         /// </param>
         /// <param name="destDir">
-        ///     The path to the directory to place the extracted files in (environment variables
-        ///     are accepted).
+        ///     The path to the directory to place the extracted files in.
         /// </param>
         /// <param name="delSrcPath">
         ///     true to delete the source archive after extracting; otherwise, false.
@@ -117,6 +133,28 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return false;
+            }
+        }
+
+        /// <summary>
+        ///     Decompresses a compressed sequence of bytes back to a <see cref="string"/>
+        ///     value.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to decompress.
+        /// </param>
+        public static string UnzipText(this byte[] bytes)
+        {
+            try
+            {
+                var ba = bytes.Unzip();
+                var s = Encoding.UTF8.GetString(ba);
+                return s;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
             }
         }
 
