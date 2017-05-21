@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-19 05:42
+// Version:  2017-05-21 10:47
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,22 +23,15 @@ namespace SilDev
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using Properties;
 
     /// <summary>
-    ///     Provides static methods for the handling of initialization files.
+    ///     Provides the functionality to handle the INI format.
     /// </summary>
     public static class Ini
     {
-        private static volatile Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> _cachedFiles;
+        private const string NonSectionId = "\0\u0002(NON-SECTION)\u0003\0";
 
-        private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles
-        {
-            get { return _cachedFiles; }
-            set { _cachedFiles = value; }
-        }
-
-        private const int MaxCacheSize = 8;
+        private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles { get; set; }
 
         private static void InitializeCache(int code, string section = null, string key = null)
         {
@@ -61,12 +54,102 @@ namespace SilDev
                 CachedFiles[code][section][key] = new List<string>();
         }
 
+        /// <summary>
+        ///     Save the cached data to the specified file.
+        /// </summary>
+        /// <param name="cacheFilePath">
+        ///     The full file path of the cache file to create.
+        /// </param>
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file. If this parameter is NULL, all
+        ///     cached data are saved.
+        /// </param>
+        public static void SaveCache(string cacheFilePath, string fileOrContent)
+        {
+            if (CachedFiles?.Any() != true)
+                return;
+            var cache = CachedFiles;
+            var file = fileOrContent ?? GetFile();
+            if (!string.IsNullOrEmpty(file))
+            {
+                var code = GetCode(file);
+                if (CodeExists(code))
+                    foreach (var data in CachedFiles)
+                    {
+                        if (data.Key != code)
+                            continue;
+                        cache = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> { { data.Key, data.Value } };
+                        break;
+                    }
+            }
+            var bytes = cache?.SerializeObject();
+            if (bytes == null)
+                return;
+            var path = PathEx.Combine(cacheFilePath);
+            if (!PathEx.IsValidPath(path))
+                return;
+            try
+            {
+                File.WriteAllBytes(path, bytes.Zip());
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Loads the data of a cache file into memory.
+        ///     </para>
+        ///     <para>
+        ///         Please note that <see cref="MaxCacheSize"/> is ignored in this case.
+        ///     </para>
+        /// </summary>
+        /// <param name="cacheFilePath">
+        ///     The full path of a cache file.
+        /// </param>
+        public static void LoadCache(string cacheFilePath)
+        {
+            var path = PathEx.Combine(cacheFilePath);
+            if (!File.Exists(path))
+                return;
+            try
+            {
+                var cache = File.ReadAllBytes(path).Unzip()?.DeserializeObject<Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>>();
+                if (cache == null)
+                    return;
+                foreach (var data in cache)
+                {
+                    var code = data.Key;
+                    if (code == 0)
+                        return;
+                    InitializeCache(code);
+                    CachedFiles[code] = data.Value;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the maximum number of cached files.
+        /// </summary>
+        public static int MaxCacheSize { get; set; } = 8;
+
+        /// <summary>
+        ///     Specifies a sequence of section names to be sorted first.
+        /// </summary>
+        public static IEnumerable<string> SortBySections { get; set; }
+
         private static Dictionary<string, Dictionary<string, List<string>>> SortHelper(this Dictionary<string, Dictionary<string, List<string>>> source)
         {
             var comparer = new Comparison.AlphanumericComparer();
-            var sorted = source.OrderBy(x => !x.Key.Equals(Resources.Ini_NonSection)).ThenBy(x => x.Key, comparer)
-                               .ToDictionary(x => x.Key, x => x.Value.OrderBy(y => y.Key, comparer)
-                                                               .ToDictionary(y => y.Key, y => y.Value));
+            var sorted = source.OrderBy(x => !x.Key.Equals(NonSectionId))
+                               .ThenBy(x => !SortBySections.ContainsEx(x.Key))
+                               .ThenBy(x => x.Key, comparer).ToDictionary(x => x.Key, x => x.Value.SortHelper());
             return sorted;
         }
 
@@ -84,7 +167,7 @@ namespace SilDev
             return sorted;
         }
 
-        private static volatile string _tmpFileGuid;
+        private static string _tmpFileGuid;
 
         private static string TmpFileGuid
         {
@@ -97,7 +180,7 @@ namespace SilDev
             }
         }
 
-        private static volatile string _filePath;
+        private static string _filePath;
 
         /// <summary>
         ///     Gets or sets a default INI file.
@@ -128,9 +211,6 @@ namespace SilDev
             }
         }
 
-        private static int GetCode(this string str) =>
-            str?.ToLower().GetHashCode() ?? -1;
-
         /// <summary>
         ///     Gets the full path of the default INI file.
         /// </summary>
@@ -146,6 +226,21 @@ namespace SilDev
         public static bool SetFile(params string[] paths) =>
             File.Exists(FilePath = PathEx.Combine(paths));
 
+        private static bool CodeExists(int code) =>
+            code != -1 && CachedFiles?.ContainsKey(code) == true && CachedFiles[code]?.Any() == true;
+
+        private static int GetCode(string fileOrContent)
+        {
+            var source = fileOrContent ?? GetFile();
+            if (string.IsNullOrWhiteSpace(source))
+                throw new ArgumentNullException(nameof(source));
+            var path = PathEx.Combine(source);
+            if (!File.Exists(path))
+                path = TmpFileGuid;
+            var code = path?.ToLower().GetHashCode() ?? -1;
+            return code;
+        }
+
         /// <summary>
         ///     Removes the read content of an INI file from cache.
         /// </summary>
@@ -156,13 +251,7 @@ namespace SilDev
         {
             try
             {
-                var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrWhiteSpace(source))
-                    throw new ArgumentNullException(nameof(source));
-                var path = PathEx.Combine(source);
-                if (!File.Exists(path))
-                    path = TmpFileGuid;
-                var code = path.GetCode();
+                var code = GetCode(fileOrContent);
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
                 if (CachedFiles?.ContainsKey(code) == true)
@@ -176,9 +265,80 @@ namespace SilDev
             return false;
         }
 
+        private static string FindSection(int code, string section)
+        {
+            var sct = section?.Trim();
+            if (string.IsNullOrEmpty(sct))
+                return NonSectionId;
+            if (!CodeExists(code) || CachedFiles[code].ContainsKey(sct))
+                return sct;
+            var newSct = CachedFiles[code].Keys.FirstOrDefault(x => x.EqualsEx(sct));
+            if (!string.IsNullOrEmpty(newSct) && !sct.Equals(newSct))
+                return newSct;
+            return sct;
+        }
+
+        private static bool SectionExists(int code, string section) =>
+            !string.IsNullOrEmpty(section) && CodeExists(code) && CachedFiles[code]?.ContainsKey(section) == true && CachedFiles[code][section]?.Any() == true;
+
         /// <summary>
-        ///     Removes the full specified section of an INI file or an INI file formatted
-        ///     string value.
+        ///     Retrieves all section names of an INI file or an INI file formatted string value.
+        /// </summary>
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
+        /// </param>
+        /// <param name="sorted">
+        ///     true to sort the sections; otherwise, false.
+        /// </param>
+        public static List<string> GetSections(string fileOrContent = null, bool sorted = true)
+        {
+            try
+            {
+                var code = GetCode(fileOrContent);
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                if (!CodeExists(code))
+                    ReadAll(fileOrContent);
+                if (CodeExists(code))
+                {
+                    var output = CachedFiles[code].Keys.ToList();
+                    if (output.Contains(NonSectionId))
+                        output.Remove(NonSectionId);
+                    if (sorted)
+                        output = output.SortHelper();
+                    return output;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return new List<string>();
+        }
+
+        /// <summary>
+        ///     Retrieves all section names of an INI file or an INI file formatted string value.
+        /// </summary>
+        /// <param name="sorted">
+        ///     true to sort the sections; otherwise, false.
+        /// </param>
+        public static List<string> GetSections(bool sorted) =>
+            GetSections(null, sorted);
+
+        private static bool RemoveSection(int code, string section)
+        {
+            if (!CodeExists(code))
+                return true;
+            var sct = FindSection(code, section);
+            if (!CachedFiles[code].ContainsKey(sct))
+                return true;
+            CachedFiles[code].Remove(sct);
+            return true;
+        }
+
+        /// <summary>
+        ///     Removes the specified section including all associated keys of an INI file
+        ///     or an INI file formatted string value.
         /// </summary>
         /// <param name="section">
         ///     The name of the section to remove.
@@ -190,38 +350,96 @@ namespace SilDev
         {
             try
             {
-                var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrEmpty(source))
-                    throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim() ?? Resources.Ini_NonSection;
-                if (string.IsNullOrEmpty(section))
-                    throw new ArgumentNullException(nameof(section));
-                var path = PathEx.Combine(source);
-                if (!File.Exists(path))
-                    path = TmpFileGuid;
-                var code = path.GetCode();
+                var code = GetCode(fileOrContent);
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
-                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
-                if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
-                    return true;
-                if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
+                if (!CodeExists(code))
+                    ReadAll(fileOrContent);
+                return RemoveSection(code, section);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
+        private static string FindKey(int code, string section, string key)
+        {
+            var sct = FindSection(code, section);
+            var ke = key?.Trim();
+            if (string.IsNullOrEmpty(ke) || !SectionExists(code, sct) || CachedFiles[code][sct].ContainsKey(ke))
+                return ke;
+            var newKey = CachedFiles[code][sct].Keys.FirstOrDefault(x => x.EqualsEx(ke));
+            if (!string.IsNullOrEmpty(newKey) && !ke.Equals(newKey))
+                return newKey;
+            return ke;
+        }
+
+        private static bool KeyExists(int code, string section, string key) =>
+            !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && CachedFiles[code][section][key]?.Any() == true;
+
+        /// <summary>
+        ///     Retrieves all key names of an INI file or an INI file formatted string value.
+        /// </summary>
+        /// <param name="section">
+        ///     The name of the section to get the key names. The value must be NULL to get all the
+        ///     key names of the specified fileOrContent parameter.
+        /// </param>
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
+        /// </param>
+        /// <param name="sorted">
+        ///     true to sort keys; otherwise, false.
+        /// </param>
+        public static List<string> GetKeys(string section, string fileOrContent = null, bool sorted = true)
+        {
+            try
+            {
+                var code = GetCode(fileOrContent);
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+                if (!CodeExists(code))
+                    ReadAll(fileOrContent);
+                var sct = FindSection(code, section);
+                if (SectionExists(code, sct))
                 {
-                    var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
-                    if (!string.IsNullOrEmpty(newSection))
-                        s = newSection;
+                    var output = CachedFiles[code][sct].Keys.ToList();
+                    if (output.Contains(NonSectionId))
+                        output.Remove(NonSectionId);
+                    if (sorted)
+                        output = output.SortHelper();
+                    return output;
                 }
-                if (!d.ContainsKey(s))
-                    return true;
-                d.Remove(s);
-                CachedFiles[code] = d;
-                return true;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return false;
+            return new List<string>();
+        }
+
+        /// <summary>
+        ///     Retrieves all key names of an INI file or an INI file formatted string value.
+        /// </summary>
+        /// <param name="section">
+        ///     The name of the section to get the key names. The value must be NULL to get all the
+        ///     key names of the specified fileOrContent parameter.
+        /// </param>
+        /// <param name="sorted">
+        ///     true to sort keys; otherwise, false.
+        /// </param>
+        public static List<string> GetKeys(string section, bool sorted) =>
+            GetKeys(section, null, sorted);
+
+        private static bool RemoveKey(int code, string section, string key)
+        {
+            var sct = FindSection(code, section);
+            var ke = FindKey(code, sct, key);
+            if (!KeyExists(code, sct, ke))
+                return true;
+            CachedFiles[code][sct].Remove(ke);
+            return true;
         }
 
         /// <summary>
@@ -241,164 +459,19 @@ namespace SilDev
         {
             try
             {
-                var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrEmpty(source))
-                    throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim() ?? Resources.Ini_NonSection;
-                if (string.IsNullOrEmpty(section))
-                    throw new ArgumentNullException(nameof(section));
-                var k = key?.Trim();
-                if (string.IsNullOrEmpty(k))
-                    throw new ArgumentNullException(nameof(key));
-                var path = PathEx.Combine(source);
-                if (!File.Exists(path))
-                    path = TmpFileGuid;
-                var code = path.GetCode();
+                var code = GetCode(fileOrContent);
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
-                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
-                if (CachedFiles?.ContainsKey(code) != true || d.Count == 0)
-                    return true;
-                if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
-                {
-                    var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
-                    if (!string.IsNullOrEmpty(newSection))
-                        s = newSection;
-                }
-                if (d.ContainsKey(s) && !d[s].ContainsKey(k))
-                {
-                    var newKey = d[s].Keys.FirstOrDefault(x => x.EqualsEx(k));
-                    if (!string.IsNullOrEmpty(newKey))
-                        k = newKey;
-                }
-                if (!d.ContainsKey(s) || !d[s].ContainsKey(k))
-                    return true;
-                d[s].Remove(k);
-                CachedFiles[code] = d;
-                return true;
+                if (CachedFiles?.ContainsKey(code) != true)
+                    ReadAll(fileOrContent);
+                return RemoveKey(code, section, key);
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
+                return false;
             }
-            return false;
         }
-
-        /// <summary>
-        ///     Retrieves all section names of an INI file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        /// <param name="sorted">
-        ///     true to sort the sections; otherwise, false.
-        /// </param>
-        public static List<string> GetSections(string fileOrContent = null, bool sorted = true)
-        {
-            var output = new List<string>();
-            try
-            {
-                var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrEmpty(source))
-                    throw new ArgumentNullException(nameof(source));
-                var path = PathEx.Combine(source);
-                if (!File.Exists(path))
-                    path = TmpFileGuid;
-                var code = path.GetCode();
-                if (code == -1)
-                    throw new ArgumentOutOfRangeException(nameof(code));
-                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
-                if (d.Count > 0)
-                {
-                    output = d.Keys.ToList();
-                    if (output.Contains(Resources.Ini_NonSection))
-                        output.Remove(Resources.Ini_NonSection);
-                    if (sorted)
-                        output = output.SortHelper();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return output;
-        }
-
-        /// <summary>
-        ///     Retrieves all section names of an INI file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="sorted">
-        ///     true to sort the sections; otherwise, false.
-        /// </param>
-        public static List<string> GetSections(bool sorted) =>
-            GetSections(null, sorted);
-
-        /// <summary>
-        ///     Retrieves all key names of an INI file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section to get the key names. The value must be NULL to get all the
-        ///     key names of the specified fileOrContent parameter.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        /// <param name="sorted">
-        ///     true to sort keys; otherwise, false.
-        /// </param>
-        public static List<string> GetKeys(string section, string fileOrContent = null, bool sorted = true)
-        {
-            var output = new List<string>();
-            try
-            {
-                var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrEmpty(source))
-                    throw new ArgumentNullException(nameof(source));
-                var s = section?.Trim() ?? Resources.Ini_NonSection;
-                if (string.IsNullOrEmpty(s))
-                    throw new ArgumentNullException(nameof(section));
-                var path = PathEx.Combine(source);
-                if (!File.Exists(path))
-                    path = TmpFileGuid;
-                var code = path.GetCode();
-                if (code == -1)
-                    throw new ArgumentOutOfRangeException(nameof(code));
-                var d = CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
-                if (d.Count > 0)
-                {
-                    if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
-                    {
-                        var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
-                        if (!string.IsNullOrEmpty(newSection))
-                            s = newSection;
-                    }
-                    if (d.ContainsKey(s) && d[s].Count > 0)
-                    {
-                        output = d[s].Keys.ToList();
-                        if (sorted)
-                            output = output.SortHelper();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return output;
-        }
-
-        /// <summary>
-        ///     Retrieves all key names of an INI file or an INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section to get the key names. The value must be NULL to get all the
-        ///     key names of the specified fileOrContent parameter.
-        /// </param>
-        /// <param name="sorted">
-        ///     true to sort keys; otherwise, false.
-        /// </param>
-        public static List<string> GetKeys(string section, bool sorted) =>
-            GetKeys(section, null, sorted);
 
         /// <summary>
         ///     Retrieves the full content of an INI file or an INI file formatted string value.
@@ -422,7 +495,7 @@ namespace SilDev
                     source = File.ReadAllText(path);
                 else
                     path = TmpFileGuid;
-                var code = path.GetCode();
+                var code = path?.ToLower().GetHashCode() ?? -1;
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
 
@@ -440,7 +513,7 @@ namespace SilDev
                 if (string.IsNullOrWhiteSpace(source))
                     throw new ArgumentNullException(nameof(source));
                 if (!source.StartsWith("["))
-                    source = $"[{Resources.Ini_NonSection}]{Environment.NewLine}{source}";
+                    source = $"[{NonSectionId}]{Environment.NewLine}{source}";
                 if (!source.EndsWith(Environment.NewLine))
                     source += Environment.NewLine;
 
@@ -500,8 +573,6 @@ namespace SilDev
                         }
                         keys[key].Add(value);
                     }
-                    if (sorted)
-                        keys = keys.SortHelper();
                     sections[section] = keys;
                 }
                 if (sorted)
@@ -512,8 +583,10 @@ namespace SilDev
                     InitializeCache(code);
                     if (CachedFiles.Count >= MaxCacheSize)
                     {
-                        var defCode = FilePath.GetCode();
-                        CachedFiles.Remove(CachedFiles.Keys.First(x => x != defCode));
+                        var defCode = FilePath?.ToLower().GetHashCode() ?? -1;
+                        var delCode = CachedFiles.Keys.First(x => x != defCode);
+                        if (CodeExists(delCode))
+                            CachedFiles.Remove(delCode);
                     }
                     CachedFiles[code] = output;
                 }
@@ -565,50 +638,63 @@ namespace SilDev
         /// <param name="reread">
         ///     true to reread the INI file; otherwise, false.
         /// </param>
-        public static string Read(string section, string key, string fileOrContent = null, bool reread = false)
+        /// <param name="index">
+        ///     The value index used to handle multiple key value pairs.
+        /// </param>
+        public static string Read(string section, string key, string fileOrContent = null, bool reread = false, int index = 0)
         {
-            var output = string.Empty;
             try
             {
-                var source = fileOrContent ?? GetFile();
-                if (string.IsNullOrEmpty(source))
-                    throw new ArgumentNullException(nameof(source));
-                var k = key?.Trim();
-                if (string.IsNullOrEmpty(k))
-                    throw new ArgumentNullException(nameof(key));
-                var s = section?.Trim() ?? Resources.Ini_NonSection;
-                var path = PathEx.Combine(source);
-                if (!File.Exists(path))
-                    path = TmpFileGuid;
-                var code = path.GetCode();
+                var code = GetCode(fileOrContent);
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
-                var d = !reread && CachedFiles?.ContainsKey(code) == true ? CachedFiles[code] : ReadAll(fileOrContent);
-                if (d.Count > 0)
+                if (reread || !CodeExists(code))
+                    ReadAll(fileOrContent);
+                if (!CodeExists(code))
+                    throw new ArgumentNullException(nameof(fileOrContent));
+                var sct = FindSection(code, section);
+                if (string.IsNullOrEmpty(sct))
+                    throw new ArgumentNullException(nameof(section));
+                var ke = FindKey(code, sct, key);
+                if (string.IsNullOrEmpty(ke))
+                    throw new ArgumentNullException(nameof(key));
+                if (KeyExists(code, sct, ke))
                 {
-                    if (!s.Equals(Resources.Ini_NonSection) && !d.ContainsKey(s))
-                    {
-                        var newSection = d.Keys.FirstOrDefault(x => x.EqualsEx(s));
-                        if (!string.IsNullOrEmpty(newSection))
-                            s = newSection;
-                    }
-                    if (d.ContainsKey(s))
-                    {
-                        if (!d[s].ContainsKey(k))
-                        {
-                            var newKey = d[s].Keys.FirstOrDefault(x => x.EqualsEx(k));
-                            if (!string.IsNullOrEmpty(newKey))
-                                k = newKey;
-                        }
-                        if (d[s].ContainsKey(k) && d[s][k].Count > 0)
-                            output = d[s][k].FirstOrDefault() ?? string.Empty;
-                    }
+                    var i = Math.Abs(index);
+                    if (CachedFiles[code][sct][ke].Count > i)
+                        return CachedFiles[code][sct][ke][i] ?? string.Empty;
+                    return CachedFiles[code][sct][ke]?.FirstOrDefault() ?? string.Empty;
                 }
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
+            return string.Empty;
+        }
+
+        /// <summary>
+        ///     Retrieves a <see cref="string"/> value from the specified section in an INI file
+        ///     or an INI file formatted string value and release all cached resources used by
+        ///     the specified INI file or the INI file formatted string value.
+        /// </summary>
+        /// <param name="section">
+        ///     The name of the section containing the key name. The value must be NULL for a
+        ///     non-section key.
+        /// </param>
+        /// <param name="key">
+        ///     The name of the key whose associated value is to be retrieved.
+        /// </param>
+        /// <param name="fileOrContent">
+        ///     The full file path or content of an INI file.
+        /// </param>
+        /// <param name="index">
+        ///     The value index used to handle multiple key value pairs.
+        /// </param>
+        public static string ReadOnly(string section, string key, string fileOrContent, int index = 0)
+        {
+            var output = Read(section, key, fileOrContent, false, index);
+            Detach(fileOrContent);
             return output;
         }
 
@@ -631,13 +717,15 @@ namespace SilDev
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        public static TValue Read<TValue>(string section, string key, TValue defValue = default(TValue), string fileOrContent = null)
+        /// <param name="reread">
+        ///     true to reread the INI file; otherwise, false.
+        /// </param>
+        public static TValue Read<TValue>(string section, string key, TValue defValue = default(TValue), string fileOrContent = null, bool reread = false)
         {
-            dynamic output = defValue;
             try
             {
-                dynamic newValue;
-                var strValue = Read(section, key, fileOrContent);
+                object newValue;
+                var strValue = Read(section, key, fileOrContent, reread);
                 var type = typeof(TValue);
                 if (string.IsNullOrEmpty(strValue))
                 {
@@ -646,38 +734,32 @@ namespace SilDev
                         var message = $"The value is not defined. (Section: '{section}'; Key: '{key}'; File: '{(fileOrContent ?? GetFile())?.EncodeToBase85()}';)";
                         throw new WarningException(message);
                     }
-                    newValue = defValue;
+                    newValue = (object)defValue ?? string.Empty;
                 }
-                else if (type == typeof(string))
-                    newValue = string.IsNullOrEmpty(strValue) && !string.IsNullOrEmpty(defValue as string) ? (dynamic)defValue : strValue;
-                else if (type == typeof(string[]) || type == typeof(List<string>) || type == typeof(IEnumerable<string>))
+                else if (strValue.StartsWith("\u0001Object\u0002") && strValue.EndsWith("\u0003"))
                 {
-                    var sequence = strValue.FromHexStringToByteArray()?.TextFromZip()?.Split('\0')
-                                           .Reverse().Skip(1).Reverse().Select(x => x?.FromHexString());
-                    if (type == typeof(string[]))
-                        newValue = sequence?.ToArray();
-                    else if (type == typeof(List<string>))
-                        newValue = sequence?.ToList();
-                    else
-                        newValue = sequence;
+                    var bytes = strValue.Substring(8).TrimEnd('\u0003').DecodeBytesFromBase85(null, null);
+                    var unzipped = bytes?.Unzip();
+                    if (unzipped != null)
+                        bytes = unzipped;
+                    newValue = bytes?.DeserializeObject<object>() ?? defValue;
                 }
-                else if (type == typeof(byte[]))
-                    newValue = strValue.FromHexStringToByteArray();
-                else if (type == typeof(Bitmap) || type == typeof(Image))
-                    newValue = strValue.FromHexStringToImage();
-                else if (type == typeof(Icon))
-                    newValue = strValue.FromHexStringToIcon();
-                else if (type == typeof(Rectangle))
-                    newValue = strValue.ToRectangle();
-                else if (type == typeof(Point))
-                    newValue = strValue.ToPoint();
-                else if (type == typeof(Size))
-                    newValue = strValue.ToSize();
-                else if (type == typeof(Version))
-                    newValue = Version.Parse(strValue);
-                else if (!strValue.TryParse<TValue>(out newValue))
-                    newValue = defValue;
-                output = newValue;
+                else
+                {
+                    if (type == typeof(string))
+                        newValue = strValue;
+                    else if (type == typeof(Rectangle))
+                        newValue = strValue.ToRectangle();
+                    else if (type == typeof(Point))
+                        newValue = strValue.ToPoint();
+                    else if (type == typeof(Size))
+                        newValue = strValue.ToSize();
+                    else if (type == typeof(Version))
+                        newValue = Version.Parse(strValue);
+                    else if (!strValue.TryParse<TValue>(out newValue))
+                        newValue = defValue;
+                }
+                return (TValue)newValue;
             }
             catch (FormatException)
             {
@@ -687,7 +769,7 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            return output;
+            return defValue;
         }
 
         /// <summary>
@@ -710,31 +792,12 @@ namespace SilDev
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        public static TValue ReadOnly<TValue>(string section, string key, TValue defValue = default(TValue), string fileOrContent = null)
+        /// <param name="index">
+        ///     The value index used to handle multiple key value pairs.
+        /// </param>
+        public static TValue ReadOnly<TValue>(string section, string key, TValue defValue, string fileOrContent, int index = 0)
         {
             var output = Read(section, key, defValue, fileOrContent);
-            Detach(fileOrContent);
-            return output;
-        }
-
-        /// <summary>
-        ///     Retrieves a <see cref="string"/> value from the specified section in an INI file
-        ///     or an INI file formatted string value and release all cached resources used by
-        ///     the specified INI file or the INI file formatted string value.
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name. The value must be NULL for a
-        ///     non-section key.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="fileOrContent">
-        ///     The full file path or content of an INI file.
-        /// </param>
-        public static string ReadOnly(string section, string key, string fileOrContent = null)
-        {
-            var output = Read(section, key, fileOrContent);
             Detach(fileOrContent);
             return output;
         }
@@ -789,7 +852,12 @@ namespace SilDev
         ///     </para>
         /// </param>
         /// <param name="file">
-        ///     The full file path of an INI file.
+        ///     <para>
+        ///         The full file path of an INI file.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the default INI file is used.
+        ///     </para>
         /// </param>
         /// <param name="sorted">
         ///     true to sort the sections and keys; otherwise, false.
@@ -802,39 +870,35 @@ namespace SilDev
         {
             try
             {
-                var source = content ?? new Dictionary<string, Dictionary<string, List<string>>>();
                 var path = PathEx.Combine(file ?? GetFile());
-                var code = path.GetCode();
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+
+                var code = path.ToLower().GetHashCode();
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
-                if (source.Count == 0 && CachedFiles?.ContainsKey(code) == true)
+
+                var source = content ?? new Dictionary<string, Dictionary<string, List<string>>>();
+                if (source.Count == 0 && CodeExists(code))
                     source = CachedFiles[code];
                 if (source.Count == 0 && File.Exists(path))
                     source = ReadAll(path);
                 if (source.Count == 0 || source.Values.Count == 0)
                     throw new ArgumentNullException(nameof(source));
-                if (!File.Exists(path))
-                    File.Create(path).Close();
                 if (sorted)
-                {
-                    var comparer = new Comparison.AlphanumericComparer();
-                    var sort = source.OrderBy(d => !d.Key.Equals(Resources.Ini_NonSection))
-                                     .ThenBy(d => d.Key, comparer)
-                                     .ToDictionary(d => d.Key, d => d.Value
-                                                                     .OrderBy(p => p.Key, comparer)
-                                                                     .ToDictionary(p => p.Key, p => p.Value));
-                    source = sort;
-                }
+                    source = source.SortHelper();
 
-                var hash = new Crypto.Md5().EncryptFile(path);
-                var temp = path + ".new";
-                File.CreateText(temp).Close();
+                if (!File.Exists(path) && !PathEx.IsValidPath(path))
+                    throw new ArgumentException(nameof(path));
+
+                var hash = File.Exists(path) ? new Crypto.Md5().EncryptFile(path) : null;
+                var temp = Path.GetRandomFileName();
                 using (var sw = new StreamWriter(temp, true))
                     foreach (var dict in source)
                     {
                         if (string.IsNullOrWhiteSpace(dict.Key) || dict.Value.Count == 0)
                             continue;
-                        if (!dict.Key.Equals(Resources.Ini_NonSection))
+                        if (!dict.Key.Equals(NonSectionId))
                         {
                             sw.Write('[');
                             sw.Write(dict.Key.Trim());
@@ -845,12 +909,11 @@ namespace SilDev
                         {
                             if (string.IsNullOrWhiteSpace(pair.Key) || pair.Value.Count == 0)
                                 continue;
-                            var key = pair.Key.Trim();
                             foreach (var value in pair.Value)
                             {
                                 if (string.IsNullOrWhiteSpace(value))
                                     continue;
-                                sw.Write(key);
+                                sw.Write(pair.Key.Trim());
                                 sw.Write('=');
                                 sw.Write(value.Trim());
                                 sw.WriteLine();
@@ -858,47 +921,13 @@ namespace SilDev
                         }
                         sw.WriteLine();
                     }
-                if (hash.Equals(new Crypto.Md5().EncryptFile(temp)))
+                if (hash?.Equals(new Crypto.Md5().EncryptFile(temp)) == true)
                 {
                     File.Delete(temp);
                     return true;
                 }
                 File.Delete(path);
                 File.Move(temp, path);
-                Data.SetAttributes(path, FileAttributes.Normal);
-
-                /*
-                var sb = new StringBuilder();
-                foreach (var dict in source)
-                {
-                    if (string.IsNullOrWhiteSpace(dict.Key) || dict.Value.Count == 0)
-                        continue;
-                    if (!dict.Key.Equals(NonSectionGuid))
-                    {
-                        sb.Append('[');
-                        sb.Append(dict.Key.Trim());
-                        sb.Append(']');
-                        sb.AppendLine();
-                    }
-                    foreach (var pair in dict.Value)
-                    {
-                        if (string.IsNullOrWhiteSpace(pair.Key) || pair.Value.Count == 0)
-                            continue;
-                        var key = pair.Key.Trim();
-                        foreach (var value in pair.Value)
-                        {
-                            if (string.IsNullOrWhiteSpace(value))
-                                continue;
-                            sb.Append(key);
-                            sb.Append('=');
-                            sb.Append(value.Trim());
-                            sb.AppendLine();
-                        }
-                    }
-                    sb.AppendLine();
-                }
-                File.WriteAllText(path, sb.ToString());
-                */
 
                 if (detach)
                     Detach(path);
@@ -915,7 +944,12 @@ namespace SilDev
         ///     Writes all the cached data from the specified INI file to the disk.
         /// </summary>
         /// <param name="file">
-        ///     The full file path of an INI file.
+        ///     <para>
+        ///         The full file path of an INI file.
+        ///     </para>
+        ///     <para>
+        ///         If this parameter is NULL, the default INI file is used.
+        ///     </para>
         /// </param>
         /// <param name="sorted">
         ///     true to sort the sections and keys; otherwise, false.
@@ -973,133 +1007,84 @@ namespace SilDev
         /// <param name="index">
         ///     The value index used to handle multiple key value pairs.
         /// </param>
-        public static bool Write<TValue>(string section, string key, TValue value, string fileOrContent = null, bool forceOverwrite = true, bool skipExistValue = false, uint index = 0)
+        public static bool Write<TValue>(string section, string key, TValue value, string fileOrContent = null, bool forceOverwrite = true, bool skipExistValue = false, int index = 0)
         {
             try
             {
-                var s = section?.Trim() ?? Resources.Ini_NonSection;
-                if (string.IsNullOrEmpty(s))
+                var code = GetCode(fileOrContent);
+                if (code == -1)
+                    throw new ArgumentOutOfRangeException(nameof(code));
+
+                if (!CodeExists(code))
+                    ReadAll(fileOrContent);
+
+                var sct = FindSection(code, section);
+                if (string.IsNullOrEmpty(sct))
                     throw new ArgumentNullException(nameof(section));
+                if (sct.Any(TextEx.IsLineSeparator))
+                    throw new ArgumentOutOfRangeException(nameof(section));
 
-                int code;
-                var path = PathEx.Combine(fileOrContent ?? GetFile());
-                if (File.Exists(path))
-                {
-                    code = path.GetCode();
-                    if (code == -1)
-                        throw new ArgumentOutOfRangeException(nameof(code));
-                    if (CachedFiles?.ContainsKey(code) != true)
-                        ReadAll(fileOrContent);
-                }
-                else
-                {
-                    path = TmpFileGuid;
-                    code = path.GetCode();
-                    if (code == -1)
-                        throw new ArgumentOutOfRangeException(nameof(code));
-                }
+                var ke = FindSection(code, key);
+                if (ke.Any(TextEx.IsLineSeparator))
+                    throw new ArgumentOutOfRangeException(nameof(key));
 
-                var newValue = string.Empty;
-                if (value != null)
+                var val = string.Empty;
+                if (!string.IsNullOrEmpty(sct) && !string.IsNullOrEmpty(ke) && Comparison.IsNotEmpty(value))
                 {
-                    // To allow the saving of a sequence of strings,
-                    // it's required to bring it in a single string
+                    var str = value.ToString();
                     var type = typeof(TValue);
-                    if (type == typeof(string[]) || type == typeof(List<string>) || type == typeof(IEnumerable<string>))
+                    if (type.IsSerializable && (type.ToString() == str || $"({type.Name})" == str || str.Any(TextEx.IsLineSeparator)))
                     {
-                        var sa = type == typeof(string[]) ? value as string[] : (value as IEnumerable<string>)?.ToArray();
-                        if (sa != null)
-                        {
-                            // Convert each part into hexadecimal to make sure there are no null
-                            // terminated character in it; concatenates the result using the null
-                            // terminated character as separator, in the next step
-                            var str = sa.Select(x => x.ToHexString()).Join('\0');
-                            if (!str.Contains('\0'))
-                                str += '\0';
-                            // To shorten it, zip the result and save it in hexadecimal
-                            newValue = str.TextToZip().ToHexString();
-                        }
-                    }
-                    // No special conversion for anything else
-                    else if (type == typeof(Bitmap) || type == typeof(Image) || type == typeof(Icon) || type == typeof(byte[]))
-                    {
-                        byte[] ba;
-                        if (type == typeof(Bitmap) || type == typeof(Image))
-                            ba = (value as Bitmap)?.ToByteArray();
-                        else if (type == typeof(Icon))
-                            ba = (value as Icon)?.ToByteArray();
-                        else
-                            ba = value as byte[];
-                        if (ba != null)
-                            newValue = ba.ToHexString();
+                        var bytes = value.SerializeObject();
+                        var zipped = bytes?.Zip();
+                        if (zipped?.Length < bytes?.Length)
+                            bytes = zipped;
+                        val = "\u0001Object\u0002" + bytes.EncodeToBase85(null, null) + "\u0003";
                     }
                     else
-                        newValue = value.ToString();
+                        val = str;
                 }
 
                 if (!forceOverwrite || skipExistValue)
                 {
-                    var c = Read(section, key, fileOrContent);
-                    if (!forceOverwrite && c == newValue || skipExistValue && !string.IsNullOrWhiteSpace(c))
+                    var c = Read(section, key, fileOrContent, false, index);
+                    if (!forceOverwrite && c == val || skipExistValue && !string.IsNullOrWhiteSpace(c))
                         return false;
                 }
 
-                var i = (int)index;
-                var k = key?.Trim();
-                if (CachedFiles?.ContainsKey(code) == true && CachedFiles[code].Count > 0)
+                var i = Math.Abs(index);
+                if (string.IsNullOrEmpty(ke) || string.IsNullOrEmpty(val))
                 {
-                    // Find the correct section
-                    if (!s.Equals(Resources.Ini_NonSection) && !CachedFiles[code].ContainsKey(s))
+                    if (!SectionExists(code, sct))
+                        return true;
+                    if (string.IsNullOrEmpty(ke))
                     {
-                        var newSection = CachedFiles[code].Keys.FirstOrDefault(x => x.EqualsEx(s));
-                        if (!string.IsNullOrEmpty(newSection))
-                            s = newSection;
-                    }
-
-                    // Remove key value pairs
-                    if (string.IsNullOrEmpty(k) || string.IsNullOrEmpty(newValue))
-                    {
-                        if (!CachedFiles[code].ContainsKey(s))
-                            return true;
-                        if (string.IsNullOrEmpty(k))
-                            CachedFiles[code][s].Clear();
-                        else if (string.IsNullOrEmpty(newValue))
-                        {
-                            if (!CachedFiles[code][s].ContainsKey(k))
-                                return true;
-                            if (CachedFiles[code][s][k].Count > 1 && CachedFiles[code][s][k].Count > i)
-                                CachedFiles[code][s][k] = CachedFiles[code][s][k].Skip(i).ToList();
-                            else
-                                CachedFiles[code][s].Remove(k);
-                        }
+                        RemoveSection(code, sct);
                         return true;
                     }
-
-                    // Find the correct key
-                    if (CachedFiles[code].ContainsKey(s))
-                        if (!CachedFiles[code][s].ContainsKey(k))
-                        {
-                            var newKey = CachedFiles[code][s].Keys.FirstOrDefault(x => x.EqualsEx(k));
-                            if (!string.IsNullOrEmpty(newKey))
-                                k = newKey;
-                        }
-                }
-
-                if (string.IsNullOrEmpty(k))
-                    throw new ArgumentNullException(nameof(key));
-                if (string.IsNullOrEmpty(newValue))
-                    throw new ArgumentNullException(nameof(value));
-
-                // Finally write the value in cache
-                InitializeCache(code, s, k);
-                if (CachedFiles[code][s][k].Count > i)
-                {
-                    CachedFiles[code][s][k][i] = newValue;
+                    if (!KeyExists(code, sct, ke))
+                        return true;
+                    if (CachedFiles?[code][sct][ke].Count > i)
+                    {
+                        CachedFiles[code][sct][ke].RemoveAt(i);
+                        return true;
+                    }
+                    RemoveKey(code, sct, ke);
                     return true;
                 }
-                if (CachedFiles[code][s][k].Count != i)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                CachedFiles[code][s][k].Add(newValue);
+
+                InitializeCache(code, sct, ke);
+                if (KeyExists(code, sct, ke))
+                {
+                    if (CachedFiles?[code][sct][ke].Count > i)
+                    {
+                        CachedFiles[code][sct][ke][i] = val;
+                        return true;
+                    }
+                    if (CachedFiles?[code][sct][ke].Count != i)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                }
+                CachedFiles?[code][sct][ke].Add(val);
                 return true;
             }
             catch (Exception ex)
@@ -1152,7 +1137,7 @@ namespace SilDev
         /// <param name="index">
         ///     The value index used to handle multiple key value pairs.
         /// </param>
-        public static bool Write<TValue>(string section, string key, TValue value, bool forceOverwrite, bool skipExistValue = false, uint index = 0) =>
+        public static bool Write<TValue>(string section, string key, TValue value, bool forceOverwrite, bool skipExistValue = false, int index = 0) =>
             Write(section, key, value, null, forceOverwrite, skipExistValue);
 
         /// <summary>
