@@ -30,7 +30,7 @@ namespace SilDev
         ///     Creates a new JSON file with the specified object data.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to read (environment variables are accepted).
+        ///     The full path of the file to read.
         /// </param>
         /// <param name="obj">
         ///     The object to convert.
@@ -59,7 +59,7 @@ namespace SilDev
         ///     Retrieves the full content of the specified JSON file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to read (environment variables are accepted).
+        ///     The full path of the file to read.
         /// </param>
         public static Dictionary<string, object> ReadAll(string path)
         {
@@ -81,7 +81,7 @@ namespace SilDev
         ///     Retrieves a value from the specified key in a JSON file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to read (environment variables are accepted).
+        ///     The full path of the file to read.
         /// </param>
         /// <param name="keys">
         ///     An array of keys to navigate to the exact position of the value.

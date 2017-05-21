@@ -234,7 +234,7 @@ namespace SilDev
             ///     Encodes the specified file.
             /// </summary>
             /// <param name="path">
-            ///     The full path of the file to encode (environment variables are accepted).
+            ///     The full path of the file to encode.
             /// </param>
             /// <param name="prefixMark">
             ///     The prefix mark.
@@ -271,7 +271,7 @@ namespace SilDev
             ///     Encodes the specified file.
             /// </summary>
             /// <param name="path">
-            ///     The full path of the file to encode (environment variables are accepted).
+            ///     The full path of the file to encode.
             /// </param>
             /// <param name="lineLength">
             ///     The length of lines.
@@ -365,7 +365,7 @@ namespace SilDev
         ///     Encodes the specifed file to a sequence of base-64 digits.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encode (environment variables are accepted).
+        ///     The full path of the file to encode.
         /// </param>
         /// <param name="prefixMark">
         ///     The prefix mark.
@@ -650,7 +650,7 @@ namespace SilDev
         ///     Encodes the specifed file to a sequence of base-85 digits.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encode (environment variables are accepted).
+        ///     The full path of the file to encode.
         /// </param>
         /// <param name="prefixMark">
         ///     The prefix mark.
@@ -961,7 +961,7 @@ namespace SilDev
         ///     Encodes the specifed file to a sequence of base-91 digits.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encode (environment variables are accepted).
+        ///     The full path of the file to encode.
         /// </param>
         /// <param name="prefixMark">
         ///     The prefix mark.
@@ -1770,7 +1770,7 @@ namespace SilDev
         ///     Encrypts the specified file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encrypt (environment variables are accepted).
+        ///     The full path of the file to encrypt.
         /// </param>
         public static string EncryptFileToMd5(string path) =>
             new Md5().EncryptFile(path);
@@ -1875,7 +1875,7 @@ namespace SilDev
         ///     Encrypts the specified file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encrypt (environment variables are accepted).
+        ///     The full path of the file to encrypt.
         /// </param>
         public static string EncryptFileToSha1(string path) =>
             new Sha1().EncryptFile(path);
@@ -1980,7 +1980,7 @@ namespace SilDev
         ///     Encrypts the specified file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encrypt (environment variables are accepted).
+        ///     The full path of the file to encrypt.
         /// </param>
         public static string EncryptFileToSha256(string path) =>
             new Sha256().EncryptFile(path);
@@ -2081,7 +2081,7 @@ namespace SilDev
         ///     Encrypts the specified file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encrypt (environment variables are accepted).
+        ///     The full path of the file to encrypt.
         /// </param>
         public static string EncryptFileToSha384(string path) =>
             new Sha384().EncryptFile(path);
@@ -2182,7 +2182,7 @@ namespace SilDev
         ///     Encrypts the specified file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to encrypt (environment variables are accepted).
+        ///     The full path of the file to encrypt.
         /// </param>
         public static string EncryptFileToSha512(string path) =>
             new Sha512().EncryptFile(path);

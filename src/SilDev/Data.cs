@@ -74,19 +74,16 @@ namespace SilDev
         ///     Creates a link to the specified path.
         /// </summary>
         /// <param name="linkPath">
-        ///     The file or directory to be linked
-        ///     (environment variables are accepted).
+        ///     The file or directory to be linked.
         /// </param>
         /// <param name="targetPath">
-        ///     The fully qualified name of the new link
-        ///     (environment variables are accepted).
+        ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="startArgs">
         ///     The arguments which applies when this shortcut is executed.
         /// </param>
         /// <param name="linkIcon">
-        ///     The icon resource path for this shortcut
-        ///     (environment variables are accepted).
+        ///     The icon resource path for this shortcut.
         /// </param>
         /// <param name="skipExists">
         ///     true to skip existing shortcuts, even if the target path of
@@ -127,12 +124,10 @@ namespace SilDev
         ///     Creates a link to the specified path.
         /// </summary>
         /// <param name="linkPath">
-        ///     The file or directory to be linked
-        ///     (environment variables are accepted).
+        ///     The file or directory to be linked.
         /// </param>
         /// <param name="targetPath">
-        ///     The fully qualified name of the new link
-        ///     (environment variables are accepted).
+        ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="startArgs">
         ///     The arguments which applies when this shortcut is executed.
@@ -148,12 +143,10 @@ namespace SilDev
         ///     Creates a link to the specified path.
         /// </summary>
         /// <param name="linkPath">
-        ///     The file or directory to be linked
-        ///     (environment variables are accepted).
+        ///     The file or directory to be linked.
         /// </param>
         /// <param name="targetPath">
-        ///     The fully qualified name of the new link
-        ///     (environment variables are accepted).
+        ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="skipExists">
         ///     true to skip existing shortcuts, even if the target path of
@@ -166,8 +159,7 @@ namespace SilDev
         ///     Returns the target path of the specified link.
         /// </summary>
         /// <param name="path">
-        ///     The shortcut path to get the target path
-        ///     (environment variables are accepted).
+        ///     The shortcut path to get the target path.
         /// </param>
         public static string GetShortcutTarget(string path)
         {
@@ -322,7 +314,7 @@ namespace SilDev
         ///     Pin the specified file to taskbar.
         /// </summary>
         /// <param name="path">
-        ///     The file to be pinned (environment variables are accepted).
+        ///     The file to be pinned.
         /// </param>
         public static bool PinToTaskbar(string path) =>
             PinUnpinTaskbar(path, true);
@@ -331,7 +323,7 @@ namespace SilDev
         ///     Unpin the specified file to taskbar.
         /// </summary>
         /// <param name="path">
-        ///     The file to be unpinned (environment variables are accepted).
+        ///     The file to be unpinned.
         /// </param>
         public static bool UnpinFromTaskbar(string path) =>
             PinUnpinTaskbar(path, false);
@@ -341,7 +333,7 @@ namespace SilDev
         ///     file attributes.
         /// </summary>
         /// <param name="path">
-        ///     The file or directory to check (environment variables are accepted).
+        ///     The file or directory to check.
         /// </param>
         /// <param name="attr">
         ///     The attributes to match.
@@ -636,11 +628,10 @@ namespace SilDev
         ///     which allows a simple solution for the elevated execution of this order.
         /// </summary>
         /// <param name="linkPath">
-        ///     The directory to be linked (environment variables are accepted).
+        ///     The directory to be linked.
         /// </param>
         /// <param name="destDir">
-        ///     The fully qualified name of the new link (environment variables
-        ///     are accepted).
+        ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="backup">
         ///     true to create an backup for existing directories; otherwise, false.
@@ -656,11 +647,10 @@ namespace SilDev
         ///     allows a simple solution for the elevated execution of this order.
         /// </summary>
         /// <param name="linkPath">
-        ///     The file to be linked (environment variables are accepted).
+        ///     The file to be linked.
         /// </param>
         /// <param name="destFile">
-        ///     The fully qualified name of the new link (environment variables
-        ///     are accepted).
+        ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="backup">
         ///     true to create an backup for existing files; otherwise, false.
@@ -696,7 +686,7 @@ namespace SilDev
         ///     order.
         /// </summary>
         /// <param name="path">
-        ///     The link to be removed (environment variables are accepted).
+        ///     The link to be removed.
         /// </param>
         /// <param name="backup">
         ///     true to restore found backups; otherwise, false.
@@ -712,7 +702,7 @@ namespace SilDev
         ///     which allows a simple solution for the elevated execution of this order.
         /// </summary>
         /// <param name="path">
-        ///     The link to be removed (environment variables are accepted).
+        ///     The link to be removed.
         /// </param>
         /// <param name="backup">
         ///     true to restore found backups; otherwise, false.
@@ -727,11 +717,10 @@ namespace SilDev
         ///     Copies an existing directory to a new location.
         /// </summary>
         /// <param name="srcDir">
-        ///     The directory to copy (environment variables are accepted).
+        ///     The directory to copy.
         /// </param>
         /// <param name="destDir">
-        ///     The fully qualified name of the destination directory
-        ///     (environment variables are accepted).
+        ///     The fully qualified name of the destination directory.
         /// </param>
         /// <param name="subDirs">
         ///     true to inlcude subdirectories; otherwise, false.
@@ -770,11 +759,10 @@ namespace SilDev
         ///     directory if this task has been completed successfully.
         /// </summary>
         /// <param name="srcDir">
-        ///     The directory to move (environment variables are accepted).
+        ///     The directory to move.
         /// </param>
         /// <param name="destDir">
-        ///     The fully qualified name of the destination directory
-        ///     (environment variables are accepted).
+        ///     The fully qualified name of the destination directory.
         /// </param>
         public static void DirSafeMove(string srcDir, string destDir)
         {
@@ -847,8 +835,7 @@ namespace SilDev
         ///     Find out which processes have a lock on this file instance member.
         /// </summary>
         /// <param name="paths">
-        ///     An array that contains the file paths to check
-        ///     (environment variables are accepted).
+        ///     An array that contains the file paths to check.
         /// </param>
         public static List<Process> GetLocks(IList<string> paths)
         {
@@ -949,7 +936,7 @@ namespace SilDev
         ///     Find out which processes have a lock on the specified path.
         /// </summary>
         /// <param name="path">
-        ///     The full path to check (environment variables are accepted).
+        ///     The full path to check.
         /// </param>
         public static List<Process> GetLocks(string path)
         {
@@ -1100,7 +1087,7 @@ namespace SilDev
         ///     Returns the version information associated with the specified file.
         /// </summary>
         /// <param name="path">
-        ///     The file to check (environment variables are accepted).
+        ///     The file to check.
         /// </param>
         public static Version GetVersion(string path)
         {

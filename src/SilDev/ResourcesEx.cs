@@ -244,7 +244,7 @@ namespace SilDev
         ///     The resource to extract.
         /// </param>
         /// <param name="destPath">
-        ///     The file to create (environment variables are accepted).
+        ///     The file to create.
         /// </param>
         /// <param name="reverseBytes">
         ///     true to invert the order of the bytes in the specified sequence before extracting;

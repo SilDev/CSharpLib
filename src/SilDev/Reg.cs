@@ -898,7 +898,7 @@ namespace SilDev
         ///     Imports the specified REG file to the registry.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to import (environment variables are accepted).
+        ///     The full path of the file to import.
         /// </param>
         /// <param name="elevated">
         ///     true to import with highest user permissions; otherwise, false.
@@ -931,7 +931,7 @@ namespace SilDev
         ///     deletes the file.
         /// </summary>
         /// <param name="path">
-        ///     The full path of the file to import (environment variables are accepted).
+        ///     The full path of the file to import.
         /// </param>
         /// <param name="content">
         ///     The full content of the file to import.
@@ -978,7 +978,7 @@ namespace SilDev
         ///     Exports the full content of the specified registry paths into an REG file.
         /// </summary>
         /// <param name="destPath">
-        ///     The full path of the file to create or override (environment variables are accepted).
+        ///     The full path of the file to create or override.
         /// </param>
         /// <param name="elevated">
         ///     true to export with highest user permissions; otherwise, false.
@@ -1035,7 +1035,7 @@ namespace SilDev
         ///     The full path of the file to create or override.
         /// </param>
         /// <param name="keyPaths">
-        ///     The full paths of the keys to export (environment variables are accepted).
+        ///     The full paths of the keys to export.
         /// </param>
         public static bool ExportKeys(string destPath, params string[] keyPaths) =>
             ExportKeys(destPath, false, keyPaths);

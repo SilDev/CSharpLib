@@ -466,7 +466,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
@@ -513,7 +513,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
@@ -531,7 +531,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
@@ -555,7 +555,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
@@ -842,7 +842,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
@@ -897,7 +897,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="timeout">
             ///     The time-out value in milliseconds.
@@ -915,7 +915,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="userName">
             ///     The username associated with the credential.
@@ -939,7 +939,7 @@ namespace SilDev
             ///     The full path of the resource to download.
             /// </param>
             /// <param name="destPath">
-            ///     The local destination path of the file (environment variables are accepted).
+            ///     The local destination path of the file.
             /// </param>
             /// <param name="timeout">
             ///     The time-out value in milliseconds.

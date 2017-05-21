@@ -146,7 +146,7 @@ namespace SilDev
         ///         For more informations see <see cref="ActivateLogging(int)"/>.
         ///     </para>
         /// </summary>
-        /// <param name="path">
+        /// <param name="configPath">
         ///     The full path of the configuration file.
         /// </param>
         /// <param name="pattern">
@@ -156,7 +156,7 @@ namespace SilDev
         ///     The key of the configuration file which hold the value, to specify the current
         ///     <see cref="DebugMode"/>.
         /// </param>
-        public static void AllowLogging(string path = null, string pattern = null, string key = nameof(DebugMode))
+        public static void AllowLogging(string configPath = null, string pattern = null, string key = nameof(DebugMode))
         {
             var mode = 0;
             var regex = new Regex("/debug [0-2]", RegexOptions.IgnoreCase);
@@ -169,6 +169,7 @@ namespace SilDev
                 if (mode > 0)
                     goto ACTIVATE;
             }
+            var path = PathEx.Combine(configPath);
             if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrEmpty(path) && File.Exists(path))
                 try
                 {
