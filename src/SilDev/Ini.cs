@@ -221,7 +221,7 @@ namespace SilDev
         ///     Specifies an INI file to use as default.
         /// </summary>
         /// <param name="paths">
-        ///     An array of parts of the path (environment variables are accepted).
+        ///     An array of parts of the path.
         /// </param>
         public static bool SetFile(params string[] paths) =>
             File.Exists(FilePath = PathEx.Combine(paths));
