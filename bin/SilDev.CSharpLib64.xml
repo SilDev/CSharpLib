@@ -120,6 +120,11 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:SilDev.Properties.Resources.SizeGripImage">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.Resources.TempDir">
             <summary>
               Looks up a localized string similar to %TEMP%\tmp-{0}.
@@ -1132,18 +1137,25 @@
                 Provides static methods for compressing and decompressing of data.
             </summary>
         </member>
-        <member name="M:SilDev.Compaction.TextToZip(System.String)">
+        <member name="M:SilDev.Compaction.Zip(System.Byte[])">
             <summary>
-                Compresses the specifed <see cref="T:System.String"/> value to zip.
+                Compresses the specifed sequence of bytes.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to compress.
+            </param>
+        </member>
+        <member name="M:SilDev.Compaction.ZipText(System.String)">
+            <summary>
+                Compresses the specifed <see cref="T:System.String"/> value.
             </summary>
             <param name="text">
                 The string to compress.
             </param>
         </member>
-        <member name="M:SilDev.Compaction.TextFromZip(System.Byte[])">
+        <member name="M:SilDev.Compaction.Unzip(System.Byte[])">
             <summary>
-                Decompresses a compressed sequence of bytes back to a <see cref="T:System.String"/>
-                value.
+                Decompresses a compressed sequence of bytes.
             </summary>
             <param name="bytes">
                 The sequence of bytes to decompress.
@@ -1155,14 +1167,22 @@
                 the file system.
             </summary>
             <param name="srcPath">
-                The path of the zip archive to extract (environment variables are accepted).
+                The path of the zip archive to extract.
             </param>
             <param name="destDir">
-                The path to the directory to place the extracted files in (environment variables
-                are accepted).
+                The path to the directory to place the extracted files in.
             </param>
             <param name="delSrcPath">
                 true to delete the source archive after extracting; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Compaction.UnzipText(System.Byte[])">
+            <summary>
+                Decompresses a compressed sequence of bytes back to a <see cref="T:System.String"/>
+                value.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to decompress.
             </param>
         </member>
         <member name="T:SilDev.Compaction.Zip7Helper">
@@ -1515,7 +1535,7 @@
                 Gets the decoded result of the last object.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.Base64.EncodeByteArray(System.Byte[],System.String,System.String,System.UInt32)">
+        <member name="M:SilDev.Crypto.Base64.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
             <summary>
                 Encodes the specified sequence of bytes.
             </summary>
@@ -1532,7 +1552,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Base64.DecodeByteArray(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Base64.DecodeBytes(System.String,System.String,System.String)">
             <summary>
                 Decodes the specified sequence of bytes.
             </summary>
@@ -1593,7 +1613,7 @@
                 Encodes the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encode (environment variables are accepted).
+                The full path of the file to encode.
             </param>
             <param name="prefixMark">
                 The prefix mark.
@@ -1610,7 +1630,7 @@
                 Encodes the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encode (environment variables are accepted).
+                The full path of the file to encode.
             </param>
             <param name="lineLength">
                 The length of lines.
@@ -1647,7 +1667,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeByteArrayFromBase64(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.DecodeBytesFromBase64(System.String,System.String,System.String)">
             <summary>
                 Decodes this sequence of base-64 digits back to a sequence of bytes.
             </summary>
@@ -1697,7 +1717,7 @@
                 Encodes the specifed file to a sequence of base-64 digits.
             </summary>
             <param name="path">
-                The full path of the file to encode (environment variables are accepted).
+                The full path of the file to encode.
             </param>
             <param name="prefixMark">
                 The prefix mark.
@@ -1738,7 +1758,7 @@
                 The suffix mark.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.Base85.EncodeByteArray(System.Byte[],System.String,System.String,System.UInt32)">
+        <member name="M:SilDev.Crypto.Base85.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
             <summary>
                 Encodes the specified sequence of bytes.
             </summary>
@@ -1755,7 +1775,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Base85.DecodeByteArray(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Base85.DecodeBytes(System.String,System.String,System.String)">
             <summary>
                 Decodes the specified sequence of bytes.
             </summary>
@@ -1786,7 +1806,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeByteArrayFromBase85(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.DecodeBytesFromBase85(System.String,System.String,System.String)">
             <summary>
                 Decodes this sequence of base-85 digits back to a sequence of bytes.
             </summary>
@@ -1836,7 +1856,7 @@
                 Encodes the specifed file to a sequence of base-85 digits.
             </summary>
             <param name="path">
-                The full path of the file to encode (environment variables are accepted).
+                The full path of the file to encode.
             </param>
             <param name="prefixMark">
                 The prefix mark.
@@ -1877,7 +1897,7 @@
                 Gets or sets the encode table.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.Base91.EncodeByteArray(System.Byte[],System.String,System.String,System.UInt32)">
+        <member name="M:SilDev.Crypto.Base91.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
             <summary>
                 Encodes the specified sequence of bytes to a sequence of base-91 digits.
             </summary>
@@ -1894,7 +1914,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Base91.DecodeByteArray(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Base91.DecodeBytes(System.String,System.String,System.String)">
             <summary>
                 Decodes the specified sequence of base-91 digits back to a sequence of bytes.
             </summary>
@@ -1925,7 +1945,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeByteArrayFromBase91(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.DecodeBytesFromBase91(System.String,System.String,System.String)">
             <summary>
                 Decodes this sequence of base-91 digits back to a sequence of bytes.
             </summary>
@@ -1975,7 +1995,7 @@
                 Encodes the specifed file to a sequence of base-91 digits.
             </summary>
             <param name="path">
-                The full path of the file to encode (environment variables are accepted).
+                The full path of the file to encode.
             </param>
             <param name="prefixMark">
                 The prefix mark.
@@ -2026,7 +2046,7 @@
                 256 bits.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptByteArray(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
+        <member name="M:SilDev.Crypto.Aes.EncryptBytes(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Encrypts the specified sequence of bytes.
             </summary>
@@ -2043,7 +2063,7 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptByteArray(System.Byte[],System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
+        <member name="M:SilDev.Crypto.Aes.EncryptBytes(System.Byte[],System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Encrypts the specified sequence of bytes.
             </summary>
@@ -2060,7 +2080,7 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptByteArray(System.Byte[],System.String,SilDev.Crypto.Aes.KeySize)">
+        <member name="M:SilDev.Crypto.Aes.EncryptBytes(System.Byte[],System.String,SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Encrypts the specified sequence of bytes.
             </summary>
@@ -2170,7 +2190,7 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptByteArray(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
+        <member name="M:SilDev.Crypto.Aes.DecryptBytes(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Decrypts the specified sequence of bytes.
             </summary>
@@ -2187,7 +2207,7 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptByteArray(System.Byte[],System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
+        <member name="M:SilDev.Crypto.Aes.DecryptBytes(System.Byte[],System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Decrypts the specified sequence of bytes.
             </summary>
@@ -2204,7 +2224,7 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptByteArray(System.Byte[],System.String,SilDev.Crypto.Aes.KeySize)">
+        <member name="M:SilDev.Crypto.Aes.DecryptBytes(System.Byte[],System.String,SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Decrypts the specified sequence of bytes.
             </summary>
@@ -2530,7 +2550,7 @@
                 The stream to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptByteArray(System.Byte[])">
+        <member name="M:SilDev.Crypto.Md5.EncryptBytes(System.Byte[])">
             <summary>
                 Encrypts the specified sequence of bytes.
             </summary>
@@ -2591,7 +2611,7 @@
                 Encrypts the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encrypt (environment variables are accepted).
+                The full path of the file to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha1">
@@ -2657,7 +2677,7 @@
                 Encrypts the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encrypt (environment variables are accepted).
+                The full path of the file to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha256">
@@ -2723,7 +2743,7 @@
                 Encrypts the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encrypt (environment variables are accepted).
+                The full path of the file to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha384">
@@ -2789,7 +2809,7 @@
                 Encrypts the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encrypt (environment variables are accepted).
+                The full path of the file to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha512">
@@ -2855,7 +2875,7 @@
                 Encrypts the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encrypt (environment variables are accepted).
+                The full path of the file to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Data">
@@ -2894,19 +2914,16 @@
                 Creates a link to the specified path.
             </summary>
             <param name="linkPath">
-                The file or directory to be linked
-                (environment variables are accepted).
+                The file or directory to be linked.
             </param>
             <param name="targetPath">
-                The fully qualified name of the new link
-                (environment variables are accepted).
+                The fully qualified name of the new link.
             </param>
             <param name="startArgs">
                 The arguments which applies when this shortcut is executed.
             </param>
             <param name="linkIcon">
-                The icon resource path for this shortcut
-                (environment variables are accepted).
+                The icon resource path for this shortcut.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
@@ -2918,12 +2935,10 @@
                 Creates a link to the specified path.
             </summary>
             <param name="linkPath">
-                The file or directory to be linked
-                (environment variables are accepted).
+                The file or directory to be linked.
             </param>
             <param name="targetPath">
-                The fully qualified name of the new link
-                (environment variables are accepted).
+                The fully qualified name of the new link.
             </param>
             <param name="startArgs">
                 The arguments which applies when this shortcut is executed.
@@ -2938,12 +2953,10 @@
                 Creates a link to the specified path.
             </summary>
             <param name="linkPath">
-                The file or directory to be linked
-                (environment variables are accepted).
+                The file or directory to be linked.
             </param>
             <param name="targetPath">
-                The fully qualified name of the new link
-                (environment variables are accepted).
+                The fully qualified name of the new link.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
@@ -2955,8 +2968,7 @@
                 Returns the target path of the specified link.
             </summary>
             <param name="path">
-                The shortcut path to get the target path
-                (environment variables are accepted).
+                The shortcut path to get the target path.
             </param>
         </member>
         <member name="M:SilDev.Data.ChangePrincipalName(System.String)">
@@ -2978,7 +2990,7 @@
                 Pin the specified file to taskbar.
             </summary>
             <param name="path">
-                The file to be pinned (environment variables are accepted).
+                The file to be pinned.
             </param>
         </member>
         <member name="M:SilDev.Data.UnpinFromTaskbar(System.String)">
@@ -2986,7 +2998,7 @@
                 Unpin the specified file to taskbar.
             </summary>
             <param name="path">
-                The file to be unpinned (environment variables are accepted).
+                The file to be unpinned.
             </param>
         </member>
         <member name="M:SilDev.Data.MatchAttributes(System.String,System.IO.FileAttributes)">
@@ -2995,7 +3007,7 @@
                 file attributes.
             </summary>
             <param name="path">
-                The file or directory to check (environment variables are accepted).
+                The file or directory to check.
             </param>
             <param name="attr">
                 The attributes to match.
@@ -3077,11 +3089,10 @@
                 which allows a simple solution for the elevated execution of this order.
             </summary>
             <param name="linkPath">
-                The directory to be linked (environment variables are accepted).
+                The directory to be linked.
             </param>
             <param name="destDir">
-                The fully qualified name of the new link (environment variables
-                are accepted).
+                The fully qualified name of the new link.
             </param>
             <param name="backup">
                 true to create an backup for existing directories; otherwise, false.
@@ -3096,11 +3107,10 @@
                 allows a simple solution for the elevated execution of this order.
             </summary>
             <param name="linkPath">
-                The file to be linked (environment variables are accepted).
+                The file to be linked.
             </param>
             <param name="destFile">
-                The fully qualified name of the new link (environment variables
-                are accepted).
+                The fully qualified name of the new link.
             </param>
             <param name="backup">
                 true to create an backup for existing files; otherwise, false.
@@ -3116,7 +3126,7 @@
                 order.
             </summary>
             <param name="path">
-                The link to be removed (environment variables are accepted).
+                The link to be removed.
             </param>
             <param name="backup">
                 true to restore found backups; otherwise, false.
@@ -3131,7 +3141,7 @@
                 which allows a simple solution for the elevated execution of this order.
             </summary>
             <param name="path">
-                The link to be removed (environment variables are accepted).
+                The link to be removed.
             </param>
             <param name="backup">
                 true to restore found backups; otherwise, false.
@@ -3145,11 +3155,10 @@
                 Copies an existing directory to a new location.
             </summary>
             <param name="srcDir">
-                The directory to copy (environment variables are accepted).
+                The directory to copy.
             </param>
             <param name="destDir">
-                The fully qualified name of the destination directory
-                (environment variables are accepted).
+                The fully qualified name of the destination directory.
             </param>
             <param name="subDirs">
                 true to inlcude subdirectories; otherwise, false.
@@ -3164,11 +3173,10 @@
                 directory if this task has been completed successfully.
             </summary>
             <param name="srcDir">
-                The directory to move (environment variables are accepted).
+                The directory to move.
             </param>
             <param name="destDir">
-                The fully qualified name of the destination directory
-                (environment variables are accepted).
+                The fully qualified name of the destination directory.
             </param>
         </member>
         <member name="M:SilDev.Data.GetFullHashCode(System.IO.DirectoryInfo,System.Boolean)">
@@ -3195,8 +3203,7 @@
                 Find out which processes have a lock on this file instance member.
             </summary>
             <param name="paths">
-                An array that contains the file paths to check
-                (environment variables are accepted).
+                An array that contains the file paths to check.
             </param>
         </member>
         <member name="M:SilDev.Data.GetLocks(System.IO.FileInfo)">
@@ -3220,7 +3227,7 @@
                 Find out which processes have a lock on the specified path.
             </summary>
             <param name="path">
-                The full path to check (environment variables are accepted).
+                The full path to check.
             </param>
         </member>
         <member name="M:SilDev.Data.ForceDelete(System.String,System.Boolean)">
@@ -3249,7 +3256,7 @@
                 Returns the version information associated with the specified file.
             </summary>
             <param name="path">
-                The file to check (environment variables are accepted).
+                The file to check.
             </param>
         </member>
         <member name="T:SilDev.Depiction">
@@ -3735,7 +3742,42 @@
         </member>
         <member name="T:SilDev.Ini">
             <summary>
-                Provides static methods for the handling of initialization files.
+                Provides the functionality to handle the INI format.
+            </summary>
+        </member>
+        <member name="M:SilDev.Ini.SaveCache(System.String,System.String)">
+            <summary>
+                Save the cached data to the specified file.
+            </summary>
+            <param name="cacheFilePath">
+                The full file path of the cache file to create.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file. If this parameter is NULL, all
+                cached data are saved.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.LoadCache(System.String)">
+            <summary>
+                <para>
+                    Loads the data of a cache file into memory.
+                </para>
+                <para>
+                    Please note that <see cref="P:SilDev.Ini.MaxCacheSize"/> is ignored in this case.
+                </para>
+            </summary>
+            <param name="cacheFilePath">
+                The full path of a cache file.
+            </param>
+        </member>
+        <member name="P:SilDev.Ini.MaxCacheSize">
+            <summary>
+                Gets or sets the maximum number of cached files.
+            </summary>
+        </member>
+        <member name="P:SilDev.Ini.SortBySections">
+            <summary>
+                Specifies a sequence of section names to be sorted first.
             </summary>
         </member>
         <member name="P:SilDev.Ini.FilePath">
@@ -3764,33 +3806,6 @@
                 The full file path or content of an INI file.
             </param>
         </member>
-        <member name="M:SilDev.Ini.RemoveSection(System.String,System.String)">
-            <summary>
-                Removes the full specified section of an INI file or an INI file formatted
-                string value.
-            </summary>
-            <param name="section">
-                The name of the section to remove.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
-        <member name="M:SilDev.Ini.RemoveKey(System.String,System.String,System.String)">
-            <summary>
-                Removes the specified key from the specified section, of an INI file or an INI
-                file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key to remove.
-            </param>
-            <param name="key">
-                The name of the key to remove.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
-            </param>
-        </member>
         <member name="M:SilDev.Ini.GetSections(System.String,System.Boolean)">
             <summary>
                 Retrieves all section names of an INI file or an INI file formatted string value.
@@ -3808,6 +3823,18 @@
             </summary>
             <param name="sorted">
                 true to sort the sections; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.RemoveSection(System.String,System.String)">
+            <summary>
+                Removes the specified section including all associated keys of an INI file
+                or an INI file formatted string value.
+            </summary>
+            <param name="section">
+                The name of the section to remove.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
             </param>
         </member>
         <member name="M:SilDev.Ini.GetKeys(System.String,System.String,System.Boolean)">
@@ -3837,6 +3864,21 @@
                 true to sort keys; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.Ini.RemoveKey(System.String,System.String,System.String)">
+            <summary>
+                Removes the specified key from the specified section, of an INI file or an INI
+                file formatted string value.
+            </summary>
+            <param name="section">
+                The name of the section containing the key to remove.
+            </param>
+            <param name="key">
+                The name of the key to remove.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+        </member>
         <member name="M:SilDev.Ini.ReadAll(System.String,System.Boolean)">
             <summary>
                 Retrieves the full content of an INI file or an INI file formatted string value.
@@ -3856,7 +3898,7 @@
                 true to sort the sections and keys; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Ini.Read(System.String,System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.Ini.Read(System.String,System.String,System.String,System.Boolean,System.Int32)">
             <summary>
                 Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file
                 or an INI file formatted string value.
@@ -3874,8 +3916,31 @@
             <param name="reread">
                 true to reread the INI file; otherwise, false.
             </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
         </member>
-        <member name="M:SilDev.Ini.Read``1(System.String,System.String,``0,System.String)">
+        <member name="M:SilDev.Ini.ReadOnly(System.String,System.String,System.String,System.Int32)">
+            <summary>
+                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file
+                or an INI file formatted string value and release all cached resources used by
+                the specified INI file or the INI file formatted string value.
+            </summary>
+            <param name="section">
+                The name of the section containing the key name. The value must be NULL for a
+                non-section key.
+            </param>
+            <param name="key">
+                The name of the key whose associated value is to be retrieved.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Read``1(System.String,System.String,``0,System.String,System.Boolean)">
             <summary>
                 Retrieves a value from the specified section in an INI file or an INI file
                 formatted string value.
@@ -3895,8 +3960,11 @@
             <param name="fileOrContent">
                 The full file path or content of an INI file.
             </param>
+            <param name="reread">
+                true to reread the INI file; otherwise, false.
+            </param>
         </member>
-        <member name="M:SilDev.Ini.ReadOnly``1(System.String,System.String,``0,System.String)">
+        <member name="M:SilDev.Ini.ReadOnly``1(System.String,System.String,``0,System.String,System.Int32)">
             <summary>
                 Retrieves a value from the specified section in an INI file or an INI file
                 formatted string value and release all cached resources used by the
@@ -3917,22 +3985,8 @@
             <param name="fileOrContent">
                 The full file path or content of an INI file.
             </param>
-        </member>
-        <member name="M:SilDev.Ini.ReadOnly(System.String,System.String,System.String)">
-            <summary>
-                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file
-                or an INI file formatted string value and release all cached resources used by
-                the specified INI file or the INI file formatted string value.
-            </summary>
-            <param name="section">
-                The name of the section containing the key name. The value must be NULL for a
-                non-section key.
-            </param>
-            <param name="key">
-                The name of the key whose associated value is to be retrieved.
-            </param>
-            <param name="fileOrContent">
-                The full file path or content of an INI file.
+            <param name="index">
+                The value index used to handle multiple key value pairs.
             </param>
         </member>
         <member name="M:SilDev.Ini.ReadDirect(System.String,System.String,System.String)">
@@ -3969,7 +4023,12 @@
                 </para>
             </param>
             <param name="file">
-                The full file path of an INI file.
+                <para>
+                    The full file path of an INI file.
+                </para>
+                <para>
+                    If this parameter is NULL, the default INI file is used.
+                </para>
             </param>
             <param name="sorted">
                 true to sort the sections and keys; otherwise, false.
@@ -3984,7 +4043,12 @@
                 Writes all the cached data from the specified INI file to the disk.
             </summary>
             <param name="file">
-                The full file path of an INI file.
+                <para>
+                    The full file path of an INI file.
+                </para>
+                <para>
+                    If this parameter is NULL, the default INI file is used.
+                </para>
             </param>
             <param name="sorted">
                 true to sort the sections and keys; otherwise, false.
@@ -3994,7 +4058,7 @@
                 false.
             </param>
         </member>
-        <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.String,System.Boolean,System.Boolean,System.UInt32)">
+        <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.String,System.Boolean,System.Boolean,System.Int32)">
             <summary>
                 <para>
                     Copies the specified value into the specified section of an INI file.
@@ -4042,7 +4106,7 @@
                 The value index used to handle multiple key value pairs.
             </param>
         </member>
-        <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.Boolean,System.Boolean,System.UInt32)">
+        <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.Boolean,System.Boolean,System.Int32)">
             <summary>
                 <para>
                     Copies the specified value into the specified section of an INI file.
@@ -4142,7 +4206,7 @@
                 Creates a new JSON file with the specified object data.
             </summary>
             <param name="path">
-                The full path of the file to read (environment variables are accepted).
+                The full path of the file to read.
             </param>
             <param name="obj">
                 The object to convert.
@@ -4153,7 +4217,7 @@
                 Retrieves the full content of the specified JSON file.
             </summary>
             <param name="path">
-                The full path of the file to read (environment variables are accepted).
+                The full path of the file to read.
             </param>
         </member>
         <member name="M:SilDev.Json.Read(System.String,System.String[])">
@@ -4161,7 +4225,7 @@
                 Retrieves a value from the specified key in a JSON file.
             </summary>
             <param name="path">
-                The full path of the file to read (environment variables are accepted).
+                The full path of the file to read.
             </param>
             <param name="keys">
                 An array of keys to navigate to the exact position of the value.
@@ -5218,7 +5282,7 @@
                     For more informations see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
                 </para>
             </summary>
-            <param name="path">
+            <param name="configPath">
                 The full path of the configuration file.
             </param>
             <param name="pattern">
@@ -5769,7 +5833,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="userName">
                 The username associated with the credential.
@@ -5792,7 +5856,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="timeout">
                 The time-out value in milliseconds.
@@ -5809,7 +5873,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="userName">
                 The username associated with the credential.
@@ -5832,7 +5896,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="timeout">
                 The time-out value in milliseconds.
@@ -6043,7 +6107,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="userName">
                 The username associated with the credential.
@@ -6066,7 +6130,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="timeout">
                 The time-out value in milliseconds.
@@ -6083,7 +6147,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="userName">
                 The username associated with the credential.
@@ -6106,7 +6170,7 @@
                 The full path of the resource to download.
             </param>
             <param name="destPath">
-                The local destination path of the file (environment variables are accepted).
+                The local destination path of the file.
             </param>
             <param name="timeout">
                 The time-out value in milliseconds.
@@ -7711,7 +7775,7 @@
                 Imports the specified REG file to the registry.
             </summary>
             <param name="path">
-                The full path of the file to import (environment variables are accepted).
+                The full path of the file to import.
             </param>
             <param name="elevated">
                 true to import with highest user permissions; otherwise, false.
@@ -7723,7 +7787,7 @@
                 deletes the file.
             </summary>
             <param name="path">
-                The full path of the file to import (environment variables are accepted).
+                The full path of the file to import.
             </param>
             <param name="content">
                 The full content of the file to import.
@@ -7749,7 +7813,7 @@
                 Exports the full content of the specified registry paths into an REG file.
             </summary>
             <param name="destPath">
-                The full path of the file to create or override (environment variables are accepted).
+                The full path of the file to create or override.
             </param>
             <param name="elevated">
                 true to export with highest user permissions; otherwise, false.
@@ -7766,13 +7830,29 @@
                 The full path of the file to create or override.
             </param>
             <param name="keyPaths">
-                The full paths of the keys to export (environment variables are accepted).
+                The full paths of the keys to export.
             </param>
         </member>
         <member name="T:SilDev.Reorganize">
             <summary>
                 Provides static methods for converting or reorganizing of data.
             </summary>
+        </member>
+        <member name="M:SilDev.Reorganize.SerializeObject``1(``0)">
+            <summary>
+                Serializes this object graph into a sequence of bytes.
+            </summary>
+            <param name="value">
+                The object graph to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.DeserializeObject``1(System.Byte[],``0)">
+            <summary>
+                Deserializes this sequence of bytes into an object graph.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
         </member>
         <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
             <summary>
@@ -7789,34 +7869,6 @@
             </param>
             <exception cref="T:System.ArgumentNullException">
             </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
-            <summary>
-                Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
-            </summary>
-            <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
-            </typeparam>
-            <param name="value">
-                The value to convert.
-            </param>
-            <param name="defValue">
-                The default value.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.TryParse``1(System.Object,System.Object@,``0)">
-            <summary>
-                Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
-            </summary>
-            <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
-            </typeparam>
-            <param name="value">
-                The value to convert.
-            </param>
-            <param name="result">
-                The result value.
-            </param>
         </member>
         <member name="T:SilDev.Reorganize.SizeUnits">
             <summary>
@@ -7898,18 +7950,29 @@
                 true to remove all zeros after the comma; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToLogStringArray(System.String)">
+        <member name="M:SilDev.Reorganize.Increment(System.IntPtr,System.IntPtr)">
             <summary>
-                Creates a sequence of strings based on natural (base e) logarithm of a count
-                of all the characters in the specified string.
+                Increments the length of a platform-specific type number with the specified value.
             </summary>
-            <param name="str">
-                The string to change.
+            <param name="ptr">
+                The platform-specific type to change.
+            </param>
+            <param name="value">
+                The number to be incremented.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Reverse(System.String)">
             <summary>
                 Reverses the sequence of all characters in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStrings(System.String)">
+            <summary>
+                Creates a sequence of strings based on natural (base e) logarithm of a count
+                of all the characters in the specified string.
             </summary>
             <param name="str">
                 The string to change.
@@ -7968,6 +8031,57 @@
                 The string to split.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToBytes(System.String)">
+            <summary>
+                Converts all the characters in the specified string into a sequence of bytes.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringEx(System.Byte[])">
+            <summary>
+                Converts the specified sequence of bytes into a string.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToRectangle(System.String)">
+            <summary>
+                Converts the specified string, which stores a set of four integers that represent the
+                location and size of a rectangle, to <see cref="T:System.Drawing.Rectangle"/>.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToPoint(System.String)">
+            <summary>
+                Converts the specified string, which stores an ordered pair of integer x- and y-coordinates,
+                to <see cref="T:System.Drawing.Point"/>.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToSize(System.String)">
+            <summary>
+                Converts the specified string, which stores an ordered pair of integers, to <see cref="T:System.Drawing.Size"/>.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToBoolean(System.String)">
+            <summary>
+                Converts the specified string to an equivalent Boolean value, which returns always false
+                for unsupported string values.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.LowerText(System.String,System.String[])">
             <summary>
                 Converts the specified strings in a string to lowercase.
@@ -8023,9 +8137,9 @@
                 The sequence of strings to remove.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToBinaryString(System.String,System.Boolean)">
+        <member name="M:SilDev.Reorganize.ToBin(System.String,System.Boolean)">
             <summary>
-                Converts the specified string to base-2 binary sequence.
+                Converts the specified string to its string representation of a base-2 binary sequence.
             </summary>
             <param name="str">
                 The string to convert.
@@ -8035,7 +8149,7 @@
                 otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FromBinaryString(System.String)">
+        <member name="M:SilDev.Reorganize.ToStringFromBin(System.String)">
             <summary>
                 Converts the specified base-2 binary sequence back to string.
             </summary>
@@ -8043,7 +8157,7 @@
                 The string to reconvert.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToHexString(System.Byte[],System.Nullable{System.Char},System.Boolean)">
+        <member name="M:SilDev.Reorganize.ToHexa(System.Byte[],System.Nullable{System.Char},System.Boolean)">
             <summary>
                 Converts the specified sequence of bytes into a hexadecimal sequence.
             </summary>
@@ -8057,21 +8171,7 @@
                 true to convert the result to uppercase; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToHexString(System.Drawing.Image,System.Nullable{System.Char},System.Boolean)">
-            <summary>
-                Converts the specified image to hexadecimal sequence.
-            </summary>
-            <param name="image">
-                The image to convert.
-            </param>
-            <param name="separator">
-                A single space character used as a separator.
-            </param>
-            <param name="upper">
-                true to convert the result to uppercase; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToHexString(System.String,System.Nullable{System.Char},System.Boolean)">
+        <member name="M:SilDev.Reorganize.ToHexa(System.String,System.Nullable{System.Char},System.Boolean)">
             <summary>
                 Converts the specified string to hexadecimal sequence.
             </summary>
@@ -8085,7 +8185,7 @@
                 true to convert the result to uppercase; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FromHexStringToByteArray(System.String)">
+        <member name="M:SilDev.Reorganize.ToBytesFormHexa(System.String)">
             <summary>
                 Converts the specified hexadecimal sequence back into a sequence of bytes.
             </summary>
@@ -8093,114 +8193,12 @@
                 The string to reconvert.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FromHexStringToImage(System.String)">
-            <summary>
-                Converts the specified hexadecimal sequence back to <see cref="T:System.Drawing.Image"/>.
-            </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromHexStringToIcon(System.String)">
-            <summary>
-                Converts the specified hexadecimal sequence back to <see cref="T:System.Drawing.Icon"/>.
-            </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromHexString(System.String)">
+        <member name="M:SilDev.Reorganize.ToStringFromHexa(System.String)">
             <summary>
                 Converts the specified hexadecimal sequence back to string.
             </summary>
             <param name="str">
                 The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToRectangle(System.String)">
-            <summary>
-                Converts the specified string, which stores a set of four integers that represent the
-                location and size of a rectangle, to <see cref="T:System.Drawing.Rectangle"/>.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToPoint(System.String)">
-            <summary>
-                Converts the specified string, which stores an ordered pair of integer x- and y-coordinates,
-                to <see cref="T:System.Drawing.Point"/>.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToSize(System.String)">
-            <summary>
-                Converts the specified string, which stores an ordered pair of integers, to <see cref="T:System.Drawing.Size"/>.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToBoolean(System.String)">
-            <summary>
-                Converts the specified string to an equivalent Boolean value, which returns always false
-                for unsupported string values.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToByteArray(System.String)">
-            <summary>
-                Converts all the characters in the specified string into a sequence of bytes.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToByteArray(System.Drawing.Image,System.Drawing.Imaging.ImageFormat)">
-            <summary>
-                Converts the specified image into a sequence of bytes.
-            </summary>
-            <param name="image">
-                The image to convert.
-            </param>
-            <param name="imageFormat">
-                An <see cref="T:System.Drawing.Imaging.ImageFormat"/> that specifies the format of the saved image.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToByteArray(System.Drawing.Icon)">
-            <summary>
-                Converts the specified icon into a sequence of bytes.
-            </summary>
-            <param name="icon">
-                The icon to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromByteArrayToString(System.Byte[])">
-            <summary>
-                Converts the specified sequence of bytes into a string.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromByteArrayToImage(System.Byte[])">
-            <summary>
-                Converts the specified sequence of bytes to <see cref="T:System.Drawing.Image"/>.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FromByteArrayToIcon(System.Byte[])">
-            <summary>
-                Converts the specified sequence of bytes to <see cref="T:System.Drawing.Icon"/>.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to convert.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Replace(System.Byte[],System.Byte[],System.Byte[])">
@@ -8218,15 +8216,32 @@
                 The sequence of bytes to replace all occurrences of oldValue.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.Increment(System.IntPtr,System.IntPtr)">
+        <member name="M:SilDev.Reorganize.Parse``1(System.Object,``0)">
             <summary>
-                Increments the length of a platform-specific type number with the specified value.
+                Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
             </summary>
-            <param name="ptr">
-                The platform-specific type to change.
-            </param>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
             <param name="value">
-                The number to be incremented.
+                The value to convert.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.TryParse``1(System.Object,System.Object@,``0)">
+            <summary>
+                Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
+            </summary>
+            <typeparam name="T">
+                The value <see cref="T:System.Type"/>.
+            </typeparam>
+            <param name="value">
+                The value to convert.
+            </param>
+            <param name="result">
+                The result value.
             </param>
         </member>
         <member name="T:SilDev.ResourcesEx">
@@ -8300,7 +8315,7 @@
                 The resource to extract.
             </param>
             <param name="destPath">
-                The file to create (environment variables are accepted).
+                The file to create.
             </param>
             <param name="reverseBytes">
                 true to invert the order of the bytes in the specified sequence before extracting;
