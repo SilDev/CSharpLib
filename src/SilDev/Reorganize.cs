@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-18 14:21
+// Version:  2017-05-21 10:27
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,7 +20,6 @@ namespace SilDev
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
-    using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -75,52 +74,6 @@ namespace SilDev
                     enumerator = stack.Pop();
                     enumerator.Dispose();
                 }
-            }
-        }
-
-        /// <summary>
-        ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
-        /// </summary>
-        /// <typeparam name="T">
-        ///     The value <see cref="Type"/>.
-        /// </typeparam>
-        /// <param name="value">
-        ///     The value to convert.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value.
-        /// </param>
-        public static T Parse<T>(this object value, T defValue = default(T))
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            var result = (T)converter.ConvertFrom(value);
-            return Comparison.IsNotEmpty(result) ? result : defValue;
-        }
-
-        /// <summary>
-        ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
-        /// </summary>
-        /// <typeparam name="T">
-        ///     The value <see cref="Type"/>.
-        /// </typeparam>
-        /// <param name="value">
-        ///     The value to convert.
-        /// </param>
-        /// <param name="result">
-        ///     The result value.
-        /// </param>
-        public static bool TryParse<T>(this object value, out dynamic result, T defValue = default(T))
-        {
-            result = defValue;
-            try
-            {
-                var converter = TypeDescriptor.GetConverter(typeof(T));
-                result = (T)converter.ConvertFrom(value);
-                return true;
-            }
-            catch
-            {
-                return false;
             }
         }
 
@@ -225,19 +178,25 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a sequence of strings based on natural (base e) logarithm of a count
-        ///     of all the characters in the specified string.
+        ///     Increments the length of a platform-specific type number with the specified value.
         /// </summary>
-        /// <param name="str">
-        ///     The string to change.
+        /// <param name="ptr">
+        ///     The platform-specific type to change.
         /// </param>
-        public static string[] ToLogStringArray(this string str)
+        /// <param name="value">
+        ///     The number to be incremented.
+        /// </param>
+        public static IntPtr Increment(this IntPtr ptr, IntPtr value)
         {
-            if (string.IsNullOrEmpty(str) || str.Length < 8)
-                return new[] { str };
-            var i = 0;
-            var b = Math.Floor(Math.Log(str.Length));
-            return str.ToLookup(c => Math.Floor(i++ / b)).Select(e => new string(e.ToArray())).ToArray();
+            try
+            {
+                return new IntPtr(IntPtr.Size == sizeof(int) ? ptr.ToInt32() + (int)value : ptr.ToInt64() + (long)value);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return new IntPtr(IntPtr.Size == sizeof(int) ? int.MaxValue : long.MaxValue);
+            }
         }
 
         /// <summary>
@@ -254,6 +213,22 @@ namespace SilDev
             Array.Reverse(ca);
             var s = new string(ca);
             return s;
+        }
+
+        /// <summary>
+        ///     Creates a sequence of strings based on natural (base e) logarithm of a count
+        ///     of all the characters in the specified string.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        public static string[] ToStrings(this string str)
+        {
+            if (string.IsNullOrEmpty(str) || str.Length < 8)
+                return new[] { str };
+            var i = 0;
+            var b = Math.Floor(Math.Log(str.Length));
+            return str.ToLookup(c => Math.Floor(i++ / b)).Select(e => new string(e.ToArray())).ToArray();
         }
 
         /// <summary>
@@ -331,230 +306,18 @@ namespace SilDev
             str.Split(Environment.NewLine);
 
         /// <summary>
-        ///     Converts the specified strings in a string to lowercase.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to change.
-        /// </param>
-        /// <param name="strs">
-        ///     The sequence of strings to convert.
-        /// </param>
-        public static string LowerText(this string str, params string[] strs)
-        {
-            if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
-                return str;
-            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToLower(), RegexOptions.IgnoreCase));
-            return s;
-        }
-
-        /// <summary>
-        ///     Converts the specified strings in a string to uppercase.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to change.
-        /// </param>
-        /// <param name="strs">
-        ///     The sequence of strings to convert.
-        /// </param>
-        public static string UpperText(this string str, params string[] strs)
-        {
-            if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
-                return str;
-            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToUpper(), RegexOptions.IgnoreCase));
-            return s;
-        }
-
-        /// <summary>
-        ///     Removes the specified characters in a char array.
-        /// </summary>
-        /// <param name="array">
-        ///     The char array to change.
-        /// </param>
-        /// <param name="chrs">
-        ///     The sequence of characters to remove.
-        /// </param>
-        public static char[] RemoveChar(this char[] array, params char[] chrs)
-        {
-            if (array == null || chrs == null)
-                return array;
-            var ca = array.Where(c => !chrs.Contains(c)).ToArray();
-            return ca;
-        }
-
-        /// <summary>
-        ///     Removes the specified characters in a string.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to change.
-        /// </param>
-        /// <param name="chrs">
-        ///     The sequence of characters to remove.
-        /// </param>
-        public static string RemoveChar(this string str, params char[] chrs)
-        {
-            if (string.IsNullOrEmpty(str) || chrs == null)
-                return str;
-            var s = new string(str.Where(c => !chrs.Contains(c)).ToArray());
-            return s;
-        }
-
-        /// <summary>
-        ///     Removes the specified strings in a string.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to change.
-        /// </param>
-        /// <param name="strs">
-        ///     The sequence of strings to remove.
-        /// </param>
-        public static string RemoveText(this string str, params string[] strs)
-        {
-            if (string.IsNullOrEmpty(str) || strs == null || strs.All(string.IsNullOrEmpty))
-                return str;
-            var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
-            return s;
-        }
-
-        /// <summary>
-        ///     Converts the specified string to base-2 binary sequence.
+        ///     Converts all the characters in the specified string into a sequence of bytes.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
         /// </param>
-        /// <param name="separator">
-        ///     true to add a single space character as a separator between every single byte;
-        ///     otherwise, false.
-        /// </param>
-        public static string ToBinaryString(this string str, bool separator = true)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(str))
-                    throw new ArgumentNullException(nameof(str));
-                var ba = Encoding.UTF8.GetBytes(str);
-                var s = separator ? " " : string.Empty;
-                s = ba.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')).Join(s);
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified base-2 binary sequence back to string.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
-        /// </param>
-        public static string FromBinaryString(this string str)
+        public static byte[] ToBytes(this string str)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(str))
                     throw new ArgumentNullException(nameof(str));
-                var s = str.RemoveChar(' ', ':', '\r', '\n');
-                if (s.Any(c => !"01".Contains(c)))
-                    throw new ArgumentOutOfRangeException(nameof(s));
-                using (var ms = new MemoryStream())
-                {
-                    for (var i = 0; i < s.Length; i += 8)
-                        ms.WriteByte(Convert.ToByte(s.Substring(i, 8), 2));
-                    s = Encoding.UTF8.GetString(ms.ToArray());
-                }
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified sequence of bytes into a hexadecimal sequence.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to convert.
-        /// </param>
-        /// <param name="separator">
-        ///     A single space character used as a separator.
-        /// </param>
-        /// <param name="upper">
-        ///     true to convert the result to uppercase; otherwise, false.
-        /// </param>
-        public static string ToHexString(this byte[] bytes, char? separator = null, bool upper = false)
-        {
-            try
-            {
-                if (bytes == null)
-                    throw new ArgumentNullException(nameof(bytes));
-                var sb = new StringBuilder(bytes.Length * 2);
-                foreach (var b in bytes)
-                    sb.Append(b.ToString("x2"));
-                var s = sb.ToString();
-                if (separator != null)
-                {
-                    var i = 0;
-                    s = s.ToLookup(c => Math.Floor(i++ / 2d)).Select(e => new string(e.ToArray())).Join(separator.ToString());
-                }
-                if (upper)
-                    s = s.ToUpper();
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified image to hexadecimal sequence.
-        /// </summary>
-        /// <param name="image">
-        ///     The image to convert.
-        /// </param>
-        /// <param name="separator">
-        ///     A single space character used as a separator.
-        /// </param>
-        /// <param name="upper">
-        ///     true to convert the result to uppercase; otherwise, false.
-        /// </param>
-        public static string ToHexString(this Image image, char? separator = null, bool upper = false) =>
-            image.ToByteArray().ToHexString(separator, upper);
-
-        /// <summary>
-        ///     Converts the specified string to hexadecimal sequence.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to convert.
-        /// </param>
-        /// <param name="separator">
-        ///     A single space character used as a separator.
-        /// </param>
-        /// <param name="upper">
-        ///     true to convert the result to uppercase; otherwise, false.
-        /// </param>
-        public static string ToHexString(this string str, char? separator = null, bool upper = false) =>
-            str.ToByteArray().ToHexString(separator, upper);
-
-        /// <summary>
-        ///     Converts the specified hexadecimal sequence back into a sequence of bytes.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
-        /// </param>
-        public static byte[] FromHexStringToByteArray(this string str)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(str))
-                    throw new ArgumentNullException(nameof(str));
-                var s = new string(str.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
-                var ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
+                var ba = Encoding.UTF8.GetBytes(str);
                 return ba;
             }
             catch (Exception ex)
@@ -565,39 +328,19 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified hexadecimal sequence back to <see cref="Image"/>.
+        ///     Converts the specified sequence of bytes into a string.
         /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
+        /// <param name="bytes">
+        ///     The sequence of bytes to convert.
         /// </param>
-        public static Image FromHexStringToImage(this string str) =>
-            str.FromHexStringToByteArray().FromByteArrayToImage();
-
-        /// <summary>
-        ///     Converts the specified hexadecimal sequence back to <see cref="Icon"/>.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
-        /// </param>
-        public static Icon FromHexStringToIcon(this string str) =>
-            str.FromHexStringToByteArray().FromByteArrayToIcon();
-
-        /// <summary>
-        ///     Converts the specified hexadecimal sequence back to string.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
-        /// </param>
-        public static string FromHexString(this string str)
+        public static string ToStringEx(this byte[] bytes)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(str))
-                    throw new ArgumentNullException(nameof(str));
-                var ba = str.FromHexStringToByteArray();
-                if (ba == null)
-                    throw new ArgumentNullException(nameof(ba));
-                return Encoding.UTF8.GetString(ba);
+                if (bytes == null)
+                    throw new ArgumentNullException(nameof(bytes));
+                var s = Encoding.UTF8.GetString(bytes);
+                return s;
             }
             catch (Exception ex)
             {
@@ -716,97 +459,109 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts all the characters in the specified string into a sequence of bytes.
+        ///     Converts the specified strings in a string to lowercase.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        /// <param name="strs">
+        ///     The sequence of strings to convert.
+        /// </param>
+        public static string LowerText(this string str, params string[] strs)
+        {
+            if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
+                return str;
+            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToLower(), RegexOptions.IgnoreCase));
+            return s;
+        }
+
+        /// <summary>
+        ///     Converts the specified strings in a string to uppercase.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        /// <param name="strs">
+        ///     The sequence of strings to convert.
+        /// </param>
+        public static string UpperText(this string str, params string[] strs)
+        {
+            if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
+                return str;
+            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToUpper(), RegexOptions.IgnoreCase));
+            return s;
+        }
+
+        /// <summary>
+        ///     Removes the specified characters in a char array.
+        /// </summary>
+        /// <param name="array">
+        ///     The char array to change.
+        /// </param>
+        /// <param name="chrs">
+        ///     The sequence of characters to remove.
+        /// </param>
+        public static char[] RemoveChar(this char[] array, params char[] chrs)
+        {
+            if (array == null || chrs == null)
+                return array;
+            var ca = array.Where(c => !chrs.Contains(c)).ToArray();
+            return ca;
+        }
+
+        /// <summary>
+        ///     Removes the specified characters in a string.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        /// <param name="chrs">
+        ///     The sequence of characters to remove.
+        /// </param>
+        public static string RemoveChar(this string str, params char[] chrs)
+        {
+            if (string.IsNullOrEmpty(str) || chrs == null)
+                return str;
+            var s = new string(str.Where(c => !chrs.Contains(c)).ToArray());
+            return s;
+        }
+
+        /// <summary>
+        ///     Removes the specified strings in a string.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        /// <param name="strs">
+        ///     The sequence of strings to remove.
+        /// </param>
+        public static string RemoveText(this string str, params string[] strs)
+        {
+            if (string.IsNullOrEmpty(str) || strs == null || strs.All(string.IsNullOrEmpty))
+                return str;
+            var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
+            return s;
+        }
+
+        /// <summary>
+        ///     Converts the specified string to its string representation of a base-2 binary sequence.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
         /// </param>
-        public static byte[] ToByteArray(this string str)
+        /// <param name="separator">
+        ///     true to add a single space character as a separator between every single byte;
+        ///     otherwise, false.
+        /// </param>
+        public static string ToBin(this string str, bool separator = true)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(str))
+                if (string.IsNullOrEmpty(str))
                     throw new ArgumentNullException(nameof(str));
                 var ba = Encoding.UTF8.GetBytes(str);
-                return ba;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified image into a sequence of bytes.
-        /// </summary>
-        /// <param name="image">
-        ///     The image to convert.
-        /// </param>
-        /// <param name="imageFormat">
-        ///     An <see cref="ImageFormat"/> that specifies the format of the saved image.
-        /// </param>
-        public static byte[] ToByteArray(this Image image, ImageFormat imageFormat = null)
-        {
-            try
-            {
-                if (image == null)
-                    throw new ArgumentNullException(nameof(image));
-                byte[] ba;
-                using (var ms = new MemoryStream())
-                {
-                    image.Save(ms, imageFormat ?? ImageFormat.Png);
-                    ba = ms.ToArray();
-                }
-                return ba;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified icon into a sequence of bytes.
-        /// </summary>
-        /// <param name="icon">
-        ///     The icon to convert.
-        /// </param>
-        public static byte[] ToByteArray(this Icon icon)
-        {
-            try
-            {
-                if (icon == null)
-                    throw new ArgumentNullException(nameof(icon));
-                byte[] ba;
-                using (var ms = new MemoryStream())
-                {
-                    icon.Save(ms);
-                    ba = ms.ToArray();
-                }
-                return ba;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified sequence of bytes into a string.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to convert.
-        /// </param>
-        public static string FromByteArrayToString(this byte[] bytes)
-        {
-            try
-            {
-                if (bytes == null)
-                    throw new ArgumentNullException(nameof(bytes));
-                var s = Encoding.UTF8.GetString(bytes);
+                var s = separator ? " " : string.Empty;
+                s = ba.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')).Join(s);
                 return s;
             }
             catch (Exception ex)
@@ -817,61 +572,133 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified sequence of bytes to <see cref="Image"/>.
+        ///     Converts the specified base-2 binary sequence back to string.
         /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to convert.
+        /// <param name="str">
+        ///     The string to reconvert.
         /// </param>
-        public static Image FromByteArrayToImage(this byte[] bytes)
+        public static string ToStringFromBin(this string str)
         {
             try
             {
-                if (bytes == null)
-                    throw new ArgumentNullException(nameof(bytes));
-                Image img;
-                using (var ms = new MemoryStream(bytes))
-                    img = Image.FromStream(ms);
-                return img;
-            }
-            catch (ArgumentException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(nameof(str));
+                var s = str.RemoveChar(' ', ':', '\r', '\n');
+                if (s.Any(c => !"01".Contains(c)))
+                    throw new ArgumentOutOfRangeException(nameof(s));
+                using (var ms = new MemoryStream())
+                {
+                    for (var i = 0; i < s.Length; i += 8)
+                        ms.WriteByte(Convert.ToByte(s.Substring(i, 8), 2));
+                    s = Encoding.UTF8.GetString(ms.ToArray());
+                }
+                return s;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
+                return string.Empty;
             }
-            return null;
         }
 
         /// <summary>
-        ///     Converts the specified sequence of bytes to <see cref="Icon"/>.
+        ///     Converts the specified sequence of bytes into a hexadecimal sequence.
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to convert.
         /// </param>
-        public static Icon FromByteArrayToIcon(this byte[] bytes)
+        /// <param name="separator">
+        ///     A single space character used as a separator.
+        /// </param>
+        /// <param name="upper">
+        ///     true to convert the result to uppercase; otherwise, false.
+        /// </param>
+        public static string ToHexa(this byte[] bytes, char? separator = null, bool upper = false)
         {
             try
             {
                 if (bytes == null)
                     throw new ArgumentNullException(nameof(bytes));
-                Icon ico;
-                using (var ms = new MemoryStream(bytes))
-                    ico = new Icon(ms);
-                return ico;
-            }
-            catch (ArgumentException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
+                var sb = new StringBuilder(bytes.Length * 2);
+                foreach (var b in bytes)
+                    sb.Append(b.ToString("x2"));
+                var s = sb.ToString();
+                if (separator != null)
+                {
+                    var i = 0;
+                    s = s.ToLookup(c => Math.Floor(i++ / 2d)).Select(e => new string(e.ToArray())).Join(separator.ToString());
+                }
+                if (upper)
+                    s = s.ToUpper();
+                return s;
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
+                return string.Empty;
             }
-            return null;
+        }
+
+        /// <summary>
+        ///     Converts the specified string to hexadecimal sequence.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to convert.
+        /// </param>
+        /// <param name="separator">
+        ///     A single space character used as a separator.
+        /// </param>
+        /// <param name="upper">
+        ///     true to convert the result to uppercase; otherwise, false.
+        /// </param>
+        public static string ToHexa(this string str, char? separator = null, bool upper = false) =>
+            str.ToBytes().ToHexa(separator, upper);
+
+        /// <summary>
+        ///     Converts the specified hexadecimal sequence back into a sequence of bytes.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to reconvert.
+        /// </param>
+        public static byte[] ToBytesFormHexa(this string str)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(str))
+                    throw new ArgumentNullException(nameof(str));
+                var s = new string(str.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
+                var ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
+                return ba;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Converts the specified hexadecimal sequence back to string.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to reconvert.
+        /// </param>
+        public static string ToStringFromHexa(this string str)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(nameof(str));
+                var ba = str.ToBytesFormHexa();
+                if (ba == null)
+                    throw new ArgumentNullException(nameof(ba));
+                return Encoding.UTF8.GetString(ba);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -921,24 +748,48 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Increments the length of a platform-specific type number with the specified value.
+        ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
         /// </summary>
-        /// <param name="ptr">
-        ///     The platform-specific type to change.
-        /// </param>
+        /// <typeparam name="T">
+        ///     The value <see cref="Type"/>.
+        /// </typeparam>
         /// <param name="value">
-        ///     The number to be incremented.
+        ///     The value to convert.
         /// </param>
-        public static IntPtr Increment(this IntPtr ptr, IntPtr value)
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        public static T Parse<T>(this object value, T defValue = default(T))
+        {
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            var result = (T)converter.ConvertFrom(value);
+            return Comparison.IsNotEmpty(result) ? result : defValue;
+        }
+
+        /// <summary>
+        ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The value <see cref="Type"/>.
+        /// </typeparam>
+        /// <param name="value">
+        ///     The value to convert.
+        /// </param>
+        /// <param name="result">
+        ///     The result value.
+        /// </param>
+        public static bool TryParse<T>(this object value, out dynamic result, T defValue = default(T))
         {
             try
             {
-                return new IntPtr(IntPtr.Size == sizeof(int) ? ptr.ToInt32() + (int)value : ptr.ToInt64() + (long)value);
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                result = (T)converter.ConvertFrom(value);
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                Log.Write(ex);
-                return new IntPtr(IntPtr.Size == sizeof(int) ? int.MaxValue : long.MaxValue);
+                result = defValue;
+                return false;
             }
         }
     }

@@ -227,6 +227,16 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SizeGripImage {
+            get {
+                object obj = ResourceManager.GetObject("SizeGripImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to %TEMP%\tmp-{0}.
         /// </summary>
         internal static string TempDir {

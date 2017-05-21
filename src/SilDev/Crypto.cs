@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2016-10-28 08:25
+// Version:  2017-05-21 10:34
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -108,7 +108,7 @@ namespace SilDev
             /// <param name="lineLength">
             ///     The length of lines.
             /// </param>
-            public virtual string EncodeByteArray(byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0)
+            public virtual string EncodeBytes(byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0)
             {
                 try
                 {
@@ -143,7 +143,7 @@ namespace SilDev
             /// <param name="suffixMark">
             ///     The suffix mark.
             /// </param>
-            public virtual byte[] DecodeByteArray(string code, string prefixMark = null, string suffixMark = null)
+            public virtual byte[] DecodeBytes(string code, string prefixMark = null, string suffixMark = null)
             {
                 try
                 {
@@ -182,8 +182,8 @@ namespace SilDev
             {
                 try
                 {
-                    var ba = text.ToByteArray();
-                    return EncodeByteArray(ba, prefixMark, suffixMark, lineLength) ?? string.Empty;
+                    var ba = text.ToBytes();
+                    return EncodeBytes(ba, prefixMark, suffixMark, lineLength) ?? string.Empty;
                 }
                 catch (Exception ex)
                 {
@@ -220,7 +220,7 @@ namespace SilDev
             {
                 try
                 {
-                    var ba = DecodeByteArray(code, prefixMark, suffixMark);
+                    var ba = DecodeBytes(code, prefixMark, suffixMark);
                     return Encoding.UTF8.GetString(ba);
                 }
                 catch (Exception ex)
@@ -258,7 +258,7 @@ namespace SilDev
                         ba = new byte[fs.Length];
                         fs.Read(ba, 0, (int)fs.Length);
                     }
-                    return EncodeByteArray(ba, prefixMark, suffixMark, lineLength);
+                    return EncodeBytes(ba, prefixMark, suffixMark, lineLength);
                 }
                 catch (Exception ex)
                 {
@@ -292,7 +292,7 @@ namespace SilDev
             ///     The suffix mark.
             /// </param>
             public byte[] DecodeFile(string code, string prefixMark = null, string suffixMark = null) =>
-                DecodeByteArray(code, prefixMark, suffixMark);
+                DecodeBytes(code, prefixMark, suffixMark);
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace SilDev
         ///     The length of lines.
         /// </param>
         public static string EncodeToBase64(this byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base64().EncodeByteArray(bytes, prefixMark, suffixMark, lineLength);
+            new Base64().EncodeBytes(bytes, prefixMark, suffixMark, lineLength);
 
         /// <summary>
         ///     Decodes this sequence of base-64 digits back to a sequence of bytes.
@@ -325,8 +325,8 @@ namespace SilDev
         /// <param name="suffixMark">
         ///     The suffix mark.
         /// </param>
-        public static byte[] DecodeByteArrayFromBase64(this string code, string prefixMark = null, string suffixMark = null) =>
-            new Base64().DecodeByteArray(code, prefixMark, suffixMark);
+        public static byte[] DecodeBytesFromBase64(this string code, string prefixMark = null, string suffixMark = null) =>
+            new Base64().DecodeBytes(code, prefixMark, suffixMark);
 
         /// <summary>
         ///     Encodes this string to a sequence of base-64 digits.
@@ -440,7 +440,7 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             [SuppressMessage("ReSharper", "OptionalParameterHierarchyMismatch")]
-            public override string EncodeByteArray(byte[] bytes, string prefixMark = "<~", string suffixMark = "~>", uint lineLength = 0)
+            public override string EncodeBytes(byte[] bytes, string prefixMark = "<~", string suffixMark = "~>", uint lineLength = 0)
             {
                 try
                 {
@@ -513,7 +513,7 @@ namespace SilDev
             ///     The suffix mark.
             /// </param>
             [SuppressMessage("ReSharper", "OptionalParameterHierarchyMismatch")]
-            public override byte[] DecodeByteArray(string code, string prefixMark = "<~", string suffixMark = "~>")
+            public override byte[] DecodeBytes(string code, string prefixMark = "<~", string suffixMark = "~>")
             {
                 try
                 {
@@ -596,7 +596,7 @@ namespace SilDev
         ///     The length of lines.
         /// </param>
         public static string EncodeToBase85(this byte[] bytes, string prefixMark = "<~", string suffixMark = "~>", uint lineLength = 0) =>
-            new Base85().EncodeByteArray(bytes, prefixMark, suffixMark, lineLength);
+            new Base85().EncodeBytes(bytes, prefixMark, suffixMark, lineLength);
 
         /// <summary>
         ///     Decodes this sequence of base-85 digits back to a sequence of bytes.
@@ -610,8 +610,8 @@ namespace SilDev
         /// <param name="suffixMark">
         ///     The suffix mark.
         /// </param>
-        public static byte[] DecodeByteArrayFromBase85(this string code, string prefixMark = "<~", string suffixMark = "~>") =>
-            new Base85().DecodeByteArray(code, prefixMark, suffixMark);
+        public static byte[] DecodeBytesFromBase85(this string code, string prefixMark = "<~", string suffixMark = "~>") =>
+            new Base85().DecodeBytes(code, prefixMark, suffixMark);
 
         /// <summary>
         ///     Encodes this string to a sequence of base-85 digits.
@@ -774,7 +774,7 @@ namespace SilDev
             /// <param name="lineLength">
             ///     The length of lines.
             /// </param>
-            public override string EncodeByteArray(byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0)
+            public override string EncodeBytes(byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0)
             {
                 try
                 {
@@ -839,7 +839,7 @@ namespace SilDev
             /// <param name="suffixMark">
             ///     The suffix mark.
             /// </param>
-            public override byte[] DecodeByteArray(string code, string prefixMark = null, string suffixMark = null)
+            public override byte[] DecodeBytes(string code, string prefixMark = null, string suffixMark = null)
             {
                 try
                 {
@@ -907,7 +907,7 @@ namespace SilDev
         ///     The length of lines.
         /// </param>
         public static string EncodeToBase91(this byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base91().EncodeByteArray(bytes, prefixMark, suffixMark, lineLength);
+            new Base91().EncodeBytes(bytes, prefixMark, suffixMark, lineLength);
 
         /// <summary>
         ///     Decodes this sequence of base-91 digits back to a sequence of bytes.
@@ -921,8 +921,8 @@ namespace SilDev
         /// <param name="suffixMark">
         ///     The suffix mark.
         /// </param>
-        public static byte[] DecodeByteArrayFromBase91(this string code, string prefixMark = null, string suffixMark = null) =>
-            new Base91().DecodeByteArray(code, prefixMark, suffixMark);
+        public static byte[] DecodeBytesFromBase91(this string code, string prefixMark = null, string suffixMark = null) =>
+            new Base91().DecodeBytes(code, prefixMark, suffixMark);
 
         /// <summary>
         ///     Encodes this string to a sequence of base-91 digits.
@@ -1035,7 +1035,7 @@ namespace SilDev
             /// <param name="keySize">
             ///     The size of the secret key.
             /// </param>
-            public static byte[] EncryptByteArray(byte[] bytes, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256)
+            public static byte[] EncryptBytes(byte[] bytes, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256)
             {
                 try
                 {
@@ -1044,7 +1044,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.EncryptToSha512().ToByteArray(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.EncryptToSha512().ToBytes(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1079,8 +1079,8 @@ namespace SilDev
             /// <param name="keySize">
             ///     The size of the secret key.
             /// </param>
-            public static byte[] EncryptByteArray(byte[] bytes, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                EncryptByteArray(bytes, password.ToByteArray(), salt, keySize);
+            public static byte[] EncryptBytes(byte[] bytes, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
+                EncryptBytes(bytes, password.ToBytes(), salt, keySize);
 
             /// <summary>
             ///     Encrypts the specified sequence of bytes.
@@ -1094,8 +1094,8 @@ namespace SilDev
             /// <param name="keySize">
             ///     The size of the secret key.
             /// </param>
-            public static byte[] EncryptByteArray(byte[] bytes, string password, KeySize keySize = KeySize.Aes256) =>
-                EncryptByteArray(bytes, password, null, keySize);
+            public static byte[] EncryptBytes(byte[] bytes, string password, KeySize keySize = KeySize.Aes256) =>
+                EncryptBytes(bytes, password, null, keySize);
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -1113,7 +1113,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] EncryptString(string text, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256) =>
-                EncryptByteArray(text.ToByteArray(), password, salt, keySize);
+                EncryptBytes(text.ToBytes(), password, salt, keySize);
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -1131,7 +1131,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] EncryptString(string text, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                EncryptString(text, password.ToByteArray(), salt, keySize);
+                EncryptString(text, password.ToBytes(), salt, keySize);
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -1146,7 +1146,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] EncryptString(string text, string password, KeySize keySize = KeySize.Aes256) =>
-                EncryptString(text, password.ToByteArray(), null, keySize);
+                EncryptString(text, password.ToBytes(), null, keySize);
 
             /// <summary>
             ///     Encrypts the specified file.
@@ -1171,7 +1171,7 @@ namespace SilDev
                     if (!File.Exists(s))
                         throw new PathNotFoundException(s);
                     var ba = File.ReadAllBytes(s);
-                    return EncryptByteArray(ba, password, salt, keySize);
+                    return EncryptBytes(ba, password, salt, keySize);
                 }
                 catch (Exception ex)
                 {
@@ -1196,7 +1196,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] EncryptFile(string path, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                EncryptFile(path, password.ToByteArray(), salt, keySize);
+                EncryptFile(path, password.ToBytes(), salt, keySize);
 
             /// <summary>
             ///     Encrypts the specified file.
@@ -1211,7 +1211,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] EncryptFile(string path, string password, KeySize keySize = KeySize.Aes256) =>
-                EncryptFile(path, password.ToByteArray(), null, keySize);
+                EncryptFile(path, password.ToBytes(), null, keySize);
 
             /// <summary>
             ///     Decrypts the specified sequence of bytes.
@@ -1228,7 +1228,7 @@ namespace SilDev
             /// <param name="keySize">
             ///     The size of the secret key.
             /// </param>
-            public static byte[] DecryptByteArray(byte[] code, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256)
+            public static byte[] DecryptBytes(byte[] code, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256)
             {
                 try
                 {
@@ -1237,7 +1237,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.EncryptToSha512().ToByteArray(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.EncryptToSha512().ToBytes(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1272,8 +1272,8 @@ namespace SilDev
             /// <param name="keySize">
             ///     The size of the secret key.
             /// </param>
-            public static byte[] DecryptByteArray(byte[] code, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                DecryptByteArray(code, password.ToByteArray(), salt, keySize);
+            public static byte[] DecryptBytes(byte[] code, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
+                DecryptBytes(code, password.ToBytes(), salt, keySize);
 
             /// <summary>
             ///     Decrypts the specified sequence of bytes.
@@ -1287,8 +1287,8 @@ namespace SilDev
             /// <param name="keySize">
             ///     The size of the secret key.
             /// </param>
-            public static byte[] DecryptByteArray(byte[] code, string password, KeySize keySize = KeySize.Aes256) =>
-                DecryptByteArray(code, password, null, keySize);
+            public static byte[] DecryptBytes(byte[] code, string password, KeySize keySize = KeySize.Aes256) =>
+                DecryptBytes(code, password, null, keySize);
 
             /// <summary>
             ///     Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
@@ -1306,7 +1306,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] DecryptString(string code, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256) =>
-                DecryptByteArray(code.FromHexStringToByteArray(), password, salt, keySize);
+                DecryptBytes(code.ToBytesFormHexa(), password, salt, keySize);
 
             /// <summary>
             ///     Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
@@ -1324,7 +1324,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] DecryptString(string code, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                DecryptString(code, password.ToByteArray(), salt, keySize);
+                DecryptString(code, password.ToBytes(), salt, keySize);
 
             /// <summary>
             ///     Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
@@ -1339,7 +1339,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] DecryptString(string code, string password, KeySize keySize = KeySize.Aes256) =>
-                DecryptString(code, password.ToByteArray(), null, keySize);
+                DecryptString(code, password.ToBytes(), null, keySize);
 
             /// <summary>
             ///     Decrypts the specified file.
@@ -1364,7 +1364,7 @@ namespace SilDev
                     if (!File.Exists(s))
                         throw new PathNotFoundException(s);
                     var ba = File.ReadAllBytes(s);
-                    return DecryptByteArray(ba, password, salt, keySize);
+                    return DecryptBytes(ba, password, salt, keySize);
                 }
                 catch (Exception ex)
                 {
@@ -1389,7 +1389,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] DecryptFile(string path, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                DecryptFile(path, password.ToByteArray(), salt, keySize);
+                DecryptFile(path, password.ToBytes(), salt, keySize);
 
             /// <summary>
             ///     Decrypts the specified file.
@@ -1404,7 +1404,7 @@ namespace SilDev
             ///     The size of the secret key.
             /// </param>
             public static byte[] DecryptFile(string path, string password, KeySize keySize = KeySize.Aes256) =>
-                DecryptFile(path, password.ToByteArray(), null, keySize);
+                DecryptFile(path, password.ToBytes(), null, keySize);
         }
 
         /// <summary>
@@ -1417,7 +1417,7 @@ namespace SilDev
         ///     The string which is used as password.
         /// </param>
         public static byte[] EncryptToAes128(this byte[] bytes, string password) =>
-            Aes.EncryptByteArray(bytes, password, Aes.KeySize.Aes128);
+            Aes.EncryptBytes(bytes, password, Aes.KeySize.Aes128);
 
         /// <summary>
         ///     Encrypts this string.
@@ -1453,7 +1453,7 @@ namespace SilDev
         ///     The string which is used as password.
         /// </param>
         public static byte[] DecryptFromAes128(this byte[] bytes, string password) =>
-            Aes.DecryptByteArray(bytes, password, Aes.KeySize.Aes128);
+            Aes.DecryptBytes(bytes, password, Aes.KeySize.Aes128);
 
         /// <summary>
         ///     Decrypts this string.
@@ -1489,7 +1489,7 @@ namespace SilDev
         ///     The string which is used as password.
         /// </param>
         public static byte[] EncryptToAes192(this byte[] bytes, string password) =>
-            Aes.EncryptByteArray(bytes, password, Aes.KeySize.Aes192);
+            Aes.EncryptBytes(bytes, password, Aes.KeySize.Aes192);
 
         /// <summary>
         ///     Encrypts this string.
@@ -1525,7 +1525,7 @@ namespace SilDev
         ///     The string which is used as password.
         /// </param>
         public static byte[] DecryptFromAes192(this byte[] bytes, string password) =>
-            Aes.DecryptByteArray(bytes, password, Aes.KeySize.Aes192);
+            Aes.DecryptBytes(bytes, password, Aes.KeySize.Aes192);
 
         /// <summary>
         ///     Decrypts this string.
@@ -1561,7 +1561,7 @@ namespace SilDev
         ///     The string which is used as password.
         /// </param>
         public static byte[] EncryptToAes256(this byte[] bytes, string password) =>
-            Aes.EncryptByteArray(bytes, password);
+            Aes.EncryptBytes(bytes, password);
 
         /// <summary>
         ///     Encrypts this string.
@@ -1597,7 +1597,7 @@ namespace SilDev
         ///     The string which is used as password.
         /// </param>
         public static byte[] DecryptFromAes256(this byte[] bytes, string password) =>
-            Aes.DecryptByteArray(bytes, password);
+            Aes.DecryptBytes(bytes, password);
 
         /// <summary>
         ///     Decrypts this string.
@@ -1650,7 +1650,7 @@ namespace SilDev
                     byte[] ba;
                     using (var csp = new MD5CryptoServiceProvider())
                         ba = csp.ComputeHash(stream);
-                    return ba.ToHexString();
+                    return ba.ToHexa();
                 }
                 catch (Exception ex)
                 {
@@ -1665,7 +1665,7 @@ namespace SilDev
             /// <param name="bytes">
             ///     The sequence of bytes to encrypt.
             /// </param>
-            public string EncryptByteArray(byte[] bytes)
+            public string EncryptBytes(byte[] bytes)
             {
                 try
                 {
@@ -1694,7 +1694,7 @@ namespace SilDev
             {
                 try
                 {
-                    var ba = text.ToByteArray();
+                    var ba = text.ToBytes();
                     using (var csp = MD5.Create())
                         ba = csp.ComputeHash(ba);
                     var s = BitConverter.ToString(ba);
@@ -1746,7 +1746,7 @@ namespace SilDev
         ///     The sequence of bytes to encrypt.
         /// </param>
         public static string EncryptToMd5(this byte[] bytes) =>
-            new Md5().EncryptByteArray(bytes);
+            new Md5().EncryptBytes(bytes);
 
         /// <summary>
         ///     Encrypts this string.
@@ -1802,7 +1802,7 @@ namespace SilDev
                     byte[] ba;
                     using (var csp = new SHA1CryptoServiceProvider())
                         ba = csp.ComputeHash(stream);
-                    return ba.ToHexString();
+                    return ba.ToHexa();
                 }
                 catch (Exception ex)
                 {
@@ -1821,7 +1821,7 @@ namespace SilDev
             {
                 try
                 {
-                    var ba = text.ToByteArray();
+                    var ba = text.ToBytes();
                     using (var csp = SHA1.Create())
                         ba = csp.ComputeHash(ba);
                     var s = BitConverter.ToString(ba);
@@ -1851,7 +1851,7 @@ namespace SilDev
         ///     The sequence of bytes to encrypt.
         /// </param>
         public static string EncryptToSha1(this byte[] bytes) =>
-            new Sha1().EncryptByteArray(bytes);
+            new Sha1().EncryptBytes(bytes);
 
         /// <summary>
         ///     Encrypts this string.
@@ -1907,7 +1907,7 @@ namespace SilDev
                     byte[] ba;
                     using (var csp = new SHA256CryptoServiceProvider())
                         ba = csp.ComputeHash(stream);
-                    return ba.ToHexString();
+                    return ba.ToHexa();
                 }
                 catch (Exception ex)
                 {
@@ -1926,7 +1926,7 @@ namespace SilDev
             {
                 try
                 {
-                    var ba = text.ToByteArray();
+                    var ba = text.ToBytes();
                     using (var csp = SHA256.Create())
                         ba = csp.ComputeHash(ba);
                     var s = BitConverter.ToString(ba);
@@ -1956,7 +1956,7 @@ namespace SilDev
         ///     The sequence of bytes to encrypt.
         /// </param>
         public static string EncryptToSha256(this byte[] bytes) =>
-            new Sha256().EncryptByteArray(bytes);
+            new Sha256().EncryptBytes(bytes);
 
         /// <summary>
         ///     Encrypts this string.
@@ -2008,7 +2008,7 @@ namespace SilDev
                     byte[] ba;
                     using (var csp = new SHA384CryptoServiceProvider())
                         ba = csp.ComputeHash(stream);
-                    return ba.ToHexString();
+                    return ba.ToHexa();
                 }
                 catch (Exception ex)
                 {
@@ -2027,7 +2027,7 @@ namespace SilDev
             {
                 try
                 {
-                    var ba = text.ToByteArray();
+                    var ba = text.ToBytes();
                     using (var csp = SHA384.Create())
                         ba = csp.ComputeHash(ba);
                     var s = BitConverter.ToString(ba);
@@ -2057,7 +2057,7 @@ namespace SilDev
         ///     The sequence of bytes to encrypt.
         /// </param>
         public static string EncryptToSha384(this byte[] bytes) =>
-            new Sha384().EncryptByteArray(bytes);
+            new Sha384().EncryptBytes(bytes);
 
         /// <summary>
         ///     Encrypts this string.
@@ -2109,7 +2109,7 @@ namespace SilDev
                     byte[] ba;
                     using (var csp = new SHA512CryptoServiceProvider())
                         ba = csp.ComputeHash(stream);
-                    return ba.ToHexString();
+                    return ba.ToHexa();
                 }
                 catch (Exception ex)
                 {
@@ -2128,7 +2128,7 @@ namespace SilDev
             {
                 try
                 {
-                    var ba = text.ToByteArray();
+                    var ba = text.ToBytes();
                     using (var csp = SHA512.Create())
                         ba = csp.ComputeHash(ba);
                     var s = BitConverter.ToString(ba);
@@ -2158,7 +2158,7 @@ namespace SilDev
         ///     The sequence of bytes to encrypt.
         /// </param>
         public static string EncryptToSha512(this byte[] bytes) =>
-            new Sha512().EncryptByteArray(bytes);
+            new Sha512().EncryptBytes(bytes);
 
         /// <summary>
         ///     Encrypts this string.
