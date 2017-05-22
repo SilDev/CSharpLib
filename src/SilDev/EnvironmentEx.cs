@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-05-12 12:15
+// Version:  2017-05-22 18:01
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -34,6 +34,7 @@ namespace SilDev
         private static List<string> _cmdLineArgs = new List<string>();
         private static bool _cmdLineArgsQuotes = true;
         private static string _commandLine = string.Empty;
+        private static Version _version;
 
         /// <summary>
         ///     Provides filtering and sorting options, and returns a string <see cref="List{T}"/>
@@ -311,6 +312,39 @@ namespace SilDev
                 Log.Write(ex);
             }
             return !string.IsNullOrWhiteSpace(output) ? output.Trim(Path.DirectorySeparatorChar) : path;
+        }
+
+        /// <summary>
+        ///     Gets a <see cref="System.Version"/> object that describes the major, minor and
+        ///     build numbers of the common language runtime.
+        /// </summary>
+        public static Version Version
+        {
+            get
+            {
+                if (_version != null)
+                    return _version;
+                var release = Reg.Read(Registry.LocalMachine, @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full", "Release", 0);
+                if (release > 460805)
+                    _version = new Version(4, 7, 1);
+                else if (release >= 460798)
+                    _version = new Version(4, 7, 0);
+                else if (release >= 394802)
+                    _version = new Version(4, 6, 2);
+                else if (release >= 394254)
+                    _version = new Version(4, 6, 1);
+                else if (release >= 393295)
+                    _version = new Version(4, 6, 0);
+                else if (release >= 379893)
+                    _version = new Version(4, 5, 2);
+                else if (release >= 378675)
+                    _version = new Version(4, 5, 1);
+                else if (release >= 378389)
+                    _version = new Version(4, 5, 0);
+                else
+                    _version = Environment.Version;
+                return _version;
+            }
         }
 
         /// <summary>
