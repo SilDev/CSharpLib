@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-21 20:08
+// Version:  2017-05-22 19:05
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -73,14 +73,15 @@ namespace SilDev
             if (!string.IsNullOrEmpty(file))
             {
                 var code = GetCode(file);
-                if (CodeExists(code))
-                    foreach (var data in CachedFiles)
-                    {
-                        if (data.Key != code)
-                            continue;
-                        cache = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> { { data.Key, data.Value } };
-                        break;
-                    }
+                if (!CodeExists(code))
+                    return;
+                foreach (var data in CachedFiles)
+                {
+                    if (data.Key != code)
+                        continue;
+                    cache = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> { { data.Key, data.Value } };
+                    break;
+                }
             }
             var bytes = cache?.SerializeObject();
             if (bytes == null)
