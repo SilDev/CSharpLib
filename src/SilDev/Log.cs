@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-05-13 04:35
+// Version:  2017-05-22 18:45
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -32,15 +32,15 @@ namespace SilDev
     /// </summary>
     public static class Log
     {
-        private static volatile bool _conIsOpen, _firstCall, _firstEntry;
-        private static volatile IntPtr _stdHandle = IntPtr.Zero;
-        private static volatile SafeFileHandle _sfh;
-        private static volatile FileStream _fs;
-        private static volatile StreamWriter _sw;
+        private static bool _conIsOpen, _firstCall, _firstEntry;
+        private static IntPtr _stdHandle = IntPtr.Zero;
+        private static SafeFileHandle _sfh;
+        private static FileStream _fs;
+        private static StreamWriter _sw;
         private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly().GetName();
         private static readonly string AssemblyName = AssemblyEntryName.Name;
         private static readonly Version AssemblyVersion = AssemblyEntryName.Version;
-        private static readonly string ConsoleTitle = $"Debug Console ('{AssemblyName}')";
+        private static readonly object Locker = new object();
 
         /// <summary>
         ///     true to enable the catching of unhandled <see cref="Exception"/>'s; otherwise, false.
@@ -116,7 +116,7 @@ namespace SilDev
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 Application.ThreadException += (s, e) => Write(e.Exception, true, true);
                 AppDomain.CurrentDomain.UnhandledException += (s, e) => WriteUnhandled(
-                    new ApplicationException("Error in the application. Sender object: '" + s + "'; Exception object: '" + e.ExceptionObject + "'"));
+                    new ApplicationException("Error in the application. Sender object: '" + s + "'; Exception object: '" + e.ExceptionObject + "';"));
                 AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
             }
             if (DebugMode <= 0)
@@ -207,60 +207,61 @@ namespace SilDev
         /// </param>
         public static void Write(string logMessage, bool exitProcess = false)
         {
-            if (!_firstCall || DebugMode < 1 || string.IsNullOrEmpty(logMessage))
-                return;
-            var dat = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff zzz") + Environment.NewLine;
-            var log = dat;
-            if (!_firstEntry)
+            lock (Locker)
             {
-                _firstEntry = true;
-                if (File.Exists(FilePath))
-                    log = new string('-', 120) + Environment.NewLine + Environment.NewLine + dat;
-                log += "***Logging has been started***" + Environment.NewLine;
-                log += "   '" + Environment.OSVersion + "'; '" + AssemblyName + "'; '" + AssemblyVersion + "'; '" + FilePath + "'" + Environment.NewLine + Environment.NewLine;
+                if (!_firstCall || DebugMode < 1 || string.IsNullOrEmpty(logMessage))
+                    return;
+                var dat = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff zzz");
+                var log = string.Empty;
+                if (_firstEntry)
+                    log = string.Concat(dat, Environment.NewLine);
+                else
+                {
+                    _firstEntry = true;
+                    if (File.Exists(FilePath))
+                        log = string.Concat(Environment.NewLine, new string('-', 120), Environment.NewLine, Environment.NewLine);
+                    log = string.Concat(log, dat, Environment.NewLine, "System: '", Environment.OSVersion, "'; Runtime: '", EnvironmentEx.Version, "'; Assembly: '", AssemblyName, "'; Version: '", AssemblyVersion, "';", Environment.NewLine, Environment.NewLine, dat, Environment.NewLine);
+                }
+                log = string.Concat(log, logMessage, Environment.NewLine, Environment.NewLine);
                 File.AppendAllText(FilePath, log);
-                log = dat;
-            }
-            log += logMessage + Environment.NewLine + Environment.NewLine;
-            File.AppendAllText(FilePath, log);
-            if (DebugMode <= 1)
-            {
+                if (DebugMode < 2)
+                {
+                    if (!exitProcess)
+                        return;
+                    Environment.ExitCode = 1;
+                    Environment.Exit(Environment.ExitCode);
+                }
+                if (!_conIsOpen)
+                {
+                    _conIsOpen = true;
+                    WinApi.SafeNativeMethods.AllocConsole();
+                    var hWnd = WinApi.SafeNativeMethods.GetConsoleWindow();
+                    if (hWnd != IntPtr.Zero)
+                    {
+                        var hMenu = WinApi.UnsafeNativeMethods.GetSystemMenu(hWnd, false);
+                        if (hMenu != IntPtr.Zero)
+                            WinApi.UnsafeNativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
+                    }
+                    _stdHandle = WinApi.UnsafeNativeMethods.GetStdHandle(-11);
+                    _sfh = new SafeFileHandle(_stdHandle, true);
+                    _fs = new FileStream(_sfh, FileAccess.Write);
+                    var title = $"Debug Console ('{AssemblyName}')";
+                    if (Console.Title != title)
+                    {
+                        Console.Title = title;
+                        Console.BufferHeight = short.MaxValue - 1;
+                        Console.BufferWidth = Console.WindowWidth;
+                        Console.SetWindowSize(Math.Min(100, Console.LargestWindowWidth), Math.Min(40, Console.LargestWindowHeight));
+                    }
+                }
+                Console.Write(log);
+                _sw = new StreamWriter(_fs, Encoding.ASCII) { AutoFlush = true };
+                Console.SetOut(_sw);
                 if (!exitProcess)
                     return;
                 Environment.ExitCode = 1;
                 Environment.Exit(Environment.ExitCode);
             }
-            if (!_conIsOpen)
-            {
-                _conIsOpen = true;
-                WinApi.SafeNativeMethods.AllocConsole();
-                var hWnd = WinApi.SafeNativeMethods.GetConsoleWindow();
-                if (hWnd != IntPtr.Zero)
-                {
-                    var hMenu = WinApi.UnsafeNativeMethods.GetSystemMenu(hWnd, false);
-                    if (hMenu != IntPtr.Zero)
-                        WinApi.UnsafeNativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
-                }
-                _stdHandle = WinApi.UnsafeNativeMethods.GetStdHandle(-11);
-                _sfh = new SafeFileHandle(_stdHandle, true);
-                _fs = new FileStream(_sfh, FileAccess.Write);
-                if (Console.Title != ConsoleTitle)
-                {
-                    Console.Title = ConsoleTitle;
-                    Console.BufferHeight = short.MaxValue - 1;
-                    Console.BufferWidth = Console.WindowWidth;
-                    Console.SetWindowSize(Math.Min(100, Console.LargestWindowWidth), Math.Min(40, Console.LargestWindowHeight));
-                }
-            }
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write(log);
-            Console.ResetColor();
-            _sw = new StreamWriter(_fs, Encoding.ASCII) { AutoFlush = true };
-            Console.SetOut(_sw);
-            if (!exitProcess)
-                return;
-            Environment.ExitCode = 1;
-            Environment.Exit(Environment.ExitCode);
         }
 
         /// <summary>
@@ -302,11 +303,11 @@ namespace SilDev
                 return;
             try
             {
-                foreach (var file in Directory.GetFiles(FileDir, $"{AssemblyName}*.log", SearchOption.TopDirectoryOnly))
+                foreach (var file in Directory.EnumerateFiles(FileDir, AssemblyName + "*.log", SearchOption.TopDirectoryOnly))
                 {
                     if (FilePath.EqualsEx(file))
                         continue;
-                    if ((DateTime.Now - new FileInfo(file).LastWriteTime).TotalDays >= 7d)
+                    if ((DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
                         File.Delete(file);
                 }
             }
