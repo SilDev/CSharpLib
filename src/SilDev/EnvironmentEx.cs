@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-05-22 18:01
+// Version:  2017-05-22 18:22
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -31,9 +31,9 @@ namespace SilDev
     /// </summary>
     public static class EnvironmentEx
     {
-        private static List<string> _cmdLineArgs = new List<string>();
-        private static bool _cmdLineArgsQuotes = true;
-        private static string _commandLine = string.Empty;
+        private static List<string> _cmdLineArgs;
+        private static bool _cmdLineArgsQuotes;
+        private static string _commandLine;
         private static Version _version;
 
         /// <summary>
@@ -54,34 +54,26 @@ namespace SilDev
         /// </param>
         public static List<string> CommandLineArgs(bool sort = true, int skip = 1, bool quotes = true)
         {
-            if (_cmdLineArgs.Count == Environment.GetCommandLineArgs().Length - skip && quotes == _cmdLineArgsQuotes)
+            if (_cmdLineArgs?.Count == Environment.GetCommandLineArgs().Length - skip && quotes == _cmdLineArgsQuotes)
                 return _cmdLineArgs;
+            _cmdLineArgs = new List<string>();
             _cmdLineArgsQuotes = quotes;
-            var filteredArgs = new List<string>();
-            try
+            if (Environment.GetCommandLineArgs().Length <= skip)
+                return _cmdLineArgs;
+            string arg = null;
+            var defaultArgs = Environment.GetCommandLineArgs().ToList();
+            if (defaultArgs.Any(x => (arg = x).EqualsEx("/debug")))
             {
-                if (Environment.GetCommandLineArgs().Length > skip)
-                {
-                    var defaultArgs = Environment.GetCommandLineArgs().Skip(skip).ToList();
-                    if (sort)
-                        defaultArgs = defaultArgs.OrderBy(x => x, new Comparison.AlphanumericComparer()).ToList();
-                    var debugArg = false;
-                    foreach (var arg in defaultArgs)
-                    {
-                        if (arg.StartsWithEx("/debug") || debugArg)
-                        {
-                            debugArg = !debugArg;
-                            continue;
-                        }
-                        filteredArgs.Add(quotes && arg.Any(char.IsWhiteSpace) ? $"\"{arg}\"" : arg);
-                    }
-                    _cmdLineArgs = filteredArgs;
-                }
+                var index = defaultArgs.IndexOf(arg);
+                defaultArgs.RemoveAt(index);
+                if (defaultArgs.Count > index)
+                    defaultArgs.RemoveAt(index);
             }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
+            if (defaultArgs.Count > skip)
+                defaultArgs = defaultArgs.Skip(skip).ToList();
+            if (sort)
+                defaultArgs = defaultArgs.OrderBy(x => x, new Comparison.AlphanumericComparer()).ToList();
+            _cmdLineArgs = quotes ? defaultArgs.Select(x => x.Any(char.IsWhiteSpace) ? $"\"{x}\"" : x).ToList() : defaultArgs;
             return _cmdLineArgs;
         }
 
@@ -131,7 +123,7 @@ namespace SilDev
         {
             if (CommandLineArgs(sort).Count > 0)
                 _commandLine = CommandLineArgs(sort, skip, quotes).Join(" ");
-            return _commandLine;
+            return _commandLine ?? string.Empty;
         }
 
         /// <summary>
