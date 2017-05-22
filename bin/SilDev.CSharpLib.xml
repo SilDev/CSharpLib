@@ -3660,6 +3660,12 @@
                 otherwise, false.
             </param>
         </member>
+        <member name="P:SilDev.EnvironmentEx.Version">
+            <summary>
+                Gets a <see cref="T:System.Version"/> object that describes the major, minor and
+                build numbers of the common language runtime.
+            </summary>
+        </member>
         <member name="P:SilDev.EnvironmentEx.SystemRestoringIsEnabled">
             <summary>
                 Determines whether the system restoring is enabled.
