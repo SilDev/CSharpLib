@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2017-05-18 15:03
+// Version:  2017-05-23 23:19
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -140,18 +140,23 @@ namespace SilDev
                 return true;
             try
             {
-                var srcHash = new Crypto.Md5().EncryptFile(srcFile);
-                var newFile = srcFile + ".new";
+                var srcDir =  Path.GetDirectoryName(srcFile);
+                var newFile = PathEx.Combine(srcDir, Path.GetRandomFileName());
                 File.Create(newFile).Close();
                 Data.SetAttributes(newFile, FileAttributes.Hidden);
                 using (var sr = new StreamReader(srcFile))
+                {
+                    var ca = new char[4096];
                     using (var sw = new StreamWriter(newFile, true, encoding))
                     {
-                        string line;
-                        while ((line = sr.ReadLine()) != null)
-                            sw.WriteLine(line);
+                        int i;
+                        while ((i = sr.Read(ca, 0, ca.Length)) > 0)
+                            sw.Write(ca, 0, i);
                     }
-                if (srcHash.Equals(new Crypto.Md5().EncryptFile(newFile)))
+                }
+                var srcHash = new Crypto.Md5().EncryptFile(srcFile);
+                var newHash = new Crypto.Md5().EncryptFile(newFile);
+                if (srcHash.Equals(newHash))
                 {
                     File.Delete(newFile);
                     return true;
