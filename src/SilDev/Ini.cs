@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-22 19:05
+// Version:  2017-05-23 09:42
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -580,10 +580,10 @@ namespace SilDev
                 if (output.Count > 0)
                 {
                     InitializeCache(code);
-                    if (CachedFiles.Count >= MaxCacheSize)
+                    if (CachedFiles.Count > 0 && CachedFiles.Count >= MaxCacheSize)
                     {
                         var defCode = FilePath?.ToLower().GetHashCode() ?? -1;
-                        var delCode = CachedFiles.Keys.First(x => x != defCode);
+                        var delCode = CachedFiles.Keys.FirstOrDefault(x => x != defCode);
                         if (CodeExists(delCode))
                             CachedFiles.Remove(delCode);
                     }
