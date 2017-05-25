@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-04-12 17:32
+// Version:  2017-05-25 07:37
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -2756,6 +2756,7 @@ namespace SilDev
             [DllImport(DllNames.Kernel32, EntryPoint = "AllocConsole", SetLastError = true)]
             internal static extern int AllocConsole();
 
+            /*
             /// <summary>
             ///     Creates a symbolic link.
             /// </summary>
@@ -2774,6 +2775,7 @@ namespace SilDev
             [DllImport(DllNames.Kernel32, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool CreateSymbolicLink([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string lpSymlinkFileName, [MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string lpTargetFileName, SymbolicLinkFlags dwFlags);
+            */
 
             /// <summary>
             ///     Determines whether a key is up or down at the time the function is called, and whether the
@@ -2814,12 +2816,14 @@ namespace SilDev
             [DllImport(DllNames.Dwmapi, EntryPoint = "#127", PreserveSig = false, SetLastError = true)]
             internal static extern void DwmGetColorizationParameters(out DWM_COLORIZATION_PARAMS parameters);
 
+            /*
             /// <summary>
             ///     ***This is an undocumented API and as such is not supported by Microsoft and can be changed
             ///     or removed in the future without futher notice.
             /// </summary>
             [DllImport(DllNames.Dwmapi, EntryPoint = "#131", PreserveSig = false, SetLastError = true)]
             internal static extern void DwmSetColorizationParameters(ref DWM_COLORIZATION_PARAMS parameters, bool unknown);
+            */
 
             /// <summary>
             ///     Registers resources to a Restart Manager session. The Restart Manager uses the list of
@@ -2964,6 +2968,7 @@ namespace SilDev
             [DllImport(DllNames.Shell32, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
             internal static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, GetFileInfoFunc uFlags);
 
+            /*
             /// <summary>
             ///     Retrieves the names of all sections in an initialization file.
             /// </summary>
@@ -2988,6 +2993,7 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             internal static extern int GetPrivateProfileSectionNames(byte[] lpszReturnBuffer, int nSize, [MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+            */
 
             /// <summary>
             ///     Retrieves a string from the specified section in an initialization file.
@@ -3037,6 +3043,7 @@ namespace SilDev
             [DllImport(DllNames.Kernel32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern int GetPrivateProfileString(string lpApplicationName, string lpKeyName, string nDefault, StringBuilder retVal, int nSize, string lpFileName);
 
+            /*
             /// <summary>
             ///     Retrieves a string from the specified section in an initialization file.
             /// </summary>
@@ -3106,6 +3113,7 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             internal static extern int WritePrivateProfileSection([MarshalAs(UnmanagedType.LPStr)] string lpAppName, [MarshalAs(UnmanagedType.LPStr, SizeConst = 65535)] string lpString, [MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+            */
 
             /// <summary>
             ///     Copies a string into the specified section of an initialization file.
