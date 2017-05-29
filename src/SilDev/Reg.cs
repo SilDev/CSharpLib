@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2017-05-21 10:46
+// Version:  2017-05-29 17:25
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -271,8 +271,10 @@ namespace SilDev
         {
             try
             {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
                 if (string.IsNullOrEmpty(subKey))
-                    throw new ArgumentNullException(nameof(subKey));
+                    return key.GetSubKeyNames();
                 var sKey = subKey.KeyFilter();
                 if (string.IsNullOrEmpty(sKey))
                     throw new ArgumentNullException(nameof(sKey));
