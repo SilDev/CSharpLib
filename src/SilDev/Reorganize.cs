@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-21 10:39
+// Version:  2017-05-30 15:38
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -105,16 +105,16 @@ namespace SilDev
             try
             {
                 while (true)
-                    if (enumerator.MoveNext())
+                    if (enumerator?.MoveNext() == true)
                     {
                         var element = enumerator.Current;
                         yield return element;
                         stack.Push(enumerator);
-                        enumerator = selector(element).GetEnumerator();
+                        enumerator = selector(element)?.GetEnumerator();
                     }
                     else if (stack.Count > 0)
                     {
-                        enumerator.Dispose();
+                        enumerator?.Dispose();
                         enumerator = stack.Pop();
                     }
                     else
@@ -122,11 +122,11 @@ namespace SilDev
             }
             finally
             {
-                enumerator.Dispose();
+                enumerator?.Dispose();
                 while (stack.Count > 0)
                 {
                     enumerator = stack.Pop();
-                    enumerator.Dispose();
+                    enumerator?.Dispose();
                 }
             }
         }
