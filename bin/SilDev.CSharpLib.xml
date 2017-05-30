@@ -7371,7 +7371,7 @@
                 The full path of the key to read.
             </param>
         </member>
-        <member name="M:SilDev.Reg.GetSubKeyTree(Microsoft.Win32.RegistryKey,System.String)">
+        <member name="M:SilDev.Reg.GetSubKeyTree(Microsoft.Win32.RegistryKey,System.String,System.Int32)">
             <summary>
                 Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with the full subkey
                 tree of the specified registry path.
@@ -7382,8 +7382,11 @@
             <param name="subKey">
                 The path of the subkey to read.
             </param>
+            <param name="timelimit">
+                The time limit in milliseconds.
+            </param>
         </member>
-        <member name="M:SilDev.Reg.GetSubKeyTree(System.String,System.String)">
+        <member name="M:SilDev.Reg.GetSubKeyTree(System.String,System.String,System.Int32)">
             <summary>
                 Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with the full subkey
                 tree of the specified registry path.
@@ -7394,14 +7397,20 @@
             <param name="subKey">
                 The path of the subkey to read.
             </param>
+            <param name="timelimit">
+                The time limit in milliseconds.
+            </param>
         </member>
-        <member name="M:SilDev.Reg.GetSubKeyTree(System.String)">
+        <member name="M:SilDev.Reg.GetSubKeyTree(System.String,System.Int32)">
             <summary>
                 Returns a <see cref="T:System.String"/> based <see cref="T:System.Collections.Generic.IEnumerable`1"/> with the full subkey
                 tree of the specified registry path.
             </summary>
             <param name="keyPath">
                 The full path of the key to read.
+            </param>
+            <param name="timelimit">
+                The time limit in milliseconds.
             </param>
         </member>
         <member name="M:SilDev.Reg.CopySubKey(Microsoft.Win32.RegistryKey,System.String,Microsoft.Win32.RegistryKey,System.String,System.Boolean)">
@@ -7860,7 +7869,7 @@
                 The sequence of bytes to convert.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}})">
+        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}},System.Int64)">
             <summary>
                 Projects each element of a sequence into a new form.
             </summary>
@@ -7873,8 +7882,9 @@
             <param name="selector">
                 A transform function to apply to each element.
             </param>
-            <exception cref="T:System.ArgumentNullException">
-            </exception>
+            <param name="timelimit">
+                The time limit in milliseconds.
+            </param>
         </member>
         <member name="T:SilDev.Reorganize.SizeUnits">
             <summary>
