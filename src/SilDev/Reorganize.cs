@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-30 15:38
+// Version:  2017-05-30 21:10
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.IO;
@@ -96,16 +97,19 @@ namespace SilDev
         /// <param name="selector">
         ///     A transform function to apply to each element.
         /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        public static IEnumerable<TSource> RecursiveSelect<TSource>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TSource>> selector)
+        /// <param name="timelimit">
+        ///     The time limit in milliseconds.
+        /// </param>
+        public static IEnumerable<TSource> RecursiveSelect<TSource>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TSource>> selector, long timelimit = 60000)
         {
             var stack = new Stack<IEnumerator<TSource>>();
             var enumerator = source.GetEnumerator();
             try
             {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
                 while (true)
-                    if (enumerator?.MoveNext() == true)
+                    if (stopwatch.ElapsedMilliseconds < timelimit && enumerator?.MoveNext() == true)
                     {
                         var element = enumerator.Current;
                         yield return element;

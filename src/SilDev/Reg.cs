@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2017-05-29 17:25
+// Version:  2017-05-30 21:11
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -326,8 +326,11 @@ namespace SilDev
         /// <param name="subKey">
         ///     The path of the subkey to read.
         /// </param>
-        public static IEnumerable<string> GetSubKeyTree(RegistryKey key, string subKey) =>
-            GetSubKeys(key, subKey)?.RecursiveSelect(e => GetSubKeys(key, e));
+        /// <param name="timelimit">
+        ///     The time limit in milliseconds.
+        /// </param>
+        public static IEnumerable<string> GetSubKeyTree(RegistryKey key, string subKey, int timelimit = 30000) =>
+            GetSubKeys(key, subKey)?.RecursiveSelect(e => GetSubKeys(key, e), timelimit);
 
         /// <summary>
         ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the full subkey
@@ -339,8 +342,11 @@ namespace SilDev
         /// <param name="subKey">
         ///     The path of the subkey to read.
         /// </param>
-        public static IEnumerable<string> GetSubKeyTree(string key, string subKey) =>
-            GetSubKeyTree(key.AsRegistryKey(), subKey);
+        /// <param name="timelimit">
+        ///     The time limit in milliseconds.
+        /// </param>
+        public static IEnumerable<string> GetSubKeyTree(string key, string subKey, int timelimit = 30000) =>
+            GetSubKeyTree(key.AsRegistryKey(), subKey, timelimit);
 
         /// <summary>
         ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the full subkey
@@ -349,8 +355,11 @@ namespace SilDev
         /// <param name="keyPath">
         ///     The full path of the key to read.
         /// </param>
-        public static IEnumerable<string> GetSubKeyTree(string keyPath) =>
-            GetSubKeyTree(keyPath.GetKey(), keyPath.GetSubKeyName());
+        /// <param name="timelimit">
+        ///     The time limit in milliseconds.
+        /// </param>
+        public static IEnumerable<string> GetSubKeyTree(string keyPath, int timelimit = 30000) =>
+            GetSubKeyTree(keyPath.GetKey(), keyPath.GetSubKeyName(), timelimit);
 
         private static void CopyKeyIntern(RegistryKey srcKey, RegistryKey destKey)
         {
