@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-05-25 07:37
+// Version:  2017-06-06 20:13
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -4350,6 +4350,15 @@ namespace SilDev
             public static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
             /// <summary>
+            ///     The MsiQueryProductState function returns the installed state for a product.
+            /// </summary>
+            /// <param name="product">
+            ///     Specifies the product code that identifies the product to be queried.
+            /// </param>
+            [DllImport(DllNames.Msi, SetLastError = true)]
+            public static extern INSTALLSTATE MsiQueryProductState(string product);
+
+            /// <summary>
             ///     Retrieves information about the specified process.
             /// </summary>
             /// <param name="hndl">
@@ -5362,6 +5371,7 @@ namespace SilDev
         {
             internal const string Advapi32 = "advapi32.dll";
             internal const string Dwmapi = "dwmapi.dll";
+            internal const string Msi = "msi.dll";
             internal const string Rstrtmgr = "rstrtmgr.dll";
             internal const string Winmm = "winmm.dll";
             public const string Kernel32 = "kernel32.dll";
@@ -5763,6 +5773,83 @@ namespace SilDev
             public uint clrBlurBalance;
             public uint clrGlassReflectionIntensity;
             public bool fOpaque;
+        }
+
+        /// <summary>
+        ///     Contains information about the installation state.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum INSTALLSTATE
+        {
+            /// <summary>
+            ///     Component disabled.
+            /// </summary>
+            INSTALLSTATE_NOTUSED = -7,
+
+            /// <summary>
+            ///     Configuration data corrupt.
+            /// </summary>
+            INSTALLSTATE_BADCONFIG = -6,
+
+            /// <summary>
+            ///     Installation suspended or in progress.
+            /// </summary>
+            INSTALLSTATE_INCOMPLETE = -5,
+
+            /// <summary>
+            ///     Run from source, source is unavailable.
+            /// </summary>
+            INSTALLSTATE_SOURCEABSENT = -4,
+
+            /// <summary>
+            ///     Return buffer overflow.
+            /// </summary>
+            INSTALLSTATE_MOREDATA = -3,
+
+            /// <summary>
+            ///     Invalid function argument.
+            /// </summary>
+            INSTALLSTATE_INVALIDARG = -2,
+
+            /// <summary>
+            ///     Unrecognized product or feature.
+            /// </summary>
+            INSTALLSTATE_UNKNOWN = -1,
+
+            /// <summary>
+            ///     Broken.
+            /// </summary>
+            INSTALLSTATE_BROKEN = 0,
+
+            /// <summary>
+            ///     Advertised feature.
+            /// </summary>
+            INSTALLSTATE_ADVERTISED = 1,
+
+            /// <summary>
+            ///     Component being removed (action state, not settable).
+            /// </summary>
+            INSTALLSTATE_REMOVED = 1,
+
+            /// <summary>
+            ///     Uninstalled (or action state absent but clients remain).
+            /// </summary>
+            INSTALLSTATE_ABSENT = 2,
+
+            /// <summary>
+            ///     Installed on local drive.
+            /// </summary>
+            INSTALLSTATE_LOCAL = 3,
+
+            /// <summary>
+            ///     Run from source, CD or net.
+            /// </summary>
+            INSTALLSTATE_SOURCE = 4,
+
+            /// <summary>
+            ///     Use default, local or source.
+            /// </summary>
+            INSTALLSTATE_DEFAULT = 5
         }
 
         /// <summary>
