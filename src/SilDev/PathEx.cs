@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-05-17 15:45
+// Version:  2017-06-06 20:05
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -165,8 +165,17 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(path));
                 if (path.Length < 3)
                     throw new ArgumentException("The path length is lower than 3 characters. - PATH: '" + path + "'");
-                if (Path.HasExtension(path) && path.Length > 260)
-                    throw new PathTooLongException("The specified path is longer than 260 characters. - PATH: '" + path + "'");
+                if (Path.HasExtension(path))
+                {
+                    if (path.Length > 260)
+                        throw new PathTooLongException("The specified path is longer than 260 characters. - PATH: '" + path + "'");
+                    var levels = path.Split(Path.DirectorySeparatorChar);
+                    var fileDir = levels.Take(levels.Length - 1).Join(Path.DirectorySeparatorChar);
+                    if (fileDir.Length > 248)
+                        throw new PathTooLongException("The directory name is longer than 248 characters. - PATH: '" + path + "'");
+                }
+                if (!Path.HasExtension(path) && path.Length > 248)
+                    throw new PathTooLongException("The specified path is longer than 248 characters. - PATH: '" + path + "'");
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
                     throw new ArgumentException("The path cannot contain several consecutive separators. - PATH: '" + path + "'");
                 var drive = path.Substring(0, 3);
@@ -177,8 +186,6 @@ namespace SilDev
                 var subPath = path.Substring(3);
                 if (subPath.Any(c => c != Path.DirectorySeparatorChar && Path.GetInvalidFileNameChars().Contains(c)))
                     throw new ArgumentException("The path contains invalid characters.");
-                if (!Path.HasExtension(path) && path.Split(Path.DirectorySeparatorChar).Any(s => s.Length > 248))
-                    throw new PathTooLongException("The directory or file name must be less than 248 characters. - PATH: '" + path + "'");
                 return true;
             }
             catch (Exception ex)
