@@ -3666,6 +3666,79 @@
                 build numbers of the common language runtime.
             </summary>
         </member>
+        <member name="T:SilDev.EnvironmentEx.RedistPack">
+            <summary>
+                Provides enumerated values of redistributable packages.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2005_x86">
+            <summary>
+                Visual C++ 2005 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2005_x64">
+            <summary>
+                Visual C++ 2005 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2008_x86">
+            <summary>
+                Visual C++ 2008 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2008_x64">
+            <summary>
+                Visual C++ 2008 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2010_x86">
+            <summary>
+                Visual C++ 2010 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2010_x64">
+            <summary>
+                Visual C++ 2010 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2012_x86">
+            <summary>
+                Visual C++ 2012 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2012_x64">
+            <summary>
+                Visual C++ 2012 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2013_x86">
+            <summary>
+                Visual C++ 2013 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2013_x64">
+            <summary>
+                Visual C++ 2013 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2015_x86">
+            <summary>
+                Visual C++ 2015 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2015_x64">
+            <summary>
+                Visual C++ 2015 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.RedistPackIsInstalled(SilDev.EnvironmentEx.RedistPack)">
+            <summary>
+                Determines whether the specified redistributable package is installed.
+            </summary>
+            <param name="key">
+                The redistributable package key value to check.
+            </param>
+        </member>
         <member name="P:SilDev.EnvironmentEx.SystemRestoringIsEnabled">
             <summary>
                 Determines whether the system restoring is enabled.
@@ -12590,6 +12663,14 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.UnsafeNativeMethods.MsiQueryProductState(System.String)">
+            <summary>
+                The MsiQueryProductState function returns the installed state for a product.
+            </summary>
+            <param name="product">
+                Specifies the product code that identifies the product to be queried.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.UnsafeNativeMethods.NtQueryInformationProcess(System.IntPtr,SilDev.WinApi.ProcessInfoFunc,SilDev.WinApi.PROCESS_BASIC_INFORMATION@,System.UInt32,System.IntPtr@)">
             <summary>
                 Retrieves information about the specified process.
@@ -13907,6 +13988,81 @@
         <member name="T:SilDev.WinApi.DWM_COLORIZATION_PARAMS">
             <summary>
                 Contains information about the colorization of a Windows.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.INSTALLSTATE">
+            <summary>
+                Contains information about the installation state.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_NOTUSED">
+            <summary>
+                Component disabled.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_BADCONFIG">
+            <summary>
+                Configuration data corrupt.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_INCOMPLETE">
+            <summary>
+                Installation suspended or in progress.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_SOURCEABSENT">
+            <summary>
+                Run from source, source is unavailable.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_MOREDATA">
+            <summary>
+                Return buffer overflow.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_INVALIDARG">
+            <summary>
+                Invalid function argument.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_UNKNOWN">
+            <summary>
+                Unrecognized product or feature.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_BROKEN">
+            <summary>
+                Broken.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_ADVERTISED">
+            <summary>
+                Advertised feature.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_REMOVED">
+            <summary>
+                Component being removed (action state, not settable).
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_ABSENT">
+            <summary>
+                Uninstalled (or action state absent but clients remain).
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_LOCAL">
+            <summary>
+                Installed on local drive.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_SOURCE">
+            <summary>
+                Run from source, CD or net.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.INSTALLSTATE.INSTALLSTATE_DEFAULT">
+            <summary>
+                Use default, local or source.
             </summary>
         </member>
         <member name="T:SilDev.WinApi.MARGINS">
