@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-05-18 14:53
+// Version:  2017-06-07 22:12
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -95,7 +95,9 @@ namespace SilDev
             try
             {
                 var link = PathEx.Combine(!linkPath.EndsWithEx(".lnk") ? $"{linkPath}.lnk" : linkPath);
-                if (!Directory.Exists(Path.GetDirectoryName(link)) || !File.Exists(PathEx.Combine(targetPath)))
+                var name = Path.GetDirectoryName(link);
+                var path = PathEx.Combine(targetPath);
+                if (!Directory.Exists(name) || !PathEx.DirOrFileExists(path))
                     return false;
                 if (File.Exists(link))
                 {
@@ -103,13 +105,14 @@ namespace SilDev
                         return true;
                     File.Delete(link);
                 }
+                name = Path.GetDirectoryName(targetPath);
                 var shell = (IShellLink)new ShellLink();
                 if (!string.IsNullOrWhiteSpace(startArgs))
                     shell.SetArguments(startArgs);
                 shell.SetDescription(string.Empty);
                 shell.SetPath(targetPath);
                 shell.SetIconLocation(linkIcon ?? targetPath, 0);
-                shell.SetWorkingDirectory(Path.GetDirectoryName(targetPath));
+                shell.SetWorkingDirectory(name);
                 ((IPersistFile)shell).Save(link, false);
                 return File.Exists(link);
             }
