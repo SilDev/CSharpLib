@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-06-06 20:52
+// Version:  2017-06-14 11:16
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -341,183 +341,145 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides enumerated values of redistributable packages.
+        ///     Provides functionality to verify the installation of redistributable packages.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum RedistPack
+        public static class Redist
         {
-            /// <summary>
-            ///     Visual C++ 2005 Redistributable Package (x86).
-            /// </summary>
-            VC2005_x86,
+            private static string[] _displayNames;
 
             /// <summary>
-            ///     Visual C++ 2005 Redistributable Package (x64).
+            ///     Provides identity flags of redistributable packages.
             /// </summary>
-            VC2005_x64,
-
-            /// <summary>
-            ///     Visual C++ 2008 Redistributable Package (x86).
-            /// </summary>
-            VC2008_x86,
-
-            /// <summary>
-            ///     Visual C++ 2008 Redistributable Package (x64).
-            /// </summary>
-            VC2008_x64,
-
-            /// <summary>
-            ///     Visual C++ 2010 Redistributable Package (x86).
-            /// </summary>
-            VC2010_x86,
-
-            /// <summary>
-            ///     Visual C++ 2010 Redistributable Package (x64).
-            /// </summary>
-            VC2010_x64,
-
-            /// <summary>
-            ///     Visual C++ 2012 Redistributable Package (x86).
-            /// </summary>
-            VC2012_x86,
-
-            /// <summary>
-            ///     Visual C++ 2012 Redistributable Package (x64).
-            /// </summary>
-            VC2012_x64,
-
-            /// <summary>
-            ///     Visual C++ 2013 Redistributable Package (x86).
-            /// </summary>
-            VC2013_x86,
-
-            /// <summary>
-            ///     Visual C++ 2013 Redistributable Package (x64).
-            /// </summary>
-            VC2013_x64,
-
-            /// <summary>
-            ///     Visual C++ 2015 Redistributable Package (x86).
-            /// </summary>
-            VC2015_x86,
-
-            /// <summary>
-            ///     Visual C++ 2015 Redistributable Package (x64).
-            /// </summary>
-            VC2015_x64
-        }
-
-        /// <summary>
-        ///     Determines whether the specified redistributable package is installed.
-        /// </summary>
-        /// <param name="key">
-        ///     The redistributable package key value to check.
-        /// </param>
-        public static bool RedistPackIsInstalled(RedistPack key)
-        {
-            string[] guids = null;
-            switch (key)
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            public enum Flags
             {
-                case RedistPack.VC2005_x86:
-                    guids = new[]
-                    {
-                        "{A49F249F-0C91-497F-86DF-B2585E8E76B7}",
-                        "{7299052B-02A4-4627-81F2-1818DA5D550D}",
-                        "{837B34E3-7C30-493C-8F6A-2B0F04E2912C}"
-                    };
-                    break;
-                case RedistPack.VC2005_x64:
-                    guids = new[]
-                    {
-                        "{6E8E85E8-CE4B-4FF5-91F7-04999C9FAE6A}",
-                        "{03ED71EA-F531-4927-AABD-1C31BCE8E187}",
-                        "{071C9B48-7C32-4621-A0AC-3F809523288F}",
-                        "{0F8FB34E-675E-42ED-850B-29D98C2ECE08}",
-                        "{6CE5BAE9-D3CA-4B99-891A-1DC6C118A5FC}",
-                        "{85025851-A784-46D8-950D-05CB3CA43A13}"
-                    };
-                    break;
-                case RedistPack.VC2008_x86:
-                    guids = new[]
-                    {
-                        "{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}",
-                        "{1F1C2DFC-2D24-3E06-BCB8-725134ADF989}",
-                        "{9BE518E6-ECC6-35A9-88E4-87755C07200F}"
-                    };
-                    break;
-                case RedistPack.VC2008_x64:
-                    guids = new[]
-                    {
-                        "{350AA351-21FA-3270-8B7A-835434E766AD}",
-                        "{2B547B43-DB50-3139-9EBE-37D419E0F5FA}",
-                        "{8220EEFE-38CD-377E-8595-13398D740ACE}",
-                        "{5827ECE1-AEB0-328E-B813-6FC68622C1F9}",
-                        "{4B6C7001-C7D6-3710-913E-5BC23FCE91E6}",
-                        "{977AD349-C2A8-39DD-9273-285C08987C7B}",
-                        "{5FCE6D76-F5DC-37AB-B2B8-22AB8CEDB1D4}",
-                        "{515643D1-4E9E-342F-A75A-D1F16448DC04}"
-                    };
-                    break;
-                case RedistPack.VC2010_x86:
-                    guids = new[]
-                    {
-                        "{196BB40D-1578-3D01-B289-BEFC77A11A1E}",
-                        "{F0C3E5D1-1ADE-321E-8167-68EF0DE699A5}"
-                    };
-                    break;
-                case RedistPack.VC2010_x64:
-                    guids = new[]
-                    {
-                        "{DA5E371C-6333-3D8A-93A4-6FD5B20BCC6E}",
-                        "{C1A35166-4301-38E9-BA67-02823AD72A1B}",
-                        "{1D8E6291-B0D5-35EC-8441-6616F567A0F7}",
-                        "{88C73C1C-2DE5-3B01-AFB8-B46EF4AB41CD}"
-                    };
-                    break;
-                case RedistPack.VC2012_x86:
-                    guids = new[]
-                    {
-                        "{BD95A8CD-1D9F-35AD-981A-3E7925026EBB}",
-                        "{B175520C-86A2-35A7-8619-86DC379688B9}"
-                    };
-                    break;
-                case RedistPack.VC2012_x64:
-                    guids = new[]
-                    {
-                        "{CF2BEA3C-26EA-32F8-AA9B-331F7E34BA97}",
-                        "{37B8F9C7-03FB-3253-8781-2517C99D7C00}"
-                    };
-                    break;
-                case RedistPack.VC2013_x86:
-                    guids = new[]
-                    {
-                        "{13A4EE12-23EA-3371-91EE-EFB36DDFFF3E}",
-                        "{F8CFEB22-A2E7-3971-9EDA-4B11EDEFC185}"
-                    };
-                    break;
-                case RedistPack.VC2013_x64:
-                    guids = new[]
-                    {
-                        "{A749D8E6-B613-3BE3-8F5F-045C84EBA29B}",
-                        "{929FBD26-9020-399B-9A7A-751D61F0B942}"
-                    };
-                    break;
-                case RedistPack.VC2015_x86:
-                    guids = new[]
-                    {
-                        "{A2563E55-3BEC-3828-8D67-E5E8B9E8B675}",
-                        "{BE960C1C-7BAD-3DE6-8B1A-2616FE532845}"
-                    };
-                    break;
-                case RedistPack.VC2015_x64:
-                    guids = new[]
-                    {
-                        "{0D3E9E15-DE7A-300B-96F1-B4AF12B96488}",
-                        "{BC958BD2-5DAC-3862-BB1A-C1BE0790438D}"
-                    };
-                    break;
+                /// <summary>
+                ///     Microsoft Visual C++ 2005 Redistributable Package (x86).
+                /// </summary>
+                VC2005X86,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2005 Redistributable Package (x64).
+                /// </summary>
+                VC2005X64,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2008 Redistributable Package (x86).
+                /// </summary>
+                VC2008X86,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2008 Redistributable Package (x64).
+                /// </summary>
+                VC2008X64,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2010 Redistributable Package (x86).
+                /// </summary>
+                VC2010X86,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2010 Redistributable Package (x64).
+                /// </summary>
+                VC2010X64,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2012 Redistributable Package (x86).
+                /// </summary>
+                VC2012X86,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2012 Redistributable Package (x64).
+                /// </summary>
+                VC2012X64,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2013 Redistributable Package (x86).
+                /// </summary>
+                VC2013X86,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2013 Redistributable Package (x64).
+                /// </summary>
+                VC2013X64,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2015 Redistributable Package (x86).
+                /// </summary>
+                VC2015X86,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2015 Redistributable Package (x64).
+                /// </summary>
+                VC2015X64,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2017 Redistributable Package (x86).
+                /// </summary>
+                VC2017X86,
+
+                /// <summary>
+                ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
+                /// </summary>
+                VC2017X64
             }
-            return guids?.Any(x => WinApi.UnsafeNativeMethods.MsiQueryProductState(x) == WinApi.INSTALLSTATE.INSTALLSTATE_DEFAULT) == true;
+
+            /// <summary>
+            ///     Returns the display names of all installed Microsoft Visual C++ redistributable packages.
+            /// </summary>
+            /// <param name="reload">
+            /// </param>
+            /// <returns>
+            /// </returns>
+            public static string[] GetDisplayNames(bool reload = false)
+            {
+                try
+                {
+                    if (!reload && _displayNames != null)
+                        return _displayNames;
+                    var comparer = new Comparison.AlphanumericComparer();
+                    var names = Reg.GetSubKeyTree("HKLM\\SOFTWARE\\Classes\\Installer", 3000).Select(x => $"HKLM\\{x}")
+                                   .SelectMany(x => new[] { "DisplayName", "ProductName" }, (x, y) => Reg.ReadString(x, y))
+                                   .Where(x => x.StartsWithEx("Microsoft Visual C++"))
+                                   .OrderBy(x => x, comparer);
+                    _displayNames = names.ToArray();
+                    return _displayNames;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                    return null;
+                }
+            }
+
+            /// <summary>
+            ///     Determines whether the specified redistributable package is installed.
+            /// </summary>
+            /// <param name="keys">
+            ///     The redistributable package keys to check.
+            /// </param>
+            public static bool IsInstalled(params Flags[] keys)
+            {
+                try
+                {
+                    var result = false;
+                    var names = GetDisplayNames();
+                    foreach (var key in keys.Select(x => x.ToString()))
+                    {
+                        var year = key.Substring(2, 4);
+                        var arch = key.Substring(6);
+                        result = names.Any(x => x.Contains(year) && x.ContainsEx(arch));
+                        if (!result)
+                            break;
+                    }
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                    return false;
+                }
+            }
         }
 
         /// <summary>
@@ -611,13 +573,13 @@ namespace SilDev
                 var mPath = new ManagementPath("SystemRestore");
                 var options = new ObjectGetOptions();
                 using (var mClass = new ManagementClass(mScope, mPath, options))
-                    using (var parameters = mClass.GetMethodParameters("CreateRestorePoint"))
-                    {
-                        parameters["Description"] = description;
-                        parameters["EventType"] = (int)eventType;
-                        parameters["RestorePointType"] = (int)restorePointType;
-                        mClass.InvokeMethod("CreateRestorePoint", parameters, null);
-                    }
+                using (var parameters = mClass.GetMethodParameters("CreateRestorePoint"))
+                {
+                    parameters["Description"] = description;
+                    parameters["EventType"] = (int)eventType;
+                    parameters["RestorePointType"] = (int)restorePointType;
+                    mClass.InvokeMethod("CreateRestorePoint", parameters, null);
+                }
             }
             catch (Exception ex)
             {
