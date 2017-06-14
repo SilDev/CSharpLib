@@ -3666,146 +3666,175 @@
                 build numbers of the common language runtime.
             </summary>
         </member>
-        <member name="T:SilDev.EnvironmentEx.RedistPack">
+        <member name="T:SilDev.EnvironmentEx.Redist">
             <summary>
-                Provides enumerated values of redistributable packages.
+                Provides functionality to verify the installation of redistributable packages.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2005_x86">
+        <member name="T:SilDev.EnvironmentEx.Redist.Flags">
             <summary>
-                Visual C++ 2005 Redistributable Package (x86).
+                Provides identity flags of redistributable packages.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2005_x64">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2005X86">
             <summary>
-                Visual C++ 2005 Redistributable Package (x64).
+                Microsoft Visual C++ 2005 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2008_x86">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2005X64">
             <summary>
-                Visual C++ 2008 Redistributable Package (x86).
+                Microsoft Visual C++ 2005 Redistributable Package (x64).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2008_x64">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2008X86">
             <summary>
-                Visual C++ 2008 Redistributable Package (x64).
+                Microsoft Visual C++ 2008 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2010_x86">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2008X64">
             <summary>
-                Visual C++ 2010 Redistributable Package (x86).
+                Microsoft Visual C++ 2008 Redistributable Package (x64).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2010_x64">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2010X86">
             <summary>
-                Visual C++ 2010 Redistributable Package (x64).
+                Microsoft Visual C++ 2010 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2012_x86">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2010X64">
             <summary>
-                Visual C++ 2012 Redistributable Package (x86).
+                Microsoft Visual C++ 2010 Redistributable Package (x64).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2012_x64">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2012X86">
             <summary>
-                Visual C++ 2012 Redistributable Package (x64).
+                Microsoft Visual C++ 2012 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2013_x86">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2012X64">
             <summary>
-                Visual C++ 2013 Redistributable Package (x86).
+                Microsoft Visual C++ 2012 Redistributable Package (x64).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2013_x64">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2013X86">
             <summary>
-                Visual C++ 2013 Redistributable Package (x64).
+                Microsoft Visual C++ 2013 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2015_x86">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2013X64">
             <summary>
-                Visual C++ 2015 Redistributable Package (x86).
+                Microsoft Visual C++ 2013 Redistributable Package (x64).
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RedistPack.VC2015_x64">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2015X86">
             <summary>
-                Visual C++ 2015 Redistributable Package (x64).
+                Microsoft Visual C++ 2015 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="M:SilDev.EnvironmentEx.RedistPackIsInstalled(SilDev.EnvironmentEx.RedistPack)">
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2015X64">
+            <summary>
+                Microsoft Visual C++ 2015 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2017X86">
+            <summary>
+                Microsoft Visual C++ 2017 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2017X64">
+            <summary>
+                Microsoft Visual C++ 2017 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.Redist.GetDisplayNames(System.Boolean)">
+            <summary>
+                Returns the display names of all installed Microsoft Visual C++ redistributable packages.
+            </summary>
+            <param name="reload">
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.Redist.IsInstalled(SilDev.EnvironmentEx.Redist.Flags[])">
             <summary>
                 Determines whether the specified redistributable package is installed.
             </summary>
-            <param name="key">
-                The redistributable package key value to check.
+            <param name="keys">
+                The redistributable package keys to check.
             </param>
         </member>
-        <member name="P:SilDev.EnvironmentEx.SystemRestoringIsEnabled">
+        <member name="T:SilDev.EnvironmentEx.SystemRestore">
+            <summary>
+                Provides functionality to handle system restore points.
+            </summary>
+        </member>
+        <member name="P:SilDev.EnvironmentEx.SystemRestore.IsEnabled">
             <summary>
                 Determines whether the system restoring is enabled.
             </summary>
         </member>
-        <member name="T:SilDev.EnvironmentEx.EventType">
+        <member name="T:SilDev.EnvironmentEx.SystemRestore.EventType">
             <summary>
-                The type of event. For more information, see <see cref="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)"/>.
+                The type of event. For more information, see <see cref="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.SystemRestore.EventType,SilDev.EnvironmentEx.SystemRestore.PointType)"/>.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.BeginNestedSystemChange">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.BeginNestedSystemChange">
             <summary>
                 A system change has begun. A subsequent nested call does not create a new restore
                 point.
                 <para>
-                    Subsequent calls must use <see cref="F:SilDev.EnvironmentEx.EventType.EndNestedSystemChange"/>, not
-                    <see cref="F:SilDev.EnvironmentEx.EventType.EndSystemChange"/>.
+                    Subsequent calls must use <see cref="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndNestedSystemChange"/>, not
+                    <see cref="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndSystemChange"/>.
                 </para>
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.BeginSystemChange">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.BeginSystemChange">
             <summary>
                 A system change has begun.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.EndNestedSystemChange">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndNestedSystemChange">
             <summary>
                 A system change has ended.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.EventType.EndSystemChange">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndSystemChange">
             <summary>
                 A system change has ended.
             </summary>
         </member>
-        <member name="T:SilDev.EnvironmentEx.RestorePointType">
+        <member name="T:SilDev.EnvironmentEx.SystemRestore.PointType">
             <summary>
-                The type of restore point. For more information, see <see cref="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)"/>.
+                The type of restore point. For more information, see <see cref="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.SystemRestore.EventType,SilDev.EnvironmentEx.SystemRestore.PointType)"/>.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationInstall">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.ApplicationInstall">
             <summary>
                 An application has been installed.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationUninstall">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.ApplicationUninstall">
             <summary>
                 An application has been uninstalled.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.CancelledOperation">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.CancelledOperation">
             <summary>
                 An application needs to delete the restore point it created. For example, an
                 application would use this flag when a user cancels an installation.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.DeviceDriverInstall">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.DeviceDriverInstall">
             <summary>
                 A device driver has been installed.
             </summary>
         </member>
-        <member name="F:SilDev.EnvironmentEx.RestorePointType.ModifySettings">
+        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.ModifySettings">
             <summary>
                 An application has had features added or removed.
             </summary>
         </member>
-        <member name="M:SilDev.EnvironmentEx.CreateSystemRestorePoint(System.String,SilDev.EnvironmentEx.EventType,SilDev.EnvironmentEx.RestorePointType)">
+        <member name="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.SystemRestore.EventType,SilDev.EnvironmentEx.SystemRestore.PointType)">
             <summary>
                 Creates a restore point on the local system.
             </summary>
