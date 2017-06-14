@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-06-14 11:44
+// Version:  2017-06-15 00:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -317,7 +317,7 @@ namespace SilDev
             {
                 if (_version != null)
                     return _version;
-                var release = Reg.Read(Registry.LocalMachine, @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full", "Release", 0);
+                var release = Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "Release", 0);
                 if (release > 460805)
                     _version = new Version(4, 7, 1);
                 else if (release >= 460798)
@@ -438,8 +438,13 @@ namespace SilDev
                     if (!reload && _displayNames != null)
                         return _displayNames;
                     var comparer = new Comparison.AlphanumericComparer();
-                    var names = Reg.GetSubKeyTree("HKLM\\SOFTWARE\\Classes\\Installer", 3000).Select(x => $"HKLM\\{x}")
-                                   .SelectMany(x => new[] { "DisplayName", "ProductName" }, (x, y) => Reg.ReadString(x, y))
+                    var entries = new[]
+                    {
+                        "DisplayName",
+                        "ProductName"
+                    };
+                    var names = Reg.GetSubKeyTree(Registry.LocalMachine, "SOFTWARE\\Classes\\Installer", 3000)
+                                   .SelectMany(x => entries, (x, y) => Reg.ReadString(Registry.LocalMachine, x, y))
                                    .Where(x => x.StartsWithEx("Microsoft Visual C++"))
                                    .OrderBy(x => x, comparer);
                     _displayNames = names.ToArray();
