@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-06-14 11:20
+// Version:  2017-06-14 11:44
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -468,7 +468,7 @@ namespace SilDev
                     {
                         var year = key.Substring(2, 4);
                         var arch = key.Substring(6);
-                        result = names.Any(x => x.Contains(year) && x.ContainsEx(arch));
+                        result = names.Any(x => x.Contains(year) && ((!year.Equals("2005") || arch.EqualsEx("x64")) && x.ContainsEx(arch) || year.Equals("2005") && !x.ContainsEx("x64")));
                         if (!result)
                             break;
                     }
