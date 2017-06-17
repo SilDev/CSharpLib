@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-06-15 00:54
+// Version:  2017-06-18 00:20
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -427,15 +427,18 @@ namespace SilDev
             /// <summary>
             ///     Returns the display names of all installed Microsoft Visual C++ redistributable packages.
             /// </summary>
-            /// <param name="reload">
+            /// <param name="refresh">
+            ///     true to refresh all names; otherwise, false to get the cached names from previous call.
+            ///     <para>
+            ///         Please note that this parameter is always true if this function has never been called
+            ///         before.
+            ///     </para>
             /// </param>
-            /// <returns>
-            /// </returns>
-            public static string[] GetDisplayNames(bool reload = false)
+            public static string[] GetDisplayNames(bool refresh = false)
             {
                 try
                 {
-                    if (!reload && _displayNames != null)
+                    if (!refresh && _displayNames != null)
                         return _displayNames;
                     var comparer = new Comparison.AlphanumericComparer();
                     var entries = new[]
@@ -473,7 +476,15 @@ namespace SilDev
                     {
                         var year = key.Substring(2, 4);
                         var arch = key.Substring(6);
-                        result = names.Any(x => x.Contains(year) && ((!year.Equals("2005") || arch.EqualsEx("x64")) && x.ContainsEx(arch) || year.Equals("2005") && !x.ContainsEx("x64")));
+                        switch (year)
+                        {
+                            case "2005":
+                                result = names.Any(x => x.Contains(year) && (arch.EqualsEx("x64") && x.ContainsEx(arch) || !x.ContainsEx("x64")));
+                                break;
+                            default:
+                                result = names.Any(x => x.Contains(year) && x.ContainsEx(arch));
+                                break;
+                        }
                         if (!result)
                             break;
                     }
