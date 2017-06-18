@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2016-10-27 12:56
+// Version:  2017-06-18 02:25
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -718,23 +718,9 @@ namespace SilDev.Forms
                     {
                         var width = cRect.Width - cRect.X;
                         var height = cRect.Height - cRect.Y;
-                        var pRect = new Rectangle(0, 0, 0, 0);
-                        if (WinApi.UnsafeNativeMethods.GetWindowRect(_owner.Handle, ref pRect))
-                        {
-                            var ptCenter = new Point(pRect.X, pRect.Y);
-                            ptCenter.X += (pRect.Width - pRect.X) / 2;
-                            ptCenter.Y += (pRect.Height - pRect.Y) / 2 - 10;
-                            var ptStart = new Point(ptCenter.X, ptCenter.Y);
-                            ptStart.X -= width / 2;
-                            if (ptStart.X < 0)
-                                ptStart.X = 0;
-                            ptStart.Y -= height / 2;
-                            if (ptStart.Y < 0)
-                                ptStart.Y = 0;
-                            WinApi.UnsafeNativeMethods.MoveWindow(msg.hwnd, ptStart.X, ptStart.Y, width, height, false);
-                            if (CenterMousePointer)
-                                WinApi.SetCursorPos(msg.hwnd, new Point(width / 2, height / 2 + 24));
-                        }
+                        WinApi.CenterWindow(msg.hwnd, _owner.Handle, true);
+                        if (CenterMousePointer)
+                            WinApi.SetCursorPos(msg.hwnd, new Point(width / 2, height / 2 + 24));
                     }
                 }
             }
@@ -759,7 +745,7 @@ namespace SilDev.Forms
         {
             var className = new StringBuilder(10);
             WinApi.UnsafeNativeMethods.GetClassName(hWnd, className, className.Capacity);
-            if (className.ToString() != "Button")
+            if (!className.ToString().EqualsEx("Button"))
                 return true;
             switch (WinApi.UnsafeNativeMethods.GetDlgCtrlID(hWnd))
             {
