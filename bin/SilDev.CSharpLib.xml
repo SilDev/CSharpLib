@@ -3750,10 +3750,13 @@
             <summary>
                 Returns the display names of all installed Microsoft Visual C++ redistributable packages.
             </summary>
-            <param name="reload">
+            <param name="refresh">
+                true to refresh all names; otherwise, false to get the cached names from previous call.
+                <para>
+                    Please note that this parameter is always true if this function has never been called
+                    before.
+                </para>
             </param>
-            <returns>
-            </returns>
         </member>
         <member name="M:SilDev.EnvironmentEx.Redist.IsInstalled(SilDev.EnvironmentEx.Redist.Flags[])">
             <summary>
@@ -10356,6 +10359,17 @@
                 The window is an overlapped window. Same as the <see cref="F:SilDev.WinApi.WindowStyleFunc.WS_TILEDWINDOW"/> style.
             </summary>
         </member>
+        <member name="F:SilDev.WinApi.WindowStyleFunc.WS_POPUP">
+            <summary>
+                The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowStyleFunc.WS_POPUPWINDOW">
+            <summary>
+                The window is a pop-up window. The <see cref="F:SilDev.WinApi.WindowStyleFunc.WS_CAPTION"/> and <see cref="F:SilDev.WinApi.WindowStyleFunc.WS_POPUPWINDOW"/> styles
+                must be combined to make the window menu visible.
+            </summary>
+        </member>
         <member name="F:SilDev.WinApi.WindowStyleFunc.WS_SIZEBOX">
             <summary>
                 The window has a sizing border. Same as the <see cref="F:SilDev.WinApi.WindowStyleFunc.WS_THICKFRAME"/> style.
@@ -10706,6 +10720,31 @@
             </param>
             <param name="y">
                 The new position of the top of the window.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.CenterWindow(System.IntPtr,System.IntPtr,System.Boolean)">
+            <summary>
+                Centers the position of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window to change.
+            </param>
+            <param name="hPar">
+                A handle to the parent window.
+            </param>
+            <param name="alwaysVisible">
+                true to force the window to remain in screen area; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.CenterWindow(System.IntPtr,System.Boolean)">
+            <summary>
+                Centers the position of the specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to the window to change.
+            </param>
+            <param name="alwaysVisible">
+                true to force the window to remain in screen area; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.WinApi.RemoveWindowBorders(System.IntPtr)">
