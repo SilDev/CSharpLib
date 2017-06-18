@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-06-06 20:13
+// Version:  2017-06-18 02:19
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1606,7 +1606,6 @@ namespace SilDev
             /// </summary>
             WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
 
-#if x64
             /// <summary>
             ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
             /// </summary>
@@ -1617,7 +1616,6 @@ namespace SilDev
             ///     must be combined to make the window menu visible.
             /// </summary>
             WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU,
-#endif
 
             /// <summary>
             ///     The window has a sizing border. Same as the <see cref="WS_THICKFRAME"/> style.
@@ -2076,6 +2074,83 @@ namespace SilDev
         /// </param>
         public static void MoveWindow(IntPtr hWnd, int x, int y) =>
             MoveWindow(hWnd, new Point(x, y));
+
+        /// <summary>
+        ///     Centers the position of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window to change.
+        /// </param>
+        /// <param name="hPar">
+        ///     A handle to the parent window.
+        /// </param>
+        /// <param name="alwaysVisible">
+        ///     true to force the window to remain in screen area; otherwise, false.
+        /// </param>
+        public static void CenterWindow(IntPtr hWnd, IntPtr hPar, bool alwaysVisible = false)
+        {
+            var rect = new Rectangle();
+            if (!UnsafeNativeMethods.GetWindowRect(hWnd, ref rect) || rect.Width < 1 || rect.Height < 1)
+                return;
+            var width = rect.Width - rect.X;
+            var height = rect.Height - rect.Y;
+            if (hPar == default(IntPtr))
+            {
+                var screen = Screen.PrimaryScreen;
+                foreach (var scr in Screen.AllScreens)
+                {
+                    if (!scr.Bounds.Contains(Cursor.Position))
+                        continue;
+                    screen = scr;
+                    break;
+                }
+                rect.X = screen.Bounds.X + screen.Bounds.Width / 2;
+                rect.Y = screen.Bounds.Y + screen.Bounds.Height / 2;
+            }
+            else
+            {
+                rect = new Rectangle();
+                if (!UnsafeNativeMethods.GetWindowRect(hPar, ref rect) || rect.Width < 1 || rect.Height < 1)
+                    return;
+                rect.X = rect.X + (rect.Width - rect.X) / 2;
+                rect.Y = rect.Y + (rect.Height - rect.Y) / 2;
+            }
+            rect.X = rect.X - width / 2;
+            rect.Y = rect.Y - height / 2;
+            if (alwaysVisible)
+            {
+                var range = new Rectangle
+                {
+                    X = SystemInformation.VirtualScreen.X,
+                    Y = SystemInformation.VirtualScreen.Y,
+                    Width = SystemInformation.VirtualScreen.Width - width,
+                    Height = SystemInformation.VirtualScreen.Height - height
+                };
+                if (rect.X < range.X)
+                    rect.X = range.X;
+                if (rect.X > range.Width)
+                    rect.X = range.Width;
+                if (rect.Y < range.Y)
+                    rect.Y = range.Y;
+                if (rect.Y > range.Height)
+                    rect.Y = range.Height;
+            }
+            rect.Width = width;
+            rect.Height = height;
+            UnsafeNativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
+        }
+
+        /// <summary>
+        ///     Centers the position of the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to the window to change.
+        /// </param>
+        /// <param name="alwaysVisible">
+        ///     true to force the window to remain in screen area; otherwise, false.
+        /// </param>
+        public static void CenterWindow(IntPtr hWnd, bool alwaysVisible = true) =>
+            CenterWindow(hWnd, default(IntPtr), alwaysVisible);
 
         /// <summary>
         ///     Removes the borders and title bar of the specified window.
