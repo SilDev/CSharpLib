@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2017-05-16 10:52
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -142,37 +142,6 @@ namespace SilDev
                 var guid = Guid.Empty;
                 volume.SetMute(mute, ref guid);
             }
-
-            /*
-            [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
-            private static IEnumerable<string> EnumerateApplications()
-            {
-                var deviceEnumerator = (IMMDeviceEnumerator)new MMDeviceEnumerator();
-                IMMDevice speakers;
-                deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
-                var iidIAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
-                object o;
-                speakers.Activate(ref iidIAudioSessionManager2, 0, IntPtr.Zero, out o);
-                var mgr = (IAudioSessionManager2)o;
-                IAudioSessionEnumerator sessionEnumerator;
-                mgr.GetSessionEnumerator(out sessionEnumerator);
-                int count;
-                sessionEnumerator.GetCount(out count);
-                for (var i = 0; i < count; i++)
-                {
-                    IAudioSessionControl ctl;
-                    sessionEnumerator.GetSession(i, out ctl);
-                    string dn;
-                    ctl.GetDisplayName(out dn);
-                    yield return dn;
-                    Marshal.ReleaseComObject(ctl);
-                }
-                Marshal.ReleaseComObject(sessionEnumerator);
-                Marshal.ReleaseComObject(mgr);
-                Marshal.ReleaseComObject(speakers);
-                Marshal.ReleaseComObject(deviceEnumerator);
-            }
-            */
 
             [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
             private static ISimpleAudioVolume GetVolumeObject(string name)
@@ -318,7 +287,7 @@ namespace SilDev
             ///     value specifies a higher (more accurate) resolution.
             /// </param>
             public static uint TimeBeginPeriod(uint uPeriod) =>
-                WinApi.SafeNativeMethods.timeBeginPeriod(uPeriod);
+                WinApi.NativeMethods.timeBeginPeriod(uPeriod);
 
             /// <summary>
             ///     Clears a previously set minimum timer resolution.
@@ -328,7 +297,7 @@ namespace SilDev
             ///     <see cref="TimeBeginPeriod(uint)"/> function.
             /// </param>
             public static uint TimeEndPeriod(uint uPeriod) =>
-                WinApi.SafeNativeMethods.timeEndPeriod(uPeriod);
+                WinApi.NativeMethods.timeEndPeriod(uPeriod);
 
             /// <summary>
             ///     Retrieves the sound volume of the current application.
@@ -336,7 +305,7 @@ namespace SilDev
             public static int GetSoundVolume()
             {
                 uint currVol;
-                WinApi.SafeNativeMethods.waveOutGetVolume(IntPtr.Zero, out currVol);
+                WinApi.NativeMethods.waveOutGetVolume(IntPtr.Zero, out currVol);
                 var calcVol = (ushort)(currVol & 0xffff);
                 return calcVol / (ushort.MaxValue / 0xa) * 0xa;
             }
@@ -351,13 +320,13 @@ namespace SilDev
             {
                 var newVolume = ushort.MaxValue / 0xa * (value.IsBetween(0x0, 0x64) ? value / 0xa : 0x64);
                 var newVolumeAllChannels = ((uint)newVolume & 0xffff) | ((uint)newVolume << 16);
-                WinApi.SafeNativeMethods.waveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
+                WinApi.NativeMethods.waveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
             }
 
             private static string SndStatus()
             {
                 var sb = new StringBuilder(128);
-                WinApi.SafeNativeMethods.mciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
+                WinApi.NativeMethods.mciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
                 return sb.ToString();
             }
 
@@ -366,19 +335,19 @@ namespace SilDev
                 if (!string.IsNullOrEmpty(SndStatus()))
                     SndClose();
                 var arg = $"open \"{path}\" alias {Alias}";
-                WinApi.SafeNativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
+                WinApi.NativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             private static void SndClose()
             {
                 var arg = $"close {Alias}";
-                WinApi.SafeNativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
+                WinApi.NativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             private static void SndPlay(bool loop = false)
             {
                 var arg = $"play {Alias}{(loop ? " repeat" : string.Empty)}";
-                WinApi.SafeNativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
+                WinApi.NativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             /// <summary>

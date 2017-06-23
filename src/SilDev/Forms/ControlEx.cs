@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2017-05-20 23:31
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -61,8 +61,8 @@ namespace SilDev.Forms
                 var cc = c.Cursor;
                 if (cursor)
                     c.Cursor = Cursors.SizeAll;
-                WinApi.UnsafeNativeMethods.ReleaseCapture();
-                WinApi.UnsafeNativeMethods.SendMessage(c.GetAncestor().Handle, 0xa1, new IntPtr(0x02), IntPtr.Zero);
+                WinApi.NativeMethods.ReleaseCapture();
+                WinApi.NativeMethods.SendMessage(c.GetAncestor().Handle, 0xa1, new IntPtr(0x2), IntPtr.Zero);
                 if (c.Cursor != cc)
                     c.Cursor = cc;
             };
@@ -101,7 +101,7 @@ namespace SilDev.Forms
         ///     The control that receives the size grip <see cref="Image"/>.
         /// </param>
         /// <param name="color">
-        ///     The color for the size grip <see cref="Image"/>, <see cref="Color.White"/> is used by default.
+        ///     The color for the size grip <see cref="Image"/>; <see cref="Color.White"/> is used by default.
         /// </param>
         /// <param name="mouseDownEvent">
         ///     Occurs when the mouse pointer is over the control and a mouse button is pressed.
@@ -137,20 +137,20 @@ namespace SilDev.Forms
                         try
                         {
                             var point = new Point(c.Width - 1, c.Height - 1);
-                            WinApi.UnsafeNativeMethods.ClientToScreen(c.Handle, ref point);
-                            WinApi.UnsafeNativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
-                            var inputMouseDown = new WinApi.INPUT();
-                            inputMouseDown.Data.Mouse.Flags = 0x0002;
-                            inputMouseDown.Type = 0;
-                            var inputMouseUp = new WinApi.INPUT();
-                            inputMouseUp.Data.Mouse.Flags = 0x0004;
-                            inputMouseUp.Type = 0;
-                            WinApi.INPUT[] inputs =
+                            WinApi.NativeMethods.ClientToScreen(c.Handle, ref point);
+                            WinApi.NativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
+                            var mouseDown = new WinApi.DeviceInput();
+                            mouseDown.Data.Mouse.Flags = 0x2;
+                            mouseDown.Type = 0;
+                            var mouseUp = new WinApi.DeviceInput();
+                            mouseUp.Data.Mouse.Flags = 0x4;
+                            mouseUp.Type = 0;
+                            WinApi.DeviceInput[] inputs =
                             {
-                                inputMouseUp,
-                                inputMouseDown
+                                mouseUp,
+                                mouseDown
                             };
-                            WinApi.UnsafeNativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.INPUT)));
+                            WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
                         }
                         catch (Exception ex)
                         {

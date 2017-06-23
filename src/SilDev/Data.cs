@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-06-07 22:12
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -204,7 +204,7 @@ namespace SilDev
         private static void GetPrincipalPointers(out IntPtr offset, out IntPtr buffer)
         {
             var curHandle = Process.GetCurrentProcess().Handle;
-            var pebBaseAddress = WinApi.GetProcessBasicInformation(curHandle).PebBaseAddress;
+            var pebBaseAddress = WinApi.NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
             var processParameters = Marshal.ReadIntPtr(pebBaseAddress, 4 * IntPtr.Size);
             var unicodeSize = IntPtr.Size * 2;
             offset = processParameters.Increment((IntPtr)(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));
@@ -277,18 +277,22 @@ namespace SilDev
 
         private static bool PinUnpinTaskbar(string path, bool pin)
         {
+            var fPath = PathEx.Combine(path);
             try
             {
-                if (!File.Exists(PathEx.Combine(path)))
+                if (!File.Exists(fPath))
                     throw new PathNotFoundException(path);
                 if (Environment.OSVersion.Version.Major >= 10)
                     ChangePrincipalName("explorer.exe");
-                var sb = new StringBuilder(255);
-                var hDll = WinApi.UnsafeNativeMethods.LoadLibrary("shell32.dll");
-                WinApi.UnsafeNativeMethods.LoadString(hDll, (uint)(pin ? 0x150a : 0x150b), sb, 0xff);
-                dynamic shell = Activator.CreateInstance(Type.GetTypeFromProgID("Shell.Application"));
-                dynamic dir = shell.NameSpace(Path.GetDirectoryName(path));
-                dynamic link = dir.ParseName(Path.GetFileName(path));
+                var sb = new StringBuilder(byte.MaxValue);
+                var lib = WinApi.NativeMethods.LoadLibrary(WinApi.DllNames.Shell32);
+                WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
+                var type = Type.GetTypeFromProgID("Shell.Application");
+                dynamic shell = Activator.CreateInstance(type);
+                var fDir = Path.GetDirectoryName(path);
+                dynamic dir = shell.NameSpace(fDir);
+                var fName = Path.GetFileName(path);
+                dynamic link = dir.ParseName(fName);
                 var verb = sb.ToString();
                 dynamic verbs = link.Verbs();
                 for (var i = 0; i < verbs.Count(); i++)
@@ -308,7 +312,7 @@ namespace SilDev
             }
             finally
             {
-                if (File.Exists(path) && Environment.OSVersion.Version.Major >= 10)
+                if (File.Exists(fPath) && Environment.OSVersion.Version.Major >= 10)
                     RestorePrincipalName();
             }
         }
@@ -487,7 +491,8 @@ namespace SilDev
             /*
              * The idea was to replace the code below with this code that uses the
              * p/invoke method to create symbolic links. But this doesn't work
-             * without administrator privileges...
+             * without administrator privileges while a CMD function called
+             * MKLINK can do that simply as normal user...
 
             var dest = PathEx.Combine(targetPath);
             try
@@ -603,7 +608,7 @@ namespace SilDev
             {
                 if (!string.IsNullOrEmpty(cmd))
                     cmd += " & ";
-                cmd += $"{(destIsDir ? "RD /S /Q" : "DEL / F / Q")} \"{link}\"";
+                cmd += $"{(destIsDir ? "RD /S /Q" : "DEL /F /Q")} \"{link}\"";
             }
 
             if (PathEx.DirOrFileExists(dest))
@@ -619,8 +624,8 @@ namespace SilDev
             int? exitCode;
             using (var p = ProcessEx.Send(cmd, elevated, false))
             {
-                if (!p?.HasExited == true)
-                    p?.WaitForExit();
+                if (p?.HasExited == false)
+                    p.WaitForExit();
                 exitCode = p?.ExitCode;
             }
             return exitCode == 0 && DirOrFileIsLink(link);
@@ -676,8 +681,8 @@ namespace SilDev
             int? exitCode;
             using (var p = ProcessEx.Send(cmd, elevated, false))
             {
-                if (!p?.HasExited == true)
-                    p?.WaitForExit();
+                if (p?.HasExited == false)
+                    p.WaitForExit();
                 exitCode = p?.ExitCode;
             }
             return exitCode == 0 && isLink;
@@ -846,7 +851,7 @@ namespace SilDev
             try
             {
                 uint handle;
-                var res = WinApi.SafeNativeMethods.RmStartSession(out handle, 0, Guid.NewGuid().ToString());
+                var res = WinApi.NativeMethods.RmStartSession(out handle, 0, Guid.NewGuid().ToString());
                 if (res != 0)
                     throw new Exception("Could not begin restart session. Unable to determine file locker.");
                 try
@@ -859,15 +864,15 @@ namespace SilDev
                     var resources = paths.Select(s => PathEx.Combine(s)).Where(File.Exists).ToArray();
                     if (resources.Length == 0)
                         throw new PathNotFoundException(paths.Join("'; '"));
-                    res = WinApi.SafeNativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
+                    res = WinApi.NativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
                     if (res != 0)
                         throw new Exception("Could not register resource.");
-                    res = WinApi.SafeNativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
+                    res = WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
                     if (res == 0xea)
                     {
-                        var processInfo = new WinApi.RM_PROCESS_INFO[pnProcInfoNeeded];
+                        var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];
                         pnProcInfo = pnProcInfoNeeded;
-                        res = WinApi.SafeNativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons);
+                        res = WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons);
                         if (res == 0)
                         {
                             var ids = processInfo.Select(e => e.Process.dwProcessId).Distinct().ToList();
@@ -893,7 +898,7 @@ namespace SilDev
                 }
                 finally
                 {
-                    WinApi.SafeNativeMethods.RmEndSession(handle);
+                    WinApi.NativeMethods.RmEndSession(handle);
                 }
             }
             catch (Exception ex)
@@ -978,7 +983,10 @@ namespace SilDev
         /// <param name="path">
         ///     The path of the file or directory to be deleted.
         /// </param>
-        public static bool ForceDelete(string path, bool elevated = false)
+        /// <param name="timelimit">
+        ///     The time limit in milliseconds.
+        /// </param>
+        public static bool ForceDelete(string path, bool elevated = false, int timelimit = 60000)
         {
             var target = PathEx.Combine(path);
             try
@@ -1027,8 +1035,8 @@ namespace SilDev
                     }
                     else
                         using (var p = ProcessEx.Send(command, elevated, false))
-                            if (!p?.HasExited == true)
-                                p?.WaitForExit();
+                            if (p?.HasExited == false)
+                                p.WaitForExit(timelimit);
                     if (Directory.Exists(tmpDir))
                         Directory.Delete(tmpDir, true);
                     if (Directory.Exists(target))
@@ -1053,8 +1061,8 @@ namespace SilDev
                         }
                         else
                             using (var p = ProcessEx.Send(command, elevated, false))
-                                if (!p?.HasExited == true)
-                                    p?.WaitForExit();
+                                if (p?.HasExited == false)
+                                    p.WaitForExit(timelimit);
                     }
             }
             catch (Exception ex)

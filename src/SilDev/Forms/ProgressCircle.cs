@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2017-04-10 12:26
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -26,18 +26,35 @@ namespace SilDev.Forms
     /// </summary>
     public class ProgressCircle : Control
     {
-        private readonly IContainer components = null;
         private readonly Timer _timer = new Timer();
+        private readonly IContainer components = null;
+        private double[] _angles;
+        private PointF _centerPoint;
+        private Color[] _colors;
+        private Color _foreColor;
+        private int _innerRadius = 6;
         private bool _isActive;
+        private int _outerRadius = 7;
         private int _progressValue;
         private int _spokes = 9;
         private int _thickness = 4;
-        private int _innerRadius = 6;
-        private int _outerRadius = 7;
-        private PointF _centerPoint;
-        private Color _foreColor;
-        private Color[] _colors;
-        private double[] _angles;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ProgressCircle"/> class.
+        /// </summary>
+        public ProgressCircle()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
+
+            GenerateColorsPallet();
+            GetSpokesAngles();
+            GetControlCenterPoint();
+
+            _timer.Tick += Timer_Tick;
+            ActiveTimer();
+
+            Resize += ProgressCircle_Resize;
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether this <see cref="ProgressCircle"/>
@@ -143,6 +160,19 @@ namespace SilDev.Forms
         }
 
         /// <summary>
+        ///     Gets or sets the foreground color of the control.
+        /// </summary>
+        public override Color ForeColor
+        {
+            get { return _foreColor; }
+            set
+            {
+                _foreColor = value;
+                GenerateColorsPallet();
+            }
+        }
+
+        /// <summary>
         ///     Sets the circle appearance.
         /// </summary>
         /// <param name="spokes">
@@ -164,36 +194,6 @@ namespace SilDev.Forms
             InnerRadius = innerRadius;
             OuterRadius = outerRadius;
             Invalidate();
-        }
-
-        /// <summary>
-        ///     Gets or sets the foreground color of the control.
-        /// </summary>
-        public override Color ForeColor
-        {
-            get { return _foreColor; }
-            set
-            {
-                _foreColor = value;
-                GenerateColorsPallet();
-            }
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ProgressCircle"/> class.
-        /// </summary>
-        public ProgressCircle()
-        {
-            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
-
-            GenerateColorsPallet();
-            GetSpokesAngles();
-            GetControlCenterPoint();
-
-            _timer.Tick += Timer_Tick;
-            ActiveTimer();
-
-            Resize += ProgressCircle_Resize;
         }
 
         private void ProgressCircle_Resize(object sender, EventArgs e) =>

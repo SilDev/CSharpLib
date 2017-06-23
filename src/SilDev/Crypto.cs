@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2017-05-21 10:34
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -403,6 +403,8 @@ namespace SilDev
         /// </summary>
         public class Base85 : Base64
         {
+            private static readonly byte[] EncodeBlock = new byte[5], DecodeBlock = new byte[4];
+
             private static readonly uint[] P85 =
             {
                 85 * 85 * 85 * 85,
@@ -411,8 +413,6 @@ namespace SilDev
                 85,
                 1
             };
-
-            private static readonly byte[] EncodeBlock = new byte[5], DecodeBlock = new byte[4];
 
             /// <summary>
             ///     The prefix mark.
@@ -753,7 +753,7 @@ namespace SilDev
                 if (_encodeTable == null)
                     _encodeTable = EncodeTable;
                 _decodeTable = new Dictionary<byte, int>();
-                for (var i = 0; i < 255; i++)
+                for (var i = 0; i < byte.MaxValue; i++)
                     _decodeTable[(byte)i] = -1;
                 for (var i = 0; i < _encodeTable.Length; i++)
                     _decodeTable[(byte)_encodeTable[i]] = i;
@@ -870,7 +870,7 @@ namespace SilDev
                             ia[3] += (ia[1] & 8191) > 88 ? 13 : 14;
                             do
                             {
-                                ms.WriteByte((byte)(ia[2] & 255));
+                                ms.WriteByte((byte)(ia[2] & byte.MaxValue));
                                 ia[2] >>= 8;
                                 ia[3] -= 8;
                             }
@@ -878,7 +878,7 @@ namespace SilDev
                             ia[1] = -1;
                         }
                         if (ia[1] != -1)
-                            ms.WriteByte((byte)((ia[2] | (ia[1] << ia[3])) & 255));
+                            ms.WriteByte((byte)((ia[2] | (ia[1] << ia[3])) & byte.MaxValue));
                         LastDecodedResult = ms.ToArray();
                     }
                 }

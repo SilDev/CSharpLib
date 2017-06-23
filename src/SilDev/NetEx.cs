@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-05-12 16:01
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -28,25 +28,6 @@ namespace SilDev
     /// </summary>
     public static class NetEx
     {
-        private class WebClientEx : WebClient
-        {
-            private int Timeout { get; }
-            internal WebClientEx() : this(60000) { }
-
-            internal WebClientEx(int timeout)
-            {
-                Timeout = timeout;
-            }
-
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                var request = base.GetWebRequest(address);
-                if (request != null)
-                    request.Timeout = Timeout;
-                return request;
-            }
-        }
-
         /// <summary>
         ///     Gets the last result defined in the previous call to the <see cref="Ping(Uri)"/> function.
         /// </summary>
@@ -1005,6 +986,26 @@ namespace SilDev
             {
                 if (IsBusy)
                     _webClient.CancelAsync();
+            }
+        }
+
+        private class WebClientEx : WebClient
+        {
+            internal WebClientEx() : this(60000) { }
+
+            internal WebClientEx(int timeout)
+            {
+                Timeout = timeout;
+            }
+
+            private int Timeout { get; }
+
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                var request = base.GetWebRequest(address);
+                if (request != null)
+                    request.Timeout = Timeout;
+                return request;
             }
         }
     }

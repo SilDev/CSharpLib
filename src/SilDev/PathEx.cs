@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-06-06 20:05
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -29,20 +29,6 @@ namespace SilDev
     /// </summary>
     public static class PathEx
     {
-        private static readonly char[] InvalidPathChars =
-        {
-            '\u0000', '\u0001', '\u0002', '\u0003',
-            '\u0004', '\u0005', '\u0006', '\u0007',
-            '\u0008', '\u0009', '\u000a', '\u000b',
-            '\u000c', '\u000d', '\u000e', '\u000f',
-            '\u0010', '\u0011', '\u0012', '\u0013',
-            '\u0014', '\u0015', '\u0016', '\u0017',
-            '\u0018', '\u0019', '\u001a', '\u001b',
-            '\u001c', '\u001d', '\u001e', '\u001f',
-            '\u0022', '\u002a', '\u003c', '\u003e',
-            '\u003f', '\u007c'
-        };
-
         /// <summary>
         ///     Provides enumerated values of PE (Portable Executable) headers.
         /// </summary>
@@ -70,6 +56,32 @@ namespace SilDev
             THUMB = 0x1c2,
             WCEMIPSV2 = 0x169
         }
+
+        private static readonly char[] InvalidPathChars =
+        {
+            '\u0000', '\u0001', '\u0002', '\u0003',
+            '\u0004', '\u0005', '\u0006', '\u0007',
+            '\u0008', '\u0009', '\u000a', '\u000b',
+            '\u000c', '\u000d', '\u000e', '\u000f',
+            '\u0010', '\u0011', '\u0012', '\u0013',
+            '\u0014', '\u0015', '\u0016', '\u0017',
+            '\u0018', '\u0019', '\u001a', '\u001b',
+            '\u001c', '\u001d', '\u001e', '\u001f',
+            '\u0022', '\u002a', '\u003c', '\u003e',
+            '\u003f', '\u007c'
+        };
+
+        /// <summary>
+        ///     Gets the full process executable path of the assembly based on
+        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
+        /// </summary>
+        public static string LocalPath => Assembly.GetEntryAssembly().CodeBase.ToUri()?.LocalPath;
+
+        /// <summary>
+        ///     Gets the process executable located directory path of the assembly based on
+        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
+        /// </summary>
+        public static string LocalDir => Path.GetDirectoryName(LocalPath)?.TrimEnd(Path.DirectorySeparatorChar);
 
         /// <summary>
         ///     Determines the PE (Portable Executable) header of the specified file.
@@ -109,18 +121,6 @@ namespace SilDev
             var pe = GetHeader(path);
             return pe == Headers.AMD64 || pe == Headers.IA64;
         }
-
-        /// <summary>
-        ///     Gets the full process executable path of the assembly based on
-        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
-        /// </summary>
-        public static string LocalPath => Assembly.GetEntryAssembly().CodeBase.ToUri()?.LocalPath;
-
-        /// <summary>
-        ///     Gets the process executable located directory path of the assembly based on
-        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
-        /// </summary>
-        public static string LocalDir => Path.GetDirectoryName(LocalPath)?.TrimEnd(Path.DirectorySeparatorChar);
 
         /// <summary>
         ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
@@ -165,6 +165,10 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(path));
                 if (path.Length < 3)
                     throw new ArgumentException("The path length is lower than 3 characters. - PATH: '" + path + "'");
+                if (!path.Contains(Path.DirectorySeparatorChar))
+                    throw new ArgumentException("The path does not contain any separator. - PATH: '" + path + "'");
+                if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
+                    throw new ArgumentException("The path cannot contain several consecutive separators. - PATH: '" + path + "'");
                 if (Path.HasExtension(path))
                 {
                     if (path.Length > 260)
@@ -174,10 +178,8 @@ namespace SilDev
                     if (fileDir.Length > 248)
                         throw new PathTooLongException("The directory name is longer than 248 characters. - PATH: '" + path + "'");
                 }
-                if (!Path.HasExtension(path) && path.Length > 248)
+                else if (path.Length > 248)
                     throw new PathTooLongException("The specified path is longer than 248 characters. - PATH: '" + path + "'");
-                if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
-                    throw new ArgumentException("The path cannot contain several consecutive separators. - PATH: '" + path + "'");
                 var drive = path.Substring(0, 3);
                 if (!Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
                     throw new DriveNotFoundException("The path does not contain any drive. - PATH: '" + path + "'");

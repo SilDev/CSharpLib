@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-05-30 21:10
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -32,6 +32,48 @@ namespace SilDev
     /// </summary>
     public static class Reorganize
     {
+        /// <summary>
+        ///     Provides units of digital information.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum SizeUnits
+        {
+            /// <summary>
+            ///     Stands for byte.
+            /// </summary>
+            Byte = 0,
+
+            /// <summary>
+            ///     Stands for kilobyte or kibibyte.
+            /// </summary>
+            KB = 1,
+
+            /// <summary>
+            ///     Stands for megabyte or mebibyte.
+            /// </summary>
+            MB = 2,
+
+            /// <summary>
+            ///     Stands for gigabyte or gibibyte.
+            /// </summary>
+            GB = 3,
+
+            /// <summary>
+            ///     Stands for terabyte or tebibyte.
+            /// </summary>
+            TB = 4,
+
+            /// <summary>
+            ///     Stands for petabyte or pebibyte.
+            /// </summary>
+            PB = 5,
+
+            /// <summary>
+            ///     Stands for exabyte or exbibyte.
+            /// </summary>
+            EB = 6
+        }
+
         /// <summary>
         ///     Serializes this object graph into a sequence of bytes.
         /// </summary>
@@ -133,48 +175,6 @@ namespace SilDev
                     enumerator?.Dispose();
                 }
             }
-        }
-
-        /// <summary>
-        ///     Provides units of digital information.
-        /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum SizeUnits
-        {
-            /// <summary>
-            ///     Stands for byte.
-            /// </summary>
-            Byte = 0,
-
-            /// <summary>
-            ///     Stands for kilobyte or kibibyte.
-            /// </summary>
-            KB = 1,
-
-            /// <summary>
-            ///     Stands for megabyte or mebibyte.
-            /// </summary>
-            MB = 2,
-
-            /// <summary>
-            ///     Stands for gigabyte or gibibyte.
-            /// </summary>
-            GB = 3,
-
-            /// <summary>
-            ///     Stands for terabyte or tebibyte.
-            /// </summary>
-            TB = 4,
-
-            /// <summary>
-            ///     Stands for petabyte or pebibyte.
-            /// </summary>
-            PB = 5,
-
-            /// <summary>
-            ///     Stands for exabyte or exbibyte.
-            /// </summary>
-            EB = 6
         }
 
         /// <summary>

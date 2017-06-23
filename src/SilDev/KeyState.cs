@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: KeyState.cs
-// Version:  2017-05-12 15:48
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -35,52 +35,52 @@ namespace SilDev
             /// <summary>
             ///     Left mouse button.
             /// </summary>
-            VK_LBUTTON = 0x01,
+            VK_LBUTTON = 0x1,
 
             /// <summary>
             ///     Right mouse button.
             /// </summary>
-            VK_RBUTTON = 0x02,
+            VK_RBUTTON = 0x2,
 
             /// <summary>
             ///     Control-break processing.
             /// </summary>
-            VK_CANCEL = 0x03,
+            VK_CANCEL = 0x3,
 
             /// <summary>
             ///     Middle mouse button (three-button mouse).
             /// </summary>
-            VK_MBUTTON = 0x04,
+            VK_MBUTTON = 0x4,
 
             /// <summary>
             ///     X1 mouse button.
             /// </summary>
-            VK_XBUTTON1 = 0x05,
+            VK_XBUTTON1 = 0x5,
 
             /// <summary>
             ///     X2 mouse button.
             /// </summary>
-            VK_XBUTTON2 = 0x06,
+            VK_XBUTTON2 = 0x6,
 
             /// <summary>
             ///     BACKSPACE key.
             /// </summary>
-            VK_BACK = 0x08,
+            VK_BACK = 0x8,
 
             /// <summary>
             ///     TAB key.
             /// </summary>
-            VK_TAB = 0x09,
+            VK_TAB = 0x9,
 
             /// <summary>
             ///     CLEAR key.
             /// </summary>
-            VK_CLEAR = 0x0c,
+            VK_CLEAR = 0xc,
 
             /// <summary>
             ///     ENTER key.
             /// </summary>
-            VK_RETURN = 0x0d,
+            VK_RETURN = 0xd,
 
             /// <summary>
             ///     SHIFT key.
@@ -950,7 +950,7 @@ namespace SilDev
         ///     The <see cref="VKey"/> value to check.
         /// </param>
         public static bool GetState(VKey key) =>
-            WinApi.SafeNativeMethods.GetAsyncKeyState((ushort)key) < 0;
+            WinApi.NativeMethods.GetAsyncKeyState((ushort)key) < 0;
 
         /// <summary>
         ///     Determines whether a key is up or down at the time the function is called, and whether the
@@ -960,7 +960,7 @@ namespace SilDev
         ///     The <see cref="ushort"/> representation of a Virtual-Key code to check.
         /// </param>
         public static bool GetState(ushort key) =>
-            WinApi.SafeNativeMethods.GetAsyncKeyState(key) < 0;
+            WinApi.NativeMethods.GetAsyncKeyState(key) < 0;
 
         /// <summary>
         ///     Determines whether a key is up or down at the time the function is called, and whether the
@@ -970,7 +970,7 @@ namespace SilDev
         ///     The <see cref="string"/> representation of a Virtual-Key code to check.
         /// </param>
         public static bool GetState(string key) =>
-            WinApi.SafeNativeMethods.GetAsyncKeyState(GetVKeyCode(key)) < 0;
+            WinApi.NativeMethods.GetAsyncKeyState(GetVKeyCode(key)) < 0;
 
         /// <summary>
         ///     Determines which keys were up or down at the time the function is called, and which keys
@@ -980,7 +980,7 @@ namespace SilDev
         {
             var keys = Enum.GetValues(typeof(VKey)).Cast<VKey>();
             foreach (var key in keys)
-                if (WinApi.SafeNativeMethods.GetAsyncKeyState(GetVKeyCode(key)) < 0)
+                if (WinApi.NativeMethods.GetAsyncKeyState(GetVKeyCode(key)) < 0)
                     yield return key;
         }
 
@@ -995,37 +995,32 @@ namespace SilDev
         /// <param name="key">
         ///     The <see cref="VKey"/> value to send.
         /// </param>
-        public static void SendState(HandleRef hWnd, VKey key)
+        public static void SendState(IntPtr hWnd, VKey key)
         {
-            WinApi.UnsafeNativeMethods.PostMessage(hWnd, 0x0100, new IntPtr((int)key), new IntPtr(0));
-            WinApi.UnsafeNativeMethods.PostMessage(hWnd, 0x0101, new IntPtr((int)key), new IntPtr(0));
+            WinApi.NativeHelper.PostMessage(hWnd, 0x100, new IntPtr((int)key), new IntPtr(0));
+            WinApi.NativeHelper.PostMessage(hWnd, 0x101, new IntPtr((int)key), new IntPtr(0));
         }
-
-        /// <summary>
-        ///     Places (posts) a key up and down message in the message queue associated with the thread
-        ///     that created the specified window and returns without waiting for the thread to process
-        ///     the message.
-        /// </summary>
-        /// <param name="hWnd">
-        ///     A handle to the window whose window procedure is to receive the message.
-        /// </param>
-        /// <param name="key">
-        ///     The <see cref="VKey"/> value to send.
-        /// </param>
-        public static void SendState(IntPtr hWnd, VKey key) =>
-            SendState(new HandleRef(null, hWnd), key);
 
         /// <summary>
         ///     Synthesizes a left mouse button click to the active window.
         /// </summary>
         public static void SendMouseClick()
         {
-            var inputMouseDown = new WinApi.INPUT { Type = 0 };
-            inputMouseDown.Data.Mouse.Flags = 0x2;
-            var inputMouseUp = new WinApi.INPUT { Type = 0 };
-            inputMouseUp.Data.Mouse.Flags = 0x4;
-            var inputs = new[] { inputMouseDown, inputMouseUp };
-            WinApi.UnsafeNativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.INPUT)));
+            var mouseDown = new WinApi.DeviceInput();
+            mouseDown.Data.Mouse.Flags = 0x2;
+            mouseDown.Type = 0;
+
+            var mouseUp = new WinApi.DeviceInput();
+            mouseUp.Data.Mouse.Flags = 0x4;
+            mouseUp.Type = 0;
+
+            var inputs = new[]
+            {
+                mouseDown,
+                mouseUp
+            };
+
+            WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
         }
     }
 }

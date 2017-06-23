@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2016-10-21 05:12
+// Version:  2017-06-23 12:07
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -66,12 +66,12 @@ namespace SilDev
         /// </summary>
         public static State GetState()
         {
-            var data = new WinApi.APPBARDATA();
+            var data = new WinApi.AppBarData();
             try
             {
                 data.cbSize = (uint)Marshal.SizeOf(data);
-                data.hWnd = WinApi.UnsafeNativeMethods.FindWindow("System_TrayWnd", null);
-                return (State)WinApi.UnsafeNativeMethods.SHAppBarMessage(WinApi.AppBarMessageFunc.ABM_GETSTATE, ref data);
+                data.hWnd = WinApi.NativeMethods.FindWindow("System_TrayWnd", null);
+                return (State)WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOptions.GetState, ref data);
             }
             finally
             {
@@ -87,13 +87,13 @@ namespace SilDev
         /// </param>
         public static void SetState(State state)
         {
-            var data = new WinApi.APPBARDATA();
+            var data = new WinApi.AppBarData();
             try
             {
                 data.cbSize = (uint)Marshal.SizeOf(data);
-                data.hWnd = WinApi.UnsafeNativeMethods.FindWindow("System_TrayWnd", null);
+                data.hWnd = WinApi.NativeMethods.FindWindow("System_TrayWnd", null);
                 data.lParam = (int)state;
-                WinApi.UnsafeNativeMethods.SHAppBarMessage(WinApi.AppBarMessageFunc.ABM_SETSTATE, ref data);
+                WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOptions.SetState, ref data);
             }
             finally
             {

@@ -87,7 +87,14 @@ namespace SilDev
             else
             {
                 if (Log.DebugMode > 0)
-                    args = "/debug " + Log.DebugMode + " ";
+                    args = string.Concat
+                    (
+                        '/',
+                        Log.DebugKey,
+                        ' ',
+                        Log.DebugMode,
+                        ' '
+                    );
                 args += EnvironmentEx.CommandLine(false);
             }
             ProcessEx.Start(PathEx.LocalPath, PathEx.LocalDir, args, true);

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: LinkLabelEx.cs
-// Version:  2016-10-24 15:58
+// Version:  2017-06-23 12:07
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -67,16 +67,7 @@ namespace SilDev.Forms
         /// <param name="uri">
         ///     The link to associate.
         /// </param>
-        public static void LinkText(this LinkLabel linkLabel, string text, string uri)
-        {
-            try
-            {
-                LinkText(linkLabel, text, new Uri(uri));
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-        }
+        public static void LinkText(this LinkLabel linkLabel, string text, string uri) =>
+            LinkText(linkLabel, text, uri.ToUri());
     }
 }

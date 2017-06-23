@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Tray.cs
-// Version:  2017-04-13 18:08
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -47,12 +47,12 @@ namespace SilDev
                 };
                 foreach (var className in classNames)
                 {
-                    WinApi.FindNestedWindow(ref hWnd, className);
+                    WinApi.NativeHelper.FindNestedWindow(ref hWnd, className);
                     if (hWnd == IntPtr.Zero)
                         throw new ArgumentNullException(nameof(hWnd));
                 }
                 Rectangle rect;
-                WinApi.UnsafeNativeMethods.GetClientRect(hWnd, out rect);
+                WinApi.NativeMethods.GetClientRect(hWnd, out rect);
 
                 /* This function cause a critical issue that
                  * deletes the sort order in some cases...
@@ -136,7 +136,7 @@ namespace SilDev
                         try
                         {
                             foreach (var name in names)
-                                WinApi.FindNestedWindow(ref hWnd, name);
+                                WinApi.NativeHelper.FindNestedWindow(ref hWnd, name);
                         }
                         catch
                         {
@@ -148,13 +148,13 @@ namespace SilDev
                         {
                             var rBtnPtr = Environment.Is64BitOperatingSystem ? pm.Allocate(tBarBtn64) : pm.Allocate(tBarBtn32);
                             pm.Allocate(trayData);
-                            var itemCount = (uint)WinApi.UnsafeNativeMethods.SendMessage(hWnd, 0x418, IntPtr.Zero, IntPtr.Zero);
+                            var itemCount = (uint)WinApi.NativeMethods.SendMessage(hWnd, 0x418, IntPtr.Zero, IntPtr.Zero);
                             uint removedCount = 0;
                             for (var i = 0; i < itemCount; i++)
                                 try
                                 {
                                     var item = i - removedCount;
-                                    if ((uint)WinApi.UnsafeNativeMethods.SendMessage(hWnd, 0x417, new IntPtr(item), rBtnPtr) != 1)
+                                    if ((uint)WinApi.NativeMethods.SendMessage(hWnd, 0x417, new IntPtr(item), rBtnPtr) != 1)
                                         throw new ApplicationException("Can not get the button of item '" + item + "' (kind: '" + kind + "').");
                                     if (Environment.Is64BitOperatingSystem)
                                     {
@@ -176,7 +176,7 @@ namespace SilDev
                                             Log.Write("Tray icon found: '" + name + "' (kind: '" + kind + "').");
                                         if (pass < 2 || !string.IsNullOrWhiteSpace(name))
                                             continue;
-                                        if ((uint)WinApi.UnsafeNativeMethods.SendMessage(hWnd, 0x416, new IntPtr(item), IntPtr.Zero) != 1)
+                                        if ((uint)WinApi.NativeMethods.SendMessage(hWnd, 0x416, new IntPtr(item), IntPtr.Zero) != 1)
                                             throw new ApplicationException("Can not remove the button of '" + name + "' (kind: '" + kind + "').");
                                         Log.Write("Tray icon removed: '" + name + "' (kind: '" + kind + "').");
                                         itemCount--;

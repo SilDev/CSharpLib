@@ -59,18 +59,18 @@ namespace SilDev
         {
             try
             {
-                htmlColor = htmlColor.ToUpper();
-                if (!htmlColor.StartsWith("#") || htmlColor.Length == 0 || htmlColor.Substring(1).Any(x => !"0123456789ABCDEF".Contains(x)))
+                var code = htmlColor?.TrimStart('#').ToUpper();
+                if (string.IsNullOrEmpty(code))
+                    throw new ArgumentNullException(nameof(htmlColor));
+                if (!code.Length.IsBetween(1, 6) || code.Substring(1).Any(x => !"0123456789ABCDEF".Contains(x)))
                     throw new ArgumentOutOfRangeException(nameof(htmlColor));
-                if (htmlColor.Length < 7)
+                if (code.Length < 6)
                 {
-                    var s = htmlColor.Substring(1);
-                    if (htmlColor.Length > 4)
-                        s = htmlColor.Substring(htmlColor.Length - 1);
-                    while (htmlColor.Length < 7)
-                        htmlColor += s;
+                    while (code.Length < 6)
+                        code += code;
+                    code = code.Substring(6);
                 }
-                var c = ColorTranslator.FromHtml(htmlColor);
+                var c = ColorTranslator.FromHtml($"#{code}");
                 if (alpha != null)
                     c = Color.FromArgb((byte)alpha, c.R, c.G, c.B);
                 return c;

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2017-05-04 16:37
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,13 +23,8 @@ namespace SilDev
 
     public class MemoryPinner : IDisposable
     {
-        private GCHandle _handle;
         private bool _disposed;
-
-        /// <summary>
-        ///     Returns the pointer to the pinned object.
-        /// </summary>
-        public IntPtr Pointer { get; private set; }
+        private GCHandle _handle;
 
         /// <summary>
         ///     Initilazies a new instance of the <see cref="MemoryPinner"/> class with
@@ -44,10 +39,10 @@ namespace SilDev
             Pointer = _handle.AddrOfPinnedObject();
         }
 
-        ~MemoryPinner()
-        {
-            Dispose(false);
-        }
+        /// <summary>
+        ///     Returns the pointer to the pinned object.
+        /// </summary>
+        public IntPtr Pointer { get; private set; }
 
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
@@ -56,6 +51,11 @@ namespace SilDev
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        ~MemoryPinner()
+        {
+            Dispose(false);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -70,8 +70,8 @@ namespace SilDev
 
     public class ProcessMemory : IDisposable
     {
-        private readonly IntPtr _hProcess;
         private readonly ArrayList _allocations = new ArrayList();
+        private readonly IntPtr _hProcess;
         private bool _disposed;
 
         /// <summary>
@@ -84,8 +84,17 @@ namespace SilDev
         public ProcessMemory(IntPtr hWnd)
         {
             uint ownerProcessId;
-            WinApi.UnsafeNativeMethods.GetWindowThreadProcessId(hWnd, out ownerProcessId);
-            _hProcess = WinApi.UnsafeNativeMethods.OpenProcess((uint)(WinApi.AccessRights.PROCESS_VM_OPERATION | WinApi.AccessRights.PROCESS_VM_READ | WinApi.AccessRights.PROCESS_VM_WRITE | WinApi.AccessRights.PROCESS_QUERY_INFORMATION), false, ownerProcessId);
+            WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out ownerProcessId);
+            _hProcess = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessVmOperation | WinApi.AccessRights.ProcessVmRead | WinApi.AccessRights.ProcessVmWrite | WinApi.AccessRights.ProcessQueryInformation, false, ownerProcessId);
+        }
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         ~ProcessMemory()
@@ -99,7 +108,7 @@ namespace SilDev
         public string GetImageFileName()
         {
             var sb = new StringBuilder(short.MaxValue);
-            return !WinApi.UnsafeNativeMethods.GetProcessImageFileName(_hProcess, sb, sb.Capacity - 1) ? null : sb.ToString();
+            return !WinApi.NativeMethods.GetProcessImageFileName(_hProcess, sb, sb.Capacity - 1) ? null : sb.ToString();
         }
 
         /// <summary>
@@ -111,7 +120,7 @@ namespace SilDev
         public IntPtr Allocate(object value)
         {
             var size = new IntPtr(Marshal.SizeOf(value));
-            var ptr = WinApi.UnsafeNativeMethods.VirtualAllocEx(_hProcess, IntPtr.Zero, size, WinApi.AllocationTypes.MEM_COMMIT, WinApi.VirtualAllocFuncMemProtect.PAGE_READWRITE);
+            var ptr = WinApi.NativeMethods.VirtualAllocEx(_hProcess, IntPtr.Zero, size, WinApi.MemAllocTypes.Commit, WinApi.MemProtectFlags.PageReadWrite);
             if (ptr != IntPtr.Zero)
                 _allocations.Add(ptr);
             return ptr;
@@ -134,7 +143,7 @@ namespace SilDev
                 {
                     var bytesRead = IntPtr.Zero;
                     var size = new IntPtr(Marshal.SizeOf(value));
-                    if (WinApi.UnsafeNativeMethods.ReadProcessMemory(_hProcess, address, pin.Pointer, size, ref bytesRead))
+                    if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, pin.Pointer, size, ref bytesRead))
                         return;
                     throw new MemoryException("Read failed (bytesRead=" + bytesRead + ").");
                 }
@@ -144,7 +153,7 @@ namespace SilDev
                 Log.Write(ex);
                 try
                 {
-                    WinApi.ThrowLastError();
+                    WinApi.NativeHelper.ThrowLastError();
                 }
                 catch (Exception exc)
                 {
@@ -168,7 +177,7 @@ namespace SilDev
             {
                 var sb = new StringBuilder(short.MaxValue);
                 var bytesRead = IntPtr.Zero;
-                if (WinApi.UnsafeNativeMethods.ReadProcessMemory(_hProcess, address, sb, new IntPtr(size), ref bytesRead))
+                if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, sb, new IntPtr(size), ref bytesRead))
                     return sb.ToString();
                 throw new MemoryException("Read failed (bytesRead=" + bytesRead + ").");
             }
@@ -177,7 +186,7 @@ namespace SilDev
                 Log.Write(ex);
                 try
                 {
-                    WinApi.ThrowLastError();
+                    WinApi.NativeHelper.ThrowLastError();
                 }
                 catch (Exception exc)
                 {
@@ -207,7 +216,7 @@ namespace SilDev
                 using (var pin = new MemoryPinner(value))
                 {
                     IntPtr bytesWritten;
-                    if (WinApi.UnsafeNativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out bytesWritten))
+                    if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out bytesWritten))
                         return;
                     throw new MemoryException("Write failed (bytesWritten=" + bytesWritten + ").");
                 }
@@ -217,22 +226,13 @@ namespace SilDev
                 Log.Write(ex);
                 try
                 {
-                    WinApi.ThrowLastError();
+                    WinApi.NativeHelper.ThrowLastError();
                 }
                 catch (Exception exc)
                 {
                     Log.Write(exc);
                 }
             }
-        }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -242,8 +242,8 @@ namespace SilDev
             if (_hProcess != IntPtr.Zero)
             {
                 foreach (IntPtr ptr in _allocations)
-                    WinApi.UnsafeNativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeTypes.MEM_RELEASE);
-                WinApi.UnsafeNativeMethods.CloseHandle(_hProcess);
+                    WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeTypes.Release);
+                WinApi.NativeMethods.CloseHandle(_hProcess);
             }
             _disposed = true;
         }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2017-05-23 23:19
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -58,21 +58,6 @@ namespace SilDev
         /// </param>
         public static bool IsAscii(this char ch) =>
             ch <= sbyte.MaxValue;
-
-        /// <summary>
-        ///     Provides <see cref="string"/> values of line separator characters.
-        /// </summary>
-        public static class NewLineFormats
-        {
-            public const string CarriageReturn = "\u000d";
-            public const string FormFeed = "\u000c";
-            public const string LineFeed = "\u000a";
-            public const string LineSeparator = "\u2028";
-            public const string NextLine = "\u0085";
-            public const string ParagraphSeparator = "\u2029";
-            public const string VerticalTab = "\u000b";
-            public const string WindowsDefault = "\u000d\u000a";
-        }
 
         /// <summary>
         ///     Converts the current <see cref="NewLineFormats"/> of the specified
@@ -140,7 +125,7 @@ namespace SilDev
                 return true;
             try
             {
-                var srcDir =  Path.GetDirectoryName(srcFile);
+                var srcDir = Path.GetDirectoryName(srcFile);
                 var newFile = PathEx.Combine(srcDir, Path.GetRandomFileName());
                 File.Create(newFile).Close();
                 Data.SetAttributes(newFile, FileAttributes.Hidden);
@@ -171,6 +156,21 @@ namespace SilDev
                 Log.Write(ex);
                 return false;
             }
+        }
+
+        /// <summary>
+        ///     Provides <see cref="string"/> values of line separator characters.
+        /// </summary>
+        public static class NewLineFormats
+        {
+            public const string CarriageReturn = "\u000d";
+            public const string FormFeed = "\u000c";
+            public const string LineFeed = "\u000a";
+            public const string LineSeparator = "\u2028";
+            public const string NextLine = "\u0085";
+            public const string ParagraphSeparator = "\u2029";
+            public const string VerticalTab = "\u000b";
+            public const string WindowsDefault = "\u000d\u000a";
         }
     }
 }

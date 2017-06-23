@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-05-22 18:45
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev
     using System.ComponentModel;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -32,15 +33,18 @@ namespace SilDev
     /// </summary>
     public static class Log
     {
-        private static bool _conIsOpen, _firstCall, _firstEntry;
-        private static IntPtr _stdHandle = IntPtr.Zero;
-        private static SafeFileHandle _sfh;
+        internal static string DebugKey = "Debug";
+        private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss,fff zzz";
+        private static bool _conIsOpen, _firstCall, _firstEntry = true;
         private static FileStream _fs;
+        private static SafeFileHandle _sfh;
+        private static IntPtr _stdHandle = IntPtr.Zero;
         private static StreamWriter _sw;
         private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly().GetName();
         private static readonly string AssemblyName = AssemblyEntryName.Name;
         private static readonly Version AssemblyVersion = AssemblyEntryName.Version;
-        private static readonly object Locker = new object();
+        private static readonly string RuntimeSeparator = new string('-', 120);
+        private static readonly object WriteLocker = new object();
 
         /// <summary>
         ///     true to enable the catching of unhandled <see cref="Exception"/>'s; otherwise, false.
@@ -53,22 +57,22 @@ namespace SilDev
         public static CultureInfo CurrentCulture { get; set; } = CultureInfo.InvariantCulture;
 
         /// <summary>
-        ///     Gets the current <see cref="DebugMode"/> option how <see cref="Exception"/>'s are handled. For
-        ///     more informations see <see cref="ActivateLogging(int)"/>.
+        ///     Gets the current <see cref="DebugMode"/> value that determines how <see cref="Exception"/>'s
+        ///     are handled. For more informations see <see cref="ActivateLogging(int)"/>.
         /// </summary>
         public static int DebugMode { get; private set; }
 
         /// <summary>
-        ///     Gets the name for the current log file.
+        ///     Gets the name of the current LOG file.
         /// </summary>
         public static string FileName => $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
 
         /// <summary>
         ///     <para>
-        ///         Gets or sets the location of the current log file.
+        ///         Gets or sets the location of the current LOG file.
         ///     </para>
         ///     <para>
-        ///         If the specified path doesn't exist, it is created.
+        ///         If the specified path doesn't exists, it is created.
         ///     </para>
         ///     <para>
         ///         If the specified path is invalid or this process doesn't have the necessary permissions
@@ -81,7 +85,7 @@ namespace SilDev
         /// <summary>
         ///     Gets the full path of the current log file.
         /// </summary>
-        public static string FilePath { get; private set; } = Path.Combine(FileDir, FileName);
+        public static string FilePath { get; private set; } = PathEx.Combine(FileDir, FileName);
 
         /// <summary>
         ///     <para>
@@ -92,9 +96,9 @@ namespace SilDev
         ///     </para>
         ///     <para>
         ///         0: Logging is disabled. If <see cref="CatchUnhandledExceptions"/> is enabled, unhandled
-        ///         <see cref="Exception"/>'s are discarded. This can be useful for public releases to
-        ///         prevent any kind of <see cref="Exception"/> notifications to the client. Please note
-        ///         that this functions may have dangerous consequences if it is used incorrectly.
+        ///         <see cref="Exception"/>'s are discarded as well. This can be useful for public releases
+        ///         to prevent any kind of <see cref="Exception"/> notifications to the client. Please note
+        ///         that these functions may have dangerous consequences if used incorrectly.
         ///     </para>
         ///     <para>
         ///         1: Logging is enabled and all <see cref="Exception"/>'s are logged.
@@ -102,7 +106,7 @@ namespace SilDev
         ///     <para>
         ///         2: Logging is enabled, all <see cref="Exception"/>'s are logged, and a new
         ///         <see cref="Console"/> window is allocated for the current process to display the current
-        ///         log in real time. Please note that the console is first allocated after the first logging.
+        ///         log in real time.
         ///     </para>
         /// </summary>
         public static void ActivateLogging(int mode = 1)
@@ -115,11 +119,24 @@ namespace SilDev
             {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 Application.ThreadException += (s, e) => Write(e.Exception, true, true);
-                AppDomain.CurrentDomain.UnhandledException += (s, e) => WriteUnhandled(
-                    new ApplicationException("Error in the application. Sender object: '" + s + "'; Exception object: '" + e.ExceptionObject + "';"));
+                AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                    WriteUnhandled
+                    (
+                        new ApplicationException
+                        (
+                            string.Concat
+                            (
+                                "Error in the application. Sender object: '",
+                                s,
+                                "'; Exception object: '",
+                                e.ExceptionObject,
+                                "';"
+                            )
+                        )
+                    );
                 AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
             }
-            if (DebugMode <= 0)
+            if (DebugMode < 1)
                 return;
             Thread.CurrentThread.CurrentCulture = CurrentCulture;
             Thread.CurrentThread.CurrentUICulture = CurrentCulture;
@@ -137,62 +154,94 @@ namespace SilDev
             {
                 FilePath = Path.Combine(FileDir, FileName);
             }
+            if (DebugMode < 2)
+                return;
+            Write(string.Empty);
         }
 
         /// <summary>
-        ///     <para>
-        ///         Checks the command line argument for a valid command, "/debug 2" - for example, or checks the
-        ///         content of the specified configuration file to specify the current <see cref="DebugMode"/>.
-        ///         For more informations see <see cref="ActivateLogging(int)"/>.
-        ///     </para>
+        ///     Allows you to enable logging by command line arguments or a specified configuration file. For
+        ///     more informations see <see cref="ActivateLogging(int)"/>.
         /// </summary>
         /// <param name="configPath">
         ///     The full path of the configuration file.
         /// </param>
-        /// <param name="pattern">
-        ///     The regular expression pattern to match.
-        /// </param>
         /// <param name="key">
-        ///     The key of the configuration file which hold the value, to specify the current
-        ///     <see cref="DebugMode"/>.
+        ///     The key used to specify the <see cref="DebugMode"/>.
         /// </param>
-        public static void AllowLogging(string configPath = null, string pattern = null, string key = nameof(DebugMode))
+        /// <param name="pattern">
+        ///     <para>
+        ///         The regular expression pattern to match.
+        ///     </para>
+        ///     <para>
+        ///         Please note that the default pattern is optimized to search within INI formatted files. The
+        ///         &lt;Key&gt; and &lt;Value&gt; tags are required in all search pattern.
+        ///     </para>
+        /// </param>
+        public static void AllowLogging(string configPath = null, string key = "Debug", string pattern = @"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))+")
         {
+            var args = Environment.GetCommandLineArgs();
+            if (!DebugKey.EqualsEx(key))
+                DebugKey = key;
+            var arg = string.Concat('/', key);
             var mode = 0;
-            var regex = new Regex("/debug [0-2]", RegexOptions.IgnoreCase);
-            var cmdLine = Environment.CommandLine.RemoveChar('\"');
-            if (regex.IsMatch(cmdLine))
+            if (args.ContainsEx(arg))
             {
-                int i;
-                if (int.TryParse(regex.Match(cmdLine).Groups[1].ToString(), out i) && i > mode)
-                    mode = i;
-                if (mode > 0)
-                    goto ACTIVATE;
-            }
-            var path = PathEx.Combine(configPath);
-            if (!string.IsNullOrEmpty(pattern) && !string.IsNullOrEmpty(path) && File.Exists(path))
+                string option;
                 try
                 {
-                    var lines = File.ReadAllLines(path);
-                    foreach (var line in lines)
+                    args = args.SkipWhile(x => !x.EqualsEx(arg)).ToArray();
+                    if (args.Length <= 1)
                     {
-                        var match = Regex.Match(line, pattern, RegexOptions.IgnoreCase).Groups;
-                        if (match.Count < 3)
-                            continue;
-                        if (!match[1].Value.EqualsEx(key))
-                            continue;
-                        int i;
-                        if (!int.TryParse(match[2].Value, out i))
-                            continue;
-                        mode = i;
-                        break;
+                        mode = 1;
+                        goto Finalize;
                     }
+                    option = args.Skip(1).FirstOrDefault();
                 }
                 catch
                 {
-                    // ignored
+                    goto Finalize;
                 }
-            ACTIVATE:
+                int i;
+                if (!int.TryParse(option, out i))
+                    mode = 1;
+                if (i > mode)
+                    mode = i;
+                if (mode > 0)
+                    goto Finalize;
+            }
+            if (string.IsNullOrEmpty(configPath) || string.IsNullOrEmpty(pattern))
+                goto Finalize;
+            var path = PathEx.Combine(configPath);
+            if (!File.Exists(path))
+                goto Finalize;
+            try
+            {
+                var source = File.ReadAllText(path);
+                var matches = Regex.Matches(source, pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
+                foreach (Match match in matches)
+                    for (var i = 0; i < match.Groups["Key"].Captures.Count; i++)
+                    {
+                        var mKey = match.Groups["Key"]?.Captures[i].Value.Trim();
+                        if (string.IsNullOrEmpty(mKey))
+                            continue;
+                        if (string.IsNullOrEmpty(mKey) || !mKey.EqualsEx(key))
+                            continue;
+                        var mVal = match.Groups["Value"]?.Captures[i].Value.Trim();
+                        if (string.IsNullOrEmpty(mVal))
+                            continue;
+                        int num;
+                        if (!int.TryParse(mVal, out num))
+                            goto Finalize;
+                        mode = num;
+                        goto Finalize;
+                    }
+            }
+            catch
+            {
+                // ignored
+            }
+            Finalize:
             ActivateLogging(mode);
         }
 
@@ -207,22 +256,54 @@ namespace SilDev
         /// </param>
         public static void Write(string logMessage, bool exitProcess = false)
         {
-            lock (Locker)
+            lock (WriteLocker)
             {
-                if (!_firstCall || DebugMode < 1 || string.IsNullOrEmpty(logMessage))
+                if (!_firstCall || DebugMode < 1 || !_firstEntry && string.IsNullOrEmpty(logMessage))
                     return;
-                var dat = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff zzz");
                 var log = string.Empty;
-                if (_firstEntry)
-                    log = string.Concat(dat, Environment.NewLine);
+                if (!_firstEntry)
+                    log = string.Concat
+                    (
+                        DateTime.Now.ToString(DateTimeFormat),
+                        Environment.NewLine
+                    );
                 else
                 {
-                    _firstEntry = true;
+                    _firstEntry = false;
                     if (File.Exists(FilePath))
-                        log = string.Concat(Environment.NewLine, new string('-', 120), Environment.NewLine, Environment.NewLine);
-                    log = string.Concat(log, dat, Environment.NewLine, "System: '", Environment.OSVersion, "'; Runtime: '", EnvironmentEx.Version, "'; Assembly: '", AssemblyName, "'; Version: '", AssemblyVersion, "';", Environment.NewLine, Environment.NewLine, dat, Environment.NewLine);
+                        log = string.Concat
+                        (
+                            Environment.NewLine,
+                            RuntimeSeparator,
+                            Environment.NewLine,
+                            Environment.NewLine
+                        );
+                    log = string.Concat
+                    (
+                        log,
+                        DateTime.Now.ToString(DateTimeFormat),
+                        Environment.NewLine,
+                        "System: '",
+                        Environment.OSVersion,
+                        "'; Runtime: '",
+                        EnvironmentEx.Version,
+                        "'; Assembly: '",
+                        AssemblyName,
+                        "'; Version: '",
+                        AssemblyVersion,
+                        "';",
+                        Environment.NewLine,
+                        Environment.NewLine
+                    );
+                    if (!string.IsNullOrEmpty(logMessage))
+                        log += string.Concat
+                        (
+                            DateTime.Now.ToString(DateTimeFormat),
+                            Environment.NewLine
+                        );
                 }
-                log = string.Concat(log, logMessage, Environment.NewLine, Environment.NewLine);
+                if (!string.IsNullOrEmpty(logMessage))
+                    log = string.Concat(log, logMessage, Environment.NewLine, Environment.NewLine);
                 File.AppendAllText(FilePath, log);
                 if (DebugMode < 2)
                 {
@@ -234,15 +315,15 @@ namespace SilDev
                 if (!_conIsOpen)
                 {
                     _conIsOpen = true;
-                    WinApi.SafeNativeMethods.AllocConsole();
-                    var hWnd = WinApi.SafeNativeMethods.GetConsoleWindow();
+                    WinApi.NativeMethods.AllocConsole();
+                    var hWnd = WinApi.NativeMethods.GetConsoleWindow();
                     if (hWnd != IntPtr.Zero)
                     {
-                        var hMenu = WinApi.UnsafeNativeMethods.GetSystemMenu(hWnd, false);
+                        var hMenu = WinApi.NativeMethods.GetSystemMenu(hWnd, false);
                         if (hMenu != IntPtr.Zero)
-                            WinApi.UnsafeNativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
+                            WinApi.NativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
                     }
-                    _stdHandle = WinApi.UnsafeNativeMethods.GetStdHandle(-11);
+                    _stdHandle = WinApi.NativeMethods.GetStdHandle(-11);
                     _sfh = new SafeFileHandle(_stdHandle, true);
                     _fs = new FileStream(_sfh, FileAccess.Write);
                     var title = $"Debug Console ('{AssemblyName}')";
@@ -254,6 +335,8 @@ namespace SilDev
                         Console.SetWindowSize(Math.Min(100, Console.LargestWindowWidth), Math.Min(40, Console.LargestWindowHeight));
                     }
                 }
+                if (log.Contains(RuntimeSeparator))
+                    log = log.TrimStart().Substring(RuntimeSeparator.Length).TrimStart();
                 Console.Write(log);
                 _sw = new StreamWriter(_fs, Encoding.ASCII) { AutoFlush = true };
                 Console.SetOut(_sw);
@@ -286,18 +369,18 @@ namespace SilDev
             }
             if (DebugMode < 2 && (exception is ArgumentNullException || exception is WarningException))
                 return;
-            Write("Handled " + exception, exitProcess);
+            Write($"Handled {exception}", exitProcess);
         }
 
         private static void WriteUnhandled(Exception exception)
         {
             DebugMode = 1;
-            Write("Unhandled " + exception, true);
+            Write($"Unhandled {exception}", true);
         }
 
         private static void Close()
         {
-            if (_sfh != null && !_sfh.IsClosed)
+            if (_sfh?.IsClosed == false)
                 _sfh.Close();
             if (!Directory.Exists(FileDir))
                 return;

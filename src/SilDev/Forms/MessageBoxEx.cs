@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2017-06-18 02:25
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -60,8 +60,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text, caption, buttons, icon, default button, and options.
+        ///     Displays a message box with the specified text, caption, buttons, icon,
+        ///     default button, and options in the center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -87,8 +87,8 @@ namespace SilDev.Forms
         /// </param>
         /// <param name="options">
         ///     One of the <see cref="MessageBoxOptions"/> values that specifies which
-        ///     display and association options will be used for the message box. You may pass
-        ///     in 0 if you wish to use the defaults.
+        ///     display and association options will be used for the message box. You may
+        ///     pass in 0 if you wish to use the defaults.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -108,8 +108,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and  with the
-        ///     specified text, caption, buttons, icon, default, and button.
+        ///     Displays a message box with the specified text, caption, buttons, icon,
+        ///     and default button in the center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -151,8 +151,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text, caption, buttons, and icon.
+        ///     Displays a message box with the specified text, caption, buttons, and icon
+        ///     in the center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -190,8 +190,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text, caption, and buttons.
+        ///     Displays a message box with the specified text, caption, and buttons in
+        ///     the center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -225,8 +225,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text and caption.
+        ///     Displays a message box with the specified text and caption in the center
+        ///     of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -256,36 +256,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and  with the
-        ///     specified text.
-        /// </summary>
-        /// <param name="owner">
-        ///     An implementation of <see cref="IWin32Window"/> that will own the modal
-        ///     dialog box.
-        /// </param>
-        /// <param name="text">
-        ///     The text to display in the message box.
-        /// </param>
-        /// <returns>
-        ///     One of the <see cref="DialogResult"/> values.
-        /// </returns>
-        public static DialogResult Show(IWin32Window owner, string text)
-        {
-            try
-            {
-                Initialize(owner);
-                return MessageBox.Show(owner, text);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return Show(text);
-            }
-        }
-
-        /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text, buttons, icon, default button, and options.
+        ///     Displays a message box with the specified text, buttons, icon, default
+        ///     button, and options in the center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -308,8 +280,8 @@ namespace SilDev.Forms
         /// </param>
         /// <param name="options">
         ///     One of the <see cref="MessageBoxOptions"/> values that specifies which
-        ///     display and association options will be used for the message box. You may pass
-        ///     in 0 if you wish to use the defaults.
+        ///     display and association options will be used for the message box. You may
+        ///     pass in 0 if you wish to use the defaults.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -318,8 +290,8 @@ namespace SilDev.Forms
             Show(owner, text, string.Empty, buttons, icon, defButton, options);
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text, buttons, icon, and default button.
+        ///     Displays a message box with the specified text, buttons, icon, and default
+        ///     button in the center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -347,8 +319,8 @@ namespace SilDev.Forms
             Show(owner, text, string.Empty, buttons, icon, defButton);
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text, buttons, and icon.
+        ///     Displays a message box with the specified text, buttons, and icon in the
+        ///     center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -372,8 +344,8 @@ namespace SilDev.Forms
             Show(owner, text, string.Empty, buttons, icon);
 
         /// <summary>
-        ///     Displays a message box in the center of the specified object and with the
-        ///     specified text, and buttons.
+        ///     Displays a message box with the specified text, icon, and buttons in the
+        ///     center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -391,6 +363,34 @@ namespace SilDev.Forms
         /// </returns>
         public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons) =>
             Show(owner, text, string.Empty, buttons);
+
+        /// <summary>
+        ///     Displays a message box with the specified text in the center of the
+        ///     specified owner object.
+        /// </summary>
+        /// <param name="owner">
+        ///     An implementation of <see cref="IWin32Window"/> that will own the modal
+        ///     dialog box.
+        /// </param>
+        /// <param name="text">
+        ///     The text to display in the message box.
+        /// </param>
+        /// <returns>
+        ///     One of the <see cref="DialogResult"/> values.
+        /// </returns>
+        public static DialogResult Show(IWin32Window owner, string text)
+        {
+            try
+            {
+                Initialize(owner);
+                return MessageBox.Show(owner, text);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return Show(text);
+            }
+        }
 
         /// <summary>
         ///     Displays a message box with the specified text, caption, buttons, icon, default
@@ -541,24 +541,6 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box with the specified text.
-        /// </summary>
-        /// <param name="text">
-        ///     The text to display in the message box.
-        /// </param>
-        /// <returns>
-        ///     One of the <see cref="DialogResult"/> values.
-        /// </returns>
-        public static DialogResult Show(string text)
-        {
-            Initialize();
-            if (!TopMost)
-                return MessageBox.Show(text);
-            using (var f = new Form { TopMost = true })
-                return MessageBox.Show(f, text);
-        }
-
-        /// <summary>
         ///     Displays a message box with the specified text, buttons, icon, default button,
         ///     and options.
         /// </summary>
@@ -649,6 +631,24 @@ namespace SilDev.Forms
         public static DialogResult Show(string text, MessageBoxButtons buttons) =>
             Show(text, string.Empty, buttons);
 
+        /// <summary>
+        ///     Displays a message box with the specified text.
+        /// </summary>
+        /// <param name="text">
+        ///     The text to display in the message box.
+        /// </param>
+        /// <returns>
+        ///     One of the <see cref="DialogResult"/> values.
+        /// </returns>
+        public static DialogResult Show(string text)
+        {
+            Initialize();
+            if (!TopMost)
+                return MessageBox.Show(text);
+            using (var f = new Form { TopMost = true })
+                return MessageBox.Show(f, text);
+        }
+
         private static void Initialize(IWin32Window owner = null)
         {
             try
@@ -660,14 +660,14 @@ namespace SilDev.Forms
                     _owner = owner;
                     if (_owner.Handle != IntPtr.Zero)
                     {
-                        var placement = new WinApi.WINDOWPLACEMENT();
-                        WinApi.UnsafeNativeMethods.GetWindowPlacement(_owner.Handle, ref placement);
+                        var placement = new WinApi.WindowPlacement();
+                        WinApi.NativeMethods.GetWindowPlacement(_owner.Handle, ref placement);
                         if (placement.showCmd == 2)
                             return;
                     }
                 }
                 if (_owner != null || ButtonText.OverrideEnabled)
-                    _hHook = WinApi.UnsafeNativeMethods.SetWindowsHookEx(WinApi.Win32HookFunc.WH_CALLWNDPROCRET, HookProc, IntPtr.Zero, (int)WinApi.UnsafeNativeMethods.GetCurrentThreadId());
+                    _hHook = WinApi.NativeMethods.SetWindowsHookEx(WinApi.Win32HookFlags.WhCallWndProcRet, HookProc, IntPtr.Zero, (int)WinApi.NativeMethods.GetCurrentThreadId());
             }
             catch (Exception ex)
             {
@@ -678,28 +678,27 @@ namespace SilDev.Forms
         private static IntPtr MessageBoxHookProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode < 0)
-                return WinApi.UnsafeNativeMethods.CallNextHookEx(_hHook, nCode, wParam, lParam);
-            var msg = (WinApi.CWPRETSTRUCT)Marshal.PtrToStructure(lParam, typeof(WinApi.CWPRETSTRUCT));
-            var hook = _hHook;
-            if (msg.message != (int)WinApi.Win32HookFunc.HCBT_ACTIVATE)
+                return WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
+            var msg = (WinApi.CallWndProcRet)Marshal.PtrToStructure(lParam, typeof(WinApi.CallWndProcRet));
+            if (msg.message != (int)WinApi.Win32HookFlags.HCbtActivate)
             {
-                if (msg.message != (int)WinApi.WindowMenuFunc.WM_INITDIALOG)
-                    return WinApi.UnsafeNativeMethods.CallNextHookEx(hook, nCode, wParam, lParam);
+                if (msg.message != (int)WinApi.WindowMenuFlags.WmInitDialog)
+                    return WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
                 if (!ButtonText.OverrideEnabled)
                     return MessageBoxUnhookProc();
                 try
                 {
                     var className = new StringBuilder(10);
-                    WinApi.UnsafeNativeMethods.GetClassName(msg.hwnd, className, className.Capacity);
+                    WinApi.NativeMethods.GetClassName(msg.hwnd, className, className.Capacity);
                     if (className.ToString() == "#32770")
                     {
                         _nButton = 0;
-                        WinApi.UnsafeNativeMethods.EnumChildWindows(msg.hwnd, EnumProc, IntPtr.Zero);
+                        WinApi.NativeMethods.EnumChildWindows(msg.hwnd, EnumProc, IntPtr.Zero);
                         if (_nButton == 1)
                         {
-                            var hButton = WinApi.UnsafeNativeMethods.GetDlgItem(msg.hwnd, 2);
+                            var hButton = WinApi.NativeMethods.GetDlgItem(msg.hwnd, 2);
                             if (hButton != IntPtr.Zero)
-                                WinApi.UnsafeNativeMethods.SetWindowText(hButton, ButtonText.OK);
+                                WinApi.NativeMethods.SetWindowText(hButton, ButtonText.OK);
                         }
                     }
                 }
@@ -714,13 +713,13 @@ namespace SilDev.Forms
                 if (_owner != null)
                 {
                     var cRect = new Rectangle(0, 0, 0, 0);
-                    if (WinApi.UnsafeNativeMethods.GetWindowRect(msg.hwnd, ref cRect))
+                    if (WinApi.NativeMethods.GetWindowRect(msg.hwnd, ref cRect))
                     {
                         var width = cRect.Width - cRect.X;
                         var height = cRect.Height - cRect.Y;
-                        WinApi.CenterWindow(msg.hwnd, _owner.Handle, true);
+                        WinApi.NativeHelper.CenterWindow(msg.hwnd, _owner.Handle, true);
                         if (CenterMousePointer)
-                            WinApi.SetCursorPos(msg.hwnd, new Point(width / 2, height / 2 + 24));
+                            WinApi.NativeHelper.SetCursorPos(msg.hwnd, new Point(width / 2, height / 2 + 24));
                     }
                 }
             }
@@ -728,12 +727,12 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
-            return !ButtonText.OverrideEnabled ? MessageBoxUnhookProc() : WinApi.UnsafeNativeMethods.CallNextHookEx(hook, nCode, wParam, lParam);
+            return !ButtonText.OverrideEnabled ? MessageBoxUnhookProc() : WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
         }
 
         private static IntPtr MessageBoxUnhookProc()
         {
-            WinApi.UnsafeNativeMethods.UnhookWindowsHookEx(_hHook);
+            WinApi.NativeMethods.UnhookWindowsHookEx(_hHook);
             _hHook = IntPtr.Zero;
             _owner = null;
             if (ButtonText.OverrideEnabled)
@@ -744,31 +743,31 @@ namespace SilDev.Forms
         private static bool MessageBoxEnumProc(IntPtr hWnd, IntPtr lParam)
         {
             var className = new StringBuilder(10);
-            WinApi.UnsafeNativeMethods.GetClassName(hWnd, className, className.Capacity);
+            WinApi.NativeMethods.GetClassName(hWnd, className, className.Capacity);
             if (!className.ToString().EqualsEx("Button"))
                 return true;
-            switch (WinApi.UnsafeNativeMethods.GetDlgCtrlID(hWnd))
+            switch (WinApi.NativeMethods.GetDlgCtrlID(hWnd))
             {
                 case 1:
-                    WinApi.UnsafeNativeMethods.SetWindowText(hWnd, ButtonText.OK);
+                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.OK);
                     break;
                 case 2:
-                    WinApi.UnsafeNativeMethods.SetWindowText(hWnd, ButtonText.Cancel);
+                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Cancel);
                     break;
                 case 3:
-                    WinApi.UnsafeNativeMethods.SetWindowText(hWnd, ButtonText.Abort);
+                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Abort);
                     break;
                 case 4:
-                    WinApi.UnsafeNativeMethods.SetWindowText(hWnd, ButtonText.Retry);
+                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Retry);
                     break;
                 case 5:
-                    WinApi.UnsafeNativeMethods.SetWindowText(hWnd, ButtonText.Ignore);
+                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Ignore);
                     break;
                 case 6:
-                    WinApi.UnsafeNativeMethods.SetWindowText(hWnd, ButtonText.Yes);
+                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Yes);
                     break;
                 case 7:
-                    WinApi.UnsafeNativeMethods.SetWindowText(hWnd, ButtonText.No);
+                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.No);
                     break;
             }
             _nButton++;

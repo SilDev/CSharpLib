@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Service.cs
-// Version:  2016-10-18 23:33
+// Version:  2017-06-23 12:07
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -79,7 +79,7 @@ namespace SilDev
 
         private static IntPtr OpenServiceControlManager(WinApi.ServiceManagerAccessRights serviceRights)
         {
-            var scman = WinApi.SafeNativeMethods.OpenSCManager(null, null, serviceRights);
+            var scman = WinApi.NativeMethods.OpenSCManager(null, null, serviceRights);
             try
             {
                 if (scman == IntPtr.Zero)
@@ -109,16 +109,16 @@ namespace SilDev
         /// </param>
         public static void Install(string serviceName, string displayName, string path, string args = "")
         {
-            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.SC_MANAGER_CONNECT | WinApi.ServiceManagerAccessRights.SC_MANAGER_CREATE_SERVICE);
+            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.Connect | WinApi.ServiceManagerAccessRights.CreateService);
             try
             {
                 if (path.Any(char.IsWhiteSpace))
                     path = $"\"{path}\"";
                 if (!string.IsNullOrWhiteSpace(args))
                     args = " " + args;
-                var service = WinApi.SafeNativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.SERVICE_QUERY_STATUS | WinApi.ServiceAccessRights.SERVICE_START);
+                var service = WinApi.NativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.QueryStatus | WinApi.ServiceAccessRights.Start);
                 if (service == IntPtr.Zero)
-                    service = WinApi.SafeNativeMethods.CreateService(scman, serviceName, displayName, WinApi.ServiceAccessRights.SERVICE_QUERY_STATUS | WinApi.ServiceAccessRights.SERVICE_START, WinApi.ServiceTypes.SERVICE_WIN32_OWN_PROCESS, WinApi.ServiceBootFlag.SERVICE_AUTO_START, WinApi.ServiceError.SERVICE_ERROR_NORMAL, path + args, null, IntPtr.Zero, null, null, null);
+                    service = WinApi.NativeMethods.CreateService(scman, serviceName, displayName, WinApi.ServiceAccessRights.QueryStatus | WinApi.ServiceAccessRights.Start, WinApi.ServiceTypes.Win32OwnProcess, WinApi.ServiceBootFlags.AutoStart, WinApi.ServiceErrors.Normal, path + args, null, IntPtr.Zero, null, null, null);
                 if (service == IntPtr.Zero)
                     throw new Exception("Failed to install service.");
             }
@@ -128,7 +128,7 @@ namespace SilDev
             }
             finally
             {
-                WinApi.SafeNativeMethods.CloseServiceHandle(scman);
+                WinApi.NativeMethods.CloseServiceHandle(scman);
             }
         }
 
@@ -152,16 +152,16 @@ namespace SilDev
         /// </param>
         public static void Uninstall(string serviceName)
         {
-            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.SC_MANAGER_CONNECT);
+            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.Connect);
             try
             {
-                var service = WinApi.SafeNativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.SERVICE_STANDARD_REQUIRED | WinApi.ServiceAccessRights.SERVICE_STOP | WinApi.ServiceAccessRights.SERVICE_QUERY_STATUS);
+                var service = WinApi.NativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.StandardRequired | WinApi.ServiceAccessRights.Stop | WinApi.ServiceAccessRights.QueryStatus);
                 if (service == IntPtr.Zero)
                     throw new Exception("Service not installed.");
                 try
                 {
                     Stop(service);
-                    var ret = WinApi.SafeNativeMethods.DeleteService(service);
+                    var ret = WinApi.NativeMethods.DeleteService(service);
                     if (ret != 0)
                         return;
                     var error = Marshal.GetLastWin32Error();
@@ -169,7 +169,7 @@ namespace SilDev
                 }
                 finally
                 {
-                    WinApi.SafeNativeMethods.CloseServiceHandle(service);
+                    WinApi.NativeMethods.CloseServiceHandle(service);
                 }
             }
             catch (Exception ex)
@@ -178,7 +178,7 @@ namespace SilDev
             }
             finally
             {
-                WinApi.SafeNativeMethods.CloseServiceHandle(scman);
+                WinApi.NativeMethods.CloseServiceHandle(scman);
             }
         }
 
@@ -190,18 +190,18 @@ namespace SilDev
         /// </param>
         public static bool Exists(string serviceName)
         {
-            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.SC_MANAGER_CONNECT);
+            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.Connect);
             try
             {
-                var service = WinApi.SafeNativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.SERVICE_QUERY_STATUS);
+                var service = WinApi.NativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.QueryStatus);
                 if (service == IntPtr.Zero)
                     return false;
-                WinApi.SafeNativeMethods.CloseServiceHandle(service);
+                WinApi.NativeMethods.CloseServiceHandle(service);
                 return true;
             }
             finally
             {
-                WinApi.SafeNativeMethods.CloseServiceHandle(scman);
+                WinApi.NativeMethods.CloseServiceHandle(scman);
             }
         }
 
@@ -213,10 +213,10 @@ namespace SilDev
         /// </param>
         public static void Start(string serviceName)
         {
-            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.SC_MANAGER_CONNECT);
+            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.Connect);
             try
             {
-                var hService = WinApi.SafeNativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.SERVICE_QUERY_STATUS | WinApi.ServiceAccessRights.SERVICE_START);
+                var hService = WinApi.NativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.QueryStatus | WinApi.ServiceAccessRights.Start);
                 if (hService == IntPtr.Zero)
                     throw new Exception("Could not open service.");
                 try
@@ -225,7 +225,7 @@ namespace SilDev
                 }
                 finally
                 {
-                    WinApi.SafeNativeMethods.CloseServiceHandle(hService);
+                    WinApi.NativeMethods.CloseServiceHandle(hService);
                 }
             }
             catch (Exception ex)
@@ -234,7 +234,7 @@ namespace SilDev
             }
             finally
             {
-                WinApi.SafeNativeMethods.CloseServiceHandle(scman);
+                WinApi.NativeMethods.CloseServiceHandle(scman);
             }
         }
 
@@ -246,10 +246,10 @@ namespace SilDev
         /// </param>
         public static void Stop(string serviceName)
         {
-            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.SC_MANAGER_CONNECT);
+            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.Connect);
             try
             {
-                var hService = WinApi.SafeNativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.SERVICE_QUERY_STATUS | WinApi.ServiceAccessRights.SERVICE_STOP);
+                var hService = WinApi.NativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.QueryStatus | WinApi.ServiceAccessRights.Stop);
                 if (hService == IntPtr.Zero)
                     throw new ApplicationException("Could not open service.");
                 try
@@ -258,7 +258,7 @@ namespace SilDev
                 }
                 finally
                 {
-                    WinApi.SafeNativeMethods.CloseServiceHandle(hService);
+                    WinApi.NativeMethods.CloseServiceHandle(hService);
                 }
             }
             catch (Exception ex)
@@ -267,21 +267,21 @@ namespace SilDev
             }
             finally
             {
-                WinApi.SafeNativeMethods.CloseServiceHandle(scman);
+                WinApi.NativeMethods.CloseServiceHandle(scman);
             }
         }
 
         private static void Start(IntPtr hService)
         {
-            WinApi.SafeNativeMethods.StartService(hService, 0, 0);
-            WaitForStatus(hService, WinApi.ServiceState.SERVICE_START_PENDING, WinApi.ServiceState.SERVICE_RUNNING);
+            WinApi.NativeMethods.StartService(hService, 0, 0);
+            WaitForStatus(hService, WinApi.ServiceStateTypes.StartPending, WinApi.ServiceStateTypes.Running);
         }
 
         private static void Stop(IntPtr hService)
         {
-            var status = new WinApi.SERVICE_STATUS();
-            WinApi.SafeNativeMethods.ControlService(hService, WinApi.ControlServiceFunc.SERVICE_CONTROL_STOP, status);
-            WaitForStatus(hService, WinApi.ServiceState.SERVICE_STOP_PENDING, WinApi.ServiceState.SERVICE_STOPPED);
+            var status = new WinApi.ServiceStatus();
+            WinApi.NativeMethods.ControlService(hService, WinApi.ServiceControlOptions.Stop, status);
+            WaitForStatus(hService, WinApi.ServiceStateTypes.StopPending, WinApi.ServiceStateTypes.Stopped);
         }
 
         /// <summary>
@@ -292,10 +292,10 @@ namespace SilDev
         /// </param>
         public static State GetStatus(string serviceName)
         {
-            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.SC_MANAGER_CONNECT);
+            var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.Connect);
             try
             {
-                var hService = WinApi.SafeNativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.SERVICE_QUERY_STATUS);
+                var hService = WinApi.NativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.QueryStatus);
                 if (hService == IntPtr.Zero)
                     return State.NotFound;
                 try
@@ -304,7 +304,7 @@ namespace SilDev
                 }
                 finally
                 {
-                    WinApi.SafeNativeMethods.CloseServiceHandle(scman);
+                    WinApi.NativeMethods.CloseServiceHandle(scman);
                 }
             }
             catch (Exception ex)
@@ -313,17 +313,17 @@ namespace SilDev
             }
             finally
             {
-                WinApi.SafeNativeMethods.CloseServiceHandle(scman);
+                WinApi.NativeMethods.CloseServiceHandle(scman);
             }
             return State.NotFound;
         }
 
         private static State GetStatus(IntPtr hService)
         {
-            var ssStatus = new WinApi.SERVICE_STATUS();
+            var ssStatus = new WinApi.ServiceStatus();
             try
             {
-                if (WinApi.SafeNativeMethods.QueryServiceStatus(hService, ssStatus) == 0)
+                if (WinApi.NativeMethods.QueryServiceStatus(hService, ssStatus) == 0)
                     throw new ServerException("Failed to query service status.");
             }
             catch (Exception ex)
@@ -333,12 +333,12 @@ namespace SilDev
             return (State)ssStatus.dwCurrentState;
         }
 
-        private static void WaitForStatus(IntPtr hService, WinApi.ServiceState waitStatus, WinApi.ServiceState desiredStatus)
+        private static void WaitForStatus(IntPtr hService, WinApi.ServiceStateTypes waitStatus, WinApi.ServiceStateTypes desiredStatus)
         {
-            var status = new WinApi.SERVICE_STATUS();
+            var status = new WinApi.ServiceStatus();
             try
             {
-                WinApi.SafeNativeMethods.QueryServiceStatus(hService, status);
+                WinApi.NativeMethods.QueryServiceStatus(hService, status);
                 if (status.dwCurrentState == desiredStatus)
                     return;
                 var dwStartTickCount = Environment.TickCount;
@@ -348,7 +348,7 @@ namespace SilDev
                     var dwWaitTime = status.dwWaitHint / 10;
                     dwWaitTime = dwWaitTime < 1000 ? 1000 : dwWaitTime > 10000 ? 10000 : dwWaitTime;
                     Thread.Sleep(dwWaitTime);
-                    if (WinApi.SafeNativeMethods.QueryServiceStatus(hService, status) == 0)
+                    if (WinApi.NativeMethods.QueryServiceStatus(hService, status) == 0)
                         break;
                     if (status.dwCheckPoint > dwOldCheckPoint)
                     {

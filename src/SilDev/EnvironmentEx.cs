@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-06-18 00:20
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -38,6 +38,39 @@ namespace SilDev
         private static Version _version;
 
         /// <summary>
+        ///     Gets a <see cref="System.Version"/> object that describes the major, minor and
+        ///     build numbers of the common language runtime.
+        /// </summary>
+        public static Version Version
+        {
+            get
+            {
+                if (_version != null)
+                    return _version;
+                var release = Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "Release", 0);
+                if (release > 460805)
+                    _version = new Version(4, 7, 1);
+                else if (release >= 460798)
+                    _version = new Version(4, 7, 0);
+                else if (release >= 394802)
+                    _version = new Version(4, 6, 2);
+                else if (release >= 394254)
+                    _version = new Version(4, 6, 1);
+                else if (release >= 393295)
+                    _version = new Version(4, 6, 0);
+                else if (release >= 379893)
+                    _version = new Version(4, 5, 2);
+                else if (release >= 378675)
+                    _version = new Version(4, 5, 1);
+                else if (release >= 378389)
+                    _version = new Version(4, 5, 0);
+                else
+                    _version = Environment.Version;
+                return _version;
+            }
+        }
+
+        /// <summary>
         ///     Provides filtering and sorting options, and returns a string <see cref="List{T}"/>
         ///     containing the command-line arguments for the current process.
         /// </summary>
@@ -63,7 +96,7 @@ namespace SilDev
                 return _cmdLineArgs;
             string arg = null;
             var defaultArgs = Environment.GetCommandLineArgs().ToList();
-            if (defaultArgs.Any(x => (arg = x).EqualsEx("/debug")))
+            if (defaultArgs.Any(x => (arg = x).EqualsEx($"/{Log.DebugKey}")))
             {
                 var index = defaultArgs.IndexOf(arg);
                 defaultArgs.RemoveAt(index);
@@ -308,45 +341,10 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets a <see cref="System.Version"/> object that describes the major, minor and
-        ///     build numbers of the common language runtime.
-        /// </summary>
-        public static Version Version
-        {
-            get
-            {
-                if (_version != null)
-                    return _version;
-                var release = Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "Release", 0);
-                if (release > 460805)
-                    _version = new Version(4, 7, 1);
-                else if (release >= 460798)
-                    _version = new Version(4, 7, 0);
-                else if (release >= 394802)
-                    _version = new Version(4, 6, 2);
-                else if (release >= 394254)
-                    _version = new Version(4, 6, 1);
-                else if (release >= 393295)
-                    _version = new Version(4, 6, 0);
-                else if (release >= 379893)
-                    _version = new Version(4, 5, 2);
-                else if (release >= 378675)
-                    _version = new Version(4, 5, 1);
-                else if (release >= 378389)
-                    _version = new Version(4, 5, 0);
-                else
-                    _version = Environment.Version;
-                return _version;
-            }
-        }
-
-        /// <summary>
         ///     Provides functionality to verify the installation of redistributable packages.
         /// </summary>
         public static class Redist
         {
-            private static string[] _displayNames;
-
             /// <summary>
             ///     Provides identity flags of redistributable packages.
             /// </summary>
@@ -423,6 +421,8 @@ namespace SilDev
                 /// </summary>
                 VC2017X64
             }
+
+            private static string[] _displayNames;
 
             /// <summary>
             ///     Returns the display names of all installed Microsoft Visual C++ redistributable packages.
@@ -504,12 +504,6 @@ namespace SilDev
         public static class SystemRestore
         {
             /// <summary>
-            ///     Determines whether the system restoring is enabled.
-            /// </summary>
-            public static bool IsEnabled =>
-                Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRestore", "RPSessionInterval", 0) > 0;
-
-            /// <summary>
             ///     The type of event. For more information, see <see cref="Create"/>.
             /// </summary>
             public enum EventType
@@ -571,6 +565,12 @@ namespace SilDev
                 /// </summary>
                 ModifySettings = 0xc
             }
+
+            /// <summary>
+            ///     Determines whether the system restoring is enabled.
+            /// </summary>
+            public static bool IsEnabled =>
+                Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRestore", "RPSessionInterval", 0) > 0;
 
             /// <summary>
             ///     Creates a restore point on the local system.

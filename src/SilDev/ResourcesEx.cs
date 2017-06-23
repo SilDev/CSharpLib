@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2017-05-12 12:17
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -31,10 +31,10 @@ namespace SilDev
     public static class ResourcesEx
     {
         /// <summary>
-        ///     Provides enumerates values for the symbol index of the system file
-        ///     "imageres.dll".
+        ///     Provides enumerated symbol index values of the Windows Image Resource dynamic
+        ///     link library ('imageres.dll').
         /// </summary>
-        public enum ImageresIconIndex : uint
+        public enum IconIndex : uint
         {
             Asterisk = 0x4c,
             Barrier = 0x51,
@@ -77,8 +77,8 @@ namespace SilDev
             Key = 0x4d,
             Network = 0x14,
             OneDrive = 0xdc,
-            Play = 0x118,
             Pin = 0xea,
+            Play = 0x118,
             PngFile = 0x4e,
             Printer = 0x2e,
             Question = 0x5e,
@@ -96,12 +96,12 @@ namespace SilDev
             SystemControl = 0x16,
             SystemDrive = 0x1f,
             TaskManager = 0x90,
+            Uac = 0x49,
             Undo = 0xff,
             UnknownDrive = 0x46,
             Unpin = 0xe9,
             User = 0xd0,
             UserDir = 0x75,
-            Uac = 0x49,
             Warning = 0x4f,
             ZipFile = 0xa5
         }
@@ -131,12 +131,12 @@ namespace SilDev
                 var file = PathEx.Combine(path);
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);
-                WinApi.UnsafeNativeMethods.ExtractIconEx(file, index, large ? ptrs : new IntPtr[1], !large ? ptrs : new IntPtr[1], 1);
+                WinApi.NativeMethods.ExtractIconEx(file, index, large ? ptrs : new IntPtr[1], !large ? ptrs : new IntPtr[1], 1);
                 var ptr = ptrs[0];
                 if (ptr == IntPtr.Zero)
                     throw new ArgumentNullException(nameof(ptr));
                 var ico = (Icon)Icon.FromHandle(ptr).Clone();
-                WinApi.UnsafeNativeMethods.DestroyIcon(ptr);
+                WinApi.NativeMethods.DestroyIcon(ptr);
                 return ico;
             }
             catch (ArgumentException ex)
@@ -164,7 +164,7 @@ namespace SilDev
         /// <param name="location">
         ///     The directory where the "imageres.dll" file is located.
         /// </param>
-        public static Icon GetSystemIcon(ImageresIconIndex index, bool large = false, string location = "%system%")
+        public static Icon GetSystemIcon(IconIndex index, bool large = false, string location = "%system%")
         {
             try
             {
@@ -201,7 +201,7 @@ namespace SilDev
         /// <param name="location">
         ///     The directory where the "imageres.dll" file is located.
         /// </param>
-        public static Icon GetSystemIcon(ImageresIconIndex index, string location) =>
+        public static Icon GetSystemIcon(IconIndex index, string location) =>
             GetSystemIcon(index, false, location);
 
         /// <summary>
@@ -222,12 +222,12 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(path));
                 if (!File.Exists(path))
                     throw new PathNotFoundException(path);
-                var shfi = new WinApi.SHFILEINFO();
-                var flags = WinApi.GetFileInfoFunc.SHGFI_ICON | WinApi.GetFileInfoFunc.SHGFI_USEFILEATTRIBUTES;
-                flags |= large ? WinApi.GetFileInfoFunc.SHGFI_LARGEICON : WinApi.GetFileInfoFunc.SHGFI_SMALLICON;
-                WinApi.SafeNativeMethods.SHGetFileInfo(path, 0x80, ref shfi, (uint)Marshal.SizeOf(shfi), flags);
+                var shfi = new WinApi.ShFileInfo();
+                var flags = WinApi.FileInfoFlags.Icon | WinApi.FileInfoFlags.UseFileAttributes;
+                flags |= large ? WinApi.FileInfoFlags.LargeIcon : WinApi.FileInfoFlags.SmallIcon;
+                WinApi.NativeMethods.SHGetFileInfo(path, 0x80, ref shfi, (uint)Marshal.SizeOf(shfi), flags);
                 var ico = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
-                WinApi.UnsafeNativeMethods.DestroyIcon(shfi.hIcon);
+                WinApi.NativeMethods.DestroyIcon(shfi.hIcon);
                 return ico;
             }
             catch (Exception ex)
@@ -283,16 +283,16 @@ namespace SilDev
         /// </summary>
         public sealed class IconBrowserDialog : Form
         {
-            private readonly IContainer _components;
-            private string _path;
-            private readonly List<IconBox> _boxes = new List<IconBox>();
-            private readonly Panel _panel;
-            private readonly TextBox _textBox;
-            private readonly Panel _buttonPanel;
-            private readonly Button _button;
-            private readonly ProgressCircle _progressCircle;
-            private readonly Timer _timer;
             private static readonly object Locker = new object();
+            private readonly List<IconBox> _boxes = new List<IconBox>();
+            private readonly Button _button;
+            private readonly Panel _buttonPanel;
+            private readonly IContainer _components;
+            private readonly Panel _panel;
+            private readonly ProgressCircle _progressCircle;
+            private readonly TextBox _textBox;
+            private readonly Timer _timer;
+            private string _path;
 
             /// <summary>
             ///     Initializes an instance of the <see cref="IconBrowserDialog"/> class.
@@ -328,7 +328,7 @@ namespace SilDev
                 BackColor = backColor ?? SystemColors.Control;
                 ForeColor = foreColor ?? SystemColors.ControlText;
                 Font = new Font("Consolas", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
-                Icon = GetSystemIcon(ImageresIconIndex.DirectorySearch, true, resLoc);
+                Icon = GetSystemIcon(IconIndex.DirectorySearch, true, resLoc);
                 MaximizeBox = false;
                 MaximumSize = new Size(680, Screen.FromHandle(Handle).WorkingArea.Height);
                 MinimizeBox = false;
@@ -395,7 +395,7 @@ namespace SilDev
                 _button = new Button
                 {
                     BackColor = buttonFace ?? SystemColors.ButtonFace,
-                    BackgroundImage = GetSystemIcon(ImageresIconIndex.Directory, false, resLoc).ToBitmap(),
+                    BackgroundImage = GetSystemIcon(IconIndex.Directory, false, resLoc).ToBitmap(),
                     BackgroundImageLayout = ImageLayout.Zoom,
                     Dock = DockStyle.Fill,
                     FlatStyle = FlatStyle.Flat,
@@ -541,8 +541,8 @@ namespace SilDev
 
             private sealed class IconBox : UserControl
             {
-                private static IntPtr[] _icons;
                 private static string _file;
+                private static IntPtr[] _icons;
                 private readonly Button _button;
                 private readonly IContainer _components = null;
 
@@ -591,7 +591,7 @@ namespace SilDev
                     if (_icons != null)
                         return index > _icons.Length - 1 ? null : Icon.FromHandle(_icons[index]);
                     _icons = new IntPtr[short.MaxValue];
-                    WinApi.UnsafeNativeMethods.ExtractIconEx(_file, 0, _icons, new IntPtr[short.MaxValue], short.MaxValue);
+                    WinApi.NativeMethods.ExtractIconEx(_file, 0, _icons, new IntPtr[short.MaxValue], short.MaxValue);
                     return index > _icons.Length - 1 ? null : Icon.FromHandle(_icons[index]);
                 }
 

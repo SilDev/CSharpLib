@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-05-18 14:19
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,7 +30,23 @@ namespace SilDev
     /// </summary>
     public static class ProcessEx
     {
+        private static IntPtr _currentHandle;
         private static string _currentName;
+
+        /// <summary>
+        ///     Gets the handle of the current process instance.
+        /// </summary>
+        public static IntPtr CurrentHandle
+        {
+            get
+            {
+                if (_currentHandle != default(IntPtr))
+                    return _currentHandle;
+                using (var p = Process.GetCurrentProcess())
+                    _currentHandle = p.Handle;
+                return _currentHandle;
+            }
+        }
 
         /// <summary>
         ///     Gets the name of the current process instance.
@@ -39,7 +55,7 @@ namespace SilDev
         {
             get
             {
-                if (_currentName != null)
+                if (_currentName != default(string))
                     return _currentName;
                 using (var p = Process.GetCurrentProcess())
                     _currentName = p.ProcessName;
@@ -53,17 +69,37 @@ namespace SilDev
         /// <param name="nameOrPath">
         ///     The filename or the full path to the application to check.
         /// </param>
-        public static IEnumerable<Process> GetInstances(string nameOrPath)
+        /// <param name="doubleTap">
+        ///     <para>
+        ///         true to try to get firstly by the path, then by name; otherwise, false.
+        ///     </para>
+        ///     <para>
+        ///         Please note that this option has no effect if the first parameter contains
+        ///         only a name.
+        ///     </para>
+        /// </param>
+        public static IEnumerable<Process> GetInstances(string nameOrPath, bool doubleTap = false)
         {
             try
             {
                 IEnumerable<Process> instances;
-                var path = nameOrPath;
+                var path = PathEx.Combine(default(char[]), nameOrPath);
                 var name = Path.GetFileNameWithoutExtension(path);
-                if (path.ContainsEx(Path.DirectorySeparatorChar) && File.Exists(path))
+                try
+                {
+                    if (!path.ContainsEx(Path.DirectorySeparatorChar) || !File.Exists(path))
+                    {
+                        doubleTap = true;
+                        throw new ArgumentException();
+                    }
                     instances = Process.GetProcesses().Where(p => p.ProcessName.EqualsEx(name) && p.MainModule.FileName.EqualsEx(path));
-                else
+                }
+                catch
+                {
+                    if (!doubleTap)
+                        return null;
                     instances = Process.GetProcessesByName(name);
+                }
                 return instances;
             }
             catch (Exception ex)
@@ -80,12 +116,21 @@ namespace SilDev
         /// <param name="nameOrPath">
         ///     The filename or the full path to the application to check.
         /// </param>
-        public static int InstancesCount(string nameOrPath)
+        /// <param name="doubleTap">
+        ///     <para>
+        ///         true to try to check firstly by the path, then by name; otherwise, false.
+        ///     </para>
+        ///     <para>
+        ///         Please note that this option has no effect if the first parameter contains
+        ///         only a name.
+        ///     </para>
+        /// </param>
+        public static int InstancesCount(string nameOrPath, bool doubleTap = false)
         {
             var count = 0;
             try
             {
-                foreach (var p in GetInstances(nameOrPath))
+                foreach (var p in GetInstances(nameOrPath, doubleTap))
                 {
                     count++;
                     p?.Dispose();
@@ -104,8 +149,17 @@ namespace SilDev
         /// <param name="nameOrPath">
         ///     The filename or the full path to the application to check.
         /// </param>
-        public static bool IsRunning(string nameOrPath) =>
-            InstancesCount(nameOrPath) > 0;
+        /// <param name="doubleTap">
+        ///     <para>
+        ///         true to try to check firstly by the path, then by name; otherwise, false.
+        ///     </para>
+        ///     <para>
+        ///         Please note that this option has no effect if the first parameter contains
+        ///         only a name.
+        ///     </para>
+        /// </param>
+        public static bool IsRunning(string nameOrPath, bool doubleTap = false) =>
+            InstancesCount(nameOrPath, doubleTap) > 0;
 
         /// <summary>
         ///     <para>
@@ -149,7 +203,7 @@ namespace SilDev
             try
             {
                 var list = new List<string>();
-                var query = "SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id;
+                var query = $"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {process.Id}";
                 using (var objs = new ManagementObjectSearcher(query))
                     list.AddRange(objs.Get().Cast<ManagementBaseObject>().Select(obj => obj["CommandLine"].ToString()));
                 return list.ToArray();
@@ -429,9 +483,7 @@ namespace SilDev
                 if ((path + cmd).Length > 8192)
                 {
                     var batch = PathEx.Combine(Path.GetTempPath(), PathEx.GetTempFileName("tmp", ".cmd"));
-                    var content = cmd.Substring(3)
-                                     .Replace("FOR /L %", "FOR /L %%")
-                                     .Replace("EXIT /B", "EXIT");
+                    var content = cmd.Substring(3).Replace("FOR /L %", "FOR /L %%").Replace("EXIT /B", "EXIT");
                     content = string.Format(Resources.Cmd_Script, content);
                     File.WriteAllText(batch, content);
                     cmd = string.Format(Resources.Cmd_CallPre, batch);
@@ -501,6 +553,66 @@ namespace SilDev
         /// </param>
         public static Process Send(string command, ProcessWindowStyle processWindowStyle, bool dispose = true) =>
             Send(command, false, processWindowStyle, dispose);
+
+        /// <summary>
+        ///     <para>
+        ///         Immediately stops all specified processes.
+        ///     </para>
+        ///     <para>
+        ///         If the current process doesn't have enough privileges to stop a specified process
+        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///     </para>
+        /// </summary>
+        /// <param name="processes">
+        ///     The <see cref="Process"/>/es to kill.
+        /// </param>
+        public static bool Terminate(IEnumerable<Process> processes)
+        {
+            var count = 0;
+            var list = new List<string>();
+            foreach (var p in processes)
+                using (p)
+                {
+                    try
+                    {
+                        if (!p.HasExited)
+                        {
+                            count++;
+                            p.Kill();
+                        }
+                        if (p.HasExited)
+                            continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+                    var s = p.ProcessName;
+                    if (!list.ContainsEx(s))
+                        list.Add(s);
+                }
+            if (list.Count == 0)
+                return count > 0;
+            using (var p = SendHelper.KillAllTasks(list, true, false))
+                if (p?.HasExited == false)
+                    p.WaitForExit();
+            return count > 0;
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Immediately stops all specified processes.
+        ///     </para>
+        ///     <para>
+        ///         If the current process doesn't have enough privileges to stop a specified process
+        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///     </para>
+        /// </summary>
+        /// <param name="processes">
+        ///     The collection of processes to kill.
+        /// </param>
+        public static bool Terminate(params Process[] processes) =>
+            Terminate(processes.ToList());
 
         /// <summary>
         ///     Provides basic functionality based on <see cref="Send(string,bool,bool)"/>.
@@ -689,65 +801,5 @@ namespace SilDev
             public static Process KillAllTasks(IEnumerable<string> processNames, bool runAsAdmin = false, bool dispose = true) =>
                 KillAllTasks(processNames, ".exe", runAsAdmin, dispose);
         }
-
-        /// <summary>
-        ///     <para>
-        ///         Immediately stops all specified processes.
-        ///     </para>
-        ///     <para>
-        ///         If the current process doesn't have enough privileges to stop a specified process
-        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
-        ///     </para>
-        /// </summary>
-        /// <param name="processes">
-        ///     The <see cref="Process"/>/es to kill.
-        /// </param>
-        public static bool Terminate(IEnumerable<Process> processes)
-        {
-            var count = 0;
-            var list = new List<string>();
-            foreach (var p in processes)
-                using (p)
-                {
-                    try
-                    {
-                        if (!p.HasExited)
-                        {
-                            count++;
-                            p.Kill();
-                        }
-                        if (p.HasExited)
-                            continue;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
-                    var s = p.ProcessName;
-                    if (!list.ContainsEx(s))
-                        list.Add(s);
-                }
-            if (list.Count == 0)
-                return count > 0;
-            using (var p = SendHelper.KillAllTasks(list, true, false))
-                if (!p?.HasExited == true)
-                    p?.WaitForExit();
-            return count > 0;
-        }
-
-        /// <summary>
-        ///     <para>
-        ///         Immediately stops all specified processes.
-        ///     </para>
-        ///     <para>
-        ///         If the current process doesn't have enough privileges to stop a specified process
-        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
-        ///     </para>
-        /// </summary>
-        /// <param name="processes">
-        ///     The collection of processes to kill.
-        /// </param>
-        public static bool Terminate(params Process[] processes) =>
-            Terminate(processes.ToList());
     }
 }

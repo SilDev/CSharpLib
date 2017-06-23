@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2017-05-16 15:15
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -100,6 +100,7 @@ namespace SilDev
         public bool TopMost { get; set; }
 
         private NotifyForm NotifyWindow { get; set; }
+
         private Thread NotifyThread { get; set; }
 
         /// <summary>
@@ -325,12 +326,12 @@ namespace SilDev
 
         private sealed class NotifyForm : Form
         {
-            private readonly IContainer _components;
-            private readonly Label _textLabel;
             private readonly BackgroundWorker _bgWorker;
-            private readonly Timer _timer, _timer2;
+            private readonly IContainer _components;
             private readonly int _duration;
             private readonly double _opacity;
+            private readonly Label _textLabel;
+            private readonly Timer _timer, _timer2;
             private bool _visible;
 
             public NotifyForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool borders, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor, bool topMost)

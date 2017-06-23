@@ -31,7 +31,7 @@ namespace SilDev.Forms
         ///     </para>
         ///     <para>
         ///         Please note that the <see cref="FlatStyle"/> is overwritten to <see cref="FlatStyle.Flat"/>
-        ///         which is required for highlight effects.
+        ///         which is required to apply highlight effects.
         ///     </para>
         /// </summary>
         /// <param name="button">
@@ -73,11 +73,11 @@ namespace SilDev.Forms
 
         /// <summary>
         ///     Represents the method that is used for the <see cref="Button"/> click <see cref="EventHandler"/>
-        ///     which determines whether the split area of this <see cref="Button"/> is clicked which opens the
-        ///     specified <see cref="ContextMenuStrip"/> control.
+        ///     that determines whether the split area of this <see cref="Button"/>, which opens the
+        ///     specified <see cref="ContextMenuStrip"/> control, is clicked.
         /// </summary>
         /// <param name="button">
-        ///     The button which contains a splitted area, created by <see cref="Split(Button, Color?)"/>.
+        ///     The button that contains a splitted area, which is created by <see cref="Split(Button, Color?)"/>.
         /// </param>
         /// <param name="contextMenuStrip">
         ///     The drop down menu that opens for the splitted area.

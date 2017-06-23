@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2017-05-30 21:11
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -28,9 +28,9 @@ namespace SilDev
     /// </summary>
     public static class Reg
     {
-        private static Dictionary<int, string> CachedKeyFilters { get; set; }
         private const int MaxCacheSize = 16;
         private const int MaxPathLength = 255;
+        private static Dictionary<int, string> CachedKeyFilters { get; set; }
 
         private static RegistryKey AsRegistryKey(this string key, bool nullable = false)
         {
@@ -926,8 +926,8 @@ namespace SilDev
                 if (Log.DebugMode > 1)
                     Log.Write($"IMPORT: \"{filePath}\"");
                 using (var p = ProcessEx.Start("%system%\\reg.exe", $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false))
-                    if (!p?.HasExited == true)
-                        p?.WaitForExit(3000);
+                    if (p?.HasExited == false)
+                        p.WaitForExit(3000);
                 return true;
             }
             catch (Exception ex)
@@ -1017,8 +1017,8 @@ namespace SilDev
                     if (Log.DebugMode > 1)
                         Log.Write($"EXPORT: \"{key}\" TO \"{path}\"");
                     using (var p = ProcessEx.Start("%system%\\reg.exe", $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
-                        if (!p?.HasExited == true)
-                            p?.WaitForExit(3000);
+                        if (p?.HasExited == false)
+                            p.WaitForExit(3000);
                     File.AppendAllText(filePath, File.ReadAllLines(path).Skip(1).Join(Environment.NewLine), Encoding.GetEncoding(1252));
                     count++;
                     try

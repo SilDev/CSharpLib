@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-05-23 09:42
+// Version:  2017-06-23 12:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,8 +30,57 @@ namespace SilDev
     public static class Ini
     {
         private const string NonSectionId = "\0\u0002(NON-SECTION)\u0003\0";
-
+        private static string _filePath;
+        private static string _tmpFileGuid;
         private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the maximum number of cached files.
+        /// </summary>
+        public static int MaxCacheSize { get; set; } = 8;
+
+        /// <summary>
+        ///     Specifies a sequence of section names to be sorted first.
+        /// </summary>
+        public static IEnumerable<string> SortBySections { get; set; }
+
+        private static string TmpFileGuid
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_tmpFileGuid))
+                    return _tmpFileGuid;
+                _tmpFileGuid = Guid.NewGuid().ToString();
+                return _tmpFileGuid;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a default INI file.
+        /// </summary>
+        public static string FilePath
+        {
+            get { return _filePath ?? string.Empty; }
+            set
+            {
+                _filePath = PathEx.Combine(value);
+                if (File.Exists(_filePath))
+                    return;
+                try
+                {
+                    var fileDir = Path.GetDirectoryName(_filePath);
+                    if (string.IsNullOrEmpty(fileDir))
+                        return;
+                    if (!Directory.Exists(fileDir))
+                        Directory.CreateDirectory(fileDir);
+                    File.Create(_filePath).Close();
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+            }
+        }
 
         private static void InitializeCache(int code, string section = null, string key = null)
         {
@@ -135,16 +184,6 @@ namespace SilDev
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the maximum number of cached files.
-        /// </summary>
-        public static int MaxCacheSize { get; set; } = 8;
-
-        /// <summary>
-        ///     Specifies a sequence of section names to be sorted first.
-        /// </summary>
-        public static IEnumerable<string> SortBySections { get; set; }
-
         private static Dictionary<string, Dictionary<string, List<string>>> SortHelper(this Dictionary<string, Dictionary<string, List<string>>> source)
         {
             var comparer = new Comparison.AlphanumericComparer();
@@ -166,48 +205,6 @@ namespace SilDev
             var comparer = new Comparison.AlphanumericComparer();
             var sorted = source.OrderBy(x => x, comparer).ToList();
             return sorted;
-        }
-
-        private static string _tmpFileGuid;
-
-        private static string TmpFileGuid
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(_tmpFileGuid))
-                    return _tmpFileGuid;
-                _tmpFileGuid = Guid.NewGuid().ToString();
-                return _tmpFileGuid;
-            }
-        }
-
-        private static string _filePath;
-
-        /// <summary>
-        ///     Gets or sets a default INI file.
-        /// </summary>
-        public static string FilePath
-        {
-            get { return _filePath ?? string.Empty; }
-            set
-            {
-                _filePath = PathEx.Combine(value);
-                if (File.Exists(_filePath))
-                    return;
-                try
-                {
-                    var fileDir = Path.GetDirectoryName(_filePath);
-                    if (string.IsNullOrEmpty(fileDir))
-                        return;
-                    if (!Directory.Exists(fileDir))
-                        Directory.CreateDirectory(fileDir);
-                    File.Create(_filePath).Close();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                }
-            }
         }
 
         /// <summary>
@@ -508,8 +505,8 @@ namespace SilDev
                     else
                         lines[i] = line;
                 }
-                source = lines.Where(LineHasIniFormat).Join(Environment.NewLine);
-                if (string.IsNullOrWhiteSpace(source))
+                source = lines.Where(LineHasIniFormat).Join(Environment.NewLine)?.TrimStart();
+                if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
                 if (!source.StartsWith("["))
                     source = $"[{NonSectionId}]{Environment.NewLine}{source}";
@@ -519,7 +516,7 @@ namespace SilDev
                 var matches = Regex.Matches(source,
                     @"^                        # Beginning of the line
                       ((?:\[)                  # Section Start
-                           (?<Section>[^\]]*)  # Actual Section text into Section Group
+                       (?<Section>[^\]]*)      # Actual Section text into Section Group
                        (?:\])                  # Section End then EOL/EOB
                        (?:[\r\n]{0,}|\Z))      # Match but don't capture the CRLF or EOB
                       (                        # Begin capture groups (Key Value Pairs)
@@ -828,7 +825,7 @@ namespace SilDev
                 if (!File.Exists(path))
                     throw new PathNotFoundException(path);
                 var sb = new StringBuilder(short.MaxValue);
-                if (WinApi.SafeNativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
+                if (WinApi.NativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
                     output = sb.ToString();
             }
             catch (Exception ex)
@@ -1213,7 +1210,7 @@ namespace SilDev
                 if (!encoding.Equals(Encoding.Unicode) && !encoding.Equals(Encoding.BigEndianUnicode))
                     TextEx.ChangeEncoding(path, Encoding.Unicode);
                 Write:
-                return WinApi.SafeNativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
+                return WinApi.NativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
             }
             catch (Exception ex)
             {
