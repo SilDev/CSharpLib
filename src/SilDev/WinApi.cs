@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-27 10:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -91,7 +91,7 @@ namespace SilDev
         ///     Provides enumerated values of process security and access rights.
         /// </summary>
         [Flags]
-        public enum AccessRights : long
+        public enum AccessRights : uint
         {
             /// <summary>
             ///     Required to delete the object.
@@ -332,9 +332,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides enumerated values of handle duplication.
+        ///     Provides enumerated options of handle duplication.
         /// </summary>
-        public enum DuplicateFuncOptions : uint
+        public enum DuplicateOptions : uint
         {
             /// <summary>
             ///     Closes the source handle. This occurs regardless of any error status returned.
@@ -2346,7 +2346,7 @@ namespace SilDev
             ///     Enables you to produce special effects when showing or hiding windows. There are four types of
             ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
             /// </summary>
-            /// <param name="hwnd">
+            /// <param name="hWnd">
             ///     A handle to the window to animate. The calling thread must own this window.
             /// </param>
             /// <param name="time">
@@ -2356,21 +2356,21 @@ namespace SilDev
             /// <param name="flags">
             ///     The type of animation.
             /// </param>
-            public static bool AnimateWindow(IntPtr hwnd, int time = 200, AnimateWindowFlags flags = AnimateWindowFlags.Center) =>
-                NativeMethods.AnimateWindow(hwnd, time, flags);
+            public static bool AnimateWindow(IntPtr hWnd, int time = 200, AnimateWindowFlags flags = AnimateWindowFlags.Blend) =>
+                NativeMethods.AnimateWindow(hWnd, time, flags);
 
             /// <summary>
             ///     Enables you to produce special effects when showing or hiding windows. There are four types of
             ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
             /// </summary>
-            /// <param name="hwnd">
+            /// <param name="hWnd">
             ///     A handle to the window to animate. The calling thread must own this window.
             /// </param>
             /// <param name="flags">
             ///     The type of animation.
             /// </param>
-            public static bool AnimateWindow(IntPtr hwnd, AnimateWindowFlags flags) =>
-                NativeMethods.AnimateWindow(hwnd, 200, flags);
+            public static bool AnimateWindow(IntPtr hWnd, AnimateWindowFlags flags) =>
+                NativeMethods.AnimateWindow(hWnd, 200, flags);
 
             /// <summary>
             ///     Passes the hook information to the next hook procedure in the current hook chain. A hook
@@ -2525,7 +2525,7 @@ namespace SilDev
             /// </param>
             public static void DisableWindowMaximizeButton(IntPtr hWnd)
             {
-                var style = (int)(NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle) & ~0x10000L);
+                var style = NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle) & ~0x10000L;
                 SetWindowLong(hWnd, WindowLongFlags.GwlStyle, (IntPtr)style);
             }
 
@@ -2537,7 +2537,7 @@ namespace SilDev
             /// </param>
             public static void DisableWindowMinimizeButton(IntPtr hWnd)
             {
-                var style = (int)(NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle) & ~0x20000L);
+                var style = NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle) & ~0x20000L;
                 SetWindowLong(hWnd, WindowLongFlags.GwlStyle, (IntPtr)style);
             }
 
@@ -2590,7 +2590,7 @@ namespace SilDev
             ///     object type, see the following Remarks section.
             ///     <para>
             ///         This parameter is ignored if the dwOptions parameter specifies the
-            ///         <see cref="DuplicateFuncOptions.SameAccess"/> flag. Otherwise, the flags that
+            ///         <see cref="DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
             ///         can be specified depend on the type of object whose handle is to be duplicated.
             ///     </para>
             /// </param>
@@ -2601,7 +2601,7 @@ namespace SilDev
             /// </param>
             /// <param name="dwOptions">
             ///     Optional actions. This parameter can be zero, or any combination of
-            ///     <see cref="DuplicateFuncOptions"/>.
+            ///     <see cref="DuplicateOptions"/>.
             /// </param>
             public static bool DuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle, uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions) =>
                 NativeMethods.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, out lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
@@ -2845,11 +2845,11 @@ namespace SilDev
             /// <summary>
             ///     Retrieves the identifier of the specified control.
             /// </summary>
-            /// <param name="hwndCtl">
+            /// <param name="hWndCtl">
             ///     A handle to the control.
             /// </param>
-            public static int GetDlgCtrlId(IntPtr hwndCtl) =>
-                NativeMethods.GetDlgCtrlID(hwndCtl);
+            public static int GetDlgCtrlId(IntPtr hWndCtl) =>
+                NativeMethods.GetDlgCtrlID(hWndCtl);
 
             /// <summary>
             ///     Retrieves a handle to a control in the specified dialog box.
@@ -3477,29 +3477,6 @@ namespace SilDev
                 NativeMethods.ReadProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, ref lpNumberOfBytesRead);
 
             /// <summary>
-            ///     ***This function is disabled by default and has been moved to <see cref="Tray.RefreshVisibleArea"/>,
-            ///     because it cause some critical issues in some cases.
-            /// </summary>
-            /// <param name="force">
-            ///     true to call <see cref="Tray.RefreshVisibleArea"/> (not recommended); otherwise, false.
-            /// </param>
-            public static bool RefreshVisibleTrayArea(bool force = false)
-            {
-                try
-                {
-                    if (!force)
-                        throw new NotSupportedException();
-                    Tray.RefreshVisibleArea();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return true;
-                }
-            }
-
-            /// <summary>
             ///     Releases the mouse capture from a window in the current thread and restores normal mouse
             ///     input processing. A window that has captured the mouse receives all mouse input, regardless
             ///     of the position of the cursor, except when a mouse button is clicked while the cursor hot
@@ -4072,7 +4049,7 @@ namespace SilDev
             ///     The replacement value.
             /// </param>
             public static IntPtr SetWindowLong(IntPtr hWnd, WindowLongFlags nIndex, IntPtr dwNewLong) =>
-                IntPtr.Size == 4 ? NativeMethods.SetWindowLongPtr32(hWnd, (int)nIndex, dwNewLong) : NativeMethods.SetWindowLongPtr64(hWnd, (int)nIndex, dwNewLong);
+                NativeMethods.SetWindowLong(hWnd, (int)nIndex, dwNewLong);
 
             /// <summary>
             ///     Sets the show state and the restored, minimized, and maximized positions of the specified window.
@@ -4270,7 +4247,7 @@ namespace SilDev
             /// <summary>
             ///     Performs an operation on a specified file.
             /// </summary>
-            /// <param name="hwnd">
+            /// <param name="hWnd">
             ///     A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the
             ///     operation is not associated with a window.
             /// </param>
@@ -4300,13 +4277,13 @@ namespace SilDev
             ///     document file, the flag is simply passed to the associated application. It is up to the application to
             ///     decide how to handle it.
             /// </param>
-            public static long ShellExecute(IntPtr hwnd, [MarshalAs(UnmanagedType.LPTStr)] string lpOperation, [MarshalAs(UnmanagedType.LPTStr)] string lpFile, [MarshalAs(UnmanagedType.LPTStr)] string lpParameters, [MarshalAs(UnmanagedType.LPTStr)] string lpDirectory, ShowWindowFlags nShowCmd) =>
-                NativeMethods.ShellExecute(hwnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
+            public static IntPtr ShellExecute(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] string lpOperation, [MarshalAs(UnmanagedType.LPTStr)] string lpFile, [MarshalAs(UnmanagedType.LPTStr)] string lpParameters, [MarshalAs(UnmanagedType.LPTStr)] string lpDirectory, ShowWindowFlags nShowCmd) =>
+                NativeMethods.ShellExecute(hWnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
 
             /// <summary>
             ///     The ShowScrollBar function shows or hides the specified scroll bar.
             /// </summary>
-            /// <param name="hwnd">
+            /// <param name="hWnd">
             ///     Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the
             ///     wBar parameter.
             /// </param>
@@ -4317,8 +4294,8 @@ namespace SilDev
             ///     Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown;
             ///     otherwise, it is hidden.
             /// </param>
-            public static long ShowScrollBar(IntPtr hwnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow) =>
-                NativeMethods.ShowScrollBar(hwnd, wBar, bShow);
+            public static long ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow) =>
+                NativeMethods.ShowScrollBar(hWnd, wBar, bShow);
 
             /// <summary>
             ///     Activates the window and displays it.
@@ -4515,7 +4492,7 @@ namespace SilDev
             ///     Enables you to produce special effects when showing or hiding windows. There are four types of
             ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
             /// </summary>
-            /// <param name="hwnd">
+            /// <param name="hWnd">
             ///     A handle to the window to animate. The calling thread must own this window.
             /// </param>
             /// <param name="time">
@@ -4529,7 +4506,7 @@ namespace SilDev
             ///     If the function succeeds, the return value is nonzero.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
-            internal static extern bool AnimateWindow(IntPtr hwnd, int time, AnimateWindowFlags flags);
+            internal static extern bool AnimateWindow(IntPtr hWnd, int time, AnimateWindowFlags flags);
 
             /// <summary>
             ///     Passes the hook information to the next hook procedure in the current hook chain. A hook
@@ -4846,7 +4823,7 @@ namespace SilDev
             ///     object type, see the following Remarks section.
             ///     <para>
             ///         This parameter is ignored if the dwOptions parameter specifies the
-            ///         <see cref="DuplicateFuncOptions.SameAccess"/> flag. Otherwise, the flags that
+            ///         <see cref="DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
             ///         can be specified depend on the type of object whose handle is to be duplicated.
             ///     </para>
             /// </param>
@@ -4857,7 +4834,7 @@ namespace SilDev
             /// </param>
             /// <param name="dwOptions">
             ///     Optional actions. This parameter can be zero, or any combination of
-            ///     <see cref="DuplicateFuncOptions"/>.
+            ///     <see cref="DuplicateOptions"/>.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -5028,24 +5005,24 @@ namespace SilDev
             ///     function searches child windows, beginning with the one following the specified child window. This
             ///     function does not perform a case-sensitive search.
             /// </summary>
-            /// <param name="hwndParent">
+            /// <param name="hWndParent">
             ///     A handle to the parent window whose child windows are to be searched.
             ///     <para>
-            ///         If hwndParent is NULL, the function uses the desktop window as the parent window. The function
+            ///         If hWndParent is NULL, the function uses the desktop window as the parent window. The function
             ///         searches among windows that are child windows of the desktop.
             ///     </para>
             ///     <para>
-            ///         If hwndParent is HWND_MESSAGE, the function searches all message-only windows.
+            ///         If hWndParent is HWND_MESSAGE, the function searches all message-only windows.
             ///     </para>
             /// </param>
-            /// <param name="hwndChildAfter">
+            /// <param name="hWndChildAfter">
             ///     A handle to a child window. The search begins with the next child window in the Z order. The child
-            ///     window must be a direct child window of hwndParent, not just a descendant window.
+            ///     window must be a direct child window of hWndParent, not just a descendant window.
             ///     <para>
-            ///         If hwndChildAfter is NULL, the search begins with the first child window of hwndParent.
+            ///         If hWndChildAfter is NULL, the search begins with the first child window of hWndParent.
             ///     </para>
             ///     <para>
-            ///         Note that if both hwndParent and hwndChildAfter are NULL, the function searches all top-level
+            ///         Note that if both hWndParent and hWndChildAfter are NULL, the function searches all top-level
             ///         and message-only windows.
             ///     </para>
             /// </param>
@@ -5068,7 +5045,7 @@ namespace SilDev
             ///     window names.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "FindWindowExA", CallingConvention = CallingConvention.StdCall, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
-            internal static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, [MarshalAs(UnmanagedType.LPStr)] string lpszClass, [MarshalAs(UnmanagedType.LPStr)] string lpszWindow);
+            internal static extern IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hWndChildAfter, [MarshalAs(UnmanagedType.LPStr)] string lpszClass, [MarshalAs(UnmanagedType.LPStr)] string lpszWindow);
 
             /// <summary>
             ///     Determines whether a key is up or down at the time the function is called, and whether the
@@ -5152,14 +5129,14 @@ namespace SilDev
             /// <summary>
             ///     Retrieves the identifier of the specified control.
             /// </summary>
-            /// <param name="hwndCtl">
+            /// <param name="hWndCtl">
             ///     A handle to the control.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is the identifier of the control.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Auto)]
-            internal static extern int GetDlgCtrlID(IntPtr hwndCtl);
+            internal static extern int GetDlgCtrlID(IntPtr hWndCtl);
 
             /// <summary>
             ///     Retrieves a handle to a control in the specified dialog box.
@@ -5590,7 +5567,7 @@ namespace SilDev
             /// <param name="cchReturn">
             ///     Size, in characters, of the return buffer specified by the lpszReturnString parameter.
             /// </param>
-            /// <param name="hwndCallback">
+            /// <param name="hWndCallback">
             ///     Handle to a callback window if the "notify" flag was specified in the command string.
             /// </param>
             /// <returns>
@@ -5599,7 +5576,7 @@ namespace SilDev
             ///     of the return value is the driver identifier; otherwise, the high-order word is zero.
             /// </returns>
             [DllImport(DllNames.Winmm, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern int mciSendString(string lpszCommand, StringBuilder lpszReturnString, uint cchReturn, IntPtr hwndCallback);
+            internal static extern int mciSendString(string lpszCommand, StringBuilder lpszReturnString, uint cchReturn, IntPtr hWndCallback);
 
             /// <summary>
             ///     Changes the position and dimensions of the specified window. For a top-level window, the position and
@@ -6412,31 +6389,14 @@ namespace SilDev
             /// <param name="dwNewLong">
             ///     The replacement value.
             /// </param>
-            /// <returns>
-            ///     If the function succeeds, the return value is the previous value of the specified 32-bit integer.
-            /// </returns>
-            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLong")]
-            internal static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+            public static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong) =>
+                IntPtr.Size == 4 ? SetWindowLongPtr32(hWnd, nIndex, dwNewLong) : SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
 
-            /// <summary>
-            ///     Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the
-            ///     specified offset into the extra window memory.
-            /// </summary>
-            /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window belongs.
-            /// </param>
-            /// <param name="nIndex">
-            ///     The zero-based offset to the value to be set. Valid values are in the range zero through the number
-            ///     of bytes of extra window memory, minus the size of an integer.
-            /// </param>
-            /// <param name="dwNewLong">
-            ///     The replacement value.
-            /// </param>
-            /// <returns>
-            ///     If the function succeeds, the return value is the previous value of the specified 32-bit integer.
-            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLong")]
+            private static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
             [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLongPtr")]
-            internal static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+            private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
             /// <summary>
             ///     Sets the show state and the restored, minimized, and maximized positions of the specified window.
@@ -6588,7 +6548,7 @@ namespace SilDev
             /// <summary>
             ///     Performs an operation on a specified file.
             /// </summary>
-            /// <param name="hwnd">
+            /// <param name="hWnd">
             ///     A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the
             ///     operation is not associated with a window.
             /// </param>
@@ -6624,7 +6584,7 @@ namespace SilDev
             ///     compatibility with 16-bit Windows applications. It is not a true HINSTANCE, however.
             /// </returns>
             [DllImport(DllNames.Shell32, EntryPoint = "ShellExecute", SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
-            internal static extern long ShellExecute(IntPtr hwnd, [MarshalAs(UnmanagedType.LPTStr)] string lpOperation, [MarshalAs(UnmanagedType.LPTStr)] string lpFile, [MarshalAs(UnmanagedType.LPTStr)] string lpParameters, [MarshalAs(UnmanagedType.LPTStr)] string lpDirectory, ShowWindowFlags nShowCmd);
+            internal static extern IntPtr ShellExecute(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] string lpOperation, [MarshalAs(UnmanagedType.LPTStr)] string lpFile, [MarshalAs(UnmanagedType.LPTStr)] string lpParameters, [MarshalAs(UnmanagedType.LPTStr)] string lpDirectory, ShowWindowFlags nShowCmd);
 
             /// <summary>
             ///     Retrieves information about an object in the file system, such as a file, folder, directory, or
@@ -6672,7 +6632,7 @@ namespace SilDev
             /// <summary>
             ///     The ShowScrollBar function shows or hides the specified scroll bar.
             /// </summary>
-            /// <param name="hwnd">
+            /// <param name="hWnd">
             ///     Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the
             ///     wBar parameter.
             /// </param>
@@ -6687,7 +6647,7 @@ namespace SilDev
             ///     If the function succeeds, the return value is nonzero.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
-            internal static extern long ShowScrollBar(IntPtr hwnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
+            internal static extern long ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
 
             /// <summary>
             ///     Sets the specified window's show state.
@@ -7318,7 +7278,6 @@ namespace SilDev
             public IntPtr BasePriority;
             public UIntPtr UniqueProcessId;
             public IntPtr InheritedFromUniqueProcessId;
-            public int Size => Marshal.SizeOf(typeof(ProcessBasicInformation));
         }
 
         /// <summary>

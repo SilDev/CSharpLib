@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-27 10:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -67,7 +67,7 @@ namespace SilDev.Forms
             SlideVerNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerNegative
         }
 
-        private static readonly Dictionary<ContextMenuStrip, object[]> EnabledAnimation = new Dictionary<ContextMenuStrip, object[]>();
+        private static readonly Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>> EnabledAnimation = new Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>>();
 
         /// <summary>
         ///     Closes this <see cref="ContextMenuStrip"/> when the mouse cursor leaves it.
@@ -113,24 +113,35 @@ namespace SilDev.Forms
         ///     The type of animation.
         /// </param>
         /// <param name="time">
-        ///     The time it takes to play the animation, in milliseconds.
+        ///     <para>
+        ///         The time it takes to play the animation, in milliseconds.
+        ///     </para>
+        ///     <para>
+        ///         Please note that this parameter is ignored if the animation is set to
+        ///         <see cref="Animations.Default"/>.
+        ///     </para>
         /// </param>
         public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, Animations animation = Animations.Default, int time = 200)
         {
             if (contextMenuStrip == null)
                 return;
-            var aniConfig = new object[] { time, animation };
+            var settings = new KeyValuePair<int, WinApi.AnimateWindowFlags>(time, (WinApi.AnimateWindowFlags)animation);
             if (EnabledAnimation.ContainsKey(contextMenuStrip))
             {
-                EnabledAnimation[contextMenuStrip] = aniConfig;
+                EnabledAnimation[contextMenuStrip] = settings;
                 return;
             }
-            EnabledAnimation.Add(contextMenuStrip, aniConfig);
+            EnabledAnimation.Add(contextMenuStrip, settings);
+            var loaded = false;
             contextMenuStrip.Opening += (sender, args) =>
             {
                 if (animation != Animations.Default)
                 {
-                    WinApi.NativeMethods.AnimateWindow(contextMenuStrip.Handle, (int)EnabledAnimation[contextMenuStrip][0], (WinApi.AnimateWindowFlags)EnabledAnimation[contextMenuStrip][1]);
+                    WinApi.NativeMethods.AnimateWindow(contextMenuStrip.Handle, EnabledAnimation[contextMenuStrip].Key, EnabledAnimation[contextMenuStrip].Value);
+                    if (loaded)
+                        return;
+                    loaded = true;
+                    contextMenuStrip.Refresh();
                     return;
                 }
                 contextMenuStrip.Opacity = 0d;

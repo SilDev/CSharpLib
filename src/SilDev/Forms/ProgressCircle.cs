@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-27 10:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,6 @@
 namespace SilDev.Forms
 {
     using System;
-    using System.ComponentModel;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Windows.Forms;
@@ -27,7 +26,6 @@ namespace SilDev.Forms
     public class ProgressCircle : Control
     {
         private readonly Timer _timer = new Timer();
-        private readonly IContainer components = null;
         private double[] _angles;
         private PointF _centerPoint;
         private Color[] _colors;
@@ -213,13 +211,6 @@ namespace SilDev.Forms
         {
             _progressValue = ++_progressValue % _spokes;
             Invalidate();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-                components?.Dispose();
-            base.Dispose(disposing);
         }
 
         protected override void OnPaint(PaintEventArgs e)

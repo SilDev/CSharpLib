@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-27 10:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -223,8 +223,6 @@ namespace SilDev
                     for (var i = 0; i < match.Groups["Key"].Captures.Count; i++)
                     {
                         var mKey = match.Groups["Key"]?.Captures[i].Value.Trim();
-                        if (string.IsNullOrEmpty(mKey))
-                            continue;
                         if (string.IsNullOrEmpty(mKey) || !mKey.EqualsEx(key))
                             continue;
                         var mVal = match.Groups["Value"]?.Captures[i].Value.Trim();

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-27 10:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -440,10 +440,9 @@ namespace SilDev
 
             protected override void Dispose(bool disposing)
             {
-                if (!disposing)
-                    return;
-                _components?.Dispose();
-                base.Dispose(true);
+                if (disposing)
+                    _components.Dispose();
+                base.Dispose(disposing);
             }
 
             private void NotifyForm_Shown(object sender, EventArgs e)

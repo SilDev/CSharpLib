@@ -185,15 +185,6 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {4EC6358E-5AA1-4F79-A26B-647E2FA8F2C6}.
-        /// </summary>
-        internal static string Ini_NonSection {
-            get {
-                return ResourceManager.GetString("Ini_NonSection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to %CurrentDir%\Bin
         ///%CurrentDir%\Binaries
         ///%ApplicationData%\References
