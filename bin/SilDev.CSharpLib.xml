@@ -91,11 +91,6 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:SilDev.Properties.Resources.Ini_NonSection">
-            <summary>
-              Looks up a localized string similar to {4EC6358E-5AA1-4F79-A26B-647E2FA8F2C6}.
-            </summary>
-        </member>
         <member name="P:SilDev.Properties.Resources.ReferenceDirs">
              <summary>
                Looks up a localized string similar to %CurrentDir%\Bin
@@ -275,7 +270,13 @@
                 The type of animation.
             </param>
             <param name="time">
-                The time it takes to play the animation, in milliseconds.
+                <para>
+                    The time it takes to play the animation, in milliseconds.
+                </para>
+                <para>
+                    Please note that this parameter is ignored if the animation is set to
+                    <see cref="F:SilDev.Forms.ContextMenuStripEx.Animations.Default"/>.
+                </para>
             </param>
         </member>
         <member name="M:SilDev.Forms.ContextMenuStripEx.SetFixedSingle(System.Windows.Forms.ContextMenuStrip,System.Nullable{System.Drawing.Color})">
@@ -9155,17 +9156,17 @@
                 Registers or unregisters an autohide appbar for an edge of a particular monitor.
             </summary>
         </member>
-        <member name="T:SilDev.WinApi.DuplicateFuncOptions">
+        <member name="T:SilDev.WinApi.DuplicateOptions">
             <summary>
-                Provides enumerated values of handle duplication.
+                Provides enumerated options of handle duplication.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.DuplicateFuncOptions.CloseSource">
+        <member name="F:SilDev.WinApi.DuplicateOptions.CloseSource">
             <summary>
                 Closes the source handle. This occurs regardless of any error status returned.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.DuplicateFuncOptions.SameAccess">
+        <member name="F:SilDev.WinApi.DuplicateOptions.SameAccess">
             <summary>
                 Ignores the dwDesiredAccess parameter. The duplicate handle has the same access as the
                 source handle.
@@ -11128,7 +11129,7 @@
                 Enables you to produce special effects when showing or hiding windows. There are four types of
                 animation: roll, slide, collapse or expand, and alpha-blended fade.
             </summary>
-            <param name="hwnd">
+            <param name="hWnd">
                 A handle to the window to animate. The calling thread must own this window.
             </param>
             <param name="time">
@@ -11144,7 +11145,7 @@
                 Enables you to produce special effects when showing or hiding windows. There are four types of
                 animation: roll, slide, collapse or expand, and alpha-blended fade.
             </summary>
-            <param name="hwnd">
+            <param name="hWnd">
                 A handle to the window to animate. The calling thread must own this window.
             </param>
             <param name="flags">
@@ -11304,7 +11305,7 @@
                 object type, see the following Remarks section.
                 <para>
                     This parameter is ignored if the dwOptions parameter specifies the
-                    <see cref="F:SilDev.WinApi.DuplicateFuncOptions.SameAccess"/> flag. Otherwise, the flags that
+                    <see cref="F:SilDev.WinApi.DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
                     can be specified depend on the type of object whose handle is to be duplicated.
                 </para>
             </param>
@@ -11315,7 +11316,7 @@
             </param>
             <param name="dwOptions">
                 Optional actions. This parameter can be zero, or any combination of
-                <see cref="T:SilDev.WinApi.DuplicateFuncOptions"/>.
+                <see cref="T:SilDev.WinApi.DuplicateOptions"/>.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.DwmExtendFrameIntoClientArea(System.IntPtr,SilDev.WinApi.ThemeMargins@)">
@@ -11530,7 +11531,7 @@
             <summary>
                 Retrieves the identifier of the specified control.
             </summary>
-            <param name="hwndCtl">
+            <param name="hWndCtl">
                 A handle to the control.
             </param>
         </member>
@@ -12078,15 +12079,6 @@
             <param name="lpNumberOfBytesRead">
                 A pointer to a variable that receives the number of bytes transferred into the
                 specified buffer. If lpNumberOfBytesRead is NULL, the parameter is ignored.
-            </param>
-        </member>
-        <member name="M:SilDev.WinApi.NativeHelper.RefreshVisibleTrayArea(System.Boolean)">
-            <summary>
-                ***This function is disabled by default and has been moved to <see cref="M:SilDev.Tray.RefreshVisibleArea"/>,
-                because it cause some critical issues in some cases.
-            </summary>
-            <param name="force">
-                true to call <see cref="M:SilDev.Tray.RefreshVisibleArea"/> (not recommended); otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.ReleaseCapture">
@@ -12765,7 +12757,7 @@
             <summary>
                 Performs an operation on a specified file.
             </summary>
-            <param name="hwnd">
+            <param name="hWnd">
                 A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the
                 operation is not associated with a window.
             </param>
@@ -12800,7 +12792,7 @@
             <summary>
                 The ShowScrollBar function shows or hides the specified scroll bar.
             </summary>
-            <param name="hwnd">
+            <param name="hWnd">
                 Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the
                 wBar parameter.
             </param>
@@ -12989,7 +12981,7 @@
                 Enables you to produce special effects when showing or hiding windows. There are four types of
                 animation: roll, slide, collapse or expand, and alpha-blended fade.
             </summary>
-            <param name="hwnd">
+            <param name="hWnd">
                 A handle to the window to animate. The calling thread must own this window.
             </param>
             <param name="time">
@@ -13309,7 +13301,7 @@
                 object type, see the following Remarks section.
                 <para>
                     This parameter is ignored if the dwOptions parameter specifies the
-                    <see cref="F:SilDev.WinApi.DuplicateFuncOptions.SameAccess"/> flag. Otherwise, the flags that
+                    <see cref="F:SilDev.WinApi.DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
                     can be specified depend on the type of object whose handle is to be duplicated.
                 </para>
             </param>
@@ -13320,7 +13312,7 @@
             </param>
             <param name="dwOptions">
                 Optional actions. This parameter can be zero, or any combination of
-                <see cref="T:SilDev.WinApi.DuplicateFuncOptions"/>.
+                <see cref="T:SilDev.WinApi.DuplicateOptions"/>.
             </param>
             <returns>
                 If the function succeeds, the return value is nonzero.
@@ -13481,24 +13473,24 @@
                 function searches child windows, beginning with the one following the specified child window. This
                 function does not perform a case-sensitive search.
             </summary>
-            <param name="hwndParent">
+            <param name="hWndParent">
                 A handle to the parent window whose child windows are to be searched.
                 <para>
-                    If hwndParent is NULL, the function uses the desktop window as the parent window. The function
+                    If hWndParent is NULL, the function uses the desktop window as the parent window. The function
                     searches among windows that are child windows of the desktop.
                 </para>
                 <para>
-                    If hwndParent is HWND_MESSAGE, the function searches all message-only windows.
+                    If hWndParent is HWND_MESSAGE, the function searches all message-only windows.
                 </para>
             </param>
-            <param name="hwndChildAfter">
+            <param name="hWndChildAfter">
                 A handle to a child window. The search begins with the next child window in the Z order. The child
-                window must be a direct child window of hwndParent, not just a descendant window.
+                window must be a direct child window of hWndParent, not just a descendant window.
                 <para>
-                    If hwndChildAfter is NULL, the search begins with the first child window of hwndParent.
+                    If hWndChildAfter is NULL, the search begins with the first child window of hWndParent.
                 </para>
                 <para>
-                    Note that if both hwndParent and hwndChildAfter are NULL, the function searches all top-level
+                    Note that if both hWndParent and hWndChildAfter are NULL, the function searches all top-level
                     and message-only windows.
                 </para>
             </param>
@@ -13599,7 +13591,7 @@
             <summary>
                 Retrieves the identifier of the specified control.
             </summary>
-            <param name="hwndCtl">
+            <param name="hWndCtl">
                 A handle to the control.
             </param>
             <returns>
@@ -14013,7 +14005,7 @@
             <param name="cchReturn">
                 Size, in characters, of the return buffer specified by the lpszReturnString parameter.
             </param>
-            <param name="hwndCallback">
+            <param name="hWndCallback">
                 Handle to a callback window if the "notify" flag was specified in the command string.
             </param>
             <returns>
@@ -14790,7 +14782,7 @@
                 </para>
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.SetWindowLongPtr32(System.IntPtr,System.Int32,System.IntPtr)">
+        <member name="M:SilDev.WinApi.NativeMethods.SetWindowLong(System.IntPtr,System.Int32,System.IntPtr)">
             <summary>
                 Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the
                 specified offset into the extra window memory.
@@ -14805,28 +14797,6 @@
             <param name="dwNewLong">
                 The replacement value.
             </param>
-            <returns>
-                If the function succeeds, the return value is the previous value of the specified 32-bit integer.
-            </returns>
-        </member>
-        <member name="M:SilDev.WinApi.NativeMethods.SetWindowLongPtr64(System.IntPtr,System.Int32,System.IntPtr)">
-            <summary>
-                Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the
-                specified offset into the extra window memory.
-            </summary>
-            <param name="hWnd">
-                A handle to the window and, indirectly, the class to which the window belongs.
-            </param>
-            <param name="nIndex">
-                The zero-based offset to the value to be set. Valid values are in the range zero through the number
-                of bytes of extra window memory, minus the size of an integer.
-            </param>
-            <param name="dwNewLong">
-                The replacement value.
-            </param>
-            <returns>
-                If the function succeeds, the return value is the previous value of the specified 32-bit integer.
-            </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.SetWindowPlacement(System.IntPtr,SilDev.WinApi.WindowPlacement@)">
             <summary>
@@ -14973,7 +14943,7 @@
             <summary>
                 Performs an operation on a specified file.
             </summary>
-            <param name="hwnd">
+            <param name="hWnd">
                 A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the
                 operation is not associated with a window.
             </param>
@@ -15055,7 +15025,7 @@
             <summary>
                 The ShowScrollBar function shows or hides the specified scroll bar.
             </summary>
-            <param name="hwnd">
+            <param name="hWnd">
                 Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the
                 wBar parameter.
             </param>
