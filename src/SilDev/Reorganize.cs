@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -105,6 +105,9 @@ namespace SilDev
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to convert.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value.
         /// </param>
         public static T DeserializeObject<T>(this byte[] bytes, T defValue = default(T))
         {
@@ -345,6 +348,9 @@ namespace SilDev
         /// </param>
         /// <param name="separator">
         ///     The string to use as a separator.
+        /// </param>
+        /// <param name="splitOptions">
+        ///     The split options.
         /// </param>
         public static string[] Split(this string str, string separator = TextEx.NewLineFormats.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None)
         {
@@ -835,6 +841,9 @@ namespace SilDev
         /// </param>
         /// <param name="result">
         ///     The result value.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value.
         /// </param>
         public static bool TryParse<T>(this object value, out dynamic result, T defValue = default(T))
         {

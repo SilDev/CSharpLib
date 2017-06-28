@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-27 16:30
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -60,7 +60,7 @@ namespace SilDev
         /// </summary>
         public static string FilePath
         {
-            get { return _filePath ?? string.Empty; }
+            get => _filePath ?? string.Empty;
             set
             {
                 _filePath = PathEx.Combine(value);

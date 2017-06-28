@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -163,6 +163,7 @@ namespace SilDev
         /// </summary>
         public static class NewLineFormats
         {
+#pragma warning disable CS1591
             public const string CarriageReturn = "\u000d";
             public const string FormFeed = "\u000c";
             public const string LineFeed = "\u000a";
@@ -171,6 +172,7 @@ namespace SilDev
             public const string ParagraphSeparator = "\u2029";
             public const string VerticalTab = "\u000b";
             public const string WindowsDefault = "\u000d\u000a";
+#pragma warning restore CS1591
         }
     }
 }

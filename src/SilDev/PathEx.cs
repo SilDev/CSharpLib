@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -35,6 +35,7 @@ namespace SilDev
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum Headers : ushort
         {
+#pragma warning disable CS1591
             Unknown = 0x0,
             AM33 = 0x1d3,
             AMD64 = 0x8664,
@@ -55,6 +56,7 @@ namespace SilDev
             SH5 = 0x1a8,
             THUMB = 0x1c2,
             WCEMIPSV2 = 0x169
+#pragma warning restore CS1591
         }
 
         private static readonly char[] InvalidPathChars =
@@ -477,6 +479,9 @@ namespace SilDev
             Message = "Could not find target '" + target + "'.";
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class with serialized data.
+        /// </summary>
         protected PathNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,11 +30,13 @@ namespace SilDev
         /// </summary>
         public enum Location
         {
+#pragma warning disable CS1591
             Hidden,
             Top,
             Bottom,
             Left,
             Right
+#pragma warning restore CS1591
         }
 
         /// <summary>

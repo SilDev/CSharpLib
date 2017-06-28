@@ -997,8 +997,8 @@ namespace SilDev
         /// </param>
         public static void SendState(IntPtr hWnd, VKey key)
         {
-            WinApi.NativeHelper.PostMessage(hWnd, 0x100, new IntPtr((int)key), new IntPtr(0));
-            WinApi.NativeHelper.PostMessage(hWnd, 0x101, new IntPtr((int)key), new IntPtr(0));
+            WinApi.NativeHelper.PostMessage(hWnd, 0x100, new IntPtr((int)key), IntPtr.Zero);
+            WinApi.NativeHelper.PostMessage(hWnd, 0x101, new IntPtr((int)key), IntPtr.Zero);
         }
 
         /// <summary>

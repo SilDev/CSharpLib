@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-06-27 10:55
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -2914,9 +2914,7 @@ namespace SilDev
             /// </param>
             public static ProcessBasicInformation GetProcessBasicInformation(IntPtr hWnd)
             {
-                ProcessBasicInformation pbi;
-                IntPtr retLen;
-                var status = NativeMethods.NtQueryInformationProcess(hWnd, 0, out pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out retLen);
+                var status = NativeMethods.NtQueryInformationProcess(hWnd, 0, out ProcessBasicInformation pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out IntPtr _);
                 try
                 {
                     if (status >= 0xc0000000)
@@ -3003,8 +3001,7 @@ namespace SilDev
             {
                 try
                 {
-                    DwmColorizationParams parameters;
-                    NativeMethods.DwmGetColorizationParameters(out parameters);
+                    NativeMethods.DwmGetColorizationParameters(out DwmColorizationParams parameters);
                     var color = Color.FromArgb(int.Parse(parameters.clrColor.ToString("X"), NumberStyles.HexNumber));
                     if (!alpha)
                         color = Color.FromArgb(color.R, color.G, color.B);
@@ -4676,7 +4673,7 @@ namespace SilDev
             ///         from a service name, because services and service groups share the same name space.
             ///     </para>
             /// </param>
-            /// <param name="lpServiceStartName ">
+            /// <param name="lpServiceStartName">
             ///     The name of the account under which the service should run. If the service type is
             ///     <see cref="ServiceTypes.Win32OwnProcess"/>, use an account name in the form
             ///     DomainName\UserName. The service process will be logged on as this user. If the account
@@ -5575,8 +5572,8 @@ namespace SilDev
             ///     value contains the error return value. If the error is device-specific, the high-order word
             ///     of the return value is the driver identifier; otherwise, the high-order word is zero.
             /// </returns>
-            [DllImport(DllNames.Winmm, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern int mciSendString(string lpszCommand, StringBuilder lpszReturnString, uint cchReturn, IntPtr hWndCallback);
+            [DllImport(DllNames.Winmm, EntryPoint = "mciSendString", SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern int MciSendString(string lpszCommand, StringBuilder lpszReturnString, uint cchReturn, IntPtr hWndCallback);
 
             /// <summary>
             ///     Changes the position and dimensions of the specified window. For a top-level window, the position and
@@ -6741,8 +6738,8 @@ namespace SilDev
             ///     Returns TIMERR_NOERROR if successful or TIMERR_NOCANDO if the resolution specified in uPeriod
             ///     is out of range.
             /// </returns>
-            [DllImport(DllNames.Winmm, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern uint timeBeginPeriod(uint uPeriod);
+            [DllImport(DllNames.Winmm, EntryPoint = "timeBeginPeriod", SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern uint TimeBeginPeriod(uint uPeriod);
 
             /// <summary>
             ///     The timeEndPeriod function clears a previously set minimum timer resolution.
@@ -6754,8 +6751,8 @@ namespace SilDev
             ///     Returns TIMERR_NOERROR if successful or TIMERR_NOCANDO if the resolution specified in uPeriod
             ///     is out of range.
             /// </returns>
-            [DllImport(DllNames.Winmm, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern uint timeEndPeriod(uint uPeriod);
+            [DllImport(DllNames.Winmm, EntryPoint = "timeEndPeriod", SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern uint TimeEndPeriod(uint uPeriod);
 
             /// <summary>
             ///     Removes a hook procedure installed in a hook chain by the SetWindowsHookEx function.
@@ -6862,8 +6859,8 @@ namespace SilDev
             /// <returns>
             ///     Returns MMSYSERR_NOERROR if successful or an error otherwise.
             /// </returns>
-            [DllImport(DllNames.Winmm, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern int waveOutGetVolume(IntPtr hwo, out uint dwVolume);
+            [DllImport(DllNames.Winmm, EntryPoint = "waveOutGetVolume", SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern int WaveOutGetVolume(IntPtr hwo, out uint dwVolume);
 
             /// <summary>
             ///     The waveOutSetVolume function sets the volume level of the specified waveform-audio output device.
@@ -6879,8 +6876,8 @@ namespace SilDev
             /// <returns>
             ///     Returns MMSYSERR_NOERROR if successful or an error otherwise.
             /// </returns>
-            [DllImport(DllNames.Winmm, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
+            [DllImport(DllNames.Winmm, EntryPoint = "waveOutSetVolume", SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern int WaveOutSetVolume(IntPtr hwo, uint dwVolume);
 
             /// <summary>
             ///     Copies a string into the specified section of an initialization file.
@@ -7197,11 +7194,13 @@ namespace SilDev
             internal const string Msi = "msi.dll";
             internal const string Rstrtmgr = "rstrtmgr.dll";
             internal const string Winmm = "winmm.dll";
+#pragma warning disable CS1591
             public const string Kernel32 = "kernel32.dll";
             public const string Ntdll = "ntdll.dll";
             public const string Psapi = "psapi.dll";
             public const string Shell32 = "shell32.dll";
             public const string User32 = "user32.dll";
+#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -7257,6 +7256,7 @@ namespace SilDev
         [StructLayout(LayoutKind.Explicit)]
         public struct MouseKeyboardHardwareInput
         {
+#pragma warning disable CS1591
             [FieldOffset(0)] public MouseInput Mouse;
             /*
             [FieldOffset(1)]
@@ -7264,6 +7264,7 @@ namespace SilDev
             [FieldOffset(2)]
             public HardwareInput Hardware;
             */
+#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -7272,12 +7273,14 @@ namespace SilDev
         [StructLayout(LayoutKind.Sequential)]
         public struct ProcessBasicInformation
         {
+#pragma warning disable CS1591
             public IntPtr ExitStatus;
             public IntPtr PebBaseAddress;
             public IntPtr AffinityMask;
             public IntPtr BasePriority;
             public UIntPtr UniqueProcessId;
             public IntPtr InheritedFromUniqueProcessId;
+#pragma warning restore CS1591
         }
 
         /// <summary>

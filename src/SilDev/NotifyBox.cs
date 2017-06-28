@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2017-06-27 10:55
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -36,11 +36,13 @@ namespace SilDev
         /// </summary>
         public enum NotifyBoxSound
         {
+#pragma warning disable CS1591
             Asterisk,
             Warning,
             Notify,
             Question,
             None
+#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -48,6 +50,7 @@ namespace SilDev
         /// </summary>
         public enum NotifyBoxStartPosition
         {
+#pragma warning disable CS1591
             Center,
             CenterLeft,
             CenterRight,
@@ -55,6 +58,7 @@ namespace SilDev
             BottomRight,
             TopLeft,
             TopRight
+#pragma warning restore CS1591
         }
 
         private double _opacity = .95d;
@@ -70,8 +74,8 @@ namespace SilDev
         /// </summary>
         public double Opacity
         {
-            get { return _opacity; }
-            set { _opacity = value < .2d ? .2d : value > 1d ? 1d : value; }
+            get => _opacity;
+            set => _opacity = value < .2d ? .2d : value > 1d ? 1d : value;
         }
 
         /// <summary>
@@ -337,7 +341,7 @@ namespace SilDev
             public NotifyForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool borders, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor, bool topMost)
             {
                 _components = new Container();
-                _duration = ((int)duration).IsBetween(1, 999) ? 1000 : duration;
+                _duration = Convert.ToInt32(duration).IsBetween(1, 999) ? 1000 : duration;
                 _opacity = opacity;
                 SuspendLayout();
                 var titleLabel = new Label
@@ -438,6 +442,9 @@ namespace SilDev
                 PerformLayout();
             }
 
+            /// <summary>
+            ///     Disposes of the resources (other than memory) used by the <see cref="Form"/>.
+            /// </summary>
             protected override void Dispose(bool disposing)
             {
                 if (disposing)

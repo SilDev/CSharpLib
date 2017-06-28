@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2017-06-27 10:55
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -36,6 +36,7 @@ namespace SilDev
         /// </summary>
         public enum IconIndex : uint
         {
+#pragma warning disable CS1591
             Asterisk = 0x4c,
             Barrier = 0x51,
             BmpFile = 0x42,
@@ -104,6 +105,7 @@ namespace SilDev
             UserDir = 0x75,
             Warning = 0x4f,
             ZipFile = 0xa5
+#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -436,6 +438,9 @@ namespace SilDev
                 _textBox.Text = curPath;
             }
 
+            /// <summary>
+            ///     Disposes of the resources (other than memory) used by the <see cref="Form"/>.
+            /// </summary>
             protected override void Dispose(bool disposing)
             {
                 if (disposing)

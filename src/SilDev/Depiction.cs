@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2017-05-05 14:32
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -123,6 +123,12 @@ namespace SilDev
         /// </summary>
         /// <param name="color">
         ///     The color to convert.
+        /// </param>
+        /// <param name="width">
+        ///     The width of the <see cref="Image"/>.
+        /// </param>
+        /// <param name="height">
+        ///     The height of the <see cref="Image"/>.
         /// </param>
         public static Image ToImage(this Color color, int width = 1, int height = 1)
         {
@@ -484,6 +490,15 @@ namespace SilDev
             private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
             private bool _disposed;
 
+            /// <summary>
+            ///     Initilazies a new instance of the <see cref="ImagePair"/> class.
+            /// </summary>
+            /// <param name="image1">
+            ///     The first <see cref="Image"/>.
+            /// </param>
+            /// <param name="image2">
+            ///     The second <see cref="Image"/>.
+            /// </param>
             public ImagePair(Image image1, Image image2)
             {
                 Image1 = image1;
@@ -509,6 +524,9 @@ namespace SilDev
                 GC.SuppressFinalize(this);
             }
 
+            /// <summary>
+            ///     Releases all resources used by this <see cref="ImagePair"/>.
+            /// </summary>
             protected virtual void Dispose(bool disposing)
             {
                 if (_disposed)
@@ -567,6 +585,9 @@ namespace SilDev
                 GC.SuppressFinalize(this);
             }
 
+            /// <summary>
+            ///     Releases all resources used by this <see cref="Frame"/>.
+            /// </summary>
             protected virtual void Dispose(bool disposing)
             {
                 if (_disposed)

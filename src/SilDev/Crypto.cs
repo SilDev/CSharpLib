@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,6 +23,9 @@ namespace SilDev
     using System.Security.Cryptography;
     using System.Text;
 
+    /// <summary>
+    ///     Provides functionality for data encryption and decryption.
+    /// </summary>
     public static class Crypto
     {
         #region Base64
@@ -57,7 +60,9 @@ namespace SilDev
             /// </summary>
             public byte[] LastDecodedResult { get; protected set; }
 
+#pragma warning disable 1591
             protected string EncodeFilters(string input, string prefixMark, string suffixMark, uint lineLength)
+#pragma warning restore 1591
             {
                 var s = input;
                 if (!string.IsNullOrEmpty(prefixMark) && !string.IsNullOrEmpty(prefixMark))
@@ -78,7 +83,9 @@ namespace SilDev
                 return s;
             }
 
+#pragma warning disable 1591
             protected string DecodeFilters(string input, string prefixMark, string suffixMark)
+#pragma warning restore 1591
             {
                 var s = input;
                 if (!string.IsNullOrEmpty(prefixMark) && !string.IsNullOrEmpty(suffixMark))
@@ -728,7 +735,7 @@ namespace SilDev
             /// </summary>
             public char[] EncodeTable
             {
-                get { return _encodeTable ?? (_encodeTable = DefaultEncodeTable); }
+                get => _encodeTable ?? (_encodeTable = DefaultEncodeTable);
                 set
                 {
                     try

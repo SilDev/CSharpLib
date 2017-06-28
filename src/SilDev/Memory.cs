@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,10 +21,13 @@ namespace SilDev
     using System.Runtime.Serialization;
     using System.Text;
 
+    /// <summary>
+    ///     Provides a way to pin a managed object from unmanaged memory.
+    /// </summary>
     public class MemoryPinner : IDisposable
     {
-        private bool _disposed;
         private GCHandle _handle;
+        private bool _disposed;
 
         /// <summary>
         ///     Initilazies a new instance of the <see cref="MemoryPinner"/> class with
@@ -44,30 +47,34 @@ namespace SilDev
         /// </summary>
         public IntPtr Pointer { get; private set; }
 
+        ~MemoryPinner() =>
+            Dispose(false);
+
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() => 
             Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
-        ~MemoryPinner()
-        {
-            Dispose(false);
-        }
-
+        /// <summary>
+        ///     Releases all resources used by this <see cref="MemoryPinner"/>.
+        /// </summary>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || !_disposed)
+            if (_disposed)
                 return;
             _handle.Free();
             Pointer = IntPtr.Zero;
             _disposed = true;
+            if (!disposing)
+                return;
+            GC.SuppressFinalize(this);
         }
     }
 
+    /// <summary>
+    ///     Provides the functionality to manage data from an area of memory in a specified process.
+    /// </summary>
     public class ProcessMemory : IDisposable
     {
         private readonly ArrayList _allocations = new ArrayList();
@@ -83,23 +90,8 @@ namespace SilDev
         /// </param>
         public ProcessMemory(IntPtr hWnd)
         {
-            uint ownerProcessId;
-            WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out ownerProcessId);
+            WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out uint ownerProcessId);
             _hProcess = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessVmOperation | WinApi.AccessRights.ProcessVmRead | WinApi.AccessRights.ProcessVmWrite | WinApi.AccessRights.ProcessQueryInformation, false, ownerProcessId);
-        }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~ProcessMemory()
-        {
-            Dispose(false);
         }
 
         /// <summary>
@@ -215,8 +207,7 @@ namespace SilDev
             {
                 using (var pin = new MemoryPinner(value))
                 {
-                    IntPtr bytesWritten;
-                    if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out bytesWritten))
+                    if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out IntPtr bytesWritten))
                         return;
                     throw new MemoryException("Write failed (bytesWritten=" + bytesWritten + ").");
                 }
@@ -235,17 +226,29 @@ namespace SilDev
             }
         }
 
+        ~ProcessMemory() => 
+            Dispose(false);
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
+        /// </summary>
+        public void Dispose() => 
+            Dispose(true);
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
+        /// </summary>
         protected virtual void Dispose(bool disposing)
         {
-            if (!_disposed || !disposing)
+            if (_disposed ||_hProcess == IntPtr.Zero)
                 return;
-            if (_hProcess != IntPtr.Zero)
-            {
-                foreach (IntPtr ptr in _allocations)
-                    WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeTypes.Release);
-                WinApi.NativeMethods.CloseHandle(_hProcess);
-            }
+            foreach (IntPtr ptr in _allocations)
+                WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeTypes.Release);
+            WinApi.NativeMethods.CloseHandle(_hProcess);
             _disposed = true;
+            if (!disposing)
+                return;
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -268,6 +271,9 @@ namespace SilDev
         /// </param>
         public MemoryException(string message) : base(message) { }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MemoryException"/> class with serialized data.
+        /// </summary>
         protected MemoryException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>

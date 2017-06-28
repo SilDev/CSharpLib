@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Win32_OperatingSystem.cs
-// Version:  2016-10-31 17:36
+// Version:  2017-06-28 08:51
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -26,6 +26,7 @@ namespace SilDev.QuickWmi
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class Win32_OperatingSystem
     {
+#pragma warning disable 1591
         public static string BootDevice => GetValue(nameof(BootDevice));
         public static string BuildNumber => GetValue(nameof(BuildNumber));
         public static string BuildType => GetValue(nameof(BuildType));
@@ -92,6 +93,7 @@ namespace SilDev.QuickWmi
         public static string WindowsDirectory => GetValue(nameof(WindowsDirectory));
         public static byte? QuantumLength => GetValue(nameof(QuantumLength));
         public static byte? QuantumType => GetValue(nameof(QuantumType));
+#pragma warning restore 1591
 
         private static dynamic GetValue(string name, Type type)
         {

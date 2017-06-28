@@ -287,7 +287,7 @@ namespace SilDev
             ///     value specifies a higher (more accurate) resolution.
             /// </param>
             public static uint TimeBeginPeriod(uint uPeriod) =>
-                WinApi.NativeMethods.timeBeginPeriod(uPeriod);
+                WinApi.NativeMethods.TimeBeginPeriod(uPeriod);
 
             /// <summary>
             ///     Clears a previously set minimum timer resolution.
@@ -297,7 +297,7 @@ namespace SilDev
             ///     <see cref="TimeBeginPeriod(uint)"/> function.
             /// </param>
             public static uint TimeEndPeriod(uint uPeriod) =>
-                WinApi.NativeMethods.timeEndPeriod(uPeriod);
+                WinApi.NativeMethods.TimeEndPeriod(uPeriod);
 
             /// <summary>
             ///     Retrieves the sound volume of the current application.
@@ -305,7 +305,7 @@ namespace SilDev
             public static int GetSoundVolume()
             {
                 uint currVol;
-                WinApi.NativeMethods.waveOutGetVolume(IntPtr.Zero, out currVol);
+                WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out currVol);
                 var calcVol = (ushort)(currVol & 0xffff);
                 return calcVol / (ushort.MaxValue / 0xa) * 0xa;
             }
@@ -320,13 +320,13 @@ namespace SilDev
             {
                 var newVolume = ushort.MaxValue / 0xa * (value.IsBetween(0x0, 0x64) ? value / 0xa : 0x64);
                 var newVolumeAllChannels = ((uint)newVolume & 0xffff) | ((uint)newVolume << 16);
-                WinApi.NativeMethods.waveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
+                WinApi.NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
             }
 
             private static string SndStatus()
             {
                 var sb = new StringBuilder(128);
-                WinApi.NativeMethods.mciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
+                WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
                 return sb.ToString();
             }
 
@@ -335,19 +335,19 @@ namespace SilDev
                 if (!string.IsNullOrEmpty(SndStatus()))
                     SndClose();
                 var arg = $"open \"{path}\" alias {Alias}";
-                WinApi.NativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
+                WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             private static void SndClose()
             {
                 var arg = $"close {Alias}";
-                WinApi.NativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
+                WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             private static void SndPlay(bool loop = false)
             {
                 var arg = $"play {Alias}{(loop ? " repeat" : string.Empty)}";
-                WinApi.NativeMethods.mciSendString(arg, null, 0, IntPtr.Zero);
+                WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             /// <summary>

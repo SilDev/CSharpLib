@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-05-18 14:16
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -38,8 +38,7 @@ namespace SilDev
             {
                 if (value == null)
                     return false;
-                var asStr = value as string;
-                if (asStr != null)
+                if (value is string asStr)
                     return !string.IsNullOrWhiteSpace(asStr);
                 bool r;
                 using (var ms = new MemoryStream())
@@ -387,6 +386,9 @@ namespace SilDev
         /// </summary>
         /// <param name="source">
         ///     The first string to compare.
+        /// </param>
+        /// <param name="comparisonType">
+        ///     The comparison type that specifies the culture, case, and sort rules.
         /// </param>
         /// <param name="targets">
         ///     The sequence of strings to compare with the first.

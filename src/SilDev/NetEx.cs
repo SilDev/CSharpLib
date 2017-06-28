@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -708,6 +708,9 @@ namespace SilDev
             /// </param>
             /// <param name="password">
             ///     The password associated with the credential.
+            /// </param>
+            /// <param name="timeout">
+            ///     The time-out value in milliseconds.
             /// </param>
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.

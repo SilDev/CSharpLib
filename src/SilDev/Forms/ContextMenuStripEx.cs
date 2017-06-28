@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2017-06-27 10:55
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.

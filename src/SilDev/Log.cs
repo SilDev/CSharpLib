@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-06-27 10:55
+// Version:  2017-06-27 16:30
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -202,8 +202,7 @@ namespace SilDev
                 {
                     goto Finalize;
                 }
-                int i;
-                if (!int.TryParse(option, out i))
+                if (!int.TryParse(option, out int i))
                     mode = 1;
                 if (i > mode)
                     mode = i;
@@ -228,8 +227,7 @@ namespace SilDev
                         var mVal = match.Groups["Value"]?.Captures[i].Value.Trim();
                         if (string.IsNullOrEmpty(mVal))
                             continue;
-                        int num;
-                        if (!int.TryParse(mVal, out num))
+                        if (!int.TryParse(mVal, out int num))
                             goto Finalize;
                         mode = num;
                         goto Finalize;

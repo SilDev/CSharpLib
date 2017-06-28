@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2017-05-21 06:59
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -166,6 +166,7 @@ namespace SilDev
         /// </summary>
         public static class Zip7Helper
         {
+#pragma warning disable 1591
             public static string ExePath { get; set; } =
 #if x64
                 PathEx.Combine(PathEx.LocalDir, "Helper\\7z\\x64\\7zG.exe");
@@ -195,6 +196,7 @@ namespace SilDev
                 var args = $"x \"\"\"{srcFile}\"\"\" -o\"\"\"{destDir}\"\"\" -y";
                 return ProcessEx.Start(ExePath, args, false, windowStyle, dispose);
             }
+#pragma warning restore 1591
         }
 
         #endregion

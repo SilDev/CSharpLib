@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2017-06-27 10:55
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -60,7 +60,7 @@ namespace SilDev.Forms
         /// </summary>
         public bool Active
         {
-            get { return _isActive; }
+            get => _isActive;
             set
             {
                 _isActive = value;
@@ -149,7 +149,7 @@ namespace SilDev.Forms
         /// </summary>
         public int RotationSpeed
         {
-            get { return _timer.Interval; }
+            get => _timer.Interval;
             set
             {
                 if (value > 0)
@@ -162,7 +162,7 @@ namespace SilDev.Forms
         /// </summary>
         public override Color ForeColor
         {
-            get { return _foreColor; }
+            get => _foreColor;
             set
             {
                 _foreColor = value;
@@ -213,6 +213,9 @@ namespace SilDev.Forms
             Invalidate();
         }
 
+        /// <summary>
+        ///     Raises the <see cref="Control"/>.Paint event.
+        /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             if (_spokes > 0)

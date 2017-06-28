@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorDialogEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -77,7 +77,9 @@ namespace SilDev.Forms
             _title = title;
         }
 
+#pragma warning disable 1591
         protected override IntPtr HookProc(IntPtr hWnd, int msg, IntPtr wparam, IntPtr lparam)
+#pragma warning restore 1591
         {
             var hookProc = base.HookProc(hWnd, msg, wparam, lparam);
             if (msg != (int)WinApi.WindowMenuFlags.WmInitDialog)
@@ -110,7 +112,7 @@ namespace SilDev.Forms
             }
             if (_point == null)
                 return hookProc;
-            WinApi.NativeMethods.SetWindowPos(hWnd, new IntPtr(0), _point.X, _point.Y, 0, 0, WinApi.SetWindowPosFlags.NoSize | WinApi.SetWindowPosFlags.NoZOrder | WinApi.SetWindowPosFlags.ShowWindow);
+            WinApi.NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, _point.X, _point.Y, 0, 0, WinApi.SetWindowPosFlags.NoSize | WinApi.SetWindowPosFlags.NoZOrder | WinApi.SetWindowPosFlags.ShowWindow);
             return hookProc;
         }
     }

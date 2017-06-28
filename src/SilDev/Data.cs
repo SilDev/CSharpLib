@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-06-28 08:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -207,7 +207,7 @@ namespace SilDev
             var pebBaseAddress = WinApi.NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
             var processParameters = Marshal.ReadIntPtr(pebBaseAddress, 4 * IntPtr.Size);
             var unicodeSize = IntPtr.Size * 2;
-            offset = processParameters.Increment((IntPtr)(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));
+            offset = processParameters.Increment(new IntPtr(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));
             buffer = Marshal.ReadIntPtr(offset, IntPtr.Size);
         }
 
@@ -224,8 +224,7 @@ namespace SilDev
             {
                 if (string.IsNullOrWhiteSpace(newName))
                     throw new ArgumentNullException(nameof(newName));
-                IntPtr offset, buffer;
-                GetPrincipalPointers(out offset, out buffer);
+                GetPrincipalPointers(out IntPtr offset, out IntPtr buffer);
                 var len = Marshal.ReadInt16(offset);
                 if (string.IsNullOrEmpty(PrincipalName))
                     PrincipalName = Marshal.PtrToStringUni(buffer, len / 2);
@@ -239,7 +238,7 @@ namespace SilDev
                 foreach (var c in newPrincipalName)
                 {
                     Marshal.WriteInt16(ptr, c);
-                    ptr = ptr.Increment((IntPtr)2);
+                    ptr = ptr.Increment(new IntPtr(2));
                 }
                 Marshal.WriteInt16(ptr, 0);
                 Marshal.WriteInt16(offset, (short)(newPrincipalName.Length * 2));
@@ -259,12 +258,11 @@ namespace SilDev
             {
                 if (string.IsNullOrEmpty(PrincipalName))
                     throw new InvalidOperationException();
-                IntPtr offset, buffer;
-                GetPrincipalPointers(out offset, out buffer);
+                GetPrincipalPointers(out IntPtr offset, out IntPtr buffer);
                 foreach (var c in PrincipalName)
                 {
                     Marshal.WriteInt16(buffer, c);
-                    buffer = buffer.Increment((IntPtr)2);
+                    buffer = buffer.Increment(new IntPtr(2));
                 }
                 Marshal.WriteInt16(buffer, 0);
                 Marshal.WriteInt16(offset, (short)(PrincipalName.Length * 2));
@@ -850,15 +848,13 @@ namespace SilDev
             var list = new List<Process>();
             try
             {
-                uint handle;
-                var res = WinApi.NativeMethods.RmStartSession(out handle, 0, Guid.NewGuid().ToString());
+                var res = WinApi.NativeMethods.RmStartSession(out uint handle, 0, Guid.NewGuid().ToString());
                 if (res != 0)
                     throw new Exception("Could not begin restart session. Unable to determine file locker.");
                 try
                 {
                     if (paths == null || !paths.Any())
                         throw new ArgumentNullException(nameof(paths));
-                    uint pnProcInfoNeeded;
                     uint pnProcInfo = 0;
                     uint lpdwRebootReasons = 0;
                     var resources = paths.Select(s => PathEx.Combine(s)).Where(File.Exists).ToArray();
@@ -867,7 +863,7 @@ namespace SilDev
                     res = WinApi.NativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
                     if (res != 0)
                         throw new Exception("Could not register resource.");
-                    res = WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
+                    res = WinApi.NativeMethods.RmGetList(handle, out uint pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
                     if (res == 0xea)
                     {
                         var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];
@@ -982,6 +978,10 @@ namespace SilDev
         /// </summary>
         /// <param name="path">
         ///     The path of the file or directory to be deleted.
+        /// </param>
+        /// <param name="elevated">
+        ///     true to run this task with administrator privileges if the deletion fails; otherwise,
+        ///     false.
         /// </param>
         /// <param name="timelimit">
         ///     The time limit in milliseconds.
