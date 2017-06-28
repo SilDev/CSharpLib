@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilDev.CSharpLib", "src\SilDev.CSharpLib.csproj", "{48B9E661-5DAB-47FF-846A-DFF487444277}"
 EndProject
@@ -16,6 +16,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{48B9E661-5DAB-47FF-846A-DFF487444277}.Debug|x64.ActiveCfg = Debug|x86
+		{48B9E661-5DAB-47FF-846A-DFF487444277}.Debug|x64.Build.0 = Debug|x86
 		{48B9E661-5DAB-47FF-846A-DFF487444277}.Debug|x86.ActiveCfg = Debug|x86
 		{48B9E661-5DAB-47FF-846A-DFF487444277}.Debug|x86.Build.0 = Debug|x86
 		{48B9E661-5DAB-47FF-846A-DFF487444277}.Release|x64.ActiveCfg = Release|x86
@@ -23,6 +24,7 @@ Global
 		{48B9E661-5DAB-47FF-846A-DFF487444277}.Release|x86.ActiveCfg = Release|x86
 		{48B9E661-5DAB-47FF-846A-DFF487444277}.Release|x86.Build.0 = Release|x86
 		{223A4D50-E1DE-437C-AA81-1660DA6DA8B7}.Debug|x64.ActiveCfg = Debug|x64
+		{223A4D50-E1DE-437C-AA81-1660DA6DA8B7}.Debug|x64.Build.0 = Debug|x64
 		{223A4D50-E1DE-437C-AA81-1660DA6DA8B7}.Debug|x86.ActiveCfg = Debug|x64
 		{223A4D50-E1DE-437C-AA81-1660DA6DA8B7}.Release|x64.ActiveCfg = Release|x64
 		{223A4D50-E1DE-437C-AA81-1660DA6DA8B7}.Release|x64.Build.0 = Release|x64
