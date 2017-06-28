@@ -1074,6 +1074,11 @@
                 The custom-sized area for a control.
             </param>
         </member>
+        <member name="M:SilDev.Forms.ProgressCircle.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+                Raises the <see cref="T:System.Windows.Forms.Control"/>.Paint event.
+            </summary>
+        </member>
         <member name="T:SilDev.Forms.RichTextBoxEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.RichTextBox"/> class.
@@ -1451,6 +1456,9 @@
             <param name="source">
                 The first string to compare.
             </param>
+            <param name="comparisonType">
+                The comparison type that specifies the culture, case, and sort rules.
+            </param>
             <param name="targets">
                 The sequence of strings to compare with the first.
             </param>
@@ -1505,6 +1513,11 @@
             <param name="b">
                 The second object to compare.
             </param>
+        </member>
+        <member name="T:SilDev.Crypto">
+            <summary>
+                Provides functionality for data encryption and decryption.
+            </summary>
         </member>
         <member name="T:SilDev.Crypto.Base64">
             <summary>
@@ -3243,6 +3256,10 @@
             <param name="path">
                 The path of the file or directory to be deleted.
             </param>
+            <param name="elevated">
+                true to run this task with administrator privileges if the deletion fails; otherwise,
+                false.
+            </param>
             <param name="timelimit">
                 The time limit in milliseconds.
             </param>
@@ -3320,6 +3337,12 @@
             </summary>
             <param name="color">
                 The color to convert.
+            </param>
+            <param name="width">
+                The width of the <see cref="T:System.Drawing.Image"/>.
+            </param>
+            <param name="height">
+                The height of the <see cref="T:System.Drawing.Image"/>.
             </param>
         </member>
         <member name="M:SilDev.Depiction.GetAverageColor(System.Drawing.Image,System.Boolean)">
@@ -3445,6 +3468,17 @@
                 class.
             </summary>
         </member>
+        <member name="M:SilDev.Depiction.ImagePair.#ctor(System.Drawing.Image,System.Drawing.Image)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.Depiction.ImagePair"/> class.
+            </summary>
+            <param name="image1">
+                The first <see cref="T:System.Drawing.Image"/>.
+            </param>
+            <param name="image2">
+                The second <see cref="T:System.Drawing.Image"/>.
+            </param>
+        </member>
         <member name="P:SilDev.Depiction.ImagePair.Image1">
             <summary>
                 Gets the first image of this <see cref="T:SilDev.Depiction.ImagePair"/>.
@@ -3456,6 +3490,11 @@
             </summary>
         </member>
         <member name="M:SilDev.Depiction.ImagePair.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.Depiction.ImagePair"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.Depiction.ImagePair.Dispose(System.Boolean)">
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.Depiction.ImagePair"/>.
             </summary>
@@ -3489,6 +3528,11 @@
             </summary>
         </member>
         <member name="M:SilDev.Depiction.Frame.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.Depiction.Frame"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.Depiction.Frame.Dispose(System.Boolean)">
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.Depiction.Frame"/>.
             </summary>
@@ -5592,6 +5636,11 @@
                 Stops playing sounds.
             </summary>
         </member>
+        <member name="T:SilDev.MemoryPinner">
+            <summary>
+                Provides a way to pin a managed object from unmanaged memory.
+            </summary>
+        </member>
         <member name="M:SilDev.MemoryPinner.#ctor(System.Object)">
             <summary>
                 Initilazies a new instance of the <see cref="T:SilDev.MemoryPinner"/> class with
@@ -5611,6 +5660,16 @@
                 Releases all resources used by this <see cref="T:SilDev.MemoryPinner"/>.
             </summary>
         </member>
+        <member name="M:SilDev.MemoryPinner.Dispose(System.Boolean)">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.MemoryPinner"/>.
+            </summary>
+        </member>
+        <member name="T:SilDev.ProcessMemory">
+            <summary>
+                Provides the functionality to manage data from an area of memory in a specified process.
+            </summary>
+        </member>
         <member name="M:SilDev.ProcessMemory.#ctor(System.IntPtr)">
             <summary>
                 Initilazies a new instance of the <see cref="T:SilDev.ProcessMemory"/> class with
@@ -5619,11 +5678,6 @@
             <param name="hWnd">
                 A handle to the window.
             </param>
-        </member>
-        <member name="M:SilDev.ProcessMemory.Dispose">
-            <summary>
-                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
-            </summary>
         </member>
         <member name="M:SilDev.ProcessMemory.GetImageFileName">
             <summary>
@@ -5675,6 +5729,16 @@
                 space of the specified process.
             </param>
         </member>
+        <member name="M:SilDev.ProcessMemory.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Dispose(System.Boolean)">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
+            </summary>
+        </member>
         <member name="T:SilDev.MemoryException">
             <summary>
                 The exception that is thrown when an attempt to access some data in memory.
@@ -5692,6 +5756,11 @@
             <param name="message">
                 Exception message.
             </param>
+        </member>
+        <member name="M:SilDev.MemoryException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.MemoryException"/> class with serialized data.
+            </summary>
         </member>
         <member name="P:SilDev.MemoryException.Message">
             <summary>
@@ -6124,6 +6193,9 @@
             <param name="password">
                 The password associated with the credential.
             </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
             <param name="userAgent">
                 The value of the User-agent HTTP header.
             </param>
@@ -6486,6 +6558,11 @@
         <member name="M:SilDev.NotifyBox.Abort">
             <summary>
                 Terminates the current notify box.
+            </summary>
+        </member>
+        <member name="M:SilDev.NotifyBox.NotifyForm.Dispose(System.Boolean)">
+            <summary>
+                Disposes of the resources (other than memory) used by the <see cref="T:System.Windows.Forms.Form"/>.
             </summary>
         </member>
         <member name="T:SilDev.NotifyBoxEx">
@@ -6858,6 +6935,11 @@
             <param name="innerException">
                 Exception inner cause.
             </param>
+        </member>
+        <member name="M:SilDev.PathNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class with serialized data.
+            </summary>
         </member>
         <member name="P:SilDev.PathNotFoundException.Message">
             <summary>
@@ -8038,6 +8120,9 @@
             <param name="bytes">
                 The sequence of bytes to convert.
             </param>
+            <param name="defValue">
+                The default value.
+            </param>
         </member>
         <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}},System.Int64)">
             <summary>
@@ -8167,6 +8252,9 @@
             </param>
             <param name="separator">
                 The string to use as a separator.
+            </param>
+            <param name="splitOptions">
+                The split options.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.SplitNewLine(System.String)">
@@ -8389,6 +8477,9 @@
             <param name="result">
                 The result value.
             </param>
+            <param name="defValue">
+                The default value.
+            </param>
         </member>
         <member name="T:SilDev.ResourcesEx">
             <summary>
@@ -8496,6 +8587,11 @@
             <param name="buttonHighlight">
                 The button highlight color of the dialog box.
             </param>
+        </member>
+        <member name="M:SilDev.ResourcesEx.IconBrowserDialog.Dispose(System.Boolean)">
+            <summary>
+                Disposes of the resources (other than memory) used by the <see cref="T:System.Windows.Forms.Form"/>.
+            </summary>
         </member>
         <member name="T:SilDev.Service">
             <summary>
@@ -13159,7 +13255,7 @@
                     from a service name, because services and service groups share the same name space.
                 </para>
             </param>
-            <param name="lpServiceStartName ">
+            <param name="lpServiceStartName">
                 The name of the account under which the service should run. If the service type is
                 <see cref="F:SilDev.WinApi.ServiceTypes.Win32OwnProcess"/>, use an account name in the form
                 DomainName\UserName. The service process will be logged on as this user. If the account
@@ -13990,7 +14086,7 @@
                 If the function succeeds, the return value is NULL.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.mciSendString(System.String,System.Text.StringBuilder,System.UInt32,System.IntPtr)">
+        <member name="M:SilDev.WinApi.NativeMethods.MciSendString(System.String,System.Text.StringBuilder,System.UInt32,System.IntPtr)">
             <summary>
                 The mciSendString function sends a command string to an MCI device. The device that the
                 command is sent to is specified in the command string.
@@ -15116,7 +15212,7 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.timeBeginPeriod(System.UInt32)">
+        <member name="M:SilDev.WinApi.NativeMethods.TimeBeginPeriod(System.UInt32)">
             <summary>
                 The timeBeginPeriod function requests a minimum resolution for periodic timers.
             </summary>
@@ -15129,7 +15225,7 @@
                 is out of range.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.timeEndPeriod(System.UInt32)">
+        <member name="M:SilDev.WinApi.NativeMethods.TimeEndPeriod(System.UInt32)">
             <summary>
                 The timeEndPeriod function clears a previously set minimum timer resolution.
             </summary>
@@ -15228,7 +15324,7 @@
                 If the function succeeds, the return value is a nonzero value.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.waveOutGetVolume(System.IntPtr,System.UInt32@)">
+        <member name="M:SilDev.WinApi.NativeMethods.WaveOutGetVolume(System.IntPtr,System.UInt32@)">
             <summary>
                 The waveOutGetVolume function retrieves the current volume level of the specified waveform-audio
                 output device.
@@ -15245,7 +15341,7 @@
                 Returns MMSYSERR_NOERROR if successful or an error otherwise.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.waveOutSetVolume(System.IntPtr,System.UInt32)">
+        <member name="M:SilDev.WinApi.NativeMethods.WaveOutSetVolume(System.IntPtr,System.UInt32)">
             <summary>
                 The waveOutSetVolume function sets the volume level of the specified waveform-audio output device.
             </summary>
