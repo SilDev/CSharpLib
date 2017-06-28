@@ -150,7 +150,6 @@ namespace SilDev
                 if (u.Scheme.EqualsEx("https", "http"))
                     return u;
                 s = "http://" + u.Host + u.PathAndQuery;
-                Log.Write(s);
                 u = s.ToUri();
                 return u;
             }
