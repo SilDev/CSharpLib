@@ -3689,7 +3689,7 @@
                 true to convert the result to lowercase; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariablePath(System.String,System.Boolean)">
+        <member name="M:SilDev.EnvironmentEx.GetVariablePath(System.String,System.Boolean,System.Boolean)">
             <summary>
                 Converts the specified path to an existing environment variable, if possible.
             </summary>
@@ -3700,8 +3700,12 @@
                 true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
                 otherwise, false.
             </param>
+            <param name="special">
+                true to consider the <see cref="T:System.Environment.SpecialFolder"/> values;
+                otherwise, false.
+            </param>
         </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariablePathFull(System.String,System.Boolean)">
+        <member name="M:SilDev.EnvironmentEx.GetVariablePathFull(System.String,System.Boolean,System.Boolean)">
             <summary>
                 Returns a new string in which all occurrences in this instance are replaced
                 with a valid environment variable.
@@ -3711,6 +3715,10 @@
             </param>
             <param name="curDir">
                 true to consider the <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value;
+                otherwise, false.
+            </param>
+            <param name="special">
+                true to consider the <see cref="T:System.Environment.SpecialFolder"/> values;
                 otherwise, false.
             </param>
         </member>
