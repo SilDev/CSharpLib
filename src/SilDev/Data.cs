@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-07-15 06:39
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -68,6 +68,149 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Replaces all occurrences of a specifed sequence of bytes in the specified
+        ///     file with another sequence of bytes.
+        /// </summary>
+        /// <param name="file">
+        ///     The file to overwrite.
+        /// </param>
+        /// <param name="oldValue">
+        ///     The sequence of bytes to be replaced.
+        /// </param>
+        /// <param name="newValue">
+        ///     The sequence of bytes to replace all all occurrences of oldValue.
+        /// </param>
+        /// <param name="backup">
+        ///     true to create a backup; otherwise, false.
+        /// </param>
+        public static bool BinaryReplace(string file, byte[] oldValue, byte[] newValue, bool backup = true)
+        {
+            var targetPath = PathEx.Combine(file);
+            try
+            {
+                if (!File.Exists(targetPath))
+                    throw new PathNotFoundException(targetPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+
+            var backupPath = $"{targetPath}.backup";
+            for (var i = 0; i < short.MaxValue; i++)
+            {
+                var path = backupPath + i;
+                if (File.Exists(path))
+                    continue;
+                backupPath = path;
+                break;
+            }
+            try
+            {
+                File.Move(targetPath, backupPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+
+            FileStream sourceStream = null, targetStream = null;
+            var result = false;
+            try
+            {
+                sourceStream = File.OpenRead(backupPath);
+                targetStream = File.Create(targetPath);
+                int index = 0, position;
+                var offset = -1L;
+                while ((position = sourceStream.ReadByte()) != -1)
+                    if (oldValue[index] == position)
+                        if (index == oldValue.Length - 1)
+                        {
+                            targetStream.Write(newValue, 0, newValue.Length);
+                            offset = -1;
+                            index = 0;
+                        }
+                        else
+                        {
+                            if (index == 0)
+                                offset = sourceStream.Position - 1;
+                            ++index;
+                        }
+                    else
+                    {
+                        if (index == 0)
+                            targetStream.WriteByte((byte)position);
+                        else
+                        {
+                            targetStream.WriteByte(oldValue[0]);
+                            sourceStream.Position = offset + 1;
+                            offset = -1;
+                            index = 0;
+                        }
+                    }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            finally
+            {
+                sourceStream?.Dispose();
+                targetStream?.Dispose();
+            }
+
+            if (!result)
+            {
+                try
+                {
+                    if (File.Exists(backupPath))
+                    {
+                        if (File.Exists(targetPath))
+                            File.Delete(targetPath);
+                        File.Move(backupPath, targetPath);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Log.Write(exc);
+                }
+                return false;
+            }
+
+            if (backup)
+            {
+                try
+                {
+                    if (File.Exists(backupPath) && File.Exists(targetPath))
+                    {
+                        var backupHash = new Crypto.Md5().EncryptFile(backupPath);
+                        var targetHash = new Crypto.Md5().EncryptFile(targetPath);
+                        if (backupHash.Equals(targetHash))
+                            File.Delete(backupPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+                return true;
+            }
+            try
+            {
+                if (File.Exists(backupPath))
+                    File.Delete(backupPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return true;
         }
 
         /// <summary>
@@ -288,14 +431,14 @@ namespace SilDev
                 var type = Type.GetTypeFromProgID("Shell.Application");
                 dynamic shell = Activator.CreateInstance(type);
                 var fDir = Path.GetDirectoryName(path);
-                dynamic dir = shell.NameSpace(fDir);
+                var dir = shell.NameSpace(fDir);
                 var fName = Path.GetFileName(path);
-                dynamic link = dir.ParseName(fName);
+                var link = dir.ParseName(fName);
                 var verb = sb.ToString();
-                dynamic verbs = link.Verbs();
+                var verbs = link.Verbs();
                 for (var i = 0; i < verbs.Count(); i++)
                 {
-                    dynamic d = verbs.Item(i);
+                    var d = verbs.Item(i);
                     if ((!pin || !d.Name.Equals(verb)) && (pin || !d.Name.Contains(verb)))
                         continue;
                     d.DoIt();
