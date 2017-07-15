@@ -2923,6 +2923,24 @@
                 The maximum number of bytes to buffer.
             </param>
         </member>
+        <member name="M:SilDev.Data.BinaryReplace(System.String,System.Byte[],System.Byte[],System.Boolean)">
+            <summary>
+                Replaces all occurrences of a specifed sequence of bytes in the specified
+                file with another sequence of bytes.
+            </summary>
+            <param name="file">
+                The file to overwrite.
+            </param>
+            <param name="oldValue">
+                The sequence of bytes to be replaced.
+            </param>
+            <param name="newValue">
+                The sequence of bytes to replace all all occurrences of oldValue.
+            </param>
+            <param name="backup">
+                true to create a backup; otherwise, false.
+            </param>
+        </member>
         <member name="M:SilDev.Data.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
                 Creates a link to the specified path.
