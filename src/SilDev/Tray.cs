@@ -50,9 +50,9 @@ namespace SilDev
                 }
                 WinApi.NativeMethods.GetClientRect(hWnd, out Rectangle rect);
                 for (var x = 0; x < rect.Right; x += 5)
-                for (var y = 0; y < rect.Bottom; y += 5)
-                    if ((uint)WinApi.NativeHelper.SendMessage(hWnd, (uint)WinApi.WindowMenuFlags.WmMouseMove, IntPtr.Zero, new IntPtr((y << 16) + x)) != 1)
-                        WinApi.NativeHelper.ThrowLastError();
+                    for (var y = 0; y < rect.Bottom; y += 5)
+                        if ((uint)WinApi.NativeHelper.SendMessage(hWnd, (uint)WinApi.WindowMenuFlags.WmMouseMove, IntPtr.Zero, new IntPtr((y << 16) + x)) != 1)
+                            WinApi.NativeHelper.ThrowLastError();
                 return true;
             }
             catch (Exception ex)
