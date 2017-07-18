@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2016-10-24 15:58
+// Version:  2017-07-19 00:08
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -39,6 +39,29 @@ namespace SilDev.Forms
             catch
             {
                 return null;
+            }
+        }
+
+        /// <summary>
+        ///     Represents a Windows list view control, which displays a collection of items that
+        ///     can be displayed using one of four different views.
+        /// </summary>
+        public class DoubleBuffered : ListView
+        {
+            protected const int WmEraseBkGnd = 0x14;
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="ListView"/> class.
+            /// </summary>
+            public DoubleBuffered() =>
+                SetStyle(ControlStyles.AllPaintingInWmPaint |
+                         ControlStyles.EnableNotifyMessage |
+                         ControlStyles.OptimizedDoubleBuffer, true);
+
+            protected override void OnNotifyMessage(Message m)
+            {
+                if (m.Msg != WmEraseBkGnd)
+                    base.OnNotifyMessage(m);
             }
         }
 
