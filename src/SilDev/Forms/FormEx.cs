@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2017-05-13 04:34
+// Version:  2017-07-18 04:21
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -35,6 +35,24 @@ namespace SilDev.Forms
             ///     Logs the loading time of the specified <see cref="Form"/>.
             /// </summary>
             LogLoadingTime = 0x10
+        }
+
+        /// <summary>
+        ///     Allows to dock the specifed <see cref="Form"/> to the virtual screen edges.
+        /// </summary>
+        /// <param name="form">
+        ///     The form window to be dockable.
+        /// </param>
+        public static void Dockable(Form form)
+        {
+            form.ResizeEnd += (sender, args) =>
+            {
+                var f = sender as Form;
+                if (f == null)
+                    return;
+                WinApi.NativeHelper.MoveWindowToVisibleScreenArea(f.Handle);
+                f.Update();
+            };
         }
 
         /// <summary>
