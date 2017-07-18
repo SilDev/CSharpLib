@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-07-18 04:21
+// Version:  2017-07-18 04:31
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -1291,44 +1291,44 @@ namespace SilDev
             /// <summary>
             ///     Closes the window.
             /// </summary>
-            ScClose = 0xf06,
+            ScClose = 0xf060,
 
             /// <summary>
             ///     Changes the cursor to a question mark with a pointer. If the user then clicks a
             ///     control in the dialog box, the control receives a WM_HELP message.
             /// </summary>
-            ScContextHelp = 0xf18,
+            ScContextHelp = 0xf180,
 
             /// <summary>
             ///     Selects the default item; the user double-clicked the window menu.
             /// </summary>
-            ScDefault = 0xf16,
+            ScDefault = 0xf160,
 
             /// <summary>
             ///     Activates the window associated with the application-specified hot key. The lParam
             ///     parameter identifies the window to activate.
             /// </summary>
-            ScHotkey = 0xf15,
+            ScHotkey = 0xf150,
 
             /// <summary>
             ///     Scrolls horizontally.
             /// </summary>
-            ScHScroll = 0xf08,
+            ScHScroll = 0xf080,
 
             /// <summary>
             ///     Retrieves the window menu as a result of a keystroke.
             /// </summary>
-            ScKeyMenu = 0xf1,
+            ScKeyMenu = 0xf100,
 
             /// <summary>
             ///     Maximizes the window.
             /// </summary>
-            ScMaximize = 0xf03,
+            ScMaximize = 0xf030,
 
             /// <summary>
             ///     Minimizes the window.
             /// </summary>
-            ScMinimize = 0xf02,
+            ScMinimize = 0xf020,
 
             /// <summary>
             ///     Sets the state of the display. This command supports devices that have power-saving
@@ -1336,52 +1336,52 @@ namespace SilDev
             ///     have the following values: -1 (the display is powering on), 1 (the display is going
             ///     to low power), 2 (the display is being shut off).
             /// </summary>
-            ScMonitorPower = 0xf17,
+            ScMonitorPower = 0xf170,
 
             /// <summary>
             ///     Retrieves the window menu as a result of a mouse click.
             /// </summary>
-            ScMouseMenu = 0xf09,
+            ScMouseMenu = 0xf090,
 
             /// <summary>
             ///     Moves the window.
             /// </summary>
-            ScMove = 0xf01,
+            ScMove = 0xf010,
 
             /// <summary>
             ///     Moves to the next window.
             /// </summary>
-            ScNextWindow = 0xf04,
+            ScNextWindow = 0xf040,
 
             /// <summary>
             ///     Moves to the previous window.
             /// </summary>
-            ScPrevWindow = 0xf05,
+            ScPrevWindow = 0xf050,
 
             /// <summary>
             ///     Restores the window to its normal position and size.
             /// </summary>
-            ScRestore = 0xf12,
+            ScRestore = 0xf120,
 
             /// <summary>
             ///     Executes the screen saver application specified in the [boot] section of the System.ini file.
             /// </summary>
-            ScScreenSave = 0xf14,
+            ScScreenSave = 0xf140,
 
             /// <summary>
             ///     Sizes the window.
             /// </summary>
-            ScSize = 0xf,
+            ScSize = 0xf000,
 
             /// <summary>
             ///     Activates the Start menu.
             /// </summary>
-            ScTaskList = 0xf13,
+            ScTaskList = 0xf130,
 
             /// <summary>
             ///     Scrolls vertically.
             /// </summary>
-            ScVScroll = 0xf07,
+            ScVScroll = 0xf070,
 
             /// <summary>
             ///     Indicates whether the screen saver is secure.
@@ -1412,7 +1412,7 @@ namespace SilDev
             ///     to the window that contains the cursor. Otherwise, the message is posted to the window that
             ///     has captured the mouse.
             /// </summary>
-            WmMouseMove = 0x2,
+            WmMouseMove = 0x200,
 
             /// <summary>
             ///     A message that is sent to all top-level windows when the SystemParametersInfo  function changes
