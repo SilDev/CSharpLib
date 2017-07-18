@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-07-18 04:31
+// Version:  2017-07-18 00:01
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -602,7 +602,7 @@ namespace SilDev
             ///     Indicates that the uPosition parameter gives the zero-based relative position
             ///     of the menu item.
             /// </summary>
-            ByPosition = 0x4,
+            ByPosition = 0x400,
 
             /// <summary>
             ///     Uses a bitmap as the menu item. The lpNewItem parameter contains a handle to
@@ -639,13 +639,13 @@ namespace SilDev
             ///     a drop-down menu, submenu, or shortcut menu, the new column is separated from
             ///     the old column by a vertical line.
             /// </summary>
-            MenuBarBreak = 0x2,
+            MenuBarBreak = 0x20,
 
             /// <summary>
             ///     Places the item on a new line (for menu bars) or in a new column (for a
             ///     drop-down menu, submenu, or shortcut menu) without separating columns.
             /// </summary>
-            MenuBreak = 0x4,
+            MenuBreak = 0x40,
 
             /// <summary>
             ///     Specifies that the item is an owner-drawn item. Before the menu is displayed
@@ -654,7 +654,7 @@ namespace SilDev
             ///     message is then sent to the window procedure of the owner window whenever
             ///     the appearance of the menu item must be updated.
             /// </summary>
-            OwnerDraw = 0x1,
+            OwnerDraw = 0x100,
 
             /// <summary>
             ///     Specifies that the menu item opens a drop-down menu or submenu. The uIDNewItem
@@ -662,14 +662,14 @@ namespace SilDev
             ///     used to add a menu name to a menu bar or a menu item that opens a submenu to a
             ///     drop-down menu, submenu, or shortcut menu.
             /// </summary>
-            Popup = 0x1,
+            Popup = 0x10,
 
             /// <summary>
             ///     Draws a horizontal dividing line. This flag is used only in a drop-down menu,
             ///     submenu, or shortcut menu. The line cannot be grayed, disabled, or highlighted.
             ///     The lpNewItem and uIDNewItem parameters are ignored.
             /// </summary>
-            Separator = 0x8,
+            Separator = 0x800,
 
             /// <summary>
             ///     Specifies that the menu item is a text string; the lpNewItem parameter is a
@@ -687,7 +687,7 @@ namespace SilDev
             /// <summary>
             ///     Remove uPosition parameters.
             /// </summary>
-            Remove = 0x1
+            Remove = 0x1000
         }
 
         /// <summary>
@@ -1471,18 +1471,18 @@ namespace SilDev
             /// <summary>
             ///     The window has a thin-line border.
             /// </summary>
-            Border = 0x8,
+            Border = 0x800000,
 
             /// <summary>
             ///     The window has a title bar (includes the <see cref="Border"/> style).
             /// </summary>
-            Caption = 0xc,
+            Caption = 0xc00000,
 
             /// <summary>
             ///     The window is a child window. A window with this style cannot have a menu bar. This style cannot
             ///     be used with the WS_POPUP style.
             /// </summary>
-            Child = 0x4,
+            Child = 0x40000000,
 
             /// <summary>
             ///     Same as the WS_CHILD style.
@@ -1493,7 +1493,7 @@ namespace SilDev
             ///     Excludes the area occupied by child windows when drawing occurs within the parent window. This
             ///     style is used when creating the parent window.
             /// </summary>
-            ClipChildren = 0x2,
+            ClipChildren = 0x2000000,
 
             /// <summary>
             ///     Clips child windows relative to each other; that is, when a particular child window receives a
@@ -1502,19 +1502,19 @@ namespace SilDev
             ///     is not specified and child windows overlap, it is possible, when drawing within the client area
             ///     of a child window, to draw within the client area of a neighboring child window.
             /// </summary>
-            ClipSiblings = 0x4,
+            ClipSiblings = 0x4000000,
 
             /// <summary>
             ///     The window is initially disabled. A disabled window cannot receive input from the user. To change
             ///     this after a window has been created, use the EnableWindow function.
             /// </summary>
-            Disabled = 0x8,
+            Disabled = 0x8000000,
 
             /// <summary>
             ///     The window has a border of a style typically used with dialog boxes. A window with this style
             ///     cannot have a title bar.
             /// </summary>
-            DlgFrame = 0x4,
+            DlgFrame = 0x400000,
 
             /// <summary>
             ///     The window is the first control of a group of controls. The group consists of this first control
@@ -1523,12 +1523,12 @@ namespace SilDev
             ///     from group to group. The user can subsequently change the keyboard focus from one control in the
             ///     group to the next control in the group by using the direction keys.
             /// </summary>
-            Group = 0x2,
+            Group = 0x20000,
 
             /// <summary>
             ///     The window has a horizontal scroll bar.
             /// </summary>
-            HorScroll = 0x1,
+            HorScroll = 0x100000,
 
             /// <summary>
             ///     The window is initially minimized. Same as the <see cref="Minimize"/> style.
@@ -1538,24 +1538,24 @@ namespace SilDev
             /// <summary>
             ///     The window is initially maximized.
             /// </summary>
-            Maximize = 0x1,
+            Maximize = 0x1000000,
 
             /// <summary>
             ///     The window has a maximize button. Cannot be combined with the <see cref="ExContextHelp"/> style.
             ///     The <see cref="SysMenu"/> style must also be specified.
             /// </summary>
-            MaximizeBox = 0x1,
+            MaximizeBox = 0x10000,
 
             /// <summary>
             ///     The window is initially minimized. Same as the WS_ICONIC style.
             /// </summary>
-            Minimize = 0x2,
+            Minimize = 0x20000000,
 
             /// <summary>
             ///     The window has a minimize button. Cannot be combined with the <see cref="ExContextHelp"/> style.
             ///     The <see cref="SysMenu"/> style must also be specified.
             /// </summary>
-            MinimizeBox = 0x2,
+            MinimizeBox = 0x20000,
 
             /// <summary>
             ///     The window is an overlapped window. An overlapped window has a title bar and a border. Same
@@ -1582,13 +1582,13 @@ namespace SilDev
             /// <summary>
             ///     The window has a sizing border. Same as the <see cref="ThickFrame"/> style.
             /// </summary>
-            SizeBox = 0x4,
+            SizeBox = 0x40000,
 
             /// <summary>
             ///     The window has a window menu on its title bar. The <see cref="Caption"/> style must also be
             ///     specified.
             /// </summary>
-            SysMenu = 0x8,
+            SysMenu = 0x80000,
 
             /// <summary>
             ///     The window is a control that can receive the keyboard focus when the user presses the TAB key.
@@ -1597,12 +1597,12 @@ namespace SilDev
             ///     a window has been created, use the SetWindowLong function. For user-created windows and modeless
             ///     dialogs to work with tab stops, alter the message loop to call the IsDialogMessage function.
             /// </summary>
-            TabStop = 0x1,
+            TabStop = 0x10000,
 
             /// <summary>
             ///     The window has a sizing border. Same as the <see cref="SizeBox"/> style.
             /// </summary>
-            ThickFrame = 0x4,
+            ThickFrame = 0x40000,
 
             /// <summary>
             ///     The window is an overlapped window. An overlapped window has a title bar and a border. Same
@@ -1619,32 +1619,32 @@ namespace SilDev
             ///     The window is initially visible. This style can be turned on and off by using the ShowWindow
             ///     or SetWindowPos function.
             /// </summary>
-            Visible = 0x1,
+            Visible = 0x10000000,
 
             /// <summary>
             ///     The window has a vertical scroll bar.
             /// </summary>
-            VerScroll = 0x2,
+            VerScroll = 0x200000,
 
             /// <summary>
             ///     The window accepts drag-drop files.
             /// </summary>
-            ExAcceptFiles = 0x1,
+            ExAcceptFiles = 0x10,
 
             /// <summary>
             ///     Forces a top-level window onto the taskbar when the window is visible.
             /// </summary>
-            ExAppWindow = 0x4,
+            ExAppWindow = 0x40000,
 
             /// <summary>
             ///     The window has a border with a sunken edge.
             /// </summary>
-            ExClientEdge = 0x2,
+            ExClientEdge = 0x200,
 
             /// <summary>
             ///     Paints all descendants of a window in bottom-to-top painting order using double-buffering.
             /// </summary>
-            ExComposited = 0x2,
+            ExComposited = 0x2000000,
 
             /// <summary>
             ///     The title bar of the window includes a question mark. When the user clicks the question mark,
@@ -1655,7 +1655,7 @@ namespace SilDev
             ///     <see cref="ExContextHelp"/> cannot be used with the <see cref="MaximizeBox"/> or
             ///     <see cref="MinimizeBox"/> styles.
             /// </summary>
-            ExContextHelp = 0x4,
+            ExContextHelp = 0x400,
 
             /// <summary>
             ///     The window itself contains child windows that should take part in dialog box navigation. If
@@ -1663,7 +1663,7 @@ namespace SilDev
             ///     performing navigation operations such as handling the TAB key, an arrow key, or a keyboard
             ///     mnemonic.
             /// </summary>
-            ExControlParent = 0x1,
+            ExControlParent = 0x10000,
 
             /// <summary>
             ///     The window has a double border; the window can, optionally, be created with a title bar by
@@ -1675,14 +1675,14 @@ namespace SilDev
             ///     The window is a layered window. This style cannot be used if the window has a class style of
             ///     either CS_OWNDC or CS_CLASSDC.
             /// </summary>
-            ExLayered = 0x8,
+            ExLayered = 0x80000,
 
             /// <summary>
             ///     If the shell language is Hebrew, Arabic, or another language that supports reading order
             ///     alignment, the horizontal origin of the window is on the right edge. Increasing horizontal
             ///     values advance to the left.
             /// </summary>
-            ExLayoutRightToLeft = 0x4,
+            ExLayoutRightToLeft = 0x400000,
 
             /// <summary>
             ///     The window has generic left-aligned properties. This is the default.
@@ -1694,7 +1694,7 @@ namespace SilDev
             ///     alignment, the vertical scroll bar (if present) is to the left of the client area. For
             ///     other languages, the style is ignored.
             /// </summary>
-            ExLeftScrollbar = 0x4,
+            ExLeftScrollbar = 0x4000,
 
             /// <summary>
             ///     The window text is displayed using left-to-right reading-order properties. This is the
@@ -1705,7 +1705,7 @@ namespace SilDev
             /// <summary>
             ///     The window is a MDI child window.
             /// </summary>
-            ExMdiChild = 0x4,
+            ExMdiChild = 0x40,
 
             /// <summary>
             ///     A top-level window created with this style does not become the foreground window when
@@ -1715,12 +1715,12 @@ namespace SilDev
             ///     taskbar by default. To force the window to appear on the taskbar, use the
             ///     WS_EX_APPWINDOW style.
             /// </summary>
-            ExNoActivate = 0x8,
+            ExNoActivate = 0x8000000,
 
             /// <summary>
             ///     The window does not pass its window layout to its child windows.
             /// </summary>
-            ExNoInheritLayout = 0x1,
+            ExNoInheritLayout = 0x100000,
 
             /// <summary>
             ///     The child window created with this style does not send the WM_PARENTNOTIFY message
@@ -1732,7 +1732,7 @@ namespace SilDev
             ///     The window does not render to a redirection surface. This is for windows that do not
             ///     have visible content or that use mechanisms other than surfaces to provide their visual.
             /// </summary>
-            ExNoRedirectionBitmap = 0x2,
+            ExNoRedirectionBitmap = 0x200000,
 
             /// <summary>
             ///     The window is an overlapped window.
@@ -1753,7 +1753,7 @@ namespace SilDev
             ///     the SS_RIGHT or ES_RIGHT style, respectively. Using this style with button controls
             ///     has the same effect as using BS_RIGHT and BS_RIGHTBUTTON styles.
             /// </summary>
-            ExRight = 0x1,
+            ExRight = 0x1000,
 
             /// <summary>
             ///     The vertical scroll bar (if present) is to the right of the client area. This is the
@@ -1766,13 +1766,13 @@ namespace SilDev
             ///     alignment, the window text is displayed using right-to-left reading-order properties.
             ///     For other languages, the style is ignored.
             /// </summary>
-            ExRightToLeftReading = 0x2,
+            ExRightToLeftReading = 0x2000,
 
             /// <summary>
             ///     The window has a three-dimensional border style intended to be used for items that do
             ///     not accept user input.
             /// </summary>
-            ExStaticEdge = 0x2,
+            ExStaticEdge = 0x20000,
 
             /// <summary>
             ///     The window is intended to be used as a floating toolbar. A tool window has a title bar
@@ -1782,7 +1782,7 @@ namespace SilDev
             ///     on the title bar. However, you can display the system menu by right-clicking or by
             ///     typing ALT+SPACE.
             /// </summary>
-            ExToolWindow = 0x8,
+            ExToolWindow = 0x80,
 
             /// <summary>
             ///     The window should be placed above all non-topmost windows and should stay above them,
@@ -1797,12 +1797,12 @@ namespace SilDev
             ///     of underlying sibling windows have already been painted. To achieve transparency without
             ///     these restrictions, use the SetWindowRgn function.
             /// </summary>
-            ExTransparent = 0x2,
+            ExTransparent = 0x20,
 
             /// <summary>
             ///     The window has a border with a raised edge.
             /// </summary>
-            ExWindowEdge = 0x1
+            ExWindowEdge = 0x100
         }
 
         /// <summary>
@@ -3539,16 +3539,25 @@ namespace SilDev
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
-            public static void RemoveWindowBorders(IntPtr hWnd)
+            /// <param name="menuBar">
+            ///     true to remove an existing menu bar; otherwise, false.
+            /// </param>
+            /// <param name="extended">
+            ///     true to remove an existing double border; otherwise, false.
+            /// </param>
+            public static void RemoveWindowBorders(IntPtr hWnd, bool menuBar = false, bool extended = false)
             {
-                var hMenu = NativeMethods.GetMenu(hWnd);
-                if (hMenu != IntPtr.Zero)
+                if (menuBar)
                 {
-                    var count = NativeMethods.GetMenuItemCount(hMenu);
-                    for (var i = 0; i < count; i++)
-                        NativeMethods.RemoveMenu(hMenu, 0, ModifyMenuFlags.ByPosition | ModifyMenuFlags.Remove);
+                    var hMenu = NativeMethods.GetMenu(hWnd);
+                    if (hMenu != IntPtr.Zero)
+                    {
+                        var count = NativeMethods.GetMenuItemCount(hMenu);
+                        for (var i = 0; i < count; i++)
+                            NativeMethods.RemoveMenu(hMenu, 0, ModifyMenuFlags.ByPosition | ModifyMenuFlags.Remove);
+                    }
+                    NativeMethods.DrawMenuBar(hWnd);
                 }
-                NativeMethods.DrawMenuBar(hWnd);
                 var style = NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle);
                 style = style & ~(int)WindowStyleFlags.SysMenu;
                 style = style & ~(int)WindowStyleFlags.Caption;
@@ -3556,6 +3565,8 @@ namespace SilDev
                 style = style & ~(int)WindowStyleFlags.MaximizeBox;
                 style = style & ~(int)WindowStyleFlags.ThickFrame;
                 SetWindowLong(hWnd, WindowLongFlags.GwlStyle, (IntPtr)style);
+                if (!extended)
+                    return;
                 style = NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlExStyle) | (int)WindowStyleFlags.ExDlgModalFrame;
                 SetWindowLong(hWnd, WindowLongFlags.GwlExStyle, (IntPtr)style);
             }
@@ -4048,9 +4059,15 @@ namespace SilDev
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
-            public static void SetWindowBorderlessFullscreen(IntPtr hWnd)
+            /// <param name="menuBar">
+            ///     true to remove an existing menu bar; otherwise, false.
+            /// </param>
+            /// <param name="extended">
+            ///     true to remove an existing double border; otherwise, false.
+            /// </param>
+            public static void SetWindowBorderlessFullscreen(IntPtr hWnd, bool menuBar = false, bool extended = false)
             {
-                RemoveWindowBorders(hWnd);
+                RemoveWindowBorders(hWnd, menuBar, extended);
                 SetWindowFullscreen(hWnd);
             }
 
