@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-07-18 04:21
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -27,6 +27,27 @@ namespace SilDev.Forms
     /// </summary>
     public static class ControlEx
     {
+        /// <summary>
+        ///     Specifies the border style for a control.
+        /// </summary>
+        public enum BorderStyle
+        {
+            /// <summary>
+            ///     A dotted border.
+            /// </summary>
+            Dotted = 1,
+
+            /// <summary>
+            ///     A dashed border.
+            /// </summary>
+            Dashed = 2,
+
+            /// <summary>
+            ///     A solid border.
+            /// </summary>
+            Solid = 3
+        }
+
         /// <summary>
         ///     Gets the ancestor of this <see cref="Control"/>.
         /// </summary>
@@ -92,6 +113,36 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Draws a border with the specified color and style on a control.
+        /// </summary>
+        /// <param name="control">
+        ///     The <see cref="Control"/> to draw on.
+        /// </param>
+        /// <param name="color">
+        ///     The <see cref="Color"/> of the border.
+        /// </param>
+        /// <param name="style">
+        ///     One of the <see cref="BorderStyle"/> values that specifies the style of the border.
+        /// </param>
+        public static void DrawBorder(this Control control, Color color, BorderStyle style = BorderStyle.Solid)
+        {
+            control.Paint += (sender, args) =>
+            {
+                var c = sender as Control;
+                if (c == null || args == null)
+                    return;
+                ControlPaint.DrawBorder(args.Graphics, c.ClientRectangle, color, (ButtonBorderStyle)style);
+            };
+            control.Resize += (sender, args) =>
+            {
+                var c = (sender as Control)?.GetAncestor();
+                if (c == null || args == null)
+                    return;
+                c.Invalidate();
+            };
         }
 
         /// <summary>
