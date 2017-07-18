@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-07-18 04:21
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -3304,6 +3304,38 @@ namespace SilDev
                 NativeMethods.MoveWindow(hWnd, x, y, nWidth, nHeight, bRepaint);
 
             /// <summary>
+            ///     Changes the position of a specified window that is outside the virtual screen to move it back to the visible
+            ///     screen area.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window.
+            /// </param>
+            public static void MoveWindowToVisibleScreenArea(IntPtr hWnd)
+            {
+                var rect = new Rectangle();
+                if (!NativeMethods.GetWindowRect(hWnd, ref rect) || rect.Width < 1 || rect.Height < 1)
+                    return;
+                rect.Width = rect.Width - rect.X;
+                rect.Height = rect.Height - rect.Y;
+                var range = new Rectangle
+                {
+                    X = SystemInformation.VirtualScreen.X,
+                    Y = SystemInformation.VirtualScreen.Y,
+                    Width = SystemInformation.VirtualScreen.Width - rect.Width,
+                    Height = SystemInformation.VirtualScreen.Height - rect.Height
+                };
+                if (rect.X < range.X)
+                    rect.X = range.X;
+                if (rect.X > range.Width)
+                    rect.X = range.Width;
+                if (rect.Y < range.Y)
+                    rect.Y = range.Y;
+                if (rect.Y > range.Height)
+                    rect.Y = range.Height;
+                NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
+            }
+
+            /// <summary>
             ///     Retrieves information about the specified process.
             /// </summary>
             /// <param name="hndl">
@@ -4441,6 +4473,29 @@ namespace SilDev
             /// </param>
             public static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, MemFreeTypes dwFreeType) =>
                 NativeMethods.VirtualFreeEx(hProcess, lpAddress, dwSize, dwFreeType);
+
+            /// <summary>
+            ///     Determines whether the specified window is outside the visible screen area.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window.
+            /// </param>
+            public static bool WindowIsOutOfVisibleScreenArea(IntPtr hWnd)
+            {
+                var rect = new Rectangle();
+                if (!NativeMethods.GetWindowRect(hWnd, ref rect) || rect.Width < 1 || rect.Height < 1)
+                    return false;
+                rect.Width = rect.Width - rect.X;
+                rect.Height = rect.Height - rect.Y;
+                var range = new Rectangle
+                {
+                    X = SystemInformation.VirtualScreen.X,
+                    Y = SystemInformation.VirtualScreen.Y,
+                    Width = SystemInformation.VirtualScreen.Width - rect.Width,
+                    Height = SystemInformation.VirtualScreen.Height - rect.Height
+                };
+                return rect.X < range.X || rect.X > range.Width || rect.Y < range.Y || rect.Y > range.Height;
+            }
 
             /// <summary>
             ///     Writes data to an area of memory in a specified process. The entire area to be written to must be
