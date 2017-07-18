@@ -466,6 +466,17 @@
                 The <see cref="T:System.Windows.Forms.ListView"/> control to check.
             </param>
         </member>
+        <member name="T:SilDev.Forms.ListViewEx.DoubleBuffered">
+            <summary>
+                Represents a Windows list view control, which displays a collection of items that
+                can be displayed using one of four different views.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.DoubleBuffered.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Windows.Forms.ListView"/> class.
+            </summary>
+        </member>
         <member name="T:SilDev.Forms.ListViewEx.AlphanumericComparer">
             <summary>
                 Provides a base class for comparison.
@@ -12280,12 +12291,18 @@
                 <see cref="F:SilDev.WinApi.ModifyMenuFlags.ByCommand"/> or <see cref="F:SilDev.WinApi.ModifyMenuFlags.ByPosition"/>.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeHelper.RemoveWindowBorders(System.IntPtr)">
+        <member name="M:SilDev.WinApi.NativeHelper.RemoveWindowBorders(System.IntPtr,System.Boolean,System.Boolean)">
             <summary>
                 Removes the borders and title bar of the specified window.
             </summary>
             <param name="hWnd">
                 A handle to the window.
+            </param>
+            <param name="menuBar">
+                true to remove an existing menu bar; otherwise, false.
+            </param>
+            <param name="extended">
+                true to remove an existing double border; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.RemoveWindowFromTaskbar(System.IntPtr)">
@@ -12720,12 +12737,18 @@
                 A pointer to the function to be notified when the time-out value elapses.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeHelper.SetWindowBorderlessFullscreen(System.IntPtr)">
+        <member name="M:SilDev.WinApi.NativeHelper.SetWindowBorderlessFullscreen(System.IntPtr,System.Boolean,System.Boolean)">
             <summary>
                 Changes the position and dimensions of the specified window to fill the entire screen.
             </summary>
             <param name="hWnd">
                 A handle to the window.
+            </param>
+            <param name="menuBar">
+                true to remove an existing menu bar; otherwise, false.
+            </param>
+            <param name="extended">
+                true to remove an existing double border; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.SetWindowFullscreen(System.IntPtr)">
