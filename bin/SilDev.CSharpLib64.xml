@@ -295,6 +295,26 @@
                 Expands the functionality for the <see cref="T:System.Windows.Forms.Control"/> class.
             </summary>
         </member>
+        <member name="T:SilDev.Forms.ControlEx.BorderStyle">
+            <summary>
+                Specifies the border style for a control.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlEx.BorderStyle.Dotted">
+            <summary>
+                A dotted border.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlEx.BorderStyle.Dashed">
+            <summary>
+                A dashed border.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlEx.BorderStyle.Solid">
+            <summary>
+                A solid border.
+            </summary>
+        </member>
         <member name="M:SilDev.Forms.ControlEx.GetAncestor(System.Windows.Forms.Control)">
             <summary>
                 Gets the ancestor of this <see cref="T:System.Windows.Forms.Control"/>.
@@ -330,6 +350,20 @@
                 true to enable the specified styles; otherwise, false to disable the specified styles.
             </param>
         </member>
+        <member name="M:SilDev.Forms.ControlEx.DrawBorder(System.Windows.Forms.Control,System.Drawing.Color,SilDev.Forms.ControlEx.BorderStyle)">
+            <summary>
+                Draws a border with the specified color and style on a control.
+            </summary>
+            <param name="control">
+                The <see cref="T:System.Windows.Forms.Control"/> to draw on.
+            </param>
+            <param name="color">
+                The <see cref="T:System.Drawing.Color"/> of the border.
+            </param>
+            <param name="style">
+                One of the <see cref="T:SilDev.Forms.ControlEx.BorderStyle"/> values that specifies the style of the border.
+            </param>
+        </member>
         <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color},System.Windows.Forms.MouseEventHandler,System.EventHandler)">
             <summary>
                 Draws a 12px large size grip <see cref="T:System.Drawing.Image"/> in this <see cref="T:System.Windows.Forms.Control"/>.
@@ -361,6 +395,14 @@
             <summary>
                 Logs the loading time of the specified <see cref="T:System.Windows.Forms.Form"/>.
             </summary>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.Dockable(System.Windows.Forms.Form)">
+            <summary>
+                Allows to dock the specifed <see cref="T:System.Windows.Forms.Form"/> to the virtual screen edges.
+            </summary>
+            <param name="form">
+                The form window to be dockable.
+            </param>
         </member>
         <member name="M:SilDev.Forms.FormEx.Plus(System.Windows.Forms.Form,SilDev.Forms.FormEx.PlusSettings)">
             <summary>
@@ -12039,6 +12081,15 @@
                 moving a child window.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.MoveWindowToVisibleScreenArea(System.IntPtr)">
+            <summary>
+                Changes the position of a specified window that is outside the virtual screen to move it back to the visible
+                screen area.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.NtQueryInformationProcess(System.IntPtr,SilDev.WinApi.ProcessInfoFlags,SilDev.WinApi.ProcessBasicInformation@,System.UInt32,System.IntPtr@)">
             <summary>
                 Retrieves information about the specified process.
@@ -13057,6 +13108,14 @@
             </param>
             <param name="dwFreeType">
                 The type of free operation.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.WindowIsOutOfVisibleScreenArea(System.IntPtr)">
+            <summary>
+                Determines whether the specified window is outside the visible screen area.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.WriteProcessMemory(System.IntPtr,System.IntPtr,System.IntPtr,System.Int32,System.IntPtr@)">
