@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2017-07-19 00:08
+// Version:  2017-07-19 04:50
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -15,6 +15,7 @@
 
 namespace SilDev.Forms
 {
+    using System;
     using System.Collections;
     using System.Windows.Forms;
 
@@ -41,6 +42,19 @@ namespace SilDev.Forms
                 return null;
             }
         }
+
+        /// <summary>
+        ///     Sets the cursor shape that is shown when the mouse is over an element of the
+        ///     <see cref="ListView"/>.
+        /// </summary>
+        /// <param name="listView">
+        ///     The <see cref="ListView"/> control to change.
+        /// </param>
+        /// <param name="cursor">
+        ///     The <see cref="Cursor"/> to set.
+        /// </param>
+        public static void SetMouseOverCursor(this ListView listView, Cursor cursor = default(Cursor)) =>
+            WinApi.NativeHelper.SendMessage(listView.Handle, 0x103e, IntPtr.Zero, (cursor ?? Cursors.Arrow).Handle);
 
         /// <summary>
         ///     Represents a Windows list view control, which displays a collection of items that
