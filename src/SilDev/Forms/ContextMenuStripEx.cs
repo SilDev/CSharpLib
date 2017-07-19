@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-07-19 04:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -67,6 +67,7 @@ namespace SilDev.Forms
             SlideVerNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerNegative
         }
 
+        private static Color _menuBorder = SystemColors.ControlDark;
         private static readonly Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>> EnabledAnimation = new Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>>();
 
         /// <summary>
@@ -175,6 +176,8 @@ namespace SilDev.Forms
         {
             if (contextMenuStrip == null)
                 return;
+            _menuBorder = borderColor ?? SystemColors.ControlDark;
+            contextMenuStrip.Renderer = new Renderer();
             contextMenuStrip.Paint += (sender, args) =>
             {
                 try
@@ -194,6 +197,17 @@ namespace SilDev.Forms
                     Log.Write(ex);
                 }
             };
+        }
+
+        private class Renderer : ToolStripProfessionalRenderer
+        {
+            public Renderer() : base(new ColorTable()) { }
+        }
+
+        private class ColorTable : ProfessionalColorTable
+        {
+            public override Color MenuItemBorder => _menuBorder;
+            public override Color MenuItemSelected => ProfessionalColors.ButtonSelectedHighlight;
         }
     }
 }
