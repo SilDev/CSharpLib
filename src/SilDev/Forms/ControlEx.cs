@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2017-07-18 04:21
+// Version:  2017-07-19 04:52
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -87,6 +87,32 @@ namespace SilDev.Forms
                 if (c.Cursor != cc)
                     c.Cursor = cc;
             };
+        }
+
+        /// <summary>
+        ///     Enables or disables the double buffering for this <see cref="Control"/>, even it is not directly
+        ///     supported.
+        /// </summary>
+        /// <param name="control">
+        ///     The control to change.
+        /// </param>
+        /// <param name="enable">
+        ///     true to enable double buffering; otherwise, false to disable double buffering.
+        /// </param>
+        public static void SetDoubleBuffer(this Control control, bool enable = true)
+        {
+            var style = (int)WinApi.NativeHelper.SendMessage(control.Handle, 0x1037u, IntPtr.Zero, IntPtr.Zero);
+            if (enable)
+            {
+                style |= 0x8000;
+                style |= 0x10000;
+            }
+            else
+            {
+                style = style & ~0x8000;
+                style = style & ~0x10000;
+            }
+            WinApi.NativeHelper.SendMessage(control.Handle, 0x1036u, IntPtr.Zero, new IntPtr(style));
         }
 
         /// <summary>
