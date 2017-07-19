@@ -335,6 +335,18 @@
                 otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.Forms.ControlEx.SetDoubleBuffer(System.Windows.Forms.Control,System.Boolean)">
+            <summary>
+                Enables or disables the double buffering for this <see cref="T:System.Windows.Forms.Control"/>, even it is not directly
+                supported.
+            </summary>
+            <param name="control">
+                The control to change.
+            </param>
+            <param name="enable">
+                true to enable double buffering; otherwise, false to disable double buffering.
+            </param>
+        </member>
         <member name="M:SilDev.Forms.ControlEx.SetControlStyle(System.Windows.Forms.Control,System.Windows.Forms.ControlStyles,System.Boolean)">
             <summary>
                 Enables or disables the specified <see cref="T:System.Windows.Forms.ControlStyles"/> for this <see cref="T:System.Windows.Forms.Control"/>, even it
@@ -464,6 +476,18 @@
             </summary>
             <param name="listView">
                 The <see cref="T:System.Windows.Forms.ListView"/> control to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.SetMouseOverCursor(System.Windows.Forms.ListView,System.Windows.Forms.Cursor)">
+            <summary>
+                Sets the cursor shape that is shown when the mouse is over an element of the
+                <see cref="T:System.Windows.Forms.ListView"/>.
+            </summary>
+            <param name="listView">
+                The <see cref="T:System.Windows.Forms.ListView"/> control to change.
+            </param>
+            <param name="cursor">
+                The <see cref="T:System.Windows.Forms.Cursor"/> to set.
             </param>
         </member>
         <member name="T:SilDev.Forms.ListViewEx.DoubleBuffered">
