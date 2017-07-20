@@ -9040,19 +9040,17 @@
         </member>
         <member name="T:SilDev.Tray">
             <summary>
-                Provides the functionality to manage the items of the system tray area
-                of the taskbar.
+                Provides the functionality to manage the items of the system tray area.
+            </summary>
+        </member>
+        <member name="M:SilDev.Tray.Refresh">
+            <summary>
+                Refreshes the symbols on system tray.
             </summary>
         </member>
         <member name="M:SilDev.Tray.RefreshVisibleArea">
             <summary>
-                Refreshes the visible system tray area of the taskbar.
-            </summary>
-        </member>
-        <member name="M:SilDev.Tray.RemovePhantomIcons">
-            <summary>
-                Removes invalid icons of the visible and hidden system tray area of
-                the taskbar (experimental function).
+                Refreshes the symbols of the visible system tray area.
             </summary>
         </member>
         <member name="T:SilDev.WinApi">
