@@ -8863,7 +8863,7 @@
                 The new state to set.
             </param>
         </member>
-        <member name="M:SilDev.TaskBar.GetLocation(System.Nullable{System.IntPtr})">
+        <member name="M:SilDev.TaskBar.GetLocation(System.IntPtr)">
             <summary>
                 Returns the location of the taskbar.
             </summary>
@@ -8871,7 +8871,7 @@
                 The handle of the window on which the taskbar is located.
             </param>
         </member>
-        <member name="M:SilDev.TaskBar.GetSize(System.Nullable{System.IntPtr})">
+        <member name="M:SilDev.TaskBar.GetSize(System.IntPtr)">
             <summary>
                 Returns the size of the taskbar.
             </summary>
@@ -9738,6 +9738,87 @@
                 critical.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.RedrawWindowFlags">
+            <summary>
+                Provides enumerated values of the redraw window flags.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.Erase">
+            <summary>
+                Causes the window to receive a WM_ERASEBKGND message when the window is repainted.
+                The <see cref="F:SilDev.WinApi.RedrawWindowFlags.Invalidate"/> flag must also be specified; otherwise,
+                <see cref="F:SilDev.WinApi.RedrawWindowFlags.Erase"/> has no effect.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.Frame">
+            <summary>
+                Causes any part of the nonclient area of the window that intersects the update region
+                to receive a WM_NCPAINT message. The <see cref="F:SilDev.WinApi.RedrawWindowFlags.Invalidate"/> flag must also be specified;
+                otherwise, <see cref="F:SilDev.WinApi.RedrawWindowFlags.Frame"/> has no effect. The WM_NCPAINT message is typically not sent
+                during the execution of RedrawWindow unless either <see cref="F:SilDev.WinApi.RedrawWindowFlags.UpdateNow"/> or
+                <see cref="F:SilDev.WinApi.RedrawWindowFlags.EraseNow"/> is specified.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.InternalPaint">
+            <summary>
+                Causes a WM_PAINT message to be posted to the window regardless of whether any portion of
+                the window is invalid.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.Invalidate">
+            <summary>
+                Invalidates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the
+                entire window is invalidated.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.NoErase">
+            <summary>
+                Suppresses any pending WM_ERASEBKGND messages.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.NoFrame">
+            <summary>
+                Suppresses any pending WM_NCPAINT messages. This flag must be used with <see cref="F:SilDev.WinApi.RedrawWindowFlags.Validate"/>
+                and is typically used with <see cref="F:SilDev.WinApi.RedrawWindowFlags.NoChildren"/>. <see cref="F:SilDev.WinApi.RedrawWindowFlags.NoFrame"/> should be used with
+                care, as it could cause parts of a window to be painted improperly.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.NoInternalPaint">
+            <summary>
+                Suppresses any pending internal WM_PAINT messages. This flag does not affect WM_PAINT messages
+                resulting from a non-NULL update area.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.Validate">
+            <summary>
+                Validates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the entire
+                window is validated. This flag does not affect internal WM_PAINT messages.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.EraseNow">
+            <summary>
+                Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to
+                receive WM_NCPAINT and WM_ERASEBKGND messages, if necessary, before the function returns.
+                WM_PAINT messages are received at the ordinary time.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.UpdateNow">
+            <summary>
+                Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to
+                receive WM_NCPAINT, WM_ERASEBKGND, and WM_PAINT messages, if necessary, before the function
+                returns.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.AllChildren">
+            <summary>
+                Includes child windows, if any, in the repainting operation.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.RedrawWindowFlags.NoChildren">
+            <summary>
+                Excludes child windows, if any, from the repainting operation.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.ServiceErrors">
             <summary>
                 Provides enumerated values of service errors.
@@ -9857,6 +9938,31 @@
         <member name="F:SilDev.WinApi.SetWindowPosFlags.ShowWindow">
             <summary>
                 Displays the window.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.ShowScrollBarOptions">
+            <summary>
+                Provides enumerated values of scroll bar show statements.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Horizontal">
+            <summary>
+                Shows or hides a window's standard horizontal scroll bars.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Vertical">
+            <summary>
+                Shows or hides a window's standard vertical scroll bar.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Control">
+            <summary>
+                Shows or hides a scroll bar control. The hwnd parameter must be the handle to the scroll bar control.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Both">
+            <summary>
+                Shows or hides a window's standard horizontal and vertical scroll bars.
             </summary>
         </member>
         <member name="T:SilDev.WinApi.ShowWindowFlags">
@@ -10796,6 +10902,36 @@
                 The window has a border with a raised edge.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.WindowThemeAttributeFlags">
+            <summary>
+                Provides enumerated values of window theme attributes.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeFlags.NoDrawCaption">
+            <summary>
+                Prevents the window caption from being drawn.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeFlags.NoDrawIcon">
+            <summary>
+                Prevents the system icon from being drawn.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeFlags.NoSysMenu">
+            <summary>
+                Prevents the system icon menu from appearing.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeFlags.NoMirrorHelp">
+            <summary>
+                Prevents mirroring of the question mark, even in right-to-left (RTL) layout.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeFlags.ValidBits">
+            <summary>
+                A mask that contains all the valid bits.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.FileInfoFlags">
             <summary>
                 Provides enumerated values that specify file informations.
@@ -11314,6 +11450,16 @@
         <member name="F:SilDev.WinApi.ServiceTypes.Win32ShareProcess">
             <summary>
                 Service that shares a process with one or more other services.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.WindowThemeAttributeTypes">
+            <summary>
+                Provides enumerated values of window theme attribute types.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeTypes.NonClient">
+            <summary>
+                Non-client area window attributes will be set.
             </summary>
         </member>
         <member name="T:SilDev.WinApi.NativeHelper">
@@ -11980,6 +12126,31 @@
                 <see cref="F:SilDev.WinApi.ModifyMenuFlags.String"/> flag, as follows.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.InvalidateRect(System.IntPtr,System.IntPtr,System.Boolean)">
+            <summary>
+                Adds a rectangle to the specified window's update region. The update region represents the portion of the
+                window's client area that must be redrawn.
+            </summary>
+            <param name="hWnd">
+                A handle to the window whose update region has changed. If this parameter is NULL, the system invalidates
+                and redraws all windows, not just the windows for this application, and sends the WM_ERASEBKGND and
+                WM_NCPAINT messages before the function returns. Setting this parameter to NULL is not recommended.
+            </param>
+            <param name="lpRect">
+                A pointer to a RECT structure that contains the client coordinates of the rectangle to be added to the update
+                region. If this parameter is NULL, the entire client area is added to the update region.
+            </param>
+            <param name="bErase">
+                Specifies whether the background within the update region is to be erased when the update region is processed.
+                If this parameter is TRUE, the background is erased when the BeginPaint function is called. If this parameter
+                is FALSE, the background remains unchanged.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.IsThemeActive">
+            <summary>
+                Tests if a visual style for the current application is active.
+            </summary>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.LoadLibrary(System.String)">
             <summary>
                 Loads the specified module into the address space of the calling process. The
@@ -12285,6 +12456,29 @@
             <param name="lpNumberOfBytesRead">
                 A pointer to a variable that receives the number of bytes transferred into the
                 specified buffer. If lpNumberOfBytesRead is NULL, the parameter is ignored.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.RedrawWindow(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.RedrawWindowFlags)">
+            <summary>
+                Updates the specified rectangle or region in a window's client area.
+            </summary>
+            <param name="hWnd">
+                A handle to the window to be redrawn. If this parameter is NULL, the desktop window
+                is updated.
+            </param>
+            <param name="lprcUpdate">
+                A pointer to a RECT structure containing the coordinates, in device units, of the
+                update rectangle. This parameter is ignored if the hrgnUpdate parameter identifies
+                a region.
+            </param>
+            <param name="hrgnUpdate">
+                A handle to the update region. If both the hrgnUpdate and lprcUpdate parameters are
+                NULL, the entire client area is added to the update region.
+            </param>
+            <param name="flags">
+                One or more redraw flags. This parameter can be used to invalidate or validate a
+                window, control repainting, and control which windows are affected by
+                <see cref="M:SilDev.WinApi.NativeHelper.RedrawWindow(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.RedrawWindowFlags)"/>.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.ReleaseCapture">
@@ -12959,6 +13153,34 @@
                 The new title or control text.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.SetWindowTheme(System.IntPtr,System.String,System.String)">
+            <summary>
+                Causes a window to use a different set of visual style information than its class normally uses.
+            </summary>
+            <param name="hWnd">
+                A handle to the window whose visual style information is to be changed.
+            </param>
+            <param name="pszSubAppName">
+                Pointer to a string that contains the application name to use in place of the calling application's
+                name. If this parameter is NULL, the calling application's name is used.
+            </param>
+            <param name="pszSubIdList">
+                Pointer to a string that contains a semicolon-separated list of CLSID names to use in place of the
+                actual list passed by the window's class. If this parameter is NULL, the ID list from the calling
+                class is used.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.SetWindowThemeAttribute(System.IntPtr,SilDev.WinApi.WindowThemeAttributeOptions@)">
+            <summary>
+                Sets attributes to control how visual styles are applied to a specified window.
+            </summary>
+            <param name="hWnd">
+                A handle to a window to apply changes to.
+            </param>
+            <param name="pvAttribute">
+                A pointer that specifies attributes to set.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.SHAppBarMessage(SilDev.WinApi.AppBarMessageOptions,SilDev.WinApi.AppBarData@)">
             <summary>
                 Sends an appbar message to the system.
@@ -13006,7 +13228,7 @@
                 decide how to handle it.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeHelper.ShowScrollBar(System.IntPtr,System.Int32,System.Boolean)">
+        <member name="M:SilDev.WinApi.NativeHelper.ShowScrollBar(System.IntPtr,SilDev.WinApi.ShowScrollBarOptions,System.Boolean)">
             <summary>
                 The ShowScrollBar function shows or hides the specified scroll bar.
             </summary>
@@ -13088,6 +13310,17 @@
                 SetWindowsHookEx.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.UpdateWindow(System.IntPtr)">
+            <summary>
+                The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT message to the
+                window if the window's update region is not empty. The function sends a WM_PAINT message directly to the window
+                procedure of the specified window, bypassing the application queue. If the update region is empty, no message
+                is sent.
+            </summary>
+            <param name="hWnd">
+                Handle to the window to be updated.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.VirtualAllocEx(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.MemAllocTypes,SilDev.WinApi.MemProtectFlags)">
             <summary>
                 Reserves, commits, or changes the state of a region of memory within the virtual address space
@@ -13153,6 +13386,18 @@
             </param>
             <param name="dwFreeType">
                 The type of free operation.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.WindowIsOutOfScreenArea(System.IntPtr,System.Drawing.Rectangle@)">
+            <summary>
+                Determines whether the specified window is outside the visible screen area.
+            </summary>
+            <param name="hWnd">
+                A handle to the window.
+            </param>
+            <param name="vRect">
+                A pointer to a <see cref="T:System.Drawing.Rectangle"/> structure that receives the best screen coordinates of the
+                upper-left and lower-right corners of the window.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.WindowIsOutOfVisibleScreenArea(System.IntPtr)">
@@ -14146,6 +14391,51 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.InvalidateRect(System.IntPtr,System.IntPtr,System.Boolean)">
+            <summary>
+                Adds a rectangle to the specified window's update region. The update region represents the portion of the
+                window's client area that must be redrawn.
+            </summary>
+            <param name="hWnd">
+                A handle to the window whose update region has changed. If this parameter is NULL, the system invalidates
+                and redraws all windows, not just the windows for this application, and sends the WM_ERASEBKGND and
+                WM_NCPAINT messages before the function returns. Setting this parameter to NULL is not recommended.
+            </param>
+            <param name="lpRect">
+                A pointer to a RECT structure that contains the client coordinates of the rectangle to be added to the update
+                region. If this parameter is NULL, the entire client area is added to the update region.
+            </param>
+            <param name="bErase">
+                Specifies whether the background within the update region is to be erased when the update region is processed.
+                If this parameter is TRUE, the background is erased when the BeginPaint function is called. If this parameter
+                is FALSE, the background remains unchanged.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.IsThemeActive">
+            <summary>
+                Tests if a visual style for the current application is active.
+            </summary>
+            <returns>
+                Returns one of the following values.
+                <para>
+                    <c>
+                        TRUE:
+                    </c>
+                    A visual style is enabled, and windows with visual styles applied should call OpenThemeData to start using
+                    theme drawing services.
+                </para>
+                <para>
+                    <c>
+                        FALSE:
+                    </c>
+                    A visual style is not enabled, and the window message handler does not need to make another call to
+                    <see cref="M:SilDev.WinApi.NativeMethods.IsThemeActive"/> until it receives a WM_THEMECHANGED message.
+                </para>
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.LoadLibrary(System.String)">
             <summary>
                 Loads the specified module into the address space of the calling process. The
@@ -14480,6 +14770,32 @@
             <param name="lpNumberOfBytesRead">
                 A pointer to a variable that receives the number of bytes transferred into the
                 specified buffer. If lpNumberOfBytesRead is NULL, the parameter is ignored.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.RedrawWindow(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.RedrawWindowFlags)">
+            <summary>
+                Updates the specified rectangle or region in a window's client area.
+            </summary>
+            <param name="hWnd">
+                A handle to the window to be redrawn. If this parameter is NULL, the desktop window
+                is updated.
+            </param>
+            <param name="lprcUpdate">
+                A pointer to a RECT structure containing the coordinates, in device units, of the
+                update rectangle. This parameter is ignored if the hrgnUpdate parameter identifies
+                a region.
+            </param>
+            <param name="hrgnUpdate">
+                A handle to the update region. If both the hrgnUpdate and lprcUpdate parameters are
+                NULL, the entire client area is added to the update region.
+            </param>
+            <param name="flags">
+                One or more redraw flags. This parameter can be used to invalidate or validate a
+                window, control repainting, and control which windows are affected by
+                <see cref="M:SilDev.WinApi.NativeMethods.RedrawWindow(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.RedrawWindowFlags)"/>.
             </param>
             <returns>
                 If the function succeeds, the return value is nonzero.
@@ -15149,6 +15465,43 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.SetWindowTheme(System.IntPtr,System.String,System.String)">
+            <summary>
+                Causes a window to use a different set of visual style information than its class normally uses.
+            </summary>
+            <param name="hWnd">
+                A handle to the window whose visual style information is to be changed.
+            </param>
+            <param name="pszSubAppName">
+                Pointer to a string that contains the application name to use in place of the calling application's
+                name. If this parameter is NULL, the calling application's name is used.
+            </param>
+            <param name="pszSubIdList">
+                Pointer to a string that contains a semicolon-separated list of CLSID names to use in place of the
+                actual list passed by the window's class. If this parameter is NULL, the ID list from the calling
+                class is used.
+            </param>
+            <returns>
+                If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.SetWindowThemeAttribute(System.IntPtr,SilDev.WinApi.WindowThemeAttributeTypes,SilDev.WinApi.WindowThemeAttributeOptions@,System.UInt32)">
+            <summary>
+                Sets attributes to control how visual styles are applied to a specified window.
+            </summary>
+            <param name="hWnd">
+                Handle to a window to apply changes to.
+            </param>
+            <param name="eAttribute">
+                Value of type <see cref="T:SilDev.WinApi.WindowThemeAttributeTypes"/> that specifies the type of attribute to set.
+            </param>
+            <param name="pvAttribute">
+                A pointer that specifies attributes to set. Type is determined by the value of the eAttribute value.
+            </param>
+            <param name="cbAttribute">
+                Specifies the size, in bytes, of the data pointed to by pvAttribute.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.SHAppBarMessage(SilDev.WinApi.AppBarMessageOptions,SilDev.WinApi.AppBarData@)">
             <summary>
                 Sends an appbar message to the system.
@@ -15247,7 +15600,7 @@
             <returns>
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.ShowScrollBar(System.IntPtr,System.Int32,System.Boolean)">
+        <member name="M:SilDev.WinApi.NativeMethods.ShowScrollBar(System.IntPtr,SilDev.WinApi.ShowScrollBarOptions,System.Boolean)">
             <summary>
                 The ShowScrollBar function shows or hides the specified scroll bar.
             </summary>
@@ -15378,6 +15731,20 @@
             <returns>
                 If the function succeeds, the return value is nonzero. If the function fails, the return value
                 is zero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.UpdateWindow(System.IntPtr)">
+            <summary>
+                The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT message to the
+                window if the window's update region is not empty. The function sends a WM_PAINT message directly to the window
+                procedure of the specified window, bypassing the application queue. If the update region is empty, no message
+                is sent.
+            </summary>
+            <param name="hWnd">
+                Handle to the window to be updated.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.VirtualAllocEx(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.MemAllocTypes,SilDev.WinApi.MemProtectFlags)">
@@ -15894,6 +16261,23 @@
         <member name="F:SilDev.WinApi.WindowPlacement.rcNormalPosition">
             <summary>
                 The window's coordinates when the window is in the restored position.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.WindowThemeAttributeOptions">
+            <summary>
+                Contains information about the placement of a window on the screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeOptions.Flags">
+            <summary>
+                A combination of flags that modify window visual style attributes.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.WindowThemeAttributeOptions.Mask">
+            <summary>
+                A bitmask that describes how the values specified in dwFlags should be applied. If
+                the bit corresponding to a value in <see cref="F:SilDev.WinApi.WindowThemeAttributeOptions.Flags"/> is 0, that flag will be
+                removed. If the bit is 1, the flag will be added.
             </summary>
         </member>
         <member name="T:SilDev.WinApi.DwmColorizationParams">
