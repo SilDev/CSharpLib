@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-07-18 00:01
+// Version:  2017-07-26 17:22
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -730,6 +730,89 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides enumerated values of the redraw window flags.
+        /// </summary>
+        [Flags]
+        public enum RedrawWindowFlags : uint
+        {
+            /// <summary>
+            ///     Causes the window to receive a WM_ERASEBKGND message when the window is repainted.
+            ///     The <see cref="Invalidate"/> flag must also be specified; otherwise,
+            ///     <see cref="Erase"/> has no effect.
+            /// </summary>
+            Erase = 0x4,
+
+            /// <summary>
+            ///     Causes any part of the nonclient area of the window that intersects the update region
+            ///     to receive a WM_NCPAINT message. The <see cref="Invalidate"/> flag must also be specified;
+            ///     otherwise, <see cref="Frame"/> has no effect. The WM_NCPAINT message is typically not sent
+            ///     during the execution of RedrawWindow unless either <see cref="UpdateNow"/> or
+            ///     <see cref="EraseNow"/> is specified.
+            /// </summary>
+            Frame = 0x400,
+
+            /// <summary>
+            ///     Causes a WM_PAINT message to be posted to the window regardless of whether any portion of
+            ///     the window is invalid.
+            /// </summary>
+            InternalPaint = 0x2,
+
+            /// <summary>
+            ///     Invalidates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the
+            ///     entire window is invalidated.
+            /// </summary>
+            Invalidate = 0x1,
+
+            /// <summary>
+            ///     Suppresses any pending WM_ERASEBKGND messages.
+            /// </summary>
+            NoErase = 0x20,
+
+            /// <summary>
+            ///     Suppresses any pending WM_NCPAINT messages. This flag must be used with <see cref="Validate"/>
+            ///     and is typically used with <see cref="NoChildren"/>. <see cref="NoFrame"/> should be used with
+            ///     care, as it could cause parts of a window to be painted improperly.
+            /// </summary>
+            NoFrame = 0x800,
+
+            /// <summary>
+            ///     Suppresses any pending internal WM_PAINT messages. This flag does not affect WM_PAINT messages
+            ///     resulting from a non-NULL update area.
+            /// </summary>
+            NoInternalPaint = 0x10,
+
+            /// <summary>
+            ///     Validates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the entire
+            ///     window is validated. This flag does not affect internal WM_PAINT messages.
+            /// </summary>
+            Validate = 0x8,
+
+            /// <summary>
+            ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to
+            ///     receive WM_NCPAINT and WM_ERASEBKGND messages, if necessary, before the function returns.
+            ///     WM_PAINT messages are received at the ordinary time.
+            /// </summary>
+            EraseNow = 0x200,
+
+            /// <summary>
+            ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to
+            ///     receive WM_NCPAINT, WM_ERASEBKGND, and WM_PAINT messages, if necessary, before the function
+            ///     returns.
+            /// </summary>
+            UpdateNow = 0x100,
+
+            /// <summary>
+            ///     Includes child windows, if any, in the repainting operation.
+            /// </summary>
+            AllChildren = 0x80,
+
+            /// <summary>
+            ///     Excludes child windows, if any, from the repainting operation.
+            /// </summary>
+            NoChildren = 0x40
+        }
+
+        /// <summary>
         ///     Provides enumerated values of service errors.
         /// </summary>
         public enum ServiceErrors
@@ -852,6 +935,32 @@ namespace SilDev
             ///     Displays the window.
             /// </summary>
             ShowWindow = 0x40
+        }
+
+        /// <summary>
+        ///     Provides enumerated values of scroll bar show statements.
+        /// </summary>
+        public enum ShowScrollBarOptions
+        {
+            /// <summary>
+            ///     Shows or hides a window's standard horizontal scroll bars.
+            /// </summary>
+            Horizontal = 0,
+
+            /// <summary>
+            ///     Shows or hides a window's standard vertical scroll bar.
+            /// </summary>
+            Vertical = 1,
+
+            /// <summary>
+            ///     Shows or hides a scroll bar control. The hwnd parameter must be the handle to the scroll bar control.
+            /// </summary>
+            Control = 2,
+
+            /// <summary>
+            ///     Shows or hides a window's standard horizontal and vertical scroll bars.
+            /// </summary>
+            Both = 3
         }
 
         /// <summary>
@@ -1806,6 +1915,38 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides enumerated values of window theme attributes.
+        /// </summary>
+        [Flags]
+        public enum WindowThemeAttributeFlags : uint
+        {
+            /// <summary>
+            ///     Prevents the window caption from being drawn.
+            /// </summary>
+            NoDrawCaption = 0x1,
+
+            /// <summary>
+            ///     Prevents the system icon from being drawn.
+            /// </summary>
+            NoDrawIcon = 0x2,
+
+            /// <summary>
+            ///     Prevents the system icon menu from appearing.
+            /// </summary>
+            NoSysMenu = 0x4,
+
+            /// <summary>
+            ///     Prevents mirroring of the question mark, even in right-to-left (RTL) layout.
+            /// </summary>
+            NoMirrorHelp = 0x8,
+
+            /// <summary>
+            ///     A mask that contains all the valid bits.
+            /// </summary>
+            ValidBits = NoDrawCaption | NoDrawIcon | NoSysMenu | NoMirrorHelp
+        }
+
+        /// <summary>
         ///     Provides enumerated values that specify file informations.
         /// </summary>
         [Flags]
@@ -2338,6 +2479,17 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides enumerated values of window theme attribute types.
+        /// </summary>
+        internal enum WindowThemeAttributeTypes : uint
+        {
+            /// <summary>
+            ///     Non-client area window attributes will be set.
+            /// </summary>
+            NonClient = 1
+        }
+
+        /// <summary>
         ///     Provides native based functions.
         /// </summary>
         public static class NativeHelper
@@ -2525,7 +2677,9 @@ namespace SilDev
             /// </param>
             public static void DisableWindowMaximizeButton(IntPtr hWnd)
             {
-                var style = NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle) & ~0x10000L;
+                var style = (long)NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle);
+                if ((style & 0x10000L) == 0x10000L)
+                    style &= ~0x10000L;
                 SetWindowLong(hWnd, WindowLongFlags.GwlStyle, (IntPtr)style);
             }
 
@@ -2537,7 +2691,9 @@ namespace SilDev
             /// </param>
             public static void DisableWindowMinimizeButton(IntPtr hWnd)
             {
-                var style = NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle) & ~0x20000L;
+                var style = (long)NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle);
+                if ((style & 0x20000L) == 0x20000L)
+                    style &= ~0x20000L;
                 SetWindowLong(hWnd, WindowLongFlags.GwlStyle, (IntPtr)style);
             }
 
@@ -2603,7 +2759,7 @@ namespace SilDev
             ///     Optional actions. This parameter can be zero, or any combination of
             ///     <see cref="DuplicateOptions"/>.
             /// </param>
-            public static bool DuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle, uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions) =>
+            public static bool DuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle, uint dwDesiredAccess, bool bInheritHandle, uint dwOptions) =>
                 NativeMethods.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, out lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
 
             /// <summary>
@@ -2692,7 +2848,7 @@ namespace SilDev
             /// <param name="nIcons">
             ///     The number of icons to be extracted from the file.
             /// </param>
-            public static int ExtractIconEx([MarshalAs(UnmanagedType.LPStr)] string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons) =>
+            public static int ExtractIconEx(string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons) =>
                 NativeMethods.ExtractIconEx(lpszFile, nIconIndex, phiconLarge, phiconSmall, nIcons);
 
             /// <summary>
@@ -2739,7 +2895,7 @@ namespace SilDev
             /// <param name="lpWindowName">
             ///     The window name (the window's title). If this parameter is NULL, all window names match.
             /// </param>
-            public static IntPtr FindWindow([MarshalAs(UnmanagedType.LPStr)] string lpClassName, [MarshalAs(UnmanagedType.LPStr)] string lpWindowName) =>
+            public static IntPtr FindWindow(string lpClassName, string lpWindowName) =>
                 NativeMethods.FindWindow(lpClassName, lpWindowName);
 
             /// <summary>
@@ -2792,7 +2948,7 @@ namespace SilDev
             /// <param name="lpszWindow">
             ///     The window name (the window's title). If this parameter is NULL, all window names match.
             /// </param>
-            public static IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hWndChildAfter, [MarshalAs(UnmanagedType.LPStr)] string lpszClass, [MarshalAs(UnmanagedType.LPStr)] string lpszWindow) =>
+            public static IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hWndChildAfter, string lpszClass, string lpszWindow) =>
                 NativeMethods.FindWindowEx(hWndParent, hWndChildAfter, lpszClass, lpszWindow);
 
             /// <summary>
@@ -2818,7 +2974,7 @@ namespace SilDev
             ///     The length of the lpClassName buffer, in characters. The buffer must be large enough to include the
             ///     terminating null character; otherwise, the class name string is truncated to nMaxCount-1 characters.
             /// </param>
-            public static int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpClassName, int nMaxCount) =>
+            public static int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount) =>
                 NativeMethods.GetClassName(hWnd, lpClassName, nMaxCount);
 
             /// <summary>
@@ -2914,7 +3070,7 @@ namespace SilDev
             /// </param>
             public static ProcessBasicInformation GetProcessBasicInformation(IntPtr hWnd)
             {
-                var status = NativeMethods.NtQueryInformationProcess(hWnd, 0, out ProcessBasicInformation pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out IntPtr _);
+                var status = NativeMethods.NtQueryInformationProcess(hWnd, ProcessInfoFlags.ProcessBasicInformation, out ProcessBasicInformation pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out IntPtr _);
                 try
                 {
                     if (status >= 0xc0000000)
@@ -3149,8 +3305,35 @@ namespace SilDev
             ///     includes the <see cref="ModifyMenuFlags.Bitmap"/>, <see cref="ModifyMenuFlags.OwnerDraw"/>, or
             ///     <see cref="ModifyMenuFlags.String"/> flag, as follows.
             /// </param>
-            public static bool InsertMenu(IntPtr hMenu, uint wPosition, ModifyMenuFlags wFlags, UIntPtr wIdNewItem, [MarshalAs(UnmanagedType.LPStr)] string lpNewItem) =>
+            public static bool InsertMenu(IntPtr hMenu, uint wPosition, ModifyMenuFlags wFlags, UIntPtr wIdNewItem, string lpNewItem) =>
                 NativeMethods.InsertMenu(hMenu, wPosition, wFlags, wIdNewItem, lpNewItem);
+
+            /// <summary>
+            ///     Adds a rectangle to the specified window's update region. The update region represents the portion of the
+            ///     window's client area that must be redrawn.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window whose update region has changed. If this parameter is NULL, the system invalidates
+            ///     and redraws all windows, not just the windows for this application, and sends the WM_ERASEBKGND and
+            ///     WM_NCPAINT messages before the function returns. Setting this parameter to NULL is not recommended.
+            /// </param>
+            /// <param name="lpRect">
+            ///     A pointer to a RECT structure that contains the client coordinates of the rectangle to be added to the update
+            ///     region. If this parameter is NULL, the entire client area is added to the update region.
+            /// </param>
+            /// <param name="bErase">
+            ///     Specifies whether the background within the update region is to be erased when the update region is processed.
+            ///     If this parameter is TRUE, the background is erased when the BeginPaint function is called. If this parameter
+            ///     is FALSE, the background remains unchanged.
+            /// </param>
+            public static bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase) =>
+                NativeMethods.InvalidateRect(hWnd, lpRect, bErase);
+
+            /// <summary>
+            ///     Tests if a visual style for the current application is active.
+            /// </summary>
+            public static bool IsThemeActive() =>
+                NativeMethods.IsThemeActive();
 
             /// <summary>
             ///     Loads the specified module into the address space of the calling process. The
@@ -3312,26 +3495,8 @@ namespace SilDev
             /// </param>
             public static void MoveWindowToVisibleScreenArea(IntPtr hWnd)
             {
-                var rect = new Rectangle();
-                if (!NativeMethods.GetWindowRect(hWnd, ref rect) || rect.Width < 1 || rect.Height < 1)
+                if (!WindowIsOutOfScreenArea(hWnd, out Rectangle rect))
                     return;
-                rect.Width = rect.Width - rect.X;
-                rect.Height = rect.Height - rect.Y;
-                var range = new Rectangle
-                {
-                    X = SystemInformation.VirtualScreen.X,
-                    Y = SystemInformation.VirtualScreen.Y,
-                    Width = SystemInformation.VirtualScreen.Width - rect.Width,
-                    Height = SystemInformation.VirtualScreen.Height - rect.Height
-                };
-                if (rect.X < range.X)
-                    rect.X = range.X;
-                if (rect.X > range.Width)
-                    rect.X = range.Width;
-                if (rect.Y < range.Y)
-                    rect.Y = range.Y;
-                if (rect.Y > range.Height)
-                    rect.Y = range.Height;
                 NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
             }
 
@@ -3506,6 +3671,30 @@ namespace SilDev
                 NativeMethods.ReadProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, ref lpNumberOfBytesRead);
 
             /// <summary>
+            ///     Updates the specified rectangle or region in a window's client area.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window to be redrawn. If this parameter is NULL, the desktop window
+            ///     is updated.
+            /// </param>
+            /// <param name="lprcUpdate">
+            ///     A pointer to a RECT structure containing the coordinates, in device units, of the
+            ///     update rectangle. This parameter is ignored if the hrgnUpdate parameter identifies
+            ///     a region.
+            /// </param>
+            /// <param name="hrgnUpdate">
+            ///     A handle to the update region. If both the hrgnUpdate and lprcUpdate parameters are
+            ///     NULL, the entire client area is added to the update region.
+            /// </param>
+            /// <param name="flags">
+            ///     One or more redraw flags. This parameter can be used to invalidate or validate a
+            ///     window, control repainting, and control which windows are affected by
+            ///     <see cref="RedrawWindow"/>.
+            /// </param>
+            public static bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags) =>
+                NativeMethods.RedrawWindow(hWnd, lprcUpdate, hrgnUpdate, flags);
+
+            /// <summary>
             ///     Releases the mouse capture from a window in the current thread and restores normal mouse
             ///     input processing. A window that has captured the mouse receives all mouse input, regardless
             ///     of the position of the cursor, except when a mouse button is clicked while the cursor hot
@@ -3555,15 +3744,21 @@ namespace SilDev
                         var count = NativeMethods.GetMenuItemCount(hMenu);
                         for (var i = 0; i < count; i++)
                             NativeMethods.RemoveMenu(hMenu, 0, ModifyMenuFlags.ByPosition | ModifyMenuFlags.Remove);
+                        NativeMethods.DrawMenuBar(hWnd);
                     }
-                    NativeMethods.DrawMenuBar(hWnd);
                 }
                 var style = NativeMethods.GetWindowLong(hWnd, WindowLongFlags.GwlStyle);
-                style = style & ~(int)WindowStyleFlags.SysMenu;
-                style = style & ~(int)WindowStyleFlags.Caption;
-                style = style & ~(int)WindowStyleFlags.Minimize;
-                style = style & ~(int)WindowStyleFlags.MaximizeBox;
-                style = style & ~(int)WindowStyleFlags.ThickFrame;
+                var flags = new[]
+                {
+                    (int)WindowStyleFlags.SysMenu,
+                    (int)WindowStyleFlags.Caption,
+                    (int)WindowStyleFlags.Minimize,
+                    (int)WindowStyleFlags.MaximizeBox,
+                    (int)WindowStyleFlags.ThickFrame
+                };
+                foreach (var flag in flags)
+                    if ((style & flag) == flag)
+                        style &= ~flag;
                 SetWindowLong(hWnd, WindowLongFlags.GwlStyle, (IntPtr)style);
                 if (!extended)
                     return;
@@ -3643,7 +3838,7 @@ namespace SilDev
             ///     The size, in bytes, of an <see cref="DeviceInput"/> structure. If cbSize is not the
             ///     size of an <see cref="DeviceInput"/> structure, the function fails.
             /// </param>
-            public static uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray)][In] DeviceInput[] pInputs, int cbSize) =>
+            public static uint SendInput(uint nInputs, [In] DeviceInput[] pInputs, int cbSize) =>
                 NativeMethods.SendInput(nInputs, pInputs, cbSize);
 
             /// <summary>
@@ -3903,7 +4098,7 @@ namespace SilDev
             /// <param name="lParam">
             ///     Additional message-specific information.
             /// </param>
-            public static bool SendNotifyMessage(IntPtr hWnd, uint msg, UIntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam) =>
+            public static bool SendNotifyMessage(IntPtr hWnd, uint msg, UIntPtr wParam, string lParam) =>
                 NativeMethods.SendNotifyMessage(hWnd, msg, wParam, lParam);
 
             /// <summary>
@@ -3912,7 +4107,7 @@ namespace SilDev
             /// <param name="lpPathName">
             ///     The path to the new current directory.
             /// </param>
-            public static bool SetCurrentDirectory([MarshalAs(UnmanagedType.LPWStr)] string lpPathName) =>
+            public static bool SetCurrentDirectory(string lpPathName) =>
                 NativeMethods.SetCurrentDirectory(lpPathName);
 
             /// <summary>
@@ -4277,6 +4472,36 @@ namespace SilDev
                 NativeMethods.SetWindowText(hWnd, lpString);
 
             /// <summary>
+            ///     Causes a window to use a different set of visual style information than its class normally uses.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window whose visual style information is to be changed.
+            /// </param>
+            /// <param name="pszSubAppName">
+            ///     Pointer to a string that contains the application name to use in place of the calling application's
+            ///     name. If this parameter is NULL, the calling application's name is used.
+            /// </param>
+            /// <param name="pszSubIdList">
+            ///     Pointer to a string that contains a semicolon-separated list of CLSID names to use in place of the
+            ///     actual list passed by the window's class. If this parameter is NULL, the ID list from the calling
+            ///     class is used.
+            /// </param>
+            public static int SetWindowTheme(IntPtr hWnd, string pszSubAppName = null, string pszSubIdList = null) =>
+                NativeMethods.SetWindowTheme(hWnd, pszSubAppName, pszSubIdList);
+
+            /// <summary>
+            ///     Sets attributes to control how visual styles are applied to a specified window.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to a window to apply changes to.
+            /// </param>
+            /// <param name="pvAttribute">
+            ///     A pointer that specifies attributes to set.
+            /// </param>
+            public static void SetWindowThemeAttribute([In] IntPtr hWnd, [In] ref WindowThemeAttributeOptions pvAttribute) =>
+                NativeMethods.SetWindowThemeAttribute(hWnd, WindowThemeAttributeTypes.NonClient, ref pvAttribute, (uint)Marshal.SizeOf(typeof(WindowThemeAttributeOptions)));
+
+            /// <summary>
             ///     Sends an appbar message to the system.
             /// </summary>
             /// <param name="dwMessage">
@@ -4323,7 +4548,7 @@ namespace SilDev
             ///     document file, the flag is simply passed to the associated application. It is up to the application to
             ///     decide how to handle it.
             /// </param>
-            public static IntPtr ShellExecute(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] string lpOperation, [MarshalAs(UnmanagedType.LPTStr)] string lpFile, [MarshalAs(UnmanagedType.LPTStr)] string lpParameters, [MarshalAs(UnmanagedType.LPTStr)] string lpDirectory, ShowWindowFlags nShowCmd) =>
+            public static IntPtr ShellExecute(IntPtr hWnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, ShowWindowFlags nShowCmd) =>
                 NativeMethods.ShellExecute(hWnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
 
             /// <summary>
@@ -4340,7 +4565,7 @@ namespace SilDev
             ///     Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown;
             ///     otherwise, it is hidden.
             /// </param>
-            public static long ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow) =>
+            public static bool ShowScrollBar(IntPtr hWnd, ShowScrollBarOptions wBar, bool bShow) =>
                 NativeMethods.ShowScrollBar(hWnd, wBar, bShow);
 
             /// <summary>
@@ -4423,6 +4648,18 @@ namespace SilDev
                 NativeMethods.UnhookWindowsHookEx(hhk);
 
             /// <summary>
+            ///     The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT message to the
+            ///     window if the window's update region is not empty. The function sends a WM_PAINT message directly to the window
+            ///     procedure of the specified window, bypassing the application queue. If the update region is empty, no message
+            ///     is sent.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     Handle to the window to be updated.
+            /// </param>
+            public static bool UpdateWindow(IntPtr hWnd) =>
+                NativeMethods.UpdateWindow(hWnd);
+
+            /// <summary>
             ///     Reserves, commits, or changes the state of a region of memory within the virtual address space
             ///     of a specified process. The function initializes the memory it allocates to zero.
             /// </summary>
@@ -4497,22 +4734,71 @@ namespace SilDev
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
-            public static bool WindowIsOutOfVisibleScreenArea(IntPtr hWnd)
+            /// <param name="vRect">
+            ///     A pointer to a <see cref="Rectangle"/> structure that receives the best screen coordinates of the
+            ///     upper-left and lower-right corners of the window.
+            /// </param>
+            public static bool WindowIsOutOfScreenArea(IntPtr hWnd, out Rectangle vRect)
             {
-                var rect = new Rectangle();
-                if (!NativeMethods.GetWindowRect(hWnd, ref rect) || rect.Width < 1 || rect.Height < 1)
+                vRect = new Rectangle();
+                if (!NativeMethods.GetWindowRect(hWnd, ref vRect) || vRect.Width < 1 || vRect.Height < 1)
                     return false;
-                rect.Width = rect.Width - rect.X;
-                rect.Height = rect.Height - rect.Y;
+                vRect.Width = vRect.Width - vRect.X;
+                vRect.Height = vRect.Height - vRect.Y;
+                var cRect = vRect;
                 var range = new Rectangle
                 {
                     X = SystemInformation.VirtualScreen.X,
                     Y = SystemInformation.VirtualScreen.Y,
-                    Width = SystemInformation.VirtualScreen.Width - rect.Width,
-                    Height = SystemInformation.VirtualScreen.Height - rect.Height
+                    Width = SystemInformation.VirtualScreen.Width - cRect.Width,
+                    Height = SystemInformation.VirtualScreen.Height - cRect.Height
                 };
-                return rect.X < range.X || rect.X > range.Width || rect.Y < range.Y || rect.Y > range.Height;
+                for (var i = 0; i < 2; i++)
+                {
+                    if (i == 1)
+                    {
+                        var screen = Screen.PrimaryScreen;
+                        range = new Rectangle
+                        {
+                            X = vRect.X + vRect.Width / 2,
+                            Y = vRect.Y + vRect.Width / 2,
+                            Width = vRect.Width / 2,
+                            Height = vRect.Height / 2
+                        };
+                        foreach (var scr in Screen.AllScreens)
+                        {
+                            if (!scr.Bounds.Contains(range))
+                                continue;
+                            screen = scr;
+                        }
+                        range = new Rectangle
+                        {
+                            X = screen.WorkingArea.X,
+                            Y = screen.WorkingArea.Y,
+                            Width = screen.WorkingArea.Width + screen.WorkingArea.X - cRect.Width,
+                            Height = screen.WorkingArea.Height + screen.WorkingArea.Y - cRect.Height
+                        };
+                    }
+                    if (vRect.X < range.X)
+                        vRect.X = range.X;
+                    if (vRect.X > range.Width)
+                        vRect.X = range.Width;
+                    if (vRect.Y < range.Y)
+                        vRect.Y = range.Y;
+                    if (vRect.Y > range.Height)
+                        vRect.Y = range.Height;
+                }
+                return cRect != vRect;
             }
+
+            /// <summary>
+            ///     Determines whether the specified window is outside the visible screen area.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window.
+            /// </param>
+            public static bool WindowIsOutOfVisibleScreenArea(IntPtr hWnd) =>
+                WindowIsOutOfScreenArea(hWnd, out Rectangle _);
 
             /// <summary>
             ///     Writes data to an area of memory in a specified process. The entire area to be written to must be
@@ -4538,7 +4824,7 @@ namespace SilDev
             ///     A pointer to a variable that receives the number of bytes transferred into the specified process. This
             ///     parameter is optional. If lpNumberOfBytesWritten is NULL, the parameter is ignored.
             /// </param>
-            public static bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, [MarshalAs(UnmanagedType.SysInt)] int nSize, out IntPtr lpNumberOfBytesWritten) =>
+            public static bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int nSize, out IntPtr lpNumberOfBytesWritten) =>
                 NativeMethods.WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, out lpNumberOfBytesWritten);
         }
 
@@ -5549,6 +5835,54 @@ namespace SilDev
             internal static extern bool InsertMenu(IntPtr hMenu, uint wPosition, ModifyMenuFlags wFlags, UIntPtr wIdNewItem, [MarshalAs(UnmanagedType.LPStr)] string lpNewItem);
 
             /// <summary>
+            ///     Adds a rectangle to the specified window's update region. The update region represents the portion of the
+            ///     window's client area that must be redrawn.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window whose update region has changed. If this parameter is NULL, the system invalidates
+            ///     and redraws all windows, not just the windows for this application, and sends the WM_ERASEBKGND and
+            ///     WM_NCPAINT messages before the function returns. Setting this parameter to NULL is not recommended.
+            /// </param>
+            /// <param name="lpRect">
+            ///     A pointer to a RECT structure that contains the client coordinates of the rectangle to be added to the update
+            ///     region. If this parameter is NULL, the entire client area is added to the update region.
+            /// </param>
+            /// <param name="bErase">
+            ///     Specifies whether the background within the update region is to be erased when the update region is processed.
+            ///     If this parameter is TRUE, the background is erased when the BeginPaint function is called. If this parameter
+            ///     is FALSE, the background remains unchanged.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            internal static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
+
+            /// <summary>
+            ///     Tests if a visual style for the current application is active.
+            /// </summary>
+            /// <returns>
+            ///     Returns one of the following values.
+            ///     <para>
+            ///         <c>
+            ///             TRUE:
+            ///         </c>
+            ///         A visual style is enabled, and windows with visual styles applied should call OpenThemeData to start using
+            ///         theme drawing services.
+            ///     </para>
+            ///     <para>
+            ///         <c>
+            ///             FALSE:
+            ///         </c>
+            ///         A visual style is not enabled, and the window message handler does not need to make another call to
+            ///         <see cref="IsThemeActive"/> until it receives a WM_THEMECHANGED message.
+            ///     </para>
+            /// </returns>
+            [DllImport(DllNames.Uxtheme, ExactSpelling = true, SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool IsThemeActive();
+
+            /// <summary>
             ///     Loads the specified module into the address space of the calling process. The
             ///     specified module may cause other modules to be loaded.
             /// </summary>
@@ -5901,6 +6235,33 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, StringBuilder lpBuffer, IntPtr nSize, ref IntPtr lpNumberOfBytesRead);
+
+            /// <summary>
+            ///     Updates the specified rectangle or region in a window's client area.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window to be redrawn. If this parameter is NULL, the desktop window
+            ///     is updated.
+            /// </param>
+            /// <param name="lprcUpdate">
+            ///     A pointer to a RECT structure containing the coordinates, in device units, of the
+            ///     update rectangle. This parameter is ignored if the hrgnUpdate parameter identifies
+            ///     a region.
+            /// </param>
+            /// <param name="hrgnUpdate">
+            ///     A handle to the update region. If both the hrgnUpdate and lprcUpdate parameters are
+            ///     NULL, the entire client area is added to the update region.
+            /// </param>
+            /// <param name="flags">
+            ///     One or more redraw flags. This parameter can be used to invalidate or validate a
+            ///     window, control repainting, and control which windows are affected by
+            ///     <see cref="RedrawWindow"/>.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            internal static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
 
             /// <summary>
             ///     Releases the mouse capture from a window in the current thread and restores normal mouse
@@ -6458,7 +6819,7 @@ namespace SilDev
             /// <param name="dwNewLong">
             ///     The replacement value.
             /// </param>
-            public static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong) =>
+            internal static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong) =>
                 IntPtr.Size == 4 ? SetWindowLongPtr32(hWnd, nIndex, dwNewLong) : SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
 
             [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLong")]
@@ -6598,6 +6959,45 @@ namespace SilDev
             internal static extern bool SetWindowText(IntPtr hWnd, string lpString);
 
             /// <summary>
+            ///     Causes a window to use a different set of visual style information than its class normally uses.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window whose visual style information is to be changed.
+            /// </param>
+            /// <param name="pszSubAppName">
+            ///     Pointer to a string that contains the application name to use in place of the calling application's
+            ///     name. If this parameter is NULL, the calling application's name is used.
+            /// </param>
+            /// <param name="pszSubIdList">
+            ///     Pointer to a string that contains a semicolon-separated list of CLSID names to use in place of the
+            ///     actual list passed by the window's class. If this parameter is NULL, the ID list from the calling
+            ///     class is used.
+            /// </param>
+            /// <returns>
+            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            /// </returns>
+            [DllImport(DllNames.Uxtheme, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
+            internal static extern int SetWindowTheme(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] string pszSubAppName, [MarshalAs(UnmanagedType.LPTStr)] string pszSubIdList);
+
+            /// <summary>
+            ///     Sets attributes to control how visual styles are applied to a specified window.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     Handle to a window to apply changes to.
+            /// </param>
+            /// <param name="eAttribute">
+            ///     Value of type <see cref="WindowThemeAttributeTypes"/> that specifies the type of attribute to set.
+            /// </param>
+            /// <param name="pvAttribute">
+            ///     A pointer that specifies attributes to set. Type is determined by the value of the eAttribute value.
+            /// </param>
+            /// <param name="cbAttribute">
+            ///     Specifies the size, in bytes, of the data pointed to by pvAttribute.
+            /// </param>
+            [DllImport(DllNames.Uxtheme, PreserveSig = false, SetLastError = true)]
+            internal static extern void SetWindowThemeAttribute([In] IntPtr hWnd, [In] WindowThemeAttributeTypes eAttribute, [In] ref WindowThemeAttributeOptions pvAttribute, [In] uint cbAttribute);
+
+            /// <summary>
             ///     Sends an appbar message to the system.
             /// </summary>
             /// <param name="dwMessage">
@@ -6716,7 +7116,8 @@ namespace SilDev
             ///     If the function succeeds, the return value is nonzero.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
-            internal static extern long ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool ShowScrollBar(IntPtr hWnd, ShowScrollBarOptions wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
 
             /// <summary>
             ///     Sets the specified window's show state.
@@ -6839,6 +7240,21 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern int UnhookWindowsHookEx(IntPtr hhk);
+
+            /// <summary>
+            ///     The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT message to the
+            ///     window if the window's update region is not empty. The function sends a WM_PAINT message directly to the window
+            ///     procedure of the specified window, bypassing the application queue. If the update region is empty, no message
+            ///     is sent.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     Handle to the window to be updated.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            internal static extern bool UpdateWindow(IntPtr hWnd);
 
             /// <summary>
             ///     Reserves, commits, or changes the state of a region of memory within the virtual address space
@@ -7265,6 +7681,7 @@ namespace SilDev
             internal const string Dwmapi = "dwmapi.dll";
             internal const string Msi = "msi.dll";
             internal const string Rstrtmgr = "rstrtmgr.dll";
+            internal const string Uxtheme = "uxtheme.dll";
             internal const string Winmm = "winmm.dll";
 #pragma warning disable CS1591
             public const string Kernel32 = "kernel32.dll";
@@ -7425,6 +7842,25 @@ namespace SilDev
             ///     The window's coordinates when the window is in the restored position.
             /// </summary>
             public Rectangle rcNormalPosition;
+        }
+
+        /// <summary>
+        ///     Contains information about the placement of a window on the screen.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WindowThemeAttributeOptions
+        {
+            /// <summary>
+            ///     A combination of flags that modify window visual style attributes.
+            /// </summary>
+            public WindowThemeAttributeFlags Flags;
+
+            /// <summary>
+            ///     A bitmask that describes how the values specified in dwFlags should be applied. If
+            ///     the bit corresponding to a value in <see cref="Flags"/> is 0, that flag will be
+            ///     removed. If the bit is 1, the flag will be added.
+            /// </summary>
+            public uint Mask;
         }
 
         /// <summary>

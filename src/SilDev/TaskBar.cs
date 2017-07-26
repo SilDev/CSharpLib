@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-07-26 17:24
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -109,9 +109,9 @@ namespace SilDev
         /// <param name="hWnd">
         ///     The handle of the window on which the taskbar is located.
         /// </param>
-        public static Location GetLocation(IntPtr? hWnd = null)
+        public static Location GetLocation(IntPtr hWnd = default(IntPtr))
         {
-            var screen = hWnd == null ? Screen.PrimaryScreen : Screen.FromHandle((IntPtr)hWnd);
+            var screen = hWnd == default(IntPtr) ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
             if (screen.WorkingArea == screen.Bounds)
                 return Location.Hidden;
             if (screen.WorkingArea.Width != screen.Bounds.Width)
@@ -125,9 +125,9 @@ namespace SilDev
         /// <param name="hWnd">
         ///     The handle of the window on which the taskbar is located.
         /// </param>
-        public static int GetSize(IntPtr? hWnd = null)
+        public static int GetSize(IntPtr hWnd = default(IntPtr))
         {
-            var screen = hWnd == null ? Screen.PrimaryScreen : Screen.FromHandle((IntPtr)hWnd);
+            var screen = hWnd == default(IntPtr) ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
             switch (GetLocation())
             {
                 case Location.Top:
