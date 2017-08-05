@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-07-26 17:22
+// Version:  2017-08-05 09:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -48,6 +48,26 @@ namespace SilDev
         ///     it must return FALSE.
         /// </returns>
         public delegate bool EnumChildProc(IntPtr hWnd, IntPtr lParam);
+
+        /// <summary>
+        ///     An application-defined callback function used with the EnumThreadWindows function.
+        ///     It receives the window handles associated with a thread. The WNDENUMPROC type defines
+        ///     a pointer to this callback function. EnumThreadWndProc is a placeholder for the
+        ///     application-defined function name.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     A handle to a window associated with the thread specified in the
+        ///     <see cref="NativeHelper.EnumThreadWindows(uint, EnumThreadWndProc, IntPtr)"/> function.
+        /// </param>
+        /// <param name="lParam">
+        ///     The application-defined value given in the
+        ///     <see cref="NativeHelper.EnumThreadWindows(uint, EnumThreadWndProc, IntPtr)"/> function.
+        /// </param>
+        /// <returns>
+        ///     To continue enumeration, the callback function must return TRUE; to stop enumeration, it
+        ///     must return FALSE.
+        /// </returns>
+        public delegate bool EnumThreadWndProc(IntPtr hWnd, IntPtr lParam);
 
         /// <summary>
         ///     Represents a pointer to the hook procedure.
@@ -2816,6 +2836,22 @@ namespace SilDev
                 NativeMethods.EnumChildWindows(hWndParent, lpEnumFunc, lParam);
 
             /// <summary>
+            ///     Enumerates all nonchild windows associated with a thread by passing the handle to each window,
+            ///     in turn, to an application-defined callback function.
+            /// </summary>
+            /// <param name="dwThreadId">
+            ///     The identifier of the thread whose windows are to be enumerated.
+            /// </param>
+            /// <param name="lpfn">
+            ///     A pointer to an application-defined callback function.
+            /// </param>
+            /// <param name="lParam">
+            ///     An application-defined value to be passed to the callback function.
+            /// </param>
+            public static bool EnumThreadWindows(uint dwThreadId, EnumThreadWndProc lpfn, IntPtr lParam) =>
+                NativeMethods.EnumThreadWindows(dwThreadId, lpfn, lParam);
+
+            /// <summary>
             ///     Creates an array of handles to large or small icons extracted from the specified executable
             ///     file, DLL, or icon file.
             /// </summary>
@@ -5269,6 +5305,27 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern bool EnumChildWindows(IntPtr hWndParent, EnumChildProc lpEnumFunc, IntPtr lParam);
+
+            /// <summary>
+            ///     Enumerates all nonchild windows associated with a thread by passing the handle to each window,
+            ///     in turn, to an application-defined callback function.
+            /// </summary>
+            /// <param name="dwThreadId">
+            ///     The identifier of the thread whose windows are to be enumerated.
+            /// </param>
+            /// <param name="lpfn">
+            ///     A pointer to an application-defined callback function.
+            /// </param>
+            /// <param name="lParam">
+            ///     An application-defined value to be passed to the callback function.
+            /// </param>
+            /// <returns>
+            ///     If the callback function returns TRUE for all windows in the thread specified by dwThreadId, the
+            ///     return value is TRUE. If the callback function returns FALSE on any enumerated window, or if
+            ///     there are no windows found in the thread specified by dwThreadId, the return value is FALSE.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            internal static extern bool EnumThreadWindows(uint dwThreadId, EnumThreadWndProc lpfn, IntPtr lParam);
 
             /// <summary>
             ///     Creates an array of handles to large or small icons extracted from the specified executable
