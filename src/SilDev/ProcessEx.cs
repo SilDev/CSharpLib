@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-08-05 11:07
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,6 +22,8 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Management;
+    using System.Threading;
+    using Microsoft.Win32.SafeHandles;
     using Properties;
 
     /// <summary>
@@ -446,6 +448,127 @@ namespace SilDev
             Start(fileName, null, null, verbRunAs, dispose);
 
         /// <summary>
+        ///     Retrieves all thread handles of the specified process.
+        /// </summary>
+        /// <param name="process">
+        ///     The <see cref="Process"/> to get all thread handles.
+        /// </param>
+        public static IEnumerable<IntPtr> ThreadHandles(this Process process)
+        {
+            var handles = new List<IntPtr>();
+            var threads = new WinApi.EnumThreadWndProc((hWnd, lParam) =>
+            {
+                handles.Add(hWnd);
+                return true;
+            });
+            foreach (ProcessThread thread in process.Threads)
+                WinApi.NativeMethods.EnumThreadWindows((uint)thread.Id, threads, IntPtr.Zero);
+            return handles;
+        }
+
+        /// <summary>
+        ///     Immediately closes all threads of the specified processes.
+        /// </summary>
+        /// <param name="processes">
+        ///     The <see cref="Process"/>/es to close.
+        /// </param>
+        /// <param name="waitOnHandle">
+        ///     Wait on the handle.
+        /// </param>
+        public static bool Close(IEnumerable<Process> processes, bool waitOnHandle = true)
+        {
+            var count = 0;
+            foreach (var p in processes)
+                using (p)
+                {
+                    foreach (var h in p.ThreadHandles())
+                    {
+                        WinApi.NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
+                        if (!waitOnHandle)
+                            continue;
+                        var wh = new ManualResetEvent(false)
+                        {
+                            SafeWaitHandle = new SafeWaitHandle(h, false)
+                        };
+                        wh.WaitOne(100);
+                    }
+                    if (p?.HasExited == false)
+                        count++;
+                }
+            return count > 0;
+        }
+
+        /// <summary>
+        ///     Immediately closes all threads of the specified processes.
+        /// </summary>
+        /// <param name="processes">
+        ///     The <see cref="Process"/>/es to close.
+        /// </param>
+        public static bool Close(params Process[] processes) =>
+            Close(processes.ToList());
+
+        /// <summary>
+        ///     <para>
+        ///         Immediately stops all specified processes.
+        ///     </para>
+        ///     <para>
+        ///         If the current process doesn't have enough privileges to stop a specified process
+        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///     </para>
+        /// </summary>
+        /// <param name="processes">
+        ///     The <see cref="Process"/>/es to kill.
+        /// </param>
+        public static bool Terminate(IEnumerable<Process> processes)
+        {
+            var count = 0;
+            var list = new List<string>();
+            foreach (var p in processes)
+                using (p)
+                {
+                    try
+                    {
+                        if (!p.HasExited)
+                        {
+                            count++;
+                            p.Kill();
+                        }
+                        if (p.HasExited)
+                            continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+                    var s = p.ProcessName;
+                    if (!list.ContainsEx(s))
+                        list.Add(s);
+                }
+            if (list.Count == 0)
+                return count > 0;
+            using (var p = SendHelper.KillAllTasks(list, true, false))
+                if (p?.HasExited == false)
+                    p.WaitForExit();
+            Tray.RefreshAsync();
+            return count > 0;
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Immediately stops all specified processes.
+        ///     </para>
+        ///     <para>
+        ///         If the current process doesn't have enough privileges to stop a specified process
+        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///     </para>
+        /// </summary>
+        /// <param name="processes">
+        ///     The collection of processes to kill.
+        /// </param>
+        public static bool Terminate(params Process[] processes) =>
+            Terminate(processes.ToList());
+
+        /// <summary>
         ///     <para>
         ///         Initializes a new instance of the <see cref="Process"/> class to execute system
         ///         commands using the system command prompt ("cmd.exe").
@@ -553,66 +676,6 @@ namespace SilDev
         /// </param>
         public static Process Send(string command, ProcessWindowStyle processWindowStyle, bool dispose = true) =>
             Send(command, false, processWindowStyle, dispose);
-
-        /// <summary>
-        ///     <para>
-        ///         Immediately stops all specified processes.
-        ///     </para>
-        ///     <para>
-        ///         If the current process doesn't have enough privileges to stop a specified process
-        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
-        ///     </para>
-        /// </summary>
-        /// <param name="processes">
-        ///     The <see cref="Process"/>/es to kill.
-        /// </param>
-        public static bool Terminate(IEnumerable<Process> processes)
-        {
-            var count = 0;
-            var list = new List<string>();
-            foreach (var p in processes)
-                using (p)
-                {
-                    try
-                    {
-                        if (!p.HasExited)
-                        {
-                            count++;
-                            p.Kill();
-                        }
-                        if (p.HasExited)
-                            continue;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
-                    var s = p.ProcessName;
-                    if (!list.ContainsEx(s))
-                        list.Add(s);
-                }
-            if (list.Count == 0)
-                return count > 0;
-            using (var p = SendHelper.KillAllTasks(list, true, false))
-                if (p?.HasExited == false)
-                    p.WaitForExit();
-            return count > 0;
-        }
-
-        /// <summary>
-        ///     <para>
-        ///         Immediately stops all specified processes.
-        ///     </para>
-        ///     <para>
-        ///         If the current process doesn't have enough privileges to stop a specified process
-        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
-        ///     </para>
-        /// </summary>
-        /// <param name="processes">
-        ///     The collection of processes to kill.
-        /// </param>
-        public static bool Terminate(params Process[] processes) =>
-            Terminate(processes.ToList());
 
         /// <summary>
         ///     Provides basic functionality based on <see cref="Send(string,bool,bool)"/>.
