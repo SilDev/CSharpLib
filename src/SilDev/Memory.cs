@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-08-05 10:02
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -47,8 +47,10 @@ namespace SilDev
         /// </summary>
         public IntPtr Pointer { get; private set; }
 
+#pragma warning disable 1591
         ~MemoryPinner() =>
             Dispose(false);
+#pragma warning restore 1591
 
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
@@ -226,8 +228,10 @@ namespace SilDev
             }
         }
 
+#pragma warning disable 1591
         ~ProcessMemory() => 
             Dispose(false);
+#pragma warning restore 1591
 
         /// <summary>
         ///     Releases all resources used by this <see cref="ProcessMemory"/>.

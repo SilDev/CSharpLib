@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2017-07-19 04:50
+// Version:  2017-08-05 10:02
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -62,7 +62,9 @@ namespace SilDev.Forms
         /// </summary>
         public class DoubleBuffered : ListView
         {
+#pragma warning disable 1591
             protected const int WmEraseBkGnd = 0x14;
+#pragma warning restore 1591
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="ListView"/> class.
@@ -72,11 +74,13 @@ namespace SilDev.Forms
                          ControlStyles.EnableNotifyMessage |
                          ControlStyles.OptimizedDoubleBuffer, true);
 
+#pragma warning disable 1591
             protected override void OnNotifyMessage(Message m)
             {
                 if (m.Msg != WmEraseBkGnd)
                     base.OnNotifyMessage(m);
             }
+#pragma warning restore 1591
         }
 
         /// <summary>
