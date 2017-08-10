@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-08-10 14:57
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,6 +23,8 @@ namespace SilDev
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading;
+    using Intern;
+    using Intern.IrrKlangEngine;
 
     /// <summary>
     ///     Provides functionality for playing WAV files and controlling the volume of applications.
@@ -86,8 +88,7 @@ namespace SilDev
                 var volume = GetVolumeObject(name);
                 if (volume == null)
                     return null;
-                float level;
-                volume.GetMasterVolume(out level);
+                volume.GetMasterVolume(out float level);
                 return level * 0x64;
             }
 
@@ -102,8 +103,7 @@ namespace SilDev
                 var volume = GetVolumeObject(name);
                 if (volume == null)
                     return null;
-                bool mute;
-                volume.GetMute(out mute);
+                volume.GetMute(out bool mute);
                 return mute;
             }
 
@@ -147,23 +147,17 @@ namespace SilDev
             private static ISimpleAudioVolume GetVolumeObject(string name)
             {
                 var deviceEnumerator = (IMMDeviceEnumerator)new MMDeviceEnumerator();
-                IMMDevice speakers;
-                deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
+                deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out IMMDevice speakers);
                 var iidIAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
-                object o;
-                speakers.Activate(ref iidIAudioSessionManager2, 0, IntPtr.Zero, out o);
+                speakers.Activate(ref iidIAudioSessionManager2, 0, IntPtr.Zero, out object o);
                 var mgr = (IAudioSessionManager2)o;
-                IAudioSessionEnumerator sessionEnumerator;
-                mgr.GetSessionEnumerator(out sessionEnumerator);
-                int count;
-                sessionEnumerator.GetCount(out count);
+                mgr.GetSessionEnumerator(out IAudioSessionEnumerator sessionEnumerator);
+                sessionEnumerator.GetCount(out int count);
                 ISimpleAudioVolume volumeControl = null;
                 for (var i = 0; i < count; i++)
                 {
-                    IAudioSessionControl ctl;
-                    sessionEnumerator.GetSession(i, out ctl);
-                    string dn;
-                    ctl.GetDisplayName(out dn);
+                    sessionEnumerator.GetSession(i, out IAudioSessionControl ctl);
+                    ctl.GetDisplayName(out string dn);
                     if (name.EqualsEx(dn))
                     {
                         volumeControl = ctl as ISimpleAudioVolume;
@@ -304,8 +298,7 @@ namespace SilDev
             /// </summary>
             public static int GetSoundVolume()
             {
-                uint currVol;
-                WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out currVol);
+                WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out uint currVol);
                 var calcVol = (ushort)(currVol & 0xffff);
                 return calcVol / (ushort.MaxValue / 0xa) * 0xa;
             }
@@ -420,7 +413,7 @@ namespace SilDev
             {
                 try
                 {
-                    if (!Intern.IrrKlangInitializer.AssemblyLoaded && !Intern.IrrKlangInitializer.LoadAssembly())
+                    if (!IrrKlangInitializer.AssemblyLoaded && !IrrKlangInitializer.LoadAssembly())
                         throw new NotSupportedException("The required assembly could not be found.");
                     var file = PathEx.Combine(path);
                     if (!File.Exists(path))
@@ -429,11 +422,11 @@ namespace SilDev
                     if (!_assemblyFinalizer)
                     {
                         curDir = Directory.GetCurrentDirectory();
-                        Directory.SetCurrentDirectory(Intern.IrrKlangInitializer.AssemblyDirectory);
+                        Directory.SetCurrentDirectory(IrrKlangInitializer.AssemblyDirectory);
                     }
                     if (WindowsPlayer.GetSoundVolume() != volume)
                         WindowsPlayer.SetSoundVolume(volume);
-                    Intern.IrrKlangEngine.Player.Play(file, loop);
+                    Player.Play(file, loop);
                     if (curDir == null)
                         return;
                     Directory.SetCurrentDirectory(curDir);
@@ -464,9 +457,9 @@ namespace SilDev
             {
                 try
                 {
-                    if (!Intern.IrrKlangInitializer.AssemblyLoaded)
+                    if (!IrrKlangInitializer.AssemblyLoaded)
                         throw new NotSupportedException();
-                    Intern.IrrKlangEngine.Player.Stop();
+                    Player.Stop();
                 }
                 catch (Exception ex)
                 {

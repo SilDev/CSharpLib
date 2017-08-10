@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IrrKlangInitializer.cs
-// Version:  2017-05-16 09:46
+// Version:  2017-08-10 14:57
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -32,7 +32,11 @@ namespace SilDev.Intern
             var dirs = string.Format(Resources.ReferenceDirs, hash);
             var list = dirs.SplitNewLine().ToList();
             list.Add(PathEx.LocalDir);
+#if x86
+            const string reqName = "msvcr100.dll";
+#else
             const string reqName = "msvcr120.dll";
+#endif
             var reqPath = PathEx.Combine("%system%", reqName);
             var exist = File.Exists(reqPath);
             const string libName = "irrKlang.NET4.dll";
@@ -53,7 +57,7 @@ namespace SilDev.Intern
                 if (!File.Exists(libPath))
                     continue;
                 AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
-                        Assembly.LoadFrom(libPath);
+                    Assembly.LoadFrom(libPath);
                 AssemblyDirectory = dir;
                 AssemblyLoaded = true;
                 break;
