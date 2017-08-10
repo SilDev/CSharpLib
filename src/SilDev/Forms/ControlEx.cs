@@ -109,8 +109,8 @@ namespace SilDev.Forms
             }
             else
             {
-                style = style & ~0x8000;
-                style = style & ~0x10000;
+                style &= ~0x8000;
+                style &= ~0x10000;
             }
             WinApi.NativeHelper.SendMessage(control.Handle, 0x1036u, IntPtr.Zero, new IntPtr(style));
         }
