@@ -483,18 +483,18 @@ namespace SilDev
                     source += Environment.NewLine;
 
                 var matches = Regex.Matches(source,
-                                            @"^                        # Beginning of the line
-                      ((?:\[)                  # Section Start
-                       (?<Section>[^\]]*)      # Actual Section text into Section Group
-                       (?:\])                  # Section End then EOL/EOB
-                       (?:[\r\n]{0,}|\Z))      # Match but don't capture the CRLF or EOB
-                      (                        # Begin capture groups (Key Value Pairs)
-                       (?!\[)                  # Stop capture groups if a [ is found; new section
-                       (?<Key>[^=]*?)          # Any text before the =, matched few as possible
-                       (?:=)                   # Get the = now
-                       (?<Value>[^\r\n]*)      # Get everything that is not an Line Changes
-                       (?:[\r\n]{0,4})         # MBDC \r\n
-                      )*                       # End Capture groups",
+                                            @"^                    # Beginning of the line
+                                              ((?:\[)              # Section Start
+                                               (?<Section>[^\]]*)  # Actual Section text into Section Group
+                                               (?:\])              # Section End then EOL/EOB
+                                               (?:[\r\n]{0,}|\Z))  # Match but don't capture the CRLF or EOB
+                                              (                    # Begin capture groups (Key Value Pairs)
+                                               (?!\[)              # Stop capture groups if a [ is found; new section
+                                               (?<Key>[^=]*?)      # Any text before the =, matched few as possible
+                                               (?:=)               # Get the = now
+                                               (?<Value>[^\r\n]*)  # Get everything that is not an Line Changes
+                                               (?:[\r\n]{0,4})     # MBDC \r\n
+                                              )*                   # End Capture groups",
                                             RegexOptions.IgnoreCase |
                                             RegexOptions.Multiline |
                                             RegexOptions.IgnorePatternWhitespace);
