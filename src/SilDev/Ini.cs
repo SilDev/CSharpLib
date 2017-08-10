@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-06-27 16:30
+// Version:  2017-08-10 17:55
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -88,13 +88,13 @@ namespace SilDev
                 CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
 
             if (!CachedFiles.ContainsKey(code))
-                CachedFiles[code] = new Dictionary<string, Dictionary<string, List<string>>>();
+                CachedFiles[code] = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
 
             if (string.IsNullOrEmpty(section))
                 return;
 
             if (!CachedFiles[code].ContainsKey(section))
-                CachedFiles[code][section] = new Dictionary<string, List<string>>();
+                CachedFiles[code][section] = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
             if (string.IsNullOrEmpty(key))
                 return;
@@ -113,34 +113,36 @@ namespace SilDev
         ///     The full file path or content of an INI file. If this parameter is NULL, all
         ///     cached data are saved.
         /// </param>
-        public static void SaveCache(string cacheFilePath, string fileOrContent)
+        /// <param name="compress">
+        ///     true to compress the cache; otherwise, false.
+        /// </param>
+        public static void SaveCache(string cacheFilePath = null, string fileOrContent = null, bool compress = true)
         {
-            if (CachedFiles?.Any() != true)
-                return;
-            var cache = CachedFiles;
-            var file = fileOrContent ?? GetFile();
-            if (!string.IsNullOrEmpty(file))
-            {
-                var code = GetCode(file);
-                if (!CodeExists(code))
-                    return;
-                foreach (var data in CachedFiles)
-                {
-                    if (data.Key != code)
-                        continue;
-                    cache = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> { { data.Key, data.Value } };
-                    break;
-                }
-            }
-            var bytes = cache?.SerializeObject();
-            if (bytes == null)
-                return;
-            var path = PathEx.Combine(cacheFilePath);
-            if (!PathEx.IsValidPath(path))
-                return;
             try
             {
-                File.WriteAllBytes(path, bytes.Zip());
+                if (CachedFiles?.Any() != true)
+                    throw new ArgumentOutOfRangeException(nameof(CachedFiles));
+                var path = PathEx.Combine(cacheFilePath ?? GetFile());
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(cacheFilePath));
+                if (!Path.HasExtension(path) || Path.GetExtension(path).EqualsEx(".ini"))
+                    path = Path.ChangeExtension(path, ".ixi");
+                if (!PathEx.IsValidPath(path))
+                    throw new ArgumentException();
+                var file = fileOrContent ?? GetFile();
+                if (string.IsNullOrEmpty(file))
+                    throw new ArgumentNullException(nameof(fileOrContent));
+                var code = GetCode(file);
+                if (!CodeExists(code))
+                    ReadAll(fileOrContent);
+                if (!CodeExists(code) || !CachedFiles[code].Any())
+                    throw new ArgumentOutOfRangeException(nameof(fileOrContent));
+                var bytes = CachedFiles[code]?.SerializeObject();
+                if (bytes == null)
+                    throw new ArgumentNullException(nameof(bytes));
+                if (compress)
+                    bytes = bytes.Zip();
+                File.WriteAllBytes(path, bytes);
             }
             catch (Exception ex)
             {
@@ -161,22 +163,20 @@ namespace SilDev
         /// </param>
         public static void LoadCache(string cacheFilePath)
         {
-            var path = PathEx.Combine(cacheFilePath);
-            if (!File.Exists(path))
-                return;
             try
             {
-                var cache = File.ReadAllBytes(path).Unzip()?.DeserializeObject<Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>>();
-                if (cache == null)
-                    return;
-                foreach (var data in cache)
-                {
-                    var code = data.Key;
-                    if (code == 0)
-                        return;
-                    InitializeCache(code);
-                    CachedFiles[code] = data.Value;
-                }
+                var path = PathEx.Combine(cacheFilePath ?? GetFile());
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(cacheFilePath));
+                if (!Path.HasExtension(path) || Path.GetExtension(path).EqualsEx(".ini"))
+                    path = Path.ChangeExtension(path, ".ixi");
+                if (!File.Exists(path))
+                    throw new PathNotFoundException(path);
+                var cache = File.ReadAllBytes(path).Unzip()?.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>();
+                var file = Path.ChangeExtension(path, ".ini");
+                var code = GetCode(file);
+                InitializeCache(code);
+                CachedFiles[code] = cache ?? throw new ArgumentNullException(nameof(cache));
             }
             catch (Exception ex)
             {
@@ -261,19 +261,6 @@ namespace SilDev
             return false;
         }
 
-        private static string FindSection(int code, string section)
-        {
-            var sct = section?.Trim();
-            if (string.IsNullOrEmpty(sct))
-                return NonSectionId;
-            if (!CodeExists(code) || CachedFiles[code].ContainsKey(sct))
-                return sct;
-            var newSct = CachedFiles[code].Keys.FirstOrDefault(x => x.EqualsEx(sct));
-            if (!string.IsNullOrEmpty(newSct) && !sct.Equals(newSct))
-                return newSct;
-            return sct;
-        }
-
         private static bool SectionExists(int code, string section) =>
             !string.IsNullOrEmpty(section) && CodeExists(code) && CachedFiles[code]?.ContainsKey(section) == true && CachedFiles[code][section]?.Any() == true;
 
@@ -323,12 +310,9 @@ namespace SilDev
 
         private static bool RemoveSection(int code, string section)
         {
-            if (!CodeExists(code))
+            if (!CodeExists(code) || !CachedFiles[code].ContainsKey(section))
                 return true;
-            var sct = FindSection(code, section);
-            if (!CachedFiles[code].ContainsKey(sct))
-                return true;
-            CachedFiles[code].Remove(sct);
+            CachedFiles[code].Remove(section);
             return true;
         }
 
@@ -360,18 +344,6 @@ namespace SilDev
             }
         }
 
-        private static string FindKey(int code, string section, string key)
-        {
-            var sct = FindSection(code, section);
-            var ke = key?.Trim();
-            if (string.IsNullOrEmpty(ke) || !SectionExists(code, sct) || CachedFiles[code][sct].ContainsKey(ke))
-                return ke;
-            var newKey = CachedFiles[code][sct].Keys.FirstOrDefault(x => x.EqualsEx(ke));
-            if (!string.IsNullOrEmpty(newKey) && !ke.Equals(newKey))
-                return newKey;
-            return ke;
-        }
-
         private static bool KeyExists(int code, string section, string key) =>
             !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && CachedFiles[code][section][key]?.Any() == true;
 
@@ -397,10 +369,9 @@ namespace SilDev
                     throw new ArgumentOutOfRangeException(nameof(code));
                 if (!CodeExists(code))
                     ReadAll(fileOrContent);
-                var sct = FindSection(code, section);
-                if (SectionExists(code, sct))
+                if (SectionExists(code, section))
                 {
-                    var output = CachedFiles[code][sct].Keys.ToList();
+                    var output = CachedFiles[code][section].Keys.ToList();
                     if (output.Contains(NonSectionId))
                         output.Remove(NonSectionId);
                     if (sorted)
@@ -430,11 +401,9 @@ namespace SilDev
 
         private static bool RemoveKey(int code, string section, string key)
         {
-            var sct = FindSection(code, section);
-            var ke = FindKey(code, sct, key);
-            if (!KeyExists(code, sct, ke))
+            if (!KeyExists(code, section, key))
                 return true;
-            CachedFiles[code][sct].Remove(ke);
+            CachedFiles[code][section].Remove(key);
             return true;
         }
 
@@ -480,7 +449,7 @@ namespace SilDev
         /// </param>
         public static Dictionary<string, Dictionary<string, List<string>>> ReadAll(string fileOrContent = null, bool sorted = false)
         {
-            var output = new Dictionary<string, Dictionary<string, List<string>>>();
+            var output = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
             try
             {
                 var source = fileOrContent ?? GetFile();
@@ -514,7 +483,7 @@ namespace SilDev
                     source += Environment.NewLine;
 
                 var matches = Regex.Matches(source,
-                    @"^                        # Beginning of the line
+                                            @"^                        # Beginning of the line
                       ((?:\[)                  # Section Start
                        (?<Section>[^\]]*)      # Actual Section text into Section Group
                        (?:\])                  # Section End then EOL/EOB
@@ -526,28 +495,19 @@ namespace SilDev
                        (?<Value>[^\r\n]*)      # Get everything that is not an Line Changes
                        (?:[\r\n]{0,4})         # MBDC \r\n
                       )*                       # End Capture groups",
-                    RegexOptions.IgnoreCase |
-                    RegexOptions.Multiline |
-                    RegexOptions.IgnorePatternWhitespace);
+                                            RegexOptions.IgnoreCase |
+                                            RegexOptions.Multiline |
+                                            RegexOptions.IgnorePatternWhitespace);
 
-                var sections = new Dictionary<string, Dictionary<string, List<string>>>();
+                var content = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
                 foreach (Match match in matches)
                 {
                     var section = match.Groups["Section"]?.Value.Trim();
                     if (string.IsNullOrEmpty(section))
                         continue;
-                    if (!sections.ContainsKey(section))
-                    {
-                        if (sections.Count > 0)
-                        {
-                            var newSection = sections.Keys.FirstOrDefault(x => x.EqualsEx(section));
-                            if (!string.IsNullOrEmpty(newSection))
-                                section = newSection;
-                        }
-                        if (!sections.ContainsKey(section))
-                            sections.Add(section, new Dictionary<string, List<string>>());
-                    }
-                    var keys = new Dictionary<string, List<string>>();
+                    if (!content.ContainsKey(section))
+                        content.Add(section, new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase));
+                    var keys = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
                     for (var i = 0; i < match.Groups["Key"].Captures.Count; i++)
                     {
                         var key = match.Groups["Key"]?.Captures[i].Value.Trim();
@@ -557,23 +517,14 @@ namespace SilDev
                         if (string.IsNullOrEmpty(value))
                             continue;
                         if (!keys.ContainsKey(key))
-                        {
-                            if (keys.Count > 0)
-                            {
-                                var newKey = keys.Keys.FirstOrDefault(x => x.EqualsEx(key));
-                                if (!string.IsNullOrEmpty(newKey))
-                                    key = newKey;
-                            }
-                            if (!keys.ContainsKey(key))
-                                keys.Add(key, new List<string>());
-                        }
+                            keys.Add(key, new List<string>());
                         keys[key].Add(value);
                     }
-                    sections[section] = keys;
+                    content[section] = keys;
                 }
                 if (sorted)
-                    sections = sections.SortHelper();
-                output = sections;
+                    content = content.SortHelper();
+                output = content;
                 if (output.Count > 0)
                 {
                     InitializeCache(code);
@@ -648,18 +599,16 @@ namespace SilDev
                     ReadAll(fileOrContent);
                 if (!CodeExists(code))
                     throw new ArgumentNullException(nameof(fileOrContent));
-                var sct = FindSection(code, section);
-                if (string.IsNullOrEmpty(sct))
+                if (string.IsNullOrEmpty(section))
                     throw new ArgumentNullException(nameof(section));
-                var ke = FindKey(code, sct, key);
-                if (string.IsNullOrEmpty(ke))
+                if (string.IsNullOrEmpty(key))
                     throw new ArgumentNullException(nameof(key));
-                if (KeyExists(code, sct, ke))
+                if (KeyExists(code, section, key))
                 {
                     var i = Math.Abs(index);
-                    if (CachedFiles[code][sct][ke].Count > i)
-                        return CachedFiles[code][sct][ke][i] ?? string.Empty;
-                    return CachedFiles[code][sct][ke]?.FirstOrDefault() ?? string.Empty;
+                    if (CachedFiles[code][section][key].Count > i)
+                        return CachedFiles[code][section][key][i] ?? string.Empty;
+                    return CachedFiles[code][section][key]?.FirstOrDefault() ?? string.Empty;
                 }
             }
             catch (Exception ex)
@@ -689,7 +638,7 @@ namespace SilDev
         /// </param>
         public static string ReadOnly(string section, string key, string fileOrContent, int index = 0)
         {
-            var output = Read(section, key, fileOrContent, false, index);
+            var output = Read(section, key, fileOrContent, true, index);
             Detach(fileOrContent);
             return output;
         }
@@ -720,15 +669,20 @@ namespace SilDev
         {
             try
             {
-                object newValue;
                 var strValue = Read(section, key, fileOrContent, reread);
-                var type = typeof(TValue);
+                object newValue;
                 if (string.IsNullOrEmpty(strValue))
                 {
                     if (Log.DebugMode > 1)
                     {
-                        var message = $"The value is not defined. (Section: '{section}'; Key: '{key}'; File: '{(fileOrContent ?? GetFile())?.EncodeToBase85()}';)";
-                        throw new WarningException(message);
+                        var lines = new[]
+                        {
+                            "The value is not defined.",
+                            $"   Section: '{section}'",
+                            $"   Key: '{key}'",
+                            $"   FileOrContent: '{(fileOrContent?.Any(TextEx.IsLineSeparator) == true ? fileOrContent.EncodeToBase85() : GetFile()) ?? "NULL"}'"
+                        };
+                        throw new WarningException(lines.Join(Environment.NewLine));
                     }
                     newValue = (object)defValue ?? string.Empty;
                 }
@@ -742,6 +696,7 @@ namespace SilDev
                 }
                 else
                 {
+                    var type = typeof(TValue);
                     if (type == typeof(string))
                         newValue = strValue;
                     else if (type == typeof(Rectangle))
@@ -874,7 +829,7 @@ namespace SilDev
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
 
-                var source = content ?? new Dictionary<string, Dictionary<string, List<string>>>();
+                var source = content ?? new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
                 if (source.Count == 0 && CodeExists(code))
                     source = CachedFiles[code];
                 if (source.Count == 0 && File.Exists(path))
@@ -1014,18 +969,16 @@ namespace SilDev
                 if (!CodeExists(code))
                     ReadAll(fileOrContent);
 
-                var sct = FindSection(code, section);
-                if (string.IsNullOrEmpty(sct))
-                    throw new ArgumentNullException(nameof(section));
-                if (sct.Any(TextEx.IsLineSeparator))
+                if (section.Any(TextEx.IsLineSeparator))
                     throw new ArgumentOutOfRangeException(nameof(section));
+                if (string.IsNullOrEmpty(section))
+                    section = NonSectionId;
 
-                var ke = FindKey(code, sct, key);
-                if (ke.Any(TextEx.IsLineSeparator))
+                if (key.Any(TextEx.IsLineSeparator))
                     throw new ArgumentOutOfRangeException(nameof(key));
 
                 var val = string.Empty;
-                if (!string.IsNullOrEmpty(sct) && !string.IsNullOrEmpty(ke) && Comparison.IsNotEmpty(value))
+                if (!string.IsNullOrEmpty(key) && Comparison.IsNotEmpty(value))
                 {
                     var str = value.ToString();
                     var type = typeof(TValue);
@@ -1049,38 +1002,36 @@ namespace SilDev
                 }
 
                 var i = Math.Abs(index);
-                if (string.IsNullOrEmpty(ke) || string.IsNullOrEmpty(val))
+                if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(val))
                 {
-                    if (!SectionExists(code, sct))
+                    if (!SectionExists(code, section))
                         return true;
-                    if (string.IsNullOrEmpty(ke))
+                    if (string.IsNullOrEmpty(key))
+                        RemoveSection(code, section);
+                    else if (KeyExists(code, section, key))
                     {
-                        RemoveSection(code, sct);
-                        return true;
+                        if (CachedFiles?[code][section][key].Count > i && i >= 0)
+                            CachedFiles[code][section][key].RemoveAt(i);
+                        if (CachedFiles?[code][section][key].Any() != true || i < 0)
+                            RemoveKey(code, section, key);
+                        if (CachedFiles?[code][section].Any() != true)
+                            RemoveSection(code, section);
                     }
-                    if (!KeyExists(code, sct, ke))
-                        return true;
-                    if (CachedFiles?[code][sct][ke].Count > i)
-                    {
-                        CachedFiles[code][sct][ke].RemoveAt(i);
-                        return true;
-                    }
-                    RemoveKey(code, sct, ke);
                     return true;
                 }
 
-                InitializeCache(code, sct, ke);
-                if (KeyExists(code, sct, ke))
+                InitializeCache(code, section, key);
+                if (KeyExists(code, section, key))
                 {
-                    if (CachedFiles?[code][sct][ke].Count > i)
+                    if (CachedFiles?[code][section][key].Count > i)
                     {
-                        CachedFiles[code][sct][ke][i] = val;
+                        CachedFiles[code][section][key][i] = val;
                         return true;
                     }
-                    if (CachedFiles?[code][sct][ke].Count != i)
+                    if (CachedFiles?[code][section][key].Count != i)
                         throw new ArgumentOutOfRangeException(nameof(index));
                 }
-                CachedFiles?[code][sct][ke].Add(val);
+                CachedFiles?[code][section][key].Add(val);
                 return true;
             }
             catch (Exception ex)
@@ -1144,8 +1095,8 @@ namespace SilDev
         ///     </para>
         ///     <para>
         ///         The Win32-API is used for writing in this case. Please note that this function
-        ///         writes the changes directly on the disk. This causes a lot of write accesses if
-        ///         it is used incorrectly.
+        ///         writes all changes directly on the disk. This causes many write accesses when used
+        ///         incorrectly.
         ///     </para>
         /// </summary>
         /// <param name="section">
