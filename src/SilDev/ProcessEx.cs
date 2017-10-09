@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-08-05 11:07
+// Version:  2017-10-09 17:25
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -479,21 +479,28 @@ namespace SilDev
         {
             var count = 0;
             foreach (var p in processes)
-                using (p)
+                try
                 {
-                    foreach (var h in p.ThreadHandles())
+                    using (p)
                     {
-                        WinApi.NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
-                        if (!waitOnHandle)
-                            continue;
-                        var wh = new ManualResetEvent(false)
+                        foreach (var h in p.ThreadHandles())
                         {
-                            SafeWaitHandle = new SafeWaitHandle(h, false)
-                        };
-                        wh.WaitOne(100);
+                            WinApi.NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
+                            if (!waitOnHandle)
+                                continue;
+                            var wh = new ManualResetEvent(false)
+                            {
+                                SafeWaitHandle = new SafeWaitHandle(h, false)
+                            };
+                            wh.WaitOne(100);
+                        }
+                        if (p?.HasExited == true)
+                            count++;
                     }
-                    if (p?.HasExited == false)
-                        count++;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
                 }
             return count > 0;
         }
@@ -524,32 +531,36 @@ namespace SilDev
             var count = 0;
             var list = new List<string>();
             foreach (var p in processes)
-                using (p)
+            {
+                string name = null;
+                try
                 {
-                    try
+                    using (p)
                     {
+                        name = p.ProcessName;
                         if (!p.HasExited)
                         {
-                            count++;
                             p.Kill();
+                            count++;
                         }
                         if (p.HasExited)
                             continue;
                     }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
-                    var s = p.ProcessName;
-                    if (!list.ContainsEx(s))
-                        list.Add(s);
                 }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+                if (string.IsNullOrEmpty(name) || list.ContainsEx(name))
+                    continue;
+                list.Add(name);
+            }
             if (list.Count == 0)
                 return count > 0;
             using (var p = SendHelper.KillAllTasks(list, true, false))
                 if (p?.HasExited == false)
                     p.WaitForExit();
-            Tray.RefreshAsync();
+            Tray.RefreshAsync(16);
             return count > 0;
         }
 
