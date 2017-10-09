@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2017-07-19 04:52
+// Version:  2017-10-09 17:17
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -101,6 +101,15 @@ namespace SilDev.Forms
         /// </param>
         public static void SetDoubleBuffer(this Control control, bool enable = true)
         {
+            try
+            {
+                var pi = typeof(Control).GetProperty("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance);
+                pi?.SetValue(control, enable, null);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
             var style = (int)WinApi.NativeHelper.SendMessage(control.Handle, 0x1037u, IntPtr.Zero, IntPtr.Zero);
             if (enable)
             {
