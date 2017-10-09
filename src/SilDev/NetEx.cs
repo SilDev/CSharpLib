@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-09 17:21
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -747,6 +747,11 @@ namespace SilDev
             public Uri Address { get; private set; }
 
             /// <summary>
+            ///     Gets the local file name of the resource.
+            /// </summary>
+            public string FileName { get; private set; }
+
+            /// <summary>
             ///     Gets the local path of the resource.
             /// </summary>
             public string FilePath { get; private set; }
@@ -855,6 +860,7 @@ namespace SilDev
                         _webClient.DownloadFileCompleted += DownloadFile_Completed;
                         _webClient.DownloadProgressChanged += DownloadFile_ProgressChanged;
                         Address = srcUri;
+                        FileName = path.Split('\\').Last() ?? string.Empty;
                         FilePath = path;
                         var exists = FileIsAvailable(Address, userName, password, timeout, userAgent);
                         if (!exists)
