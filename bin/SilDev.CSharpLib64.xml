@@ -6329,6 +6329,11 @@
                 Gets the address to the resource.
             </summary>
         </member>
+        <member name="P:SilDev.NetEx.AsyncTransfer.FileName">
+            <summary>
+                Gets the local file name of the resource.
+            </summary>
+        </member>
         <member name="P:SilDev.NetEx.AsyncTransfer.FilePath">
             <summary>
                 Gets the local path of the resource.
@@ -8332,6 +8337,20 @@
                 The string to change.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.Trim(System.String,System.Drawing.Font,System.Int32)">
+            <summary>
+                Trim the string logical on its maximum size.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="font">
+                The font that is used to measure.
+            </param>
+            <param name="width">
+                The maximum width in pixel.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToStrings(System.String)">
             <summary>
                 Creates a sequence of strings based on natural (base e) logarithm of a count
@@ -9077,10 +9096,16 @@
                 Refreshes the symbols on system tray.
             </summary>
         </member>
-        <member name="M:SilDev.Tray.RefreshAsync">
+        <member name="M:SilDev.Tray.RefreshAsync(System.Int32,System.Int32)">
             <summary>
                 Refreshes the symbols on system tray asynchronous.
             </summary>
+            <param name="num">
+                Number of refreshes.
+            </param>
+            <param name="wait">
+                Delay between refreshes in milliseconds.
+            </param>
         </member>
         <member name="M:SilDev.Tray.RefreshVisibleArea">
             <summary>
