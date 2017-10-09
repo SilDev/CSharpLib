@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-09 17:20
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -273,6 +273,37 @@ namespace SilDev
             var ca = str.ToCharArray();
             Array.Reverse(ca);
             var s = new string(ca);
+            return s;
+        }
+
+        /// <summary>
+        ///     Trim the string logical on its maximum size.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        /// <param name="font">
+        ///     The font that is used to measure.
+        /// </param>
+        /// <param name="width">
+        ///     The maximum width in pixel.
+        /// </param>
+        public static string Trim(this string str, Font font, int width)
+        {
+            var s = str;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                var x = Convert.ToInt32(g.MeasureString("...", font).Width);
+                width -= x;
+                var c = Convert.ToInt32(g.MeasureString(s, font).Width);
+                var r = Convert.ToDouble(width) / c;
+                while (r < 1.0)
+                {
+                    s = string.Concat(s.Substring(0, Convert.ToInt32(s.Length * r) - 3), "...");
+                    c = Convert.ToInt32(g.MeasureString(s, font).Width);
+                    r = Convert.ToDouble(width) / c;
+                }
+            }
             return s;
         }
 
