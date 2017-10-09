@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Tray.cs
-// Version:  2017-08-05 09:42
+// Version:  2017-10-09 17:27
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -74,11 +74,30 @@ namespace SilDev
         /// <summary>
         ///     Refreshes the symbols on system tray asynchronous.
         /// </summary>
-        public static void RefreshAsync()
+        /// <param name="num">
+        ///     Number of refreshes.
+        /// </param>
+        /// <param name="wait">
+        ///     Delay between refreshes in milliseconds.
+        /// </param>
+        public static void RefreshAsync(int num = 1, int wait = 100)
         {
             try
             {
-                var thread = new Thread(Refresh)
+                if (num < byte.MinValue)
+                    num = byte.MinValue;
+                if (num > byte.MaxValue)
+                    num = byte.MaxValue;
+                var thread = new Thread(() =>
+                {
+                    for (var i = 0; i < num; i++)
+                    {
+                        Refresh();
+                        if (num < 2 || wait < 1)
+                            continue;
+                        Thread.Sleep(wait);
+                    }
+                })
                 {
                     IsBackground = true
                 };
