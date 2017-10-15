@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-10-09 17:21
+// Version:  2017-10-15 14:52
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -793,7 +793,7 @@ namespace SilDev
             /// <summary>
             ///     Gets the string representation of the speed of the asynchronous transfer.
             /// </summary>
-            public string TransferSpeedAd { get; private set; } = "0,00 bit/s";
+            public string TransferSpeedAd { get; private set; } = "0.00 bit/s";
 
             /// <summary>
             ///     Gets the total elapsed time.
