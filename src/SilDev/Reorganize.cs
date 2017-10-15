@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-10-09 17:20
+// Version:  2017-10-15 14:58
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -291,17 +291,17 @@ namespace SilDev
         public static string Trim(this string str, Font font, int width)
         {
             var s = str;
+            const string suffix = "...";
             using (var g = Graphics.FromHwnd(IntPtr.Zero))
             {
-                var x = Convert.ToInt32(g.MeasureString("...", font).Width);
-                width -= x;
-                var c = Convert.ToInt32(g.MeasureString(s, font).Width);
-                var r = Convert.ToDouble(width) / c;
+                var x = Math.Floor(g.MeasureString(suffix, font).Width);
+                var c = g.MeasureString(s, font).Width;
+                var r = width / c;
                 while (r < 1.0)
                 {
-                    s = string.Concat(s.Substring(0, Convert.ToInt32(s.Length * r) - 3), "...");
-                    c = Convert.ToInt32(g.MeasureString(s, font).Width);
-                    r = Convert.ToDouble(width) / c;
+                    s = string.Concat(s.Substring(0, (int)Math.Floor(s.Length * r - x)), suffix);
+                    c = g.MeasureString(s, font).Width;
+                    r = width / c;
                 }
             }
             return s;
