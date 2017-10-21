@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorDialogEx.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-21 13:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev.Forms
     using System.Drawing;
     using System.Windows.Forms;
 
+    /// <inheritdoc/>
     /// <summary>
     ///     Expands the functionality for the <see cref="ColorDialog"/> class.
     /// </summary>
@@ -28,6 +29,7 @@ namespace SilDev.Forms
         private readonly string _title;
         private Point _point;
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="ColorDialogEx"/> class.
         /// </summary>
@@ -44,6 +46,7 @@ namespace SilDev.Forms
             _title = title;
         }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="ColorDialogEx"/> class.
         /// </summary>
@@ -59,6 +62,7 @@ namespace SilDev.Forms
             _title = title;
         }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="ColorDialogEx"/> class.
         /// </summary>

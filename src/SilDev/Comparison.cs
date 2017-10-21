@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-21 14:00
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -36,10 +36,13 @@ namespace SilDev
         {
             try
             {
-                if (value == null)
-                    return false;
-                if (value is string asStr)
-                    return !string.IsNullOrWhiteSpace(asStr);
+                switch (value)
+                {
+                    case null:
+                        return false;
+                    case string asStr:
+                        return !string.IsNullOrWhiteSpace(asStr);
+                }
                 bool r;
                 using (var ms = new MemoryStream())
                 {

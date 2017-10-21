@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-21 14:50
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -471,8 +471,7 @@ namespace SilDev
 
             private void FadeInOutTimer_Tick(object sender, EventArgs e)
             {
-                var timer = sender as Timer;
-                if (timer == null)
+                if (!(sender is Timer timer))
                     return;
                 if (!_visible && Opacity < _opacity)
                 {
@@ -492,8 +491,7 @@ namespace SilDev
 
             private void ProgressDotsTimer_Tick(object sender, EventArgs e)
             {
-                var timer = sender as Timer;
-                if (timer == null)
+                if (!(sender is Timer timer))
                     return;
                 var s = _textLabel.Text;
                 if (!s.EndsWith(" ."))

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2017-08-05 10:02
+// Version:  2017-10-21 14:37
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,13 +21,14 @@ namespace SilDev
     using System.Runtime.Serialization;
     using System.Text;
 
+    /// <inheritdoc/>
     /// <summary>
     ///     Provides a way to pin a managed object from unmanaged memory.
     /// </summary>
     public class MemoryPinner : IDisposable
     {
-        private GCHandle _handle;
         private bool _disposed;
+        private GCHandle _handle;
 
         /// <summary>
         ///     Initilazies a new instance of the <see cref="MemoryPinner"/> class with
@@ -47,15 +48,11 @@ namespace SilDev
         /// </summary>
         public IntPtr Pointer { get; private set; }
 
-#pragma warning disable 1591
-        ~MemoryPinner() =>
-            Dispose(false);
-#pragma warning restore 1591
-
+        /// <inheritdoc/>
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
         /// </summary>
-        public void Dispose() => 
+        public void Dispose() =>
             Dispose(true);
 
         /// <summary>
@@ -72,8 +69,14 @@ namespace SilDev
                 return;
             GC.SuppressFinalize(this);
         }
+
+#pragma warning disable 1591
+        ~MemoryPinner() =>
+            Dispose(false);
+#pragma warning restore 1591
     }
 
+    /// <inheritdoc/>
     /// <summary>
     ///     Provides the functionality to manage data from an area of memory in a specified process.
     /// </summary>
@@ -92,9 +95,37 @@ namespace SilDev
         /// </param>
         public ProcessMemory(IntPtr hWnd)
         {
-            WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out uint ownerProcessId);
+            WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out var ownerProcessId);
             _hProcess = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessVmOperation | WinApi.AccessRights.ProcessVmRead | WinApi.AccessRights.ProcessVmWrite | WinApi.AccessRights.ProcessQueryInformation, false, ownerProcessId);
         }
+
+        /// <inheritdoc/>
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
+        /// </summary>
+        public void Dispose() =>
+            Dispose(true);
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed || _hProcess == IntPtr.Zero)
+                return;
+            foreach (IntPtr ptr in _allocations)
+                WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeTypes.Release);
+            WinApi.NativeMethods.CloseHandle(_hProcess);
+            _disposed = true;
+            if (!disposing)
+                return;
+            GC.SuppressFinalize(this);
+        }
+
+#pragma warning disable 1591
+        ~ProcessMemory() =>
+            Dispose(false);
+#pragma warning restore 1591
 
         /// <summary>
         ///     Gets the file name of the process image.
@@ -139,7 +170,7 @@ namespace SilDev
                     var size = new IntPtr(Marshal.SizeOf(value));
                     if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, pin.Pointer, size, ref bytesRead))
                         return;
-                    throw new MemoryException("Read failed (bytesRead=" + bytesRead + ").");
+                    throw new MemoryException($"Read failed (bytesRead={bytesRead}).");
                 }
             }
             catch (Exception ex)
@@ -173,7 +204,7 @@ namespace SilDev
                 var bytesRead = IntPtr.Zero;
                 if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, sb, new IntPtr(size), ref bytesRead))
                     return sb.ToString();
-                throw new MemoryException("Read failed (bytesRead=" + bytesRead + ").");
+                throw new MemoryException($"Read failed (bytesRead={bytesRead}).");
             }
             catch (Exception ex)
             {
@@ -209,9 +240,9 @@ namespace SilDev
             {
                 using (var pin = new MemoryPinner(value))
                 {
-                    if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out IntPtr bytesWritten))
+                    if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out var bytesWritten))
                         return;
-                    throw new MemoryException("Write failed (bytesWritten=" + bytesWritten + ").");
+                    throw new MemoryException($"Write failed (bytesWritten={bytesWritten}).");
                 }
             }
             catch (Exception ex)
@@ -227,46 +258,22 @@ namespace SilDev
                 }
             }
         }
-
-#pragma warning disable 1591
-        ~ProcessMemory() => 
-            Dispose(false);
-#pragma warning restore 1591
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
-        /// </summary>
-        public void Dispose() => 
-            Dispose(true);
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
-        /// </summary>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed ||_hProcess == IntPtr.Zero)
-                return;
-            foreach (IntPtr ptr in _allocations)
-                WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeTypes.Release);
-            WinApi.NativeMethods.CloseHandle(_hProcess);
-            _disposed = true;
-            if (!disposing)
-                return;
-            GC.SuppressFinalize(this);
-        }
     }
 
+    /// <inheritdoc/>
     /// <summary>
     ///     The exception that is thrown when an attempt to access some data in memory.
     /// </summary>
     [Serializable]
     public class MemoryException : Exception
     {
+        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception.
         /// </summary>
         public MemoryException() { }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception with a specified error message.
         /// </summary>
@@ -275,11 +282,13 @@ namespace SilDev
         /// </param>
         public MemoryException(string message) : base(message) { }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryException"/> class with serialized data.
         /// </summary>
         protected MemoryException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Gets the error message.
         /// </summary>

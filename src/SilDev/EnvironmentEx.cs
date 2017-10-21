@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-06-29 11:56
+// Version:  2017-10-21 14:18
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -48,7 +48,9 @@ namespace SilDev
                 if (_version != null)
                     return _version;
                 var release = Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "Release", 0);
-                if (release > 460805)
+                if (release > 461318)
+                    _version = new Version(4, 7, 2);
+                else if (release >= 460805)
                     _version = new Version(4, 7, 1);
                 else if (release >= 460798)
                     _version = new Version(4, 7, 0);
@@ -481,6 +483,7 @@ namespace SilDev
                     {
                         var year = key.Substring(2, 4);
                         var arch = key.Substring(6);
+                        Recheck:
                         switch (year)
                         {
                             case "2005":
@@ -490,8 +493,15 @@ namespace SilDev
                                 result = names.Any(x => x.Contains(year) && x.ContainsEx(arch));
                                 break;
                         }
-                        if (!result)
-                            break;
+                        if (result)
+                            continue;
+                        switch (year)
+                        {
+                            case "2015":
+                                year = "2017";
+                                goto Recheck;
+                        }
+                        break;
                     }
                     return result;
                 }

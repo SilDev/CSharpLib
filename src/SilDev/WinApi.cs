@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-08-05 09:55
+// Version:  2017-10-21 14:59
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -3193,7 +3193,7 @@ namespace SilDev
             {
                 try
                 {
-                    NativeMethods.DwmGetColorizationParameters(out DwmColorizationParams parameters);
+                    NativeMethods.DwmGetColorizationParameters(out var parameters);
                     var color = Color.FromArgb(int.Parse(parameters.clrColor.ToString("X"), NumberStyles.HexNumber));
                     if (!alpha)
                         color = Color.FromArgb(color.R, color.G, color.B);

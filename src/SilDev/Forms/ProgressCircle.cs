@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-21 13:56
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,6 +20,7 @@ namespace SilDev.Forms
     using System.Drawing.Drawing2D;
     using System.Windows.Forms;
 
+    /// <inheritdoc/>
     /// <summary>
     ///     Represents a <see cref="ProgressCircle"/> control.
     /// </summary>
@@ -37,6 +38,7 @@ namespace SilDev.Forms
         private int _spokes = 9;
         private int _thickness = 4;
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="ProgressCircle"/> class.
         /// </summary>
@@ -157,6 +159,7 @@ namespace SilDev.Forms
             }
         }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Gets or sets the foreground color of the control.
         /// </summary>
@@ -197,6 +200,7 @@ namespace SilDev.Forms
         private void ProgressCircle_Resize(object sender, EventArgs e) =>
             GetControlCenterPoint();
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Retrieves the size of a rectangular area into which a control can be
         ///     fitted.
@@ -213,6 +217,7 @@ namespace SilDev.Forms
             Invalidate();
         }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Raises the <see cref="Control"/>.Paint event.
         /// </summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-21 14:51
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -166,27 +166,27 @@ namespace SilDev
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(path));
                 if (path.Length < 3)
-                    throw new ArgumentException("The path length is lower than 3 characters. - PATH: '" + path + "'");
+                    throw new ArgumentException($"The path length is lower than 3 characters. - PATH: \'{path}\'");
                 if (!path.Contains(Path.DirectorySeparatorChar))
-                    throw new ArgumentException("The path does not contain any separator. - PATH: '" + path + "'");
+                    throw new ArgumentException($"The path does not contain any separator. - PATH: \'{path}\'");
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
-                    throw new ArgumentException("The path cannot contain several consecutive separators. - PATH: '" + path + "'");
+                    throw new ArgumentException($"The path cannot contain several consecutive separators. - PATH: \'{path}\'");
                 if (Path.HasExtension(path))
                 {
                     if (path.Length > 260)
-                        throw new PathTooLongException("The specified path is longer than 260 characters. - PATH: '" + path + "'");
+                        throw new PathTooLongException($"The specified path is longer than 260 characters. - PATH: \'{path}\'");
                     var levels = path.Split(Path.DirectorySeparatorChar);
                     var fileDir = levels.Take(levels.Length - 1).Join(Path.DirectorySeparatorChar);
                     if (fileDir.Length > 248)
-                        throw new PathTooLongException("The directory name is longer than 248 characters. - PATH: '" + path + "'");
+                        throw new PathTooLongException($"The directory name is longer than 248 characters. - PATH: \'{path}\'");
                 }
                 else if (path.Length > 248)
-                    throw new PathTooLongException("The specified path is longer than 248 characters. - PATH: '" + path + "'");
+                    throw new PathTooLongException($"The specified path is longer than 248 characters. - PATH: \'{path}\'");
                 var drive = path.Substring(0, 3);
                 if (!Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
-                    throw new DriveNotFoundException("The path does not contain any drive. - PATH: '" + path + "'");
+                    throw new DriveNotFoundException($"The path does not contain any drive. - PATH: \'{path}\'");
                 if (!DriveInfo.GetDrives().Select(di => di.Name).Contains(drive))
-                    throw new DriveNotFoundException("The path does not contain a valid drive. - PATH: '" + path + "'");
+                    throw new DriveNotFoundException($"The path does not contain a valid drive. - PATH: \'{path}\'");
                 var subPath = path.Substring(3);
                 if (subPath.Any(c => c != Path.DirectorySeparatorChar && Path.GetInvalidFileNameChars().Contains(c)))
                     throw new ArgumentException("The path contains invalid characters.");
@@ -246,7 +246,7 @@ namespace SilDev
                         levels[i] += sepChar;
                 }
                 path = Path.Combine(levels);
-                if (path.StartsWith("%") && (path.Contains("%" + sepChar) || path.EndsWith("%")))
+                if (path.StartsWith("%") && (path.Contains($"%{sepChar}") || path.EndsWith("%")))
                 {
                     var regex = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase);
                     if (regex.Groups.Count > 1)
@@ -256,7 +256,7 @@ namespace SilDev
                         {
                             var value = EnvironmentEx.GetVariableValue(variable);
                             if (!string.IsNullOrEmpty(value))
-                                path = path.Replace("%" + variable + "%", value);
+                                path = path.Replace($"%{variable}%", value);
                         }
                     }
                 }
@@ -442,6 +442,7 @@ namespace SilDev
             GetTempFileName("tmp", len);
     }
 
+    /// <inheritdoc/>
     /// <summary>
     ///     The exception that is thrown when an attempt to access a target that does not exist
     ///     fails.
@@ -449,11 +450,13 @@ namespace SilDev
     [Serializable]
     public class PathNotFoundException : Exception
     {
+        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception.
         /// </summary>
         public PathNotFoundException() { }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception with path.
         /// </summary>
@@ -462,9 +465,10 @@ namespace SilDev
         /// </param>
         public PathNotFoundException(string target) : base(target)
         {
-            Message = "Could not find target '" + target + "'.";
+            Message = $"Could not find target \'{target}\'.";
         }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception with path and inner cause.
         /// </summary>
@@ -476,14 +480,16 @@ namespace SilDev
         /// </param>
         public PathNotFoundException(string target, Exception innerException) : base(target, innerException)
         {
-            Message = "Could not find target '" + target + "'.";
+            Message = $"Could not find target \'{target}\'.";
         }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class with serialized data.
         /// </summary>
         protected PathNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Gets the error message and the path, or only the exception message if no path
         ///     is set.

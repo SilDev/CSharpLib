@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2017-10-09 17:17
+// Version:  2017-10-21 13:53
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -76,8 +76,7 @@ namespace SilDev.Forms
         {
             control.MouseDown += (sender, args) =>
             {
-                var c = sender as Control;
-                if (c == null || args == null || args.Button != MouseButtons.Left)
+                if (!(sender is Control c) || args == null || args.Button != MouseButtons.Left)
                     return;
                 var cc = c.Cursor;
                 if (cursor)
@@ -142,7 +141,7 @@ namespace SilDev.Forms
             try
             {
                 var method = typeof(Control).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
-                method.Invoke(control, new object[] { controlStyles, enable });
+                method?.Invoke(control, new object[] { controlStyles, enable });
             }
             catch (Exception ex)
             {
@@ -166,8 +165,7 @@ namespace SilDev.Forms
         {
             control.Paint += (sender, args) =>
             {
-                var c = sender as Control;
-                if (c == null || args == null)
+                if (!(sender is Control c) || args == null)
                     return;
                 ControlPaint.DrawBorder(args.Graphics, c.ClientRectangle, color, (ButtonBorderStyle)style);
             };

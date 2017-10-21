@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-21 14:05
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -405,6 +405,7 @@ namespace SilDev
 
         #region Base85
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base85"/> class.
         /// </summary>
@@ -421,16 +422,19 @@ namespace SilDev
                 1
             };
 
+            /// <inheritdoc/>
             /// <summary>
             ///     The prefix mark.
             /// </summary>
             public override string PrefixMark { get; set; } = "<~";
 
+            /// <inheritdoc/>
             /// <summary>
             ///     The suffix mark.
             /// </summary>
             public override string SuffixMark { get; set; } = "~>";
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encodes the specified sequence of bytes.
             /// </summary>
@@ -507,6 +511,7 @@ namespace SilDev
                 return LastEncodedResult;
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Decodes the specified sequence of bytes.
             /// </summary>
@@ -690,6 +695,7 @@ namespace SilDev
 
         #region Base91
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base91"/> class.
         /// </summary>
@@ -766,6 +772,7 @@ namespace SilDev
                     _decodeTable[(byte)_encodeTable[i]] = i;
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encodes the specified sequence of bytes to a sequence of base-91 digits.
             /// </summary>
@@ -834,6 +841,7 @@ namespace SilDev
                 return LastEncodedResult;
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Decodes the specified sequence of base-91 digits back to a sequence of bytes.
             /// </summary>
@@ -1786,16 +1794,19 @@ namespace SilDev
 
         #region Secure Hash Algorithm 1
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha1"/> class.
         /// </summary>
         public class Sha1 : Md5
         {
+            /// <inheritdoc/>
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
             public override int HashLength => 40;
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
@@ -1818,6 +1829,7 @@ namespace SilDev
                 }
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified string.
             /// </summary>
@@ -1891,16 +1903,19 @@ namespace SilDev
 
         #region Secure Hash Algorithm 2
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha256"/> class.
         /// </summary>
         public class Sha256 : Md5
         {
+            /// <inheritdoc/>
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
             public override int HashLength => 64;
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
@@ -1923,6 +1938,7 @@ namespace SilDev
                 }
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified string.
             /// </summary>
@@ -1992,16 +2008,19 @@ namespace SilDev
         public static string EncryptFileToSha256(string path) =>
             new Sha256().EncryptFile(path);
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha384"/> class.
         /// </summary>
         public class Sha384 : Md5
         {
+            /// <inheritdoc/>
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
             public override int HashLength => 96;
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
@@ -2024,6 +2043,7 @@ namespace SilDev
                 }
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified string.
             /// </summary>
@@ -2093,16 +2113,19 @@ namespace SilDev
         public static string EncryptFileToSha384(string path) =>
             new Sha384().EncryptFile(path);
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha512"/> class.
         /// </summary>
         public class Sha512 : Md5
         {
+            /// <inheritdoc/>
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
             public override int HashLength => 128;
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
@@ -2125,6 +2148,7 @@ namespace SilDev
                 }
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Encrypts the specified string.
             /// </summary>

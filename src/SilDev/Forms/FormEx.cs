@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2017-07-18 04:21
+// Version:  2017-10-21 13:52
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -47,8 +47,7 @@ namespace SilDev.Forms
         {
             form.ResizeEnd += (sender, args) =>
             {
-                var f = sender as Form;
-                if (f == null)
+                if (!(sender is Form f))
                     return;
                 WinApi.NativeHelper.MoveWindowToVisibleScreenArea(f.Handle);
                 f.Update();
@@ -87,7 +86,7 @@ namespace SilDev.Forms
             form.Shown += (s, e) =>
             {
                 stopwatch.Stop();
-                Log.Write("Stopwatch: " + form.Name + " loaded in " + stopwatch.ElapsedMilliseconds + "ms.");
+                Log.Write($"Stopwatch: {form.Name} loaded in {stopwatch.ElapsedMilliseconds}ms.");
             };
             return form;
         }

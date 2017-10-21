@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2016-10-24 20:29
+// Version:  2017-10-21 13:51
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -92,8 +92,7 @@ namespace SilDev.Forms
 
         private static void Split_MouseMove(object sender, MouseEventArgs e)
         {
-            var button = sender as Button;
-            if (button == null)
+            if (!(sender is Button button))
                 return;
             Split_MouseLeave(button, null);
             try

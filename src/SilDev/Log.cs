@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-06-27 16:30
+// Version:  2017-10-21 14:47
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -121,19 +121,19 @@ namespace SilDev
                 Application.ThreadException += (s, e) => Write(e.Exception, true, true);
                 AppDomain.CurrentDomain.UnhandledException += (s, e) =>
                     WriteUnhandled
-                    (
-                        new ApplicationException
                         (
-                            string.Concat
-                            (
-                                "Error in the application. Sender object: '",
-                                s,
-                                "'; Exception object: '",
-                                e.ExceptionObject,
-                                "';"
-                            )
-                        )
-                    );
+                         new ApplicationException
+                             (
+                              string.Concat
+                                  (
+                                   "Error in the application. Sender object: '",
+                                   s,
+                                   "'; Exception object: '",
+                                   e.ExceptionObject,
+                                   "';"
+                                  )
+                             )
+                        );
                 AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
             }
             if (DebugMode < 1)
@@ -202,7 +202,7 @@ namespace SilDev
                 {
                     goto Finalize;
                 }
-                if (!int.TryParse(option, out int i))
+                if (!int.TryParse(option, out var i))
                     mode = 1;
                 if (i > mode)
                     mode = i;
@@ -227,7 +227,7 @@ namespace SilDev
                         var mVal = match.Groups["Value"]?.Captures[i].Value.Trim();
                         if (string.IsNullOrEmpty(mVal))
                             continue;
-                        if (!int.TryParse(mVal, out int num))
+                        if (!int.TryParse(mVal, out var num))
                             goto Finalize;
                         mode = num;
                         goto Finalize;
@@ -259,44 +259,44 @@ namespace SilDev
                 var log = string.Empty;
                 if (!_firstEntry)
                     log = string.Concat
-                    (
-                        DateTime.Now.ToString(DateTimeFormat),
-                        Environment.NewLine
-                    );
+                        (
+                         DateTime.Now.ToString(DateTimeFormat),
+                         Environment.NewLine
+                        );
                 else
                 {
                     _firstEntry = false;
                     if (File.Exists(FilePath))
                         log = string.Concat
-                        (
-                            Environment.NewLine,
-                            RuntimeSeparator,
-                            Environment.NewLine,
-                            Environment.NewLine
-                        );
+                            (
+                             Environment.NewLine,
+                             RuntimeSeparator,
+                             Environment.NewLine,
+                             Environment.NewLine
+                            );
                     log = string.Concat
-                    (
-                        log,
-                        DateTime.Now.ToString(DateTimeFormat),
-                        Environment.NewLine,
-                        "System: '",
-                        Environment.OSVersion,
-                        "'; Runtime: '",
-                        EnvironmentEx.Version,
-                        "'; Assembly: '",
-                        AssemblyName,
-                        "'; Version: '",
-                        AssemblyVersion,
-                        "';",
-                        Environment.NewLine,
-                        Environment.NewLine
-                    );
+                        (
+                         log,
+                         DateTime.Now.ToString(DateTimeFormat),
+                         Environment.NewLine,
+                         "System: '",
+                         Environment.OSVersion,
+                         "'; Runtime: '",
+                         EnvironmentEx.Version,
+                         "'; Assembly: '",
+                         AssemblyName,
+                         "'; Version: '",
+                         AssemblyVersion,
+                         "';",
+                         Environment.NewLine,
+                         Environment.NewLine
+                        );
                     if (!string.IsNullOrEmpty(logMessage))
                         log += string.Concat
-                        (
-                            DateTime.Now.ToString(DateTimeFormat),
-                            Environment.NewLine
-                        );
+                            (
+                             DateTime.Now.ToString(DateTimeFormat),
+                             Environment.NewLine
+                            );
                 }
                 if (!string.IsNullOrEmpty(logMessage))
                     log = string.Concat(log, logMessage, Environment.NewLine, Environment.NewLine);

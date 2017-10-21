@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-07-15 06:39
+// Version:  2017-10-21 14:43
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -367,7 +367,7 @@ namespace SilDev
             {
                 if (string.IsNullOrWhiteSpace(newName))
                     throw new ArgumentNullException(nameof(newName));
-                GetPrincipalPointers(out IntPtr offset, out IntPtr buffer);
+                GetPrincipalPointers(out var offset, out var buffer);
                 var len = Marshal.ReadInt16(offset);
                 if (string.IsNullOrEmpty(PrincipalName))
                     PrincipalName = Marshal.PtrToStringUni(buffer, len / 2);
@@ -401,7 +401,7 @@ namespace SilDev
             {
                 if (string.IsNullOrEmpty(PrincipalName))
                     throw new InvalidOperationException();
-                GetPrincipalPointers(out IntPtr offset, out IntPtr buffer);
+                GetPrincipalPointers(out var offset, out var buffer);
                 foreach (var c in PrincipalName)
                 {
                     Marshal.WriteInt16(buffer, c);
@@ -991,7 +991,7 @@ namespace SilDev
             var list = new List<Process>();
             try
             {
-                var res = WinApi.NativeMethods.RmStartSession(out uint handle, 0, Guid.NewGuid().ToString());
+                var res = WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString());
                 if (res != 0)
                     throw new Exception("Could not begin restart session. Unable to determine file locker.");
                 try
@@ -1006,7 +1006,7 @@ namespace SilDev
                     res = WinApi.NativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
                     if (res != 0)
                         throw new Exception("Could not register resource.");
-                    res = WinApi.NativeMethods.RmGetList(handle, out uint pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
+                    res = WinApi.NativeMethods.RmGetList(handle, out var pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
                     if (res == 0xea)
                     {
                         var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];

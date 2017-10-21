@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: KeyState.cs
-// Version:  2017-06-23 12:07
+// Version:  2017-10-21 14:50
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -917,8 +917,7 @@ namespace SilDev
         /// </param>
         public static ushort GetVKeyCode(string key)
         {
-            VKey vkey;
-            if (Enum.TryParse(key, out vkey))
+            if (Enum.TryParse(key, out VKey vkey))
                 return (ushort)vkey;
             return 0;
         }
