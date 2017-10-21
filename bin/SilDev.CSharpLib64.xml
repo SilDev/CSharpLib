@@ -161,11 +161,13 @@
             </param>
         </member>
         <member name="T:SilDev.Forms.ColorDialogEx">
+            <inheritdoc/>
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.ColorDialog"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.ColorDialogEx.#ctor(System.Windows.Forms.IWin32Window,System.String)">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Forms.ColorDialogEx"/> class.
             </summary>
@@ -178,6 +180,7 @@
             </param>
         </member>
         <member name="M:SilDev.Forms.ColorDialogEx.#ctor(System.Drawing.Point,System.String)">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Forms.ColorDialogEx"/> class.
             </summary>
@@ -189,6 +192,7 @@
             </param>
         </member>
         <member name="M:SilDev.Forms.ColorDialogEx.#ctor(System.Int32,System.Int32,System.String)">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Forms.ColorDialogEx"/> class.
             </summary>
@@ -1079,11 +1083,13 @@
             </param>
         </member>
         <member name="T:SilDev.Forms.ProgressCircle">
+            <inheritdoc/>
             <summary>
                 Represents a <see cref="T:SilDev.Forms.ProgressCircle"/> control.
             </summary>
         </member>
         <member name="M:SilDev.Forms.ProgressCircle.#ctor">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Forms.ProgressCircle"/> class.
             </summary>
@@ -1120,6 +1126,7 @@
             </summary>
         </member>
         <member name="P:SilDev.Forms.ProgressCircle.ForeColor">
+            <inheritdoc/>
             <summary>
                 Gets or sets the foreground color of the control.
             </summary>
@@ -1142,6 +1149,7 @@
             </param>
         </member>
         <member name="M:SilDev.Forms.ProgressCircle.GetPreferredSize(System.Drawing.Size)">
+            <inheritdoc/>
             <summary>
                 Retrieves the size of a rectangular area into which a control can be
                 fitted.
@@ -1151,6 +1159,7 @@
             </param>
         </member>
         <member name="M:SilDev.Forms.ProgressCircle.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <inheritdoc/>
             <summary>
                 Raises the <see cref="T:System.Windows.Forms.Control"/>.Paint event.
             </summary>
@@ -1834,21 +1843,25 @@
             </param>
         </member>
         <member name="T:SilDev.Crypto.Base85">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Base85"/> class.
             </summary>
         </member>
         <member name="P:SilDev.Crypto.Base85.PrefixMark">
+            <inheritdoc/>
             <summary>
                 The prefix mark.
             </summary>
         </member>
         <member name="P:SilDev.Crypto.Base85.SuffixMark">
+            <inheritdoc/>
             <summary>
                 The suffix mark.
             </summary>
         </member>
         <member name="M:SilDev.Crypto.Base85.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
+            <inheritdoc/>
             <summary>
                 Encodes the specified sequence of bytes.
             </summary>
@@ -1866,6 +1879,7 @@
             </param>
         </member>
         <member name="M:SilDev.Crypto.Base85.DecodeBytes(System.String,System.String,System.String)">
+            <inheritdoc/>
             <summary>
                 Decodes the specified sequence of bytes.
             </summary>
@@ -1973,6 +1987,7 @@
             </param>
         </member>
         <member name="T:SilDev.Crypto.Base91">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Base91"/> class.
             </summary>
@@ -1988,6 +2003,7 @@
             </summary>
         </member>
         <member name="M:SilDev.Crypto.Base91.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
+            <inheritdoc/>
             <summary>
                 Encodes the specified sequence of bytes to a sequence of base-91 digits.
             </summary>
@@ -2005,6 +2021,7 @@
             </param>
         </member>
         <member name="M:SilDev.Crypto.Base91.DecodeBytes(System.String,System.String,System.String)">
+            <inheritdoc/>
             <summary>
                 Decodes the specified sequence of base-91 digits back to a sequence of bytes.
             </summary>
@@ -2705,16 +2722,19 @@
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha1">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha1"/> class.
             </summary>
         </member>
         <member name="P:SilDev.Crypto.Sha1.HashLength">
+            <inheritdoc/>
             <summary>
                 Gets the required hash length.
             </summary>
         </member>
         <member name="M:SilDev.Crypto.Sha1.EncryptStream(System.IO.Stream)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified stream.
             </summary>
@@ -2723,6 +2743,7 @@
             </param>
         </member>
         <member name="M:SilDev.Crypto.Sha1.EncryptString(System.String)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified string.
             </summary>
@@ -2771,16 +2792,19 @@
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha256">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha256"/> class.
             </summary>
         </member>
         <member name="P:SilDev.Crypto.Sha256.HashLength">
+            <inheritdoc/>
             <summary>
                 Gets the required hash length.
             </summary>
         </member>
         <member name="M:SilDev.Crypto.Sha256.EncryptStream(System.IO.Stream)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified stream.
             </summary>
@@ -2789,6 +2813,7 @@
             </param>
         </member>
         <member name="M:SilDev.Crypto.Sha256.EncryptString(System.String)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified string.
             </summary>
@@ -2837,16 +2862,19 @@
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha384">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha384"/> class.
             </summary>
         </member>
         <member name="P:SilDev.Crypto.Sha384.HashLength">
+            <inheritdoc/>
             <summary>
                 Gets the required hash length.
             </summary>
         </member>
         <member name="M:SilDev.Crypto.Sha384.EncryptStream(System.IO.Stream)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified stream.
             </summary>
@@ -2855,6 +2883,7 @@
             </param>
         </member>
         <member name="M:SilDev.Crypto.Sha384.EncryptString(System.String)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified string.
             </summary>
@@ -2903,16 +2932,19 @@
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha512">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha512"/> class.
             </summary>
         </member>
         <member name="P:SilDev.Crypto.Sha512.HashLength">
+            <inheritdoc/>
             <summary>
                 Gets the required hash length.
             </summary>
         </member>
         <member name="M:SilDev.Crypto.Sha512.EncryptStream(System.IO.Stream)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified stream.
             </summary>
@@ -2921,6 +2953,7 @@
             </param>
         </member>
         <member name="M:SilDev.Crypto.Sha512.EncryptString(System.String)">
+            <inheritdoc/>
             <summary>
                 Encrypts the specified string.
             </summary>
@@ -3557,6 +3590,7 @@
             </param>
         </member>
         <member name="T:SilDev.Depiction.ImagePair">
+            <inheritdoc/>
             <summary>
                 An base class that provides a pair of two elements of the <see cref="T:System.Drawing.Image"/>
                 class.
@@ -3584,6 +3618,7 @@
             </summary>
         </member>
         <member name="M:SilDev.Depiction.ImagePair.Dispose">
+            <inheritdoc/>
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.Depiction.ImagePair"/>.
             </summary>
@@ -3594,6 +3629,7 @@
             </summary>
         </member>
         <member name="T:SilDev.Depiction.Frame">
+            <inheritdoc/>
             <summary>
                 An base class that provides the <see cref="T:System.Drawing.Image"/> and duration
                 of a single frame.
@@ -3622,6 +3658,7 @@
             </summary>
         </member>
         <member name="M:SilDev.Depiction.Frame.Dispose">
+            <inheritdoc/>
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.Depiction.Frame"/>.
             </summary>
@@ -5742,6 +5779,7 @@
             </summary>
         </member>
         <member name="T:SilDev.MemoryPinner">
+            <inheritdoc/>
             <summary>
                 Provides a way to pin a managed object from unmanaged memory.
             </summary>
@@ -5761,6 +5799,7 @@
             </summary>
         </member>
         <member name="M:SilDev.MemoryPinner.Dispose">
+            <inheritdoc/>
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.MemoryPinner"/>.
             </summary>
@@ -5771,6 +5810,7 @@
             </summary>
         </member>
         <member name="T:SilDev.ProcessMemory">
+            <inheritdoc/>
             <summary>
                 Provides the functionality to manage data from an area of memory in a specified process.
             </summary>
@@ -5783,6 +5823,17 @@
             <param name="hWnd">
                 A handle to the window.
             </param>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Dispose">
+            <inheritdoc/>
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessMemory.Dispose(System.Boolean)">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
+            </summary>
         </member>
         <member name="M:SilDev.ProcessMemory.GetImageFileName">
             <summary>
@@ -5834,27 +5885,20 @@
                 space of the specified process.
             </param>
         </member>
-        <member name="M:SilDev.ProcessMemory.Dispose">
-            <summary>
-                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
-            </summary>
-        </member>
-        <member name="M:SilDev.ProcessMemory.Dispose(System.Boolean)">
-            <summary>
-                Releases all resources used by this <see cref="T:SilDev.ProcessMemory"/>.
-            </summary>
-        </member>
         <member name="T:SilDev.MemoryException">
+            <inheritdoc/>
             <summary>
                 The exception that is thrown when an attempt to access some data in memory.
             </summary>
         </member>
         <member name="M:SilDev.MemoryException.#ctor">
+            <inheritdoc/>
             <summary>
                 Create the exception.
             </summary>
         </member>
         <member name="M:SilDev.MemoryException.#ctor(System.String)">
+            <inheritdoc/>
             <summary>
                 Create the exception with a specified error message.
             </summary>
@@ -5863,11 +5907,13 @@
             </param>
         </member>
         <member name="M:SilDev.MemoryException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.MemoryException"/> class with serialized data.
             </summary>
         </member>
         <member name="P:SilDev.MemoryException.Message">
+            <inheritdoc/>
             <summary>
                 Gets the error message.
             </summary>
@@ -7017,17 +7063,20 @@
             </param>
         </member>
         <member name="T:SilDev.PathNotFoundException">
+            <inheritdoc/>
             <summary>
                 The exception that is thrown when an attempt to access a target that does not exist
                 fails.
             </summary>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor">
+            <inheritdoc/>
             <summary>
                 Create the exception.
             </summary>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor(System.String)">
+            <inheritdoc/>
             <summary>
                 Create the exception with path.
             </summary>
@@ -7036,6 +7085,7 @@
             </param>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor(System.String,System.Exception)">
+            <inheritdoc/>
             <summary>
                 Create the exception with path and inner cause.
             </summary>
@@ -7047,11 +7097,13 @@
             </param>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc/>
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class with serialized data.
             </summary>
         </member>
         <member name="P:SilDev.PathNotFoundException.Message">
+            <inheritdoc/>
             <summary>
                 Gets the error message and the path, or only the exception message if no path
                 is set.
@@ -8711,12 +8763,14 @@
             </param>
         </member>
         <member name="T:SilDev.ResourcesEx.IconBrowserDialog">
+            <inheritdoc/>
             <summary>
                 Displays a dialog box that prompts to the user to browse the icon resource of a file.
                 <see cref="T:System.Windows.Forms.OpenFileDialog"/>
             </summary>
         </member>
         <member name="M:SilDev.ResourcesEx.IconBrowserDialog.#ctor(System.String,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})">
+            <inheritdoc/>
             <summary>
                 Initializes an instance of the <see cref="T:SilDev.ResourcesEx.IconBrowserDialog"/> class.
             </summary>
@@ -8740,6 +8794,7 @@
             </param>
         </member>
         <member name="M:SilDev.ResourcesEx.IconBrowserDialog.Dispose(System.Boolean)">
+            <inheritdoc/>
             <summary>
                 Disposes of the resources (other than memory) used by the <see cref="T:System.Windows.Forms.Form"/>.
             </summary>
