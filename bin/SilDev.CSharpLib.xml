@@ -7125,6 +7125,19 @@
                 Gets the name of the current process instance.
             </summary>
         </member>
+        <member name="P:SilDev.ProcessEx.CurrentParent">
+            <summary>
+                Gets the parent process of the current process instance.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessEx.GetParent(System.Diagnostics.Process)">
+            <summary>
+                Gets the parent process of this <see cref="T:System.Diagnostics.Process"/>.
+            </summary>
+            <param name="process">
+                The <see cref="T:System.Diagnostics.Process"/> component.
+            </param>
+        </member>
         <member name="M:SilDev.ProcessEx.GetInstances(System.String,System.Boolean)">
             <summary>
                 Gets all active instances associated with the specified application.
@@ -7436,7 +7449,7 @@
                 </para>
             </summary>
             <param name="command">
-                The application to start.
+                The command to execute.
             </param>
             <param name="runAsAdmin">
                 true to start the application with administrator privileges; otherwise, false.
@@ -7461,7 +7474,7 @@
                 </para>
             </summary>
             <param name="command">
-                The application to start.
+                The command to execute.
             </param>
             <param name="runAsAdmin">
                 true to start the application with administrator privileges; otherwise, false.
@@ -7483,7 +7496,7 @@
                 </para>
             </summary>
             <param name="command">
-                The application to start.
+                The command to execute.
             </param>
             <param name="processWindowStyle">
                 The window state to use when the process is started.
@@ -7491,6 +7504,16 @@
             <param name="dispose">
                 true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
                 been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendEx(System.String[])">
+            <summary>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system commands
+                using the system command prompt ("cmd.exe") and stream its output to a console, if
+                available.
+            </summary>
+            <param name="commands">
+                The commands to execute.
             </param>
         </member>
         <member name="T:SilDev.ProcessEx.SendHelper">
