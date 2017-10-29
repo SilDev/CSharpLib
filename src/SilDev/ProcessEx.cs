@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-10-09 17:25
+// Version:  2017-10-29 23:46
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -62,6 +62,52 @@ namespace SilDev
                 using (var p = Process.GetCurrentProcess())
                     _currentName = p.ProcessName;
                 return _currentName;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the parent process of the current process instance.
+        /// </summary>
+        public static Process CurrentParent
+        {
+            get
+            {
+                Process parentProcess;
+                using (var p = Process.GetCurrentProcess())
+                    parentProcess = GetParent(p);
+                return parentProcess;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the parent process of this <see cref="Process"/>.
+        /// </summary>
+        /// <param name="process">
+        ///     The <see cref="Process"/> component.
+        /// </param>
+        public static Process GetParent(this Process process)
+        {
+            try
+            {
+                var childId = process.Id;
+                var childName = Process.GetProcessById(childId).ProcessName;
+                var processes = Process.GetProcessesByName(childName);
+                string parentName = null;
+                for (var i = 0; i < processes.Length; i++)
+                {
+                    parentName = i == 0 ? childName : $"{childName}#{i}";
+                    var tmpId = new PerformanceCounter("Process", "ID Process", parentName);
+                    if ((int)tmpId.NextValue() == childId)
+                        break;
+                }
+                var parentId = new PerformanceCounter("Process", "Creating Process ID", parentName);
+                var parentProcess = Process.GetProcessById((int)parentId.NextValue());
+                return parentProcess;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
             }
         }
 
