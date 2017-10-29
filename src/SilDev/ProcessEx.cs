@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-10-29 23:46
+// Version:  2017-10-29 23:53
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -636,7 +636,7 @@ namespace SilDev
         ///     </para>
         /// </summary>
         /// <param name="command">
-        ///     The application to start.
+        ///     The command to execute.
         /// </param>
         /// <param name="runAsAdmin">
         ///     true to start the application with administrator privileges; otherwise, false.
@@ -699,7 +699,7 @@ namespace SilDev
         ///     </para>
         /// </summary>
         /// <param name="command">
-        ///     The application to start.
+        ///     The command to execute.
         /// </param>
         /// <param name="runAsAdmin">
         ///     true to start the application with administrator privileges; otherwise, false.
@@ -722,7 +722,7 @@ namespace SilDev
         ///     </para>
         /// </summary>
         /// <param name="command">
-        ///     The application to start.
+        ///     The command to execute.
         /// </param>
         /// <param name="processWindowStyle">
         ///     The window state to use when the process is started.
