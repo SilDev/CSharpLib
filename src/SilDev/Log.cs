@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-10-21 14:47
+// Version:  2017-10-29 23:48
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -326,9 +326,12 @@ namespace SilDev
                     if (Console.Title != title)
                     {
                         Console.Title = title;
-                        Console.BufferHeight = short.MaxValue - 1;
-                        Console.BufferWidth = Console.WindowWidth;
-                        Console.SetWindowSize(Math.Min(100, Console.LargestWindowWidth), Math.Min(40, Console.LargestWindowHeight));
+                        var parentName = ProcessEx.CurrentParent?.ProcessName;
+                        if (!parentName.EqualsEx("bash", "cmd", "powershell", "powershell_ise"))
+                        {
+                            Console.SetBufferSize(short.MaxValue - 1, Console.WindowWidth);
+                            Console.SetWindowSize(Math.Min(120, Console.LargestWindowWidth), Math.Min(55, Console.LargestWindowHeight));
+                        }
                     }
                 }
                 if (log.Contains(RuntimeSeparator))
