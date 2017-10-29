@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-10-29 23:53
+// Version:  2017-10-29 23:56
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -733,6 +733,48 @@ namespace SilDev
         /// </param>
         public static Process Send(string command, ProcessWindowStyle processWindowStyle, bool dispose = true) =>
             Send(command, false, processWindowStyle, dispose);
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Process"/> class to execute system commands
+        ///     using the system command prompt ("cmd.exe") and stream its output to a console, if
+        ///     available.
+        /// </summary>
+        /// <param name="commands">
+        ///     The commands to execute.
+        /// </param>
+        public static bool SendEx(params string[] commands)
+        {
+            try
+            {
+                var path = PathEx.Combine(Resources.CmdPath);
+                using (var p = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        CreateNoWindow = true,
+                        FileName = path,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        Verb = Elevation.IsAdministrator ? "runas" : string.Empty
+                    }
+                })
+                {
+                    p.Start();
+                    foreach (var s in commands)
+                        p.StandardInput.WriteLine(s);
+                    p.StandardInput.Flush();
+                    p.StandardInput.Close();
+                    Console.WriteLine(p.StandardOutput.ReadToEnd());
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
 
         /// <summary>
         ///     Provides basic functionality based on <see cref="Send(string,bool,bool)"/>.
