@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Win32_OperatingSystem.cs
-// Version:  2017-06-28 08:51
+// Version:  2017-10-31 03:28
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -26,6 +26,39 @@ namespace SilDev.QuickWmi
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class Win32_OperatingSystem
     {
+        private static dynamic GetValue(string name, Type type)
+        {
+            try
+            {
+                var d = GetValue(name).ToString();
+                if (type == typeof(Version))
+                    d = System.Version.Parse(d);
+                else if (type == typeof(DateTime))
+                    d = ManagementDateTimeConverter.ToDateTime(d);
+                return d;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
+
+        private static dynamic GetValue(string name)
+        {
+            try
+            {
+                dynamic d;
+                using (var obj = new ManagementObject(nameof(Win32_OperatingSystem) + "=@"))
+                    d = obj[name];
+                return d;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
+        }
 #pragma warning disable 1591
         public static string BootDevice => GetValue(nameof(BootDevice));
         public static string BuildNumber => GetValue(nameof(BuildNumber));
@@ -94,39 +127,5 @@ namespace SilDev.QuickWmi
         public static byte? QuantumLength => GetValue(nameof(QuantumLength));
         public static byte? QuantumType => GetValue(nameof(QuantumType));
 #pragma warning restore 1591
-
-        private static dynamic GetValue(string name, Type type)
-        {
-            try
-            {
-                dynamic d = GetValue(name).ToString();
-                if (type == typeof(Version))
-                    d = System.Version.Parse(d);
-                else if (type == typeof(DateTime))
-                    d = ManagementDateTimeConverter.ToDateTime(d);
-                return d;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        private static dynamic GetValue(string name)
-        {
-            try
-            {
-                dynamic d;
-                using (var obj = new ManagementObject(nameof(Win32_OperatingSystem) + "=@"))
-                    d = obj[name];
-                return d;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
     }
 }

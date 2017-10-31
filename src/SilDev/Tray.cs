@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Tray.cs
-// Version:  2017-10-09 17:27
+// Version:  2017-10-31 03:28
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,6 @@
 namespace SilDev
 {
     using System;
-    using System.Drawing;
     using System.Threading;
 
     /// <summary>
@@ -55,12 +54,12 @@ namespace SilDev
                             throw new ArgumentNullException(nameof(hWnd));
                     }
                     MouseMove:
-                    WinApi.NativeMethods.GetClientRect(hWnd, out Rectangle rect1);
+                    WinApi.NativeMethods.GetClientRect(hWnd, out var rect1);
                     for (var x = 0; x < rect1.Right; x += 5)
                     {
                         for (var y = 0; y < rect1.Bottom; y += 5)
                             WinApi.NativeHelper.SendMessage(hWnd, (uint)WinApi.WindowMenuFlags.WmMouseMove, IntPtr.Zero, new IntPtr((y << 16) + x));
-                        WinApi.NativeMethods.GetClientRect(hWnd, out Rectangle rect2);
+                        WinApi.NativeMethods.GetClientRect(hWnd, out var rect2);
                         if (rect1 != rect2)
                             goto MouseMove;
                     }
