@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-10-21 14:18
+// Version:  2017-10-31 02:10
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -38,36 +38,71 @@ namespace SilDev
         private static Version _version;
 
         /// <summary>
-        ///     Gets a <see cref="System.Version"/> object that describes the major, minor and
-        ///     build numbers of the common language runtime.
+        ///     Gets a <see cref="System.Version"/> object that describes the exact major, minor, build
+        ///     and revision numbers of the common language runtime.
         /// </summary>
         public static Version Version
         {
             get
             {
-                if (_version != null)
+                if (_version != default(Version))
                     return _version;
-                var release = Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", "Release", 0);
-                if (release > 461318)
-                    _version = new Version(4, 7, 2);
-                else if (release >= 460805)
-                    _version = new Version(4, 7, 1);
-                else if (release >= 460798)
-                    _version = new Version(4, 7, 0);
-                else if (release >= 394802)
-                    _version = new Version(4, 6, 2);
-                else if (release >= 394254)
-                    _version = new Version(4, 6, 1);
-                else if (release >= 393295)
-                    _version = new Version(4, 6, 0);
-                else if (release >= 379893)
-                    _version = new Version(4, 5, 2);
-                else if (release >= 378675)
-                    _version = new Version(4, 5, 1);
-                else if (release >= 378389)
-                    _version = new Version(4, 5, 0);
-                else
-                    _version = Environment.Version;
+                try
+                {
+                    var envDir = PathEx.Combine("%WinDir%\\Microsoft.NET",
+#if x64
+                                                "Framework64"
+#else
+                                                "Framework"
+#endif
+                                               );
+                    foreach (var dir in Directory.EnumerateDirectories(envDir).Reverse())
+                    {
+                        var path = Path.Combine(dir, "System.dll");
+                        if (!File.Exists(path))
+                            continue;
+                        _version = Data.GetVersion(path);
+                        break;
+                    }
+                    if (_version < Environment.Version)
+                        throw new ArgumentException();
+                }
+                catch
+                {
+                    const string keyPath = "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full";
+                    try
+                    {
+                        var version = Reg.Read(Registry.LocalMachine, keyPath, "Version", string.Empty);
+                        if (string.IsNullOrWhiteSpace(version))
+                            throw new ArgumentException();
+                        version = version.Split('.').Select(s => s.Length > 1 ? s.TrimStart('0') : s).Join('.');
+                        _version = new Version(version);
+                    }
+                    catch
+                    {
+                        var release = Reg.Read(Registry.LocalMachine, keyPath, "Release", 0);
+                        if (release >= 461308)
+                            _version = new Version(4, 7, 2);
+                        else if (release >= 460805)
+                            _version = new Version(4, 7, 1);
+                        else if (release >= 460798)
+                            _version = new Version(4, 7);
+                        else if (release >= 394802)
+                            _version = new Version(4, 6, 2);
+                        else if (release >= 394254)
+                            _version = new Version(4, 6, 1);
+                        else if (release >= 393295)
+                            _version = new Version(4, 6);
+                        else if (release >= 379893)
+                            _version = new Version(4, 5, 2);
+                        else if (release >= 378675)
+                            _version = new Version(4, 5, 1);
+                        else if (release >= 378389)
+                            _version = new Version(4, 5);
+                        else
+                            _version = Environment.Version;
+                    }
+                }
                 return _version;
             }
         }
