@@ -1574,6 +1574,7 @@
             </param>
         </member>
         <member name="T:SilDev.Comparison.AlphanumericComparer">
+            <inheritdoc/>
             <summary>
                 Provides a base class for comparison.
             </summary>
@@ -1583,11 +1584,12 @@
                 Initilazies a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/> class. A
                 parameter specifies whether the order is descended.
             </summary>
-            <param name="descendent">
+            <param name="descendant">
                 true to enable the descending order; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Comparison.AlphanumericComparer.Compare(System.Object,System.Object)">
+            <inheritdoc/>
             <summary>
                 Compare two specified objects and returns an integer that indicates their relative
                 position in the sort order.
@@ -3711,8 +3713,8 @@
         </member>
         <member name="P:SilDev.EnvironmentEx.Version">
             <summary>
-                Gets a <see cref="T:System.Version"/> object that describes the major, minor and
-                build numbers of the common language runtime.
+                Gets a <see cref="T:System.Version"/> object that describes the exact major, minor, build
+                and revision numbers of the common language runtime.
             </summary>
         </member>
         <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Boolean,System.Int32,System.Boolean)">
