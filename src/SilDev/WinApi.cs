@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-10-21 14:59
+// Version:  2017-10-31 03:21
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -3106,7 +3106,7 @@ namespace SilDev
             /// </param>
             public static ProcessBasicInformation GetProcessBasicInformation(IntPtr hWnd)
             {
-                var status = NativeMethods.NtQueryInformationProcess(hWnd, ProcessInfoFlags.ProcessBasicInformation, out ProcessBasicInformation pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out IntPtr _);
+                var status = NativeMethods.NtQueryInformationProcess(hWnd, ProcessInfoFlags.ProcessBasicInformation, out var pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out IntPtr _);
                 try
                 {
                     if (status >= 0xc0000000)
@@ -3531,7 +3531,7 @@ namespace SilDev
             /// </param>
             public static void MoveWindowToVisibleScreenArea(IntPtr hWnd)
             {
-                if (!WindowIsOutOfScreenArea(hWnd, out Rectangle rect))
+                if (!WindowIsOutOfScreenArea(hWnd, out var rect))
                     return;
                 NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
             }
@@ -4797,7 +4797,7 @@ namespace SilDev
                         range = new Rectangle
                         {
                             X = vRect.X + vRect.Width / 2,
-                            Y = vRect.Y + vRect.Width / 2,
+                            Y = vRect.Y + vRect.Height / 2,
                             Width = vRect.Width / 2,
                             Height = vRect.Height / 2
                         };
