@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-10-31 02:13
+// Version:  2017-10-31 07:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -441,7 +441,6 @@ namespace SilDev
             return r;
         }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Provides a base class for comparison.
         /// </summary>
@@ -461,7 +460,6 @@ namespace SilDev
                 _d = descendant;
             }
 
-            /// <inheritdoc/>
             /// <summary>
             ///     Compare two specified objects and returns an integer that indicates their relative
             ///     position in the sort order.

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2017-10-21 14:45
+// Version:  2017-10-31 07:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -481,7 +481,6 @@ namespace SilDev
             }
         }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     An base class that provides a pair of two elements of the <see cref="Image"/>
         ///     class.
@@ -516,7 +515,6 @@ namespace SilDev
             /// </summary>
             public Image Image2 { get; }
 
-            /// <inheritdoc/>
             /// <summary>
             ///     Releases all resources used by this <see cref="ImagePair"/>.
             /// </summary>
@@ -543,7 +541,6 @@ namespace SilDev
             }
         }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     An base class that provides the <see cref="System.Drawing.Image"/> and duration
         ///     of a single frame.
@@ -579,7 +576,6 @@ namespace SilDev
             /// </summary>
             public int Duration { get; }
 
-            /// <inheritdoc/>
             /// <summary>
             ///     Releases all resources used by this <see cref="Frame"/>.
             /// </summary>

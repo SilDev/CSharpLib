@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-10-21 14:51
+// Version:  2017-10-31 07:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -442,7 +442,6 @@ namespace SilDev
             GetTempFileName("tmp", len);
     }
 
-    /// <inheritdoc/>
     /// <summary>
     ///     The exception that is thrown when an attempt to access a target that does not exist
     ///     fails.
@@ -450,13 +449,11 @@ namespace SilDev
     [Serializable]
     public class PathNotFoundException : Exception
     {
-        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception.
         /// </summary>
         public PathNotFoundException() { }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception with path.
         /// </summary>
@@ -468,7 +465,6 @@ namespace SilDev
             Message = $"Could not find target \'{target}\'.";
         }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception with path and inner cause.
         /// </summary>
@@ -483,13 +479,11 @@ namespace SilDev
             Message = $"Could not find target \'{target}\'.";
         }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class with serialized data.
         /// </summary>
         protected PathNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Gets the error message and the path, or only the exception message if no path
         ///     is set.

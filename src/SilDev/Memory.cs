@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2017-10-21 14:37
+// Version:  2017-10-31 07:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,7 +21,6 @@ namespace SilDev
     using System.Runtime.Serialization;
     using System.Text;
 
-    /// <inheritdoc/>
     /// <summary>
     ///     Provides a way to pin a managed object from unmanaged memory.
     /// </summary>
@@ -48,7 +47,6 @@ namespace SilDev
         /// </summary>
         public IntPtr Pointer { get; private set; }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
         /// </summary>
@@ -76,7 +74,6 @@ namespace SilDev
 #pragma warning restore 1591
     }
 
-    /// <inheritdoc/>
     /// <summary>
     ///     Provides the functionality to manage data from an area of memory in a specified process.
     /// </summary>
@@ -99,7 +96,6 @@ namespace SilDev
             _hProcess = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessVmOperation | WinApi.AccessRights.ProcessVmRead | WinApi.AccessRights.ProcessVmWrite | WinApi.AccessRights.ProcessQueryInformation, false, ownerProcessId);
         }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Releases all resources used by this <see cref="ProcessMemory"/>.
         /// </summary>
@@ -260,20 +256,17 @@ namespace SilDev
         }
     }
 
-    /// <inheritdoc/>
     /// <summary>
     ///     The exception that is thrown when an attempt to access some data in memory.
     /// </summary>
     [Serializable]
     public class MemoryException : Exception
     {
-        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception.
         /// </summary>
         public MemoryException() { }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Create the exception with a specified error message.
         /// </summary>
@@ -282,13 +275,11 @@ namespace SilDev
         /// </param>
         public MemoryException(string message) : base(message) { }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryException"/> class with serialized data.
         /// </summary>
         protected MemoryException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Gets the error message.
         /// </summary>

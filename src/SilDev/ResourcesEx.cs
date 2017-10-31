@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2017-10-21 14:55
+// Version:  2017-10-31 07:54
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -279,7 +279,6 @@ namespace SilDev
             }
         }
 
-        /// <inheritdoc/>
         /// <summary>
         ///     Displays a dialog box that prompts to the user to browse the icon resource of a file.
         ///     <see cref="OpenFileDialog"/>
@@ -297,7 +296,6 @@ namespace SilDev
             private readonly Timer _timer;
             private string _path;
 
-            /// <inheritdoc/>
             /// <summary>
             ///     Initializes an instance of the <see cref="IconBrowserDialog"/> class.
             /// </summary>
@@ -440,7 +438,6 @@ namespace SilDev
                 _textBox.Text = curPath;
             }
 
-            /// <inheritdoc/>
             /// <summary>
             ///     Disposes of the resources (other than memory) used by the <see cref="Form"/>.
             /// </summary>

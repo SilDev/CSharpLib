@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-10-31 03:21
+// Version:  2017-10-31 07:52
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -7670,7 +7670,7 @@ namespace SilDev
 
         /// <summary>
         ///     Contains data to be passed to another application by the
-        ///     <see cref="WindowMenuFlags.WmCopyData"/> message.
+        ///     <see cref="F:SilDev.WinApi.WindowMenuFlags.WmCopyData"/> message.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct CopyData : IDisposable
