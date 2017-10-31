@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: KeyState.cs
-// Version:  2017-10-21 14:50
+// Version:  2017-10-31 07:36
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -997,7 +997,7 @@ namespace SilDev
         public static void SendState(IntPtr hWnd, VKey key)
         {
             WinApi.NativeHelper.PostMessage(hWnd, 0x100, new IntPtr((int)key), IntPtr.Zero);
-            WinApi.NativeHelper.PostMessage(hWnd, 0x101, new IntPtr((int)key), IntPtr.Zero);
+            WinApi.NativeHelper.PostMessage(hWnd, 0x101, new IntPtr((int)key), new IntPtr(1 << 31));
         }
 
         /// <summary>
