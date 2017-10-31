@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-10-21 14:00
+// Version:  2017-10-31 02:13
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -441,6 +441,7 @@ namespace SilDev
             return r;
         }
 
+        /// <inheritdoc/>
         /// <summary>
         ///     Provides a base class for comparison.
         /// </summary>
@@ -452,14 +453,15 @@ namespace SilDev
             ///     Initilazies a new instance of the <see cref="AlphanumericComparer"/> class. A
             ///     parameter specifies whether the order is descended.
             /// </summary>
-            /// <param name="descendent">
+            /// <param name="descendant">
             ///     true to enable the descending order; otherwise, false.
             /// </param>
-            public AlphanumericComparer(bool descendent = false)
+            public AlphanumericComparer(bool descendant = false)
             {
-                _d = descendent;
+                _d = descendant;
             }
 
+            /// <inheritdoc/>
             /// <summary>
             ///     Compare two specified objects and returns an integer that indicates their relative
             ///     position in the sort order.
