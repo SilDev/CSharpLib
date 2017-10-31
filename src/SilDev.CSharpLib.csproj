@@ -81,6 +81,7 @@
     <Compile Include="SilDev\Crypto.cs" />
     <Compile Include="SilDev\Data.cs" />
     <Compile Include="SilDev\Depiction.cs" />
+    <Compile Include="SilDev\Desktop.cs" />
     <Compile Include="SilDev\Elevation.cs" />
     <Compile Include="SilDev\EnvironmentEx.cs" />
     <Compile Include="SilDev\Ini.cs" />
@@ -119,6 +120,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\DimEmptyImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SHDocVw">
+      <Guid>{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
