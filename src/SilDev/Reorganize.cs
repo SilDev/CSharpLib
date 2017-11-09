@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-10-15 14:58
+// Version:  2017-11-09 15:32
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -258,6 +258,34 @@ namespace SilDev
                 Log.Write(ex);
                 return new IntPtr(IntPtr.Size == sizeof(int) ? int.MaxValue : long.MaxValue);
             }
+        }
+
+        /// <summary>
+        ///     Returns a new string in which all occurrences of a specified string in the current
+        ///     instance are replaced with another specified string.
+        /// </summary>
+        /// <param name="str">
+        /// </param>
+        /// The string to change.
+        /// <param name="oldValue">
+        ///     The string to be replaced.
+        /// </param>
+        /// <param name="newValue">
+        ///     The string to replace all occurrences of oldValue.
+        /// </param>
+        /// <param name="comparisonType">
+        ///     One of the enumeration values that specifies the rules for the search.
+        /// </param>
+        public static string Replace(this string str, string oldValue, string newValue, StringComparison comparisonType)
+        {
+            var s = str;
+            Replace:
+            var i = s.IndexOf(oldValue, comparisonType);
+            if (i < 0)
+                return s;
+            s = s.Remove(i, oldValue.Length);
+            s = s.Insert(i, newValue);
+            goto Replace;
         }
 
         /// <summary>
