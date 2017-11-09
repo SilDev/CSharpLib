@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2017-10-31 08:39
+// Version:  2017-11-09 15:37
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -27,9 +27,13 @@ namespace SilDev
         ///     Refreshes the desktop.
         /// </summary>
         /// <param name="explorer">
-        ///     true to refresh all open explorer windows; otherwise, false
+        ///     true to refresh all open explorer windows; otherwise, false.
         /// </param>
-        public static void Refresh(bool explorer = true)
+        /// <param name="extended">
+        ///     true to wait for a window to refresh, if there is no window available;
+        ///     otherwise, false.
+        /// </param>
+        public static void Refresh(bool explorer = true, bool extended = false)
         {
             var hWnd = WinApi.NativeHelper.FindWindow("Progman", "Program Manager");
             var cNames = new[]
@@ -41,7 +45,7 @@ namespace SilDev
                 WinApi.NativeHelper.FindNestedWindow(ref hWnd, cName);
             KeyState.SendState(hWnd, KeyState.VKey.VK_F5);
             if (explorer)
-                RefreshExplorer();
+                RefreshExplorer(extended);
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace SilDev
         /// </summary>
         /// <param name="extended">
         ///     true to wait for a window to refresh, if there is no window available;
-        ///     otherwise, false
+        ///     otherwise, false.
         /// </param>
         public static void RefreshExplorer(bool extended = false)
         {
