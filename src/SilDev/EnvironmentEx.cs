@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-10-31 02:10
+// Version:  2017-12-28 16:58
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -49,13 +49,11 @@ namespace SilDev
                     return _version;
                 try
                 {
-                    var envDir = PathEx.Combine("%WinDir%\\Microsoft.NET",
 #if x64
-                                                "Framework64"
+                    var envDir = PathEx.Combine("%WinDir%\\Microsoft.NET\\Framework64");
 #else
-                                                "Framework"
+                    var envDir = PathEx.Combine("%WinDir%\\Microsoft.NET\\Framework");
 #endif
-                                               );
                     foreach (var dir in Directory.EnumerateDirectories(envDir).Reverse())
                     {
                         var path = Path.Combine(dir, "System.dll");
@@ -64,45 +62,47 @@ namespace SilDev
                         _version = Data.GetVersion(path);
                         break;
                     }
-                    if (_version < Environment.Version)
-                        throw new ArgumentException();
+                    if (_version > Environment.Version)
+                        return _version;
                 }
                 catch
                 {
-                    const string keyPath = "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full";
+                    // ignored
+                }
+                const string keyPath = "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full";
+                var version = Reg.Read(Registry.LocalMachine, keyPath, "Version", string.Empty);
+                if (!string.IsNullOrWhiteSpace(version))
                     try
                     {
-                        var version = Reg.Read(Registry.LocalMachine, keyPath, "Version", string.Empty);
-                        if (string.IsNullOrWhiteSpace(version))
-                            throw new ArgumentException();
-                        version = version.Split('.').Select(s => s.Length > 1 ? s.TrimStart('0') : s).Join('.');
-                        _version = new Version(version);
+                        _version = new Version(version.Split('.').Select(s => s.Length > 1 ? s.TrimStart('0') : s).Join('.'));
+                        if (_version > Environment.Version)
+                            return _version;
                     }
                     catch
                     {
-                        var release = Reg.Read(Registry.LocalMachine, keyPath, "Release", 0);
-                        if (release >= 461308)
-                            _version = new Version(4, 7, 2);
-                        else if (release >= 460805)
-                            _version = new Version(4, 7, 1);
-                        else if (release >= 460798)
-                            _version = new Version(4, 7);
-                        else if (release >= 394802)
-                            _version = new Version(4, 6, 2);
-                        else if (release >= 394254)
-                            _version = new Version(4, 6, 1);
-                        else if (release >= 393295)
-                            _version = new Version(4, 6);
-                        else if (release >= 379893)
-                            _version = new Version(4, 5, 2);
-                        else if (release >= 378675)
-                            _version = new Version(4, 5, 1);
-                        else if (release >= 378389)
-                            _version = new Version(4, 5);
-                        else
-                            _version = Environment.Version;
+                        // ignored
                     }
-                }
+                var release = Reg.Read(Registry.LocalMachine, keyPath, "Release", 0);
+                if (release >= 461308)
+                    _version = new Version(4, 7, 2);
+                else if (release >= 460805)
+                    _version = new Version(4, 7, 1);
+                else if (release >= 460798)
+                    _version = new Version(4, 7);
+                else if (release >= 394802)
+                    _version = new Version(4, 6, 2);
+                else if (release >= 394254)
+                    _version = new Version(4, 6, 1);
+                else if (release >= 393295)
+                    _version = new Version(4, 6);
+                else if (release >= 379893)
+                    _version = new Version(4, 5, 2);
+                else if (release >= 378675)
+                    _version = new Version(4, 5, 1);
+                else if (release >= 378389)
+                    _version = new Version(4, 5);
+                else
+                    _version = Environment.Version;
                 return _version;
             }
         }
