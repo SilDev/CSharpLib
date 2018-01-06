@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2017-11-09 15:32
+// Version:  2018-01-06 06:27
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -425,8 +425,17 @@ namespace SilDev
         /// <param name="str">
         ///     The string to split.
         /// </param>
-        public static string[] SplitNewLine(this string str) =>
-            str.Split(Environment.NewLine);
+        /// <param name="splitOptions">
+        ///     The split options.
+        /// </param>
+        public static string[] SplitNewLine(this string str, StringSplitOptions splitOptions = StringSplitOptions.RemoveEmptyEntries)
+        {
+            if (!str.Any(TextEx.IsLineSeparator))
+                return new[] { str };
+            var s = TextEx.FormatNewLine(str);
+            var sa = s.Split(Environment.NewLine, splitOptions);
+            return sa;
+        }
 
         /// <summary>
         ///     Converts all the characters in the specified string into a sequence of bytes.
