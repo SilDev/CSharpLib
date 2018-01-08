@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2017-06-23 12:07
+// Version:  2018-01-08 10:40
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -957,9 +957,31 @@ namespace SilDev
                 var filePath = PathEx.Combine(path);
                 if (string.IsNullOrEmpty(filePath))
                     throw new ArgumentNullException(nameof(path));
+                if (content == null)
+                    throw new ArgumentNullException(nameof(content));
+                if (content.Length == 0)
+                    throw new ArgumentOutOfRangeException(nameof(content));
                 if (File.Exists(filePath))
                     File.Delete(filePath);
-                File.WriteAllLines(filePath, content);
+                using (var sw = new StreamWriter(filePath, true, Encoding.GetEncoding(1252)))
+                {
+                    var head = false;
+                    foreach (var line in content.Where(Comparison.IsNotEmpty))
+                    {
+                        if (!head)
+                        {
+                            head = true;
+                            const string header = "Windows Registry Editor Version 5.00";
+                            if (!line.StartsWithEx("REGEDIT4", header))
+                                sw.WriteLine(header);
+                        }
+                        if (line.StartsWith("["))
+                            sw.WriteLine();
+                        sw.WriteLine(line);
+                    }
+                    sw.WriteLine();
+                    sw.WriteLine();
+                }
                 var imported = ImportFile(filePath, elevated);
                 if (File.Exists(filePath))
                     File.Delete(filePath);
@@ -1009,8 +1031,9 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(destDir));
                 if (!Directory.Exists(destDir))
                     Directory.CreateDirectory(destDir);
+                const string header = "Windows Registry Editor Version 5.00";
+                File.WriteAllText(filePath, $@"{header}{Environment.NewLine}", Encoding.GetEncoding(1252));
                 var count = 0;
-                File.WriteAllText(filePath, @"Windows Registry Editor Version 5.00" + Environment.NewLine, Encoding.GetEncoding(1252));
                 foreach (var key in keyPaths)
                 {
                     var path = Path.Combine(Path.GetTempPath(), PathEx.GetTempFileName("reg", 8));
