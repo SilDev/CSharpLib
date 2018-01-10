@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-01-10 07:22
+// Version:  2018-01-10 07:29
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,6 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -29,36 +28,6 @@ namespace SilDev
     /// </summary>
     public static class PathEx
     {
-        /// <summary>
-        ///     Provides enumerated values of PE (Portable Executable) headers.
-        /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum Headers : ushort
-        {
-#pragma warning disable CS1591
-            Unknown = 0x0,
-            AM33 = 0x1d3,
-            AMD64 = 0x8664,
-            ARM = 0x1c0,
-            EBC = 0xebc,
-            I386 = 0x14c,
-            IA64 = 0x200,
-            M32R = 0x9041,
-            MIPS16 = 0x266,
-            MIPSFPU = 0x366,
-            MIPSFPU16 = 0x466,
-            POWERPC = 0x1f0,
-            POWERPCFP = 0x1f1,
-            R4000 = 0x166,
-            SH3 = 0x1a2,
-            SH3DSP = 0x1a3,
-            SH4 = 0x1a6,
-            SH5 = 0x1a8,
-            THUMB = 0x1c2,
-            WCEMIPSV2 = 0x169
-#pragma warning restore CS1591
-        }
-
         private static readonly char[] InvalidPathChars =
         {
             '\u0000', '\u0001', '\u0002', '\u0003',
@@ -84,45 +53,6 @@ namespace SilDev
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
         public static string LocalDir => Path.GetDirectoryName(LocalPath)?.TrimEnd(Path.DirectorySeparatorChar);
-
-        /// <summary>
-        ///     Determines the PE (Portable Executable) header of the specified file.
-        /// </summary>
-        /// <param name="path">
-        ///     The file to check.
-        /// </param>
-        public static Headers GetHeader(string path)
-        {
-            var pe = Headers.Unknown;
-            try
-            {
-                using (var fs = new FileStream(Combine(path), FileMode.Open, FileAccess.Read))
-                {
-                    var br = new BinaryReader(fs);
-                    fs.Seek(0x3c, SeekOrigin.Begin);
-                    fs.Seek(br.ReadInt32(), SeekOrigin.Begin);
-                    br.ReadUInt32();
-                    pe = (Headers)br.ReadUInt16();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return pe;
-        }
-
-        /// <summary>
-        ///     Determines whether the specified file was compiled for a 64-bit platform environments.
-        /// </summary>
-        /// <param name="path">
-        ///     The file to check.
-        /// </param>
-        public static bool FileIs64Bit(string path)
-        {
-            var pe = GetHeader(path);
-            return pe == Headers.AMD64 || pe == Headers.IA64;
-        }
 
         /// <summary>
         ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
@@ -445,6 +375,16 @@ namespace SilDev
         /// </param>
         public static string GetTempFileName(int len) =>
             GetTempFileName("tmp", len);
+
+        /// <summary>
+        ///     Determines whether the specified file was compiled for 64-bit platform environments.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check.
+        /// </param>
+        [Obsolete("Kept for backward compatibility; just use PortableExecutable.Is64Bit(string) method.")]
+        public static bool FileIs64Bit(string path) =>
+            PortableExecutable.Is64Bit(path);
     }
 
     /// <summary>
