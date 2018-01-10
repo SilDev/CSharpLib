@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2017-10-31 07:54
+// Version:  2018-01-10 07:22
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -168,14 +168,19 @@ namespace SilDev
                 if (path.Length < 3)
                     throw new ArgumentException($"The path length is lower than 3 characters. - PATH: \'{path}\'");
                 if (!path.Contains(Path.DirectorySeparatorChar))
-                    throw new ArgumentException($"The path does not contain any separator. - PATH: \'{path}\'");
+                {
+                    if (!path.Contains(Path.AltDirectorySeparatorChar))
+                        throw new ArgumentException($"The path does not contain any separator. - PATH: \'{path}\'");
+                    throw new ArgumentException($"The path does not contain a valid separator. - PATH: \'{path}\'");
+                }
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
                     throw new ArgumentException($"The path cannot contain several consecutive separators. - PATH: \'{path}\'");
-                if (Path.HasExtension(path))
+                var levels = path.Split(Path.DirectorySeparatorChar);
+                var fileName = levels.Last();
+                if (Path.HasExtension(fileName))
                 {
                     if (path.Length > 260)
                         throw new PathTooLongException($"The specified path is longer than 260 characters. - PATH: \'{path}\'");
-                    var levels = path.Split(Path.DirectorySeparatorChar);
                     var fileDir = levels.Take(levels.Length - 1).Join(Path.DirectorySeparatorChar);
                     if (fileDir.Length > 248)
                         throw new PathTooLongException($"The directory name is longer than 248 characters. - PATH: \'{path}\'");
