@@ -93,6 +93,7 @@
     <Compile Include="SilDev\NetEx.cs" />
     <Compile Include="SilDev\NotifyBox.cs" />
     <Compile Include="SilDev\PathEx.cs" />
+    <Compile Include="SilDev\PortableExecutable.cs" />
     <Compile Include="SilDev\ProcessEx.cs" />
     <Compile Include="SilDev\Reg.cs" />
     <Compile Include="SilDev\Reorganize.cs" />
