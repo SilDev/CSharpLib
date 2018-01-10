@@ -6847,11 +6847,6 @@
                 <see cref="T:System.String"/> instances that contain file or directory path information.
             </summary>
         </member>
-        <member name="T:SilDev.PathEx.Headers">
-            <summary>
-                Provides enumerated values of PE (Portable Executable) headers.
-            </summary>
-        </member>
         <member name="P:SilDev.PathEx.LocalPath">
             <summary>
                 Gets the full process executable path of the assembly based on
@@ -6863,22 +6858,6 @@
                 Gets the process executable located directory path of the assembly based on
                 <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
             </summary>
-        </member>
-        <member name="M:SilDev.PathEx.GetHeader(System.String)">
-            <summary>
-                Determines the PE (Portable Executable) header of the specified file.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.FileIs64Bit(System.String)">
-            <summary>
-                Determines whether the specified file was compiled for a 64-bit platform environments.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
         </member>
         <member name="M:SilDev.PathEx.DirOrFileExists(System.String)">
             <summary>
@@ -7042,6 +7021,14 @@
                 The length of the hash. Valid values are 4 through 24.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.FileIs64Bit(System.String)">
+            <summary>
+                Determines whether the specified file was compiled for 64-bit platform environments.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
         <member name="T:SilDev.PathNotFoundException">
             <summary>
                 The exception that is thrown when an attempt to access a target that does not exist
@@ -7082,6 +7069,157 @@
                 Gets the error message and the path, or only the exception message if no path
                 is set.
             </summary>
+        </member>
+        <member name="T:SilDev.PortableExecutable">
+            <summary>
+                Provides basic functionality for reading PE (Portable Executable) header informations.
+            </summary>
+        </member>
+        <member name="T:SilDev.PortableExecutable.MachineTypes">
+            <summary>
+                Provides enumerated values of the machine field values that specifies its CPU type.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.Unknown">
+            <summary>
+                The contents of this field are assumed to be applicable to any machine type.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.AM33">
+            <summary>
+                Matsushita AM33.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.AMD64">
+            <summary>
+                AMD64 (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.ARM">
+            <summary>
+                ARM little endian.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.ARM64">
+            <summary>
+                ARM64 little endian.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.ARMNT">
+            <summary>
+                ARM Thumb-2 little endian.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.EBC">
+            <summary>
+                EFI byte code.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.I386">
+            <summary>
+                Intel 386 or later processors and compatible processors.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.IA64">
+            <summary>
+                Intel Itanium processor family.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.M32R">
+            <summary>
+                Mitsubishi M32R little endian.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.MIPS16">
+            <summary>
+                MIPS16.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.MIPSFPU">
+            <summary>
+                MIPS with FPU.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.MIPSFPU16">
+            <summary>
+                MIPS16 with FPU.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.POWERPC">
+            <summary>
+                Power PC little endian.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.POWERPCFP">
+            <summary>
+                Power PC with floating point support.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.R4000">
+            <summary>
+                MIPS little endian.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.RISCV32">
+            <summary>
+                RISC-V 32-bit address space.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.RISCV64">
+            <summary>
+                RISC-V 64-bit address space.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.RISCV128">
+            <summary>
+                RISC-V 128-bit address space.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.SH3">
+            <summary>
+                Hitachi SH3.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.SH3DSP">
+            <summary>
+                Hitachi SH3 DSP.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.SH4">
+            <summary>
+                Hitachi SH4.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.SH5">
+            <summary>
+                Hitachi SH5.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.THUMB">
+            <summary>
+                ARM Thumb.
+            </summary>
+        </member>
+        <member name="F:SilDev.PortableExecutable.MachineTypes.WCEMIPSV2">
+            <summary>
+                MIPS little-endian WCE v2.
+            </summary>
+        </member>
+        <member name="M:SilDev.PortableExecutable.GetMachineTypes(System.String)">
+            <summary>
+                Determines the CPU type of the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.PortableExecutable.Is64Bit(System.String)">
+            <summary>
+                Determines whether the specified file was compiled for 64-bit platform environments.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
         </member>
         <member name="T:SilDev.ProcessEx">
             <summary>
