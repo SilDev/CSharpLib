@@ -3698,6 +3698,11 @@
                 about the current environment.
             </summary>
         </member>
+        <member name="P:SilDev.EnvironmentEx.MachineId">
+            <summary>
+                Gets a unique system identification number.
+            </summary>
+        </member>
         <member name="P:SilDev.EnvironmentEx.Version">
             <summary>
                 Gets a <see cref="T:System.Version"/> object that describes the exact major, minor, build
