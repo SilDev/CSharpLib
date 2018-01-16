@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2017-10-21 14:43
+// Version:  2018-01-16 12:14
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -672,7 +672,7 @@ namespace SilDev
                 if (!DirIsLink(link) && backup)
                     try
                     {
-                        File.Move(link, link + ".SI13N7-BACKUP");
+                        File.Move(link, link + $"-{{{EnvironmentEx.MachineId}}}.backup");
                     }
                     catch (Exception ex)
                     {
@@ -741,7 +741,7 @@ namespace SilDev
             if (backup)
                 if (PathEx.DirOrFileExists(link))
                     if (!DirIsLink(link))
-                        cmd += $"MOVE /Y \"{link}\" \"{link}.SI13N7-BACKUP\"";
+                        cmd += $"MOVE /Y \"{link}\" \"{link}-{{{EnvironmentEx.MachineId}}}.backup\"";
                     else
                         UnLinker(link, true, true, elevated);
 
@@ -815,8 +815,8 @@ namespace SilDev
             var link = PathEx.Combine(path);
             var isLink = link.DirOrFileIsLink();
             var cmd = $"{(pathIsDir ? "RD /Q" : "DEL /F /Q")}{(!pathIsDir && isLink ? " /A:L" : string.Empty)} \"{link}\"";
-            if (backup && PathEx.DirOrFileExists($"{link}.SI13N7-BACKUP"))
-                cmd += $" & MOVE /Y \"{link}.SI13N7-BACKUP\" \"{link}\"";
+            if (backup && PathEx.DirOrFileExists($"{link}-{{{EnvironmentEx.MachineId}}}.backup"))
+                cmd += $" & MOVE /Y \"{link}-{{{EnvironmentEx.MachineId}}}.backup\" \"{link}\"";
             if (string.IsNullOrEmpty(cmd))
                 return false;
             int? exitCode;
