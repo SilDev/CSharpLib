@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-01-06 06:27
+// Version:  2018-01-16 11:00
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -428,14 +428,35 @@ namespace SilDev
         /// <param name="splitOptions">
         ///     The split options.
         /// </param>
-        public static string[] SplitNewLine(this string str, StringSplitOptions splitOptions = StringSplitOptions.RemoveEmptyEntries)
+        /// <param name="trim">
+        ///     true to trim each line; otherwise, false.
+        /// </param>
+        public static string[] SplitNewLine(this string str, StringSplitOptions splitOptions = StringSplitOptions.RemoveEmptyEntries, bool trim = false)
         {
             if (!str.Any(TextEx.IsLineSeparator))
                 return new[] { str };
             var s = TextEx.FormatNewLine(str);
             var sa = s.Split(Environment.NewLine, splitOptions);
+            if (!trim)
+                return sa;
+            var ie = sa.Select(x => x.Trim());
+            if (splitOptions == StringSplitOptions.RemoveEmptyEntries)
+                ie = ie.Where(Comparison.IsNotEmpty);
+            sa = ie.ToArray();
             return sa;
         }
+
+        /// <summary>
+        ///     Splits a string into substrings based on <see cref="Environment.NewLine"/>.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to split.
+        /// </param>
+        /// <param name="trim">
+        ///     true to trim each line; otherwise, false.
+        /// </param>
+        public static string[] SplitNewLine(this string str, bool trim) =>
+            str.SplitNewLine(StringSplitOptions.RemoveEmptyEntries, trim);
 
         /// <summary>
         ///     Converts all the characters in the specified string into a sequence of bytes.
