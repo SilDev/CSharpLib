@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2017-12-28 16:58
+// Version:  2018-01-16 11:56
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -25,6 +25,7 @@ namespace SilDev
     using System.Management;
     using System.Reflection;
     using Microsoft.Win32;
+    using QuickWmi;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Environment"/> class to provide informations
@@ -35,7 +36,25 @@ namespace SilDev
         private static List<string> _cmdLineArgs;
         private static bool _cmdLineArgsQuotes;
         private static string _commandLine;
+        private static int _machineId;
         private static Version _version;
+
+        /// <summary>
+        ///     Gets a unique system identification number.
+        /// </summary>
+        public static int MachineId
+        {
+            get
+            {
+                if (_machineId != default(int))
+                    return _machineId;
+                var id = Win32_OperatingSystem.SerialNumber;
+                if (string.IsNullOrWhiteSpace(id))
+                    id = $"{Environment.MachineName}\\{Environment.UserName}";
+                _machineId = Math.Abs(id.GetHashCode());
+                return _machineId;
+            }
+        }
 
         /// <summary>
         ///     Gets a <see cref="System.Version"/> object that describes the exact major, minor, build
