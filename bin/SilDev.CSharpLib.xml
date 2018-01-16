@@ -8613,7 +8613,7 @@
                 The split options.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.SplitNewLine(System.String,System.StringSplitOptions)">
+        <member name="M:SilDev.Reorganize.SplitNewLine(System.String,System.StringSplitOptions,System.Boolean)">
             <summary>
                 Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
             </summary>
@@ -8622,6 +8622,20 @@
             </param>
             <param name="splitOptions">
                 The split options.
+            </param>
+            <param name="trim">
+                true to trim each line; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.SplitNewLine(System.String,System.Boolean)">
+            <summary>
+                Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
+            </summary>
+            <param name="str">
+                The string to split.
+            </param>
+            <param name="trim">
+                true to trim each line; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.ToBytes(System.String)">
