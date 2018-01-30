@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2018-01-16 12:14
+// Version:  2018-01-30 21:17
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -1216,18 +1216,28 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the version information associated with this file instance member.
+        ///     Returns the highest version information associated with this file instance member.
         /// </summary>
         /// <param name="fileInfo">
         ///     The file instance member to check.
         /// </param>
-        public static Version GetVersion(this FileInfo fileInfo)
+        public static Version GetVersion(this FileInfo fileInfo) =>
+            GetVersion(fileInfo.FullName);
+
+        /// <summary>
+        ///     Returns the highest version information associated with the specified file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check.
+        /// </param>
+        public static Version GetVersion(string path)
         {
             Version v;
             try
             {
-                var fvi = FileVersionInfo.GetVersionInfo(fileInfo.FullName);
-                v = Version.Parse(fvi.ProductVersion);
+                var v1 = GetFileVersion(path);
+                var v2 = GetProductVersion(path);
+                v = v1 > v2 ? v1 : v2;
             }
             catch (Exception ex)
             {
@@ -1238,12 +1248,21 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the version information associated with the specified file.
+        ///     Returns the file version information associated with this file instance member.
+        /// </summary>
+        /// <param name="fileInfo">
+        ///     The file instance member to check.
+        /// </param>
+        public static Version GetFileVersion(this FileInfo fileInfo) =>
+            GetFileVersion(fileInfo.FullName);
+
+        /// <summary>
+        ///     Returns the file version information associated with the specified file.
         /// </summary>
         /// <param name="path">
         ///     The file to check.
         /// </param>
-        public static Version GetVersion(string path)
+        public static Version GetFileVersion(string path)
         {
             Version v;
             try
@@ -1252,7 +1271,7 @@ namespace SilDev
                 if (!File.Exists(s))
                     throw new PathNotFoundException(s);
                 var fvi = FileVersionInfo.GetVersionInfo(s);
-                v = Version.Parse(fvi.ProductVersion);
+                v = Version.Parse(fvi.FileVersion.VersionFilter());
             }
             catch (Exception ex)
             {
@@ -1260,6 +1279,52 @@ namespace SilDev
                 v = Version.Parse("0.0.0.0");
             }
             return v;
+        }
+
+        /// <summary>
+        ///     Returns the product version information associated with this file instance member.
+        /// </summary>
+        /// <param name="fileInfo">
+        ///     The file instance member to check.
+        /// </param>
+        public static Version GetProductVersion(this FileInfo fileInfo) =>
+            GetProductVersion(fileInfo.FullName);
+
+        /// <summary>
+        ///     Returns the product version information associated with the specified file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check.
+        /// </param>
+        public static Version GetProductVersion(string path)
+        {
+            Version v;
+            try
+            {
+                var s = PathEx.Combine(path);
+                if (!File.Exists(s))
+                    throw new PathNotFoundException(s);
+                var fvi = FileVersionInfo.GetVersionInfo(s);
+                v = Version.Parse(fvi.ProductVersion.VersionFilter());
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                v = Version.Parse("0.0.0.0");
+            }
+            return v;
+        }
+
+        private static string VersionFilter(this string str)
+        {
+            var s = str;
+            if (!s.Any(x => !char.IsDigit(x) && x != '.'))
+                return s;
+            var ca = s.Where(char.IsDigit).ToArray();
+            if (ca.Length > 4)
+                ca = ca.Take(4).ToArray();
+            s = string.Join(".", ca);
+            return s;
         }
 
         [ComImport]
