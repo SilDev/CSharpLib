@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2017-10-31 07:52
+// Version:  2018-01-30 22:59
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,6 +20,7 @@ namespace SilDev
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Globalization;
+    using System.IO;
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Text;
@@ -603,6 +604,55 @@ namespace SilDev
             ///     Sets all pages to be write-combined.
             /// </summary>
             PageWriteCombine = 0x400
+        }
+
+        /// <summary>
+        ///     Provides enumerated options for MIME functions.
+        /// </summary>
+        [Flags]
+        public enum MimeFlags
+        {
+            /// <summary>
+            ///     No flags specified. Use default behavior for the function.
+            /// </summary>
+            Default = 0x0,
+
+            /// <summary>
+            ///     Treat the specified pwzUrl as a file name.
+            /// </summary>
+            UrlAsFileName = 0x1,
+
+            /// <summary>
+            ///     Internet Explorer 6 for Windows XP SP2 and later. Use MIME-type detection even
+            ///     if FEATURE_MIME_SNIFFING is detected. Usually, this feature control key would
+            ///     disable MIME-type detection.
+            /// </summary>
+            EnableMimeSniffing = 0x2,
+
+            /// <summary>
+            ///     Internet Explorer 6 for Windows XP SP2 and later. Perform MIME-type detection
+            ///     if "text/plain" is proposed, even if data sniffing is otherwise disabled. Plain
+            ///     text may be converted to text/html if HTML tags are detected.
+            /// </summary>
+            IgnoreMimeTextPlain = 0x4,
+
+            /// <summary>
+            ///     Internet Explorer 8. Use the authoritative MIME type specified in pwzMimeProposed.
+            ///     Unless <see cref="IgnoreMimeTextPlain"/> is specified, no data sniffing is
+            ///     performed.
+            /// </summary>
+            ServerMime = 0x8,
+
+            /// <summary>
+            ///     Internet Explorer 9. Do not perform detection if "text/plain" is specified in
+            ///     pwzMimeProposed.
+            /// </summary>
+            RespectTextPlain = 0x10,
+
+            /// <summary>
+            ///     Internet Explorer 9. Returns image/png and image/jpeg instead of image/x-png and image/pjpeg.
+            /// </summary>
+            ReturnUpdatedImgMimes = 0x20
         }
 
         /// <summary>
@@ -2886,6 +2936,91 @@ namespace SilDev
             /// </param>
             public static int ExtractIconEx(string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons) =>
                 NativeMethods.ExtractIconEx(lpszFile, nIconIndex, phiconLarge, phiconSmall, nIcons);
+
+            /// <summary>
+            ///     Determines the MIME type from the data provided.
+            /// </summary>
+            /// <param name="pBc">
+            ///     A pointer to the IBindCtx interface. Can be set to NULL.
+            /// </param>
+            /// <param name="pwzUrl">
+            ///     A pointer to a string value that contains the URL of the data. Can be set to NULL if pBuffer
+            ///     contains the data to be sniffed.
+            /// </param>
+            /// <param name="pBuffer">
+            ///     A pointer to the buffer that contains the data to be sniffed. Can be set to NULL if pwzUrl
+            ///     contains a valid URL.
+            /// </param>
+            /// <param name="cbSize">
+            ///     An unsigned long integer value that contains the size of the buffer.
+            /// </param>
+            /// <param name="pwzMimeProposed">
+            ///     A pointer to a string value that contains the proposed MIME type. This value is authoritative if
+            ///     type cannot be determined from the data. If the proposed type contains a semi-colon (;) it is
+            ///     removed. This parameter can be set to NULL.
+            /// </param>
+            /// <param name="dwMimeFlags">
+            ///     The search and filter options.
+            /// </param>
+            /// <param name="ppwzMimeOut">
+            ///     The address of a string value that receives the suggested MIME type.
+            /// </param>
+            /// <param name="dwReserved">
+            ///     Reserved. Must be set to 0.
+            /// </param>
+            /// <returns>
+            ///     This function can return one of these values.
+            ///     <para>
+            ///         S_OK: The operation completed successfully.
+            ///     </para>
+            ///     <para>
+            ///         E_FAIL: The operation failed.
+            ///     </para>
+            ///     <para>
+            ///         E_INVALIDARG: One or more arguments are invalid.
+            ///     </para>
+            ///     <para>
+            ///         E_OUTOFMEMORY: There is insufficient memory to complete the operation.
+            ///     </para>
+            /// </returns>
+            public static int FindMimeFromData(IntPtr pBc, string pwzUrl, byte[] pBuffer, int cbSize, string pwzMimeProposed, MimeFlags dwMimeFlags, out IntPtr ppwzMimeOut, int dwReserved) =>
+                NativeMethods.FindMimeFromData(pBc, pwzUrl, pBuffer, cbSize, pwzMimeProposed, dwMimeFlags, out ppwzMimeOut, dwReserved);
+
+            /// <summary>
+            ///     Determines the MIME type from the file.
+            /// </summary>
+            /// <param name="fPath">
+            ///     The file to check.
+            /// </param>
+            /// <param name="dwMimeFlags">
+            ///     The search and filter options.
+            /// </param>
+            public static string FindMimeFromFile(string fPath, MimeFlags dwMimeFlags = MimeFlags.EnableMimeSniffing | MimeFlags.IgnoreMimeTextPlain | MimeFlags.ReturnUpdatedImgMimes)
+            {
+                try
+                {
+                    var file = PathEx.Combine(fPath);
+                    if (!PathEx.IsValidPath(file))
+                        throw new ArgumentException();
+                    if (!File.Exists(file))
+                        throw new PathNotFoundException(file);
+                    var buffer = new byte[256];
+                    using (var fs = new FileStream(file, FileMode.Open))
+                        if (fs.Length >= 256)
+                            fs.Read(buffer, 0, 256);
+                        else
+                            fs.Read(buffer, 0, (int)fs.Length);
+                    NativeMethods.FindMimeFromData(IntPtr.Zero, null, buffer, 256, null, dwMimeFlags, out var mimetype, 0);
+                    var mime = Marshal.PtrToStringUni(mimetype);
+                    Marshal.FreeCoTaskMem(mimetype);
+                    return mime;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                    return "unknown/unknown";
+                }
+            }
 
             /// <summary>
             ///     Retrieves a handle to a window whose class name is matched.
@@ -5369,6 +5504,55 @@ namespace SilDev
             internal static extern int ExtractIconEx([MarshalAs(UnmanagedType.LPStr)] string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons);
 
             /// <summary>
+            ///     Determines the MIME type from the data provided.
+            /// </summary>
+            /// <param name="pBc">
+            ///     A pointer to the IBindCtx interface. Can be set to NULL.
+            /// </param>
+            /// <param name="pwzUrl">
+            ///     A pointer to a string value that contains the URL of the data. Can be set to NULL if pBuffer
+            ///     contains the data to be sniffed.
+            /// </param>
+            /// <param name="pBuffer">
+            ///     A pointer to the buffer that contains the data to be sniffed. Can be set to NULL if pwzUrl
+            ///     contains a valid URL.
+            /// </param>
+            /// <param name="cbSize">
+            ///     An unsigned long integer value that contains the size of the buffer.
+            /// </param>
+            /// <param name="pwzMimeProposed">
+            ///     A pointer to a string value that contains the proposed MIME type. This value is authoritative if
+            ///     type cannot be determined from the data. If the proposed type contains a semi-colon (;) it is
+            ///     removed. This parameter can be set to NULL.
+            /// </param>
+            /// <param name="dwMimeFlags">
+            ///     The search and filter options.
+            /// </param>
+            /// <param name="ppwzMimeOut">
+            ///     The address of a string value that receives the suggested MIME type.
+            /// </param>
+            /// <param name="dwReserved">
+            ///     Reserved. Must be set to 0.
+            /// </param>
+            /// <returns>
+            ///     This function can return one of these values.
+            ///     <para>
+            ///         S_OK: The operation completed successfully.
+            ///     </para>
+            ///     <para>
+            ///         E_FAIL: The operation failed.
+            ///     </para>
+            ///     <para>
+            ///         E_INVALIDARG: One or more arguments are invalid.
+            ///     </para>
+            ///     <para>
+            ///         E_OUTOFMEMORY: There is insufficient memory to complete the operation.
+            ///     </para>
+            /// </returns>
+            [DllImport(DllNames.Urlmon, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false)]
+            internal static extern int FindMimeFromData(IntPtr pBc, [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)] byte[] pBuffer, int cbSize, [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed, MimeFlags dwMimeFlags, out IntPtr ppwzMimeOut, int dwReserved);
+
+            /// <summary>
             ///     Retrieves a handle to the top-level window whose class name and window name match the specified
             ///     strings. This function does not search child windows. This function does not perform a
             ///     case-sensitive search.
@@ -7738,6 +7922,7 @@ namespace SilDev
             internal const string Dwmapi = "dwmapi.dll";
             internal const string Msi = "msi.dll";
             internal const string Rstrtmgr = "rstrtmgr.dll";
+            internal const string Urlmon = "urlmon.dll";
             internal const string Uxtheme = "uxtheme.dll";
             internal const string Winmm = "winmm.dll";
 #pragma warning disable CS1591
