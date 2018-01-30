@@ -3360,7 +3360,7 @@
         </member>
         <member name="M:SilDev.Data.GetVersion(System.IO.FileInfo)">
             <summary>
-                Returns the version information associated with this file instance member.
+                Returns the highest version information associated with this file instance member.
             </summary>
             <param name="fileInfo">
                 The file instance member to check.
@@ -3368,7 +3368,39 @@
         </member>
         <member name="M:SilDev.Data.GetVersion(System.String)">
             <summary>
-                Returns the version information associated with the specified file.
+                Returns the highest version information associated with the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Data.GetFileVersion(System.IO.FileInfo)">
+            <summary>
+                Returns the file version information associated with this file instance member.
+            </summary>
+            <param name="fileInfo">
+                The file instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Data.GetFileVersion(System.String)">
+            <summary>
+                Returns the file version information associated with the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Data.GetProductVersion(System.IO.FileInfo)">
+            <summary>
+                Returns the product version information associated with this file instance member.
+            </summary>
+            <param name="fileInfo">
+                The file instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Data.GetProductVersion(System.String)">
+            <summary>
+                Returns the product version information associated with the specified file.
             </summary>
             <param name="path">
                 The file to check.
@@ -9904,6 +9936,53 @@
                 Sets all pages to be write-combined.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.MimeFlags">
+            <summary>
+                Provides enumerated options for MIME functions.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MimeFlags.Default">
+            <summary>
+                No flags specified. Use default behavior for the function.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MimeFlags.UrlAsFileName">
+            <summary>
+                Treat the specified pwzUrl as a file name.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MimeFlags.EnableMimeSniffing">
+            <summary>
+                Internet Explorer 6 for Windows XP SP2 and later. Use MIME-type detection even
+                if FEATURE_MIME_SNIFFING is detected. Usually, this feature control key would
+                disable MIME-type detection.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MimeFlags.IgnoreMimeTextPlain">
+            <summary>
+                Internet Explorer 6 for Windows XP SP2 and later. Perform MIME-type detection
+                if "text/plain" is proposed, even if data sniffing is otherwise disabled. Plain
+                text may be converted to text/html if HTML tags are detected.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MimeFlags.ServerMime">
+            <summary>
+                Internet Explorer 8. Use the authoritative MIME type specified in pwzMimeProposed.
+                Unless <see cref="F:SilDev.WinApi.MimeFlags.IgnoreMimeTextPlain"/> is specified, no data sniffing is
+                performed.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MimeFlags.RespectTextPlain">
+            <summary>
+                Internet Explorer 9. Do not perform detection if "text/plain" is specified in
+                pwzMimeProposed.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.MimeFlags.ReturnUpdatedImgMimes">
+            <summary>
+                Internet Explorer 9. Returns image/png and image/jpeg instead of image/x-png and image/pjpeg.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.ModifyMenuFlags">
             <summary>
                 Provides enumerated values of menu items.
@@ -12065,6 +12144,65 @@
             </param>
             <param name="nIcons">
                 The number of icons to be extracted from the file.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.FindMimeFromData(System.IntPtr,System.String,System.Byte[],System.Int32,System.String,SilDev.WinApi.MimeFlags,System.IntPtr@,System.Int32)">
+            <summary>
+                Determines the MIME type from the data provided.
+            </summary>
+            <param name="pBc">
+                A pointer to the IBindCtx interface. Can be set to NULL.
+            </param>
+            <param name="pwzUrl">
+                A pointer to a string value that contains the URL of the data. Can be set to NULL if pBuffer
+                contains the data to be sniffed.
+            </param>
+            <param name="pBuffer">
+                A pointer to the buffer that contains the data to be sniffed. Can be set to NULL if pwzUrl
+                contains a valid URL.
+            </param>
+            <param name="cbSize">
+                An unsigned long integer value that contains the size of the buffer.
+            </param>
+            <param name="pwzMimeProposed">
+                A pointer to a string value that contains the proposed MIME type. This value is authoritative if
+                type cannot be determined from the data. If the proposed type contains a semi-colon (;) it is
+                removed. This parameter can be set to NULL.
+            </param>
+            <param name="dwMimeFlags">
+                The search and filter options.
+            </param>
+            <param name="ppwzMimeOut">
+                The address of a string value that receives the suggested MIME type.
+            </param>
+            <param name="dwReserved">
+                Reserved. Must be set to 0.
+            </param>
+            <returns>
+                This function can return one of these values.
+                <para>
+                    S_OK: The operation completed successfully.
+                </para>
+                <para>
+                    E_FAIL: The operation failed.
+                </para>
+                <para>
+                    E_INVALIDARG: One or more arguments are invalid.
+                </para>
+                <para>
+                    E_OUTOFMEMORY: There is insufficient memory to complete the operation.
+                </para>
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.FindMimeFromFile(System.String,SilDev.WinApi.MimeFlags)">
+            <summary>
+                Determines the MIME type from the file.
+            </summary>
+            <param name="fPath">
+                The file to check.
+            </param>
+            <param name="dwMimeFlags">
+                The search and filter options.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.FindNestedWindow(System.IntPtr@,System.String)">
@@ -14235,6 +14373,54 @@
                 If the nIconIndex parameter is -1, the phiconLarge parameter is NULL, and the phiconSmall
                 parameter is NULL, then the return value is the number of icons contained in the specified file.
                 Otherwise, the return value is the number of icons successfully extracted from the file.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.FindMimeFromData(System.IntPtr,System.String,System.Byte[],System.Int32,System.String,SilDev.WinApi.MimeFlags,System.IntPtr@,System.Int32)">
+            <summary>
+                Determines the MIME type from the data provided.
+            </summary>
+            <param name="pBc">
+                A pointer to the IBindCtx interface. Can be set to NULL.
+            </param>
+            <param name="pwzUrl">
+                A pointer to a string value that contains the URL of the data. Can be set to NULL if pBuffer
+                contains the data to be sniffed.
+            </param>
+            <param name="pBuffer">
+                A pointer to the buffer that contains the data to be sniffed. Can be set to NULL if pwzUrl
+                contains a valid URL.
+            </param>
+            <param name="cbSize">
+                An unsigned long integer value that contains the size of the buffer.
+            </param>
+            <param name="pwzMimeProposed">
+                A pointer to a string value that contains the proposed MIME type. This value is authoritative if
+                type cannot be determined from the data. If the proposed type contains a semi-colon (;) it is
+                removed. This parameter can be set to NULL.
+            </param>
+            <param name="dwMimeFlags">
+                The search and filter options.
+            </param>
+            <param name="ppwzMimeOut">
+                The address of a string value that receives the suggested MIME type.
+            </param>
+            <param name="dwReserved">
+                Reserved. Must be set to 0.
+            </param>
+            <returns>
+                This function can return one of these values.
+                <para>
+                    S_OK: The operation completed successfully.
+                </para>
+                <para>
+                    E_FAIL: The operation failed.
+                </para>
+                <para>
+                    E_INVALIDARG: One or more arguments are invalid.
+                </para>
+                <para>
+                    E_OUTOFMEMORY: There is insufficient memory to complete the operation.
+                </para>
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.FindWindow(System.String,System.String)">
