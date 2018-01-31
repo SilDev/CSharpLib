@@ -1065,6 +1065,17 @@
                 be applied.
             </summary>
         </member>
+        <member name="T:SilDev.Forms.PanelEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.Panel"/> class.
+            </summary>
+        </member>
+        <member name="T:SilDev.Forms.PanelEx.FakeProgressBar">
+            <summary>
+                ***This is an undocumented class and can be changed or removed in the future
+                without futher notice.
+            </summary>
+        </member>
         <member name="T:SilDev.Forms.ProgressBarEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.ProgressBar"/> class.
