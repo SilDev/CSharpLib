@@ -67,6 +67,7 @@
     <Compile Include="SilDev\Forms\LinkLabelEx.cs" />
     <Compile Include="SilDev\Forms\ListViewEx.cs" />
     <Compile Include="SilDev\Forms\MessageBoxEx.cs" />
+    <Compile Include="SilDev\Forms\PanelEx.cs" />
     <Compile Include="SilDev\Forms\ProgressBarEx.cs" />
     <Compile Include="SilDev\Forms\ProgressCircle.cs">
       <SubType>Component</SubType>
