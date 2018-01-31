@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Data.cs
-// Version:  2018-01-30 21:17
+// Version:  2018-01-31 21:47
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -1318,12 +1318,16 @@ namespace SilDev
         private static string VersionFilter(this string str)
         {
             var s = str;
-            if (!s.Any(x => !char.IsDigit(x) && x != '.'))
+            if (!s.Any(x => char.IsDigit(x) || x == '.') && s.Count(x => x == '.') > 0)
                 return s;
-            var ca = s.Where(char.IsDigit).ToArray();
-            if (ca.Length > 4)
-                ca = ca.Take(4).ToArray();
-            s = string.Join(".", ca);
+            var sa = s.Split('.').ToList();
+            for (var i = 0; i < sa.Count; i++)
+                sa[i] = new string(sa[i].Where(char.IsDigit).ToArray());
+            while (sa.Count < 4)
+                sa.Add("0");
+            if (sa.Count > 4)
+                sa = sa.Take(4).ToList();
+            s = sa.Join(".");
             return s;
         }
 
