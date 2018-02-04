@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2017-06-28 08:51
+// Version:  2018-02-04 04:20
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -183,7 +183,7 @@ namespace SilDev
             public static Process Zip(string srcDirOrFile, string destFile, string args = null, ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden, bool dispose = false)
             {
                 args = args ?? CompressTemplates.Default;
-                var prfx = Data.IsDir(srcDirOrFile) ? "\\*" : string.Empty;
+                var prfx = PathEx.IsDir(srcDirOrFile) ? "\\*" : string.Empty;
                 args = $"a {args} \"\"\"{destFile}\"\"\" \"\"\"{srcDirOrFile}{prfx}\"\"\"";
                 return ProcessEx.Start(ExePath, args, false, windowStyle, dispose);
             }

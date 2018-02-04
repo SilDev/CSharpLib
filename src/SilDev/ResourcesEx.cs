@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2017-10-31 07:54
+// Version:  2018-02-04 04:20
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -173,7 +173,7 @@ namespace SilDev
                 var path = PathEx.Combine(location);
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(path));
-                if (Data.IsDir(path))
+                if (PathEx.IsDir(path))
                     path = Path.Combine(path, "imageres.dll");
                 if (!File.Exists(path))
                     path = PathEx.Combine("%system%\\imageres.dll");
@@ -322,7 +322,7 @@ namespace SilDev
                 _components = new Container();
                 SuspendLayout();
                 var resPath = PathEx.Combine(path);
-                if (Data.IsDir(resPath))
+                if (PathEx.IsDir(resPath))
                     resPath = PathEx.Combine(path, "imageres.dll");
                 if (!File.Exists(resPath))
                     resPath = PathEx.Combine("%system%", "imageres.dll");

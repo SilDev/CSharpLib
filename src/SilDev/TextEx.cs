@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2017-06-28 08:51
+// Version:  2018-02-04 04:20
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -128,7 +128,7 @@ namespace SilDev
                 var srcDir = Path.GetDirectoryName(srcFile);
                 var newFile = PathEx.Combine(srcDir, Path.GetRandomFileName());
                 File.Create(newFile).Close();
-                Data.SetAttributes(newFile, FileAttributes.Hidden);
+                FileEx.SetAttributes(newFile, FileAttributes.Hidden);
                 using (var sr = new StreamReader(srcFile))
                 {
                     var ca = new char[4096];
@@ -148,7 +148,7 @@ namespace SilDev
                 }
                 File.Delete(srcFile);
                 File.Move(newFile, srcFile);
-                Data.SetAttributes(srcFile, FileAttributes.Normal);
+                FileEx.SetAttributes(srcFile, FileAttributes.Normal);
                 return true;
             }
             catch (Exception ex)
@@ -163,16 +163,45 @@ namespace SilDev
         /// </summary>
         public static class NewLineFormats
         {
-#pragma warning disable CS1591
+            /// <summary>
+            ///     Carriage Return.
+            /// </summary>
             public const string CarriageReturn = "\u000d";
+
+            /// <summary>
+            ///     Form Feed.
+            /// </summary>
             public const string FormFeed = "\u000c";
+
+            /// <summary>
+            ///     Line Feed.
+            /// </summary>
             public const string LineFeed = "\u000a";
+
+            /// <summary>
+            ///     Line Separator.
+            /// </summary>
             public const string LineSeparator = "\u2028";
+
+            /// <summary>
+            ///     Next Line.
+            /// </summary>
             public const string NextLine = "\u0085";
+
+            /// <summary>
+            ///     Paragraph Separator.
+            /// </summary>
             public const string ParagraphSeparator = "\u2029";
+
+            /// <summary>
+            ///     Vertical Tab.
+            /// </summary>
             public const string VerticalTab = "\u000b";
+
+            /// <summary>
+            ///     Carriage Return &amp; Line Feed.
+            /// </summary>
             public const string WindowsDefault = "\u000d\u000a";
-#pragma warning restore CS1591
         }
     }
 }

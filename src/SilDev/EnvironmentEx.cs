@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2018-01-16 11:56
+// Version:  2018-02-04 04:20
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -78,7 +78,7 @@ namespace SilDev
                         var path = Path.Combine(dir, "System.dll");
                         if (!File.Exists(path))
                             continue;
-                        _version = Data.GetVersion(path);
+                        _version = FileEx.GetVersion(path);
                         break;
                     }
                     if (_version > Environment.Version)
