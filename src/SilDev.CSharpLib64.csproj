@@ -80,11 +80,12 @@
     <Compile Include="SilDev\Compaction.cs" />
     <Compile Include="SilDev\Comparison.cs" />
     <Compile Include="SilDev\Crypto.cs" />
-    <Compile Include="SilDev\Data.cs" />
     <Compile Include="SilDev\Depiction.cs" />
     <Compile Include="SilDev\Desktop.cs" />
+    <Compile Include="SilDev\DirectoryEx.cs" />
     <Compile Include="SilDev\Elevation.cs" />
     <Compile Include="SilDev\EnvironmentEx.cs" />
+    <Compile Include="SilDev\FileEx.cs" />
     <Compile Include="SilDev\Ini.cs" />
     <Compile Include="SilDev\Json.cs" />
     <Compile Include="SilDev\KeyState.cs" />
