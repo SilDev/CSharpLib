@@ -3514,10 +3514,10 @@
                 allows a simple solution for the elevated execution of this order.
             </summary>
             <param name="linkPath">
-                The directory to be linked.
-            </param>
-            <param name="destFile">
                 The fully qualified name of the new link.
+            </param>
+            <param name="srcDir">
+                The directory to be linked.
             </param>
             <param name="backup">
                 true to create an backup for existing files; otherwise, false.
