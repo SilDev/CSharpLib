@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2017-07-26 17:24
+// Version:  2018-02-04 04:20
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,7 +17,9 @@ namespace SilDev
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Windows.Forms;
 
     /// <summary>
@@ -30,13 +32,30 @@ namespace SilDev
         /// </summary>
         public enum Location
         {
-#pragma warning disable CS1591
+            /// <summary>
+            ///     The taskbar is hidden.
+            /// </summary>
             Hidden,
+
+            /// <summary>
+            ///     The taskbar is located at the top.
+            /// </summary>
             Top,
+
+            /// <summary>
+            ///     The taskbar is located at the bottom.
+            /// </summary>
             Bottom,
+
+            /// <summary>
+            ///     The taskbar is on the left side.
+            /// </summary>
             Left,
+
+            /// <summary>
+            ///     The taskbar is on the right side.
+            /// </summary>
             Right
-#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -162,6 +181,66 @@ namespace SilDev
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public static void DeleteTab(IntPtr hWnd) =>
             (TaskBarInstance as ITaskBarList3)?.DeleteTab(hWnd);
+
+        private static bool PinUnpin(string path, bool pin)
+        {
+            var fPath = PathEx.Combine(path);
+            try
+            {
+                if (!File.Exists(fPath))
+                    throw new PathNotFoundException(path);
+                if (Environment.OSVersion.Version.Major >= 10)
+                    ProcessEx.CurrentPrincipal.ChangeName("explorer.exe");
+                var sb = new StringBuilder(byte.MaxValue);
+                var lib = WinApi.NativeMethods.LoadLibrary(WinApi.DllNames.Shell32);
+                WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
+                var type = Type.GetTypeFromProgID("Shell.Application");
+                dynamic shell = Activator.CreateInstance(type);
+                var fDir = Path.GetDirectoryName(path);
+                var dir = shell.NameSpace(fDir);
+                var fName = Path.GetFileName(path);
+                var link = dir.ParseName(fName);
+                var verb = sb.ToString();
+                var verbs = link.Verbs();
+                for (var i = 0; i < verbs.Count(); i++)
+                {
+                    var d = verbs.Item(i);
+                    if ((!pin || !d.Name.Equals(verb)) && (pin || !d.Name.Contains(verb)))
+                        continue;
+                    d.DoIt();
+                    break;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            finally
+            {
+                if (File.Exists(fPath) && Environment.OSVersion.Version.Major >= 10)
+                    ProcessEx.CurrentPrincipal.RestoreName();
+            }
+        }
+
+        /// <summary>
+        ///     Pin the specified file to taskbar.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to be pinned.
+        /// </param>
+        public static bool Pin(string path) =>
+            PinUnpin(path, true);
+
+        /// <summary>
+        ///     Unpin the specified file to taskbar.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to be unpinned.
+        /// </param>
+        public static bool Unpin(string path) =>
+            PinUnpin(path, false);
 
         /// <summary>
         ///     Provides static methods to manage a progress bar hosted in a taskbar button.
