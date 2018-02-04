@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Tray.cs
-// Version:  2017-10-31 03:28
+// Version:  2018-02-04 04:20
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -106,16 +106,6 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-        }
-
-        /// <summary>
-        ///     Refreshes the symbols of the visible system tray area.
-        /// </summary>
-        [Obsolete("Kept for backward compatibility; just use Refresh method.")]
-        public static bool RefreshVisibleArea()
-        {
-            RefreshAsync();
-            return true;
         }
     }
 }
