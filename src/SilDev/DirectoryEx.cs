@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-02-04 06:24
+// Version:  2018-02-04 07:35
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -464,10 +464,10 @@ namespace SilDev
         ///     allows a simple solution for the elevated execution of this order.
         /// </summary>
         /// <param name="linkPath">
-        ///     The directory to be linked.
-        /// </param>
-        /// <param name="destFile">
         ///     The fully qualified name of the new link.
+        /// </param>
+        /// <param name="srcDir">
+        ///     The directory to be linked.
         /// </param>
         /// <param name="backup">
         ///     true to create an backup for existing files; otherwise, false.
@@ -475,8 +475,8 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to create this link with highest privileges; otherwise, false.
         /// </param>
-        public static bool CreateSymbolicLink(string linkPath, string destFile, bool backup = false, bool elevated = false) =>
-            PathEx.IsDir(linkPath) && PathEx.CreateSymbolicLink(linkPath, destFile, false, backup, elevated);
+        public static bool CreateSymbolicLink(string linkPath, string srcDir, bool backup = false, bool elevated = false) =>
+            PathEx.CreateSymbolicLink(linkPath, srcDir, true, backup, elevated);
 
         /// <summary>
         ///     Removes an symbolic link of the specified directory link based on command prompt
@@ -492,7 +492,7 @@ namespace SilDev
         ///     true to remove this link with highest privileges; otherwise, false.
         /// </param>
         public static bool DestroySymbolicLink(string path, bool backup = false, bool elevated = false) =>
-            PathEx.DestroySymbolicLink(path, false, backup, elevated);
+            PathEx.DestroySymbolicLink(path, true, backup, elevated);
 
         /// <summary>
         ///     Find out which processes have a lock on the files of this directory instance member.

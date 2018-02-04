@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-02-04 07:35
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -496,7 +496,7 @@ namespace SilDev
         ///     true to create this link with highest privileges; otherwise, false.
         /// </param>
         public static bool CreateSymbolicLink(string linkPath, string destFile, bool backup = false, bool elevated = false) =>
-            !PathEx.IsDir(linkPath) && PathEx.CreateSymbolicLink(linkPath, destFile, false, backup, elevated);
+            PathEx.CreateSymbolicLink(linkPath, destFile, false, backup, elevated);
 
         /// <summary>
         ///     Removes an symbolic link of the specified file link based on command prompt
