@@ -2979,444 +2979,6 @@
                 The full path of the file to encrypt.
             </param>
         </member>
-        <member name="T:SilDev.Data">
-            <summary>
-                Provides static methods for the creation, copying, linking of data and to handle file
-                information.
-            </summary>
-        </member>
-        <member name="P:SilDev.Data.PrincipalName">
-            <summary>
-                <para>
-                    Gets the original name of the current principal.
-                </para>
-                <para>
-                    This variable is only set if <see cref="M:SilDev.Data.ChangePrincipalName(System.String)"/>
-                    was previously called.
-                </para>
-            </summary>
-        </member>
-        <member name="M:SilDev.Data.CopyTo(System.IO.Stream,System.IO.Stream,System.Int32)">
-            <summary>
-                Reads the bytes from the specified stream and writes them to another stream.
-            </summary>
-            <param name="src">
-                The <see cref="T:System.IO.Stream"/> to copy.
-            </param>
-            <param name="dest">
-                The <see cref="T:System.IO.Stream"/> to override.
-            </param>
-            <param name="buffer">
-                The maximum number of bytes to buffer.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.BinaryReplace(System.String,System.Byte[],System.Byte[],System.Boolean)">
-            <summary>
-                Replaces all occurrences of a specifed sequence of bytes in the specified
-                file with another sequence of bytes.
-            </summary>
-            <param name="file">
-                The file to overwrite.
-            </param>
-            <param name="oldValue">
-                The sequence of bytes to be replaced.
-            </param>
-            <param name="newValue">
-                The sequence of bytes to replace all all occurrences of oldValue.
-            </param>
-            <param name="backup">
-                true to create a backup; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
-            <summary>
-                Creates a link to the specified path.
-            </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
-            <param name="targetPath">
-                The fully qualified name of the new link.
-            </param>
-            <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
-            </param>
-            <param name="linkIcon">
-                The icon resource path for this shortcut.
-            </param>
-            <param name="skipExists">
-                true to skip existing shortcuts, even if the target path of
-                the same; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.CreateShortcut(System.String,System.String,System.String,System.Boolean)">
-            <summary>
-                Creates a link to the specified path.
-            </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
-            <param name="targetPath">
-                The fully qualified name of the new link.
-            </param>
-            <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
-            </param>
-            <param name="skipExists">
-                true to skip existing shortcuts, even if the target path of
-                the same; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.CreateShortcut(System.String,System.String,System.Boolean)">
-            <summary>
-                Creates a link to the specified path.
-            </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
-            <param name="targetPath">
-                The fully qualified name of the new link.
-            </param>
-            <param name="skipExists">
-                true to skip existing shortcuts, even if the target path of
-                the same; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetShortcutTarget(System.String)">
-            <summary>
-                Returns the target path of the specified link.
-            </summary>
-            <param name="path">
-                The shortcut path to get the target path.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.ChangePrincipalName(System.String)">
-            <summary>
-                Changes the name of the current principal.
-            </summary>
-            <param name="newName">
-                The new name for the current principal, which
-                cannot be longer than the original one.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.RestorePrincipalName">
-            <summary>
-                Restores the name of the current principal.
-            </summary>
-        </member>
-        <member name="M:SilDev.Data.PinToTaskbar(System.String)">
-            <summary>
-                Pin the specified file to taskbar.
-            </summary>
-            <param name="path">
-                The file to be pinned.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.UnpinFromTaskbar(System.String)">
-            <summary>
-                Unpin the specified file to taskbar.
-            </summary>
-            <param name="path">
-                The file to be unpinned.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.MatchAttributes(System.String,System.IO.FileAttributes)">
-            <summary>
-                Determines whether the specified path specifies the specified
-                file attributes.
-            </summary>
-            <param name="path">
-                The file or directory to check.
-            </param>
-            <param name="attr">
-                The attributes to match.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.MatchAttributes(System.IO.DirectoryInfo,System.IO.FileAttributes)">
-            <summary>
-                Determines whether the specified path specifies the specified
-                file attributes.
-            </summary>
-            <param name="dirInfo">
-                The directory to check.
-            </param>
-            <param name="attr">
-                The attributes to match.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.MatchAttributes(System.IO.FileInfo,System.IO.FileAttributes)">
-            <summary>
-                Determines whether the specified path specifies the specified
-                file attributes.
-            </summary>
-            <param name="fileInfo">
-                The file to check.
-            </param>
-            <param name="attr">
-                The attributes to match.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.DirOrFileIsLink(System.String)">
-            <summary>
-                Determines whether the specified path is specified as reparse
-                point.
-            </summary>
-            <param name="path">
-                The file or directory to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.DirIsLink(System.String)">
-            <summary>
-                Determines whether the specified directory is specified as
-                reparse point.
-            </summary>
-            <param name="path">
-                The directory to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.FileIsLink(System.String)">
-            <summary>
-                Determines whether the specified file is specified as reparse
-                point.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.IsDir(System.String)">
-            <summary>
-                Determines whether the specified path is specified as directory.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.SetAttributes(System.String,System.IO.FileAttributes)">
-            <summary>
-                Sets the specified attributes for the specified path.
-            </summary>
-            <param name="path">
-                The file or directory to change.
-            </param>
-            <param name="attr">
-                The attributes to set.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.DirLink(System.String,System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Creates a symbolic link to the specified directory based on command prompt
-                which allows a simple solution for the elevated execution of this order.
-            </summary>
-            <param name="linkPath">
-                The directory to be linked.
-            </param>
-            <param name="destDir">
-                The fully qualified name of the new link.
-            </param>
-            <param name="backup">
-                true to create an backup for existing directories; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to create this link with highest privileges; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.FileLink(System.String,System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Creates a symbolic link to the specified file based on command prompt which
-                allows a simple solution for the elevated execution of this order.
-            </summary>
-            <param name="linkPath">
-                The file to be linked.
-            </param>
-            <param name="destFile">
-                The fully qualified name of the new link.
-            </param>
-            <param name="backup">
-                true to create an backup for existing files; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to create this link with highest privileges; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.DirUnLink(System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Removes an symbolic link of the specified directory link based on command
-                prompt which allows a simple solution for the elevated execution of this
-                order.
-            </summary>
-            <param name="path">
-                The link to be removed.
-            </param>
-            <param name="backup">
-                true to restore found backups; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to remove this link with highest privileges; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.FileUnLink(System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Removes an symbolic link of the specified file link based on command prompt
-                which allows a simple solution for the elevated execution of this order.
-            </summary>
-            <param name="path">
-                The link to be removed.
-            </param>
-            <param name="backup">
-                true to restore found backups; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to remove this link with highest privileges; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.DirCopy(System.String,System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Copies an existing directory to a new location.
-            </summary>
-            <param name="srcDir">
-                The directory to copy.
-            </param>
-            <param name="destDir">
-                The fully qualified name of the destination directory.
-            </param>
-            <param name="subDirs">
-                true to inlcude subdirectories; otherwise, false.
-            </param>
-            <param name="overwrite">
-                true to allow an existing file to be overwritten; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.DirSafeMove(System.String,System.String)">
-            <summary>
-                Copies an existing directory to a new location and deletes the source
-                directory if this task has been completed successfully.
-            </summary>
-            <param name="srcDir">
-                The directory to move.
-            </param>
-            <param name="destDir">
-                The fully qualified name of the destination directory.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetFullHashCode(System.IO.DirectoryInfo,System.Boolean)">
-            <summary>
-                Returns the hash code for the specified directory instance member.
-            </summary>
-            <param name="dirInfo">
-                The directory instance member to get the hash code.
-            </param>
-            <param name="size">
-                true to include the size of each file; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetSize(System.IO.DirectoryInfo)">
-            <summary>
-                Gets the full size, in bytes, of the specified directory instance member.
-            </summary>
-            <param name="dirInfo">
-                The directory instance to get the size.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetLocks(System.Collections.Generic.IList{System.String})">
-            <summary>
-                Find out which processes have a lock on this file instance member.
-            </summary>
-            <param name="paths">
-                An array that contains the file paths to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetLocks(System.IO.FileInfo)">
-            <summary>
-                Find out which processes have a lock on this file instance member.
-            </summary>
-            <param name="fileInfo">
-                The file instance member to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetLocks(System.IO.DirectoryInfo)">
-            <summary>
-                Find out which processes have a lock on the files of this directory instance member.
-            </summary>
-            <param name="dirInfo">
-                The directory instance member to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetLocks(System.String)">
-            <summary>
-                Find out which processes have a lock on the specified path.
-            </summary>
-            <param name="path">
-                The full path to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.ForceDelete(System.String,System.Boolean,System.Int32)">
-            <summary>
-                <para>
-                    Deletes any file or directory.
-                </para>
-                <para>
-                    Immediately stops all specified processes that are locking this file or directory.
-                </para>
-            </summary>
-            <param name="path">
-                The path of the file or directory to be deleted.
-            </param>
-            <param name="elevated">
-                true to run this task with administrator privileges if the deletion fails; otherwise,
-                false.
-            </param>
-            <param name="timelimit">
-                The time limit in milliseconds.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetVersion(System.IO.FileInfo)">
-            <summary>
-                Returns the highest version information associated with this file instance member.
-            </summary>
-            <param name="fileInfo">
-                The file instance member to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetVersion(System.String)">
-            <summary>
-                Returns the highest version information associated with the specified file.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetFileVersion(System.IO.FileInfo)">
-            <summary>
-                Returns the file version information associated with this file instance member.
-            </summary>
-            <param name="fileInfo">
-                The file instance member to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetFileVersion(System.String)">
-            <summary>
-                Returns the file version information associated with the specified file.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetProductVersion(System.IO.FileInfo)">
-            <summary>
-                Returns the product version information associated with this file instance member.
-            </summary>
-            <param name="fileInfo">
-                The file instance member to check.
-            </param>
-        </member>
-        <member name="M:SilDev.Data.GetProductVersion(System.String)">
-            <summary>
-                Returns the product version information associated with the specified file.
-            </summary>
-            <param name="path">
-                The file to check.
-            </param>
-        </member>
         <member name="T:SilDev.Depiction">
             <summary>
                 Provides functionality for the <see cref="T:System.Drawing.Color"/>, <see cref="T:System.Drawing.Image"/> descended classes.
@@ -3698,6 +3260,327 @@
             <param name="extended">
                 true to wait for a window to refresh, if there is no window available;
                 otherwise, false.
+            </param>
+        </member>
+        <member name="T:SilDev.DirectoryEx">
+            <summary>
+                Provides static methods based on the <see cref="T:System.IO.Directory"/> class to perform
+                directory operations.
+            </summary>
+        </member>
+        <member name="M:SilDev.DirectoryEx.MatchAttributes(System.IO.DirectoryInfo,System.IO.FileAttributes)">
+            <summary>
+                Determines whether the specified path specifies the specified attributes.
+            </summary>
+            <param name="dirInfo">
+                The directory instance member that contains the directory to check.
+            </param>
+            <param name="attr">
+                The attributes to match.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.MatchAttributes(System.String,System.IO.FileAttributes)">
+            <summary>
+                Determines whether the specified path specifies the specified attributes.
+            </summary>
+            <param name="path">
+                The directory to check.
+            </param>
+            <param name="attr">
+                The attributes to match.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.IsHidden(System.IO.DirectoryInfo)">
+            <summary>
+                Determines whether the specified directory is hidden.
+            </summary>
+            <param name="dirInfo">
+                The directory instance member that contains the directory to check.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.IsHidden(System.String)">
+            <summary>
+                Determines whether the specified directory is hidden.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.IsLink(System.IO.DirectoryInfo)">
+            <summary>
+                Determines whether the specified directory is specified as reparse point.
+            </summary>
+            <param name="dirInfo">
+                The directory instance member that contains the directory to check.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.IsLink(System.String)">
+            <summary>
+                Determines whether the specified directory is specified as reparse point.
+            </summary>
+            <param name="path">
+                The directory to check.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.SetAttributes(System.String,System.IO.FileAttributes)">
+            <summary>
+                Sets the specified attributes for the specified directory.
+            </summary>
+            <param name="path">
+                The directory to change.
+            </param>
+            <param name="attr">
+                The attributes to set.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.Copy(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Copies an existing directory to a new location.
+            </summary>
+            <param name="srcDir">
+                The directory to copy.
+            </param>
+            <param name="destDir">
+                The fully qualified name of the destination directory.
+            </param>
+            <param name="subDirs">
+                true to inlcude subdirectories; otherwise, false.
+            </param>
+            <param name="overwrite">
+                true to allow existing files to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.Copy(System.IO.DirectoryInfo,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Copies an existing directory to a new location.
+            </summary>
+            <param name="dirInfo">
+                The directory instance member that contains the directory to copy.
+            </param>
+            <param name="destDir">
+                The fully qualified name of the destination directory.
+            </param>
+            <param name="subDirs">
+                true to inlcude subdirectories; otherwise, false.
+            </param>
+            <param name="overwrite">
+                true to allow existing files to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.Move(System.String,System.String,System.Boolean)">
+            <summary>
+                Copies an existing directory to a new location and deletes the source
+                directory if this task has been completed successfully.
+            </summary>
+            <param name="srcDir">
+                The directory to move.
+            </param>
+            <param name="destDir">
+                The fully qualified name of the destination directory.
+            </param>
+            <param name="overwrite">
+                true to allow existing files to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.Delete(System.String)">
+            <summary>
+                Deletes the specified directory, if it exists.
+            </summary>
+            <param name="path">
+                The path of the directory to be deleted.
+            </param>
+            <exception cref="T:System.IO.IOException">
+                See <see cref="M:System.IO.Directory.Delete(System.String,System.Boolean)"/>.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                See <see cref="M:System.IO.Directory.Delete(System.String,System.Boolean)"/>.
+            </exception>
+        </member>
+        <member name="M:SilDev.DirectoryEx.TryDelete(System.String)">
+            <summary>
+                Tries to delete the specified directory.
+            </summary>
+            <param name="path">
+                The path of the directory to be deleted.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.CreateLink(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Creates a symbolic link to the specified directory based on command prompt
+                which allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="linkPath">
+                The directory to be linked.
+            </param>
+            <param name="destDir">
+                The fully qualified name of the new link.
+            </param>
+            <param name="backup">
+                true to create an backup for existing directories; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to create this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.DestroyLink(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Removes an symbolic link of the specified directory link based on command
+                prompt which allows a simple solution for the elevated execution of this
+                order.
+            </summary>
+            <param name="path">
+                The link to be removed.
+            </param>
+            <param name="backup">
+                true to restore found backups; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to remove this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetFullHashCode(System.IO.DirectoryInfo,System.Boolean)">
+            <summary>
+                Returns the hash code for the specified directory instance member.
+            </summary>
+            <param name="dirInfo">
+                The directory instance member to get the hash code.
+            </param>
+            <param name="size">
+                true to include the size of each file; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetFullHashCode(System.String,System.Boolean)">
+            <summary>
+                Returns the hash code for the specified directory instance member.
+            </summary>
+            <param name="dir">
+                The directory to get the hash code.
+            </param>
+            <param name="size">
+                true to include the size of each file; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetSize(System.IO.DirectoryInfo)">
+            <summary>
+                Gets the full size, in bytes, of the specified directory instance member.
+            </summary>
+            <param name="dirInfo">
+                The directory instance to get the size.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetSize(System.String)">
+            <summary>
+                Gets the full size, in bytes, of the specified directory instance member.
+            </summary>
+            <param name="dir">
+                The directory instance to get the size.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified directory.
+            </summary>
+            <param name="targetPath">
+                The directory to be linked.
+            </param>
+            <param name="linkPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="startArgs">
+                The arguments which applies when this shortcut is executed.
+            </param>
+            <param name="linkIcon">
+                The icon resource path for this shortcut.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified path.
+            </summary>
+            <param name="targetPath">
+                The directory to be linked.
+            </param>
+            <param name="linkPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="startArgs">
+                The arguments which applies when this shortcut is executed.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified path.
+            </summary>
+            <param name="targetPath">
+                The directory to be linked.
+            </param>
+            <param name="linkPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetShortcutTarget(System.String)">
+            <summary>
+                Returns the target path of the specified link.
+                <para>
+                    The target path is returned only if the specified target is an existing
+                    directory.
+                </para>
+            </summary>
+            <param name="path">
+                The shortcut path to get the target path.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.CreateSymbolicLink(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Creates a symbolic link to the specified directory based on command prompt which
+                allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="linkPath">
+                The directory to be linked.
+            </param>
+            <param name="destFile">
+                The fully qualified name of the new link.
+            </param>
+            <param name="backup">
+                true to create an backup for existing files; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to create this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.DestroySymbolicLink(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Removes an symbolic link of the specified directory link based on command prompt
+                which allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="path">
+                The link to be removed.
+            </param>
+            <param name="backup">
+                true to restore found backups; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to remove this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetLocks(System.IO.DirectoryInfo)">
+            <summary>
+                Find out which processes have a lock on the files of this directory instance member.
+            </summary>
+            <param name="dirInfo">
+                The directory instance member to check.
             </param>
         </member>
         <member name="T:SilDev.Elevation">
@@ -4073,6 +3956,312 @@
             </param>
             <param name="restorePointType">
                 The type of restore point.
+            </param>
+        </member>
+        <member name="T:SilDev.FileEx">
+            <summary>
+                Provides static methods based on the <see cref="T:System.IO.File"/> class to perform file
+                operations.
+            </summary>
+        </member>
+        <member name="M:SilDev.FileEx.MatchAttributes(System.IO.FileInfo,System.IO.FileAttributes)">
+            <summary>
+                Determines whether the specified path specifies the specified file attributes.
+            </summary>
+            <param name="fileInfo">
+                The file instance member that contains the file to check.
+            </param>
+            <param name="attr">
+                The attributes to match.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.MatchAttributes(System.String,System.IO.FileAttributes)">
+            <summary>
+                Determines whether the specified path specifies the specified file attributes.
+            </summary>
+            <param name="path">
+                The file or directory to check.
+            </param>
+            <param name="attr">
+                The attributes to match.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.IsHidden(System.IO.FileInfo)">
+            <summary>
+                Determines whether the specified file is hidden.
+            </summary>
+            <param name="fileInfo">
+                The file instance member that contains the file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.IsHidden(System.String)">
+            <summary>
+                Determines whether the specified file is hidden.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.IsLink(System.IO.FileInfo)">
+            <summary>
+                Determines whether the specified file is specified as reparse point.
+            </summary>
+            <param name="fileInfo">
+                The file instance member that contains the file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.IsLink(System.String)">
+            <summary>
+                Determines whether the specified file is specified as reparse point.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.SetAttributes(System.String,System.IO.FileAttributes)">
+            <summary>
+                Sets the specified attributes for the specified file.
+            </summary>
+            <param name="file">
+                The file to change.
+            </param>
+            <param name="attr">
+                The attributes to set.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.BinaryReplace(System.String,System.Byte[],System.Byte[],System.Boolean)">
+            <summary>
+                Replaces all occurrences of a specifed sequence of bytes in the specified file
+                with another sequence of bytes.
+            </summary>
+            <param name="file">
+                The file to overwrite.
+            </param>
+            <param name="oldValue">
+                The sequence of bytes to be replaced.
+            </param>
+            <param name="newValue">
+                The sequence of bytes to replace all all occurrences of oldValue.
+            </param>
+            <param name="backup">
+                true to create a backup; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Copy(System.String,System.String,System.Boolean)">
+            <summary>
+                Copies an existing file to a new location.
+            </summary>
+            <param name="srcFile">
+                The file to copy.
+            </param>
+            <param name="destFile">
+                The fully qualified name of the destination file.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Move(System.String,System.String,System.Boolean)">
+            <summary>
+                Copies an existing file to a new location and deletes the source file if
+                this task has been completed successfully.
+            </summary>
+            <param name="srcFile">
+                The file to move.
+            </param>
+            <param name="destFile">
+                The fully qualified name of the destination file.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Delete(System.String)">
+            <summary>
+                Deletes the specified file, if it exists.
+            </summary>
+            <param name="path">
+                The path of the file to be deleted.
+            </param>
+            <exception cref="T:System.IO.IOException">
+                See <see cref="M:System.IO.File.Delete(System.String)"/>.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                See <see cref="M:System.IO.File.Delete(System.String)"/>.
+            </exception>
+        </member>
+        <member name="M:SilDev.FileEx.TryDelete(System.String)">
+            <summary>
+                Tries to delete the specified file.
+            </summary>
+            <param name="path">
+                The path of the file to be deleted.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified path.
+            </summary>
+            <param name="targetPath">
+                The file to be linked.
+            </param>
+            <param name="linkPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="startArgs">
+                The arguments which applies when this shortcut is executed.
+            </param>
+            <param name="linkIcon">
+                The icon resource path for this shortcut.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified path.
+            </summary>
+            <param name="linkPath">
+                The file or directory to be linked.
+            </param>
+            <param name="targetPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="startArgs">
+                The arguments which applies when this shortcut is executed.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified path.
+            </summary>
+            <param name="linkPath">
+                The file or directory to be linked.
+            </param>
+            <param name="targetPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.DestroyShortcut(System.String)">
+            <summary>
+                Removes a link of the specified file.
+            </summary>
+            <param name="path">
+                The shortcut to be removed.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetShortcutTarget(System.String)">
+            <summary>
+                Returns the target path of the specified link.
+                <para>
+                    The target path is returned only if the specified target is an existing
+                    file.
+                </para>
+            </summary>
+            <param name="path">
+                The shortcut path to get the target path.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.CreateSymbolicLink(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Creates a symbolic link to the specified file based on command prompt which
+                allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="linkPath">
+                The file to be linked.
+            </param>
+            <param name="destFile">
+                The fully qualified name of the new link.
+            </param>
+            <param name="backup">
+                true to create an backup for existing files; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to create this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.DestroySymbolicLink(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Removes an symbolic link of the specified file link based on command prompt
+                which allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="path">
+                The link to be removed.
+            </param>
+            <param name="backup">
+                true to restore found backups; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to remove this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetLocks(System.IO.FileInfo)">
+            <summary>
+                Find out which processes have a lock on this file instance member.
+            </summary>
+            <param name="fileInfo">
+                The file instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetVersion(System.IO.FileInfo)">
+            <summary>
+                Returns the highest version information associated with this file instance
+                member.
+            </summary>
+            <param name="fileInfo">
+                The file instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetVersion(System.String)">
+            <summary>
+                Returns the highest version information associated with the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetFileVersion(System.IO.FileInfo)">
+            <summary>
+                Returns the file version information associated with this file instance
+                member.
+            </summary>
+            <param name="fileInfo">
+                The file instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetFileVersion(System.String)">
+            <summary>
+                Returns the file version information associated with the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetProductVersion(System.IO.FileInfo)">
+            <summary>
+                Returns the product version information associated with this file instance
+                member.
+            </summary>
+            <param name="fileInfo">
+                The file instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetProductVersion(System.String)">
+            <summary>
+                Returns the product version information associated with the specified file.
+            </summary>
+            <param name="path">
+                The file to check.
             </param>
         </member>
         <member name="T:SilDev.Ini">
@@ -6925,12 +7114,40 @@
                 An array of files and directories to check.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.DirOrFileIsLink(System.String)">
+            <summary>
+                Determines whether the specified path is specified as reparse
+                point.
+            </summary>
+            <param name="path">
+                The file or directory to check.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.IsValidPath(System.String)">
             <summary>
                 Determines whether the specified path has a valid format.
             </summary>
             <param name="path">
                 The specified path to check.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.IsDir(System.String)">
+            <summary>
+                Determines whether the specified path is specified as directory.
+            </summary>
+            <param name="path">
+                The path to check.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.SetAttributes(System.String,System.IO.FileAttributes)">
+            <summary>
+                Sets the specified attributes for the specified path.
+            </summary>
+            <param name="path">
+                The file or directory to change.
+            </param>
+            <param name="attr">
+                The attributes to set.
             </param>
         </member>
         <member name="M:SilDev.PathEx.Combine(System.Char[],System.String[])">
@@ -7069,12 +7286,143 @@
                 The length of the hash. Valid values are 4 through 24.
             </param>
         </member>
-        <member name="M:SilDev.PathEx.FileIs64Bit(System.String)">
+        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
-                Determines whether the specified file was compiled for 64-bit platform environments.
+                Creates a link to the specified path.
+            </summary>
+            <param name="targetPath">
+                The file or directory to be linked.
+            </param>
+            <param name="linkPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="startArgs">
+                The arguments which applies when this shortcut is executed.
+            </param>
+            <param name="linkIcon">
+                The icon resource path for this shortcut.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified path.
+            </summary>
+            <param name="linkPath">
+                The file or directory to be linked.
+            </param>
+            <param name="targetPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="startArgs">
+                The arguments which applies when this shortcut is executed.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.Boolean)">
+            <summary>
+                Creates a link to the specified path.
+            </summary>
+            <param name="linkPath">
+                The file or directory to be linked.
+            </param>
+            <param name="targetPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="skipExists">
+                true to skip existing shortcuts, even if the target path of
+                the same; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.DestroyShortcut(System.String)">
+            <summary>
+                Removes a link of the specified file or directory.
             </summary>
             <param name="path">
-                The file to check.
+                The shortcut to be removed.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.GetShortcutTarget(System.String)">
+            <summary>
+                Returns the target path of the specified link.
+            </summary>
+            <param name="path">
+                The shortcut path to get the target path.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.CreateSymbolicLink(System.String,System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+                Creates a symbolic link to the specified file or directory based on command prompt
+                which allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="linkPath">
+                The file or directory to be linked.
+            </param>
+            <param name="destPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="backup">
+                true to create an backup for existing files; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to create this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.DestroySymbolicLink(System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+                Removes an symbolic link of the specified file or directory link based on command
+                prompt which allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="path">
+                The link to be removed.
+            </param>
+            <param name="backup">
+                true to restore found backups; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to remove this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.GetLocks(System.Collections.Generic.IList{System.String})">
+            <summary>
+                Find out which processes have a lock on this file instance member.
+            </summary>
+            <param name="paths">
+                An array that contains the file paths to check.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.GetLocks(System.String)">
+            <summary>
+                Find out which processes have a lock on the specified path.
+            </summary>
+            <param name="path">
+                The full path to check.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.ForceDelete(System.String,System.Boolean,System.Int32)">
+            <summary>
+                <para>
+                    Deletes any file or directory.
+                </para>
+                <para>
+                    Immediately stops all specified processes that are locking this file or directory.
+                </para>
+            </summary>
+            <param name="path">
+                The path of the file or directory to be deleted.
+            </param>
+            <param name="elevated">
+                true to run this task with administrator privileges if the deletion fails; otherwise,
+                false.
+            </param>
+            <param name="timelimit">
+                The time limit in milliseconds.
             </param>
         </member>
         <member name="T:SilDev.PathNotFoundException">
@@ -7675,6 +8023,41 @@
             <param name="commands">
                 The commands to execute.
             </param>
+        </member>
+        <member name="T:SilDev.ProcessEx.CurrentPrincipal">
+            <summary>
+                Provides the functionality to handle the current principal name.
+            </summary>
+        </member>
+        <member name="P:SilDev.ProcessEx.CurrentPrincipal.Name">
+            <summary>
+                <para>
+                    Gets the original name of the current principal.
+                </para>
+                <para>
+                    This variable is only set if <see cref="M:SilDev.ProcessEx.CurrentPrincipal.GetOriginalName"/> was
+                    previously called.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessEx.CurrentPrincipal.GetOriginalName">
+            <summary>
+                Changes the name of the current principal.
+            </summary>
+        </member>
+        <member name="M:SilDev.ProcessEx.CurrentPrincipal.ChangeName(System.String)">
+            <summary>
+                Changes the name of the current principal.
+            </summary>
+            <param name="newName">
+                The new name for the current principal, which cannot be longer than
+                the original one.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.CurrentPrincipal.RestoreName">
+            <summary>
+                Restores the name of the current principal.
+            </summary>
         </member>
         <member name="T:SilDev.ProcessEx.SendHelper">
             <summary>
@@ -8477,6 +8860,20 @@
                 Stands for exabyte or exbibyte.
             </summary>
         </member>
+        <member name="M:SilDev.Reorganize.CopyTo(System.IO.Stream,System.IO.Stream,System.Int32)">
+            <summary>
+                Reads the bytes from the specified stream and writes them to another stream.
+            </summary>
+            <param name="src">
+                The <see cref="T:System.IO.Stream"/> to copy.
+            </param>
+            <param name="dest">
+                The <see cref="T:System.IO.Stream"/> to override.
+            </param>
+            <param name="buffer">
+                The maximum number of bytes to buffer.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.SerializeObject``1(``0)">
             <summary>
                 Serializes this object graph into a sequence of bytes.
@@ -9147,6 +9544,31 @@
                 Provides enumerated flags of the taskbar location.
             </summary>
         </member>
+        <member name="F:SilDev.TaskBar.Location.Hidden">
+            <summary>
+                The taskbar is hidden.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBar.Location.Top">
+            <summary>
+                The taskbar is located at the top.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBar.Location.Bottom">
+            <summary>
+                The taskbar is located at the bottom.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBar.Location.Left">
+            <summary>
+                The taskbar is on the left side.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBar.Location.Right">
+            <summary>
+                The taskbar is on the right side.
+            </summary>
+        </member>
         <member name="T:SilDev.TaskBar.State">
             <summary>
                 Provides enumerated options that control the current state of the taskbar.
@@ -9211,6 +9633,22 @@
             </summary>
             <param name="hWnd">
                 A handle to the window to be deleted from the taskbar.
+            </param>
+        </member>
+        <member name="M:SilDev.TaskBar.Pin(System.String)">
+            <summary>
+                Pin the specified file to taskbar.
+            </summary>
+            <param name="path">
+                The file to be pinned.
+            </param>
+        </member>
+        <member name="M:SilDev.TaskBar.Unpin(System.String)">
+            <summary>
+                Unpin the specified file to taskbar.
+            </summary>
+            <param name="path">
+                The file to be unpinned.
             </param>
         </member>
         <member name="T:SilDev.TaskBar.Progress">
@@ -9356,6 +9794,46 @@
                 Provides <see cref="T:System.String"/> values of line separator characters.
             </summary>
         </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.CarriageReturn">
+            <summary>
+                Carriage Return.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.FormFeed">
+            <summary>
+                Form Feed.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.LineFeed">
+            <summary>
+                Line Feed.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.LineSeparator">
+            <summary>
+                Line Separator.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.NextLine">
+            <summary>
+                Next Line.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.ParagraphSeparator">
+            <summary>
+                Paragraph Separator.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.VerticalTab">
+            <summary>
+                Vertical Tab.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.WindowsDefault">
+            <summary>
+                Carriage Return &amp; Line Feed.
+            </summary>
+        </member>
         <member name="T:SilDev.Tray">
             <summary>
                 Provides the functionality to manage the items of the system tray area.
@@ -9376,11 +9854,6 @@
             <param name="wait">
                 Delay between refreshes in milliseconds.
             </param>
-        </member>
-        <member name="M:SilDev.Tray.RefreshVisibleArea">
-            <summary>
-                Refreshes the symbols of the visible system tray area.
-            </summary>
         </member>
         <member name="T:SilDev.WinApi">
             <summary>
