@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2017-10-29 23:56
+// Version:  2018-02-04 04:20
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,6 +22,7 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Management;
+    using System.Runtime.InteropServices;
     using System.Threading;
     using Microsoft.Win32.SafeHandles;
     using Properties;
@@ -777,6 +778,116 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides the functionality to handle the current principal name.
+        /// </summary>
+        public static class CurrentPrincipal
+        {
+            /// <summary>
+            ///     <para>
+            ///         Gets the original name of the current principal.
+            ///     </para>
+            ///     <para>
+            ///         This variable is only set if <see cref="GetOriginalName"/> was
+            ///         previously called.
+            ///     </para>
+            /// </summary>
+            public static string Name { get; private set; }
+
+            private static void GetPointers(out IntPtr offset, out IntPtr buffer)
+            {
+                var curHandle = Process.GetCurrentProcess().Handle;
+                var pebBaseAddress = WinApi.NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
+                var processParameters = Marshal.ReadIntPtr(pebBaseAddress, 4 * IntPtr.Size);
+                var unicodeSize = IntPtr.Size * 2;
+                offset = processParameters.Increment(new IntPtr(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));
+                buffer = Marshal.ReadIntPtr(offset, IntPtr.Size);
+            }
+
+            /// <summary>
+            ///     Changes the name of the current principal.
+            /// </summary>
+            public static string GetOriginalName()
+            {
+                if (!string.IsNullOrEmpty(Name))
+                    return Name;
+                try
+                {
+                    GetPointers(out var offset, out var buffer);
+                    var len = Marshal.ReadInt16(offset);
+                    if (string.IsNullOrEmpty(Name))
+                        Name = Marshal.PtrToStringUni(buffer, len / 2);
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+                return Name;
+            }
+
+            /// <summary>
+            ///     Changes the name of the current principal.
+            /// </summary>
+            /// <param name="newName">
+            ///     The new name for the current principal, which cannot be longer than
+            ///     the original one.
+            /// </param>
+            public static void ChangeName(string newName)
+            {
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(newName))
+                        throw new ArgumentNullException(nameof(newName));
+                    GetPointers(out var offset, out var buffer);
+                    var len = Marshal.ReadInt16(offset);
+                    if (string.IsNullOrEmpty(Name))
+                        Name = Marshal.PtrToStringUni(buffer, len / 2);
+                    var principalDir = Path.GetDirectoryName(Name);
+                    if (string.IsNullOrEmpty(principalDir))
+                        throw new PathNotFoundException(principalDir);
+                    var newPrincipalName = Path.Combine(principalDir, newName);
+                    if (newPrincipalName.Length > Name.Length)
+                        throw new ArgumentException("The new principal name cannot be longer than the original one.");
+                    var ptr = buffer;
+                    foreach (var c in newPrincipalName)
+                    {
+                        Marshal.WriteInt16(ptr, c);
+                        ptr = ptr.Increment(new IntPtr(2));
+                    }
+                    Marshal.WriteInt16(ptr, 0);
+                    Marshal.WriteInt16(offset, (short)(newPrincipalName.Length * 2));
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+            }
+
+            /// <summary>
+            ///     Restores the name of the current principal.
+            /// </summary>
+            public static void RestoreName()
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(Name))
+                        throw new InvalidOperationException();
+                    GetPointers(out var offset, out var buffer);
+                    foreach (var c in Name)
+                    {
+                        Marshal.WriteInt16(buffer, c);
+                        buffer = buffer.Increment(new IntPtr(2));
+                    }
+                    Marshal.WriteInt16(buffer, 0);
+                    Marshal.WriteInt16(offset, (short)(Name.Length * 2));
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+            }
+        }
+
+        /// <summary>
         ///     Provides basic functionality based on <see cref="Send(string,bool,bool)"/>.
         /// </summary>
         public static class SendHelper
@@ -805,7 +916,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(fullPath))
                     return null;
                 var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                var command = string.Format(Data.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
+                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
                 command = string.Format(Resources.Cmd_WaitThenCmd, time, command);
                 return Send(command, runAsAdmin, dispose);
             }
@@ -846,7 +957,7 @@ namespace SilDev
                 var name = processName;
                 if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
                     name += extension;
-                var command = string.Format(Data.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
+                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
                 command = string.Format(Resources.Cmd_WaitForProcThenCmd, name, command);
                 return Send(command, runAsAdmin, dispose);
             }
