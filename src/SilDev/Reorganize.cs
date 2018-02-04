@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-01-16 11:00
+// Version:  2018-02-04 04:20
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -72,6 +72,33 @@ namespace SilDev
             ///     Stands for exabyte or exbibyte.
             /// </summary>
             EB = 6
+        }
+
+        /// <summary>
+        ///     Reads the bytes from the specified stream and writes them to another stream.
+        /// </summary>
+        /// <param name="src">
+        ///     The <see cref="Stream"/> to copy.
+        /// </param>
+        /// <param name="dest">
+        ///     The <see cref="Stream"/> to override.
+        /// </param>
+        /// <param name="buffer">
+        ///     The maximum number of bytes to buffer.
+        /// </param>
+        public static void CopyTo(this Stream src, Stream dest, int buffer = 4096)
+        {
+            try
+            {
+                var ba = new byte[buffer];
+                int i;
+                while ((i = src.Read(ba, 0, ba.Length)) > 0)
+                    dest.Write(ba, 0, i);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
         }
 
         /// <summary>
