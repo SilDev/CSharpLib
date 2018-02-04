@@ -3404,40 +3404,6 @@
                 The path of the directory to be deleted.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.CreateLink(System.String,System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Creates a symbolic link to the specified directory based on command prompt
-                which allows a simple solution for the elevated execution of this order.
-            </summary>
-            <param name="linkPath">
-                The directory to be linked.
-            </param>
-            <param name="destDir">
-                The fully qualified name of the new link.
-            </param>
-            <param name="backup">
-                true to create an backup for existing directories; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to create this link with highest privileges; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.DirectoryEx.DestroyLink(System.String,System.Boolean,System.Boolean)">
-            <summary>
-                Removes an symbolic link of the specified directory link based on command
-                prompt which allows a simple solution for the elevated execution of this
-                order.
-            </summary>
-            <param name="path">
-                The link to be removed.
-            </param>
-            <param name="backup">
-                true to restore found backups; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to remove this link with highest privileges; otherwise, false.
-            </param>
-        </member>
         <member name="M:SilDev.DirectoryEx.GetFullHashCode(System.IO.DirectoryInfo,System.Boolean)">
             <summary>
                 Returns the hash code for the specified directory instance member.
