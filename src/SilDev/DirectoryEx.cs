@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-02-04 06:24
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -290,42 +290,6 @@ namespace SilDev
                 return false;
             }
         }
-
-        /// <summary>
-        ///     Creates a symbolic link to the specified directory based on command prompt
-        ///     which allows a simple solution for the elevated execution of this order.
-        /// </summary>
-        /// <param name="linkPath">
-        ///     The directory to be linked.
-        /// </param>
-        /// <param name="destDir">
-        ///     The fully qualified name of the new link.
-        /// </param>
-        /// <param name="backup">
-        ///     true to create an backup for existing directories; otherwise, false.
-        /// </param>
-        /// <param name="elevated">
-        ///     true to create this link with highest privileges; otherwise, false.
-        /// </param>
-        public static bool CreateLink(string linkPath, string destDir, bool backup = false, bool elevated = false) =>
-            PathEx.IsDir(linkPath) && PathEx.CreateSymbolicLink(linkPath, destDir, true, backup, elevated);
-
-        /// <summary>
-        ///     Removes an symbolic link of the specified directory link based on command
-        ///     prompt which allows a simple solution for the elevated execution of this
-        ///     order.
-        /// </summary>
-        /// <param name="path">
-        ///     The link to be removed.
-        /// </param>
-        /// <param name="backup">
-        ///     true to restore found backups; otherwise, false.
-        /// </param>
-        /// <param name="elevated">
-        ///     true to remove this link with highest privileges; otherwise, false.
-        /// </param>
-        public static bool DestroyLink(string path, bool backup = false, bool elevated = false) =>
-            PathEx.DestroySymbolicLink(path, true, backup, elevated);
 
         /// <summary>
         ///     Returns the hash code for the specified directory instance member.
