@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-02-05 07:46
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -435,20 +435,23 @@ namespace SilDev
         /// <param name="linkIcon">
         ///     The icon resource path for this shortcut.
         /// </param>
+        /// <param name="linkIconId">
+        ///     The icon resource id for this shortcut.
+        /// </param>
         /// <param name="skipExists">
         ///     true to skip existing shortcuts, even if the target path of
         ///     the same; otherwise, false.
         /// </param>
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
-        public static bool CreateShortcut(string targetPath, string linkPath, string startArgs = null, string linkIcon = null, bool skipExists = false)
+        public static bool CreateShortcut(string targetPath, string linkPath, string startArgs = null, string linkIcon = null, int linkIconId = 0, bool skipExists = false)
         {
             try
             {
                 var ext = Path.GetExtension(linkPath);
                 var link = Combine(!ext.EqualsEx(".lnk") ? $"{linkPath}.lnk" : linkPath);
-                var name = Path.GetDirectoryName(link);
+                var dir = Path.GetDirectoryName(link);
                 var path = Combine(targetPath);
-                if (!Directory.Exists(name) || !DirOrFileExists(path))
+                if (!Directory.Exists(dir) || !DirOrFileExists(path))
                     return false;
                 if (File.Exists(link))
                 {
@@ -456,15 +459,28 @@ namespace SilDev
                         return true;
                     File.Delete(link);
                 }
-                path = EnvironmentEx.GetVariablePathFull(path, false, false);
-                name = Path.GetDirectoryName(path);
+                var env = EnvironmentEx.GetVariablePathFull(path, false, false);
+                dir = Path.GetDirectoryName(env);
                 var shell = (IShellLink)new ShellLink();
                 if (!string.IsNullOrWhiteSpace(startArgs))
                     shell.SetArguments(startArgs);
                 shell.SetDescription(string.Empty);
-                shell.SetPath(path);
-                shell.SetIconLocation(linkIcon ?? path, 0);
-                shell.SetWorkingDirectory(name);
+                shell.SetPath(env);
+                var ico = EnvironmentEx.GetVariablePathFull(linkIcon, false, false);
+                var id = linkIconId;
+                if (string.IsNullOrWhiteSpace(ico))
+                    if (IsDir(path))
+                    {
+                        ico = "%SystemRoot%\\System32\\imageres.dll";
+                        id = 3;
+                    }
+                    else
+                    {
+                        ico = env;
+                        id = 0;
+                    }
+                shell.SetIconLocation(ico, id);
+                shell.SetWorkingDirectory(dir);
                 ((IPersistFile)shell).Save(link, false);
                 return File.Exists(link);
             }
@@ -492,7 +508,7 @@ namespace SilDev
         ///     the same; otherwise, false.
         /// </param>
         public static bool CreateShortcut(string targetPath, string linkPath, string startArgs, bool skipExists) =>
-            CreateShortcut(targetPath, linkPath, startArgs, null, skipExists);
+            CreateShortcut(targetPath, linkPath, startArgs, null, 0, skipExists);
 
         /// <summary>
         ///     Creates a link to the specified path.
@@ -508,7 +524,7 @@ namespace SilDev
         ///     the same; otherwise, false.
         /// </param>
         public static bool CreateShortcut(string targetPath, string linkPath, bool skipExists) =>
-            CreateShortcut(targetPath, linkPath, null, null, skipExists);
+            CreateShortcut(targetPath, linkPath, null, null, 0, skipExists);
 
         /// <summary>
         ///     Removes a link of the specified file or directory.

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-02-04 07:35
+// Version:  2018-02-05 07:46
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -401,12 +401,15 @@ namespace SilDev
         /// <param name="linkIcon">
         ///     The icon resource path for this shortcut.
         /// </param>
+        /// <param name="linkIconId">
+        ///     The icon resource id for this shortcut.
+        /// </param>
         /// <param name="skipExists">
         ///     true to skip existing shortcuts, even if the target path of
         ///     the same; otherwise, false.
         /// </param>
-        public static bool CreateShortcut(string targetPath, string linkPath, string startArgs = null, string linkIcon = null, bool skipExists = false) =>
-            PathEx.IsDir(targetPath) && PathEx.CreateShortcut(targetPath, linkPath, startArgs, linkIcon, skipExists);
+        public static bool CreateShortcut(string targetPath, string linkPath, string startArgs = null, string linkIcon = null, int linkIconId = 0, bool skipExists = false) =>
+            PathEx.IsDir(targetPath) && PathEx.CreateShortcut(targetPath, linkPath, startArgs, linkIcon, linkIconId, skipExists);
 
         /// <summary>
         ///     Creates a link to the specified path.
@@ -425,7 +428,7 @@ namespace SilDev
         ///     the same; otherwise, false.
         /// </param>
         public static bool CreateShortcut(string targetPath, string linkPath, string startArgs, bool skipExists) =>
-            CreateShortcut(targetPath, linkPath, startArgs, null, skipExists);
+            CreateShortcut(targetPath, linkPath, startArgs, null, 0, skipExists);
 
         /// <summary>
         ///     Creates a link to the specified path.
@@ -441,7 +444,7 @@ namespace SilDev
         ///     the same; otherwise, false.
         /// </param>
         public static bool CreateShortcut(string targetPath, string linkPath, bool skipExists) =>
-            CreateShortcut(targetPath, linkPath, null, null, skipExists);
+            CreateShortcut(targetPath, linkPath, null, null, 0, skipExists);
 
         /// <summary>
         ///     Returns the target path of the specified link.
