@@ -3442,7 +3442,7 @@
                 The directory instance to get the size.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
             <summary>
                 Creates a link to the specified directory.
             </summary>
@@ -3457,6 +3457,9 @@
             </param>
             <param name="linkIcon">
                 The icon resource path for this shortcut.
+            </param>
+            <param name="linkIconId">
+                The icon resource id for this shortcut.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
@@ -4064,7 +4067,7 @@
                 The path of the file to be deleted.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
             <summary>
                 Creates a link to the specified path.
             </summary>
@@ -4079,6 +4082,9 @@
             </param>
             <param name="linkIcon">
                 The icon resource path for this shortcut.
+            </param>
+            <param name="linkIconId">
+                The icon resource id for this shortcut.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
@@ -7252,7 +7258,7 @@
                 The length of the hash. Valid values are 4 through 24.
             </param>
         </member>
-        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
             <summary>
                 Creates a link to the specified path.
             </summary>
@@ -7267,6 +7273,9 @@
             </param>
             <param name="linkIcon">
                 The icon resource path for this shortcut.
+            </param>
+            <param name="linkIconId">
+                The icon resource id for this shortcut.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
