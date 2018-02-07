@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-02-05 07:46
+// Version:  2018-02-07 02:31
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -240,6 +240,8 @@ namespace SilDev
             {
                 if (!overwrite || GetFullHashCode(src) != GetFullHashCode(dest))
                     throw new AggregateException();
+                if (!IsLink(src))
+                    SetAttributes(src, FileAttributes.Directory | FileAttributes.Normal);
                 Directory.Delete(src, true);
                 return true;
             }
@@ -269,6 +271,8 @@ namespace SilDev
             var dir = PathEx.Combine(path);
             if (!Directory.Exists(dir))
                 return true;
+            if (!IsLink(dir))
+                SetAttributes(dir, FileAttributes.Directory | FileAttributes.Normal);
             Directory.Delete(dir, true);
             return true;
         }

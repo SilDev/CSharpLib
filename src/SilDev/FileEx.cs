@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-02-05 07:46
+// Version:  2018-02-07 02:31
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -306,6 +306,8 @@ namespace SilDev
                 {
                     if (!overwrite)
                         return true;
+                    if (!IsLink(src))
+                        SetAttributes(src, FileAttributes.Normal);
                     File.Delete(dest);
                 }
                 else
@@ -375,6 +377,8 @@ namespace SilDev
             var file = PathEx.Combine(path);
             if (!File.Exists(file))
                 return true;
+            if (!IsLink(file))
+                SetAttributes(file, FileAttributes.Normal);
             File.Delete(file);
             return true;
         }
