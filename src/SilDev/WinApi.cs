@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-01-30 22:59
+// Version:  2018-02-10 07:41
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -3567,6 +3567,17 @@ namespace SilDev
                 NativeMethods.LocalFree(hMem);
 
             /// <summary>
+            ///     Disables or enables drawing in the specified window. Only one window can be locked
+            ///     at a time.
+            /// </summary>
+            /// <param name="hWndLock">
+            ///     The window in which drawing will be disabled. If this parameter is NULL, drawing in
+            ///     the locked window is enabled.
+            /// </param>
+            public static bool LockWindowUpdate(IntPtr hWndLock) =>
+                NativeMethods.LockWindowUpdate(hWndLock);
+
+            /// <summary>
             ///     Changes the position and dimensions of the specified window.
             /// </summary>
             /// <param name="hWnd">
@@ -6196,6 +6207,20 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr LocalFree(IntPtr hMem);
+
+            /// <summary>
+            ///     Disables or enables drawing in the specified window. Only one window can be locked
+            ///     at a time.
+            /// </summary>
+            /// <param name="hWndLock">
+            ///     The window in which drawing will be disabled. If this parameter is NULL, drawing in
+            ///     the locked window is enabled.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            internal static extern bool LockWindowUpdate(IntPtr hWndLock);
 
             /// <summary>
             ///     The mciSendString function sends a command string to an MCI device. The device that the
