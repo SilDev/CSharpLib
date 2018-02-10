@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2017-05-18 14:21
+// Version:  2018-02-10 08:06
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -26,7 +26,7 @@ namespace SilDev.Forms
     public static class RichTextBoxEx
     {
         /// <summary>
-        ///     Marks the specified text on this <see cref="RichTextBox"/> control.
+        ///     Marks the specified text in this <see cref="RichTextBox"/> control.
         /// </summary>
         /// <param name="richTextBox">
         ///     The <see cref="RichTextBox"/> control to change.
@@ -72,6 +72,105 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Marks the text depending on two specified keywords in this <see cref="RichTextBox"/> control.
+        /// </summary>
+        /// <param name="richTextBox">
+        ///     The <see cref="RichTextBox"/> control to change.
+        /// </param>
+        /// <param name="startKeyword">
+        ///     The start keyword for the text to mark.
+        /// </param>
+        /// <param name="endKeyword">
+        ///     The end keyword for the text to mark.
+        /// </param>
+        /// <param name="foreColor">
+        ///     The new forground color.
+        /// </param>
+        /// <param name="backColor">
+        ///     The new background color.
+        /// </param>
+        /// <param name="font">
+        ///     The new font.
+        /// </param>
+        public static void MarkLine(this RichTextBox richTextBox, string startKeyword, string endKeyword, Color foreColor, Color? backColor = null, Font font = null)
+        {
+            var selection = new Point(richTextBox.SelectionStart, richTextBox.SelectionLength);
+            for (var i = 0; i < richTextBox.Lines.Length; i++)
+            {
+                var line = richTextBox.Lines[i];
+                var length = line.Length;
+                if (length < 1 || !line.StartsWith(startKeyword))
+                    continue;
+                var start = richTextBox.GetFirstCharIndexFromLine(i);
+                if (start < 0)
+                    continue;
+                richTextBox.Select(start, length);
+                richTextBox.SelectionColor = string.IsNullOrEmpty(endKeyword) || line.EndsWith(endKeyword) ? foreColor : Color.Red;
+                if (backColor != null)
+                    richTextBox.SelectionBackColor = (Color)backColor;
+                if (font != null)
+                    richTextBox.SelectionFont = font;
+            }
+            richTextBox.SelectionStart = selection.X;
+            richTextBox.SelectionLength = selection.Y;
+        }
+
+        /// <summary>
+        ///     Marks the specified text in this <see cref="RichTextBox"/> control.
+        /// </summary>
+        /// <param name="richTextBox">
+        ///     The <see cref="RichTextBox"/> control to change.
+        /// </param>
+        /// <param name="keyword">
+        ///     The text to mark.
+        /// </param>
+        /// <param name="count">
+        ///     The number of keywords to be marked.
+        /// </param>
+        /// <param name="foreColor">
+        ///     The new forground color.
+        /// </param>
+        /// <param name="backColor">
+        ///     The new background color.
+        /// </param>
+        /// <param name="font">
+        ///     The new font.
+        /// </param>
+        public static void MarkInLine(this RichTextBox richTextBox, string keyword, int count, Color foreColor, Color? backColor = null, Font font = null)
+        {
+            var selection = new Point(richTextBox.SelectionStart, richTextBox.SelectionLength);
+            for (var i = 0; i < richTextBox.Lines.Length; i++)
+            {
+                var line = richTextBox.Lines[i];
+                var length = line.Length;
+                if (length < 1 || !line.ContainsEx(keyword))
+                    continue;
+                var index = richTextBox.GetFirstCharIndexFromLine(i);
+                if (index < 0)
+                    continue;
+                var num = count < 1 ? 1 : count;
+                int start;
+                var startIndex = 0;
+                while (num > 0 && (start = line.IndexOf(keyword, startIndex, StringComparison.Ordinal)) > -1)
+                {
+                    index = richTextBox.GetFirstCharIndexFromLine(i) + start;
+                    if (index < 0 || length < keyword.Length)
+                        continue;
+                    richTextBox.Select(index, keyword.Length);
+                    richTextBox.SelectionColor = !line.StartsWith(keyword) ? foreColor : Color.Red;
+                    if (backColor != null)
+                        richTextBox.SelectionBackColor = (Color)backColor;
+                    if (font != null)
+                        richTextBox.SelectionFont = font;
+                    startIndex = start + keyword.Length;
+                    num--;
+                }
+            }
+            richTextBox.SelectionStart = selection.X;
+            richTextBox.SelectionLength = selection.Y;
         }
 
         /// <summary>
