@@ -1173,13 +1173,59 @@
         </member>
         <member name="M:SilDev.Forms.RichTextBoxEx.MarkText(System.Windows.Forms.RichTextBox,System.String,System.Drawing.Color,System.Nullable{System.Drawing.Color},System.Drawing.Font)">
             <summary>
-                Marks the specified text on this <see cref="T:System.Windows.Forms.RichTextBox"/> control.
+                Marks the specified text in this <see cref="T:System.Windows.Forms.RichTextBox"/> control.
             </summary>
             <param name="richTextBox">
                 The <see cref="T:System.Windows.Forms.RichTextBox"/> control to change.
             </param>
             <param name="text">
                 The text to mark.
+            </param>
+            <param name="foreColor">
+                The new forground color.
+            </param>
+            <param name="backColor">
+                The new background color.
+            </param>
+            <param name="font">
+                The new font.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.RichTextBoxEx.MarkLine(System.Windows.Forms.RichTextBox,System.String,System.String,System.Drawing.Color,System.Nullable{System.Drawing.Color},System.Drawing.Font)">
+            <summary>
+                Marks the text depending on two specified keywords in this <see cref="T:System.Windows.Forms.RichTextBox"/> control.
+            </summary>
+            <param name="richTextBox">
+                The <see cref="T:System.Windows.Forms.RichTextBox"/> control to change.
+            </param>
+            <param name="startKeyword">
+                The start keyword for the text to mark.
+            </param>
+            <param name="endKeyword">
+                The end keyword for the text to mark.
+            </param>
+            <param name="foreColor">
+                The new forground color.
+            </param>
+            <param name="backColor">
+                The new background color.
+            </param>
+            <param name="font">
+                The new font.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.RichTextBoxEx.MarkInLine(System.Windows.Forms.RichTextBox,System.String,System.Int32,System.Drawing.Color,System.Nullable{System.Drawing.Color},System.Drawing.Font)">
+            <summary>
+                Marks the specified text in this <see cref="T:System.Windows.Forms.RichTextBox"/> control.
+            </summary>
+            <param name="richTextBox">
+                The <see cref="T:System.Windows.Forms.RichTextBox"/> control to change.
+            </param>
+            <param name="keyword">
+                The text to mark.
+            </param>
+            <param name="count">
+                The number of keywords to be marked.
             </param>
             <param name="foreColor">
                 The new forground color.
@@ -13125,6 +13171,16 @@
                 <see cref="M:SilDev.WinApi.NativeHelper.LocalAlloc(SilDev.WinApi.LocalAllocFlags,System.UIntPtr)"/> function.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.LockWindowUpdate(System.IntPtr)">
+            <summary>
+                Disables or enables drawing in the specified window. Only one window can be locked
+                at a time.
+            </summary>
+            <param name="hWndLock">
+                The window in which drawing will be disabled. If this parameter is NULL, drawing in
+                the locked window is enabled.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.MoveWindow(System.IntPtr,System.Drawing.Rectangle)">
             <summary>
                 Changes the position and dimensions of the specified window.
@@ -15490,6 +15546,19 @@
             </param>
             <returns>
                 If the function succeeds, the return value is NULL.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.LockWindowUpdate(System.IntPtr)">
+            <summary>
+                Disables or enables drawing in the specified window. Only one window can be locked
+                at a time.
+            </summary>
+            <param name="hWndLock">
+                The window in which drawing will be disabled. If this parameter is NULL, drawing in
+                the locked window is enabled.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.MciSendString(System.String,System.Text.StringBuilder,System.UInt32,System.IntPtr)">
