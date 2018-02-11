@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-02-11 16:14
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -269,6 +269,13 @@ namespace SilDev
                 if (string.IsNullOrWhiteSpace(variable))
                     throw new ArgumentNullException(nameof(variable));
                 variable = variable.RemoveChar('%');
+                var option = default(string);
+                if (variable.Contains(':'))
+                {
+                    var sa = variable.Split(':');
+                    variable = sa.FirstOrDefault();
+                    option = sa.LastOrDefault()?.ToLower();
+                }
                 if (variable.EqualsEx("CurrentDir", "CurDir"))
                     output = PathEx.LocalDir;
                 else
@@ -283,6 +290,32 @@ namespace SilDev
                     {
                         output = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
                                             .First(x => variable.EqualsEx(x.Key.ToString())).Value.ToString();
+                    }
+                if (!string.IsNullOrEmpty(option))
+                    try
+                    {
+                        if (option.All(char.IsDigit))
+                        {
+                            var num = Convert.ToInt32(option);
+                            output = output.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
+                        }
+                        else
+                        {
+                            if (option.StartsWith("alt"))
+                            {
+                                output = output.Replace(Path.DirectorySeparatorChar.ToString(), Path.AltDirectorySeparatorChar.ToString());
+                                if (option.Any(char.IsDigit))
+                                {
+                                    option = new string(option.Where(char.IsDigit).ToArray());
+                                    var num = Convert.ToInt32(option);
+                                    output = output.Replace(Path.AltDirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
                     }
                 if (lower)
                     output = output?.ToLower();
