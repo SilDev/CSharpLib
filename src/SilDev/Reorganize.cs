@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-02-11 16:56
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -346,18 +346,29 @@ namespace SilDev
         public static string Trim(this string str, Font font, int width)
         {
             var s = str;
-            const string suffix = "...";
-            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            try
             {
-                var x = Math.Floor(g.MeasureString(suffix, font).Width);
-                var c = g.MeasureString(s, font).Width;
-                var r = width / c;
-                while (r < 1.0)
+                const string suffix = "...";
+                using (var g = Graphics.FromHwnd(IntPtr.Zero))
                 {
-                    s = string.Concat(s.Substring(0, (int)Math.Floor(s.Length * r - x)), suffix);
-                    c = g.MeasureString(s, font).Width;
-                    r = width / c;
+                    var x = Math.Floor(g.MeasureString(suffix, font).Width);
+                    var c = g.MeasureString(s, font).Width;
+                    var r = width / c;
+                    while (r < 1.0)
+                    {
+                        s = string.Concat(s.Substring(0, (int)Math.Floor(s.Length * r - x)), suffix);
+                        c = g.MeasureString(s, font).Width;
+                        r = width / c;
+                    }
                 }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // ignored
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
             }
             return s;
         }
