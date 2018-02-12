@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2018-02-11 16:14
+// Version:  2018-02-12 04:54
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -243,6 +243,50 @@ namespace SilDev
             CommandLine(true, skip);
 
         /// <summary>
+        ///     Provides filter for special environment variables.
+        /// </summary>
+        /// <param name="variable">
+        ///     The name of the environment variable.
+        /// </param>
+        /// <param name="key">
+        ///     The key that specifies the directory separator.
+        /// </param>
+        /// <param name="num">
+        ///     The number that specifies the number of directory separators.
+        /// </param>
+        public static void VariableFilter(ref string variable, out string key, out byte num)
+        {
+            key = null;
+            num = 1;
+            if (!variable.Contains(':') || variable.ContainsEx(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar))
+                return;
+            var sa = variable.Split(':');
+            var s = sa.FirstOrDefault();
+            if (string.IsNullOrEmpty(s))
+                return;
+            variable = s;
+            if (s.StartsWith("%"))
+                variable = $"{variable}%";
+            s = sa.LastOrDefault()?.Trim('%');
+            if (string.IsNullOrEmpty(s))
+                return;
+            if (s.All(char.IsDigit) && byte.TryParse(s, out num))
+            {
+                if (num < 1)
+                    num = 1;
+                return;
+            }
+            if (s.Length < 3)
+                return;
+            key = s.Substring(0, 3);
+            if (s.Length < 4)
+                return;
+            s = s.RemoveChar(',').Substring(3);
+            if (!byte.TryParse(s, out num))
+                num = 1;
+        }
+
+        /// <summary>
         ///     <para>
         ///         Retrieves the value of an environment variable from the current process.
         ///     </para>
@@ -269,13 +313,7 @@ namespace SilDev
                 if (string.IsNullOrWhiteSpace(variable))
                     throw new ArgumentNullException(nameof(variable));
                 variable = variable.RemoveChar('%');
-                var option = default(string);
-                if (variable.Contains(':'))
-                {
-                    var sa = variable.Split(':');
-                    variable = sa.FirstOrDefault();
-                    option = sa.LastOrDefault()?.ToLower();
-                }
+                VariableFilter(ref variable, out var key, out var num);
                 if (variable.EqualsEx("CurrentDir", "CurDir"))
                     output = PathEx.LocalDir;
                 else
@@ -291,34 +329,13 @@ namespace SilDev
                         output = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
                                             .First(x => variable.EqualsEx(x.Key.ToString())).Value.ToString();
                     }
-                if (!string.IsNullOrEmpty(option))
-                    try
-                    {
-                        if (option.All(char.IsDigit))
-                        {
-                            var num = Convert.ToInt32(option);
-                            output = output.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
-                        }
-                        else
-                        {
-                            if (option.StartsWith("alt"))
-                            {
-                                output = output.Replace(Path.DirectorySeparatorChar.ToString(), Path.AltDirectorySeparatorChar.ToString());
-                                if (option.Any(char.IsDigit))
-                                {
-                                    option = new string(option.Where(char.IsDigit).ToArray());
-                                    var num = Convert.ToInt32(option);
-                                    output = output.Replace(Path.AltDirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
                 if (lower)
                     output = output?.ToLower();
+                if (!string.IsNullOrEmpty(output) && (!string.IsNullOrEmpty(key) || num > 1))
+                    if (string.IsNullOrEmpty(key))
+                        output = output.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
+                    else if (key.EqualsEx("Alt"))
+                        output = output.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
             }
             catch (InvalidOperationException ex)
             {

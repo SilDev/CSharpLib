@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-02-05 07:46
+// Version:  2018-02-12 04:54
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -225,17 +225,21 @@ namespace SilDev
                         levels[i] += sepChar;
                 }
                 path = Path.Combine(levels);
+                string key = null;
+                byte num = 0;
                 if (path.StartsWith("%") && (path.Contains($"%{sepChar}") || path.EndsWith("%")))
                 {
                     var regex = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase);
                     if (regex.Groups.Count > 1)
                     {
-                        var variable = regex.Groups[1].Value;
-                        if (!string.IsNullOrEmpty(variable))
+                        var variable1 = regex.Groups[1].Value;
+                        var variable2 = variable1;
+                        EnvironmentEx.VariableFilter(ref variable2, out key, out num);
+                        if (!string.IsNullOrEmpty(variable2))
                         {
-                            var value = EnvironmentEx.GetVariableValue(variable);
+                            var value = EnvironmentEx.GetVariableValue(variable2);
                             if (!string.IsNullOrEmpty(value))
-                                path = path.Replace($"%{variable}%", value);
+                                path = path.Replace($"%{variable1}%", value);
                         }
                     }
                 }
@@ -243,6 +247,11 @@ namespace SilDev
                     path = Path.GetFullPath(path);
                 if (path.Contains('.'))
                     path = path.TrimEnd('.');
+                if (!string.IsNullOrEmpty(key) || num > 1)
+                    if (string.IsNullOrEmpty(key))
+                        path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
+                    else if (key.EqualsEx("Alt"))
+                        path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
             }
             catch (ArgumentException ex)
             {
