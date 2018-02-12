@@ -3734,6 +3734,20 @@
                 The number of arguments to skip before returning the remaining arguments.
             </param>
         </member>
+        <member name="M:SilDev.EnvironmentEx.VariableFilter(System.String@,System.String@,System.Byte@)">
+            <summary>
+                Provides filter for special environment variables.
+            </summary>
+            <param name="variable">
+                The name of the environment variable.
+            </param>
+            <param name="key">
+                The key that specifies the directory separator.
+            </param>
+            <param name="num">
+                The number that specifies the number of directory separators.
+            </param>
+        </member>
         <member name="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)">
             <summary>
                 <para>
