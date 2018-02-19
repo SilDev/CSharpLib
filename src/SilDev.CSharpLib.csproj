@@ -137,8 +137,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if exist "$(SolutionDir).helper\AssemblyDateVersion.exe" (
-    "$(SolutionDir).helper\AssemblyDateVersion.exe" /$(Configuration) "$(ProjectDir)Properties\AssemblyInfo.cs"
+    <PreBuildEvent>if exist "$(ProjectDir)..\.helper\AssemblyDateVersion.exe" (
+    "$(ProjectDir)..\.helper\AssemblyDateVersion.exe" /$(Configuration) "$(ProjectDir)Properties\AssemblyInfo.cs"
     set errorlevel=0
 )</PreBuildEvent>
   </PropertyGroup>
