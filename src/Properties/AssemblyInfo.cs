@@ -1,4 +1,4 @@
-using System.Resources;
+﻿using System.Resources;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("901502cc-aa7d-444e-944a-7fc063c34917")]
 
-[assembly: AssemblyVersion("18.2.12.*")]
+[assembly: AssemblyVersion("18.2.19.0")]
 
 [assembly: NeutralResourcesLanguage("")]
 
