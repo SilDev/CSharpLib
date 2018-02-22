@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-02-20 16:14
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -123,8 +123,44 @@ namespace SilDev
                 var dest = PathEx.Combine(destDir);
                 if (string.IsNullOrEmpty(dest))
                     throw new ArgumentNullException(nameof(dest));
-                using (var zip = ZipFile.OpenRead(src))
-                    zip.ExtractToDirectory(dest);
+                using (var archive = ZipFile.OpenRead(src))
+                    try
+                    {
+                        archive.ExtractToDirectory(dest);
+                    }
+                    catch
+                    {
+                        foreach (var ent in archive.Entries)
+                            try
+                            {
+                                var entPath = ent.FullName;
+                                var entIsDir = entPath.EndsWithEx(Path.AltDirectorySeparatorChar.ToString(), Path.DirectorySeparatorChar.ToString());
+                                entPath = PathEx.Combine(dest, entPath);
+                                if (!PathEx.IsValidPath(entPath))
+                                    throw new NotSupportedException();
+                                if (entIsDir && !Directory.Exists(entPath))
+                                {
+                                    Directory.CreateDirectory(entPath);
+                                    continue;
+                                }
+                                if (ent.Length == 0)
+                                    continue;
+                                FileEx.Delete(entPath);
+                                var entDir = Path.GetDirectoryName(entPath);
+                                if (string.IsNullOrEmpty(entDir))
+                                    continue;
+                                if (!Directory.Exists(entDir))
+                                {
+                                    FileEx.Delete(entDir);
+                                    Directory.CreateDirectory(entDir);
+                                }
+                                ent.ExtractToFile(entPath, true);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Write(ex);
+                            }
+                    }
                 if (delSrcPath)
                     File.Delete(src);
                 return true;
