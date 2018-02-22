@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2018-01-08 10:40
+// Version:  2018-02-22 02:06
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -28,9 +29,9 @@ namespace SilDev
     /// </summary>
     public static class Reg
     {
+        private static Dictionary<int, string> CachedKeyFilters { get; set; }
         private const int MaxCacheSize = 16;
         private const int MaxPathLength = 255;
-        private static Dictionary<int, string> CachedKeyFilters { get; set; }
 
         private static RegistryKey AsRegistryKey(this string key, bool nullable = false)
         {
@@ -102,6 +103,14 @@ namespace SilDev
                 return null;
             }
         }
+
+#if x86
+        private static string RegPath { get; } = "%SystemRoot%\\System32\\reg.exe";
+        private static string RegPath64 { get; } = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative\\reg.exe" : "%SystemRoot%\\System32\\reg.exe";
+#else
+        private static string RegPath { get; } = "%SystemRoot%\\SysWOW64\\reg.exe";
+        private static string RegPath64 { get; } = "%SystemRoot%\\System32\\reg.exe";
+#endif
 
         /// <summary>
         ///     Determines whether the specified subkey exists.
@@ -679,6 +688,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The value that is used as default.
         /// </param>
+        [SuppressMessage("ReSharper", "ConvertIfStatementToSwitchStatement")]
         public static string ReadString(RegistryKey key, string subKey, string entry, string defValue = "")
         {
             var value = defValue;
@@ -914,7 +924,14 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to import with highest user permissions; otherwise, false.
         /// </param>
-        public static bool ImportFile(string path, bool elevated = false)
+        /// <param name="native">
+        ///     true to import with the system native architecture; otherwise, false.
+        /// </param>
+#if x86
+        public static bool ImportFile(string path, bool elevated = false, bool native = false)
+#else
+        public static bool ImportFile(string path, bool elevated = false, bool native = true)
+#endif
         {
             try
             {
@@ -925,7 +942,7 @@ namespace SilDev
                     throw new PathNotFoundException(filePath);
                 if (Log.DebugMode > 1)
                     Log.Write($"IMPORT: \"{filePath}\"");
-                using (var p = ProcessEx.Start("%system%\\reg.exe", $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false))
+                using (var p = ProcessEx.Start(native ? RegPath64 : RegPath, $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false))
                     if (p?.HasExited == false)
                         p.WaitForExit(3000);
                 return true;
@@ -950,7 +967,14 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to import with highest user permissions; otherwise, false.
         /// </param>
-        public static bool ImportFile(string path, string[] content, bool elevated = false)
+        /// <param name="native">
+        ///     true to import with the system native architecture; otherwise, false.
+        /// </param>
+#if x86
+        public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
+#else
+        public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
+#endif
         {
             try
             {
@@ -982,7 +1006,7 @@ namespace SilDev
                     sw.WriteLine();
                     sw.WriteLine();
                 }
-                var imported = ImportFile(filePath, elevated);
+                var imported = ImportFile(filePath, elevated, native);
                 if (File.Exists(filePath))
                     File.Delete(filePath);
                 return imported;
@@ -1004,8 +1028,15 @@ namespace SilDev
         /// <param name="elevated">
         ///     true to import with highest user permissions; otherwise, false.
         /// </param>
-        public static bool ImportFile(string[] content, bool elevated = false) =>
-            ImportFile(PathEx.Combine("%TEMP%", PathEx.GetTempDirName() + ".reg"), content, elevated);
+        /// <param name="native">
+        ///     true to import with the system native architecture; otherwise, false.
+        /// </param>
+#if x86
+        public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
+#else
+        public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
+#endif
+            ImportFile(PathEx.Combine("%TEMP%", $"{PathEx.GetTempDirName()}.reg"), content, elevated, native);
 
         /// <summary>
         ///     Exports the full content of the specified registry paths into an REG file.
@@ -1019,7 +1050,10 @@ namespace SilDev
         /// <param name="keyPaths">
         ///     The full paths of the keys to export.
         /// </param>
-        public static bool ExportKeys(string destPath, bool elevated, params string[] keyPaths)
+        /// <param name="native">
+        ///     true to import with the system native architecture; otherwise, false.
+        /// </param>
+        public static bool ExportKeys(string destPath, bool elevated, bool native, params string[] keyPaths)
         {
             try
             {
@@ -1032,26 +1066,21 @@ namespace SilDev
                 if (!Directory.Exists(destDir))
                     Directory.CreateDirectory(destDir);
                 const string header = "Windows Registry Editor Version 5.00";
-                File.WriteAllText(filePath, $@"{header}{Environment.NewLine}", Encoding.GetEncoding(1252));
+                var encoding = Encoding.GetEncoding(1252);
+                File.WriteAllText(filePath, $@"{header}{Environment.NewLine}", encoding);
                 var count = 0;
                 foreach (var key in keyPaths)
                 {
                     var path = Path.Combine(Path.GetTempPath(), PathEx.GetTempFileName("reg", 8));
                     if (Log.DebugMode > 1)
                         Log.Write($"EXPORT: \"{key}\" TO \"{path}\"");
-                    using (var p = ProcessEx.Start("%system%\\reg.exe", $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
+                    using (var p = ProcessEx.Start(native ? RegPath64 : RegPath, $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
                         if (p?.HasExited == false)
-                            p.WaitForExit(3000);
-                    File.AppendAllText(filePath, File.ReadAllLines(path).Skip(1).Join(Environment.NewLine), Encoding.GetEncoding(1252));
+                            p.WaitForExit(5000);
+                    var lines = File.ReadAllLines(path).Skip(1);
+                    File.AppendAllText(filePath, lines.Join(Environment.NewLine), encoding);
+                    FileEx.TryDelete(path);
                     count++;
-                    try
-                    {
-                        File.Delete(path);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
                 }
                 return count == keyPaths.Length;
             }
@@ -1068,10 +1097,32 @@ namespace SilDev
         /// <param name="destPath">
         ///     The full path of the file to create or override.
         /// </param>
+        /// <param name="elevated">
+        ///     true to export with highest user permissions; otherwise, false.
+        /// </param>
+        /// <param name="keyPaths">
+        ///     The full paths of the keys to export.
+        /// </param>
+        public static bool ExportKeys(string destPath, bool elevated, params string[] keyPaths) =>
+#if x86
+            ExportKeys(destPath, elevated, false, keyPaths);
+#else
+            ExportKeys(destPath, elevated, true, keyPaths);
+#endif
+        /// <summary>
+        ///     Exports the full content of the specified registry paths into an REG file.
+        /// </summary>
+        /// <param name="destPath">
+        ///     The full path of the file to create or override.
+        /// </param>
         /// <param name="keyPaths">
         ///     The full paths of the keys to export.
         /// </param>
         public static bool ExportKeys(string destPath, params string[] keyPaths) =>
-            ExportKeys(destPath, false, keyPaths);
+#if x86
+            ExportKeys(destPath, false, false, keyPaths);
+#else
+            ExportKeys(destPath, false, true, keyPaths);
+#endif
     }
 }
