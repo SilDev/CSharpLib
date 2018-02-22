@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-02-22 02:03
+// Version:  2018-02-22 03:14
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -290,13 +290,20 @@ namespace SilDev
         /// <param name="overwrite">
         ///     true to overwrite an existing file; otherwise, false.
         /// </param>
-        public static bool CreateEmpty(string path, bool overwrite = false)
+        public static bool Create(string path, bool overwrite = false)
         {
-            var file = PathEx.Combine(path);
             try
             {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var file = PathEx.Combine(path);
                 if (!overwrite && File.Exists(file))
                     return true;
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
                 File.Create(file).Close();
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);

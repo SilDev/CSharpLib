@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-02-22 02:03
+// Version:  2018-02-22 03:14
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -372,13 +372,9 @@ namespace SilDev
         {
             try
             {
-                if (path == null)
+                if (string.IsNullOrEmpty(path))
                     throw new ArgumentNullException(nameof(path));
-                if (path.Length == 0)
-                    throw new ArgumentOutOfRangeException(nameof(path));
-                var dir = path;
-                if (dir[0] == '%')
-                    dir = PathEx.Combine(dir);
+                var dir = PathEx.Combine(path);
                 if (Directory.Exists(dir))
                     return true;
                 if (File.Exists(dir) && !PathEx.IsDir(dir))

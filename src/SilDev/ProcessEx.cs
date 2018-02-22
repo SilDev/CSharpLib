@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-02-22 03:01
+// Version:  2018-02-22 03:28
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -918,10 +918,11 @@ namespace SilDev
                 int exitCode;
                 using (var p = Send(string.Format(Resources.Cmd_Copy, src, dest), runAsAdmin, false))
                 {
-                    if (!wait || p?.HasExited != false)
+                    if (!wait)
                         return true;
-                    p.WaitForExit();
-                    exitCode = p.ExitCode;
+                    if (p?.HasExited == false)
+                        p.WaitForExit();
+                    exitCode = p?.ExitCode ?? 1;
                 }
                 return exitCode == 0;
             }
@@ -948,10 +949,11 @@ namespace SilDev
                 int exitCode;
                 using (var p = Send(string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, fullPath), runAsAdmin, false))
                 {
-                    if (!wait || p?.HasExited != false)
+                    if (!wait)
                         return true;
-                    p.WaitForExit();
-                    exitCode = p.ExitCode;
+                    if (p?.HasExited == false)
+                        p.WaitForExit();
+                    exitCode = p?.ExitCode ?? 1;
                 }
                 return exitCode == 0;
             }

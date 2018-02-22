@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PanelEx.cs
-// Version:  2018-01-31 05:29
+// Version:  2018-02-22 03:14
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,6 +30,7 @@ namespace SilDev.Forms
         /// </summary>
         public static class FakeProgressBar
         {
+#pragma warning disable 1591
             public static Color ForeColor { get; set; } = default(Color);
 
             public static Color Update(Panel panel, int value, int maxValue = 100)
@@ -53,6 +54,7 @@ namespace SilDev.Forms
                 }
                 return color;
             }
+#pragma warning restore 1591
         }
     }
 }
