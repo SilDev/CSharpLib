@@ -129,6 +129,9 @@
   <data name="Cmd_CallPre" xml:space="preserve">
     <value>/C CALL "{0}"</value>
   </data>
+  <data name="Cmd_Copy" xml:space="preserve">
+    <value>COPY /Y "{0}" "{1}"</value>
+  </data>
   <data name="Cmd_DeleteDir" xml:space="preserve">
     <value>RMDIR /S /Q "{0}"</value>
   </data>

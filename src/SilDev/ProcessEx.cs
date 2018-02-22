@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-02-22 03:01
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -75,7 +75,7 @@ namespace SilDev
             {
                 Process parentProcess;
                 using (var p = Process.GetCurrentProcess())
-                    parentProcess = GetParent(p);
+                    parentProcess = p.GetParent();
                 return parentProcess;
             }
         }
@@ -893,6 +893,70 @@ namespace SilDev
         public static class SendHelper
         {
             /// <summary>
+            ///     Copies an existing file or directory to a new location.
+            /// </summary>
+            /// <param name="srcPath">
+            ///     The path to the file or directory to copy.
+            /// </param>
+            /// <param name="destPath">
+            ///     The name of the destination file or directory.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="wait">
+            ///     true to wait indefinitely for the associated process to exit; otherwise, false.
+            /// </param>
+            public static bool Copy(string srcPath, string destPath, bool runAsAdmin = false, bool wait = true)
+            {
+                if (string.IsNullOrWhiteSpace(srcPath) || string.IsNullOrWhiteSpace(destPath))
+                    return false;
+                var src = PathEx.Combine(srcPath);
+                if (!PathEx.DirOrFileExists(src))
+                    return false;
+                var dest = PathEx.Combine(destPath);
+                int exitCode;
+                using (var p = Send(string.Format(Resources.Cmd_Copy, src, dest), runAsAdmin, false))
+                {
+                    if (!wait || p?.HasExited != false)
+                        return true;
+                    p.WaitForExit();
+                    exitCode = p.ExitCode;
+                }
+                return exitCode == 0;
+            }
+
+            /// <summary>
+            ///     Deletes an existing file or directory.
+            /// </summary>
+            /// <param name="path">
+            ///     The path to the file or directory to be deleted.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="wait">
+            ///     true to wait indefinitely for the associated process to exit; otherwise, false.
+            /// </param>
+            public static bool Delete(string path, bool runAsAdmin = false, bool wait = true)
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    return false;
+                var fullPath = PathEx.Combine(path);
+                if (!PathEx.DirOrFileExists(fullPath))
+                    return true;
+                int exitCode;
+                using (var p = Send(string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, fullPath), runAsAdmin, false))
+                {
+                    if (!wait || p?.HasExited != false)
+                        return true;
+                    p.WaitForExit();
+                    exitCode = p.ExitCode;
+                }
+                return exitCode == 0;
+            }
+
+            /// <summary>
             ///     Waits before the system is instructed to delete the target at the specified path.
             /// </summary>
             /// <param name="path">
@@ -916,7 +980,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(fullPath))
                     return null;
                 var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
+                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, fullPath);
                 command = string.Format(Resources.Cmd_WaitThenCmd, time, command);
                 return Send(command, runAsAdmin, dispose);
             }
@@ -957,7 +1021,7 @@ namespace SilDev
                 var name = processName;
                 if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
                     name += extension;
-                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, path);
+                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, fullPath);
                 command = string.Format(Resources.Cmd_WaitForProcThenCmd, name, command);
                 return Send(command, runAsAdmin, dispose);
             }

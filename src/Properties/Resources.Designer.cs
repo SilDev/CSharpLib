@@ -19,7 +19,7 @@ namespace SilDev.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -75,6 +75,15 @@ namespace SilDev.Properties {
         internal static string Cmd_CallPre {
             get {
                 return ResourceManager.GetString("Cmd_CallPre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to COPY /Y &quot;{0}&quot; &quot;{1}&quot;.
+        /// </summary>
+        internal static string Cmd_Copy {
+            get {
+                return ResourceManager.GetString("Cmd_Copy", resourceCulture);
             }
         }
         
