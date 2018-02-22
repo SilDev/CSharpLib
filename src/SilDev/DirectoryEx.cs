@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-02-07 02:31
+// Version:  2018-02-22 02:03
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -154,6 +154,246 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Returns an enumerable collection of directory names that match a search
+        ///     pattern in a specified path, and optionally searches subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchPattern">
+        ///     The search string to match against the names of directories in path. This
+        ///     parameter can contain a combination of valid literal path and wildcard
+        ///     (* and ?) characters, but doesn't support regular expressions.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static IEnumerable<string> EnumerateDirectories(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        {
+            var dirs = default(IEnumerable<string>);
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var dir = PathEx.Combine(path);
+                if (!Directory.Exists(dir))
+                    throw new PathNotFoundException(dir);
+                dirs = Directory.EnumerateDirectories(path, searchPattern, searchOption);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return dirs;
+        }
+
+        /// <summary>
+        ///     Returns an enumerable collection of directory names that match a search
+        ///     pattern in a specified path, and optionally searches subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static IEnumerable<string> EnumerateDirectories(string path, SearchOption searchOption) =>
+            EnumerateDirectories(path, "*", searchOption);
+
+        /// <summary>
+        ///     Returns the names of the subdirectories (including their paths) that match the
+        ///     specified search pattern in the specified directory, and optionally searches
+        ///     subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchPattern">
+        ///     The search string to match against the names of directories in path. This
+        ///     parameter can contain a combination of valid literal path and wildcard
+        ///     (* and ?) characters, but doesn't support regular expressions.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static string[] GetDirectories(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        {
+            var dirs = default(string[]);
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var dir = PathEx.Combine(path);
+                if (!Directory.Exists(dir))
+                    throw new PathNotFoundException(dir);
+                dirs = Directory.GetDirectories(path, searchPattern, searchOption);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return dirs;
+        }
+
+        /// <summary>
+        ///     Returns the names of the subdirectories (including their paths) that match the
+        ///     specified search pattern in the specified directory, and optionally searches
+        ///     subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static string[] GetDirectories(string path, SearchOption searchOption) =>
+            GetDirectories(path, "*", searchOption);
+
+        /// <summary>
+        ///     Returns an enumerable collection of file names that match a search pattern in
+        ///     a specified path, and optionally searches subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchPattern">
+        ///     The search string to match against the names of files in path. This parameter
+        ///     can contain a combination of valid literal path and wildcard (* and ?)
+        ///     characters, but doesn't support regular expressions.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static IEnumerable<string> EnumerateFiles(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        {
+            var files = default(IEnumerable<string>);
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var dir = PathEx.Combine(path);
+                if (!Directory.Exists(dir))
+                    throw new PathNotFoundException(dir);
+                files = Directory.EnumerateFiles(path, searchPattern, searchOption);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return files;
+        }
+
+        /// <summary>
+        ///     Returns an enumerable collection of file names that match a search pattern in
+        ///     a specified path, and optionally searches subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static IEnumerable<string> EnumerateFiles(string path, SearchOption searchOption) =>
+            EnumerateFiles(path, "*", searchOption);
+
+        /// <summary>
+        ///     Returns the names of files (including their paths) that match the specified search
+        ///     pattern in the specified directory, using a value to determine whether to search
+        ///     subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchPattern">
+        ///     The search string to match against the names of files in path. This parameter
+        ///     can contain a combination of valid literal path and wildcard (* and ?)
+        ///     characters, but doesn't support regular expressions.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static string[] GetFiles(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        {
+            var files = default(string[]);
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var dir = PathEx.Combine(path);
+                if (!Directory.Exists(dir))
+                    throw new PathNotFoundException(dir);
+                files = Directory.GetFiles(path, searchPattern, searchOption);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return files;
+        }
+
+        /// <summary>
+        ///     Returns the names of files (including their paths) that match the specified search
+        ///     pattern in the specified directory, using a value to determine whether to search
+        ///     subdirectories.
+        /// </summary>
+        /// <param name="path">
+        ///     The relative or absolute path to the directory to search. This string is
+        ///     not case-sensitive.
+        /// </param>
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the search operation
+        ///     should include only the current directory or should include all  subdirectories.
+        /// </param>
+        public static string[] GetFiles(string path, SearchOption searchOption) =>
+            GetFiles(path, "*", searchOption);
+
+        /// <summary>
+        ///     Creates all directories and subdirectories in the specified path
+        ///     unless they already exist.
+        /// </summary>
+        /// <param name="path">
+        ///     The directory to create.
+        /// </param>
+        public static bool Create(string path)
+        {
+            try
+            {
+                if (path == null)
+                    throw new ArgumentNullException(nameof(path));
+                if (path.Length == 0)
+                    throw new ArgumentOutOfRangeException(nameof(path));
+                var dir = path;
+                if (dir[0] == '%')
+                    dir = PathEx.Combine(dir);
+                if (Directory.Exists(dir))
+                    return true;
+                if (File.Exists(dir) && !PathEx.IsDir(dir))
+                    File.Delete(dir);
+                var di = Directory.CreateDirectory(dir);
+                return di.Exists;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
         ///     Copies an existing directory to a new location.
         /// </summary>
         /// <param name="srcDir">
@@ -170,16 +410,20 @@ namespace SilDev
         /// </param>
         public static bool Copy(string srcDir, string destDir, bool subDirs = true, bool overwrite = false)
         {
-            var src = PathEx.Combine(srcDir);
             try
             {
+                if (string.IsNullOrEmpty(srcDir))
+                    throw new ArgumentNullException(nameof(srcDir));
+                var src = PathEx.Combine(srcDir);
                 var di = new DirectoryInfo(src);
                 if (!di.Exists)
                     throw new PathNotFoundException(di.FullName);
+                if (string.IsNullOrEmpty(destDir))
+                    throw new ArgumentNullException(nameof(destDir));
                 var dest = PathEx.Combine(destDir);
                 if (!Directory.Exists(dest))
                     Directory.CreateDirectory(dest);
-                foreach (var f in di.GetFiles())
+                foreach (var f in di.EnumerateFiles())
                 {
                     var p = Path.Combine(dest, f.Name);
                     if (File.Exists(p) && !overwrite)

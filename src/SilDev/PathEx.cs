@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-02-12 04:54
+// Version:  2018-02-22 01:50
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -49,17 +49,19 @@ namespace SilDev
             '\u003f', '\u007c'
         };
 
+        private static Dictionary<int, string> CachedPaths { get; } = new Dictionary<int, string>();
+
         /// <summary>
         ///     Gets the full process executable path of the assembly based on
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
-        public static string LocalPath => Assembly.GetEntryAssembly().CodeBase.ToUri()?.LocalPath;
+        public static string LocalPath { get; } = Assembly.GetEntryAssembly().CodeBase.ToUri()?.LocalPath;
 
         /// <summary>
         ///     Gets the process executable located directory path of the assembly based on
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
-        public static string LocalDir => Path.GetDirectoryName(LocalPath)?.TrimEnd(Path.DirectorySeparatorChar);
+        public static string LocalDir { get; } = Path.GetDirectoryName(LocalPath)?.TrimEnd(Path.DirectorySeparatorChar);
 
         /// <summary>
         ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
@@ -120,23 +122,21 @@ namespace SilDev
                         throw new ArgumentException($"The path does not contain any separator. - PATH: \'{path}\'");
                     throw new ArgumentException($"The path does not contain a valid separator. - PATH: \'{path}\'");
                 }
+                if (path.StartsWith("\\\\?\\"))
+                    throw new NotSupportedException($"The \"\\\\?\\\" prefix is not supported. - PATH: \'{path}\'");
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
                     throw new ArgumentException($"The path cannot contain several consecutive separators. - PATH: \'{path}\'");
-                var levels = path.Split(Path.DirectorySeparatorChar);
-                var fileName = levels.Last();
-                if (Path.HasExtension(fileName))
-                {
-                    if (path.Length > 260)
-                        throw new PathTooLongException($"The specified path is longer than 260 characters. - PATH: \'{path}\'");
-                    var fileDir = levels.Take(levels.Length - 1).Join(Path.DirectorySeparatorChar);
-                    if (fileDir.Length > 248)
-                        throw new PathTooLongException($"The directory name is longer than 248 characters. - PATH: \'{path}\'");
-                }
-                else if (path.Length > 248)
-                    throw new PathTooLongException($"The specified path is longer than 248 characters. - PATH: \'{path}\'");
                 var drive = path.Substring(0, 3);
                 if (!Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
                     throw new DriveNotFoundException($"The path does not contain any drive. - PATH: \'{path}\'");
+                if (path.Length >= 260)
+                    throw new PathTooLongException($"The specified path is longer than 260 characters. - PATH: \'{path}\'");
+                var levels = path.Split(Path.DirectorySeparatorChar);
+                if (levels.Any(s => s.Length >= 255))
+                    throw new PathTooLongException($"A segment of the path is longer than 255 characters. - PATH: \'{path}\'");
+                var dirLength = Path.HasExtension(path) ? levels.Take(levels.Length - 1).Join(Path.DirectorySeparatorChar).Length : path.Length;
+                if (dirLength >= 248)
+                    throw new PathTooLongException($"The directory name is longer than 248 characters. - PATH: \'{path}\'");
                 if (!DriveInfo.GetDrives().Select(di => di.Name).Contains(drive))
                     throw new DriveNotFoundException($"The path does not contain a valid drive. - PATH: \'{path}\'");
                 var subPath = path.Substring(3);
@@ -208,6 +208,12 @@ namespace SilDev
             {
                 if (paths.Length == 0 || paths.Count(string.IsNullOrWhiteSpace) == paths.Length)
                     throw new ArgumentNullException(nameof(paths));
+                var hash = paths.GetHashCode();
+                if (hash != -1 && CachedPaths.ContainsKey(hash))
+                {
+                    path = CachedPaths[hash];
+                    goto Return;
+                }
                 var levels = paths;
                 var sepChar = Path.DirectorySeparatorChar;
                 for (var i = 0; i < levels.Length; i++)
@@ -243,7 +249,7 @@ namespace SilDev
                         }
                     }
                 }
-                if (path.Contains(sepChar + ".."))
+                if (path.Contains($"{sepChar}.."))
                     path = Path.GetFullPath(path);
                 if (path.Contains('.'))
                     path = path.TrimEnd('.');
@@ -252,6 +258,16 @@ namespace SilDev
                         path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
                         path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
+                if (hash != -1)
+                {
+                    if (CachedPaths.Count >= byte.MaxValue)
+                    {
+                        var code = CachedPaths.Keys.FirstOrDefault(x => x != hash);
+                        if (CachedPaths.ContainsKey(code))
+                            CachedPaths.Remove(code);
+                    }
+                    CachedPaths[hash] = path;
+                }
             }
             catch (ArgumentException ex)
             {
@@ -262,6 +278,7 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
+            Return:
             return path;
         }
 
@@ -323,10 +340,10 @@ namespace SilDev
                 };
                 for (var i = 0; i < schemes.Length; i++)
                 {
-                    var scheme = schemes[i] + Path.AltDirectorySeparatorChar;
+                    var scheme = $"{schemes[i]}{Path.AltDirectorySeparatorChar}";
                     if (!path.StartsWithEx(scheme))
                         continue;
-                    path = path.Replace(scheme, scheme + new string(Path.AltDirectorySeparatorChar, i < 1 ? 2 : 1));
+                    path = path.Replace(scheme, $"{scheme}{new string(Path.AltDirectorySeparatorChar, i < 1 ? 2 : 1)}");
                     break;
                 }
             }
@@ -361,6 +378,39 @@ namespace SilDev
             AltCombine(InvalidPathChars, paths);
 
         /// <summary>
+        ///     Returns the directory information for the specified path string.
+        /// </summary>
+        /// <param name="path">
+        ///     The path of a file or directory.
+        /// </param>
+        /// <param name="convertEnvVars">
+        ///     true to convert environment variables; otherwise, false.
+        /// </param>
+        public static string GetDirectoryName(string path, bool convertEnvVars = false)
+        {
+            var str = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var index = str.LastIndexOf(Path.DirectorySeparatorChar);
+            var alt = false;
+            if (index < 0)
+            {
+                alt = true;
+                index = str.LastIndexOf(Path.AltDirectorySeparatorChar);
+            }
+            if (index > 2 && index < str.Length)
+            {
+                str = str.Substring(0, index);
+                if (convertEnvVars)
+                    str = alt ? AltCombine(str) : Combine(str);
+            }
+            else
+            {
+                str = alt ? AltCombine(path) : Combine(path);
+                str = Path.GetDirectoryName(str);
+            }
+            return !str.EqualsEx(path) ? str : null;
+        }
+
+        /// <summary>
         ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()"/>.
         /// </summary>
         /// <param name="prefix">
@@ -372,15 +422,8 @@ namespace SilDev
         public static string GetTempDirName(string prefix = "tmp", int len = 4)
         {
             var s = prefix;
-            try
-            {
-                var g = new string(Guid.NewGuid().ToString().Where(char.IsLetterOrDigit).ToArray());
-                s = s.ToLower() + g.Substring(0, len.IsBetween(4, 24) ? len : 4).ToUpper();
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
+            var g = new string(Guid.NewGuid().ToString().Where(char.IsLetterOrDigit).ToArray());
+            s = $"{s.ToLower()}{g.Substring(0, len.IsBetween(4, 24) ? len : 4).ToUpper()}";
             return s;
         }
 
@@ -612,6 +655,9 @@ namespace SilDev
         /// <param name="destPath">
         ///     The fully qualified name of the new link.
         /// </param>
+        /// <param name="destIsDir">
+        ///     true to determine that the destination path is a directory; otherwise, false.
+        /// </param>
         /// <param name="backup">
         ///     true to create an backup for existing files; otherwise, false.
         /// </param>
@@ -769,6 +815,9 @@ namespace SilDev
         /// </summary>
         /// <param name="path">
         ///     The link to be removed.
+        /// </param>
+        /// <param name="pathIsDir">
+        ///     true to determine that the path is a directory; otherwise, false.
         /// </param>
         /// <param name="backup">
         ///     true to restore found backups; otherwise, false.

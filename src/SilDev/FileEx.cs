@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-02-07 02:31
+// Version:  2018-02-22 02:03
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -279,6 +279,34 @@ namespace SilDev
                 Log.Write(ex);
             }
             return true;
+        }
+
+        /// <summary>
+        ///     Creates an empty file in the specified path.
+        /// </summary>
+        /// <param name="path">
+        ///     The path and name of the file to create.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to overwrite an existing file; otherwise, false.
+        /// </param>
+        public static bool CreateEmpty(string path, bool overwrite = false)
+        {
+            var file = PathEx.Combine(path);
+            try
+            {
+                if (!overwrite && File.Exists(file))
+                    return true;
+                File.Create(file).Close();
+                if (!File.Exists(file))
+                    throw new PathNotFoundException(file);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
         }
 
         /// <summary>
