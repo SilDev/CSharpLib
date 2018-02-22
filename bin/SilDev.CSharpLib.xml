@@ -30,6 +30,11 @@
               Looks up a localized string similar to /C CALL &quot;{0}&quot;.
             </summary>
         </member>
+        <member name="P:SilDev.Properties.Resources.Cmd_Copy">
+            <summary>
+              Looks up a localized string similar to COPY /Y &quot;{0}&quot; &quot;{1}&quot;.
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.Resources.Cmd_DeleteDir">
             <summary>
               Looks up a localized string similar to RMDIR /S /Q &quot;{0}&quot;.
@@ -3379,6 +3384,151 @@
                 The attributes to set.
             </param>
         </member>
+        <member name="M:SilDev.DirectoryEx.EnumerateDirectories(System.String,System.String,System.IO.SearchOption)">
+            <summary>
+                Returns an enumerable collection of directory names that match a search
+                pattern in a specified path, and optionally searches subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchPattern">
+                The search string to match against the names of directories in path. This
+                parameter can contain a combination of valid literal path and wildcard
+                (* and ?) characters, but doesn't support regular expressions.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.EnumerateDirectories(System.String,System.IO.SearchOption)">
+            <summary>
+                Returns an enumerable collection of directory names that match a search
+                pattern in a specified path, and optionally searches subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetDirectories(System.String,System.String,System.IO.SearchOption)">
+            <summary>
+                Returns the names of the subdirectories (including their paths) that match the
+                specified search pattern in the specified directory, and optionally searches
+                subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchPattern">
+                The search string to match against the names of directories in path. This
+                parameter can contain a combination of valid literal path and wildcard
+                (* and ?) characters, but doesn't support regular expressions.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetDirectories(System.String,System.IO.SearchOption)">
+            <summary>
+                Returns the names of the subdirectories (including their paths) that match the
+                specified search pattern in the specified directory, and optionally searches
+                subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.EnumerateFiles(System.String,System.String,System.IO.SearchOption)">
+            <summary>
+                Returns an enumerable collection of file names that match a search pattern in
+                a specified path, and optionally searches subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchPattern">
+                The search string to match against the names of files in path. This parameter
+                can contain a combination of valid literal path and wildcard (* and ?)
+                characters, but doesn't support regular expressions.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.EnumerateFiles(System.String,System.IO.SearchOption)">
+            <summary>
+                Returns an enumerable collection of file names that match a search pattern in
+                a specified path, and optionally searches subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetFiles(System.String,System.String,System.IO.SearchOption)">
+            <summary>
+                Returns the names of files (including their paths) that match the specified search
+                pattern in the specified directory, using a value to determine whether to search
+                subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchPattern">
+                The search string to match against the names of files in path. This parameter
+                can contain a combination of valid literal path and wildcard (* and ?)
+                characters, but doesn't support regular expressions.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetFiles(System.String,System.IO.SearchOption)">
+            <summary>
+                Returns the names of files (including their paths) that match the specified search
+                pattern in the specified directory, using a value to determine whether to search
+                subdirectories.
+            </summary>
+            <param name="path">
+                The relative or absolute path to the directory to search. This string is
+                not case-sensitive.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the search operation
+                should include only the current directory or should include all  subdirectories.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.Create(System.String)">
+            <summary>
+                Creates all directories and subdirectories in the specified path
+                unless they already exist.
+            </summary>
+            <param name="path">
+                The directory to create.
+            </param>
+        </member>
         <member name="M:SilDev.DirectoryEx.Copy(System.String,System.String,System.Boolean,System.Boolean)">
             <summary>
                 Copies an existing directory to a new location.
@@ -4074,6 +4224,17 @@
             </param>
             <param name="backup">
                 true to create a backup; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Create(System.String,System.Boolean)">
+            <summary>
+                Creates an empty file in the specified path.
+            </summary>
+            <param name="path">
+                The path and name of the file to create.
+            </param>
+            <param name="overwrite">
+                true to overwrite an existing file; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.FileEx.Copy(System.String,System.String,System.Boolean)">
@@ -7266,6 +7427,17 @@
                 An array of parts of the path.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.GetDirectoryName(System.String,System.Boolean)">
+            <summary>
+                Returns the directory information for the specified path string.
+            </summary>
+            <param name="path">
+                The path of a file or directory.
+            </param>
+            <param name="convertEnvVars">
+                true to convert environment variables; otherwise, false.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.GetTempDirName(System.String,System.Int32)">
             <summary>
                 Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
@@ -7402,6 +7574,9 @@
             <param name="destPath">
                 The fully qualified name of the new link.
             </param>
+            <param name="destIsDir">
+                true to determine that the destination path is a directory; otherwise, false.
+            </param>
             <param name="backup">
                 true to create an backup for existing files; otherwise, false.
             </param>
@@ -7416,6 +7591,9 @@
             </summary>
             <param name="path">
                 The link to be removed.
+            </param>
+            <param name="pathIsDir">
+                true to determine that the path is a directory; otherwise, false.
             </param>
             <param name="backup">
                 true to restore found backups; otherwise, false.
@@ -8098,6 +8276,37 @@
             <summary>
                 Provides basic functionality based on <see cref="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Boolean)"/>.
             </summary>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.Copy(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Copies an existing file or directory to a new location.
+            </summary>
+            <param name="srcPath">
+                The path to the file or directory to copy.
+            </param>
+            <param name="destPath">
+                The name of the destination file or directory.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="wait">
+                true to wait indefinitely for the associated process to exit; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.Delete(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Deletes an existing file or directory.
+            </summary>
+            <param name="path">
+                The path to the file or directory to be deleted.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="wait">
+                true to wait indefinitely for the associated process to exit; otherwise, false.
+            </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitThenDelete(System.String,System.Int32,System.Boolean,System.Boolean)">
             <summary>
@@ -8787,7 +8996,7 @@
                 The entry to remove.
             </param>
         </member>
-        <member name="M:SilDev.Reg.ImportFile(System.String,System.Boolean)">
+        <member name="M:SilDev.Reg.ImportFile(System.String,System.Boolean,System.Boolean)">
             <summary>
                 Imports the specified REG file to the registry.
             </summary>
@@ -8797,8 +9006,11 @@
             <param name="elevated">
                 true to import with highest user permissions; otherwise, false.
             </param>
+            <param name="native">
+                true to import with the system native architecture; otherwise, false.
+            </param>
         </member>
-        <member name="M:SilDev.Reg.ImportFile(System.String,System.String[],System.Boolean)">
+        <member name="M:SilDev.Reg.ImportFile(System.String,System.String[],System.Boolean,System.Boolean)">
             <summary>
                 Creates a new REG file with the specified content, imports it into the registry, and then
                 deletes the file.
@@ -8812,8 +9024,11 @@
             <param name="elevated">
                 true to import with highest user permissions; otherwise, false.
             </param>
+            <param name="native">
+                true to import with the system native architecture; otherwise, false.
+            </param>
         </member>
-        <member name="M:SilDev.Reg.ImportFile(System.String[],System.Boolean)">
+        <member name="M:SilDev.Reg.ImportFile(System.String[],System.Boolean,System.Boolean)">
             <summary>
                 Creates a new REG file with the specified content, imports it into the registry, and then
                 deletes the file.
@@ -8823,6 +9038,26 @@
             </param>
             <param name="elevated">
                 true to import with highest user permissions; otherwise, false.
+            </param>
+            <param name="native">
+                true to import with the system native architecture; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Reg.ExportKeys(System.String,System.Boolean,System.Boolean,System.String[])">
+            <summary>
+                Exports the full content of the specified registry paths into an REG file.
+            </summary>
+            <param name="destPath">
+                The full path of the file to create or override.
+            </param>
+            <param name="elevated">
+                true to export with highest user permissions; otherwise, false.
+            </param>
+            <param name="keyPaths">
+                The full paths of the keys to export.
+            </param>
+            <param name="native">
+                true to import with the system native architecture; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Reg.ExportKeys(System.String,System.Boolean,System.String[])">
