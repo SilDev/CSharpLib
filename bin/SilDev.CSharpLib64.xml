@@ -9090,9 +9090,29 @@
                 Provides static methods for converting or reorganizing of data.
             </summary>
         </member>
+        <member name="T:SilDev.Reorganize.SizeOptions">
+            <summary>
+                Provides size format options.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeOptions.None">
+            <summary>
+                Determines that the format is not changed.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeOptions.Trim">
+            <summary>
+                Determines that all zeros are removed after the comma.
+            </summary>
+        </member>
+        <member name="F:SilDev.Reorganize.SizeOptions.Round">
+            <summary>
+                Determines that the value is rounded to the nearest integral value.
+            </summary>
+        </member>
         <member name="T:SilDev.Reorganize.SizeUnits">
             <summary>
-                Provides units of digital information.
+                Provides labels for size units.
             </summary>
         </member>
         <member name="F:SilDev.Reorganize.SizeUnits.Byte">
@@ -9129,6 +9149,102 @@
             <summary>
                 Stands for exabyte or exbibyte.
             </summary>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean,SilDev.Reorganize.SizeOptions)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="unit">
+                The new unit.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="suffix">
+                true to show the size unit suffix; otherwise, false.
+            </param>
+            <param name="sizeOptions">
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,SilDev.Reorganize.SizeOptions)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="unit">
+                The new unit.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="sizeOptions">
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeUnits,SilDev.Reorganize.SizeOptions)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="unit">
+                The new unit.
+            </param>
+            <param name="sizeOptions">
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,System.Boolean,SilDev.Reorganize.SizeOptions)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+                on the size.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="suffix">
+                true to show the size unit suffix; otherwise, false.
+            </param>
+            <param name="sizeOptions">
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,SilDev.Reorganize.SizeOptions)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+                on the size.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="binary">
+                true for the binary numeral system; otherwise, false for the decimal numeral system.
+            </param>
+            <param name="sizeOptions">
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeOptions)">
+            <summary>
+                Converts this numeric value into a string that represents the number expressed as a size
+                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+                on the size.
+            </summary>
+            <param name="value">
+                The value to be converted.
+            </param>
+            <param name="sizeOptions">
+            </param>
         </member>
         <member name="M:SilDev.Reorganize.CopyTo(System.IO.Stream,System.IO.Stream,System.Int32)">
             <summary>
@@ -9178,46 +9294,6 @@
             </param>
             <param name="timelimit">
                 The time limit in milliseconds.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-                Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
-            </summary>
-            <param name="value">
-                The value to be converted.
-            </param>
-            <param name="unit">
-                The new unit.
-            </param>
-            <param name="binary">
-                true for the binary numeral system; otherwise, false for the decimal numeral system.
-            </param>
-            <param name="suffix">
-                true to show the size unit suffix; otherwise, false.
-            </param>
-            <param name="trim">
-                true to remove all zeros after the comma; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDataSize(System.Int64,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-                Converts this numeric value into a string that represents the number expressed as a size
-                value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-                on the size.
-            </summary>
-            <param name="value">
-                The value to be converted.
-            </param>
-            <param name="binary">
-                true for the binary numeral system; otherwise, false for the decimal numeral system.
-            </param>
-            <param name="suffix">
-                true to show the size unit suffix; otherwise, false.
-            </param>
-            <param name="trim">
-                true to remove all zeros after the comma; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Increment(System.IntPtr,System.IntPtr)">
