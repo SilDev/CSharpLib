@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-02-11 16:56
+// Version:  2018-02-24 01:31
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -33,7 +33,28 @@ namespace SilDev
     public static class Reorganize
     {
         /// <summary>
-        ///     Provides units of digital information.
+        ///     Provides size format options.
+        /// </summary>
+        public enum SizeOptions
+        {
+            /// <summary>
+            ///     Determines that the format is not changed.
+            /// </summary>
+            None,
+
+            /// <summary>
+            ///     Determines that all zeros are removed after the comma.
+            /// </summary>
+            Trim,
+
+            /// <summary>
+            ///     Determines that the value is rounded to the nearest integral value.
+            /// </summary>
+            Round
+        }
+
+        /// <summary>
+        ///     Provides labels for size units.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum SizeUnits
@@ -73,6 +94,130 @@ namespace SilDev
             /// </summary>
             EB = 6
         }
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in the specified <see cref="SizeUnits"/>.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="unit">
+        ///     The new unit.
+        /// </param>
+        /// <param name="binary">
+        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        /// </param>
+        /// <param name="suffix">
+        ///     true to show the size unit suffix; otherwise, false.
+        /// </param>
+        /// <param name="sizeOptions">
+        /// </param>
+        public static string FormatSize(this long value, SizeUnits unit, bool binary = true, bool suffix = true, SizeOptions sizeOptions = SizeOptions.None)
+        {
+            if (value < 0)
+                return $"-{Math.Abs(value).FormatSize(unit, binary, suffix, sizeOptions)}";
+            var f = sizeOptions != SizeOptions.None ? "0.##" : "0.00";
+            if (value == 0)
+                return $"{value.ToString(f)} bytes";
+            var d = value / Math.Pow(binary ? 1024 : 1000, (int)unit);
+            if (sizeOptions == SizeOptions.Round)
+                d = Math.Round(d);
+            var s = d.ToString(f);
+            if (!suffix)
+                return s;
+            s = $"{s} {unit}";
+            if (unit == 0 && !Math.Abs(d).Equals(1d))
+                s += "s";
+            return s;
+        }
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in the specified <see cref="SizeUnits"/>.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="unit">
+        ///     The new unit.
+        /// </param>
+        /// <param name="binary">
+        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        /// </param>
+        /// <param name="sizeOptions">
+        /// </param>
+        public static string FormatSize(this long value, SizeUnits unit, bool binary, SizeOptions sizeOptions) =>
+            value.FormatSize(unit, binary, true, sizeOptions);
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in the specified <see cref="SizeUnits"/>.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="unit">
+        ///     The new unit.
+        /// </param>
+        /// <param name="sizeOptions">
+        /// </param>
+        public static string FormatSize(this long value, SizeUnits unit, SizeOptions sizeOptions) =>
+            value.FormatSize(unit, true, true, sizeOptions);
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+        ///     on the size.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="binary">
+        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        /// </param>
+        /// <param name="suffix">
+        ///     true to show the size unit suffix; otherwise, false.
+        /// </param>
+        /// <param name="sizeOptions">
+        /// </param>
+        public static string FormatSize(this long value, bool binary = true, bool suffix = true, SizeOptions sizeOptions = SizeOptions.None)
+        {
+            if (value == 0)
+                return value.FormatSize(SizeUnits.Byte, binary, suffix, sizeOptions);
+            var i = (int)Math.Floor(Math.Log(Math.Abs(value), binary ? 1024 : 1000));
+            var s = value.FormatSize((SizeUnits)i, binary, suffix, sizeOptions);
+            return s;
+        }
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+        ///     on the size.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="binary">
+        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        /// </param>
+        /// <param name="sizeOptions">
+        /// </param>
+        public static string FormatSize(this long value, bool binary, SizeOptions sizeOptions) =>
+            value.FormatSize(SizeUnits.Byte, binary, true, sizeOptions);
+
+        /// <summary>
+        ///     Converts this numeric value into a string that represents the number expressed as a size
+        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
+        ///     on the size.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to be converted.
+        /// </param>
+        /// <param name="sizeOptions">
+        /// </param>
+        public static string FormatSize(this long value, SizeOptions sizeOptions) =>
+            value.FormatSize(true, true, sizeOptions);
 
         /// <summary>
         ///     Reads the bytes from the specified stream and writes them to another stream.
@@ -205,64 +350,6 @@ namespace SilDev
                     enumerator?.Dispose();
                 }
             }
-        }
-
-        /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnits"/>.
-        /// </summary>
-        /// <param name="value">
-        ///     The value to be converted.
-        /// </param>
-        /// <param name="unit">
-        ///     The new unit.
-        /// </param>
-        /// <param name="binary">
-        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
-        /// </param>
-        /// <param name="suffix">
-        ///     true to show the size unit suffix; otherwise, false.
-        /// </param>
-        /// <param name="trim">
-        ///     true to remove all zeros after the comma; otherwise, false.
-        /// </param>
-        public static string FormatDataSize(this long value, SizeUnits unit, bool binary = true, bool suffix = true, bool trim = false)
-        {
-            if (value < 0)
-                return "-" + FormatDataSize(Math.Abs(value), unit, binary, suffix);
-            if (value == 0)
-                return value.ToString(trim ? "0.##" : "0.00") + " bytes";
-            var d = value / Math.Pow(binary ? 1024 : 1000, (int)unit);
-            var s = d.ToString(trim ? "0.##" : "0.00") + " " + unit;
-            if (unit == 0 && !Math.Abs(d).Equals(1d))
-                s += "s";
-            return s;
-        }
-
-        /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-        ///     on the size.
-        /// </summary>
-        /// <param name="value">
-        ///     The value to be converted.
-        /// </param>
-        /// <param name="binary">
-        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
-        /// </param>
-        /// <param name="suffix">
-        ///     true to show the size unit suffix; otherwise, false.
-        /// </param>
-        /// <param name="trim">
-        ///     true to remove all zeros after the comma; otherwise, false.
-        /// </param>
-        public static string FormatDataSize(this long value, bool binary = true, bool suffix = true, bool trim = false)
-        {
-            if (value == 0)
-                return value.FormatDataSize(SizeUnits.Byte, binary, suffix, trim);
-            var i = (int)Math.Log(Math.Abs(value), binary ? 1024 : 1000);
-            var s = value.FormatDataSize((SizeUnits)i, binary, suffix, trim);
-            return s;
         }
 
         /// <summary>

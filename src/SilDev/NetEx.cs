@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2017-10-15 14:52
+// Version:  2018-02-24 01:38
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -774,9 +774,9 @@ namespace SilDev
             {
                 get
                 {
-                    var current = BytesReceived.FormatDataSize(Reorganize.SizeUnits.MB);
-                    var total = TotalBytesToReceive.FormatDataSize(Reorganize.SizeUnits.MB);
-                    return current + " / " + total;
+                    var current = BytesReceived.FormatSize(Reorganize.SizeUnits.MB);
+                    var total = TotalBytesToReceive.FormatSize(Reorganize.SizeUnits.MB);
+                    return $"{current} / {total}";
                 }
             }
 
@@ -951,7 +951,11 @@ namespace SilDev
                     if (e.BytesReceived <= 0)
                         return;
                     TransferSpeed = TransferSpeed / 1000 / TimeElapsed.TotalSeconds;
-                    TransferSpeedAd = $"{((long)(e.BytesReceived / TimeElapsed.TotalSeconds)).FormatDataSize(false).ToLower()}it/s";
+                    var speed = (long)(e.BytesReceived / TimeElapsed.TotalSeconds);
+                    var speedAd = speed.FormatSize(false).ToLower();
+                    if (speedAd.Contains("byte"))
+                        speedAd = speedAd.TrimEnd('s').Replace("byte", "b");
+                    TransferSpeedAd = $"{speedAd}it/s";
                 }
                 catch (Exception ex)
                 {
