@@ -1348,25 +1348,6 @@
                 The object to check.
             </param>
         </member>
-        <member name="M:SilDev.Comparison.IndexOf``1(``0[],``0[])">
-            <summary>
-                Searches for the specified one-dimensional array and returns the index of its first
-                occurrence in another one-dimensional array.
-            </summary>
-            <typeparam name="T">
-                The type of the elements of the array.
-            </typeparam>
-            <param name="source">
-                The one-dimensional array to search.
-            </param>
-            <param name="target">
-                The one-dimensional array to locate.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-            </exception>
-            <exception cref="T:System.OverflowException">
-            </exception>
-        </member>
         <member name="M:SilDev.Comparison.IsBetween``1(``0,``0,``0)">
             <summary>
                 Determines whether the value of this object instance is between two specified values.
@@ -1382,49 +1363,6 @@
             </param>
             <param name="end">
                 The end index value.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx``1(System.Collections.Generic.IEnumerable{``0},``0[][])">
-            <summary>
-                Determines whether a specified sequence of elements occurs within this sequence of
-                elements.
-            </summary>
-            <typeparam name="T">
-                The type of the elements of the array.
-            </typeparam>
-            <param name="source">
-                The sequence of elements to browse.
-            </param>
-            <param name="targets">
-                The sequence of elements to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String[])">
-            <summary>
-                Determines whether a specified string occurs within this sequence of strings. A
-                parameter specifies the culture, case, and sort rules used in the comparison.
-            </summary>
-            <param name="source">
-                The sequence to browse.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-            <param name="targets">
-                The sequence of strings to seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.String[])">
-            <summary>
-                Determines whether a specified string occurs within this sequence of strings. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
-            </summary>
-            <param name="source">
-                The sequence to browse.
-            </param>
-            <param name="targets">
-                The sequence of strings to seek.
             </param>
         </member>
         <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.String[])">
@@ -1511,30 +1449,6 @@
                 The sequence of strings to compare seek.
             </param>
         </member>
-        <member name="M:SilDev.Comparison.StartWith(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
-            <summary>
-                Determines whether the beginning of this sequence of bytes matches the specified
-                sequence of bytes
-            </summary>
-            <param name="source">
-                The first sequence of bytes to compare.
-            </param>
-            <param name="target">
-                The sequence of bytes to compare with the first.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.StartWith(System.Collections.Generic.IEnumerable{System.Byte},System.Collections.Generic.IEnumerable{System.Byte})">
-            <summary>
-                Determines whether the beginning of this sequence of bytes matches the specified
-                sequence of bytes
-            </summary>
-            <param name="source">
-                The first sequence of bytes to compare.
-            </param>
-            <param name="target">
-                The sequence of bytes to compare with the first.
-            </param>
-        </member>
         <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
             <summary>
                 Determines whether the end of this string matches a string. A parameter specifies the
@@ -1560,30 +1474,6 @@
             </param>
             <param name="targets">
                 The sequence of strings to compare seek.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EndsWith(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
-            <summary>
-                Determines whether the end of this sequence of bytes matches the specified sequence of
-                bytes.
-            </summary>
-            <param name="source">
-                The first sequence of bytes to compare.
-            </param>
-            <param name="target">
-                The sequence of bytes to compare with the first.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EndsWith(System.Collections.Generic.IEnumerable{System.Byte},System.Collections.Generic.IEnumerable{System.Byte})">
-            <summary>
-                Determines whether the end of this sequence of bytes matches the specified sequence of
-                bytes.
-            </summary>
-            <param name="source">
-                The first sequence of bytes to compare.
-            </param>
-            <param name="target">
-                The sequence of bytes to compare with the first.
             </param>
         </member>
         <member name="M:SilDev.Comparison.EqualsEx(System.String,System.StringComparison,System.String[])">
@@ -1612,18 +1502,6 @@
             </param>
             <param name="targets">
                 The sequence of strings to compare with the first.
-            </param>
-        </member>
-        <member name="M:SilDev.Comparison.EqualsEx(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
-            <summary>
-                Determines whether this sequence of bytes the same as the specified sequence of
-                bytes.
-            </summary>
-            <param name="source">
-                The first sequence of bytes to compare.
-            </param>
-            <param name="target">
-                The sequence of bytes to compare with the first.
             </param>
         </member>
         <member name="T:SilDev.Comparison.AlphanumericComparer">
@@ -3781,6 +3659,615 @@
             <param name="cmdLineArgs">
                 The command-line arguments to use when starting the application. Use null to use
                 the current arguments, which are already in use.
+            </param>
+        </member>
+        <member name="T:SilDev.EnumerableEx">
+            <summary>
+                Provides static methods based on the <see cref="T:System.Linq.Enumerable"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.EnumerableEx.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}},System.Int64)">
+            <summary>
+                Projects each element of a sequence into a new form.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                A sequence of values to invoke a transform function on.
+            </param>
+            <param name="selector">
+                A transform function to apply to each element.
+            </param>
+            <param name="timelimit">
+                The time limit in milliseconds.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source or selector is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The <see cref="T:System.Collections.Generic.Stack`1"/> is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Just``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.Int32)">
+            <summary>
+                Returns a element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <param name="indicator">
+                The indicator that determines which element is returned.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                The indicator value is negative.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                No element satisfies the condition in predicate. -or- The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Just``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+                Returns a element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="indicator">
+                The indicator that determines which element is returned.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                The indicator value is negative.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.JustOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.Int32)">
+            <summary>
+                Returns a element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <param name="indicator">
+                The indicator that determines which element is returned.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                The indicator value is negative.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.JustOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+                Returns a element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="indicator">
+                The indicator that determines which element is returned.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                The indicator value is negative.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Second``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the second element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.SecondOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the second element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Third``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the third element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.ThirdOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the third element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Fourth``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the fourth element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.FourthOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the fourth element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Fifth``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the fifth element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.FifthOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the fifth element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Sixth``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the sixth element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.SixthOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the sixth element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Seventh``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the seventh element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.SeventhOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the seventh element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Eighth``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the eighth element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.EighthOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the eighth element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Ninth``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the ninth element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.NinthOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the ninth element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Tenth``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the tenth element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                The source sequence is empty.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.TenthOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+                Returns the tenth element in a sequence that satisfies a specified condition or a default
+                value if no such element is found.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.
+            </param>
+            <param name="predicate">
+                A function to test each element for a condition.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.IndexOf``1(``0[],``0[])">
+            <summary>
+                Searches for the specified one-dimensional array and returns the index of its first
+                occurrence in another one-dimensional array.
+            </summary>
+            <typeparam name="T">
+                The type of the elements of the array.
+            </typeparam>
+            <param name="source">
+                The one-dimensional array to search.
+            </param>
+            <param name="target">
+                The one-dimensional array to locate.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.EnumerableEx.ContainsEx``1(System.Collections.Generic.IEnumerable{``0},``0[][])">
+            <summary>
+                Determines whether a specified sequence of elements occurs within this sequence of
+                elements.
+            </summary>
+            <typeparam name="T">
+                The type of the elements of the array.
+            </typeparam>
+            <param name="source">
+                The sequence of elements to browse.
+            </param>
+            <param name="targets">
+                The sequence of elements to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String[])">
+            <summary>
+                Determines whether a specified string occurs within this sequence of strings. A
+                parameter specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The sequence to browse.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.String[])">
+            <summary>
+                Determines whether a specified string occurs within this sequence of strings. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The sequence to browse.
+            </param>
+            <param name="targets">
+                The sequence of strings to seek.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.StartWith(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
+            <summary>
+                Determines whether the beginning of this sequence of bytes matches the specified
+                sequence of bytes
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.StartWith(System.Collections.Generic.IEnumerable{System.Byte},System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+                Determines whether the beginning of this sequence of bytes matches the specified
+                sequence of bytes
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.EndsWith(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
+            <summary>
+                Determines whether the end of this sequence of bytes matches the specified sequence of
+                bytes.
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.EndsWith(System.Collections.Generic.IEnumerable{System.Byte},System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+                Determines whether the end of this sequence of bytes matches the specified sequence of
+                bytes.
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.EqualsEx(System.Collections.Generic.IEnumerable{System.Byte},System.Byte[])">
+            <summary>
+                Determines whether this sequence of bytes the same as the specified sequence of
+                bytes.
+            </summary>
+            <param name="source">
+                The first sequence of bytes to compare.
+            </param>
+            <param name="target">
+                The sequence of bytes to compare with the first.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
+                <see cref="T:System.String"/>, using the specified separator between each number.
+            </summary>
+            <param name="values">
+                An array that contains the elements to concatenate.
+            </param>
+            <param name="separator">
+                The string to use as a separator.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.Join(System.Collections.Generic.IEnumerable{System.String},System.Char)">
+            <summary>
+                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
+                <see cref="T:System.String"/>, using the specified separator between each number.
+            </summary>
+            <param name="values">
+                An array that contains the elements to concatenate.
+            </param>
+            <param name="separator">
+                The character to use as a separator.
             </param>
         </member>
         <member name="T:SilDev.EnvironmentEx">
@@ -9279,23 +9766,6 @@
                 The default value.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.RecursiveSelect``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``0}},System.Int64)">
-            <summary>
-                Projects each element of a sequence into a new form.
-            </summary>
-            <typeparam name="TSource">
-                The type of the elements of source.
-            </typeparam>
-            <param name="source">
-                A sequence of values to invoke a transform function on.
-            </param>
-            <param name="selector">
-                A transform function to apply to each element.
-            </param>
-            <param name="timelimit">
-                The time limit in milliseconds.
-            </param>
-        </member>
         <member name="M:SilDev.Reorganize.Increment(System.IntPtr,System.IntPtr)">
             <summary>
                 Increments the length of a platform-specific type number with the specified value.
@@ -9354,30 +9824,6 @@
             </summary>
             <param name="str">
                 The string to change.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
-            <summary>
-                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
-                <see cref="T:System.String"/>, using the specified separator between each number.
-            </summary>
-            <param name="values">
-                An array that contains the elements to concatenate.
-            </param>
-            <param name="separator">
-                The string to use as a separator.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Join(System.Collections.Generic.IEnumerable{System.String},System.Char)">
-            <summary>
-                Concatenates the members of a constructed <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection of type
-                <see cref="T:System.String"/>, using the specified separator between each number.
-            </summary>
-            <param name="values">
-                An array that contains the elements to concatenate.
-            </param>
-            <param name="separator">
-                The character to use as a separator.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Sort(System.String[])">
