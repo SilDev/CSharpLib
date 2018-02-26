@@ -84,6 +84,7 @@
     <Compile Include="SilDev\Desktop.cs" />
     <Compile Include="SilDev\DirectoryEx.cs" />
     <Compile Include="SilDev\Elevation.cs" />
+    <Compile Include="SilDev\EnumerableEx.cs" />
     <Compile Include="SilDev\EnvironmentEx.cs" />
     <Compile Include="SilDev\FileEx.cs" />
     <Compile Include="SilDev\Ini.cs" />
