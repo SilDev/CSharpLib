@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2017-10-31 07:54
+// Version:  2018-02-26 18:26
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,7 +17,6 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
@@ -62,7 +61,7 @@ namespace SilDev
                 var code = htmlColor?.TrimStart('#').ToUpper();
                 if (string.IsNullOrEmpty(code))
                     throw new ArgumentNullException(nameof(htmlColor));
-                if (!code.Length.IsBetween(1, 6) || code.Substring(1).Any(x => !"0123456789ABCDEF".Contains(x)))
+                if (!code.Length.IsBetween(1, 6) || code.Any(x => !"0123456789ABCDEF".Contains(x)))
                     throw new ArgumentOutOfRangeException(nameof(htmlColor));
                 if (code.Length < 6)
                 {
@@ -204,6 +203,15 @@ namespace SilDev
         {
             try
             {
+#if x86
+                const int maxRange = 23049;
+#else
+                const int maxRange = 23170;
+#endif
+                if (width.IsBetween(1, maxRange))
+                    throw new ArgumentOutOfRangeException(nameof(width));
+                if (heigth.IsBetween(1, maxRange))
+                    throw new ArgumentOutOfRangeException(nameof(heigth));
                 var bmp = new Bitmap(width, heigth);
                 bmp.SetResolution(image.HorizontalResolution, image.VerticalResolution);
                 using (var gr = Graphics.FromImage(bmp))
@@ -259,7 +267,6 @@ namespace SilDev
         ///     Specifies the maximal size indicator, which determines when the image
         ///     gets a new size.
         /// </param>
-        [SuppressMessage("ReSharper", "InvertIf")]
         public static Image Redraw(this Image image, SmoothingMode quality = SmoothingMode.HighQuality, int indicator = 1024)
         {
             int[] size =
@@ -267,15 +274,18 @@ namespace SilDev
                 image.Width,
                 image.Height
             };
-            if (indicator > 0 && (indicator < size[0] || indicator < size[1]))
-                for (var i = 0; i < size.Length; i++)
-                    if (size[i] > indicator)
-                    {
-                        var percent = (int)Math.Floor(100f / size[i] * indicator);
-                        size[i] = (int)(size[i] * (percent / 100f));
-                        size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100f));
-                        break;
-                    }
+            if (indicator <= 0 || indicator >= size.First() && indicator >= size.Last())
+                goto Return;
+            for (var i = 0; i < size.Length; i++)
+            {
+                if (size[i] <= indicator)
+                    continue;
+                var percent = (int)Math.Floor(100f / size[i] * indicator);
+                size[i] = (int)(size[i] * (percent / 100f));
+                size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100f));
+                break;
+            }
+            Return:
             return image.Redraw(size[0], size[1], quality);
         }
 
@@ -427,8 +437,8 @@ namespace SilDev
             try
             {
                 var bmp = (Bitmap)image;
-                for (var y = 0; y < image.Height; y++)
-                    for (var x = 0; x < image.Width; x++)
+                for (var x = 0; x < image.Width; x++)
+                    for (var y = 0; y < image.Height; y++)
                     {
                         var px = bmp.GetPixel(x, y);
                         if (Color.FromArgb(0, px.R, px.G, px.B) == Color.FromArgb(0, from.R, from.G, from.B))
@@ -459,14 +469,20 @@ namespace SilDev
                 var imgList = new List<Frame>();
                 var frames = image.GetFrameCount(FrameDimension.Time);
                 if (frames <= 1)
-                    imgList.Add(new Frame(new Bitmap(image), 0));
+                {
+                    var bmp = new Bitmap(image);
+                    var frame = new Frame(bmp, 0);
+                    imgList.Add(frame);
+                }
                 else
                 {
                     var times = image.GetPropertyItem(0x5100).Value;
                     for (var i = 0; i < frames; i++)
                     {
+                        var bmp = new Bitmap(image);
                         var duration = BitConverter.ToInt32(times, 4 * i);
-                        imgList.Add(new Frame(new Bitmap(image), duration));
+                        var frame = new Frame(bmp, duration);
+                        imgList.Add(frame);
                         image.SelectActiveFrame(FrameDimension.Time, i);
                     }
                 }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2017-10-31 07:54
+// Version:  2018-02-26 18:31
 // 
 // Copyright (c) 2017, Si13n7 Developments (r)
 // All rights reserved.
@@ -60,32 +60,6 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Searches for the specified one-dimensional array and returns the index of its first
-        ///     occurrence in another one-dimensional array.
-        /// </summary>
-        /// <typeparam name="T">
-        ///     The type of the elements of the array.
-        /// </typeparam>
-        /// <param name="source">
-        ///     The one-dimensional array to search.
-        /// </param>
-        /// <param name="target">
-        ///     The one-dimensional array to locate.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="OverflowException">
-        /// </exception>
-        public static IEnumerable<int> IndexOf<T>(T[] source, T[] target)
-        {
-            if (target == null || source.Length < target.Length)
-                yield break;
-            for (var i = 0; i < source.Length - target.Length + 1; i++)
-                if (!target.Where((data, index) => !source[i + index].Equals(data)).Any())
-                    yield return i;
-        }
-
-        /// <summary>
         ///     Determines whether the value of this object instance is between two specified values.
         /// </summary>
         /// <typeparam name="T">
@@ -114,69 +88,6 @@ namespace SilDev
                 return false;
             }
         }
-
-        /// <summary>
-        ///     Determines whether a specified sequence of elements occurs within this sequence of
-        ///     elements.
-        /// </summary>
-        /// <typeparam name="T">
-        ///     The type of the elements of the array.
-        /// </typeparam>
-        /// <param name="source">
-        ///     The sequence of elements to browse.
-        /// </param>
-        /// <param name="targets">
-        ///     The sequence of elements to seek.
-        /// </param>
-        public static bool ContainsEx<T>(this IEnumerable<T> source, params T[][] targets)
-        {
-            try
-            {
-                if (source == null || targets == null || targets.Length == 0 || targets.All(x => x == null || x.Length == 0))
-                    return false;
-                var r = targets.Any(x => IndexOf(source.ToArray(), x).Any(y => y >= 0));
-                return r;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether a specified string occurs within this sequence of strings. A
-        ///     parameter specifies the culture, case, and sort rules used in the comparison.
-        /// </summary>
-        /// <param name="source">
-        ///     The sequence to browse.
-        /// </param>
-        /// <param name="comparisonType">
-        ///     One of the enumeration values that specifies the rules for the search.
-        /// </param>
-        /// <param name="targets">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this IEnumerable<string> source, StringComparison comparisonType, params string[] targets)
-        {
-            if (source == null || targets == null || targets.All(string.IsNullOrEmpty))
-                return false;
-            var r = source.Any(x => targets.Any(y => string.Equals(x, y, comparisonType)));
-            return r;
-        }
-
-        /// <summary>
-        ///     Determines whether a specified string occurs within this sequence of strings. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="source">
-        ///     The sequence to browse.
-        /// </param>
-        /// <param name="targets">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this IEnumerable<string> source, params string[] targets) =>
-            source.ContainsEx(StringComparison.OrdinalIgnoreCase, targets);
 
         /// <summary>
         ///     Determines whether a specified substring occurs within this string. A parameter
@@ -284,38 +195,6 @@ namespace SilDev
             source.StartsWithEx(StringComparison.OrdinalIgnoreCase, targets);
 
         /// <summary>
-        ///     Determines whether the beginning of this sequence of bytes matches the specified
-        ///     sequence of bytes
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool StartWith(this IEnumerable<byte> source, params byte[] target)
-        {
-            var ba = source?.ToArray();
-            if (ba == null || target == null || ba.Length < target.Length)
-                return false;
-            var r = !target.Where((t, i) => t != ba[i]).Any();
-            return r;
-        }
-
-        /// <summary>
-        ///     Determines whether the beginning of this sequence of bytes matches the specified
-        ///     sequence of bytes
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool StartWith(this IEnumerable<byte> source, IEnumerable<byte> target) =>
-            source.StartWith(target.ToArray());
-
-        /// <summary>
         ///     Determines whether the end of this string matches a string. A parameter specifies the
         ///     culture, case, and sort rules used in the comparison.
         /// </summary>
@@ -348,40 +227,6 @@ namespace SilDev
         /// </param>
         public static bool EndsWithEx(this string source, params string[] targets) =>
             source.EndsWithEx(StringComparison.OrdinalIgnoreCase, targets);
-
-        /// <summary>
-        ///     Determines whether the end of this sequence of bytes matches the specified sequence of
-        ///     bytes.
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool EndsWith(this IEnumerable<byte> source, params byte[] target)
-        {
-            var ba = source?.ToArray();
-            if (ba == null || target == null || ba.Length < target.Length)
-                return false;
-            for (var i = target.Length - 1; i >= 0; i--)
-                if (target[i] != ba[i])
-                    return false;
-            return true;
-        }
-
-        /// <summary>
-        ///     Determines whether the end of this sequence of bytes matches the specified sequence of
-        ///     bytes.
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool EndsWith(this IEnumerable<byte> source, IEnumerable<byte> target) =>
-            source.EndsWith(target.ToArray());
 
         /// <summary>
         ///     Determines whether this string instance is the same as a string of the specified string
@@ -421,27 +266,6 @@ namespace SilDev
             source.EqualsEx(StringComparison.OrdinalIgnoreCase, targets);
 
         /// <summary>
-        ///     Determines whether this sequence of bytes the same as the specified sequence of
-        ///     bytes.
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool EqualsEx(this IEnumerable<byte> source, params byte[] target)
-        {
-            var ba = source?.ToArray();
-            if (ba == null && target == null)
-                return true;
-            if (ba == null || target == null || ba.Length != target.Length)
-                return false;
-            var r = !ba.Where((t, i) => t != target[i]).Any();
-            return r;
-        }
-
-        /// <summary>
         ///     Provides a base class for comparison.
         /// </summary>
         public class AlphanumericComparer : IComparer<object>
@@ -455,10 +279,8 @@ namespace SilDev
             /// <param name="descendant">
             ///     true to enable the descending order; otherwise, false.
             /// </param>
-            public AlphanumericComparer(bool descendant = false)
-            {
+            public AlphanumericComparer(bool descendant = false) =>
                 _d = descendant;
-            }
 
             /// <summary>
             ///     Compare two specified objects and returns an integer that indicates their relative

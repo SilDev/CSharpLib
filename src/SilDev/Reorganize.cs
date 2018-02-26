@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-02-24 01:31
+// Version:  2018-02-26 18:30
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,9 +16,7 @@
 namespace SilDev
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.IO;
@@ -303,56 +301,6 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Projects each element of a sequence into a new form.
-        /// </summary>
-        /// <typeparam name="TSource">
-        ///     The type of the elements of source.
-        /// </typeparam>
-        /// <param name="source">
-        ///     A sequence of values to invoke a transform function on.
-        /// </param>
-        /// <param name="selector">
-        ///     A transform function to apply to each element.
-        /// </param>
-        /// <param name="timelimit">
-        ///     The time limit in milliseconds.
-        /// </param>
-        public static IEnumerable<TSource> RecursiveSelect<TSource>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TSource>> selector, long timelimit = 60000)
-        {
-            var stack = new Stack<IEnumerator<TSource>>();
-            var enumerator = source.GetEnumerator();
-            try
-            {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-                while (true)
-                    if (stopwatch.ElapsedMilliseconds < timelimit && enumerator?.MoveNext() == true)
-                    {
-                        var element = enumerator.Current;
-                        yield return element;
-                        stack.Push(enumerator);
-                        enumerator = selector(element)?.GetEnumerator();
-                    }
-                    else if (stack.Count > 0)
-                    {
-                        enumerator?.Dispose();
-                        enumerator = stack.Pop();
-                    }
-                    else
-                        yield break;
-            }
-            finally
-            {
-                enumerator?.Dispose();
-                while (stack.Count > 0)
-                {
-                    enumerator = stack.Pop();
-                    enumerator?.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
         ///     Increments the length of a platform-specific type number with the specified value.
         /// </summary>
         /// <param name="ptr">
@@ -475,37 +423,6 @@ namespace SilDev
             var b = Math.Floor(Math.Log(str.Length));
             return str.ToLookup(c => Math.Floor(i++ / b)).Select(e => new string(e.ToArray())).ToArray();
         }
-
-        /// <summary>
-        ///     Concatenates the members of a constructed <see cref="IEnumerable{T}"/> collection of type
-        ///     <see cref="string"/>, using the specified separator between each number.
-        /// </summary>
-        /// <param name="values">
-        ///     An array that contains the elements to concatenate.
-        /// </param>
-        /// <param name="separator">
-        ///     The string to use as a separator.
-        /// </param>
-        public static string Join(this IEnumerable<string> values, string separator = null)
-        {
-            if (values == null)
-                return null;
-            var s = string.Join(separator, values);
-            return s;
-        }
-
-        /// <summary>
-        ///     Concatenates the members of a constructed <see cref="IEnumerable{T}"/> collection of type
-        ///     <see cref="string"/>, using the specified separator between each number.
-        /// </summary>
-        /// <param name="values">
-        ///     An array that contains the elements to concatenate.
-        /// </param>
-        /// <param name="separator">
-        ///     The character to use as a separator.
-        /// </param>
-        public static string Join(this IEnumerable<string> values, char separator) =>
-            values.Join(separator.ToString());
 
         /// <summary>
         ///     Sorts the elements in an entire string array using the <see cref="IComparable{T}"/> generic
