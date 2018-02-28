@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2018-02-28 04:57
+// Version:  2018-02-28 04:59
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,6 +20,7 @@ namespace SilDev
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using Microsoft.Win32.SafeHandles;
@@ -114,6 +115,66 @@ namespace SilDev
                 Log.Write(ex);
                 return Color.Empty;
             }
+        }
+
+        /// <summary>
+        ///     Converts this GDI+ <see cref="Image"/> to an <see cref="Icon"/>.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to convert.
+        /// </param>
+        /// <param name="size">
+        ///     The icon size.
+        /// </param>
+        public static Icon ToIcon(this Image image, int size = 16)
+        {
+            var ico = default(Icon);
+            try
+            {
+                var bmp = image.Redraw(size, size);
+                using (var msBmp = new MemoryStream())
+                {
+                    bmp.Save(msBmp, ImageFormat.Png);
+                    using (var msIco = new MemoryStream())
+                    {
+                        var bsize = (byte)size;
+                        var bytes = new List<byte>
+                        {
+                            0x00,
+                            0x00,
+                            0x01,
+                            0x00,
+                            0x01,
+                            0x00,
+                            bsize,
+                            bsize,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x20,
+                            0x00
+                        };
+                        bytes.AddRange(BitConverter.GetBytes((int)msBmp.Length));
+                        bytes.AddRange(new byte[]
+                        {
+                            0x16,
+                            0x00,
+                            0x00,
+                            0x00
+                        });
+                        bytes.AddRange(msBmp.ToArray());
+                        msIco.Write(bytes.ToArray(), 0, bytes.Count);
+                        msIco.Position = 0;
+                        ico = new Icon(msIco);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return ico;
         }
 
         /// <summary>
