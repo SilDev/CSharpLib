@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2018-02-26 18:26
+// Version:  2018-02-28 04:57
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -208,9 +208,9 @@ namespace SilDev
 #else
                 const int maxRange = 23170;
 #endif
-                if (width.IsBetween(1, maxRange))
+                if (!width.IsBetween(1, maxRange))
                     throw new ArgumentOutOfRangeException(nameof(width));
-                if (heigth.IsBetween(1, maxRange))
+                if (!heigth.IsBetween(1, maxRange))
                     throw new ArgumentOutOfRangeException(nameof(heigth));
                 var bmp = new Bitmap(width, heigth);
                 bmp.SetResolution(image.HorizontalResolution, image.VerticalResolution);
