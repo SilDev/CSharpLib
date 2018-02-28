@@ -2958,6 +2958,17 @@
                 The color to scale.
             </param>
         </member>
+        <member name="M:SilDev.Depiction.ToIcon(System.Drawing.Image,System.Int32)">
+            <summary>
+                Converts this GDI+ <see cref="T:System.Drawing.Image"/> to an <see cref="T:System.Drawing.Icon"/>.
+            </summary>
+            <param name="image">
+                The image to convert.
+            </param>
+            <param name="size">
+                The icon size.
+            </param>
+        </member>
         <member name="M:SilDev.Depiction.ToImage(System.Drawing.Color,System.Int32,System.Int32)">
             <summary>
                 Initilazies a new instance of the <see cref="T:System.Drawing.Image"/> class with
