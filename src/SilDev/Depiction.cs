@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Depiction.cs
-// Version:  2018-02-28 04:59
+// Version:  2018-02-28 05:01
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -347,7 +347,7 @@ namespace SilDev
                 break;
             }
             Return:
-            return image.Redraw(size[0], size[1], quality);
+            return image.Redraw(size.First(), size.Last(), quality);
         }
 
         /// <summary>
