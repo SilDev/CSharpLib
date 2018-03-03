@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-03-02 21:09
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,6 +23,7 @@ namespace SilDev
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
+    using Drawing;
     using Forms;
 
     /// <summary>

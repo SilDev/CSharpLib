@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2017-10-21 13:53
+// Version:  2018-03-02 21:08
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,6 +20,7 @@ namespace SilDev.Forms
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
+    using Drawing;
     using Properties;
 
     /// <summary>
@@ -195,64 +196,50 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null)
         {
-            try
+            Image img = Resources.SizeGripImage;
+            if (img == null)
+                return;
+            if (color != null && color != Color.White)
+                img = img.RecolorPixels(Color.White, (Color)color);
+            var pb = new PictureBox
             {
-                Image img = Resources.SizeGripImage;
-                if (img == null)
-                    return;
-                if (color != null && color != Color.White)
-                    img = img.RecolorPixels(Color.White, (Color)color);
-                var pb = new PictureBox
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
+                BackColor = Color.Transparent,
+                BackgroundImage = img,
+                BackgroundImageLayout = ImageLayout.Center,
+                Location = new Point(control.Right - 12, control.Bottom - 12),
+                Size = new Size(12, 12)
+            };
+            if (mouseDownEvent != null)
+                pb.MouseDown += mouseDownEvent;
+            else
+            {
+                var c = pb.GetAncestor();
+                pb.MouseDown += (sender, args) =>
                 {
-                    Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
-                    BackColor = Color.Transparent,
-                    BackgroundImage = img,
-                    BackgroundImageLayout = ImageLayout.Center,
-                    Location = new Point(control.Right - 12, control.Bottom - 12),
-                    Size = new Size(12, 12)
-                };
-                if (mouseDownEvent != null)
-                    pb.MouseDown += mouseDownEvent;
-                else
-                {
-                    var c = pb.GetAncestor();
-                    pb.MouseDown += (sender, args) =>
+                    var point = new Point(c.Width - 1, c.Height - 1);
+                    WinApi.NativeMethods.ClientToScreen(c.Handle, ref point);
+                    WinApi.NativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
+                    var mouseDown = new WinApi.DeviceInput();
+                    mouseDown.Data.Mouse.Flags = 0x2;
+                    mouseDown.Type = 0;
+                    var mouseUp = new WinApi.DeviceInput();
+                    mouseUp.Data.Mouse.Flags = 0x4;
+                    mouseUp.Type = 0;
+                    WinApi.DeviceInput[] inputs =
                     {
-                        try
-                        {
-                            var point = new Point(c.Width - 1, c.Height - 1);
-                            WinApi.NativeMethods.ClientToScreen(c.Handle, ref point);
-                            WinApi.NativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
-                            var mouseDown = new WinApi.DeviceInput();
-                            mouseDown.Data.Mouse.Flags = 0x2;
-                            mouseDown.Type = 0;
-                            var mouseUp = new WinApi.DeviceInput();
-                            mouseUp.Data.Mouse.Flags = 0x4;
-                            mouseUp.Type = 0;
-                            WinApi.DeviceInput[] inputs =
-                            {
-                                mouseUp,
-                                mouseDown
-                            };
-                            WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Write(ex);
-                        }
+                        mouseUp,
+                        mouseDown
                     };
-                }
-                if (mouseEnterEvent != null)
-                    pb.MouseEnter += mouseEnterEvent;
-                else
-                    pb.Cursor = Cursors.SizeNWSE;
-                control.Controls.Add(pb);
-                control.Update();
+                    WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
+                };
             }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
+            if (mouseEnterEvent != null)
+                pb.MouseEnter += mouseEnterEvent;
+            else
+                pb.Cursor = Cursors.SizeNWSE;
+            control.Controls.Add(pb);
+            control.Update();
         }
     }
 }

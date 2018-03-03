@@ -57,6 +57,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SilDev\Drawing\ColorEx.cs" />
+    <Compile Include="SilDev\Drawing\IconEx.cs" />
+    <Compile Include="SilDev\Drawing\ImageEx.cs" />
     <Compile Include="SilDev\Forms\ButtonEx.cs" />
     <Compile Include="SilDev\Forms\ColorDialogEx.cs">
       <SubType>Component</SubType>
@@ -80,7 +83,6 @@
     <Compile Include="SilDev\Compaction.cs" />
     <Compile Include="SilDev\Comparison.cs" />
     <Compile Include="SilDev\Crypto.cs" />
-    <Compile Include="SilDev\Depiction.cs" />
     <Compile Include="SilDev\Desktop.cs" />
     <Compile Include="SilDev\DirectoryEx.cs" />
     <Compile Include="SilDev\Elevation.cs" />

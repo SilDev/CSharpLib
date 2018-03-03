@@ -4,8 +4,8 @@
 // This file is distributed under the MIT License
 // ==============================================
 // 
-// Filename: Depiction.cs
-// Version:  2018-02-28 05:01
+// Filename: ImageEx.cs
+// Version:  2018-03-03 02:10
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -13,7 +13,7 @@
 
 #endregion
 
-namespace SilDev
+namespace SilDev.Drawing
 {
     using System;
     using System.Collections.Generic;
@@ -27,9 +27,9 @@ namespace SilDev
     using Properties;
 
     /// <summary>
-    ///     Provides functionality for the <see cref="Color"/>, <see cref="Image"/> descended classes.
+    ///     Expands the functionality for the <see cref="Image"/> class.
     /// </summary>
-    public static class Depiction
+    public static class ImageEx
     {
         private static readonly Dictionary<object, ImagePair> SwitcherCache = new Dictionary<object, ImagePair>();
 
@@ -42,140 +42,6 @@ namespace SilDev
         ///     Gets an <see cref="Image"/> object that contains a white 16px large search symbol.
         /// </summary>
         public static Image DefaultSearchSymbol => Resources.SearchImage;
-
-        /// <summary>
-        ///     Translates an HTML color representation to a GDI+ <see cref="Color"/> structure.
-        /// </summary>
-        /// <param name="htmlColor">
-        ///     The string representation of the HTML color to translate.
-        /// </param>
-        /// <param name="defColor">
-        ///     The color that is set if no HTML color was found.
-        /// </param>
-        /// <param name="alpha">
-        ///     The alpha component. Valid values are 0 through 255.
-        /// </param>
-        public static Color FromHtmlToColor(this string htmlColor, Color defColor, byte? alpha = null)
-        {
-            try
-            {
-                var code = htmlColor?.TrimStart('#').ToUpper();
-                if (string.IsNullOrEmpty(code))
-                    throw new ArgumentNullException(nameof(htmlColor));
-                if (!code.Length.IsBetween(1, 6) || code.Any(x => !"0123456789ABCDEF".Contains(x)))
-                    throw new ArgumentOutOfRangeException(nameof(htmlColor));
-                if (code.Length < 6)
-                {
-                    while (code.Length < 6)
-                        code += code;
-                    code = code.Substring(6);
-                }
-                var c = ColorTranslator.FromHtml($"#{code}");
-                if (alpha != null)
-                    c = Color.FromArgb((byte)alpha, c.R, c.G, c.B);
-                return c;
-            }
-            catch
-            {
-                return defColor;
-            }
-        }
-
-        /// <summary>
-        ///     Inverts the three RGB component (red, green, blue) values of the specified
-        ///     <see cref="Color"/> structure.
-        /// </summary>
-        /// <param name="color">
-        ///     The color to invert.
-        /// </param>
-        /// <param name="alpha">
-        ///     The alpha component. Valid values are 0 through 255.
-        /// </param>
-        public static Color InvertRgb(this Color color, byte? alpha = null) =>
-            Color.FromArgb(alpha ?? color.A, (byte)~color.R, (byte)~color.G, (byte)~color.B);
-
-        /// <summary>
-        ///     Scales the three RGB component (red, green, blue) values of the specified
-        ///     <see cref="Color"/> structure to gray.
-        /// </summary>
-        /// <param name="color">
-        ///     The color to scale.
-        /// </param>
-        public static Color ToGrayScale(this Color color)
-        {
-            try
-            {
-                var c = color;
-                int scale = (byte)(c.R * .3f + c.G * .59f + c.B * .11f);
-                c = Color.FromArgb(c.A, scale, scale, scale);
-                return c;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return Color.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts this GDI+ <see cref="Image"/> to an <see cref="Icon"/>.
-        /// </summary>
-        /// <param name="image">
-        ///     The image to convert.
-        /// </param>
-        /// <param name="size">
-        ///     The icon size.
-        /// </param>
-        public static Icon ToIcon(this Image image, int size = 16)
-        {
-            var ico = default(Icon);
-            try
-            {
-                var bmp = image.Redraw(size, size);
-                using (var msBmp = new MemoryStream())
-                {
-                    bmp.Save(msBmp, ImageFormat.Png);
-                    using (var msIco = new MemoryStream())
-                    {
-                        var bsize = (byte)size;
-                        var bytes = new List<byte>
-                        {
-                            0x00,
-                            0x00,
-                            0x01,
-                            0x00,
-                            0x01,
-                            0x00,
-                            bsize,
-                            bsize,
-                            0x00,
-                            0x00,
-                            0x00,
-                            0x00,
-                            0x20,
-                            0x00
-                        };
-                        bytes.AddRange(BitConverter.GetBytes((int)msBmp.Length));
-                        bytes.AddRange(new byte[]
-                        {
-                            0x16,
-                            0x00,
-                            0x00,
-                            0x00
-                        });
-                        bytes.AddRange(msBmp.ToArray());
-                        msIco.Write(bytes.ToArray(), 0, bytes.Count);
-                        msIco.Position = 0;
-                        ico = new Icon(msIco);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return ico;
-        }
 
         /// <summary>
         ///     Initilazies a new instance of the <see cref="Image"/> class with
@@ -192,56 +58,11 @@ namespace SilDev
         /// </param>
         public static Image ToImage(this Color color, int width = 1, int height = 1)
         {
-            try
-            {
-                var img = new Bitmap(width, height);
-                using (var gr = Graphics.FromImage(img))
-                    using (Brush b = new SolidBrush(color))
-                        gr.FillRectangle(b, 0, 0, width, height);
-                return img;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Gets the average RGB component (red, green, blue) values from the specified
-        ///     <see cref="Image"/>.
-        /// </summary>
-        /// <param name="image">
-        ///     The input image.
-        /// </param>
-        /// <param name="disposeImage">
-        ///     true to release all resources used by the specified <see cref="Image"/>;
-        ///     otherwise false.
-        /// </param>
-        public static Color GetAverageColor(this Image image, bool disposeImage = false)
-        {
-            try
-            {
-                Color c;
-                using (var bmp = new Bitmap(1, 1))
-                {
-                    using (var g = Graphics.FromImage(bmp))
-                    {
-                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        g.DrawImage(new Bitmap(image), new Rectangle(0, 0, 1, 1));
-                    }
-                    c = bmp.GetPixel(0, 0);
-                }
-                c = Color.FromArgb(c.R, c.G, c.B);
-                if (disposeImage)
-                    image.Dispose();
-                return c;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return Color.Empty;
-            }
+            var img = new Bitmap(width, height);
+            using (var gr = Graphics.FromImage(img))
+                using (Brush b = new SolidBrush(color))
+                    gr.FillRectangle(b, 0, 0, width, height);
+            return img;
         }
 
         /// <summary>
@@ -556,6 +377,54 @@ namespace SilDev
                 Log.Write(ex);
                 return null;
             }
+        }
+
+        /// <summary>
+        ///     Tests whether the specified object is a <see cref="Bitmap"/> object and is
+        ///     equivalent to this <see cref="Bitmap"/> object.
+        /// </summary>
+        /// <param name="bitmap1">
+        ///     The first <see cref="Bitmap"/> object to compare.
+        /// </param>
+        /// <param name="bitmap2">
+        ///     The second <see cref="Bitmap"/> object to compare.
+        /// </param>
+        public static bool EqualsEx(this Bitmap bitmap1, Bitmap bitmap2)
+        {
+            if (bitmap1 == null)
+                return bitmap2 == null;
+            if (bitmap2 == null)
+                return false;
+            if (!bitmap1.PixelFormat.Equals(bitmap2.PixelFormat))
+                return false;
+            if (!bitmap1.RawFormat.Equals(bitmap2.RawFormat))
+                return false;
+            var hashes = new string[2];
+            for (var i = 0; i < hashes.Length; i++)
+                using (var ms = new MemoryStream())
+                {
+                    var bmp = i == 0 ? bitmap1 : bitmap2;
+                    bmp.Save(ms, bmp.RawFormat);
+                    hashes[i] = ms.ToArray().EncryptToSha256();
+                }
+            return hashes.First().Equals(hashes.Last());
+        }
+
+        /// <summary>
+        ///     Tests whether the specified object is a <see cref="Image"/> object and is
+        ///     equivalent to this <see cref="Image"/> object.
+        /// </summary>
+        /// <param name="image1">
+        ///     The first <see cref="Image"/> object to compare.
+        /// </param>
+        /// <param name="image2">
+        ///     The second <see cref="Image"/> object to compare.
+        /// </param>
+        public static bool EqualsEx(this Image image1, Image image2)
+        {
+            var bmp1 = image1 as Bitmap;
+            var bmp2 = image2 as Bitmap;
+            return EqualsEx(bmp1, bmp2);
         }
 
         /// <summary>

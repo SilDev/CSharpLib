@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2016-10-24 15:57
+// Version:  2018-03-02 21:09
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -15,9 +15,9 @@
 
 namespace SilDev.Forms
 {
-    using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using Drawing;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="TextBox"/> class.
@@ -35,50 +35,43 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawSearchSymbol(this TextBox textBox, Color? color = null)
         {
-            try
+            var img = ImageEx.DefaultSearchSymbol;
+            if (img == null)
+                return;
+            if (color == null)
+                color = textBox.ForeColor;
+            if (color != Color.White)
+                img = img.RecolorPixels(Color.White, (Color)color);
+            var panel = new Panel
             {
-                var img = Depiction.DefaultSearchSymbol;
-                if (img == null)
-                    return;
-                if (color == null)
-                    color = textBox.ForeColor;
-                if (color != Color.White)
-                    img = img.RecolorPixels(Color.White, (Color)color);
-                var panel = new Panel
-                {
-                    Anchor = textBox.Anchor,
-                    BackColor = textBox.BackColor,
-                    BorderStyle = textBox.BorderStyle,
-                    Dock = textBox.Dock,
-                    ForeColor = textBox.ForeColor,
-                    Location = textBox.Location,
-                    Name = $"{textBox.Name}Panel",
-                    Parent = textBox.Parent,
-                    Size = textBox.Size,
-                    TabIndex = textBox.TabIndex
-                };
-                var pictureBox = new PictureBox
-                {
-                    BackColor = textBox.BackColor,
-                    BackgroundImage = img,
-                    BackgroundImageLayout = ImageLayout.Center,
-                    Cursor = Cursors.IBeam,
-                    Dock = DockStyle.Right,
-                    ForeColor = textBox.ForeColor,
-                    Name = $"{textBox.Name}PictureBox",
-                    Size = new Size(16, 16)
-                };
-                pictureBox.Click += (sender, e) => textBox.Select();
-                panel.Controls.Add(pictureBox);
-                textBox.BorderStyle = BorderStyle.None;
-                textBox.Dock = DockStyle.Fill;
-                textBox.Parent = panel;
-                panel.Parent.Update();
-            }
-            catch (Exception ex)
+                Anchor = textBox.Anchor,
+                BackColor = textBox.BackColor,
+                BorderStyle = textBox.BorderStyle,
+                Dock = textBox.Dock,
+                ForeColor = textBox.ForeColor,
+                Location = textBox.Location,
+                Name = $"{textBox.Name}Panel",
+                Parent = textBox.Parent,
+                Size = textBox.Size,
+                TabIndex = textBox.TabIndex
+            };
+            var pictureBox = new PictureBox
             {
-                Log.Write(ex);
-            }
+                BackColor = textBox.BackColor,
+                BackgroundImage = img,
+                BackgroundImageLayout = ImageLayout.Center,
+                Cursor = Cursors.IBeam,
+                Dock = DockStyle.Right,
+                ForeColor = textBox.ForeColor,
+                Name = $"{textBox.Name}PictureBox",
+                Size = new Size(16, 16)
+            };
+            pictureBox.Click += (sender, e) => textBox.Select();
+            panel.Controls.Add(pictureBox);
+            textBox.BorderStyle = BorderStyle.None;
+            textBox.Dock = DockStyle.Fill;
+            textBox.Parent = panel;
+            panel.Parent.Update();
         }
     }
 }
