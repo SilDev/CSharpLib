@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2018-03-02 21:09
+// Version:  2018-03-04 01:09
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -328,6 +328,8 @@ namespace SilDev
                 if (!File.Exists(resPath))
                     resPath = PathEx.Combine("%system%", "imageres.dll");
                 var resLoc = Path.GetDirectoryName(resPath);
+                AutoScaleDimensions = new SizeF(96f, 96f);
+                AutoScaleMode = AutoScaleMode.Dpi;
                 BackColor = backColor ?? SystemColors.Control;
                 ForeColor = foreColor ?? SystemColors.ControlText;
                 Font = new Font("Consolas", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -552,6 +554,8 @@ namespace SilDev
                 public IconBox(string path, int index, Color? buttonFace = null, Color? buttonText = null, Color? buttonHighlight = null)
                 {
                     SuspendLayout();
+                    AutoScaleDimensions = new SizeF(96f, 96f);
+                    AutoScaleMode = AutoScaleMode.Dpi;
                     BackColor = buttonFace ?? SystemColors.ButtonFace;
                     ForeColor = buttonText ?? SystemColors.ControlText;
                     Name = "IconBox";

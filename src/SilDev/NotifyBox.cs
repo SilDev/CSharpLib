@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2017-10-21 14:50
+// Version:  2018-03-04 01:09
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -104,7 +104,6 @@ namespace SilDev
         public bool TopMost { get; set; }
 
         private NotifyForm NotifyWindow { get; set; }
-
         private Thread NotifyThread { get; set; }
 
         /// <summary>
@@ -390,8 +389,8 @@ namespace SilDev
                     Interval = byte.MaxValue
                 };
                 _timer2.Tick += ProgressDotsTimer_Tick;
-                AutoScaleDimensions = new SizeF(6f, 13f);
-                AutoScaleMode = AutoScaleMode.Font;
+                AutoScaleDimensions = new SizeF(96f, 96f);
+                AutoScaleMode = AutoScaleMode.Dpi;
                 BackColor = backColor;
                 ClientSize = new Size(48, 44);
                 Font = new Font("Tahoma", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
