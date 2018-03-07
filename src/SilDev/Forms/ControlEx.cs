@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2018-03-02 21:08
+// Version:  2018-03-07 12:06
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,9 +16,9 @@
 namespace SilDev.Forms
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Reflection;
-    using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using Drawing;
     using Properties;
@@ -201,7 +201,7 @@ namespace SilDev.Forms
                 return;
             if (color != null && color != Color.White)
                 img = img.RecolorPixels(Color.White, (Color)color);
-            var pb = new PictureBox
+            var pb = new PictureBoxEx(mouseDownEvent != null && mouseEnterEvent != null)
             {
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
                 BackColor = Color.Transparent,
@@ -212,34 +212,37 @@ namespace SilDev.Forms
             };
             if (mouseDownEvent != null)
                 pb.MouseDown += mouseDownEvent;
-            else
-            {
-                var c = pb.GetAncestor();
-                pb.MouseDown += (sender, args) =>
-                {
-                    var point = new Point(c.Width - 1, c.Height - 1);
-                    WinApi.NativeMethods.ClientToScreen(c.Handle, ref point);
-                    WinApi.NativeMethods.SetCursorPos((uint)point.X, (uint)point.Y);
-                    var mouseDown = new WinApi.DeviceInput();
-                    mouseDown.Data.Mouse.Flags = 0x2;
-                    mouseDown.Type = 0;
-                    var mouseUp = new WinApi.DeviceInput();
-                    mouseUp.Data.Mouse.Flags = 0x4;
-                    mouseUp.Type = 0;
-                    WinApi.DeviceInput[] inputs =
-                    {
-                        mouseUp,
-                        mouseDown
-                    };
-                    WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
-                };
-            }
             if (mouseEnterEvent != null)
                 pb.MouseEnter += mouseEnterEvent;
-            else
-                pb.Cursor = Cursors.SizeNWSE;
             control.Controls.Add(pb);
             control.Update();
+        }
+    }
+
+    internal class PictureBoxEx : PictureBox
+    {
+        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        public PictureBoxEx(bool clickable)
+        {
+            if (clickable)
+                return;
+            if (Parent is IMouseClick parent)
+                MouseClick += parent.HandleMouseClick;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x84)
+            {
+                m.Result = new IntPtr(-1);
+                return;
+            }
+            base.WndProc(ref m);
+        }
+
+        private interface IMouseClick
+        {
+            void HandleMouseClick(object sender, MouseEventArgs e);
         }
     }
 }
