@@ -134,7 +134,18 @@
                 Expands the functionality for the <see cref="T:System.Drawing.Color"/> class.
             </summary>
         </member>
-        <member name="M:SilDev.Drawing.ColorEx.FromHtmlToColor(System.String,System.Drawing.Color,System.Nullable{System.Byte})">
+        <member name="M:SilDev.Drawing.ColorEx.FromHtmlToColor(System.String,System.Drawing.Color)">
+            <summary>
+                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
+            </summary>
+            <param name="htmlColor">
+                The string representation of the HTML color to translate.
+            </param>
+            <param name="defColor">
+                The color that is set if no HTML color was found.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.FromHtmlToColor(System.String,System.Drawing.Color,System.Byte)">
             <summary>
                 Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
             </summary>
@@ -146,6 +157,41 @@
             </param>
             <param name="alpha">
                 The alpha component. Valid values are 0 through 255.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.FromHtmlToColor(System.String,System.Byte)">
+            <summary>
+                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
+            </summary>
+            <param name="htmlColor">
+                The string representation of the HTML color to translate.
+            </param>
+            <param name="alpha">
+                The alpha component. Valid values are 0 through 255.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToHtmlString(System.Drawing.Color,System.Nullable{System.Byte})">
+            <summary>
+                Translates the specified <see cref="T:System.Drawing.Color"/> structure to an HTML string color
+                representation.
+            </summary>
+            <param name="color">
+                The <see cref="T:System.Drawing.Color"/> structure to translate.
+            </param>
+            <param name="alpha">
+                The alpha component. Valid values are 0 through 255.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToHtmlString(System.Drawing.Color,System.Boolean)">
+            <summary>
+                Translates the specified <see cref="T:System.Drawing.Color"/> structure to an HTML string color
+                representation.
+            </summary>
+            <param name="color">
+                The <see cref="T:System.Drawing.Color"/> structure to translate.
+            </param>
+            <param name="alpha">
+                true to translate also the alpha value; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Drawing.ColorEx.InvertRgb(System.Drawing.Color,System.Nullable{System.Byte})">
@@ -334,6 +380,58 @@
                 Gets an <see cref="T:System.Drawing.Image"/> object that contains a white 16px large search symbol.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.SizeIsValid(System.Int32,System.Drawing.Imaging.PixelFormat)">
+            <summary>
+                Determines whether the specified pixel size indicator is within the allowed
+                range, depending on the specified pixel format.
+            </summary>
+            <param name="pixelIndicator">
+                The pixel size indicator to check.
+                <para>
+                    The pixel size indicator represents the maximum value between the width
+                    and height of an image.
+                </para>
+            </param>
+            <param name="pixelFormat">
+                The pixel format.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SizeIsValid(System.Int32,System.Int32,System.Drawing.Imaging.PixelFormat)">
+            <summary>
+                Determines whether the specified <see cref="T:System.Drawing.Image"/> size is within the
+                allowed range, depending on the specified pixel format.
+            </summary>
+            <param name="width">
+                The image width to check.
+            </param>
+            <param name="height">
+                The image height to check.
+            </param>
+            <param name="pixelFormat">
+                The pixel format.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SizeIsValid(System.Drawing.Size,System.Drawing.Imaging.PixelFormat)">
+            <summary>
+                Determines whether the specified <see cref="T:System.Drawing.Image"/> size is within the
+                allowed range, depending on the specified pixel format.
+            </summary>
+            <param name="size">
+                The image size to check.
+            </param>
+            <param name="pixelFormat">
+                The pixel format.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SizeIsValid(System.Drawing.Image)">
+            <summary>
+                Determines whether the specified <see cref="T:System.Drawing.Image"/> size is within the
+                allowed range.
+            </summary>
+            <param name="image">
+                The image to check.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.ToImage(System.Drawing.Color,System.Int32,System.Int32)">
             <summary>
                 Initilazies a new instance of the <see cref="T:System.Drawing.Image"/> class with
@@ -394,6 +492,17 @@
             <param name="indicator">
                 Specifies the maximal size indicator, which determines when the image
                 gets a new size.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SetColorMatrix(System.Drawing.Image,System.Drawing.Imaging.ColorMatrix)">
+            <summary>
+                Sets the color-adjustment matrix for the specified <see cref="T:System.Drawing.Image"/>.
+            </summary>
+            <param name="image">
+                The image to change.
+            </param>
+            <param name="colorMatrix">
+                The color-adjustment matrix to set.
             </param>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.InvertColors(System.Drawing.Image)">
@@ -776,8 +885,8 @@
         </member>
         <member name="M:SilDev.Forms.ControlEx.SetControlStyle(System.Windows.Forms.Control,System.Windows.Forms.ControlStyles,System.Boolean)">
             <summary>
-                Enables or disables the specified <see cref="T:System.Windows.Forms.ControlStyles"/> for this <see cref="T:System.Windows.Forms.Control"/>, even it
-                is not directly supported.
+                Enables or disables the specified <see cref="T:System.Windows.Forms.ControlStyles"/> for this <see cref="T:System.Windows.Forms.Control"/>,
+                even it is not directly supported.
             </summary>
             <param name="control">
                 The control to change.
@@ -803,7 +912,7 @@
                 One of the <see cref="T:SilDev.Forms.ControlEx.BorderStyle"/> values that specifies the style of the border.
             </param>
         </member>
-        <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color},System.Windows.Forms.MouseEventHandler,System.EventHandler)">
+        <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color},System.Windows.Forms.MouseEventHandler,System.EventHandler,System.Boolean)">
             <summary>
                 Draws a 12px large size grip <see cref="T:System.Drawing.Image"/> in this <see cref="T:System.Windows.Forms.Control"/>.
             </summary>
@@ -811,13 +920,18 @@
                 The control that receives the size grip <see cref="T:System.Drawing.Image"/>.
             </param>
             <param name="color">
-                The color for the size grip <see cref="T:System.Drawing.Image"/>; <see cref="P:System.Drawing.Color.White"/> is used by default.
+                The color for the size grip <see cref="T:System.Drawing.Image"/>; <see cref="P:System.Drawing.Color.White"/> is used
+                by default.
             </param>
             <param name="mouseDownEvent">
                 Occurs when the mouse pointer is over the control and a mouse button is pressed.
             </param>
             <param name="mouseEnterEvent">
                 Occurs when the mouse pointer enters the control.
+            </param>
+            <param name="update">
+                true to causes the control to redraw the invalidated regions within its client area;
+                otherwise, false.
             </param>
         </member>
         <member name="T:SilDev.Forms.FormEx">
@@ -858,6 +972,200 @@
             <param name="settings">
                 The settings to be applied.
             </param>
+        </member>
+        <member name="T:SilDev.Forms.FormEx.BorderlessResizable">
+            <summary>
+                Represents a window or dialog box that makes up an application's user interface.
+            </summary>
+        </member>
+        <member name="T:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags">
+            <summary>
+                Provides enumerated values for determining sizing border areas.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.None">
+            <summary>
+                No border or corner of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Left">
+            <summary>
+                The left border of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Right">
+            <summary>
+                The right border of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Top">
+            <summary>
+                The upper-horizontal border of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.TopLeft">
+            <summary>
+                The upper-left corner of a window border.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.TopRight">
+            <summary>
+                The upper-right corner of a window border.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Bottom">
+            <summary>
+                The lower-horizontal border of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomLeft">
+            <summary>
+                The lower-left corner of a border of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomRight">
+            <summary>
+                The lower-right corner of a border of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.All">
+            <summary>
+                All borders and corners of a window.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Forms.FormEx.BorderlessResizable"/> form class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorders">
+            <summary>
+                The <see cref="T:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags"/> flags for resizing.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.GetResizingBorderAreas(SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags,System.Int32)">
+            <summary>
+                Get the border areas depending on the specified <see cref="T:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags"/> flags.
+                <para>
+                    This method is used by the
+                    <see cref="M:SilDev.Forms.FormEx.BorderlessResizable.GetActiveResizingBorderMessage(SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags,System.IntPtr,System.Int32)"/> function.
+                </para>
+            </summary>
+            <param name="flags">
+                The <see cref="T:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags"/> flags.
+            </param>
+            <param name="thickness">
+                The border thickness. Valid values are 1 through 32.
+            </param>
+            <returns>
+                The return value is a <see cref="T:System.Collections.Generic.Dictionary`2"/> with HTLEFT, HTRIGHT, HTTOP,
+                HTTOPLEFT, HTTOPRIGHT, HTBOTTOM, HTBOTTOMLEFT, and/or HTBOTTOMRIGHT values, indicating
+                the position of the cursor hot spot, as key; and a <see cref="T:System.Drawing.Rectangle"/> with the border
+                coordinates as value.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.GetActiveResizingBorderMessage(SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags,System.IntPtr,System.Int32)">
+            <summary>
+                Get the active border area <see cref="T:System.Windows.Forms.Message"/> depending on the specified
+                <see cref="T:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags"/> flags.
+                <para>
+                    This method is recommended to use within a <see cref="M:SilDev.Forms.FormEx.BorderlessResizable.WndProc(System.Windows.Forms.Message@)"/> override.
+                </para>
+            </summary>
+            <param name="flags">
+                The <see cref="T:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags"/> flags.
+            </param>
+            <param name="lParam">
+                The <see cref="T:System.Windows.Forms.Message"/>.LParam field of the message.
+            </param>
+            <param name="thickness">
+                The border thickness. Valid values are 1 through 32.
+            </param>
+            <returns>
+                The return value is HTLEFT, HTRIGHT, HTTOP, HTTOPLEFT, HTTOPRIGHT, HTBOTTOM, HTBOTTOMLEFT,
+                or HTBOTTOMRIGHT, indicating the position of the cursor hot spot, used to specify the
+                value that is returned to Windows in response to handling the <see cref="T:System.Windows.Forms.Message"/>.
+            </returns>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.SetResizingBorders(SilDev.TaskBar.Location)">
+            <summary>
+                Sets the <see cref="P:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorders"/> flags depending on the specified
+                <see cref="T:SilDev.TaskBar.Location"/> flag.
+                <para>
+                    Result for <see cref="F:SilDev.TaskBar.Location.Left"/>:
+                    <code>
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Right"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Bottom"/> |
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomRight"/>
+                    </code>
+                </para>
+                <para>
+                    Result for <see cref="F:SilDev.TaskBar.Location.Right"/>:
+                    <code>
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Left"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Bottom"/> |
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomLeft"/>
+                    </code>
+                </para>
+                <para>
+                    Result for <see cref="F:SilDev.TaskBar.Location.Top"/>:
+                    <code>
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Right"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Bottom"/> |
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomRight"/>
+                    </code>
+                </para>
+                <para>
+                    Result for <see cref="F:SilDev.TaskBar.Location.Bottom"/>:
+                    <code>
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Right"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Top"/> |
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.TopRight"/>
+                    </code>
+                </para>
+                <para>
+                    Result for <see cref="F:SilDev.TaskBar.Location.Hidden"/>:
+                    <code>
+                        <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.All"/>
+                    </code>
+                </para>
+            </summary>
+            <param name="taskBarLocation">
+                The <see cref="T:SilDev.TaskBar.Location"/> flag.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.OnLoad(System.EventArgs)">
+            <summary>
+                Raises the <see cref="E:System.Windows.Forms.Form.Load"/> event.
+            </summary>
+            <param name="e">
+                An <see cref="T:System.EventArgs"/> that contains the event data.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.WndProc(System.Windows.Forms.Message@)">
+            <summary>
+                Processes Windows messages.
+            </summary>
+            <param name="m">
+                The Windows <see cref="T:System.Windows.Forms.Message"/> to process.
+            </param>
+        </member>
+        <member name="T:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessages">
+            <summary>
+                Provides enumerated Windows <see cref="T:System.Windows.Forms.Message"/>'s, used within a <see cref="M:SilDev.Forms.FormEx.BorderlessResizable.WndProc(System.Windows.Forms.Message@)"/>
+                override.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessages.MouseFirst">
+            <summary>
+                Specify the first mouse message.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessages.NcHitTest">
+            <summary>
+                Sent to a window in order to determine what part of the window corresponds to a
+                particular screen coordinate. This can happen, for example, when the cursor moves,
+                when a mouse button is pressed or released, or in response to a call to a function
+                such as WindowFromPoint. If the mouse is not captured, the message is sent to the
+                window beneath the cursor. Otherwise, the message is sent to the window that has
+                captured the mouse.
+            </summary>
         </member>
         <member name="T:SilDev.Forms.LinkLabelEx">
             <summary>
@@ -927,6 +1235,14 @@
             <summary>
                 Initializes a new instance of the <see cref="T:System.Windows.Forms.ListView"/> class.
             </summary>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.DoubleBuffered.OnNotifyMessage(System.Windows.Forms.Message)">
+            <summary>
+                Notifies the control of Windows messages.
+            </summary>
+            <param name="m">
+                A <see cref="T:System.Windows.Forms.Message"/> that represents the Windows message.
+            </param>
         </member>
         <member name="T:SilDev.Forms.ListViewEx.AlphanumericComparer">
             <summary>
@@ -1503,6 +1819,32 @@
                 ***This is an undocumented class and can be changed or removed in the future
                 without futher notice.
             </summary>
+        </member>
+        <member name="T:SilDev.Forms.PictureBoxEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.PictureBox"/> class.
+            </summary>
+        </member>
+        <member name="T:SilDev.Forms.PictureBoxEx.NonClickable">
+            <summary>
+                Represents a Windows non-clickable picture box control for displaying an image.
+            </summary>
+        </member>
+        <member name="M:SilDev.Forms.PictureBoxEx.NonClickable.#ctor(System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Forms.PictureBoxEx.NonClickable"/> picture box class.
+            </summary>
+            <param name="clickable">
+                true to determine that the picture box is clickable; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.PictureBoxEx.NonClickable.WndProc(System.Windows.Forms.Message@)">
+            <summary>
+                Processes Windows messages.
+            </summary>
+            <param name="m">
+                The Windows <see cref="T:System.Windows.Forms.Message"/> to process.
+            </param>
         </member>
         <member name="T:SilDev.Forms.ProgressBarEx">
             <summary>
