@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2017-07-19 04:54
+// Version:  2018-03-08 01:37
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -15,10 +15,10 @@
 
 namespace SilDev.Forms
 {
-    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
+    using System.Linq;
     using System.Windows.Forms;
 
     /// <summary>
@@ -81,11 +81,11 @@ namespace SilDev.Forms
         /// </param>
         public static void CloseOnMouseLeave(this ContextMenuStrip contextMenuStrip, int toleration = 0)
         {
-            if (contextMenuStrip == null)
+            if (!(contextMenuStrip is ContextMenuStrip cms))
                 return;
             if (toleration < 0)
                 toleration = 0;
-            contextMenuStrip.Opened += (sender, args) =>
+            cms.Opened += (sender, args) =>
             {
                 var timer = new Timer
                 {
@@ -94,11 +94,11 @@ namespace SilDev.Forms
                 };
                 timer.Tick += (s, a) =>
                 {
-                    var rect = contextMenuStrip.ClientRectangle;
+                    var rect = cms.ClientRectangle;
                     rect = new Rectangle(rect.X - toleration, rect.Y - toleration, rect.Width + toleration * 2, rect.Height + toleration * 2);
-                    if (rect.Contains(contextMenuStrip.PointToClient(Control.MousePosition)))
+                    if (rect.Contains(cms.PointToClient(Control.MousePosition)))
                         return;
-                    contextMenuStrip.Close();
+                    cms.Close();
                     timer.Dispose();
                 };
             };
@@ -124,28 +124,28 @@ namespace SilDev.Forms
         /// </param>
         public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, Animations animation = Animations.Default, int time = 200)
         {
-            if (contextMenuStrip == null)
+            if (!(contextMenuStrip is ContextMenuStrip cms))
                 return;
             var settings = new KeyValuePair<int, WinApi.AnimateWindowFlags>(time, (WinApi.AnimateWindowFlags)animation);
-            if (EnabledAnimation.ContainsKey(contextMenuStrip))
+            if (EnabledAnimation.ContainsKey(cms))
             {
-                EnabledAnimation[contextMenuStrip] = settings;
+                EnabledAnimation[cms] = settings;
                 return;
             }
-            EnabledAnimation.Add(contextMenuStrip, settings);
+            EnabledAnimation.Add(cms, settings);
             var loaded = false;
-            contextMenuStrip.Opening += (sender, args) =>
+            cms.Opening += (sender, args) =>
             {
                 if (animation != Animations.Default)
                 {
-                    WinApi.NativeMethods.AnimateWindow(contextMenuStrip.Handle, EnabledAnimation[contextMenuStrip].Key, EnabledAnimation[contextMenuStrip].Value);
+                    WinApi.NativeMethods.AnimateWindow(cms.Handle, EnabledAnimation[cms].Key, EnabledAnimation[cms].Value);
                     if (loaded)
                         return;
                     loaded = true;
-                    contextMenuStrip.Refresh();
+                    cms.Refresh();
                     return;
                 }
-                contextMenuStrip.Opacity = 0d;
+                cms.Opacity = 0d;
                 var timer = new Timer
                 {
                     Interval = 1,
@@ -153,9 +153,9 @@ namespace SilDev.Forms
                 };
                 timer.Tick += (s, a) =>
                 {
-                    if (contextMenuStrip.Opacity < 1d)
+                    if (cms.Opacity < 1d)
                     {
-                        contextMenuStrip.Opacity += .1d;
+                        cms.Opacity += .1d;
                         return;
                     }
                     timer.Dispose();
@@ -174,27 +174,23 @@ namespace SilDev.Forms
         /// </param>
         public static void SetFixedSingle(this ContextMenuStrip contextMenuStrip, Color? borderColor = null)
         {
-            if (contextMenuStrip == null)
+            if (!(contextMenuStrip is ContextMenuStrip cms))
                 return;
             _menuBorder = borderColor ?? SystemColors.ControlDark;
-            contextMenuStrip.Renderer = new Renderer();
-            contextMenuStrip.Paint += (sender, args) =>
+            cms.Renderer = new Renderer();
+            cms.Paint += (sender, args) =>
             {
-                try
+                using (var gp = new GraphicsPath())
                 {
-                    using (var gp = new GraphicsPath())
-                    {
-                        contextMenuStrip.Region = new Region(new RectangleF(2, 2, contextMenuStrip.Width - 4, contextMenuStrip.Height - 4));
-                        gp.AddRectangle(new RectangleF(2, 2, contextMenuStrip.Width - 5, contextMenuStrip.Height - 5));
-                        using (Brush b = new SolidBrush(contextMenuStrip.BackColor))
-                            args.Graphics.FillPath(b, gp);
-                        using (var p = new Pen(borderColor ?? SystemColors.ControlDark, 1))
-                            args.Graphics.DrawPath(p, gp);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
+                    var rects = new RectangleF[2];
+                    for (var i = 0; i < rects.Length; i++)
+                        rects[i] = new RectangleF(2, 2, cms.Width - 4 - i, cms.Height - 4 - i);
+                    cms.Region = new Region(rects.FirstOrDefault());
+                    gp.AddRectangle(rects.LastOrDefault());
+                    using (var b = new SolidBrush(cms.BackColor))
+                        args.Graphics.FillPath(b, gp);
+                    using (var p = new Pen(borderColor ?? SystemColors.ControlDark, 1))
+                        args.Graphics.DrawPath(p, gp);
                 }
             };
         }

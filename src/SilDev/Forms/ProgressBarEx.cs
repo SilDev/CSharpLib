@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProgressBarEx.cs
-// Version:  2016-10-24 15:58
+// Version:  2018-03-08 01:19
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -15,7 +15,6 @@
 
 namespace SilDev.Forms
 {
-    using System;
     using System.Windows.Forms;
 
     /// <summary>
@@ -31,19 +30,14 @@ namespace SilDev.Forms
         /// </param>
         public static void JumpToEnd(this ProgressBar progressBar)
         {
-            try
-            {
-                var maximum = progressBar.Maximum;
-                progressBar.Maximum = int.MaxValue;
-                progressBar.Value = progressBar.Maximum;
-                progressBar.Value--;
-                progressBar.Maximum = maximum;
-                progressBar.Value = progressBar.Maximum;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
+            if (!(progressBar is ProgressBar pb))
+                return;
+            var max = pb.Maximum;
+            pb.Maximum = int.MaxValue;
+            pb.Value = pb.Maximum;
+            pb.Value--;
+            pb.Maximum = max;
+            pb.Value = progressBar.Maximum;
         }
     }
 }

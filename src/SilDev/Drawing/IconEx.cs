@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconEx.cs
-// Version:  2018-03-07 11:23
+// Version:  2018-03-09 00:57
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -167,7 +167,7 @@ namespace SilDev.Drawing
                         img = img.Redraw(MaxWidth, MaxHeight);
                     if (img.Width != img.Height)
                     {
-                        var size = img.Width > img.Height ? img.Width : img.Height;
+                        var size = Math.Max(img.Width, img.Height);
                         img = img.Redraw(size, size);
                     }
                     if (!image.EqualsEx(img))

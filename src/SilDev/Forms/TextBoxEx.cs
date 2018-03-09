@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2018-03-02 21:09
+// Version:  2018-03-08 01:19
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -35,42 +35,44 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawSearchSymbol(this TextBox textBox, Color? color = null)
         {
+            if (!(textBox is TextBox tb))
+                return;
             var img = ImageEx.DefaultSearchSymbol;
             if (img == null)
                 return;
             if (color == null)
-                color = textBox.ForeColor;
+                color = tb.ForeColor;
             if (color != Color.White)
                 img = img.RecolorPixels(Color.White, (Color)color);
             var panel = new Panel
             {
-                Anchor = textBox.Anchor,
-                BackColor = textBox.BackColor,
-                BorderStyle = textBox.BorderStyle,
-                Dock = textBox.Dock,
-                ForeColor = textBox.ForeColor,
-                Location = textBox.Location,
-                Name = $"{textBox.Name}Panel",
-                Parent = textBox.Parent,
-                Size = textBox.Size,
-                TabIndex = textBox.TabIndex
+                Anchor = tb.Anchor,
+                BackColor = tb.BackColor,
+                BorderStyle = tb.BorderStyle,
+                Dock = tb.Dock,
+                ForeColor = tb.ForeColor,
+                Location = tb.Location,
+                Name = $"{tb.Name}Panel",
+                Parent = tb.Parent,
+                Size = tb.Size,
+                TabIndex = tb.TabIndex
             };
-            var pictureBox = new PictureBox
+            var pBox = new PictureBox
             {
-                BackColor = textBox.BackColor,
+                BackColor = tb.BackColor,
                 BackgroundImage = img,
                 BackgroundImageLayout = ImageLayout.Center,
                 Cursor = Cursors.IBeam,
                 Dock = DockStyle.Right,
-                ForeColor = textBox.ForeColor,
-                Name = $"{textBox.Name}PictureBox",
+                ForeColor = tb.ForeColor,
+                Name = $"{tb.Name}PictureBox",
                 Size = new Size(16, 16)
             };
-            pictureBox.Click += (sender, e) => textBox.Select();
-            panel.Controls.Add(pictureBox);
-            textBox.BorderStyle = BorderStyle.None;
-            textBox.Dock = DockStyle.Fill;
-            textBox.Parent = panel;
+            pBox.Click += (sender, e) => tb.Select();
+            panel.Controls.Add(pBox);
+            tb.BorderStyle = BorderStyle.None;
+            tb.Dock = DockStyle.Fill;
+            tb.Parent = panel;
             panel.Parent.Update();
         }
     }

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2017-08-05 10:02
+// Version:  2018-03-08 01:18
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -24,6 +24,8 @@ namespace SilDev.Forms
     /// </summary>
     public static class ListViewEx
     {
+        private const int LvmSetHotCursor = 0x103e;
+
         /// <summary>
         ///     Retrives the <see cref="ListViewItem"/> at the current cursor's position.
         /// </summary>
@@ -32,15 +34,10 @@ namespace SilDev.Forms
         /// </param>
         public static ListViewItem ItemFromPoint(this ListView listView)
         {
-            try
-            {
-                var pos = listView.PointToClient(Cursor.Position);
-                return listView.GetItemAt(pos.X, pos.Y);
-            }
-            catch
-            {
+            if (!(listView is ListView lv))
                 return null;
-            }
+            var pos = listView.PointToClient(Cursor.Position);
+            return lv.GetItemAt(pos.X, pos.Y);
         }
 
         /// <summary>
@@ -54,7 +51,7 @@ namespace SilDev.Forms
         ///     The <see cref="Cursor"/> to set.
         /// </param>
         public static void SetMouseOverCursor(this ListView listView, Cursor cursor = default(Cursor)) =>
-            WinApi.NativeHelper.SendMessage(listView.Handle, 0x103e, IntPtr.Zero, (cursor ?? Cursors.Arrow).Handle);
+            WinApi.NativeHelper.SendMessage(listView.Handle, LvmSetHotCursor, IntPtr.Zero, (cursor ?? Cursors.Arrow).Handle);
 
         /// <summary>
         ///     Represents a Windows list view control, which displays a collection of items that
@@ -62,9 +59,7 @@ namespace SilDev.Forms
         /// </summary>
         public class DoubleBuffered : ListView
         {
-#pragma warning disable 1591
-            protected const int WmEraseBkGnd = 0x14;
-#pragma warning restore 1591
+            private const int WmEraseBkGnd = 0x14;
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="ListView"/> class.
@@ -74,13 +69,23 @@ namespace SilDev.Forms
                          ControlStyles.EnableNotifyMessage |
                          ControlStyles.OptimizedDoubleBuffer, true);
 
-#pragma warning disable 1591
+            /// <summary>
+            ///     Notifies the control of Windows messages.
+            /// </summary>
+            /// <param name="m">
+            ///     A <see cref="Message"/> that represents the Windows message.
+            /// </param>
             protected override void OnNotifyMessage(Message m)
             {
-                if (m.Msg != WmEraseBkGnd)
-                    base.OnNotifyMessage(m);
+                switch (m.Msg)
+                {
+                    case WmEraseBkGnd:
+                        break;
+                    default:
+                        base.OnNotifyMessage(m);
+                        break;
+                }
             }
-#pragma warning restore 1591
         }
 
         /// <summary>
@@ -97,10 +102,8 @@ namespace SilDev.Forms
             /// <param name="descendent">
             ///     true to enable the descending order; otherwise, false.
             /// </param>
-            public AlphanumericComparer(bool descendent = false)
-            {
+            public AlphanumericComparer(bool descendent = false) =>
                 _d = descendent;
-            }
 
             /// <summary>
             ///     Compare two specified objects and returns an integer that indicates their
@@ -114,10 +117,10 @@ namespace SilDev.Forms
             /// </param>
             public int Compare(object a, object b)
             {
-                if (!(a is ListViewItem) || !(b is ListViewItem))
+                if (!(a is ListViewItem lvi1) || !(b is ListViewItem lvi2))
                     return 0;
-                var s1 = ((ListViewItem)a).Text;
-                var s2 = ((ListViewItem)b).Text;
+                var s1 = lvi1.Text;
+                var s2 = lvi2.Text;
                 return new Comparison.AlphanumericComparer(_d).Compare(s1, s2);
             }
         }

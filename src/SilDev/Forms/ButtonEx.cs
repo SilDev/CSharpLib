@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2017-10-21 13:51
+// Version:  2018-03-08 01:18
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -42,33 +42,28 @@ namespace SilDev.Forms
         /// </param>
         public static void Split(this Button button, Color? buttonText = null)
         {
-            try
+            if (!(button is Button b))
+                return;
+            if (b.Width < 48 || b.Height < 16)
+                throw new NotSupportedException();
+            if (b.FlatStyle != FlatStyle.Flat)
             {
-                if (button.Width < 48 || button.Height < 16)
-                    throw new NotSupportedException();
-                if (button.FlatStyle != FlatStyle.Flat)
-                {
-                    button.FlatStyle = FlatStyle.Flat;
-                    button.FlatAppearance.MouseOverBackColor = SystemColors.Highlight;
-                }
-                button.Image = new Bitmap(12, button.Height);
-                button.ImageAlign = ContentAlignment.MiddleRight;
-                using (var gr = Graphics.FromImage(button.Image))
-                {
-                    var pen = new Pen(buttonText ?? SystemColors.ControlText, 1);
-                    gr.DrawLine(pen, 0, 0, 0, button.Image.Height - 3);
-                    var size = new Size(button.Image.Width - 6, button.Image.Height - 12);
-                    gr.DrawLine(pen, size.Width, size.Height, size.Width + 5, size.Height);
-                    gr.DrawLine(pen, size.Width + 1, size.Height + 1, size.Width + 4, size.Height + 1);
-                    gr.DrawLine(pen, size.Width + 2, size.Height + 2, size.Width + 3, size.Height + 2);
-                }
-                button.MouseMove += Split_MouseMove;
-                button.MouseLeave += Split_MouseLeave;
+                b.FlatStyle = FlatStyle.Flat;
+                b.FlatAppearance.MouseOverBackColor = SystemColors.Highlight;
             }
-            catch (Exception ex)
+            b.Image = new Bitmap(12, b.Height);
+            b.ImageAlign = ContentAlignment.MiddleRight;
+            using (var g = Graphics.FromImage(b.Image))
             {
-                Log.Write(ex);
+                var p = new Pen(buttonText ?? SystemColors.ControlText, 1);
+                g.DrawLine(p, 0, 0, 0, b.Image.Height - 3);
+                var s = new Size(b.Image.Width - 6, b.Image.Height - 12);
+                g.DrawLine(p, s.Width, s.Height, s.Width + 5, s.Height);
+                g.DrawLine(p, s.Width + 1, s.Height + 1, s.Width + 4, s.Height + 1);
+                g.DrawLine(p, s.Width + 2, s.Height + 2, s.Width + 3, s.Height + 2);
             }
+            b.MouseMove += Split_MouseMove;
+            b.MouseLeave += Split_MouseLeave;
         }
 
         /// <summary>
@@ -84,52 +79,45 @@ namespace SilDev.Forms
         /// </param>
         public static bool SplitClickHandler(this Button button, ContextMenuStrip contextMenuStrip)
         {
-            if (button.PointToClient(Cursor.Position).X < button.Right - 16)
+            if (!(button is Button b) || !(contextMenuStrip is ContextMenuStrip cms) || b.PointToClient(Cursor.Position).X < b.Right - 16)
                 return false;
-            contextMenuStrip.Show(button, new Point(0, button.Height), ToolStripDropDownDirection.BelowRight);
+            cms.Show(b, new Point(0, b.Height), ToolStripDropDownDirection.BelowRight);
             return true;
         }
 
         private static void Split_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!(sender is Button button))
+            if (!(sender is Button b))
                 return;
-            Split_MouseLeave(button, null);
-            try
+            Split_MouseLeave(b, null);
+            if (b.PointToClient(Cursor.Position).X >= b.Right - 16)
             {
-                if (button.PointToClient(Cursor.Position).X >= button.Right - 16)
-                {
-                    if (button.BackgroundImage != null)
-                        return;
-                    button.BackgroundImage = new Bitmap(button.Width, button.Height);
-                    var w = button.Right - 16 - button.FlatAppearance.BorderSize;
-                    using (var g = Graphics.FromImage(button.BackgroundImage))
-                        using (Brush b = new SolidBrush(button.BackColor))
-                            g.FillRectangle(b, 0, 0, w, button.BackgroundImage.Height);
-                }
-                else
-                {
-                    button.BackgroundImage = new Bitmap(button.Width, button.Height);
-                    var x = button.BackgroundImage.Width - 15 - button.FlatAppearance.BorderSize;
-                    var w = 15 + button.FlatAppearance.BorderSize;
-                    using (var g = Graphics.FromImage(button.BackgroundImage))
-                        using (Brush b = new SolidBrush(button.BackColor))
-                            g.FillRectangle(b, x, 0, w, button.BackgroundImage.Height);
-                }
+                if (b.BackgroundImage != null)
+                    return;
+                b.BackgroundImage = new Bitmap(b.Width, b.Height);
+                var w = b.Right - 16 - b.FlatAppearance.BorderSize;
+                using (var g = Graphics.FromImage(b.BackgroundImage))
+                    using (var sb = new SolidBrush(b.BackColor))
+                        g.FillRectangle(sb, 0, 0, w, b.BackgroundImage.Height);
             }
-            catch (Exception ex)
+            else
             {
-                Log.Write(ex);
+                b.BackgroundImage = new Bitmap(b.Width, b.Height);
+                var x = b.BackgroundImage.Width - 15 - b.FlatAppearance.BorderSize;
+                var w = 15 + b.FlatAppearance.BorderSize;
+                using (var g = Graphics.FromImage(b.BackgroundImage))
+                    using (var sb = new SolidBrush(b.BackColor))
+                        g.FillRectangle(sb, x, 0, w, b.BackgroundImage.Height);
             }
         }
 
         private static void Split_MouseLeave(object sender, EventArgs e)
         {
-            var button = sender as Button;
-            if (button?.BackgroundImage == null)
+            var b = sender as Button;
+            if (b?.BackgroundImage == null)
                 return;
-            button.BackgroundImage.Dispose();
-            button.BackgroundImage = null;
+            b.BackgroundImage.Dispose();
+            b.BackgroundImage = null;
         }
     }
 }

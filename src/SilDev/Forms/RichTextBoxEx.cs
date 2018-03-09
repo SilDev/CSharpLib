@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2018-02-10 08:06
+// Version:  2018-03-08 01:18
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -45,33 +45,27 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkText(this RichTextBox richTextBox, string text, Color foreColor, Color? backColor = null, Font font = null)
         {
-            try
+            if (!(richTextBox is RichTextBox rtb) || string.IsNullOrWhiteSpace(text))
+                return;
+            var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
+            int start, startIndex = 0, end = rtb.Text.Length - 1, length = text.Length;
+            while ((start = rtb.Text.IndexOf(text, startIndex, StringComparison.Ordinal)).IsBetween(0, end))
             {
-                if (string.IsNullOrWhiteSpace(text))
-                    throw new ArgumentNullException(nameof(text));
-                var selected = new Point(richTextBox.SelectionStart, richTextBox.SelectionLength);
-                var startIndex = 0;
-                int start;
-                while ((start = richTextBox.Text.IndexOf(text, startIndex, StringComparison.Ordinal)) > -1)
-                {
-                    richTextBox.Select(start, text.Length);
-                    richTextBox.SelectionColor = foreColor;
-                    if (backColor != null)
-                        richTextBox.SelectionBackColor = (Color)backColor;
-                    if (font != null)
-                        richTextBox.SelectionFont = font;
-                    startIndex = start + text.Length;
-                }
-                richTextBox.SelectionStart = selected.X;
-                richTextBox.SelectionLength = selected.Y;
-                richTextBox.SelectionBackColor = richTextBox.BackColor;
-                richTextBox.SelectionColor = richTextBox.ForeColor;
-                richTextBox.SelectionFont = richTextBox.Font;
+                rtb.Select(start, length);
+                rtb.SelectionColor = foreColor;
+                if (backColor != null)
+                    rtb.SelectionBackColor = (Color)backColor;
+                if (font != null)
+                    rtb.SelectionFont = font;
+                startIndex = start + length;
             }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
+            if (selection.X >= 0)
+                rtb.SelectionStart = selection.X;
+            if (selection.Y >= 0)
+                rtb.SelectionLength = selection.Y;
+            rtb.SelectionBackColor = rtb.BackColor;
+            rtb.SelectionColor = rtb.ForeColor;
+            rtb.SelectionFont = rtb.Font;
         }
 
         /// <summary>
@@ -97,25 +91,30 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkLine(this RichTextBox richTextBox, string startKeyword, string endKeyword, Color foreColor, Color? backColor = null, Font font = null)
         {
-            var selection = new Point(richTextBox.SelectionStart, richTextBox.SelectionLength);
-            for (var i = 0; i < richTextBox.Lines.Length; i++)
+            if (!(richTextBox is RichTextBox rtb) || string.IsNullOrWhiteSpace(startKeyword))
+                return;
+            var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
+            var lines = rtb.Lines;
+            for (var i = 0; i < lines.Length; i++)
             {
-                var line = richTextBox.Lines[i];
+                var line = lines[i];
                 var length = line.Length;
                 if (length < 1 || !line.StartsWith(startKeyword))
                     continue;
-                var start = richTextBox.GetFirstCharIndexFromLine(i);
+                var start = rtb.GetFirstCharIndexFromLine(i);
                 if (start < 0)
                     continue;
-                richTextBox.Select(start, length);
-                richTextBox.SelectionColor = string.IsNullOrEmpty(endKeyword) || line.EndsWith(endKeyword) ? foreColor : Color.Red;
+                rtb.Select(start, length);
+                rtb.SelectionColor = string.IsNullOrEmpty(endKeyword) || line.EndsWith(endKeyword) ? foreColor : Color.Red;
                 if (backColor != null)
-                    richTextBox.SelectionBackColor = (Color)backColor;
+                    rtb.SelectionBackColor = (Color)backColor;
                 if (font != null)
-                    richTextBox.SelectionFont = font;
+                    rtb.SelectionFont = font;
             }
-            richTextBox.SelectionStart = selection.X;
-            richTextBox.SelectionLength = selection.Y;
+            if (selection.X >= 0)
+                rtb.SelectionStart = selection.X;
+            if (selection.Y >= 0)
+                rtb.SelectionLength = selection.Y;
         }
 
         /// <summary>
@@ -141,14 +140,17 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkInLine(this RichTextBox richTextBox, string keyword, int count, Color foreColor, Color? backColor = null, Font font = null)
         {
-            var selection = new Point(richTextBox.SelectionStart, richTextBox.SelectionLength);
-            for (var i = 0; i < richTextBox.Lines.Length; i++)
+            if (!(richTextBox is RichTextBox rtb) || string.IsNullOrWhiteSpace(keyword))
+                return;
+            var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
+            var lines = rtb.Lines;
+            for (var i = 0; i < lines.Length; i++)
             {
-                var line = richTextBox.Lines[i];
+                var line = lines[i];
                 var length = line.Length;
                 if (length < 1 || !line.ContainsEx(keyword))
                     continue;
-                var index = richTextBox.GetFirstCharIndexFromLine(i);
+                var index = rtb.GetFirstCharIndexFromLine(i);
                 if (index < 0)
                     continue;
                 var num = count < 1 ? 1 : count;
@@ -156,21 +158,23 @@ namespace SilDev.Forms
                 var startIndex = 0;
                 while (num > 0 && (start = line.IndexOf(keyword, startIndex, StringComparison.Ordinal)) > -1)
                 {
-                    index = richTextBox.GetFirstCharIndexFromLine(i) + start;
+                    index = rtb.GetFirstCharIndexFromLine(i) + start;
                     if (index < 0 || length < keyword.Length)
                         continue;
-                    richTextBox.Select(index, keyword.Length);
-                    richTextBox.SelectionColor = !line.StartsWith(keyword) ? foreColor : Color.Red;
+                    rtb.Select(index, keyword.Length);
+                    rtb.SelectionColor = !line.StartsWith(keyword) ? foreColor : Color.Red;
                     if (backColor != null)
-                        richTextBox.SelectionBackColor = (Color)backColor;
+                        rtb.SelectionBackColor = (Color)backColor;
                     if (font != null)
-                        richTextBox.SelectionFont = font;
+                        rtb.SelectionFont = font;
                     startIndex = start + keyword.Length;
                     num--;
                 }
             }
-            richTextBox.SelectionStart = selection.X;
-            richTextBox.SelectionLength = selection.Y;
+            if (selection.X >= 0)
+                rtb.SelectionStart = selection.X;
+            if (selection.Y >= 0)
+                rtb.SelectionLength = selection.Y;
         }
 
         /// <summary>
@@ -185,81 +189,92 @@ namespace SilDev.Forms
         /// </param>
         public static void SetDefaultContextMenuStrip(this RichTextBox richTextBox, IWin32Window owner = null)
         {
+            if (!(richTextBox is RichTextBox rtb))
+                return;
             var cms = new ContextMenuStrip
             {
                 AutoSize = true,
                 RenderMode = ToolStripRenderMode.System,
                 ShowImageMargin = false
             };
-            cms.AddToolStripItem(new ToolStripMenuItem("Cut"), richTextBox.Cut);
-            cms.AddToolStripItem(new ToolStripMenuItem("Copy"), richTextBox.Copy);
-            cms.AddToolStripItem(new ToolStripMenuItem("Paste"), richTextBox.Paste);
-            cms.AddToolStripItem(new ToolStripMenuItem("Select All"), richTextBox.SelectAll);
+            cms.AddToolStripItem(new ToolStripMenuItem("Cut"), rtb.Cut);
+            cms.AddToolStripItem(new ToolStripMenuItem("Copy"), rtb.Copy);
+            cms.AddToolStripItem(new ToolStripMenuItem("Paste"), rtb.Paste);
+            cms.AddToolStripItem(new ToolStripMenuItem("Select All"), rtb.SelectAll);
             cms.Items.Add(new ToolStripSeparator());
-            cms.AddToolStripItem(new ToolStripMenuItem("Load File"), LoadTextFile, richTextBox, owner);
-            cms.AddToolStripItem(new ToolStripMenuItem("Save All"), SaveTextFile, richTextBox, owner);
+            cms.AddToolStripItem(new ToolStripMenuItem("Load File"), LoadTextFile, rtb, owner);
+            cms.AddToolStripItem(new ToolStripMenuItem("Save All"), SaveTextFile, rtb, owner);
             cms.Items.Add(new ToolStripSeparator());
-            cms.AddToolStripItem(new ToolStripMenuItem("Undo"), richTextBox.Undo);
-            richTextBox.ContextMenuStrip = cms;
+            cms.AddToolStripItem(new ToolStripMenuItem("Undo"), rtb.Undo);
+            rtb.ContextMenuStrip = cms;
         }
 
-        private static void AddToolStripItem(this ToolStrip toolStrip, ToolStripItem toolStripItem, FileDialogHandler action, Control control, IWin32Window owner = null)
+        private static void AddToolStripItem(this IDisposable toolStrip, ToolStripItem toolStripItem, FileDialogHandler action, Control control, IWin32Window owner = null)
         {
-            toolStripItem.Click += (s, e) => action(control, owner);
-            toolStrip.Items.Add(toolStripItem);
+            if (!(toolStripItem is ToolStripItem tsi) || !(toolStrip is ToolStrip ts))
+                return;
+            tsi.Click += (s, e) => action(control, owner);
+            ts.Items.Add(toolStripItem);
         }
 
-        private static void AddToolStripItem(this ToolStrip toolStrip, ToolStripItem toolStripItem, Action action)
+        private static void AddToolStripItem(this IDisposable toolStrip, ToolStripItem toolStripItem, Action action)
         {
-            toolStripItem.Click += (s, e) => action();
-            toolStrip.Items.Add(toolStripItem);
+            if (!(toolStripItem is ToolStripItem tsi) || !(toolStrip is ToolStrip ts))
+                return;
+            tsi.Click += (s, e) => action();
+            ts.Items.Add(toolStripItem);
         }
 
         private static void LoadTextFile(Control control, IWin32Window owner = null)
         {
-            try
+            if (!(control is Control c))
+                return;
+            using (var dialog = new OpenFileDialog())
             {
-                using (var dialog = new OpenFileDialog())
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
                     {
-                        control.Text = File.ReadAllText(dialog.FileName);
+                        c.Text = File.ReadAllText(dialog.FileName);
                         MessageBoxEx.Show(owner, "File successfully loaded!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
-                    else
-                        MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+                    catch (Exception ex)
+                    {
+                        MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    return;
+                }
+                MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
         }
 
         private static void SaveTextFile(Control control, IWin32Window owner = null)
         {
-            try
+            if (!(control is Control c))
+                return;
+            if (string.IsNullOrEmpty(c.Text))
             {
-                if (string.IsNullOrEmpty(control.Text))
-                    throw new ArgumentException("This field is empty!");
-                using (var dialog = new SaveFileDialog())
+                MessageBoxEx.Show(owner, "The text can not be empty!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            using (var dialog = new SaveFileDialog())
+            {
+                dialog.Filter = @"Text Files|*.txt";
+                dialog.FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt";
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    dialog.Filter = @"Text File|*.txt";
-                    dialog.FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt";
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                    try
                     {
-                        File.WriteAllText(dialog.FileName, TextEx.FormatNewLine(control.Text));
+                        File.WriteAllText(dialog.FileName, TextEx.FormatNewLine(c.Text));
                         MessageBoxEx.Show(owner, "File successfully saved!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
-                    else
-                        MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    catch (Exception ex)
+                    {
+                        MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    return;
                 }
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+                MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
         }
 

@@ -44,6 +44,111 @@ namespace SilDev.Drawing
         public static Image DefaultSearchSymbol => Resources.SearchImage;
 
         /// <summary>
+        ///     Determines whether the specified pixel size indicator is within the allowed
+        ///     range, depending on the specified pixel format.
+        /// </summary>
+        /// <param name="pixelIndicator">
+        ///     The pixel size indicator to check.
+        ///     <para>
+        ///         The pixel size indicator represents the maximum value between the width
+        ///         and height of an image.
+        ///     </para>
+        /// </param>
+        /// <param name="pixelFormat">
+        ///     The pixel format.
+        /// </param>
+        public static bool SizeIsValid(int pixelIndicator, PixelFormat pixelFormat)
+        {
+#if x86
+            const double memoryLimit = 0x40000000;
+#else
+            const double memoryLimit = 0x80000000;
+#endif
+            double bit;
+            switch (pixelFormat)
+            {
+                case PixelFormat.Format1bppIndexed:
+                    bit = 1d;
+                    break;
+                case PixelFormat.Format4bppIndexed:
+                    bit = 4d;
+                    break;
+                case PixelFormat.Format8bppIndexed:
+                    bit = 8d;
+                    break;
+                case PixelFormat.Format16bppArgb1555:
+                case PixelFormat.Format16bppGrayScale:
+                case PixelFormat.Format16bppRgb555:
+                case PixelFormat.Format16bppRgb565:
+                    bit = 16d;
+                    break;
+                case PixelFormat.Format32bppArgb:
+                case PixelFormat.Format32bppPArgb:
+                case PixelFormat.Format32bppRgb:
+                    bit = 32d;
+                    break;
+                case PixelFormat.Format48bppRgb:
+                    bit = 48d;
+                    break;
+                default:
+                    bit = 64d;
+                    break;
+            }
+            var absolutRange = (int)Math.Ceiling(Math.Sqrt(memoryLimit / (bit * .125d)));
+            return pixelIndicator.IsBetween(1, absolutRange);
+        }
+
+        /// <summary>
+        ///     Determines whether the specified <see cref="Image"/> size is within the
+        ///     allowed range, depending on the specified pixel format.
+        /// </summary>
+        /// <param name="width">
+        ///     The image width to check.
+        /// </param>
+        /// <param name="height">
+        ///     The image height to check.
+        /// </param>
+        /// <param name="pixelFormat">
+        ///     The pixel format.
+        /// </param>
+        public static bool SizeIsValid(int width, int height, PixelFormat pixelFormat)
+        {
+            var indicator = Math.Max(width, height);
+            return SizeIsValid(indicator, pixelFormat);
+        }
+
+        /// <summary>
+        ///     Determines whether the specified <see cref="Image"/> size is within the
+        ///     allowed range, depending on the specified pixel format.
+        /// </summary>
+        /// <param name="size">
+        ///     The image size to check.
+        /// </param>
+        /// <param name="pixelFormat">
+        ///     The pixel format.
+        /// </param>
+        public static bool SizeIsValid(Size size, PixelFormat pixelFormat)
+        {
+            var indicator = Math.Max(size.Width, size.Height);
+            return SizeIsValid(indicator, pixelFormat);
+        }
+
+        /// <summary>
+        ///     Determines whether the specified <see cref="Image"/> size is within the
+        ///     allowed range.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to check.
+        /// </param>
+        public static bool SizeIsValid(Image image)
+        {
+            if (!(image is Image img))
+                return false;
+            var indicator = Math.Max(img.Width, img.Height);
+            return SizeIsValid(indicator, img.PixelFormat);
+        }
+
+        /// <summary>
         ///     Initilazies a new instance of the <see cref="Image"/> class with
         ///     the specified color as background.
         /// </summary>
@@ -59,9 +164,9 @@ namespace SilDev.Drawing
         public static Image ToImage(this Color color, int width = 1, int height = 1)
         {
             var img = new Bitmap(width, height);
-            using (var gr = Graphics.FromImage(img))
-                using (Brush b = new SolidBrush(color))
-                    gr.FillRectangle(b, 0, 0, width, height);
+            using (var g = Graphics.FromImage(img))
+                using (var b = new SolidBrush(color))
+                    g.FillRectangle(b, 0, 0, width, height);
             return img;
         }
 
@@ -83,47 +188,42 @@ namespace SilDev.Drawing
         /// </param>
         public static Image Redraw(this Image image, int width, int heigth, SmoothingMode quality = SmoothingMode.HighQuality)
         {
+            if (!(image is Image img))
+                return default(Image);
             try
             {
-#if x86
-                const int maxRange = 23049;
-#else
-                const int maxRange = 23170;
-#endif
-                if (!width.IsBetween(1, maxRange))
-                    throw new ArgumentOutOfRangeException(nameof(width));
-                if (!heigth.IsBetween(1, maxRange))
-                    throw new ArgumentOutOfRangeException(nameof(heigth));
+                if (!SizeIsValid(width, heigth, PixelFormat.Format32bppArgb))
+                    throw new ArgumentOutOfRangeException();
                 var bmp = new Bitmap(width, heigth);
-                bmp.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-                using (var gr = Graphics.FromImage(bmp))
+                bmp.SetResolution(img.HorizontalResolution, img.VerticalResolution);
+                using (var g = Graphics.FromImage(bmp))
                 {
-                    gr.CompositingMode = CompositingMode.SourceCopy;
+                    g.CompositingMode = CompositingMode.SourceCopy;
                     switch (quality)
                     {
                         case SmoothingMode.AntiAlias:
-                            gr.CompositingQuality = CompositingQuality.HighQuality;
-                            gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                            gr.SmoothingMode = SmoothingMode.AntiAlias;
+                            g.CompositingQuality = CompositingQuality.HighQuality;
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                            g.SmoothingMode = SmoothingMode.AntiAlias;
                             break;
                         case SmoothingMode.HighQuality:
-                            gr.CompositingQuality = CompositingQuality.HighQuality;
-                            gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                            gr.SmoothingMode = SmoothingMode.HighQuality;
+                            g.CompositingQuality = CompositingQuality.HighQuality;
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                            g.SmoothingMode = SmoothingMode.HighQuality;
                             break;
                         case SmoothingMode.HighSpeed:
-                            gr.CompositingQuality = CompositingQuality.HighSpeed;
-                            gr.InterpolationMode = InterpolationMode.NearestNeighbor;
-                            gr.PixelOffsetMode = PixelOffsetMode.HighSpeed;
-                            gr.SmoothingMode = SmoothingMode.HighSpeed;
+                            g.CompositingQuality = CompositingQuality.HighSpeed;
+                            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                            g.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+                            g.SmoothingMode = SmoothingMode.HighSpeed;
                             break;
                     }
-                    using (var attr = new ImageAttributes())
+                    using (var ia = new ImageAttributes())
                     {
-                        attr.SetWrapMode(WrapMode.TileFlipXY);
-                        gr.DrawImage(image, new Rectangle(0, 0, width, heigth), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attr);
+                        ia.SetWrapMode(WrapMode.TileFlipXY);
+                        g.DrawImage(img, new Rectangle(0, 0, width, heigth), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, ia);
                     }
                 }
                 return bmp;
@@ -131,7 +231,7 @@ namespace SilDev.Drawing
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return image;
+                return img;
             }
         }
 
@@ -151,10 +251,12 @@ namespace SilDev.Drawing
         /// </param>
         public static Image Redraw(this Image image, SmoothingMode quality = SmoothingMode.HighQuality, int indicator = 1024)
         {
+            if (!(image is Image img))
+                return default(Image);
             int[] size =
             {
-                image.Width,
-                image.Height
+                img.Width,
+                img.Height
             };
             if (indicator <= 0 || indicator >= size.First() && indicator >= size.Last())
                 goto Return;
@@ -162,13 +264,13 @@ namespace SilDev.Drawing
             {
                 if (size[i] <= indicator)
                     continue;
-                var percent = (int)Math.Floor(100f / size[i] * indicator);
-                size[i] = (int)(size[i] * (percent / 100f));
-                size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100f));
+                var percent = (int)Math.Floor(100d / size[i] * indicator);
+                size[i] = (int)(size[i] * (percent / 100d));
+                size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100d));
                 break;
             }
             Return:
-            return image.Redraw(size.First(), size.Last(), quality);
+            return img.Redraw(size.First(), size.Last(), quality);
         }
 
         /// <summary>
@@ -186,6 +288,29 @@ namespace SilDev.Drawing
             image.Redraw(SmoothingMode.HighQuality, indicator);
 
         /// <summary>
+        ///     Sets the color-adjustment matrix for the specified <see cref="Image"/>.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to change.
+        /// </param>
+        /// <param name="colorMatrix">
+        ///     The color-adjustment matrix to set.
+        /// </param>
+        public static Image SetColorMatrix(this Image image, ColorMatrix colorMatrix)
+        {
+            if (!(image is Image img))
+                return default(Image);
+            var bmp = new Bitmap(img.Width, img.Height);
+            using (var g = Graphics.FromImage(bmp))
+                using (var ia = new ImageAttributes())
+                {
+                    ia.SetColorMatrix(colorMatrix);
+                    g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, ia);
+                }
+            return bmp;
+        }
+
+        /// <summary>
         ///     Inverts the color matrix of the specified <see cref="Image"/>.
         /// </summary>
         /// <param name="image">
@@ -193,32 +318,15 @@ namespace SilDev.Drawing
         /// </param>
         public static Image InvertColors(this Image image)
         {
-            try
+            var cm = new ColorMatrix(new[]
             {
-                var bmp = new Bitmap(image.Width, image.Height);
-                using (var gr = Graphics.FromImage(bmp))
-                {
-                    var cm = new ColorMatrix(new[]
-                    {
-                        new[] { -1f, 00f, 00f, 00f, 00f },
-                        new[] { 00f, -1f, 00f, 00f, 00f },
-                        new[] { 00f, 00f, -1f, 00f, 00f },
-                        new[] { 00f, 00f, 00f, 01f, 00f },
-                        new[] { 01f, 01f, 01f, 00f, 01f }
-                    });
-                    using (var attr = new ImageAttributes())
-                    {
-                        attr.SetColorMatrix(cm);
-                        gr.DrawImage(image, new Rectangle(0, 0, image.Width, image.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attr);
-                    }
-                }
-                return bmp;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return image;
-            }
+                new[] { -1f, 00f, 00f, 00f, 00f },
+                new[] { 00f, -1f, 00f, 00f, 00f },
+                new[] { 00f, 00f, -1f, 00f, 00f },
+                new[] { 00f, 00f, 00f, 01f, 00f },
+                new[] { 01f, 01f, 01f, 00f, 01f }
+            });
+            return SetColorMatrix(image, cm);
         }
 
         /// <summary>
@@ -229,32 +337,15 @@ namespace SilDev.Drawing
         /// </param>
         public static Image ToGrayScale(this Image image)
         {
-            try
+            var cm = new ColorMatrix(new[]
             {
-                var bmp = new Bitmap(image.Width, image.Height);
-                using (var gr = Graphics.FromImage(bmp))
-                {
-                    var cm = new ColorMatrix(new[]
-                    {
-                        new[] { 0.30f, 0.30f, 0.30f, 0.00f, 0.00f },
-                        new[] { 0.59f, 0.59f, 0.59f, 0.00f, 0.00f },
-                        new[] { 0.11f, 0.11f, 0.11f, 0.00f, 0.00f },
-                        new[] { 0.00f, 0.00f, 0.00f, 1.00f, 0.00f },
-                        new[] { 0.00f, 0.00f, 0.00f, 0.00f, 1.00f }
-                    });
-                    using (var attr = new ImageAttributes())
-                    {
-                        attr.SetColorMatrix(cm);
-                        gr.DrawImage(image, new Rectangle(0, 0, image.Width, image.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attr);
-                    }
-                }
-                return bmp;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return image;
-            }
+                new[] { 0.30f, 0.30f, 0.30f, 0.00f, 0.00f },
+                new[] { 0.59f, 0.59f, 0.59f, 0.00f, 0.00f },
+                new[] { 0.11f, 0.11f, 0.11f, 0.00f, 0.00f },
+                new[] { 0.00f, 0.00f, 0.00f, 1.00f, 0.00f },
+                new[] { 0.00f, 0.00f, 0.00f, 0.00f, 1.00f }
+            });
+            return SetColorMatrix(image, cm);
         }
 
         /// <summary>
@@ -272,33 +363,26 @@ namespace SilDev.Drawing
         /// </param>
         public static Image SwitchGrayScale(this Image image, object key, bool dispose = false)
         {
-            try
+            if (!(image is Image img))
+                return default(Image);
+            if (!SwitcherCache.ContainsKey(key))
             {
-                Image img;
-                if (!SwitcherCache.ContainsKey(key))
-                {
-                    var imgPair = new ImagePair(image, image.ToGrayScale());
-                    SwitcherCache.Add(key, imgPair);
-                    img = imgPair.Image2;
-                }
+                var imgPair = new ImagePair(img, img.ToGrayScale());
+                SwitcherCache.Add(key, imgPair);
+                img = imgPair.Image2;
+            }
+            else
+            {
+                if (!dispose)
+                    img = img == SwitcherCache[key].Image1 ? SwitcherCache[key].Image2 : SwitcherCache[key].Image1;
                 else
                 {
-                    if (!dispose)
-                        img = image == SwitcherCache[key].Image1 ? SwitcherCache[key].Image2 : SwitcherCache[key].Image1;
-                    else
-                    {
-                        img = new Bitmap(SwitcherCache[key].Image1);
-                        SwitcherCache[key].Dispose();
-                        SwitcherCache.Remove(key);
-                    }
+                    img = new Bitmap(SwitcherCache[key].Image1);
+                    SwitcherCache[key].Dispose();
+                    SwitcherCache.Remove(key);
                 }
-                return img;
             }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return image;
-            }
+            return img;
         }
 
         /// <summary>
@@ -316,23 +400,17 @@ namespace SilDev.Drawing
         /// </param>
         public static Image RecolorPixels(this Image image, Color from, Color to)
         {
-            try
-            {
-                var bmp = (Bitmap)image;
-                for (var x = 0; x < image.Width; x++)
-                    for (var y = 0; y < image.Height; y++)
-                    {
-                        var px = bmp.GetPixel(x, y);
-                        if (Color.FromArgb(0, px.R, px.G, px.B) == Color.FromArgb(0, from.R, from.G, from.B))
-                            bmp.SetPixel(x, y, Color.FromArgb(px.A, to.R, to.G, to.B));
-                    }
-                return bmp;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return image;
-            }
+            if (!(image is Image img))
+                return default(Image);
+            var bmp = (Bitmap)img;
+            for (var x = 0; x < img.Width; x++)
+                for (var y = 0; y < img.Height; y++)
+                {
+                    var px = bmp.GetPixel(x, y);
+                    if (Color.FromArgb(0, px.R, px.G, px.B) == Color.FromArgb(0, from.R, from.G, from.B))
+                        bmp.SetPixel(x, y, Color.FromArgb(px.A, to.R, to.G, to.B));
+                }
+            return bmp;
         }
 
         /// <summary>
@@ -346,37 +424,31 @@ namespace SilDev.Drawing
         /// </param>
         public static List<Frame> GetFrames(this Image image, bool disposeImage = true)
         {
-            try
+            var images = new List<Frame>();
+            if (!(image is Image img))
+                return images;
+            var frames = img.GetFrameCount(FrameDimension.Time);
+            if (frames <= 1)
             {
-                var imgList = new List<Frame>();
-                var frames = image.GetFrameCount(FrameDimension.Time);
-                if (frames <= 1)
-                {
-                    var bmp = new Bitmap(image);
-                    var frame = new Frame(bmp, 0);
-                    imgList.Add(frame);
-                }
-                else
-                {
-                    var times = image.GetPropertyItem(0x5100).Value;
-                    for (var i = 0; i < frames; i++)
-                    {
-                        var bmp = new Bitmap(image);
-                        var duration = BitConverter.ToInt32(times, 4 * i);
-                        var frame = new Frame(bmp, duration);
-                        imgList.Add(frame);
-                        image.SelectActiveFrame(FrameDimension.Time, i);
-                    }
-                }
-                if (disposeImage)
-                    image.Dispose();
-                return imgList;
+                var bmp = new Bitmap(img);
+                var frame = new Frame(bmp, 0);
+                images.Add(frame);
             }
-            catch (Exception ex)
+            else
             {
-                Log.Write(ex);
-                return null;
+                var times = img.GetPropertyItem(0x5100).Value;
+                for (var i = 0; i < frames; i++)
+                {
+                    var bmp = new Bitmap(img);
+                    var duration = BitConverter.ToInt32(times, 4 * i);
+                    var frame = new Frame(bmp, duration);
+                    images.Add(frame);
+                    img.SelectActiveFrame(FrameDimension.Time, i);
+                }
             }
+            if (disposeImage)
+                img.Dispose();
+            return images;
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2018-03-07 12:06
+// Version:  2018-03-08 01:18
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,6 @@
 namespace SilDev.Forms
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Reflection;
     using System.Windows.Forms;
@@ -79,11 +78,14 @@ namespace SilDev.Forms
             {
                 if (!(sender is Control c) || args == null || args.Button != MouseButtons.Left)
                     return;
+                var ca = c.GetAncestor();
+                if (ca == null)
+                    return;
                 var cc = c.Cursor;
                 if (cursor)
                     c.Cursor = Cursors.SizeAll;
                 WinApi.NativeMethods.ReleaseCapture();
-                WinApi.NativeMethods.SendMessage(c.GetAncestor().Handle, 0xa1, new IntPtr(0x2), IntPtr.Zero);
+                WinApi.NativeMethods.SendMessage(ca.Handle, 0xa1, new IntPtr(0x2), IntPtr.Zero);
                 if (c.Cursor != cc)
                     c.Cursor = cc;
             };
@@ -125,8 +127,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Enables or disables the specified <see cref="ControlStyles"/> for this <see cref="Control"/>, even it
-        ///     is not directly supported.
+        ///     Enables or disables the specified <see cref="ControlStyles"/> for this <see cref="Control"/>,
+        ///     even it is not directly supported.
         /// </summary>
         /// <param name="control">
         ///     The control to change.
@@ -164,16 +166,16 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawBorder(this Control control, Color color, BorderStyle style = BorderStyle.Solid)
         {
-            control.Paint += (sender, args) =>
+            control.Paint += (sender, e) =>
             {
-                if (!(sender is Control c) || args == null)
+                if (!(sender is Control c) || e == null)
                     return;
-                ControlPaint.DrawBorder(args.Graphics, c.ClientRectangle, color, (ButtonBorderStyle)style);
+                ControlPaint.DrawBorder(e.Graphics, c.ClientRectangle, color, (ButtonBorderStyle)style);
             };
-            control.Resize += (sender, args) =>
+            control.Resize += (sender, e) =>
             {
                 var c = (sender as Control)?.GetAncestor();
-                if (c == null || args == null)
+                if (c == null || e == null)
                     return;
                 c.Invalidate();
             };
@@ -186,7 +188,8 @@ namespace SilDev.Forms
         ///     The control that receives the size grip <see cref="Image"/>.
         /// </param>
         /// <param name="color">
-        ///     The color for the size grip <see cref="Image"/>; <see cref="Color.White"/> is used by default.
+        ///     The color for the size grip <see cref="Image"/>; <see cref="Color.White"/> is used
+        ///     by default.
         /// </param>
         /// <param name="mouseDownEvent">
         ///     Occurs when the mouse pointer is over the control and a mouse button is pressed.
@@ -194,55 +197,34 @@ namespace SilDev.Forms
         /// <param name="mouseEnterEvent">
         ///     Occurs when the mouse pointer enters the control.
         /// </param>
-        public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null)
+        /// <param name="update">
+        ///     true to causes the control to redraw the invalidated regions within its client area;
+        ///     otherwise, false.
+        /// </param>
+        public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null, bool update = false)
         {
-            Image img = Resources.SizeGripImage;
-            if (img == null)
+            if (!(control is Control c) || !(Resources.SizeGripImage is Image i))
                 return;
-            if (color != null && color != Color.White)
-                img = img.RecolorPixels(Color.White, (Color)color);
-            var pb = new PictureBoxEx(mouseDownEvent != null && mouseEnterEvent != null)
+            if (color is Color cr && cr != Color.White)
+                i = i.RecolorPixels(Color.White, cr);
+            var meh = mouseDownEvent;
+            var mev = mouseEnterEvent;
+            var pb = new PictureBoxEx.NonClickable(meh != null && mev != null)
             {
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
                 BackColor = Color.Transparent,
-                BackgroundImage = img,
+                BackgroundImage = i,
                 BackgroundImageLayout = ImageLayout.Center,
-                Location = new Point(control.Right - 12, control.Bottom - 12),
+                Location = new Point(c.Right - 12, c.Bottom - 12),
                 Size = new Size(12, 12)
             };
-            if (mouseDownEvent != null)
-                pb.MouseDown += mouseDownEvent;
-            if (mouseEnterEvent != null)
-                pb.MouseEnter += mouseEnterEvent;
-            control.Controls.Add(pb);
-            control.Update();
-        }
-    }
-
-    internal class PictureBoxEx : PictureBox
-    {
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
-        public PictureBoxEx(bool clickable)
-        {
-            if (clickable)
-                return;
-            if (Parent is IMouseClick parent)
-                MouseClick += parent.HandleMouseClick;
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == 0x84)
-            {
-                m.Result = new IntPtr(-1);
-                return;
-            }
-            base.WndProc(ref m);
-        }
-
-        private interface IMouseClick
-        {
-            void HandleMouseClick(object sender, MouseEventArgs e);
+            if (meh != null)
+                pb.MouseDown += meh;
+            if (mev != null)
+                pb.MouseEnter += mev;
+            c.Controls.Add(pb);
+            if (update)
+                c.Update();
         }
     }
 }
