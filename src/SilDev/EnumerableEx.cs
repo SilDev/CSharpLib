@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2018-02-26 19:34
+// Version:  2018-03-17 10:11
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -808,5 +808,40 @@ namespace SilDev
         /// </param>
         public static string Join(this IEnumerable<string> values, char separator) =>
             values.Join(separator.ToString());
+
+        /// <summary>
+        ///     Returns a specified number of contiguous elements from the end of a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The sequence to return elements from.
+        /// </param>
+        /// <param name="count">
+        ///     The number of elements to return.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     The count value is negative.
+        /// </exception>
+        public static IEnumerable<TSource> TakeLast<TSource>(this IEnumerable<TSource> source, int count)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            var queue = new Queue<TSource>();
+            using (var enumerator = source.GetEnumerator())
+                while (enumerator.MoveNext())
+                {
+                    queue.Enqueue(enumerator.Current);
+                    if (queue.Count > count)
+                        queue.Dequeue();
+                }
+            return queue;
+        }
     }
 }
