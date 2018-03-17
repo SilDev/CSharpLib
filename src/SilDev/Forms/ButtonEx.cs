@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2018-03-08 01:18
+// Version:  2018-03-12 02:08
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -46,6 +46,9 @@ namespace SilDev.Forms
                 return;
             if (b.Width < 48 || b.Height < 16)
                 throw new NotSupportedException();
+            var lis = b.LayoutIsSuspended();
+            if (!lis)
+                b.SuspendLayout();
             if (b.FlatStyle != FlatStyle.Flat)
             {
                 b.FlatStyle = FlatStyle.Flat;
@@ -64,6 +67,8 @@ namespace SilDev.Forms
             }
             b.MouseMove += Split_MouseMove;
             b.MouseLeave += Split_MouseLeave;
+            if (!lis)
+                b.ResumeLayout();
         }
 
         /// <summary>
@@ -89,6 +94,9 @@ namespace SilDev.Forms
         {
             if (!(sender is Button b))
                 return;
+            var lis = b.LayoutIsSuspended();
+            if (!lis)
+                b.SuspendLayout();
             Split_MouseLeave(b, null);
             if (b.PointToClient(Cursor.Position).X >= b.Right - 16)
             {
@@ -109,6 +117,8 @@ namespace SilDev.Forms
                     using (var sb = new SolidBrush(b.BackColor))
                         g.FillRectangle(sb, x, 0, w, b.BackgroundImage.Height);
             }
+            if (!lis)
+                b.ResumeLayout();
         }
 
         private static void Split_MouseLeave(object sender, EventArgs e)

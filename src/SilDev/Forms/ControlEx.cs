@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2018-03-08 01:18
+// Version:  2018-03-12 02:09
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev.Forms
 {
     using System;
     using System.Drawing;
+    using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
     using Drawing;
@@ -56,10 +57,35 @@ namespace SilDev.Forms
         /// </param>
         public static Control GetAncestor(this Control control)
         {
-            var c = control;
+            if (!(control is Control ctrl))
+                return default(Control);
+            var c = ctrl;
             while (c.Parent != null)
                 c = c.Parent;
             return c;
+        }
+
+        /// <summary>
+        ///     Determines whether the layout logic for this control has been temporarily suspended.
+        /// </summary>
+        /// <param name="control">
+        ///     The control to check.
+        /// </param>
+        public static bool LayoutIsSuspended(this Control control)
+        {
+            if (!(control is Control c))
+                return false;
+            try
+            {
+                var fi = typeof(Control).GetField("layoutSuspendCount", BindingFlags.Instance | BindingFlags.NonPublic);
+                var b = (byte?)fi?.GetValue(c) ?? 0;
+                return b > 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
         }
 
         /// <summary>
@@ -72,9 +98,11 @@ namespace SilDev.Forms
         ///     true to change <see cref="Control"/>.Cursor to <see cref="Cursors.SizeAll"/> while dragging;
         ///     otherwise, false.
         /// </param>
-        public static void EnableDragMove(this Control control, bool cursor = true)
+        public static void EnableDragMove(Control control, bool cursor = true)
         {
-            control.MouseDown += (sender, args) =>
+            if (!(control is Control ctrl))
+                return;
+            ctrl.MouseDown += (sender, args) =>
             {
                 if (!(sender is Control c) || args == null || args.Button != MouseButtons.Left)
                     return;
@@ -103,27 +131,33 @@ namespace SilDev.Forms
         /// </param>
         public static void SetDoubleBuffer(this Control control, bool enable = true)
         {
+            if (!(control is Control c))
+                return;
             try
             {
                 var pi = typeof(Control).GetProperty("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance);
-                pi?.SetValue(control, enable, null);
+                pi?.SetValue(c, enable, null);
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            var style = (int)WinApi.NativeHelper.SendMessage(control.Handle, 0x1037u, IntPtr.Zero, IntPtr.Zero);
-            if (enable)
+            var style = (int)WinApi.NativeHelper.SendMessage(c.Handle, 0x1037u, IntPtr.Zero, IntPtr.Zero);
+            var flags = new[]
             {
-                style |= 0x8000;
-                style |= 0x10000;
-            }
-            else
+                0x8000,
+                0x10000
+            };
+            foreach (var flag in flags)
             {
-                style &= ~0x8000;
-                style &= ~0x10000;
+                if (enable)
+                {
+                    style |= flag;
+                    continue;
+                }
+                style &= ~flag;
             }
-            WinApi.NativeHelper.SendMessage(control.Handle, 0x1036u, IntPtr.Zero, new IntPtr(style));
+            WinApi.NativeHelper.SendMessage(c.Handle, 0x1036u, IntPtr.Zero, new IntPtr(style));
         }
 
         /// <summary>
@@ -141,15 +175,37 @@ namespace SilDev.Forms
         /// </param>
         public static void SetControlStyle(this Control control, ControlStyles controlStyles, bool enable = true)
         {
+            if (!(control is Control c))
+                return;
             try
             {
-                var method = typeof(Control).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
-                method?.Invoke(control, new object[] { controlStyles, enable });
+                var mi = typeof(Control).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
+                mi?.Invoke(c, new object[] { controlStyles, enable });
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Sets a value indicating whether all child controls of this control are displayed.
+        /// </summary>
+        /// <param name="control">
+        ///     The control with the child controls to change.
+        /// </param>
+        /// <param name="visibility">
+        ///     true if all child controls are displayed; otherwise, false.
+        /// </param>
+        /// <param name="exempt">
+        ///     A sequence of child controls that remain visible.
+        /// </param>
+        public static void SetChildVisibility(this Control control, bool visibility, params Control[] exempt)
+        {
+            if (!(control is Control ctrl))
+                return;
+            var ctrls = ctrl.Controls.OfType<Control>().Where(c => !exempt.Contains(c));
+            ctrls.Aggregate(visibility, (v, c) => c.Visible = v);
         }
 
         /// <summary>
@@ -164,18 +220,22 @@ namespace SilDev.Forms
         /// <param name="style">
         ///     One of the <see cref="BorderStyle"/> values that specifies the style of the border.
         /// </param>
-        public static void DrawBorder(this Control control, Color color, BorderStyle style = BorderStyle.Solid)
+        public static void DrawBorder(Control control, Color color, BorderStyle style = BorderStyle.Solid)
         {
-            control.Paint += (sender, e) =>
+            if (!(control is Control ctrl))
+                return;
+            ctrl.Paint += (sender, e) =>
             {
                 if (!(sender is Control c) || e == null)
                     return;
                 ControlPaint.DrawBorder(e.Graphics, c.ClientRectangle, color, (ButtonBorderStyle)style);
             };
-            control.Resize += (sender, e) =>
+            ctrl.Resize += (sender, e) =>
             {
+                if (e == null)
+                    return;
                 var c = (sender as Control)?.GetAncestor();
-                if (c == null || e == null)
+                if (c == null || c.LayoutIsSuspended())
                     return;
                 c.Invalidate();
             };
@@ -197,11 +257,7 @@ namespace SilDev.Forms
         /// <param name="mouseEnterEvent">
         ///     Occurs when the mouse pointer enters the control.
         /// </param>
-        /// <param name="update">
-        ///     true to causes the control to redraw the invalidated regions within its client area;
-        ///     otherwise, false.
-        /// </param>
-        public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null, bool update = false)
+        public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null)
         {
             if (!(control is Control c) || !(Resources.SizeGripImage is Image i))
                 return;
@@ -223,7 +279,7 @@ namespace SilDev.Forms
             if (mev != null)
                 pb.MouseEnter += mev;
             c.Controls.Add(pb);
-            if (update)
+            if (!c.LayoutIsSuspended())
                 c.Update();
         }
     }

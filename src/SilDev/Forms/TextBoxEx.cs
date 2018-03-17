@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2018-03-08 01:19
+// Version:  2018-03-12 02:09
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -52,7 +52,11 @@ namespace SilDev.Forms
                 Dock = tb.Dock,
                 ForeColor = tb.ForeColor,
                 Location = tb.Location,
+                Margin = tb.Margin,
+                MaximumSize = tb.MaximumSize,
+                MinimumSize = tb.MinimumSize,
                 Name = $"{tb.Name}Panel",
+                Padding = new Padding(0, 0, 0, 0),
                 Parent = tb.Parent,
                 Size = tb.Size,
                 TabIndex = tb.TabIndex
@@ -70,10 +74,11 @@ namespace SilDev.Forms
             };
             pBox.Click += (sender, e) => tb.Select();
             panel.Controls.Add(pBox);
+            tb.Parent = panel;
             tb.BorderStyle = BorderStyle.None;
             tb.Dock = DockStyle.Fill;
-            tb.Parent = panel;
-            panel.Parent.Update();
+            if (!panel.Parent.LayoutIsSuspended())
+                panel.Parent.Update();
         }
     }
 }
