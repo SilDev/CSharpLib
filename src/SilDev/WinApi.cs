@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-02-10 07:41
+// Version:  2018-03-17 10:27
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -2664,14 +2664,10 @@ namespace SilDev
                         Width = SystemInformation.VirtualScreen.Width - width,
                         Height = SystemInformation.VirtualScreen.Height - height
                     };
-                    if (rect.X < range.X)
-                        rect.X = range.X;
-                    if (rect.X > range.Width)
-                        rect.X = range.Width;
-                    if (rect.Y < range.Y)
-                        rect.Y = range.Y;
-                    if (rect.Y > range.Height)
-                        rect.Y = range.Height;
+                    rect.X = Math.Max(rect.X, range.X);
+                    rect.X = Math.Min(rect.X, range.Width);
+                    rect.Y = Math.Max(rect.Y, range.Y);
+                    rect.Y = Math.Min(rect.Y, range.Height);
                 }
                 rect.Width = width;
                 rect.Height = height;
@@ -4961,14 +4957,10 @@ namespace SilDev
                             Height = screen.WorkingArea.Height + screen.WorkingArea.Y - cRect.Height
                         };
                     }
-                    if (vRect.X < range.X)
-                        vRect.X = range.X;
-                    if (vRect.X > range.Width)
-                        vRect.X = range.Width;
-                    if (vRect.Y < range.Y)
-                        vRect.Y = range.Y;
-                    if (vRect.Y > range.Height)
-                        vRect.Y = range.Height;
+                    vRect.X = Math.Max(vRect.X, range.X);
+                    vRect.X = Math.Min(vRect.X, range.Width);
+                    vRect.Y = Math.Max(vRect.Y, range.Y);
+                    vRect.Y = Math.Min(vRect.Y, range.Height);
                 }
                 return cRect != vRect;
             }
