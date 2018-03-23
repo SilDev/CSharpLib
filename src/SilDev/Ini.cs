@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2017-08-10 17:55
+// Version:  2018-03-23 22:29
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -30,8 +31,9 @@ namespace SilDev
     public static class Ini
     {
         private const string NonSectionId = "\0\u0002(NON-SECTION)\u0003\0";
-        private static string _filePath;
-        private static string _tmpFileGuid;
+        private const string ObjectPrefix = "\u0001Object\u0002";
+        private const string ObjectSuffix = "\u0003";
+        private static string _filePath, _tmpFileGuid;
         private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles { get; set; }
 
         /// <summary>
@@ -48,7 +50,7 @@ namespace SilDev
         {
             get
             {
-                if (!string.IsNullOrEmpty(_tmpFileGuid))
+                if (_tmpFileGuid != default(string))
                     return _tmpFileGuid;
                 _tmpFileGuid = Guid.NewGuid().ToString();
                 return _tmpFileGuid;
@@ -84,7 +86,7 @@ namespace SilDev
 
         private static void InitializeCache(int code, string section = null, string key = null)
         {
-            if (CachedFiles == null)
+            if (CachedFiles == default(Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>))
                 CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
 
             if (!CachedFiles.ContainsKey(code))
@@ -92,13 +94,11 @@ namespace SilDev
 
             if (string.IsNullOrEmpty(section))
                 return;
-
             if (!CachedFiles[code].ContainsKey(section))
                 CachedFiles[code][section] = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
             if (string.IsNullOrEmpty(key))
                 return;
-
             if (!CachedFiles[code][section].ContainsKey(key))
                 CachedFiles[code][section][key] = new List<string>();
         }
@@ -205,6 +205,21 @@ namespace SilDev
             var comparer = new Comparison.AlphanumericComparer();
             var sorted = source.OrderBy(x => x, comparer).ToList();
             return sorted;
+        }
+
+        /// <summary>
+        ///     Gets the regular expression to convert the INI data into an accessible format.
+        /// </summary>
+        /// <param name="allowEmptySection">
+        ///     true to allow key value pairs without section; otherwise, false.
+        /// </param>
+        [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
+        public static Regex GetRegex(bool allowEmptySection = true)
+        {
+            const RegexOptions options = RegexOptions.IgnoreCase | RegexOptions.Multiline;
+            if (allowEmptySection)
+                return new Regex(@"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))*", options);
+            return new Regex(@"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))+", options);
         }
 
         /// <summary>
@@ -464,43 +479,9 @@ namespace SilDev
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
 
-                // Enforce INI format rules
-                var lines = TextEx.FormatNewLine(source).SplitNewLine();
-                for (var i = 0; i < lines.Length; i++)
-                {
-                    var line = lines[i].Trim();
-                    if (line.StartsWith("[") && !line.EndsWith("]") && line.Contains("]") && line.IndexOf(']') > 1)
-                        lines[i] = line.Substring(0, line.IndexOf(']') + 1);
-                    else
-                        lines[i] = line;
-                }
-                source = lines.Where(LineHasIniFormat).Join(Environment.NewLine)?.TrimStart();
-                if (string.IsNullOrEmpty(source))
-                    throw new ArgumentNullException(nameof(source));
-                if (!source.StartsWith("["))
-                    source = $"[{NonSectionId}]{Environment.NewLine}{source}";
-                if (!source.EndsWith(Environment.NewLine))
-                    source += Environment.NewLine;
-
-                var matches = Regex.Matches(source,
-                                            @"^                    # Beginning of the line
-                                              ((?:\[)              # Section Start
-                                               (?<Section>[^\]]*)  # Actual Section text into Section Group
-                                               (?:\])              # Section End then EOL/EOB
-                                               (?:[\r\n]{0,}|\Z))  # Match but don't capture the CRLF or EOB
-                                              (                    # Begin capture groups (Key Value Pairs)
-                                               (?!\[)              # Stop capture groups if a [ is found; new section
-                                               (?<Key>[^=]*?)      # Any text before the =, matched few as possible
-                                               (?:=)               # Get the = now
-                                               (?<Value>[^\r\n]*)  # Get everything that is not an Line Changes
-                                               (?:[\r\n]{0,4})     # MBDC \r\n
-                                              )*                   # End Capture groups",
-                                            RegexOptions.IgnoreCase |
-                                            RegexOptions.Multiline |
-                                            RegexOptions.IgnorePatternWhitespace);
-
+                source = ForceFormat(source);
                 var content = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
-                foreach (Match match in matches)
+                foreach (var match in GetRegex().Matches(source).Cast<Match>())
                 {
                     var section = match.Groups["Section"]?.Value.Trim();
                     if (string.IsNullOrEmpty(section))
@@ -545,10 +526,10 @@ namespace SilDev
             return output;
         }
 
-        private static bool LineHasIniFormat(this string str)
+        private static bool LineIsValid(string str)
         {
             var s = str;
-            if (string.IsNullOrWhiteSpace(s))
+            if (string.IsNullOrWhiteSpace(s) || s.Length < 3)
                 return false;
             if (s.StartsWith("[") && s.EndsWith("]") && s.Count(x => x == '[') == 1 && s.Count(x => x == ']') == 1 && s.Any(char.IsLetterOrDigit))
                 return true;
@@ -556,7 +537,30 @@ namespace SilDev
             if (!char.IsLetterOrDigit(c) && !c.IsBetween('$', '/') && !c.IsBetween('<', '@') && !c.IsBetween('{', '~') && c != '!' && c != '"' && c != ':' && c != '^' && c != '_')
                 return false;
             var i = s.IndexOf('=');
-            return i > 0 && s.Substring(0, i).Any(char.IsLetterOrDigit) && s.Contains('=') && i + 1 < s.Length;
+            return i > 0 && s.Substring(0, i).Any(char.IsLetterOrDigit) && i + 1 < s.Length;
+        }
+
+        private static string ForceFormat(string str)
+        {
+            var builder = new StringBuilder();
+            foreach (var text in str.TrimStart().Split(TextEx.NewLineFormats.All))
+            {
+                var line = text.Trim();
+                if (line.StartsWith("[") && !line.EndsWith("]") && line.Contains(']') && line.IndexOf(']') > 1)
+                    line = line.Substring(0, line.IndexOf(']') + 1);
+                if (LineIsValid(line))
+                    builder.AppendLine(line);
+            }
+            if (builder.Length < 1)
+                throw new ArgumentNullException(nameof(builder));
+            var first = builder.ToString(0, 1).First();
+            if (first.Equals('['))
+                return builder.ToString();
+            builder.Insert(0, Environment.NewLine);
+            builder.Insert(0, ']');
+            builder.Insert(0, NonSectionId);
+            builder.Insert(0, '[');
+            return builder.ToString();
         }
 
         /// <summary>
@@ -600,7 +604,11 @@ namespace SilDev
                 if (!CodeExists(code))
                     throw new ArgumentNullException(nameof(fileOrContent));
                 if (string.IsNullOrEmpty(section))
-                    throw new ArgumentNullException(nameof(section));
+                {
+                    if (section != null)
+                        throw new ArgumentNullException(nameof(section));
+                    section = NonSectionId;
+                }
                 if (string.IsNullOrEmpty(key))
                     throw new ArgumentNullException(nameof(key));
                 if (KeyExists(code, section, key))
@@ -675,20 +683,20 @@ namespace SilDev
                 {
                     if (Log.DebugMode > 1)
                     {
-                        var lines = new[]
-                        {
-                            "The value is not defined.",
-                            $"   Section: '{section}'",
-                            $"   Key: '{key}'",
-                            $"   FileOrContent: '{(fileOrContent?.Any(TextEx.IsLineSeparator) == true ? fileOrContent.EncodeToBase85() : GetFile()) ?? "NULL"}'"
-                        };
-                        throw new WarningException(lines.Join(Environment.NewLine));
+                        var msg = new StringBuilder();
+                        msg.AppendLine("The value is not defined.");
+                        msg.AppendLine($"   Section: '{section}'");
+                        msg.AppendLine($"   Key: '{key}'");
+                        msg.Append($"   FileOrContent: '{(fileOrContent?.Any(TextEx.IsLineSeparator) == true ? fileOrContent.EncodeToBase85() : GetFile()) ?? "NULL"}'");
+                        throw new WarningException(msg.ToString());
                     }
                     newValue = (object)defValue ?? string.Empty;
                 }
-                else if (strValue.StartsWith("\u0001Object\u0002") && strValue.EndsWith("\u0003"))
+                else if (strValue.StartsWith(ObjectPrefix) && strValue.EndsWith(ObjectSuffix))
                 {
-                    var bytes = strValue.Substring(8).TrimEnd('\u0003').DecodeBytesFromBase85(null, null);
+                    var startIndex = ObjectPrefix.Length;
+                    var length = strValue.Length - ObjectPrefix.Length - ObjectSuffix.Length;
+                    var bytes = strValue.Substring(startIndex, length).DecodeBytesFromBase85(null, null);
                     var unzipped = bytes?.Unzip();
                     if (unzipped != null)
                         bytes = unzipped;
@@ -969,10 +977,14 @@ namespace SilDev
                 if (!CodeExists(code))
                     ReadAll(fileOrContent);
 
+                if (string.IsNullOrEmpty(section))
+                {
+                    if (section != null)
+                        throw new ArgumentNullException(nameof(section));
+                    section = NonSectionId;
+                }
                 if (section.Any(TextEx.IsLineSeparator))
                     throw new ArgumentOutOfRangeException(nameof(section));
-                if (string.IsNullOrEmpty(section))
-                    section = NonSectionId;
 
                 if (key.Any(TextEx.IsLineSeparator))
                     throw new ArgumentOutOfRangeException(nameof(key));
@@ -988,7 +1000,7 @@ namespace SilDev
                         var zipped = bytes?.Zip();
                         if (zipped?.Length < bytes?.Length)
                             bytes = zipped;
-                        val = "\u0001Object\u0002" + bytes.EncodeToBase85(null, null) + "\u0003";
+                        val = string.Concat(ObjectPrefix, bytes.EncodeToBase85(null, null), ObjectSuffix);
                     }
                     else
                         val = str;
