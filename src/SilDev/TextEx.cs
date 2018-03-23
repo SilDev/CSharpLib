@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-03-23 22:28
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -202,6 +202,20 @@ namespace SilDev
             ///     Carriage Return &amp; Line Feed.
             /// </summary>
             public const string WindowsDefault = "\u000d\u000a";
+
+            /// <summary>
+            ///     Returns a sequence of all line separator characters.
+            /// </summary>
+            public static readonly char[] All =
+            {
+                '\u000d',
+                '\u000c',
+                '\u000a',
+                '\u2028',
+                '\u0085',
+                '\u2029',
+                '\u000b'
+            };
         }
     }
 }
