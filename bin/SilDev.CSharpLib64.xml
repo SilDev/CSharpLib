@@ -4019,27 +4019,35 @@
             <summary>
                 Returns the hash code for the specified directory instance member.
             </summary>
-            <param name="dir">
+            <param name="path">
                 The directory to get the hash code.
             </param>
             <param name="size">
                 true to include the size of each file; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.GetSize(System.IO.DirectoryInfo)">
+        <member name="M:SilDev.DirectoryEx.GetSize(System.IO.DirectoryInfo,System.IO.SearchOption)">
             <summary>
-                Gets the full size, in bytes, of the specified directory instance member.
+                Returns the size, in bytes, of the specified directory instance member.
             </summary>
             <param name="dirInfo">
-                The directory instance to get the size.
+                The directory instance member to get the size.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the operation should include
+                only the current directory or all subdirectories.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.GetSize(System.String)">
+        <member name="M:SilDev.DirectoryEx.GetSize(System.String,System.IO.SearchOption)">
             <summary>
-                Gets the full size, in bytes, of the specified directory instance member.
+                Returns the size, in bytes, of the specified directory.
             </summary>
-            <param name="dir">
-                The directory instance to get the size.
+            <param name="path">
+                The directory to get the size.
+            </param>
+            <param name="searchOption">
+                One of the enumeration values that specifies whether the operation should include
+                only the current directory or all subdirectories.
             </param>
         </member>
         <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
@@ -5538,6 +5546,14 @@
                 The full path of a cache file.
             </param>
         </member>
+        <member name="M:SilDev.Ini.GetRegex(System.Boolean)">
+            <summary>
+                Gets the regular expression to convert the INI data into an accessible format.
+            </summary>
+            <param name="allowEmptySection">
+                true to allow key value pairs without section; otherwise, false.
+            </param>
+        </member>
         <member name="M:SilDev.Ini.GetFile">
             <summary>
                 Gets the full path of the default INI file.
@@ -6995,7 +7011,7 @@
                 <para>
                     Specifies the <see cref="P:SilDev.Log.DebugMode"/> for the handling of <see cref="T:System.Exception"/>'s.
                     The <see cref="P:SilDev.Log.DebugMode"/> can also specified over an command line argument or an
-                    config parameter in combination with <see cref="M:SilDev.Log.AllowLogging(System.String,System.String,System.String)"/>.
+                    config parameter in combination with <see cref="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)"/>.
                     The following <see cref="P:SilDev.Log.DebugMode"/> options are available.
                 </para>
                 <para>
@@ -7014,7 +7030,7 @@
                 </para>
             </summary>
         </member>
-        <member name="M:SilDev.Log.AllowLogging(System.String,System.String,System.String)">
+        <member name="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)">
             <summary>
                 Allows you to enable logging by command line arguments or a specified configuration file. For
                 more informations see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
@@ -7025,14 +7041,8 @@
             <param name="key">
                 The key used to specify the <see cref="P:SilDev.Log.DebugMode"/>.
             </param>
-            <param name="pattern">
-                <para>
-                    The regular expression pattern to match.
-                </para>
-                <para>
-                    Please note that the default pattern is optimized to search within INI formatted files. The
-                    &lt;Key&gt; and &lt;Value&gt; tags are required in all search pattern.
-                </para>
+            <param name="regex">
+                The regular expression to match.
             </param>
         </member>
         <member name="M:SilDev.Log.Write(System.String,System.Boolean)">
@@ -10664,12 +10674,12 @@
                 true to remove this link with highest privileges; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.PathEx.GetLocks(System.Collections.Generic.IList{System.String})">
+        <member name="M:SilDev.PathEx.GetLocks(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Find out which processes have a lock on this file instance member.
             </summary>
-            <param name="paths">
-                An array that contains the file paths to check.
+            <param name="files">
+                An sequence of strings that contains the file paths to check.
             </param>
         </member>
         <member name="M:SilDev.PathEx.GetLocks(System.String)">
@@ -13199,6 +13209,11 @@
         <member name="F:SilDev.TextEx.NewLineFormats.WindowsDefault">
             <summary>
                 Carriage Return &amp; Line Feed.
+            </summary>
+        </member>
+        <member name="F:SilDev.TextEx.NewLineFormats.All">
+            <summary>
+                Returns a sequence of all line separator characters.
             </summary>
         </member>
         <member name="T:SilDev.Tray">
