@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-02-22 03:14
+// Version:  2018-03-21 21:34
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,6 +21,8 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Directory"/> class to perform
@@ -549,14 +551,15 @@ namespace SilDev
             try
             {
                 var sb = new StringBuilder();
-                long len = 0;
+                var len = 0L;
                 foreach (var fi in dirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
                 {
                     sb.Append(fi.Name);
                     if (size)
                         len += fi.Length;
                 }
-                return size ? $"{len}{sb}".GetHashCode() : sb.ToString().GetHashCode();
+                var s = size ? len + sb.ToString() : sb.ToString();
+                return s.GetHashCode();
             }
             catch (Exception ex)
             {
@@ -568,16 +571,19 @@ namespace SilDev
         /// <summary>
         ///     Returns the hash code for the specified directory instance member.
         /// </summary>
-        /// <param name="dir">
+        /// <param name="path">
         ///     The directory to get the hash code.
         /// </param>
         /// <param name="size">
         ///     true to include the size of each file; otherwise, false.
         /// </param>
-        public static int GetFullHashCode(string dir, bool size = true)
+        public static int GetFullHashCode(string path, bool size = true)
         {
             try
             {
+                var dir = PathEx.Combine(path);
+                if (!Directory.Exists(dir))
+                    return -1;
                 var di = new DirectoryInfo(dir);
                 return di.GetFullHashCode(size);
             }
@@ -589,17 +595,27 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the full size, in bytes, of the specified directory instance member.
+        ///     Returns the size, in bytes, of the specified directory instance member.
         /// </summary>
         /// <param name="dirInfo">
-        ///     The directory instance to get the size.
+        ///     The directory instance member to get the size.
         /// </param>
-        public static long GetSize(this DirectoryInfo dirInfo)
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the operation should include
+        ///     only the current directory or all subdirectories.
+        /// </param>
+        public static long GetSize(this DirectoryInfo dirInfo, SearchOption searchOption = SearchOption.AllDirectories)
         {
             try
             {
-                var size = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(fi => fi.Length);
-                return size;
+                var len = 0L;
+                if (dirInfo == default(DirectoryInfo))
+                    return len;
+                foreach (var fi in dirInfo.GetFiles())
+                    Interlocked.Add(ref len, fi.Length);
+                if (searchOption == SearchOption.AllDirectories)
+                    Parallel.ForEach(dirInfo.GetDirectories(), di => Interlocked.Add(ref len, di.GetSize()));
+                return len;
             }
             catch (OverflowException)
             {
@@ -607,27 +623,27 @@ namespace SilDev
             }
             catch
             {
-                return -1;
+                return 0L;
             }
         }
 
         /// <summary>
-        ///     Gets the full size, in bytes, of the specified directory instance member.
+        ///     Returns the size, in bytes, of the specified directory.
         /// </summary>
-        /// <param name="dir">
-        ///     The directory instance to get the size.
+        /// <param name="path">
+        ///     The directory to get the size.
         /// </param>
-        public static long GetSize(string dir)
+        /// <param name="searchOption">
+        ///     One of the enumeration values that specifies whether the operation should include
+        ///     only the current directory or all subdirectories.
+        /// </param>
+        public static long GetSize(string path, SearchOption searchOption = SearchOption.AllDirectories)
         {
-            try
-            {
-                var di = new DirectoryInfo(dir);
-                return di.GetSize();
-            }
-            catch
-            {
-                return -1;
-            }
+            var dir = PathEx.Combine(path);
+            if (!Directory.Exists(dir))
+                return 0L;
+            var di = new DirectoryInfo(dir);
+            return di.GetSize(searchOption);
         }
 
         /// <summary>
@@ -747,21 +763,19 @@ namespace SilDev
         /// <param name="dirInfo">
         ///     The directory instance member to check.
         /// </param>
-        public static List<Process> GetLocks(this DirectoryInfo dirInfo)
+        public static IEnumerable<Process> GetLocks(this DirectoryInfo dirInfo)
         {
-            var list = new List<Process>();
+            var locks = default(IEnumerable<Process>);
             try
             {
-                var sa = Directory.GetFiles(dirInfo.FullName, "*", SearchOption.AllDirectories);
-                list = PathEx.GetLocks(sa);
-                if (list.Any())
-                    list = list.Distinct().ToList();
+                var files = Directory.EnumerateFiles(dirInfo.FullName, "*", SearchOption.AllDirectories);
+                locks = PathEx.GetLocks(files);
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return list;
+            return locks;
         }
     }
 }
