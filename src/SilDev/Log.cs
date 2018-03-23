@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2017-10-29 23:48
+// Version:  2018-03-23 22:59
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -33,9 +34,10 @@ namespace SilDev
     /// </summary>
     public static class Log
     {
-        internal static string DebugKey = "Debug";
-        private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss,fff zzz";
-        private static bool _conIsOpen, _firstCall, _firstEntry = true;
+        internal static string DebugKey = @"Debug";
+        private const string DateTimeFormat = @"yyyy-MM-dd HH:mm:ss,fff zzz";
+        private static bool _conIsOpen, _fileIsValid, _firstCall, _firstEntry = true;
+        private static string _fileDir, _filePath;
         private static FileStream _fs;
         private static SafeFileHandle _sfh;
         private static IntPtr _stdHandle = IntPtr.Zero;
@@ -43,8 +45,7 @@ namespace SilDev
         private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly().GetName();
         private static readonly string AssemblyName = AssemblyEntryName.Name;
         private static readonly Version AssemblyVersion = AssemblyEntryName.Version;
-        private static readonly string RuntimeSeparator = new string('-', 120);
-        private static readonly object WriteLocker = new object();
+        private static readonly StringBuilder Builder = new StringBuilder();
 
         /// <summary>
         ///     true to enable the catching of unhandled <see cref="Exception"/>'s; otherwise, false.
@@ -65,7 +66,7 @@ namespace SilDev
         /// <summary>
         ///     Gets the name of the current LOG file.
         /// </summary>
-        public static string FileName => $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
+        public static string FileName { get; } = $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
 
         /// <summary>
         ///     <para>
@@ -80,18 +81,44 @@ namespace SilDev
         ///         temporary files.
         ///     </para>
         /// </summary>
-        public static string FileDir { get; set; } = Path.GetTempPath();
+        public static string FileDir
+        {
+            get
+            {
+                if (_fileDir == default(string))
+                    FileDir = Path.GetTempPath();
+                return _fileDir;
+            }
+            set
+            {
+                var dir = PathEx.Combine(value);
+                if (!PathEx.IsValidPath(dir) || !DirectoryEx.Create(dir))
+                    dir = Path.GetTempPath();
+                _fileDir = dir;
+                _fileIsValid = false;
+            }
+        }
 
         /// <summary>
         ///     Gets the full path of the current log file.
         /// </summary>
-        public static string FilePath { get; private set; } = PathEx.Combine(FileDir, FileName);
+        public static string FilePath
+        {
+            get
+            {
+                if (_fileIsValid)
+                    return _filePath;
+                _filePath = Path.Combine(FileDir, FileName);
+                _fileIsValid = true;
+                return _filePath;
+            }
+        }
 
         /// <summary>
         ///     <para>
         ///         Specifies the <see cref="DebugMode"/> for the handling of <see cref="Exception"/>'s.
         ///         The <see cref="DebugMode"/> can also specified over an command line argument or an
-        ///         config parameter in combination with <see cref="AllowLogging(string, string, string)"/>.
+        ///         config parameter in combination with <see cref="AllowLogging(string, string, Regex)"/>.
         ///         The following <see cref="DebugMode"/> options are available.
         ///     </para>
         ///     <para>
@@ -120,40 +147,21 @@ namespace SilDev
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 Application.ThreadException += (s, e) => Write(e.Exception, true, true);
                 AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-                    WriteUnhandled
-                        (
-                         new ApplicationException
-                             (
-                              string.Concat
-                                  (
-                                   "Error in the application. Sender object: '",
-                                   s,
-                                   "'; Exception object: '",
-                                   e.ExceptionObject,
-                                   "';"
-                                  )
-                             )
-                        );
+                {
+                    var builder = new StringBuilder();
+                    builder.Append("Error in the application. Sender object: '");
+                    builder.Append(s);
+                    builder.Append("'; Exception object: '");
+                    builder.Append(e.ExceptionObject);
+                    builder.Append(';');
+                    WriteUnhandled(new ApplicationException(builder.ToString()));
+                };
                 AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
             }
             if (DebugMode < 1)
                 return;
             Thread.CurrentThread.CurrentCulture = CurrentCulture;
             Thread.CurrentThread.CurrentUICulture = CurrentCulture;
-            try
-            {
-                FileDir = Path.GetFullPath(FileDir);
-                if (!Directory.Exists(FileDir))
-                    Directory.CreateDirectory(FileDir);
-            }
-            catch
-            {
-                FileDir = Path.GetTempPath();
-            }
-            finally
-            {
-                FilePath = Path.Combine(FileDir, FileName);
-            }
             if (DebugMode < 2)
                 return;
             Write(string.Empty);
@@ -169,16 +177,10 @@ namespace SilDev
         /// <param name="key">
         ///     The key used to specify the <see cref="DebugMode"/>.
         /// </param>
-        /// <param name="pattern">
-        ///     <para>
-        ///         The regular expression pattern to match.
-        ///     </para>
-        ///     <para>
-        ///         Please note that the default pattern is optimized to search within INI formatted files. The
-        ///         &lt;Key&gt; and &lt;Value&gt; tags are required in all search pattern.
-        ///     </para>
+        /// <param name="regex">
+        ///     The regular expression to match.
         /// </param>
-        public static void AllowLogging(string configPath = null, string key = "Debug", string pattern = @"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))+")
+        public static void AllowLogging(string configPath = null, string key = "Debug", Regex regex = null)
         {
             var args = Environment.GetCommandLineArgs();
             if (!DebugKey.EqualsEx(key))
@@ -209,33 +211,48 @@ namespace SilDev
                 if (mode > 0)
                     goto Finalize;
             }
-            if (string.IsNullOrEmpty(configPath) || string.IsNullOrEmpty(pattern))
+            if (string.IsNullOrEmpty(configPath) || regex == null)
                 goto Finalize;
             var path = PathEx.Combine(configPath);
             if (!File.Exists(path))
                 goto Finalize;
+            var groupNames = regex.GetGroupNames();
+            if (!groupNames.Contains("Key") || !groupNames.Contains("Value"))
+                goto Finalize;
+            string source;
             try
             {
-                var source = File.ReadAllText(path);
-                var matches = Regex.Matches(source, pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
-                foreach (Match match in matches)
-                    for (var i = 0; i < match.Groups["Key"].Captures.Count; i++)
+                source = File.ReadAllText(path);
+                if (string.IsNullOrEmpty(source))
+                    throw new ArgumentNullException(nameof(source));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                goto Finalize;
+            }
+            foreach (var match in regex.Matches(source).Cast<Match>())
+            {
+                var keys = match.Groups["Key"].Captures.Cast<Capture>().GetEnumerator();
+                var vals = match.Groups["Value"].Captures.Cast<Capture>().GetEnumerator();
+                try
+                {
+                    while (keys.MoveNext() && vals.MoveNext())
                     {
-                        var mKey = match.Groups["Key"]?.Captures[i].Value.Trim();
-                        if (string.IsNullOrEmpty(mKey) || !mKey.EqualsEx(key))
+                        var keyName = keys.Current?.Value.Trim();
+                        if (!keyName.EqualsEx(key))
                             continue;
-                        var mVal = match.Groups["Value"]?.Captures[i].Value.Trim();
-                        if (string.IsNullOrEmpty(mVal))
-                            continue;
-                        if (!int.TryParse(mVal, out var num))
-                            goto Finalize;
-                        mode = num;
+                        var strValue = vals.Current?.Value.Trim();
+                        if (int.TryParse(strValue, out var value))
+                            mode = value;
                         goto Finalize;
                     }
-            }
-            catch
-            {
-                // ignored
+                }
+                finally
+                {
+                    keys.Dispose();
+                    vals.Dispose();
+                }
             }
             Finalize:
             ActivateLogging(mode);
@@ -252,55 +269,42 @@ namespace SilDev
         /// </param>
         public static void Write(string logMessage, bool exitProcess = false)
         {
-            lock (WriteLocker)
+            lock (Builder)
             {
                 if (!_firstCall || DebugMode < 1 || !_firstEntry && string.IsNullOrEmpty(logMessage))
                     return;
-                var log = string.Empty;
                 if (!_firstEntry)
-                    log = string.Concat
-                        (
-                         DateTime.Now.ToString(DateTimeFormat),
-                         Environment.NewLine
-                        );
+                    Builder.AppendLine(DateTime.Now.ToString(DateTimeFormat));
                 else
                 {
                     _firstEntry = false;
-                    if (File.Exists(FilePath))
-                        log = string.Concat
-                            (
-                             Environment.NewLine,
-                             RuntimeSeparator,
-                             Environment.NewLine,
-                             Environment.NewLine
-                            );
-                    log = string.Concat
-                        (
-                         log,
-                         DateTime.Now.ToString(DateTimeFormat),
-                         Environment.NewLine,
-                         "System: '",
-                         Environment.OSVersion,
-                         "'; Runtime: '",
-                         EnvironmentEx.Version,
-                         "'; Assembly: '",
-                         AssemblyName,
-                         "'; Version: '",
-                         AssemblyVersion,
-                         "';",
-                         Environment.NewLine,
-                         Environment.NewLine
-                        );
+                    if (Directory.Exists(FileDir) && File.Exists(FilePath))
+                    {
+                        Builder.AppendLine();
+                        Builder.AppendLine(new string('-', 120));
+                        Builder.AppendLine();
+                        AppendToFile();
+                    }
+                    Builder.AppendLine(DateTime.Now.ToString(DateTimeFormat));
+                    Builder.Append("System: '");
+                    Builder.Append(Environment.OSVersion);
+                    Builder.Append("'; Runtime: '");
+                    Builder.Append(EnvironmentEx.Version);
+                    Builder.Append("'; Assembly: '");
+                    Builder.Append(AssemblyName);
+                    Builder.Append("'; Version: '");
+                    Builder.Append(AssemblyVersion);
+                    Builder.AppendLine("';");
+                    Builder.AppendLine();
                     if (!string.IsNullOrEmpty(logMessage))
-                        log += string.Concat
-                            (
-                             DateTime.Now.ToString(DateTimeFormat),
-                             Environment.NewLine
-                            );
+                        Builder.AppendLine(DateTime.Now.ToString(DateTimeFormat));
                 }
                 if (!string.IsNullOrEmpty(logMessage))
-                    log = string.Concat(log, logMessage, Environment.NewLine, Environment.NewLine);
-                File.AppendAllText(FilePath, log);
+                {
+                    Builder.AppendLine(logMessage);
+                    Builder.AppendLine();
+                }
+                var content = AppendToFile();
                 if (DebugMode < 2)
                 {
                     if (!exitProcess)
@@ -319,7 +323,7 @@ namespace SilDev
                         if (hMenu != IntPtr.Zero)
                             WinApi.NativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
                     }
-                    _stdHandle = WinApi.NativeMethods.GetStdHandle(-11);
+                    _stdHandle = WinApi.NativeMethods.GetStdHandle(-0xb);
                     _sfh = new SafeFileHandle(_stdHandle, true);
                     _fs = new FileStream(_sfh, FileAccess.Write);
                     var title = $"Debug Console ('{AssemblyName}')";
@@ -334,9 +338,7 @@ namespace SilDev
                         }
                     }
                 }
-                if (log.Contains(RuntimeSeparator))
-                    log = log.TrimStart().Substring(RuntimeSeparator.Length).TrimStart();
-                Console.Write(log);
+                Console.Write(content);
                 _sw = new StreamWriter(_fs, Encoding.ASCII) { AutoFlush = true };
                 Console.SetOut(_sw);
                 if (!exitProcess)
@@ -377,25 +379,31 @@ namespace SilDev
             Write($"Unhandled {exception}", true);
         }
 
+        private static string AppendToFile()
+        {
+            lock (Builder)
+            {
+                var content = Builder.Length > 0 ? Builder.ToString() : string.Empty;
+                if (Directory.Exists(FileDir))
+                    File.AppendAllText(FilePath, content);
+                Builder.Clear();
+                return content;
+            }
+        }
+
         private static void Close()
         {
             if (_sfh?.IsClosed == false)
                 _sfh.Close();
             if (!Directory.Exists(FileDir))
                 return;
-            try
+            AppendToFile();
+            foreach (var file in Directory.EnumerateFiles(FileDir, AssemblyName + "*.log", SearchOption.TopDirectoryOnly))
             {
-                foreach (var file in Directory.EnumerateFiles(FileDir, AssemblyName + "*.log", SearchOption.TopDirectoryOnly))
-                {
-                    if (FilePath.EqualsEx(file))
-                        continue;
-                    if ((DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
-                        File.Delete(file);
-                }
-            }
-            catch
-            {
-                // ignored
+                if (FilePath.EqualsEx(file))
+                    continue;
+                if ((DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
+                    File.Delete(file);
             }
         }
     }
