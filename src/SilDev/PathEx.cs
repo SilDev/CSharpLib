@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-02-22 01:50
+// Version:  2018-03-21 21:35
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -847,53 +847,56 @@ namespace SilDev
         /// <summary>
         ///     Find out which processes have a lock on this file instance member.
         /// </summary>
-        /// <param name="paths">
-        ///     An array that contains the file paths to check.
+        /// <param name="files">
+        ///     An sequence of strings that contains the file paths to check.
         /// </param>
-        public static List<Process> GetLocks(IList<string> paths)
+        public static IEnumerable<Process> GetLocks(IEnumerable<string> files)
         {
-            var list = new List<Process>();
+            var locks = default(IEnumerable<Process>);
             try
             {
-                var res = WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString());
-                if (res != 0)
-                    throw new Exception("Could not begin restart session. Unable to determine file locker.");
+                var paths = files?.ToArray();
+                if (paths == null || !paths.Any())
+                    throw new ArgumentNullException(nameof(paths));
+                var result = WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString());
+                if (result != 0)
+                    throw new InvalidOperationException("Could not begin restart session. Unable to determine file locker.");
                 try
                 {
-                    if (paths == null || !paths.Any())
-                        throw new ArgumentNullException(nameof(paths));
-                    uint pnProcInfo = 0;
-                    uint lpdwRebootReasons = 0;
                     var resources = paths.Select(s => Combine(s)).Where(File.Exists).ToArray();
-                    if (resources.Length == 0)
+                    if (!resources.Any())
                         throw new PathNotFoundException(paths.Join("'; '"));
-                    res = WinApi.NativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
-                    if (res != 0)
+                    result = WinApi.NativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0u, null, 0u, null);
+                    if (result != 0)
                         throw new Exception("Could not register resource.");
-                    res = WinApi.NativeMethods.RmGetList(handle, out var pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
-                    if (res == 0xea)
+                    var pnProcInfo = 0u;
+                    var lpdwRebootReasons = 0u;
+                    result = WinApi.NativeMethods.RmGetList(handle, out var pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
+                    if (result != 234)
+                        throw new InvalidOperationException("Could not list processes locking resource. Failed to get size of result.");
+                    var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];
+                    pnProcInfo = pnProcInfoNeeded;
+                    result = WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons);
+                    if (result != 0)
+                        throw new InvalidOperationException("Could not list processes locking resource.");
+                    var ids = processInfo.Select(e => e.Process.dwProcessId);
+                    var procs = new List<Process>();
+                    foreach (var id in ids)
                     {
-                        var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];
-                        pnProcInfo = pnProcInfoNeeded;
-                        res = WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons);
-                        if (res == 0)
+                        Process proc;
+                        try
                         {
-                            var ids = processInfo.Select(e => e.Process.dwProcessId).Distinct().ToList();
-                            foreach (var id in ids)
-                                try
-                                {
-                                    list.Add(Process.GetProcessById(id));
-                                }
-                                catch (Exception ex)
-                                {
-                                    Log.Write(ex);
-                                }
+                            proc = Process.GetProcessById(id);
                         }
-                        else
-                            throw new Exception("Could not list processes locking resource.");
+                        catch
+                        {
+                            continue;
+                        }
+                        if (procs.Contains(proc))
+                            continue;
+                        procs.Add(proc);
                     }
-                    else if (res != 0)
-                        throw new Exception("Could not list processes locking resource. Failed to get size of result.");
+                    locks = procs;
                 }
                 catch (Exception ex)
                 {
@@ -908,7 +911,7 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            return list;
+            return locks;
         }
 
         /// <summary>
@@ -917,9 +920,9 @@ namespace SilDev
         /// <param name="path">
         ///     The full path to check.
         /// </param>
-        public static List<Process> GetLocks(string path)
+        public static IEnumerable<Process> GetLocks(string path)
         {
-            var list = new List<Process>();
+            var locks = default(IEnumerable<Process>);
             try
             {
                 var s = Combine(path);
@@ -928,19 +931,19 @@ namespace SilDev
                 if (IsDir(s))
                 {
                     var di = new DirectoryInfo(s);
-                    list = di.GetLocks();
+                    locks = di.GetLocks();
                 }
                 else
                 {
                     var fi = new FileInfo(s);
-                    list = fi.GetLocks();
+                    locks = fi.GetLocks();
                 }
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
             }
-            return list;
+            return locks;
         }
 
         /// <summary>
@@ -971,27 +974,24 @@ namespace SilDev
                 var locked = false;
                 using (var current = Process.GetCurrentProcess())
                 {
-                    var locks = GetLocks(target);
-                    if (locks != null)
-                        foreach (var p in locks)
-                        {
-                            if (p != current)
-                                continue;
-                            locked = true;
-                            p.Dispose();
-                            break;
-                        }
-                    locks = GetLocks(target)?.Where(p => p != current).ToList();
-                    if (locks?.Any() == true)
-                        ProcessEx.Terminate(locks);
-                    if (!locked)
-                        locks = GetLocks(target);
-                    if (locks?.Any() == true)
+                    foreach (var p in GetLocks(target))
                     {
+                        if (p == current)
+                        {
+                            p.Dispose();
+                            continue;
+                        }
+                        if (ProcessEx.Terminate(p) || locked)
+                            continue;
                         locked = true;
-                        foreach (var p in locks)
-                            p?.Dispose();
                     }
+                    if (!locked)
+                        foreach (var p in GetLocks(target))
+                        {
+                            if (!locked && p != current)
+                                locked = true;
+                            p.Dispose();
+                        }
                 }
                 var curName = $"{ProcessEx.CurrentName}.exe";
                 if (IsDir(target))
@@ -1012,10 +1012,8 @@ namespace SilDev
                         using (var p = ProcessEx.Send(command, elevated, false))
                             if (p?.HasExited == false)
                                 p.WaitForExit(timelimit);
-                    if (Directory.Exists(tmpDir))
-                        Directory.Delete(tmpDir, true);
-                    if (Directory.Exists(target))
-                        Directory.Delete(target, true);
+                    DirectoryEx.Delete(tmpDir);
+                    DirectoryEx.Delete(target);
                     command = string.Format(Resources.Cmd_DeleteFile, helper);
                     command = string.Format(Resources.Cmd_WaitThenCmd, 5, command);
                     command = string.Format(Resources.Cmd_WaitForProcThenCmd, curName, command);
@@ -1095,10 +1093,8 @@ namespace SilDev
         /// <param name="target">
         ///     Exception target.
         /// </param>
-        public PathNotFoundException(string target) : base(target)
-        {
+        public PathNotFoundException(string target) : base(target) =>
             Message = $"Could not find target \'{target}\'.";
-        }
 
         /// <summary>
         ///     Create the exception with path and inner cause.
@@ -1109,10 +1105,8 @@ namespace SilDev
         /// <param name="innerException">
         ///     Exception inner cause.
         /// </param>
-        public PathNotFoundException(string target, Exception innerException) : base(target, innerException)
-        {
+        public PathNotFoundException(string target, Exception innerException) : base(target, innerException) =>
             Message = $"Could not find target \'{target}\'.";
-        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class with serialized data.

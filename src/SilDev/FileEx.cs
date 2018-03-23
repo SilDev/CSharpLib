@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-02-22 03:14
+// Version:  2018-03-21 21:35
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -562,7 +562,7 @@ namespace SilDev
         /// <param name="fileInfo">
         ///     The file instance member to check.
         /// </param>
-        public static List<Process> GetLocks(this FileInfo fileInfo) =>
+        public static IEnumerable<Process> GetLocks(this FileInfo fileInfo) =>
             PathEx.GetLocks(fileInfo?.FullName);
 
         /// <summary>
