@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2018-03-17 07:52
+// Version:  2018-03-22 18:25
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -191,7 +191,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool IsValid(this Uri uri, bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string))
+        public static bool IsValid(this Uri uri, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null)
         {
             var statusCode = 500;
             try
@@ -201,7 +201,7 @@ namespace SilDev
                 if (!string.IsNullOrEmpty(userAgent))
                     request.UserAgent = userAgent;
                 request.AllowAutoRedirect = allowAutoRedirect;
-                if (cookieContainer != default(CookieContainer))
+                if (cookieContainer != null)
                     request.CookieContainer = cookieContainer;
                 if (timeout >= 0)
                     request.Timeout = timeout;
@@ -233,8 +233,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool IsValid(this Uri uri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            uri.IsValid(true, default(CookieContainer), timeout, userAgent);
+        public static bool IsValid(this Uri uri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            uri.IsValid(true, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet address.
@@ -251,7 +251,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool IsValid(this Uri uri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
+        public static bool IsValid(this Uri uri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
             uri.IsValid(true, cookieContainer, timeout, userAgent);
 
         /// <summary>
@@ -266,8 +266,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool IsValid(this Uri uri, int timeout, string userAgent = default(string)) =>
-            uri.IsValid(true, default(CookieContainer), timeout, userAgent);
+        public static bool IsValid(this Uri uri, int timeout, string userAgent = null) =>
+            uri.IsValid(true, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -294,7 +294,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string))
+        public static bool FileIsAvailable(this Uri srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null)
         {
             long contentLength = 0;
             try
@@ -303,7 +303,7 @@ namespace SilDev
                 if (!string.IsNullOrEmpty(userAgent))
                     request.UserAgent = userAgent;
                 request.AllowAutoRedirect = allowAutoRedirect;
-                if (cookieContainer != default(CookieContainer))
+                if (cookieContainer != null)
                     request.CookieContainer = cookieContainer;
                 if (timeout >= 0)
                     request.Timeout = timeout;
@@ -341,8 +341,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.FileIsAvailable(userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(this Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.FileIsAvailable(userName, password, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -365,8 +365,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.FileIsAvailable(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
+            srcUri.FileIsAvailable(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -386,8 +386,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-            srcUri.FileIsAvailable(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(this Uri srcUri, string userName, string password, int timeout, string userAgent = null) =>
+            srcUri.FileIsAvailable(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -408,8 +408,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.FileIsAvailable(default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+        public static bool FileIsAvailable(this Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.FileIsAvailable(null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -427,8 +427,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.FileIsAvailable(default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(this Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.FileIsAvailable(null, null, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -445,8 +445,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, CookieContainer cookieContainer, int timeout, string userAgent = default(string)) =>
-            srcUri.FileIsAvailable(default(string), default(string), true, cookieContainer, timeout, userAgent);
+        public static bool FileIsAvailable(this Uri srcUri, CookieContainer cookieContainer, int timeout, string userAgent = null) =>
+            srcUri.FileIsAvailable(null, null, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -460,8 +460,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(this Uri srcUri, int timeout, string userAgent = default(string)) =>
-            srcUri.FileIsAvailable(default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(this Uri srcUri, int timeout, string userAgent = null) =>
+            srcUri.FileIsAvailable(null, null, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -488,7 +488,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
+        public static bool FileIsAvailable(string srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
             srcUri.ToHttpUri().FileIsAvailable(userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
@@ -513,8 +513,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().FileIsAvailable(userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(userName, password, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -537,7 +537,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
+        public static bool FileIsAvailable(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
             srcUri.ToHttpUri().FileIsAvailable(userName, password, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
@@ -558,8 +558,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().FileIsAvailable(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(string srcUri, string userName, string password, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -580,8 +580,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().FileIsAvailable(default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+        public static bool FileIsAvailable(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -599,8 +599,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().FileIsAvailable(default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(null, null, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -617,8 +617,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().FileIsAvailable(default(string), default(string), true, cookieContainer, timeout, userAgent);
+        public static bool FileIsAvailable(string srcUri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(null, null, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -632,8 +632,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static bool FileIsAvailable(string srcUri, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().FileIsAvailable(default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+        public static bool FileIsAvailable(string srcUri, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().FileIsAvailable(null, null, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -660,7 +660,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string))
+        public static DateTime GetFileDate(this Uri srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null)
         {
             var lastModified = DateTime.Now;
             try
@@ -669,7 +669,7 @@ namespace SilDev
                 if (!string.IsNullOrEmpty(userAgent))
                     request.UserAgent = userAgent;
                 request.AllowAutoRedirect = allowAutoRedirect;
-                if (cookieContainer != default(CookieContainer))
+                if (cookieContainer != null)
                     request.CookieContainer = cookieContainer;
                 if (timeout >= 0)
                     request.Timeout = timeout;
@@ -707,8 +707,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileDate(userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(this Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.GetFileDate(userName, password, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -731,8 +731,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.GetFileDate(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
+            srcUri.GetFileDate(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -752,8 +752,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileDate(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(this Uri srcUri, string userName, string password, int timeout, string userAgent = null) =>
+            srcUri.GetFileDate(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -774,8 +774,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.GetFileDate(default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+        public static DateTime GetFileDate(this Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.GetFileDate(null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -793,8 +793,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileDate(default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(this Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.GetFileDate(null, null, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -811,8 +811,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, CookieContainer cookieContainer, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileDate(default(string), default(string), true, cookieContainer, timeout, userAgent);
+        public static DateTime GetFileDate(this Uri srcUri, CookieContainer cookieContainer, int timeout, string userAgent = null) =>
+            srcUri.GetFileDate(null, null, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -826,8 +826,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(this Uri srcUri, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileDate(default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(this Uri srcUri, int timeout, string userAgent = null) =>
+            srcUri.GetFileDate(null, null, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -854,7 +854,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
+        public static DateTime GetFileDate(string srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
             srcUri.ToHttpUri().GetFileDate(userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
@@ -879,8 +879,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileDate(userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(userName, password, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -903,7 +903,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
+        public static DateTime GetFileDate(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
             srcUri.ToHttpUri().GetFileDate(userName, password, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
@@ -924,8 +924,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileDate(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(string srcUri, string userName, string password, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -946,8 +946,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileDate(default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+        public static DateTime GetFileDate(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -965,8 +965,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileDate(default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(null, null, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -983,8 +983,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileDate(default(string), default(string), true, cookieContainer, timeout, userAgent);
+        public static DateTime GetFileDate(string srcUri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(null, null, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -998,8 +998,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static DateTime GetFileDate(string srcUri, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileDate(default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+        public static DateTime GetFileDate(string srcUri, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileDate(null, null, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1026,7 +1026,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string))
+        public static string GetFileName(this Uri srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null)
         {
             var name = string.Empty;
             try
@@ -1078,8 +1078,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileName(userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(this Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.GetFileName(userName, password, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1102,8 +1102,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.GetFileName(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
+            srcUri.GetFileName(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1123,8 +1123,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileName(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(this Uri srcUri, string userName, string password, int timeout, string userAgent = null) =>
+            srcUri.GetFileName(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1145,8 +1145,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.GetFileName(default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+        public static string GetFileName(this Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.GetFileName(null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1164,8 +1164,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileName(default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(this Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.GetFileName(null, null, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1182,8 +1182,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, CookieContainer cookieContainer, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileName(default(string), default(string), true, cookieContainer, timeout, userAgent);
+        public static string GetFileName(this Uri srcUri, CookieContainer cookieContainer, int timeout, string userAgent = null) =>
+            srcUri.GetFileName(null, null, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1197,8 +1197,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(this Uri srcUri, int timeout, string userAgent = default(string)) =>
-            srcUri.GetFileName(default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(this Uri srcUri, int timeout, string userAgent = null) =>
+            srcUri.GetFileName(null, null, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1225,7 +1225,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
+        public static string GetFileName(string srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
             srcUri.ToHttpUri().GetFileName(userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
@@ -1250,8 +1250,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileName(userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileName(userName, password, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1274,7 +1274,7 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
+        public static string GetFileName(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
             srcUri.ToHttpUri().GetFileName(userName, password, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
@@ -1295,8 +1295,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileName(userName, password, true, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(string srcUri, string userName, string password, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileName(userName, password, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1317,8 +1317,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileName(default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+        public static string GetFileName(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileName(null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1336,8 +1336,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileName(default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileName(null, null, allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1354,8 +1354,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileName(default(string), default(string), true, cookieContainer, timeout, userAgent);
+        public static string GetFileName(string srcUri, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileName(null, null, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1369,8 +1369,8 @@ namespace SilDev
         /// <param name="userAgent">
         ///     The value of the User-agent HTTP header.
         /// </param>
-        public static string GetFileName(string srcUri, int timeout, string userAgent = default(string)) =>
-            srcUri.ToHttpUri().GetFileName(default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+        public static string GetFileName(string srcUri, int timeout, string userAgent = null) =>
+            srcUri.ToHttpUri().GetFileName(null, null, true, null, timeout, userAgent);
 
         /// <summary>
         ///     Provides static methods for downloading internet resources.
@@ -1405,7 +1405,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string))
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
@@ -1456,8 +1456,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1483,8 +1483,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1507,8 +1507,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1532,8 +1532,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public static bool DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1553,8 +1553,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public static bool DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1571,8 +1571,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1602,7 +1602,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
+            public static bool DownloadFile(string srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
                 DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -1630,8 +1630,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1657,7 +1657,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
+            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
                 DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -1681,8 +1681,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1706,8 +1706,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1728,8 +1728,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1749,8 +1749,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public static bool DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1767,8 +1767,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public static bool DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -1795,7 +1795,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string))
+            public static byte[] DownloadData(Uri srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
@@ -1841,8 +1841,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri, userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadData(srcUri, userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -1865,7 +1865,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
+            public static byte[] DownloadData(Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
                 DownloadData(srcUri, userName, password, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -1886,8 +1886,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(Uri srcUri, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadData(srcUri, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -1908,8 +1908,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadData(srcUri, default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public static byte[] DownloadData(Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadData(srcUri, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -1927,8 +1927,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri, default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadData(srcUri, null, null, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -1945,8 +1945,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadData(srcUri, default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public static byte[] DownloadData(Uri srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadData(srcUri, null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -1960,8 +1960,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(Uri srcUri, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri, default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(Uri srcUri, int timeout, string userAgent = null) =>
+                DownloadData(srcUri, null, null, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -1988,7 +1988,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
+            public static byte[] DownloadData(string srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
                 DownloadData(srcUri.ToHttpUri(), userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -2013,8 +2013,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri.ToHttpUri(), userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -2037,7 +2037,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
+            public static byte[] DownloadData(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
                 DownloadData(srcUri.ToHttpUri(), userName, password, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -2058,8 +2058,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri.ToHttpUri(), userName, password, true, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(string srcUri, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -2080,8 +2080,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadData(srcUri.ToHttpUri(), default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public static byte[] DownloadData(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -2099,8 +2099,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri.ToHttpUri(), default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), null, null, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -2117,8 +2117,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadData(srcUri.ToHttpUri(), default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public static byte[] DownloadData(string srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -2132,8 +2132,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static byte[] DownloadData(string srcUri, int timeout, string userAgent = default(string)) =>
-                DownloadData(srcUri.ToHttpUri(), default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public static byte[] DownloadData(string srcUri, int timeout, string userAgent = null) =>
+                DownloadData(srcUri.ToHttpUri(), null, null, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2160,7 +2160,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string))
+            public static string DownloadString(Uri srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
@@ -2206,8 +2206,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri, userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(Uri srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadString(srcUri, userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2230,7 +2230,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
+            public static string DownloadString(Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
                 DownloadString(srcUri, userName, password, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -2251,8 +2251,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(Uri srcUri, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadString(srcUri, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2273,8 +2273,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadString(srcUri, default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public static string DownloadString(Uri srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadString(srcUri, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2292,8 +2292,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri, default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(Uri srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadString(srcUri, null, null, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2310,8 +2310,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadString(srcUri, default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public static string DownloadString(Uri srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadString(srcUri, null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2325,8 +2325,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(Uri srcUri, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri, default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(Uri srcUri, int timeout, string userAgent = null) =>
+                DownloadString(srcUri, null, null, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2353,7 +2353,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
+            public static string DownloadString(string srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
                 DownloadString(srcUri.ToHttpUri(), userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -2378,8 +2378,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri.ToHttpUri(), userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(string srcUri, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2402,7 +2402,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
+            public static string DownloadString(string srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
                 DownloadString(srcUri.ToHttpUri(), userName, password, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -2423,8 +2423,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri.ToHttpUri(), userName, password, true, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(string srcUri, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2445,8 +2445,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadString(srcUri.ToHttpUri(), default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public static string DownloadString(string srcUri, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2464,8 +2464,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri.ToHttpUri(), default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(string srcUri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), null, null, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2482,8 +2482,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadString(srcUri.ToHttpUri(), default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public static string DownloadString(string srcUri, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="string"/>.
@@ -2497,8 +2497,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static string DownloadString(string srcUri, int timeout, string userAgent = default(string)) =>
-                DownloadString(srcUri.ToHttpUri(), default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public static string DownloadString(string srcUri, int timeout, string userAgent = null) =>
+                DownloadString(srcUri.ToHttpUri(), null, null, true, null, timeout, userAgent);
         }
 
         /// <summary>
@@ -2625,7 +2625,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string))
+            public void DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null)
             {
                 try
                 {
@@ -2685,8 +2685,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2712,8 +2712,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2736,8 +2736,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2761,8 +2761,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public void DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2782,8 +2782,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public void DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2800,8 +2800,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri, destPath, default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri, destPath, null, null, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2831,7 +2831,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName = default(string), string password = default(string), bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
+            public void DownloadFile(string srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
                 DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -2859,8 +2859,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2886,7 +2886,7 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
+            public void DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
                 DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
@@ -2910,8 +2910,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2935,8 +2935,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), allowAutoRedirect, cookieContainer, timeout, userAgent);
+            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2957,8 +2957,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), allowAutoRedirect, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, null, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2978,8 +2978,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), true, cookieContainer, timeout, userAgent);
+            public void DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, cookieContainer, timeout, userAgent);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2996,8 +2996,8 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, int timeout, string userAgent = default(string)) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, default(string), default(string), true, default(CookieContainer), timeout, userAgent);
+            public void DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent);
 
             private void DownloadFile_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
             {
@@ -3082,7 +3082,7 @@ namespace SilDev
             ///     <see cref="HttpWebRequest.GetResponse()"/> and
             ///     <see cref="HttpWebRequest.GetRequestStream()"/> methods.
             /// </param>
-            public WebClientEx(bool allowAutoRedirect = true, CookieContainer cookieContainer = default(CookieContainer), int timeout = 60000)
+            public WebClientEx(bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000)
             {
                 AllowAutoRedirect = allowAutoRedirect;
                 CookieContainer = cookieContainer;
@@ -3110,7 +3110,7 @@ namespace SilDev
             ///     <see cref="HttpWebRequest.GetResponse()"/> and
             ///     <see cref="HttpWebRequest.GetRequestStream()"/> methods.
             /// </param>
-            public WebClientEx(int timeout) : this(true, default(CookieContainer), timeout) { }
+            public WebClientEx(int timeout) : this(true, null, timeout) { }
 
             /// <summary>
             ///     Gets or sets a value that indicates whether the request should follow
@@ -3141,7 +3141,7 @@ namespace SilDev
                 if (!(base.GetWebRequest(address) is HttpWebRequest request))
                     return default(WebRequest);
                 request.AllowAutoRedirect = AllowAutoRedirect;
-                if (CookieContainer != default(CookieContainer))
+                if (CookieContainer != null)
                     request.CookieContainer = CookieContainer;
                 if (Timeout >= 0)
                     request.Timeout = Timeout;
