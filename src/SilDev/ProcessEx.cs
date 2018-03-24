@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-03-24 17:08
+// Version:  2018-03-25 00:05
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -356,7 +356,6 @@ namespace SilDev
                             {
                                 if (WinApi.NativeMethods.GetWindowThreadProcessId(shellWindow, out var pid) <= 0)
                                     throw new ArgumentOutOfRangeException(nameof(pid));
-                                processId = (int)pid;
                                 shellHandle = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessQueryInformation, false, pid);
                                 if (shellHandle == IntPtr.Zero)
                                     throw new ArgumentNullException(nameof(shellHandle));
@@ -365,13 +364,14 @@ namespace SilDev
                                 if (!WinApi.NativeMethods.DuplicateTokenEx(shellToken, 0x18bu, IntPtr.Zero, WinApi.SecurityImpersonationLevels.SecurityImpersonation, WinApi.TokenTypes.TokenPrimary, out primaryToken))
                                     throw new OperationCanceledException("Unable to duplicate process token.");
                                 var startupInfo = new WinApi.StartupInfo();
-                                if (!WinApi.NativeMethods.CreateProcessWithTokenW(primaryToken, 0, process.StartInfo.FileName, process.StartInfo.Arguments, 0, IntPtr.Zero, process.StartInfo.WorkingDirectory, ref startupInfo, out _))
+                                if (!WinApi.NativeMethods.CreateProcessWithTokenW(primaryToken, 0, process.StartInfo.FileName, process.StartInfo.Arguments, 0, IntPtr.Zero, process.StartInfo.WorkingDirectory, ref startupInfo, out var processInformation))
                                     throw new OperationCanceledException("Unable to create process with token.");
+                                processId = processInformation.dwProcessId;
                             }
                             finally
                             {
-                                WinApi.NativeMethods.CloseHandle(shellToken);
                                 WinApi.NativeMethods.CloseHandle(primaryToken);
+                                WinApi.NativeMethods.CloseHandle(shellToken);
                                 WinApi.NativeMethods.CloseHandle(shellHandle);
                             }
                             processStarted = true;
