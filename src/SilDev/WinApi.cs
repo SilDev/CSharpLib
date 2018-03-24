@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-03-17 10:27
+// Version:  2018-03-24 16:44
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -2017,6 +2017,138 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides enumerated values of token access rights.
+        /// </summary>
+        [Flags]
+        internal enum AccessTokenFlags : uint
+        {
+            /// <summary>
+            ///     The right to read the information in the object's security descriptor, not including the
+            ///     information in the system access control list (SACL), the right to delete the object,
+            ///     the right to modify the discretionary access control list (DACL) in the object's security
+            ///     descriptor, the right to change the owner in the object's security descriptor, and the
+            ///     right to use the object for synchronization.
+            /// </summary>
+            StandardRightsRequired = 0xf0000,
+
+            /// <summary>
+            ///     The right to read the information in the object's security descriptor, not including the
+            ///     information in the system access control list (SACL).
+            /// </summary>
+            StandardRightsRead = 0x20000,
+
+            /// <summary>
+            ///     Required to attach a primary token to a process. The SE_ASSIGNPRIMARYTOKEN_NAME privilege
+            ///     is also required to accomplish this task.
+            /// </summary>
+            TokenAssignPrimary = 0x1,
+
+            /// <summary>
+            ///     Required to duplicate an access token.
+            /// </summary>
+            TokenDuplicate = 0x2,
+
+            /// <summary>
+            ///     Required to attach an impersonation access token to a process.
+            /// </summary>
+            TokenImpersonate = 0x4,
+
+            /// <summary>
+            ///     Required to query an access token.
+            /// </summary>
+            TokenQuery = 0x8,
+
+            /// <summary>
+            ///     Required to query the source of an access token.
+            /// </summary>
+            TokenQuerySource = 0x10,
+
+            /// <summary>
+            ///     Required to enable or disable the privileges in an access token.
+            /// </summary>
+            TokenAdjustPrivileges = 0x20,
+
+            /// <summary>
+            ///     Required to adjust the attributes of the groups in an access token.
+            /// </summary>
+            TokenAdjustGroups = 0x40,
+
+            /// <summary>
+            ///     Required to change the default owner, primary group, or DACL of an access token.
+            /// </summary>
+            TokenAdjustDefault = 0x80,
+
+            /// <summary>
+            ///     Required to adjust the session ID of an access token. The SE_TCB_NAME privilege is required.
+            /// </summary>
+            TokenAdjustSessionid = 0x100,
+
+            /// <summary>
+            ///     Combines <see cref="StandardRightsRead"/> and <see cref="TokenQuery"/>.
+            /// </summary>
+            TokenRead = StandardRightsRead | TokenQuery,
+
+            /// <summary>
+            ///     Combines all possible access rights for a token.
+            /// </summary>
+            TokenAllAccess = StandardRightsRequired | TokenAssignPrimary | TokenDuplicate | TokenImpersonate | TokenQuery | TokenQuerySource | TokenAdjustPrivileges | TokenAdjustGroups | TokenAdjustDefault | TokenAdjustSessionid
+        }
+
+        /// <summary>
+        ///     Provides enumerated values that control how the process is created.
+        /// </summary>
+        [Flags]
+        internal enum CreationFlags
+        {
+            /// <summary>
+            ///     The new process does not inherit the error mode of the calling process. Instead, the new
+            ///     process gets the current default error mode.
+            /// </summary>
+            CreateDefaultErrorMode = 0x4000000,
+
+            /// <summary>
+            ///     The new process has a new console, instead of inheriting the parent's console.
+            /// </summary>
+            CreateNewConsole = 0x10,
+
+            /// <summary>
+            ///     The new process is the root process of a new process group. The process group includes all
+            ///     processes that are descendants of this root process. The process identifier of the new
+            ///     process group is the same as the process identifier, which is returned in the lpProcessInfo
+            ///     parameter.
+            /// </summary>
+            CreateNewProcessGroup = 0x200,
+
+            /// <summary>
+            ///     This flag is only valid starting a 16-bit Windows-based application. If set, the new process
+            ///     runs in a private Virtual DOS Machine (VDM). By default, all 16-bit Windows-based applications
+            ///     run in a single, shared VDM. The advantage of running separately is that a crash only terminates
+            ///     the single VDM; any other programs running in distinct VDMs continue to function normally. Also,
+            ///     16-bit Windows-based applications that run in separate VDMs have separate input queues. That
+            ///     means that if one application stops responding momentarily, applications in separate VDMs continue
+            ///     to receive input.
+            /// </summary>
+            CreateSeparateWowVdm = 0x800,
+
+            /// <summary>
+            ///     The primary thread of the new process is created in a suspended state.
+            /// </summary>
+            CreateSuspended = 0x4,
+
+            /// <summary>
+            ///     Indicates the format of the lpEnvironment parameter. If this flag is set, the environment block
+            ///     pointed to by lpEnvironment uses Unicode characters. Otherwise, the environment block uses ANSI
+            ///     characters.
+            /// </summary>
+            CreateUnicodeEnvironment = 0x400,
+
+            /// <summary>
+            ///     The process is created with extended startup information.
+            /// </summary>
+            ExtendedStartupInfoPresent = 0x80000
+        }
+
+        /// <summary>
         ///     Provides enumerated values that specify file informations.
         /// </summary>
         [Flags]
@@ -2149,6 +2281,32 @@ namespace SilDev
             ///     <see cref="ExeType"/>, or <see cref="PidL"/> flags.
             /// </summary>
             UseFileAttributes = 0x10
+        }
+
+        /// <summary>
+        ///     Provides enumerated logon options.
+        /// </summary>
+        internal enum LogonOptions
+        {
+            /// <summary>
+            ///     Log on, then load the user's profile in the HKEY_USERS registry key. The function returns
+            ///     after the profile has been loaded. Loading the profile can be time-consuming, so it is best
+            ///     to use this value only if you must access the information in the HKEY_CURRENT_USER registry
+            ///     key.
+            /// </summary>
+            WithProfile = 1,
+
+            /// <summary>
+            ///     Log on, but use the specified credentials on the network only. The new process uses the same
+            ///     token as the caller, but the system creates a new logon session within LSA, and the process
+            ///     uses the specified credentials as the default credentials.
+            ///     <para>
+            ///         This value can be used to create a process that uses a different set of credentials locally
+            ///         than it does remotely. This is useful in inter-domain scenarios where there is no trust
+            ///         relationship.
+            ///     </para>
+            /// </summary>
+            NetCredentialsOnly = 2
         }
 
         /// <summary>
@@ -2503,6 +2661,39 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides enumerated values that specify security impersonation levels.
+        /// </summary>
+        internal enum SecurityImpersonationLevels
+        {
+            /// <summary>
+            ///     The server process cannot obtain identification information about the client, and it cannot
+            ///     impersonate the client. It is defined with no value given, and thus, by ANSI C rules,
+            ///     defaults to a value of zero.
+            /// </summary>
+            SecurityAnonymous = 0,
+
+            /// <summary>
+            ///     The server process can obtain information about the client, such as security identifiers and
+            ///     privileges, but it cannot impersonate the client. This is useful for servers that export
+            ///     their own objects, for example, database products that export tables and views. Using the
+            ///     retrieved client-security information, the server can make access-validation decisions
+            ///     without being able to use other services that are using the client's security context.
+            /// </summary>
+            SecurityIdentification = 1,
+
+            /// <summary>
+            ///     The server process can impersonate the client's security context on its local system. The
+            ///     server cannot impersonate the client on remote systems.
+            /// </summary>
+            SecurityImpersonation = 2,
+
+            /// <summary>
+            ///     The server process can impersonate the client's security context on remote systems.
+            /// </summary>
+            SecurityDelegation = 3
+        }
+
+        /// <summary>
         ///     Provides enumerated values of service types.
         /// </summary>
         internal enum ServiceTypes
@@ -2549,6 +2740,143 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Provides enumerated values of process start flags.
+        /// </summary>
+        [Flags]
+        internal enum StartFlags
+        {
+            /// <summary>
+            ///     Indicates that the cursor is in feedback mode for two seconds after CreateProcess is called.
+            ///     The Working in Background cursor is displayed (see the Pointers tab in the Mouse control
+            ///     panel utility).
+            ///     <para>
+            ///         If during those two seconds the process makes the first GUI call, the system gives five
+            ///         more seconds to the process. If during those five seconds the process shows a window,
+            ///         the system gives five more seconds to the process to finish drawing the window.
+            ///     </para>
+            /// </summary>
+            ForceOnFeedback = 0x40,
+
+            /// <summary>
+            ///     Indicates that the feedback cursor is forced off while the process is starting. The Normal
+            ///     Select cursor is displayed.
+            /// </summary>
+            ForceOffFeedback = 0x80,
+
+            /// <summary>
+            ///     Indicates that any windows created by the process cannot be pinned on the taskbar.
+            ///     <para>
+            ///         This flag must be combined with <see cref="TitleIsAppId"/>.
+            ///     </para>
+            /// </summary>
+            PreventPinning = 0x2000,
+
+            /// <summary>
+            ///     Indicates that the process should be run in full-screen mode, rather than in windowed mode.
+            ///     <para>
+            ///         This flag is only valid for console applications running on an x86 computer.
+            ///     </para>
+            /// </summary>
+            RunFullscreen = 0x20,
+
+            /// <summary>
+            ///     The lpTitle member contains an AppUserModelID. This identifier controls how the taskbar and
+            ///     Start menu present the application, and enables it to be associated with the correct shortcuts
+            ///     and Jump Lists.
+            ///     <para>
+            ///         If <see cref="PreventPinning"/> is used, application windows cannot be pinned on the
+            ///         taskbar. The use of any AppUserModelID-related window properties by the application
+            ///         overrides this setting for that window only.
+            ///     </para>
+            ///     <para>
+            ///         This flag cannot be used with <see cref="TitleIsLinkName"/>.
+            ///     </para>
+            /// </summary>
+            TitleIsAppId = 0x1000,
+
+            /// <summary>
+            ///     The lpTitle member contains the path of the shortcut file (.lnk) that the user invoked to
+            ///     start this process. This is typically set by the shell when a .lnk file pointing to the
+            ///     launched application is invoked. Most applications will not need to set this value.
+            ///     <para>
+            ///         This flag cannot be used with <see cref="TitleIsAppId"/>.
+            ///     </para>
+            /// </summary>
+            TitleIsLinkName = 0x800,
+
+            /// <summary>
+            ///     The command line came from an untrusted source.
+            /// </summary>
+            UntrustedSource = 0x8000,
+
+            /// <summary>
+            ///     The dwXCountChars and dwYCountChars members contain additional information.
+            /// </summary>
+            UseCountChars = 0x8,
+
+            /// <summary>
+            ///     The dwXCountChars and dwYCountChars members contain additional information.
+            /// </summary>
+            UseFillAttribute = 0x10,
+
+            /// <summary>
+            ///     The hStdInput member contains additional information.
+            ///     <para>
+            ///         This flag cannot be used with <see cref="UseStdHandles"/>.
+            ///     </para>
+            /// </summary>
+            UseHotkey = 0x200,
+
+            /// <summary>
+            ///     The dwX and dwY members contain additional information.
+            /// </summary>
+            UsePosition = 0x4,
+
+            /// <summary>
+            ///     The wShowWindow member contains additional information.
+            /// </summary>
+            UseShowWindow = 0x1,
+
+            /// <summary>
+            ///     The dwXSize and dwYSize members contain additional information.
+            /// </summary>
+            UseSize = 0x2,
+
+            /// <summary>
+            ///     The hStdInput, hStdOutput, and hStdError members contain additional information.
+            ///     <para>
+            ///         If this flag is specified when calling one of the process creation functions, the
+            ///         handles must be inheritable and the function's bInheritHandles parameter must be set
+            ///         to TRUE.
+            ///     </para>
+            ///     <para>
+            ///         Handles must be closed with <see cref="NativeMethods.CloseHandle"/> when they are no
+            ///         longer needed.
+            ///     </para>
+            ///     <para>
+            ///         This flag cannot be used with <see cref="UseHotkey"/>.
+            ///     </para>
+            /// </summary>
+            UseStdHandles = 0x100
+        }
+
+        /// <summary>
+        ///     Provides enumerated values that differentiate between a primary token and an impersonation token.
+        /// </summary>
+        internal enum TokenTypes
+        {
+            /// <summary>
+            ///     Indicates a primary token.
+            /// </summary>
+            TokenPrimary = 1,
+
+            /// <summary>
+            ///     Indicates an impersonation token.
+            /// </summary>
+            TokenImpersonation = 2
+        }
+
+        /// <summary>
         ///     Provides enumerated values of window theme attribute types.
         /// </summary>
         internal enum WindowThemeAttributeTypes : uint
@@ -2564,6 +2892,30 @@ namespace SilDev
         /// </summary>
         public static class NativeHelper
         {
+            /// <summary>
+            ///     Enables or disables privileges in the specified access token. Enabling or disabling privileges in
+            ///     an access token requires <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access.
+            /// </summary>
+            /// <param name="tokenHandle">
+            ///     A handle to the access token that contains the privileges to be modified. The handle must have
+            ///     <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access to the token. If the PreviousState
+            ///     parameter is not NULL, the handle must also have <see cref="AccessTokenFlags.TokenQuery"/> access.
+            /// </param>
+            /// <param name="disableAllPrivileges">
+            ///     Specifies whether the function disables all of the token's privileges. If this value is TRUE, the
+            ///     function disables all privileges and ignores the NewState parameter. If it is FALSE, the function
+            ///     modifies privileges based on the information pointed to by the NewState parameter.
+            /// </param>
+            /// <param name="newState">
+            ///     A pointer to a <see cref="TokenPrivileges"/> structure that specifies an array of privileges and their
+            ///     attributes. If the disableAllPrivileges parameter is FALSE, the AdjustTokenPrivileges function
+            ///     enables, disables, or removes these privileges for the token. The following table describes the
+            ///     action taken by the AdjustTokenPrivileges function, based on the privilege attribute. If
+            ///     disableAllPrivileges is TRUE, the function ignores this parameter.
+            /// </param>
+            public static bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TokenPrivileges newState) =>
+                NativeMethods.AdjustTokenPrivileges(tokenHandle, disableAllPrivileges, ref newState, 0u, IntPtr.Zero, IntPtr.Zero);
+
             /// <summary>
             ///     Enables you to produce special effects when showing or hiding windows. There are four types of
             ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
@@ -3572,6 +3924,66 @@ namespace SilDev
             /// </param>
             public static bool LockWindowUpdate(IntPtr hWndLock) =>
                 NativeMethods.LockWindowUpdate(hWndLock);
+
+            /// <summary>
+            ///     Retrieves the name that corresponds to the privilege represented on a specific system by a specified
+            ///     locally unique identifier (LUID).
+            /// </summary>
+            /// <param name="lpSystemName">
+            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
+            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
+            ///     on the local system.
+            /// </param>
+            /// <param name="lpLuid">
+            ///     A pointer to the <see cref="LuId"/> by which the privilege is known on the target system.
+            /// </param>
+            /// <param name="lpName">
+            ///     A pointer to a buffer that receives a null-terminated string that represents the privilege name.
+            ///     For example, this string could be "SeSecurityPrivilege".
+            /// </param>
+            /// <param name="cchName">
+            ///     A pointer to a variable that specifies the size, in a TCHAR value, of the lpName buffer. When the
+            ///     function returns, this parameter contains the length of the privilege name, not including the
+            ///     terminating null character. If the buffer pointed to by the lpName parameter is too small, this
+            ///     variable contains the required size.
+            /// </param>
+            public static bool LookupPrivilegeName(string lpSystemName, LuId lpLuid, StringBuilder lpName, ref int cchName)
+            {
+                var ptr = Marshal.AllocHGlobal(Marshal.SizeOf(lpLuid));
+                Marshal.StructureToPtr(lpLuid, ptr, true);
+                try
+                {
+                    var len = 0;
+                    if (!NativeMethods.LookupPrivilegeName(null, ptr, null, ref len))
+                        return false;
+                    lpName.EnsureCapacity(++len);
+                    return NativeMethods.LookupPrivilegeName(null, ptr, lpName, ref len);
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(ptr);
+                }
+            }
+
+            /// <summary>
+            ///     Retrieves the <see cref="LuId"/> used on a specified system to locally represent the specified
+            ///     privilege name.
+            /// </summary>
+            /// <param name="lpSystemName">
+            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
+            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
+            ///     on the local system.
+            /// </param>
+            /// <param name="lpName">
+            ///     A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
+            ///     Winnt.h header file.
+            /// </param>
+            /// <param name="lpLuid">
+            ///     A pointer to a variable that receives the <see cref="LuId"/> by which the privilege is known on
+            ///     the system specified by the lpSystemName parameter.
+            /// </param>
+            internal static bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid) =>
+                NativeMethods.LookupPrivilegeValue(lpSystemName, lpName, ref lpLuid);
 
             /// <summary>
             ///     Changes the position and dimensions of the specified window.
@@ -5009,6 +5421,52 @@ namespace SilDev
         internal static class NativeMethods
         {
             /// <summary>
+            ///     Enables or disables privileges in the specified access token. Enabling or disabling privileges in
+            ///     an access token requires <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access.
+            /// </summary>
+            /// <param name="tokenHandle">
+            ///     A handle to the access token that contains the privileges to be modified. The handle must have
+            ///     <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access to the token. If the PreviousState
+            ///     parameter is not NULL, the handle must also have <see cref="AccessTokenFlags.TokenQuery"/> access.
+            /// </param>
+            /// <param name="disableAllPrivileges">
+            ///     Specifies whether the function disables all of the token's privileges. If this value is TRUE, the
+            ///     function disables all privileges and ignores the NewState parameter. If it is FALSE, the function
+            ///     modifies privileges based on the information pointed to by the NewState parameter.
+            /// </param>
+            /// <param name="newState">
+            ///     A pointer to a <see cref="TokenPrivileges"/> structure that specifies an array of privileges and their
+            ///     attributes. If the disableAllPrivileges parameter is FALSE, the AdjustTokenPrivileges function
+            ///     enables, disables, or removes these privileges for the token. The following table describes the
+            ///     action taken by the AdjustTokenPrivileges function, based on the privilege attribute. If
+            ///     disableAllPrivileges is TRUE, the function ignores this parameter.
+            /// </param>
+            /// <param name="bufferLength">
+            ///     Specifies the size, in bytes, of the buffer pointed to by the PreviousState parameter. This parameter
+            ///     can be zero if the PreviousState parameter is NULL.
+            /// </param>
+            /// <param name="previousState">
+            ///     A pointer to a buffer that the function fills with a <see cref="TokenPrivileges"/> structure that
+            ///     contains the previous state of any privileges that the function modifies. That is, if a privilege
+            ///     has been modified by this function, the privilege and its previous state are contained in the
+            ///     <see cref="TokenPrivileges"/> structure referenced by PreviousState. If the PrivilegeCount member
+            ///     of <see cref="TokenPrivileges"/> is zero, then no privileges have been changed by this function.
+            ///     This parameter can be NULL. If you specify a buffer that is too small to receive the complete list
+            ///     of modified privileges, the function fails and does not adjust any privileges. In this case, the
+            ///     function sets the variable pointed to by the returnLength parameter to the number of bytes required
+            ///     to hold the complete list of modified privileges.
+            /// </param>
+            /// <param name="returnLength">
+            ///     A pointer to a variable that receives the required size, in bytes, of the buffer pointed to by the
+            ///     previousState parameter. This parameter can be NULL if previousState is NULL.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.Advapi32, SetLastError = true)]
+            internal static extern bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TokenPrivileges newState, uint bufferLength, IntPtr previousState, IntPtr returnLength);
+
+            /// <summary>
             ///     Allocates a new console for the calling process.
             /// </summary>
             /// <returns>
@@ -5120,6 +5578,83 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Advapi32, SetLastError = true, CharSet = CharSet.Ansi)]
             internal static extern int ControlService(IntPtr hService, ServiceControlOptions dwControl, ServiceStatus lpServiceStatus);
+
+            /// <summary>
+            ///     Creates a new process and its primary thread. The new process runs in the security context
+            ///     of the specified token. It can optionally load the user profile for the specified user.
+            /// </summary>
+            /// <param name="hToken">
+            ///     A handle to the primary token that represents a user. The handle must have the
+            ///     <see cref="AccessTokenFlags.TokenQuery"/>, <see cref="AccessTokenFlags.TokenDuplicate"/>,
+            ///     and <see cref="AccessTokenFlags.TokenAssignPrimary"/> access rights. The user represented
+            ///     by the token must have read and execute access to the application specified by the
+            ///     lpApplicationName or the lpCommandLine parameter.
+            /// </param>
+            /// <param name="dwLogonFlags">
+            ///     The logon option.
+            /// </param>
+            /// <param name="lpApplicationName">
+            ///     The name of the module to be executed. This module can be a Windows-based application. It
+            ///     can be some other type of module (for example, MS-DOS or OS/2) if the appropriate subsystem
+            ///     is available on the local computer.
+            ///     <para>
+            ///         The string can specify the full path and file name of the module to execute or it can
+            ///         specify a partial name. In the case of a partial name, the function uses the current
+            ///         drive and current directory to complete the specification. The function will not use
+            ///         the search path. This parameter must include the file name extension; no default
+            ///         extension is assumed.
+            ///     </para>
+            ///     <para>
+            ///         The lpApplicationName parameter can be NULL. In that case, the module name must be the
+            ///         first white space–delimited token in the lpCommandLine string. If you are using a long
+            ///         file name that contains a space, use quoted strings to indicate where the file name ends
+            ///         and the arguments begin; otherwise, the file name is ambiguous.
+            ///     </para>
+            /// </param>
+            /// <param name="lpCommandLine">
+            ///     The command line to be executed. The maximum length of this string is 1024 characters. If
+            ///     lpApplicationName is NULL, the module name portion of lpCommandLine is limited to 255
+            ///     characters.
+            ///     <para>
+            ///         The lpCommandLine parameter can be NULL. In that case, the function uses the string
+            ///         pointed to by lpApplicationName as the command line.
+            ///     </para>
+            /// </param>
+            /// <param name="dwCreationFlags">
+            ///     The flags that control how the process is created.
+            /// </param>
+            /// <param name="lpEnvironment">
+            ///     A pointer to an environment block for the new process. If this parameter is NULL, the new
+            ///     process uses an environment created from the profile of the user specified by lpUsername.
+            /// </param>
+            /// <param name="lpCurrentDirectory">
+            ///     The full path to the current directory for the process. The string can also specify a UNC path.
+            ///     <para>
+            ///         If this parameter is NULL, the new process will have the same current drive and directory
+            ///         as the calling process. (This feature is provided primarily for shells that need to start
+            ///         an application and specify its initial drive and working directory.)
+            ///     </para>
+            /// </param>
+            /// <param name="lpStartupInfo">
+            ///     A pointer to a <see cref="StartupInfo"/> structure.
+            ///     <para>
+            ///         If the lpDesktop member is NULL or an empty string, the new process inherits the desktop
+            ///         and window station of its parent process. The function adds permission for the specified
+            ///         user account to the inherited window station and desktop. Otherwise, if this member
+            ///         specifies a desktop, it is the responsibility of the application to add permission for
+            ///         the specified user account to the specified window station and desktop, even for
+            ///         WinSta0\Default.
+            ///     </para>
+            /// </param>
+            /// <param name="lpProcessInformation">
+            ///     A pointer to a <see cref="ProcessInformation"/> structure that receives identification
+            ///     information for the new process, including a handle to the process.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.Advapi32, SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern bool CreateProcessWithTokenW(IntPtr hToken, LogonOptions dwLogonFlags, string lpApplicationName, string lpCommandLine, CreationFlags dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory, ref StartupInfo lpStartupInfo, out ProcessInformation lpProcessInformation);
 
             /// <summary>
             ///     Creates a service object and adds it to the specified service control manager database.
@@ -5371,6 +5906,78 @@ namespace SilDev
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             internal static extern bool DuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle, uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions);
+
+            /// <summary>
+            ///     Creates a new access token that duplicates one already in existence.
+            /// </summary>
+            /// <param name="hExistingToken">
+            ///     A handle to an access token opened with <see cref="AccessTokenFlags.TokenDuplicate"/> access.
+            /// </param>
+            /// <param name="dwDesiredAccess">
+            ///     Specifies the requested access rights for the new token.
+            /// </param>
+            /// <param name="lpTokenAttributes">
+            ///     A pointer to a <see cref="SecurityAttributes"/> structure that specifies a security descriptor
+            ///     for the new token and determines whether child processes can inherit the token. If
+            ///     lpTokenAttributes is NULL, the token gets a default security descriptor and the handle cannot
+            ///     be inherited. If the security descriptor contains a system access control list (SACL), the token
+            ///     gets system security access rights, even if it was not requested in dwDesiredAccess.
+            /// </param>
+            /// <param name="impersonationLevel">
+            ///     Specifies a value from the <see cref="SecurityImpersonationLevels"/> enumeration that indicates
+            ///     the impersonation level of the new token.
+            /// </param>
+            /// <param name="tokenType">
+            ///     Specifies one of the following values from the <see cref="TokenType"/> enumeration.
+            /// </param>
+            /// <param name="phNewToken">
+            ///     A pointer to a HANDLE variable that receives the new token.
+            ///     <para>
+            ///         When you have finished using the new token, call the <see cref="CloseHandle"/> function
+            ///         to close the token handle.
+            ///     </para>
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the function returns a nonzero value.
+            /// </returns>
+            [DllImport(DllNames.Advapi32, CharSet = CharSet.Auto, SetLastError = true)]
+            internal static extern bool DuplicateTokenEx(IntPtr hExistingToken, AccessTokenFlags dwDesiredAccess, ref SecurityAttributes lpTokenAttributes, SecurityImpersonationLevels impersonationLevel, TokenTypes tokenType, out IntPtr phNewToken);
+
+            /// <summary>
+            ///     Creates a new access token that duplicates one already in existence.
+            /// </summary>
+            /// <param name="hExistingToken">
+            ///     A handle to an access token opened with <see cref="AccessTokenFlags.TokenDuplicate"/> access.
+            /// </param>
+            /// <param name="dwDesiredAccess">
+            ///     Specifies the requested access rights for the new token.
+            /// </param>
+            /// <param name="lpTokenAttributes">
+            ///     A pointer to a <see cref="SecurityAttributes"/> structure that specifies a security descriptor
+            ///     for the new token and determines whether child processes can inherit the token. If
+            ///     lpTokenAttributes is NULL, the token gets a default security descriptor and the handle cannot
+            ///     be inherited. If the security descriptor contains a system access control list (SACL), the token
+            ///     gets system security access rights, even if it was not requested in dwDesiredAccess.
+            /// </param>
+            /// <param name="impersonationLevel">
+            ///     Specifies a value from the <see cref="SecurityImpersonationLevels"/> enumeration that indicates
+            ///     the impersonation level of the new token.
+            /// </param>
+            /// <param name="tokenType">
+            ///     Specifies one of the following values from the <see cref="TokenType"/> enumeration.
+            /// </param>
+            /// <param name="phNewToken">
+            ///     A pointer to a HANDLE variable that receives the new token.
+            ///     <para>
+            ///         When you have finished using the new token, call the <see cref="CloseHandle"/> function
+            ///         to close the token handle.
+            ///     </para>
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the function returns a nonzero value.
+            /// </returns>
+            [DllImport(DllNames.Advapi32, CharSet = CharSet.Auto, SetLastError = true)]
+            internal static extern bool DuplicateTokenEx(IntPtr hExistingToken, uint dwDesiredAccess, IntPtr lpTokenAttributes, SecurityImpersonationLevels impersonationLevel, TokenTypes tokenType, out IntPtr phNewToken);
 
             /// <summary>
             ///     Extends the window frame into the client area.
@@ -5717,6 +6324,15 @@ namespace SilDev
             internal static extern IntPtr GetConsoleWindow();
 
             /// <summary>
+            ///     Retrieves a pseudo handle for the current process.
+            /// </summary>
+            /// <returns>
+            ///     The return value is a pseudo handle to the current process.
+            /// </returns>
+            [DllImport(DllNames.Kernel32, SetLastError = true)]
+            internal static extern IntPtr GetCurrentProcess();
+
+            /// <summary>
             ///     Retrieves the thread identifier of the calling thread.
             /// </summary>
             /// <returns>
@@ -5890,6 +6506,16 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Psapi, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern bool GetProcessImageFileName(IntPtr hProcess, StringBuilder lpImageFileName, int nSize);
+
+            /// <summary>
+            ///     Retrieves a handle to the Shell's desktop window.
+            /// </summary>
+            /// <returns>
+            ///     The return value is the handle of the Shell's desktop window. If no Shell
+            ///     process is present, the return value is NULL.
+            /// </returns>
+            [DllImport(DllNames.User32)]
+            internal static extern IntPtr GetShellWindow();
 
             /// <summary>
             ///     Retrieves a handle to the specified standard device (standard input, standard
@@ -6215,6 +6841,58 @@ namespace SilDev
             internal static extern bool LockWindowUpdate(IntPtr hWndLock);
 
             /// <summary>
+            ///     Retrieves the name that corresponds to the privilege represented on a specific system by a specified
+            ///     locally unique identifier (LUID).
+            /// </summary>
+            /// <param name="lpSystemName">
+            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
+            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
+            ///     on the local system.
+            /// </param>
+            /// <param name="lpLuid">
+            ///     A pointer to the <see cref="LuId"/> by which the privilege is known on the target system.
+            /// </param>
+            /// <param name="lpName">
+            ///     A pointer to a buffer that receives a null-terminated string that represents the privilege name.
+            ///     For example, this string could be "SeSecurityPrivilege".
+            /// </param>
+            /// <param name="cchName">
+            ///     A pointer to a variable that specifies the size, in a TCHAR value, of the lpName buffer. When the
+            ///     function returns, this parameter contains the length of the privilege name, not including the
+            ///     terminating null character. If the buffer pointed to by the lpName parameter is too small, this
+            ///     variable contains the required size.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the function returns nonzero.
+            /// </returns>
+            [DllImport(DllNames.Advapi32, SetLastError = true, CharSet = CharSet.Unicode)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool LookupPrivilegeName(string lpSystemName, IntPtr lpLuid, StringBuilder lpName, ref int cchName);
+
+            /// <summary>
+            ///     Retrieves the <see cref="LuId"/> used on a specified system to locally represent the specified
+            ///     privilege name.
+            /// </summary>
+            /// <param name="lpSystemName">
+            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
+            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
+            ///     on the local system.
+            /// </param>
+            /// <param name="lpName">
+            ///     A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
+            ///     Winnt.h header file.
+            /// </param>
+            /// <param name="lpLuid">
+            ///     A pointer to a variable that receives the <see cref="LuId"/> by which the privilege is known on
+            ///     the system specified by the lpSystemName parameter.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the function returns nonzero.
+            /// </returns>
+            [DllImport(DllNames.Advapi32, SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid);
+
+            /// <summary>
             ///     The mciSendString function sends a command string to an MCI device. The device that the
             ///     command is sent to is specified in the command string.
             /// </summary>
@@ -6321,6 +6999,28 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr OpenProcess(AccessRights dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
+
+            /// <summary>
+            ///     Opens the access token associated with a process.
+            /// </summary>
+            /// <param name="processHandle">
+            ///     A handle to the process whose access token is opened. The process must have the
+            ///     <see cref="AccessRights.ProcessQueryInformation"/> access permission.
+            /// </param>
+            /// <param name="desiredAccess">
+            ///     Specifies an access mask that specifies the requested types of access to the access token.
+            ///     These requested access types are compared with the discretionary access control list (DACL)
+            ///     of the token to determine which accesses are granted or denied.
+            /// </param>
+            /// <param name="tokenHandle">
+            ///     A pointer to a handle that identifies the newly opened access token when the function returns.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.Advapi32, SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool OpenProcessToken(IntPtr processHandle, uint desiredAccess, out IntPtr tokenHandle);
 
             /// <summary>
             ///     Establishes a connection to the service control manager on the specified computer and opens
@@ -7683,6 +8383,70 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Contains information about a newly created process and its primary thread.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct ProcessInformation
+        {
+            /// <summary>
+            ///     A handle to the newly created process. The handle is used to specify the process in all functions
+            ///     that perform operations on the process object.
+            /// </summary>
+            internal IntPtr hProcess;
+
+            /// <summary>
+            ///     A handle to the primary thread of the newly created process. The handle is used to specify the
+            ///     thread in all functions that perform operations on the thread object.
+            /// </summary>
+            internal IntPtr hThread;
+
+            /// <summary>
+            ///     A value that can be used to identify a process. The value is valid from the time the process is
+            ///     created until all handles to the process are closed and the process object is freed; at this
+            ///     point, the identifier may be reused.
+            /// </summary>
+            internal int dwProcessId;
+
+            /// <summary>
+            ///     A value that can be used to identify a thread. The value is valid from the time the thread is
+            ///     created until all handles to the thread are closed and the thread object is freed; at this point,
+            ///     the identifier may be reused.
+            /// </summary>
+            internal int dwThreadId;
+        }
+
+        /// <summary>
+        ///     Contains the security descriptor for an object and specifies whether the handle retrieved
+        ///     by specifying this structure is inheritable. This structure provides security settings for
+        ///     objects created by various functions.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct SecurityAttributes
+        {
+            /// <summary>
+            ///     The size, in bytes, of this structure. Set this value to the size of the
+            ///     <see cref="SecurityAttributes"/> structure.
+            /// </summary>
+            internal int nLength;
+
+            /// <summary>
+            ///     A pointer to a security descriptor structure that controls access to the object. If the
+            ///     value of this member is NULL, the object is assigned the default security descriptor
+            ///     associated with the access token of the calling process. This is not the same as granting
+            ///     access to everyone by assigning a NULL discretionary access control list (DACL). By default,
+            ///     the default DACL in the access token of a process allows access only to the user represented
+            ///     by the access token.
+            /// </summary>
+            internal IntPtr lpSecurityDescriptor;
+
+            /// <summary>
+            ///     A value that specifies whether the returned handle is inherited when a new process is created.
+            ///     If this member is TRUE, the new process inherits the handle.
+            /// </summary>
+            internal int bInheritHandle;
+        }
+
+        /// <summary>
         ///     Contains status information for a service.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
@@ -7745,6 +8509,127 @@ namespace SilDev
             ///     is running and on normal termination.
             /// </summary>
             internal int dwWin32ExitCode;
+        }
+
+        /// <summary>
+        ///     Specifies the window station, desktop, standard handles, and appearance of the main window for
+        ///     a process at creation time.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        internal struct StartupInfo
+        {
+            /// <summary>
+            ///     The size of the structure, in bytes.
+            /// </summary>
+            internal int cb;
+
+            /// <summary>
+            ///     Reserved; must be NULL.
+            /// </summary>
+            internal string lpReserved;
+
+            /// <summary>
+            ///     The name of the desktop, or the name of both the desktop and window station for this process.
+            ///     A backslash in the string indicates that the string includes both the desktop and window station
+            ///     names.
+            /// </summary>
+            internal string lpDesktop;
+
+            /// <summary>
+            ///     For console processes, this is the title displayed in the title bar if a new console window is
+            ///     created. If NULL, the name of the executable file is used as the window title instead. This
+            ///     parameter must be NULL for GUI or console processes that do not create a new console window.
+            /// </summary>
+            internal string lpTitle;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UsePosition"/>, this member is the x offset of the
+            ///     upper left corner of a window if a new window is created, in pixels. Otherwise, this member is
+            ///     ignored.
+            /// </summary>
+            internal int dwX;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UsePosition"/>, this member is the y offset of the
+            ///     upper left corner of a window if a new window is created, in pixels. Otherwise, this member is
+            ///     ignored.
+            /// </summary>
+            internal int dwY;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseSize"/>, this member is the width of the window
+            ///     if a new window is created, in pixels. Otherwise, this member is ignored.
+            /// </summary>
+            internal int dwXSize;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseSize"/>, this member is the height of the window
+            ///     if a new window is created, in pixels. Otherwise, this member is ignored.
+            /// </summary>
+            internal int dwYSize;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseCountChars"/>, if a new console window is created
+            ///     in a console process, this member specifies the screen buffer width, in character columns.
+            ///     Otherwise, this member is ignored.
+            /// </summary>
+            internal int dwXCountChars;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseCountChars"/>, if a new console window is created
+            ///     in a console process, this member specifies the screen buffer height, in character rows.
+            ///     Otherwise, this member is ignored.
+            /// </summary>
+            internal int dwYCountChars;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseFillAttribute"/>, this member is the initial text
+            ///     and background colors if a new console window is created in a console application. Otherwise,
+            ///     this member is ignored.
+            /// </summary>
+            internal int dwFillAttribute;
+
+            /// <summary>
+            ///     A bitfield that determines whether certain <see cref="StartupInfo"/> members are used when the
+            ///     process creates a window.
+            /// </summary>
+            internal StartFlags dwFlags;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseShowWindow"/>.
+            /// </summary>
+            internal short wShowWindow;
+
+            /// <summary>
+            ///     Reserved for use by the C Run-time; must be zero.
+            /// </summary>
+            internal short cbReserved2;
+
+            /// <summary>
+            ///     Reserved for use by the C Run-time; must be zero.
+            /// </summary>
+            internal IntPtr lpReserved2;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is the standard input
+            ///     handle for the process. If <see cref="StartFlags.UseStdHandles"/> is not specified, the default
+            ///     for standard input is the keyboard buffer.
+            /// </summary>
+            internal IntPtr hStdInput;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is the standard output
+            ///     handle for the process. Otherwise, this member is ignored and the default for standard output
+            ///     is the console window's buffer.
+            /// </summary>
+            internal IntPtr hStdOutput;
+
+            /// <summary>
+            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is the standard error
+            ///     handle for the process. Otherwise, this member is ignored and the default for standard error is
+            ///     the console window's buffer.
+            /// </summary>
+            internal IntPtr hStdError;
         }
 
         /// <summary>
@@ -7952,6 +8837,41 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Contains the locally unique identifier (LUID).
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LuId
+        {
+            /// <summary>
+            ///     Low-order bits.
+            /// </summary>
+            public uint LowPart;
+
+            /// <summary>
+            ///     High-order bits.
+            /// </summary>
+            public int HighPart;
+        }
+
+        /// <summary>
+        ///     Represents a locally unique identifier (LUID) and its attributes.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct LuIdAndAttributes
+        {
+            /// <summary>
+            ///     Specifies an <see cref="LuId"/> value.
+            /// </summary>
+            public LuId Luid;
+
+            /// <summary>
+            ///     Specifies attributes of the <see cref="LuId"/>. This value contains up to 32 one-bit flags.
+            ///     Its meaning is dependent on the definition and use of the <see cref="LuId"/>.
+            /// </summary>
+            public uint Attributes;
+        }
+
+        /// <summary>
         ///     Stores information about a simulated mouse event.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
@@ -8057,6 +8977,26 @@ namespace SilDev
             ///     Height of the bottom border that retains its size.
             /// </summary>
             public int cyBottomHeight;
+        }
+
+        /// <summary>
+        ///     Contains information about a set of privileges for an access token.
+        /// </summary>
+        public struct TokenPrivileges
+        {
+            /// <summary>
+            ///     This must be set to the number of entries in the Privileges array.
+            /// </summary>
+            public uint PrivilegeCount;
+
+            /// <summary>
+            ///     Specifies an array of <see cref="LuIdAndAttributes"/> structures. Each structure
+            ///     contains the <see cref="LuId"/> and attributes of a privilege. To get the name of
+            ///     the privilege associated with a <see cref="LuId"/>, call the
+            ///     <see cref="NativeHelper.LookupPrivilegeName"/> function, passing the address of
+            ///     the <see cref="LuId"/> as the value of the lpLuid parameter.
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)] public LuIdAndAttributes[] Privileges;
         }
 
         /// <summary>
