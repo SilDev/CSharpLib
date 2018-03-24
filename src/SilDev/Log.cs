@@ -100,7 +100,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the full path of the current log file.
+        ///     Gets the full path of the current LOG file.
         /// </summary>
         public static string FilePath
         {
@@ -259,7 +259,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes the specified information into a log file.
+        ///     Writes the specified information into a LOG file.
         /// </summary>
         /// <param name="logMessage">
         ///     The message text to write.
@@ -349,7 +349,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes all <see cref="Exception"/> information into a log file.
+        ///     Writes all <see cref="Exception"/> information into a LOG file.
         /// </summary>
         /// <param name="exception">
         ///     The handled <see cref="Exception"/> to write.
