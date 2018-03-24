@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-03-24 16:44
+// Version:  2018-03-24 17:34
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -3982,7 +3982,7 @@ namespace SilDev
             ///     A pointer to a variable that receives the <see cref="LuId"/> by which the privilege is known on
             ///     the system specified by the lpSystemName parameter.
             /// </param>
-            internal static bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid) =>
+            public static bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid) =>
                 NativeMethods.LookupPrivilegeValue(lpSystemName, lpName, ref lpLuid);
 
             /// <summary>
