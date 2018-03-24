@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-03-21 21:35
+// Version:  2018-03-24 17:27
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -974,23 +974,18 @@ namespace SilDev
                 var locked = false;
                 using (var current = Process.GetCurrentProcess())
                 {
-                    foreach (var p in GetLocks(target))
+                    foreach (var p in GetLocks(target).Where(x => x != current))
                     {
-                        if (p == current)
-                        {
-                            p.Dispose();
-                            continue;
-                        }
                         if (ProcessEx.Terminate(p) || locked)
                             continue;
                         locked = true;
                     }
                     if (!locked)
-                        foreach (var p in GetLocks(target))
+                        foreach (var p in GetLocks(target).Where(x => x != current))
                         {
-                            if (!locked && p != current)
+                            if (!locked)
                                 locked = true;
-                            p.Dispose();
+                            p?.Dispose();
                         }
                 }
                 var curName = $"{ProcessEx.CurrentName}.exe";
