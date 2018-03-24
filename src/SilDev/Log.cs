@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2018-03-23 22:59
+// Version:  2018-03-25 00:26
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -395,7 +395,7 @@ namespace SilDev
         {
             if (_sfh?.IsClosed == false)
                 _sfh.Close();
-            if (!Directory.Exists(FileDir))
+            if (DebugMode < 1 || !Directory.Exists(FileDir))
                 return;
             AppendToFile();
             foreach (var file in Directory.EnumerateFiles(FileDir, AssemblyName + "*.log", SearchOption.TopDirectoryOnly))
