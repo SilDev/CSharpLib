@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-02-22 03:28
+// Version:  2018-03-24 17:08
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -314,7 +314,81 @@ namespace SilDev
                     }
                     if (!process.StartInfo.UseShellExecute && !process.StartInfo.CreateNoWindow && process.StartInfo.WindowStyle == ProcessWindowStyle.Hidden)
                         process.StartInfo.CreateNoWindow = true;
-                    process.Start();
+                    var processStarted = false;
+                    if (process.StartInfo.Verb.EqualsEx("RunNotAs"))
+                    {
+                        process.StartInfo.Verb = string.Empty;
+                        var processId = 0;
+                        try
+                        {
+                            if (!Elevation.IsAdministrator)
+                                throw new NotSupportedException();
+                            var tokenHandle = IntPtr.Zero;
+                            try
+                            {
+                                var currentHandle = WinApi.NativeMethods.GetCurrentProcess();
+                                if (currentHandle == IntPtr.Zero)
+                                    throw new ArgumentNullException(nameof(currentHandle));
+                                if (!WinApi.NativeMethods.OpenProcessToken(currentHandle, 0x20, out tokenHandle))
+                                    throw new OperationCanceledException("Unable to open process token for the current handle.");
+                                var newState = new WinApi.TokenPrivileges
+                                {
+                                    PrivilegeCount = 1,
+                                    Privileges = new WinApi.LuIdAndAttributes[1]
+                                };
+                                if (!WinApi.NativeMethods.LookupPrivilegeValue(null, "SeIncreaseQuotaPrivilege", ref newState.Privileges[0].Luid))
+                                    throw new OperationCanceledException("Unable privilege value could not be retrieved.");
+                                newState.Privileges[0].Attributes = 0x2;
+                                if (!WinApi.NativeHelper.AdjustTokenPrivileges(tokenHandle, false, ref newState))
+                                    throw new OperationCanceledException("Unable to adjust the token privileges.");
+                            }
+                            finally
+                            {
+                                WinApi.NativeMethods.CloseHandle(tokenHandle);
+                            }
+                            var shellWindow = WinApi.NativeMethods.GetShellWindow();
+                            if (shellWindow == IntPtr.Zero)
+                                throw new ArgumentNullException(nameof(shellWindow));
+                            var shellHandle = IntPtr.Zero;
+                            var shellToken = IntPtr.Zero;
+                            var primaryToken = IntPtr.Zero;
+                            try
+                            {
+                                if (WinApi.NativeMethods.GetWindowThreadProcessId(shellWindow, out var pid) <= 0)
+                                    throw new ArgumentOutOfRangeException(nameof(pid));
+                                processId = (int)pid;
+                                shellHandle = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessQueryInformation, false, pid);
+                                if (shellHandle == IntPtr.Zero)
+                                    throw new ArgumentNullException(nameof(shellHandle));
+                                if (!WinApi.NativeMethods.OpenProcessToken(shellHandle, 0x2, out shellToken))
+                                    throw new OperationCanceledException("Unable to open process token.");
+                                if (!WinApi.NativeMethods.DuplicateTokenEx(shellToken, 0x18bu, IntPtr.Zero, WinApi.SecurityImpersonationLevels.SecurityImpersonation, WinApi.TokenTypes.TokenPrimary, out primaryToken))
+                                    throw new OperationCanceledException("Unable to duplicate process token.");
+                                var startupInfo = new WinApi.StartupInfo();
+                                if (!WinApi.NativeMethods.CreateProcessWithTokenW(primaryToken, 0, process.StartInfo.FileName, process.StartInfo.Arguments, 0, IntPtr.Zero, process.StartInfo.WorkingDirectory, ref startupInfo, out _))
+                                    throw new OperationCanceledException("Unable to create process with token.");
+                            }
+                            finally
+                            {
+                                WinApi.NativeMethods.CloseHandle(shellToken);
+                                WinApi.NativeMethods.CloseHandle(primaryToken);
+                                WinApi.NativeMethods.CloseHandle(shellHandle);
+                            }
+                            processStarted = true;
+                        }
+                        catch (NotSupportedException)
+                        {
+                            // ignored
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Write(ex);
+                        }
+                        if (processStarted && !dispose)
+                            return Process.GetProcessById(processId);
+                    }
+                    if (!processStarted)
+                        process.Start();
                 }
                 return process;
             }
@@ -383,7 +457,7 @@ namespace SilDev
                 {
                     Arguments = arguments,
                     FileName = fileName,
-                    Verb = verbRunAs ? "runas" : string.Empty,
+                    Verb = verbRunAs ? "RunAs" : string.Empty,
                     WindowStyle = processWindowStyle,
                     WorkingDirectory = workingDirectory
                 }
