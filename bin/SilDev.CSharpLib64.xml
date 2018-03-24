@@ -4165,6 +4165,12 @@
                 Provides funcionality for the user authorization on Windows.
             </summary>
         </member>
+        <member name="P:SilDev.Elevation.CurrentPrincipal">
+            <summary>
+                Returns a <see cref="T:System.Security.Principal.WindowsPrincipal"/> object that represents the current
+                Windows user.
+            </summary>
+        </member>
         <member name="P:SilDev.Elevation.IsAdministrator">
             <summary>
                 Determines whether the current principal belongs to the Windows administrator
@@ -4177,18 +4183,27 @@
                 specified directory.
             </summary>
             <param name="path">
-                The directory to check.
+                The path to check.
             </param>
         </member>
         <member name="M:SilDev.Elevation.WritableLocation">
             <summary>
                 Determines whether the current principal has enough privileges to write in the
-                specified directory.
+                <see cref="P:SilDev.PathEx.LocalDir"/> directory.
             </summary>
         </member>
         <member name="M:SilDev.Elevation.RestartAsAdministrator(System.String)">
             <summary>
                 Restarts the current process with highest privileges.
+            </summary>
+            <param name="cmdLineArgs">
+                The command-line arguments to use when starting the application. Use null to use
+                the current arguments, which are already in use.
+            </param>
+        </member>
+        <member name="M:SilDev.Elevation.RestartAsNonAdministrator(System.String)">
+            <summary>
+                Restarts the current process with non-elevated privileges.
             </summary>
             <param name="cmdLineArgs">
                 The command-line arguments to use when starting the application. Use null to use
@@ -7003,7 +7018,7 @@
         </member>
         <member name="P:SilDev.Log.FilePath">
             <summary>
-                Gets the full path of the current log file.
+                Gets the full path of the current LOG file.
             </summary>
         </member>
         <member name="M:SilDev.Log.ActivateLogging(System.Int32)">
@@ -7047,7 +7062,7 @@
         </member>
         <member name="M:SilDev.Log.Write(System.String,System.Boolean)">
             <summary>
-                Writes the specified information into a log file.
+                Writes the specified information into a LOG file.
             </summary>
             <param name="logMessage">
                 The message text to write.
@@ -7058,7 +7073,7 @@
         </member>
         <member name="M:SilDev.Log.Write(System.Exception,System.Boolean,System.Boolean)">
             <summary>
-                Writes all <see cref="T:System.Exception"/> information into a log file.
+                Writes all <see cref="T:System.Exception"/> information into a LOG file.
             </summary>
             <param name="exception">
                 The handled <see cref="T:System.Exception"/> to write.
@@ -15183,6 +15198,134 @@
                 A mask that contains all the valid bits.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.AccessTokenFlags">
+            <summary>
+                Provides enumerated values of token access rights.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.StandardRightsRequired">
+            <summary>
+                The right to read the information in the object's security descriptor, not including the
+                information in the system access control list (SACL), the right to delete the object,
+                the right to modify the discretionary access control list (DACL) in the object's security
+                descriptor, the right to change the owner in the object's security descriptor, and the
+                right to use the object for synchronization.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.StandardRightsRead">
+            <summary>
+                The right to read the information in the object's security descriptor, not including the
+                information in the system access control list (SACL).
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenAssignPrimary">
+            <summary>
+                Required to attach a primary token to a process. The SE_ASSIGNPRIMARYTOKEN_NAME privilege
+                is also required to accomplish this task.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenDuplicate">
+            <summary>
+                Required to duplicate an access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenImpersonate">
+            <summary>
+                Required to attach an impersonation access token to a process.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenQuery">
+            <summary>
+                Required to query an access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenQuerySource">
+            <summary>
+                Required to query the source of an access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustPrivileges">
+            <summary>
+                Required to enable or disable the privileges in an access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustGroups">
+            <summary>
+                Required to adjust the attributes of the groups in an access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustDefault">
+            <summary>
+                Required to change the default owner, primary group, or DACL of an access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustSessionid">
+            <summary>
+                Required to adjust the session ID of an access token. The SE_TCB_NAME privilege is required.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenRead">
+            <summary>
+                Combines <see cref="F:SilDev.WinApi.AccessTokenFlags.StandardRightsRead"/> and <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenQuery"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.AccessTokenFlags.TokenAllAccess">
+            <summary>
+                Combines all possible access rights for a token.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.CreationFlags">
+            <summary>
+                Provides enumerated values that control how the process is created.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.CreationFlags.CreateDefaultErrorMode">
+            <summary>
+                The new process does not inherit the error mode of the calling process. Instead, the new
+                process gets the current default error mode.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.CreationFlags.CreateNewConsole">
+            <summary>
+                The new process has a new console, instead of inheriting the parent's console.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.CreationFlags.CreateNewProcessGroup">
+            <summary>
+                The new process is the root process of a new process group. The process group includes all
+                processes that are descendants of this root process. The process identifier of the new
+                process group is the same as the process identifier, which is returned in the lpProcessInfo
+                parameter.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.CreationFlags.CreateSeparateWowVdm">
+            <summary>
+                This flag is only valid starting a 16-bit Windows-based application. If set, the new process
+                runs in a private Virtual DOS Machine (VDM). By default, all 16-bit Windows-based applications
+                run in a single, shared VDM. The advantage of running separately is that a crash only terminates
+                the single VDM; any other programs running in distinct VDMs continue to function normally. Also,
+                16-bit Windows-based applications that run in separate VDMs have separate input queues. That
+                means that if one application stops responding momentarily, applications in separate VDMs continue
+                to receive input.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.CreationFlags.CreateSuspended">
+            <summary>
+                The primary thread of the new process is created in a suspended state.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.CreationFlags.CreateUnicodeEnvironment">
+            <summary>
+                Indicates the format of the lpEnvironment parameter. If this flag is set, the environment block
+                pointed to by lpEnvironment uses Unicode characters. Otherwise, the environment block uses ANSI
+                characters.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.CreationFlags.ExtendedStartupInfoPresent">
+            <summary>
+                The process is created with extended startup information.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.FileInfoFlags">
             <summary>
                 Provides enumerated values that specify file informations.
@@ -15314,6 +15457,31 @@
                 it should act as if the file specified by pszPath exists with the file attributes passed in
                 dwFileAttributes. This flag cannot be combined with the <see cref="F:SilDev.WinApi.FileInfoFlags.Attributes"/>,
                 <see cref="F:SilDev.WinApi.FileInfoFlags.ExeType"/>, or <see cref="F:SilDev.WinApi.FileInfoFlags.PidL"/> flags.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.LogonOptions">
+            <summary>
+                Provides enumerated logon options.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.LogonOptions.WithProfile">
+            <summary>
+                Log on, then load the user's profile in the HKEY_USERS registry key. The function returns
+                after the profile has been loaded. Loading the profile can be time-consuming, so it is best
+                to use this value only if you must access the information in the HKEY_CURRENT_USER registry
+                key.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.LogonOptions.NetCredentialsOnly">
+            <summary>
+                Log on, but use the specified credentials on the network only. The new process uses the same
+                token as the caller, but the system creates a new logon session within LSA, and the process
+                uses the specified credentials as the default credentials.
+                <para>
+                    This value can be used to create a process that uses a different set of credentials locally
+                    than it does remotely. This is useful in inter-domain scenarios where there is no trust
+                    relationship.
+                </para>
             </summary>
         </member>
         <member name="T:SilDev.WinApi.RmAppTypes">
@@ -15658,6 +15826,38 @@
                 The service is not running.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.SecurityImpersonationLevels">
+            <summary>
+                Provides enumerated values that specify security impersonation levels.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SecurityImpersonationLevels.SecurityAnonymous">
+            <summary>
+                The server process cannot obtain identification information about the client, and it cannot
+                impersonate the client. It is defined with no value given, and thus, by ANSI C rules,
+                defaults to a value of zero.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SecurityImpersonationLevels.SecurityIdentification">
+            <summary>
+                The server process can obtain information about the client, such as security identifiers and
+                privileges, but it cannot impersonate the client. This is useful for servers that export
+                their own objects, for example, database products that export tables and views. Using the
+                retrieved client-security information, the server can make access-validation decisions
+                without being able to use other services that are using the client's security context.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SecurityImpersonationLevels.SecurityImpersonation">
+            <summary>
+                The server process can impersonate the client's security context on its local system. The
+                server cannot impersonate the client on remote systems.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SecurityImpersonationLevels.SecurityDelegation">
+            <summary>
+                The server process can impersonate the client's security context on remote systems.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.ServiceTypes">
             <summary>
                 Provides enumerated values of service types.
@@ -15703,6 +15903,140 @@
                 Service that shares a process with one or more other services.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.StartFlags">
+            <summary>
+                Provides enumerated values of process start flags.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.ForceOnFeedback">
+            <summary>
+                Indicates that the cursor is in feedback mode for two seconds after CreateProcess is called.
+                The Working in Background cursor is displayed (see the Pointers tab in the Mouse control
+                panel utility).
+                <para>
+                    If during those two seconds the process makes the first GUI call, the system gives five
+                    more seconds to the process. If during those five seconds the process shows a window,
+                    the system gives five more seconds to the process to finish drawing the window.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.ForceOffFeedback">
+            <summary>
+                Indicates that the feedback cursor is forced off while the process is starting. The Normal
+                Select cursor is displayed.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.PreventPinning">
+            <summary>
+                Indicates that any windows created by the process cannot be pinned on the taskbar.
+                <para>
+                    This flag must be combined with <see cref="F:SilDev.WinApi.StartFlags.TitleIsAppId"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.RunFullscreen">
+            <summary>
+                Indicates that the process should be run in full-screen mode, rather than in windowed mode.
+                <para>
+                    This flag is only valid for console applications running on an x86 computer.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.TitleIsAppId">
+            <summary>
+                The lpTitle member contains an AppUserModelID. This identifier controls how the taskbar and
+                Start menu present the application, and enables it to be associated with the correct shortcuts
+                and Jump Lists.
+                <para>
+                    If <see cref="F:SilDev.WinApi.StartFlags.PreventPinning"/> is used, application windows cannot be pinned on the
+                    taskbar. The use of any AppUserModelID-related window properties by the application
+                    overrides this setting for that window only.
+                </para>
+                <para>
+                    This flag cannot be used with <see cref="F:SilDev.WinApi.StartFlags.TitleIsLinkName"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.TitleIsLinkName">
+            <summary>
+                The lpTitle member contains the path of the shortcut file (.lnk) that the user invoked to
+                start this process. This is typically set by the shell when a .lnk file pointing to the
+                launched application is invoked. Most applications will not need to set this value.
+                <para>
+                    This flag cannot be used with <see cref="F:SilDev.WinApi.StartFlags.TitleIsAppId"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UntrustedSource">
+            <summary>
+                The command line came from an untrusted source.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UseCountChars">
+            <summary>
+                The dwXCountChars and dwYCountChars members contain additional information.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UseFillAttribute">
+            <summary>
+                The dwXCountChars and dwYCountChars members contain additional information.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UseHotkey">
+            <summary>
+                The hStdInput member contains additional information.
+                <para>
+                    This flag cannot be used with <see cref="F:SilDev.WinApi.StartFlags.UseStdHandles"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UsePosition">
+            <summary>
+                The dwX and dwY members contain additional information.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UseShowWindow">
+            <summary>
+                The wShowWindow member contains additional information.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UseSize">
+            <summary>
+                The dwXSize and dwYSize members contain additional information.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartFlags.UseStdHandles">
+            <summary>
+                The hStdInput, hStdOutput, and hStdError members contain additional information.
+                <para>
+                    If this flag is specified when calling one of the process creation functions, the
+                    handles must be inheritable and the function's bInheritHandles parameter must be set
+                    to TRUE.
+                </para>
+                <para>
+                    Handles must be closed with <see cref="M:SilDev.WinApi.NativeMethods.CloseHandle(System.IntPtr)"/> when they are no
+                    longer needed.
+                </para>
+                <para>
+                    This flag cannot be used with <see cref="F:SilDev.WinApi.StartFlags.UseHotkey"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.TokenTypes">
+            <summary>
+                Provides enumerated values that differentiate between a primary token and an impersonation token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.TokenTypes.TokenPrimary">
+            <summary>
+                Indicates a primary token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.TokenTypes.TokenImpersonation">
+            <summary>
+                Indicates an impersonation token.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.WindowThemeAttributeTypes">
             <summary>
                 Provides enumerated values of window theme attribute types.
@@ -15717,6 +16051,29 @@
             <summary>
                 Provides native based functions.
             </summary>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.AdjustTokenPrivileges(System.IntPtr,System.Boolean,SilDev.WinApi.TokenPrivileges@)">
+            <summary>
+                Enables or disables privileges in the specified access token. Enabling or disabling privileges in
+                an access token requires <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustPrivileges"/> access.
+            </summary>
+            <param name="tokenHandle">
+                A handle to the access token that contains the privileges to be modified. The handle must have
+                <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustPrivileges"/> access to the token. If the PreviousState
+                parameter is not NULL, the handle must also have <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenQuery"/> access.
+            </param>
+            <param name="disableAllPrivileges">
+                Specifies whether the function disables all of the token's privileges. If this value is TRUE, the
+                function disables all privileges and ignores the NewState parameter. If it is FALSE, the function
+                modifies privileges based on the information pointed to by the NewState parameter.
+            </param>
+            <param name="newState">
+                A pointer to a <see cref="T:SilDev.WinApi.TokenPrivileges"/> structure that specifies an array of privileges and their
+                attributes. If the disableAllPrivileges parameter is FALSE, the AdjustTokenPrivileges function
+                enables, disables, or removes these privileges for the token. The following table describes the
+                action taken by the AdjustTokenPrivileges function, based on the privilege attribute. If
+                disableAllPrivileges is TRUE, the function ignores this parameter.
+            </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.AnimateWindow(System.IntPtr,System.Int32,SilDev.WinApi.AnimateWindowFlags)">
             <summary>
@@ -16540,6 +16897,49 @@
             <param name="hWndLock">
                 The window in which drawing will be disabled. If this parameter is NULL, drawing in
                 the locked window is enabled.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.LookupPrivilegeName(System.String,SilDev.WinApi.LuId,System.Text.StringBuilder,System.Int32@)">
+            <summary>
+                Retrieves the name that corresponds to the privilege represented on a specific system by a specified
+                locally unique identifier (LUID).
+            </summary>
+            <param name="lpSystemName">
+                A pointer to a null-terminated string that specifies the name of the system on which the privilege
+                name is retrieved. If a null string is specified, the function attempts to find the privilege name
+                on the local system.
+            </param>
+            <param name="lpLuid">
+                A pointer to the <see cref="T:SilDev.WinApi.LuId"/> by which the privilege is known on the target system.
+            </param>
+            <param name="lpName">
+                A pointer to a buffer that receives a null-terminated string that represents the privilege name.
+                For example, this string could be "SeSecurityPrivilege".
+            </param>
+            <param name="cchName">
+                A pointer to a variable that specifies the size, in a TCHAR value, of the lpName buffer. When the
+                function returns, this parameter contains the length of the privilege name, not including the
+                terminating null character. If the buffer pointed to by the lpName parameter is too small, this
+                variable contains the required size.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.LookupPrivilegeValue(System.String,System.String,SilDev.WinApi.LuId@)">
+            <summary>
+                Retrieves the <see cref="T:SilDev.WinApi.LuId"/> used on a specified system to locally represent the specified
+                privilege name.
+            </summary>
+            <param name="lpSystemName">
+                A pointer to a null-terminated string that specifies the name of the system on which the privilege
+                name is retrieved. If a null string is specified, the function attempts to find the privilege name
+                on the local system.
+            </param>
+            <param name="lpName">
+                A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
+                Winnt.h header file.
+            </param>
+            <param name="lpLuid">
+                A pointer to a variable that receives the <see cref="T:SilDev.WinApi.LuId"/> by which the privilege is known on
+                the system specified by the lpSystemName parameter.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.MoveWindow(System.IntPtr,System.Drawing.Rectangle)">
@@ -17774,6 +18174,51 @@
                 Represents native methods.
             </summary>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.AdjustTokenPrivileges(System.IntPtr,System.Boolean,SilDev.WinApi.TokenPrivileges@,System.UInt32,System.IntPtr,System.IntPtr)">
+            <summary>
+                Enables or disables privileges in the specified access token. Enabling or disabling privileges in
+                an access token requires <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustPrivileges"/> access.
+            </summary>
+            <param name="tokenHandle">
+                A handle to the access token that contains the privileges to be modified. The handle must have
+                <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenAdjustPrivileges"/> access to the token. If the PreviousState
+                parameter is not NULL, the handle must also have <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenQuery"/> access.
+            </param>
+            <param name="disableAllPrivileges">
+                Specifies whether the function disables all of the token's privileges. If this value is TRUE, the
+                function disables all privileges and ignores the NewState parameter. If it is FALSE, the function
+                modifies privileges based on the information pointed to by the NewState parameter.
+            </param>
+            <param name="newState">
+                A pointer to a <see cref="T:SilDev.WinApi.TokenPrivileges"/> structure that specifies an array of privileges and their
+                attributes. If the disableAllPrivileges parameter is FALSE, the AdjustTokenPrivileges function
+                enables, disables, or removes these privileges for the token. The following table describes the
+                action taken by the AdjustTokenPrivileges function, based on the privilege attribute. If
+                disableAllPrivileges is TRUE, the function ignores this parameter.
+            </param>
+            <param name="bufferLength">
+                Specifies the size, in bytes, of the buffer pointed to by the PreviousState parameter. This parameter
+                can be zero if the PreviousState parameter is NULL.
+            </param>
+            <param name="previousState">
+                A pointer to a buffer that the function fills with a <see cref="T:SilDev.WinApi.TokenPrivileges"/> structure that
+                contains the previous state of any privileges that the function modifies. That is, if a privilege
+                has been modified by this function, the privilege and its previous state are contained in the
+                <see cref="T:SilDev.WinApi.TokenPrivileges"/> structure referenced by PreviousState. If the PrivilegeCount member
+                of <see cref="T:SilDev.WinApi.TokenPrivileges"/> is zero, then no privileges have been changed by this function.
+                This parameter can be NULL. If you specify a buffer that is too small to receive the complete list
+                of modified privileges, the function fails and does not adjust any privileges. In this case, the
+                function sets the variable pointed to by the returnLength parameter to the number of bytes required
+                to hold the complete list of modified privileges.
+            </param>
+            <param name="returnLength">
+                A pointer to a variable that receives the required size, in bytes, of the buffer pointed to by the
+                previousState parameter. This parameter can be NULL if previousState is NULL.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.AllocConsole">
             <summary>
                 Allocates a new console for the calling process.
@@ -17878,6 +18323,82 @@
             <param name="lpServiceStatus">
             </param>
             <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.CreateProcessWithTokenW(System.IntPtr,SilDev.WinApi.LogonOptions,System.String,System.String,SilDev.WinApi.CreationFlags,System.IntPtr,System.String,SilDev.WinApi.StartupInfo@,SilDev.WinApi.ProcessInformation@)">
+            <summary>
+                Creates a new process and its primary thread. The new process runs in the security context
+                of the specified token. It can optionally load the user profile for the specified user.
+            </summary>
+            <param name="hToken">
+                A handle to the primary token that represents a user. The handle must have the
+                <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenQuery"/>, <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenDuplicate"/>,
+                and <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenAssignPrimary"/> access rights. The user represented
+                by the token must have read and execute access to the application specified by the
+                lpApplicationName or the lpCommandLine parameter.
+            </param>
+            <param name="dwLogonFlags">
+                The logon option.
+            </param>
+            <param name="lpApplicationName">
+                The name of the module to be executed. This module can be a Windows-based application. It
+                can be some other type of module (for example, MS-DOS or OS/2) if the appropriate subsystem
+                is available on the local computer.
+                <para>
+                    The string can specify the full path and file name of the module to execute or it can
+                    specify a partial name. In the case of a partial name, the function uses the current
+                    drive and current directory to complete the specification. The function will not use
+                    the search path. This parameter must include the file name extension; no default
+                    extension is assumed.
+                </para>
+                <para>
+                    The lpApplicationName parameter can be NULL. In that case, the module name must be the
+                    first white space–delimited token in the lpCommandLine string. If you are using a long
+                    file name that contains a space, use quoted strings to indicate where the file name ends
+                    and the arguments begin; otherwise, the file name is ambiguous.
+                </para>
+            </param>
+            <param name="lpCommandLine">
+                The command line to be executed. The maximum length of this string is 1024 characters. If
+                lpApplicationName is NULL, the module name portion of lpCommandLine is limited to 255
+                characters.
+                <para>
+                    The lpCommandLine parameter can be NULL. In that case, the function uses the string
+                    pointed to by lpApplicationName as the command line.
+                </para>
+            </param>
+            <param name="dwCreationFlags">
+                The flags that control how the process is created.
+            </param>
+            <param name="lpEnvironment">
+                A pointer to an environment block for the new process. If this parameter is NULL, the new
+                process uses an environment created from the profile of the user specified by lpUsername.
+            </param>
+            <param name="lpCurrentDirectory">
+                The full path to the current directory for the process. The string can also specify a UNC path.
+                <para>
+                    If this parameter is NULL, the new process will have the same current drive and directory
+                    as the calling process. (This feature is provided primarily for shells that need to start
+                    an application and specify its initial drive and working directory.)
+                </para>
+            </param>
+            <param name="lpStartupInfo">
+                A pointer to a <see cref="T:SilDev.WinApi.StartupInfo"/> structure.
+                <para>
+                    If the lpDesktop member is NULL or an empty string, the new process inherits the desktop
+                    and window station of its parent process. The function adds permission for the specified
+                    user account to the inherited window station and desktop. Otherwise, if this member
+                    specifies a desktop, it is the responsibility of the application to add permission for
+                    the specified user account to the specified window station and desktop, even for
+                    WinSta0\Default.
+                </para>
+            </param>
+            <param name="lpProcessInformation">
+                A pointer to a <see cref="T:SilDev.WinApi.ProcessInformation"/> structure that receives identification
+                information for the new process, including a handle to the process.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.CreateService(System.IntPtr,System.String,System.String,SilDev.WinApi.ServiceAccessRights,SilDev.WinApi.ServiceTypes,SilDev.WinApi.ServiceBootFlags,SilDev.WinApi.ServiceErrors,System.String,System.String,System.IntPtr,System.String,System.String,System.String)">
@@ -18122,6 +18643,76 @@
             </param>
             <returns>
                 If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.DuplicateTokenEx(System.IntPtr,SilDev.WinApi.AccessTokenFlags,SilDev.WinApi.SecurityAttributes@,SilDev.WinApi.SecurityImpersonationLevels,SilDev.WinApi.TokenTypes,System.IntPtr@)">
+            <summary>
+                Creates a new access token that duplicates one already in existence.
+            </summary>
+            <param name="hExistingToken">
+                A handle to an access token opened with <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenDuplicate"/> access.
+            </param>
+            <param name="dwDesiredAccess">
+                Specifies the requested access rights for the new token.
+            </param>
+            <param name="lpTokenAttributes">
+                A pointer to a <see cref="T:SilDev.WinApi.SecurityAttributes"/> structure that specifies a security descriptor
+                for the new token and determines whether child processes can inherit the token. If
+                lpTokenAttributes is NULL, the token gets a default security descriptor and the handle cannot
+                be inherited. If the security descriptor contains a system access control list (SACL), the token
+                gets system security access rights, even if it was not requested in dwDesiredAccess.
+            </param>
+            <param name="impersonationLevel">
+                Specifies a value from the <see cref="T:SilDev.WinApi.SecurityImpersonationLevels"/> enumeration that indicates
+                the impersonation level of the new token.
+            </param>
+            <param name="tokenType">
+                Specifies one of the following values from the <see cref="T:System.TokenType"/> enumeration.
+            </param>
+            <param name="phNewToken">
+                A pointer to a HANDLE variable that receives the new token.
+                <para>
+                    When you have finished using the new token, call the <see cref="M:SilDev.WinApi.NativeMethods.CloseHandle(System.IntPtr)"/> function
+                    to close the token handle.
+                </para>
+            </param>
+            <returns>
+                If the function succeeds, the function returns a nonzero value.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.DuplicateTokenEx(System.IntPtr,System.UInt32,System.IntPtr,SilDev.WinApi.SecurityImpersonationLevels,SilDev.WinApi.TokenTypes,System.IntPtr@)">
+            <summary>
+                Creates a new access token that duplicates one already in existence.
+            </summary>
+            <param name="hExistingToken">
+                A handle to an access token opened with <see cref="F:SilDev.WinApi.AccessTokenFlags.TokenDuplicate"/> access.
+            </param>
+            <param name="dwDesiredAccess">
+                Specifies the requested access rights for the new token.
+            </param>
+            <param name="lpTokenAttributes">
+                A pointer to a <see cref="T:SilDev.WinApi.SecurityAttributes"/> structure that specifies a security descriptor
+                for the new token and determines whether child processes can inherit the token. If
+                lpTokenAttributes is NULL, the token gets a default security descriptor and the handle cannot
+                be inherited. If the security descriptor contains a system access control list (SACL), the token
+                gets system security access rights, even if it was not requested in dwDesiredAccess.
+            </param>
+            <param name="impersonationLevel">
+                Specifies a value from the <see cref="T:SilDev.WinApi.SecurityImpersonationLevels"/> enumeration that indicates
+                the impersonation level of the new token.
+            </param>
+            <param name="tokenType">
+                Specifies one of the following values from the <see cref="T:System.TokenType"/> enumeration.
+            </param>
+            <param name="phNewToken">
+                A pointer to a HANDLE variable that receives the new token.
+                <para>
+                    When you have finished using the new token, call the <see cref="M:SilDev.WinApi.NativeMethods.CloseHandle(System.IntPtr)"/> function
+                    to close the token handle.
+                </para>
+            </param>
+            <returns>
+                If the function succeeds, the function returns a nonzero value.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.DwmExtendFrameIntoClientArea(System.IntPtr,SilDev.WinApi.ThemeMargins@)">
@@ -18453,6 +19044,14 @@
                 the calling process or NULL if there is no such associated console.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.GetCurrentProcess">
+            <summary>
+                Retrieves a pseudo handle for the current process.
+            </summary>
+            <returns>
+                The return value is a pseudo handle to the current process.
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.GetCurrentThreadId">
             <summary>
                 Retrieves the thread identifier of the calling thread.
@@ -18615,6 +19214,15 @@
             <returns>
                 If the function succeeds, the return value specifies the length of the string
                 copied to the buffer.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.GetShellWindow">
+            <summary>
+                Retrieves a handle to the Shell's desktop window.
+            </summary>
+            <returns>
+                The return value is the handle of the Shell's desktop window. If no Shell
+                process is present, the return value is NULL.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.GetStdHandle(System.Int32)">
@@ -18922,6 +19530,55 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.LookupPrivilegeName(System.String,System.IntPtr,System.Text.StringBuilder,System.Int32@)">
+            <summary>
+                Retrieves the name that corresponds to the privilege represented on a specific system by a specified
+                locally unique identifier (LUID).
+            </summary>
+            <param name="lpSystemName">
+                A pointer to a null-terminated string that specifies the name of the system on which the privilege
+                name is retrieved. If a null string is specified, the function attempts to find the privilege name
+                on the local system.
+            </param>
+            <param name="lpLuid">
+                A pointer to the <see cref="T:SilDev.WinApi.LuId"/> by which the privilege is known on the target system.
+            </param>
+            <param name="lpName">
+                A pointer to a buffer that receives a null-terminated string that represents the privilege name.
+                For example, this string could be "SeSecurityPrivilege".
+            </param>
+            <param name="cchName">
+                A pointer to a variable that specifies the size, in a TCHAR value, of the lpName buffer. When the
+                function returns, this parameter contains the length of the privilege name, not including the
+                terminating null character. If the buffer pointed to by the lpName parameter is too small, this
+                variable contains the required size.
+            </param>
+            <returns>
+                If the function succeeds, the function returns nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.LookupPrivilegeValue(System.String,System.String,SilDev.WinApi.LuId@)">
+            <summary>
+                Retrieves the <see cref="T:SilDev.WinApi.LuId"/> used on a specified system to locally represent the specified
+                privilege name.
+            </summary>
+            <param name="lpSystemName">
+                A pointer to a null-terminated string that specifies the name of the system on which the privilege
+                name is retrieved. If a null string is specified, the function attempts to find the privilege name
+                on the local system.
+            </param>
+            <param name="lpName">
+                A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
+                Winnt.h header file.
+            </param>
+            <param name="lpLuid">
+                A pointer to a variable that receives the <see cref="T:SilDev.WinApi.LuId"/> by which the privilege is known on
+                the system specified by the lpSystemName parameter.
+            </param>
+            <returns>
+                If the function succeeds, the function returns nonzero.
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.MciSendString(System.String,System.Text.StringBuilder,System.UInt32,System.IntPtr)">
             <summary>
                 The mciSendString function sends a command string to an MCI device. The device that the
@@ -19024,6 +19681,26 @@
             <returns>
                 If the function succeeds, the return value is an open handle to the specified
                 process.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.OpenProcessToken(System.IntPtr,System.UInt32,System.IntPtr@)">
+            <summary>
+                Opens the access token associated with a process.
+            </summary>
+            <param name="processHandle">
+                A handle to the process whose access token is opened. The process must have the
+                <see cref="F:SilDev.WinApi.AccessRights.ProcessQueryInformation"/> access permission.
+            </param>
+            <param name="desiredAccess">
+                Specifies an access mask that specifies the requested types of access to the access token.
+                These requested access types are compared with the discretionary access control list (DACL)
+                of the token to determine which accesses are granted or denied.
+            </param>
+            <param name="tokenHandle">
+                A pointer to a handle that identifies the newly opened access token when the function returns.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.OpenSCManager(System.String,System.String,SilDev.WinApi.ServiceManagerAccessRights)">
@@ -20324,6 +21001,66 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="T:SilDev.WinApi.ProcessInformation">
+            <summary>
+                Contains information about a newly created process and its primary thread.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ProcessInformation.hProcess">
+            <summary>
+                A handle to the newly created process. The handle is used to specify the process in all functions
+                that perform operations on the process object.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ProcessInformation.hThread">
+            <summary>
+                A handle to the primary thread of the newly created process. The handle is used to specify the
+                thread in all functions that perform operations on the thread object.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ProcessInformation.dwProcessId">
+            <summary>
+                A value that can be used to identify a process. The value is valid from the time the process is
+                created until all handles to the process are closed and the process object is freed; at this
+                point, the identifier may be reused.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.ProcessInformation.dwThreadId">
+            <summary>
+                A value that can be used to identify a thread. The value is valid from the time the thread is
+                created until all handles to the thread are closed and the thread object is freed; at this point,
+                the identifier may be reused.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.SecurityAttributes">
+            <summary>
+                Contains the security descriptor for an object and specifies whether the handle retrieved
+                by specifying this structure is inheritable. This structure provides security settings for
+                objects created by various functions.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SecurityAttributes.nLength">
+            <summary>
+                The size, in bytes, of this structure. Set this value to the size of the
+                <see cref="T:SilDev.WinApi.SecurityAttributes"/> structure.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SecurityAttributes.lpSecurityDescriptor">
+            <summary>
+                A pointer to a security descriptor structure that controls access to the object. If the
+                value of this member is NULL, the object is assigned the default security descriptor
+                associated with the access token of the calling process. This is not the same as granting
+                access to everyone by assigning a NULL discretionary access control list (DACL). By default,
+                the default DACL in the access token of a process allows access only to the user represented
+                by the access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SecurityAttributes.bInheritHandle">
+            <summary>
+                A value that specifies whether the returned handle is inherited when a new process is created.
+                If this member is TRUE, the new process inherits the handle.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.ServiceStatus">
             <summary>
                 Contains status information for a service.
@@ -20385,6 +21122,125 @@
                 value to ERROR_SERVICE_SPECIFIC_ERROR to indicate that the dwServiceSpecificExitCode
                 member contains the error code. The service should set this value to NO_ERROR when it
                 is running and on normal termination.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.StartupInfo">
+            <summary>
+                Specifies the window station, desktop, standard handles, and appearance of the main window for
+                a process at creation time.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.cb">
+            <summary>
+                The size of the structure, in bytes.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.lpReserved">
+            <summary>
+                Reserved; must be NULL.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.lpDesktop">
+            <summary>
+                The name of the desktop, or the name of both the desktop and window station for this process.
+                A backslash in the string indicates that the string includes both the desktop and window station
+                names.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.lpTitle">
+            <summary>
+                For console processes, this is the title displayed in the title bar if a new console window is
+                created. If NULL, the name of the executable file is used as the window title instead. This
+                parameter must be NULL for GUI or console processes that do not create a new console window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwX">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UsePosition"/>, this member is the x offset of the
+                upper left corner of a window if a new window is created, in pixels. Otherwise, this member is
+                ignored.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwY">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UsePosition"/>, this member is the y offset of the
+                upper left corner of a window if a new window is created, in pixels. Otherwise, this member is
+                ignored.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwXSize">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseSize"/>, this member is the width of the window
+                if a new window is created, in pixels. Otherwise, this member is ignored.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwYSize">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseSize"/>, this member is the height of the window
+                if a new window is created, in pixels. Otherwise, this member is ignored.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwXCountChars">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseCountChars"/>, if a new console window is created
+                in a console process, this member specifies the screen buffer width, in character columns.
+                Otherwise, this member is ignored.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwYCountChars">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseCountChars"/>, if a new console window is created
+                in a console process, this member specifies the screen buffer height, in character rows.
+                Otherwise, this member is ignored.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwFillAttribute">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseFillAttribute"/>, this member is the initial text
+                and background colors if a new console window is created in a console application. Otherwise,
+                this member is ignored.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.dwFlags">
+            <summary>
+                A bitfield that determines whether certain <see cref="T:SilDev.WinApi.StartupInfo"/> members are used when the
+                process creates a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.wShowWindow">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseShowWindow"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.cbReserved2">
+            <summary>
+                Reserved for use by the C Run-time; must be zero.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.lpReserved2">
+            <summary>
+                Reserved for use by the C Run-time; must be zero.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.hStdInput">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseStdHandles"/>, this member is the standard input
+                handle for the process. If <see cref="F:SilDev.WinApi.StartFlags.UseStdHandles"/> is not specified, the default
+                for standard input is the keyboard buffer.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.hStdOutput">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseStdHandles"/>, this member is the standard output
+                handle for the process. Otherwise, this member is ignored and the default for standard output
+                is the console window's buffer.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.StartupInfo.hStdError">
+            <summary>
+                If dwFlags specifies <see cref="F:SilDev.WinApi.StartFlags.UseStdHandles"/>, this member is the standard error
+                handle for the process. Otherwise, this member is ignored and the default for standard error is
+                the console window's buffer.
             </summary>
         </member>
         <member name="T:SilDev.WinApi.AppBarData">
@@ -20556,6 +21412,37 @@
                 Contains the names of the used Windows dynamic-link library (DLL) files.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.LuId">
+            <summary>
+                Contains the locally unique identifier (LUID).
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.LuId.LowPart">
+            <summary>
+                Low-order bits.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.LuId.HighPart">
+            <summary>
+                High-order bits.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.LuIdAndAttributes">
+            <summary>
+                Represents a locally unique identifier (LUID) and its attributes.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.LuIdAndAttributes.Luid">
+            <summary>
+                Specifies an <see cref="T:SilDev.WinApi.LuId"/> value.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.LuIdAndAttributes.Attributes">
+            <summary>
+                Specifies attributes of the <see cref="T:SilDev.WinApi.LuId"/>. This value contains up to 32 one-bit flags.
+                Its meaning is dependent on the definition and use of the <see cref="T:SilDev.WinApi.LuId"/>.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.MouseInput">
             <summary>
                 Stores information about a simulated mouse event.
@@ -20635,6 +21522,25 @@
         <member name="F:SilDev.WinApi.ThemeMargins.cyBottomHeight">
             <summary>
                 Height of the bottom border that retains its size.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.TokenPrivileges">
+            <summary>
+                Contains information about a set of privileges for an access token.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.TokenPrivileges.PrivilegeCount">
+            <summary>
+                This must be set to the number of entries in the Privileges array.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.TokenPrivileges.Privileges">
+            <summary>
+                Specifies an array of <see cref="T:SilDev.WinApi.LuIdAndAttributes"/> structures. Each structure
+                contains the <see cref="T:SilDev.WinApi.LuId"/> and attributes of a privilege. To get the name of
+                the privilege associated with a <see cref="T:SilDev.WinApi.LuId"/>, call the
+                <see cref="M:SilDev.WinApi.NativeHelper.LookupPrivilegeName(System.String,SilDev.WinApi.LuId,System.Text.StringBuilder,System.Int32@)"/> function, passing the address of
+                the <see cref="T:SilDev.WinApi.LuId"/> as the value of the lpLuid parameter.
             </summary>
         </member>
         <member name="T:SilDev.WinApi.WindowPlacement">
