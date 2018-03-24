@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Elevation.cs
-// Version:  2016-10-18 23:33
+// Version:  2018-03-24 16:47
 // 
-// Copyright (c) 2016, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,8 @@ namespace SilDev
 {
     using System;
     using System.IO;
+    using System.Linq;
+    using System.Security.AccessControl;
     using System.Security.Principal;
 
     /// <summary>
@@ -25,47 +27,55 @@ namespace SilDev
     public static class Elevation
     {
         /// <summary>
+        ///     Returns a <see cref="WindowsPrincipal"/> object that represents the current
+        ///     Windows user.
+        /// </summary>
+        public static WindowsPrincipal CurrentPrincipal => new WindowsPrincipal(WindowsIdentity.GetCurrent());
+
+        /// <summary>
         ///     Determines whether the current principal belongs to the Windows administrator
         ///     user group.
         /// </summary>
-        public static bool IsAdministrator
-        {
-            get
-            {
-                try
-                {
-                    return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-        }
+        public static bool IsAdministrator => CurrentPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
 
         /// <summary>
         ///     Determines whether the current principal has enough privileges to write in the
         ///     specified directory.
         /// </summary>
         /// <param name="path">
-        ///     The directory to check.
+        ///     The path to check.
         /// </param>
         public static bool WritableLocation(string path)
         {
+            var result = false;
             try
             {
-                File.Create(PathEx.Combine(path, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose).Close();
-                return true;
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var dir = PathEx.Combine(path);
+                if (!Directory.Exists(dir))
+                    dir = Path.GetDirectoryName(dir);
+                if (!Directory.Exists(dir))
+                    throw new PathNotFoundException(path);
+                var acl = Directory.GetAccessControl(dir);
+                foreach (var rule in acl.GetAccessRules(true, true, typeof(NTAccount)).Cast<FileSystemAccessRule>())
+                {
+                    if ((rule.FileSystemRights & FileSystemRights.Write) == 0 || !CurrentPrincipal.IsInRole(rule.IdentityReference.Value))
+                        continue;
+                    result = rule.AccessControlType == AccessControlType.Allow;
+                    break;
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                Log.Write(ex);
             }
+            return result;
         }
 
         /// <summary>
         ///     Determines whether the current principal has enough privileges to write in the
-        ///     specified directory.
+        ///     <see cref="PathEx.LocalDir"/> directory.
         /// </summary>
         public static bool WritableLocation() =>
             WritableLocation(PathEx.LocalDir);
@@ -87,14 +97,7 @@ namespace SilDev
             else
             {
                 if (Log.DebugMode > 0)
-                    args = string.Concat
-                    (
-                        '/',
-                        Log.DebugKey,
-                        ' ',
-                        Log.DebugMode,
-                        ' '
-                    );
+                    args = $"/{Log.DebugKey} {Log.DebugMode} ";
                 args += EnvironmentEx.CommandLine(false);
             }
             ProcessEx.Start(PathEx.LocalPath, PathEx.LocalDir, args, true);
