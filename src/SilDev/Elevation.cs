@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Elevation.cs
-// Version:  2018-03-24 16:47
+// Version:  2018-03-24 17:19
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Security.AccessControl;
@@ -101,6 +102,37 @@ namespace SilDev
                 args += EnvironmentEx.CommandLine(false);
             }
             ProcessEx.Start(PathEx.LocalPath, PathEx.LocalDir, args, true);
+            Environment.ExitCode = 0;
+            Environment.Exit(Environment.ExitCode);
+        }
+
+        /// <summary>
+        ///     Restarts the current process with non-elevated privileges.
+        /// </summary>
+        /// <param name="cmdLineArgs">
+        ///     The command-line arguments to use when starting the application. Use null to use
+        ///     the current arguments, which are already in use.
+        /// </param>
+        public static void RestartAsNonAdministrator(string cmdLineArgs = null)
+        {
+            if (!IsAdministrator)
+                return;
+            var startArgs = string.Empty;
+            if (cmdLineArgs != null)
+                startArgs = cmdLineArgs;
+            else
+            {
+                if (Log.DebugMode > 0)
+                    startArgs = $"/{Log.DebugKey} {Log.DebugMode} ";
+                startArgs += EnvironmentEx.CommandLine(false);
+            }
+            var psi = new ProcessStartInfo
+            {
+                Arguments = startArgs,
+                FileName = PathEx.LocalPath,
+                Verb = "RunNotAs"
+            };
+            ProcessEx.Start(psi);
             Environment.ExitCode = 0;
             Environment.Exit(Environment.ExitCode);
         }
