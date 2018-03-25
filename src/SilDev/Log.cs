@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2018-03-25 00:26
+// Version:  2018-03-25 15:48
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -368,7 +368,7 @@ namespace SilDev
                     return;
                 DebugMode = 1;
             }
-            if (DebugMode < 2 && (exception is ArgumentNullException || exception is WarningException))
+            if (DebugMode < 2 && (exception is ArgumentNullException || exception is NotSupportedException || exception is WarningException))
                 return;
             Write($"Handled {exception}", exitProcess);
         }
