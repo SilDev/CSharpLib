@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-03-24 17:34
+// Version:  2018-03-25 15:40
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -5218,13 +5218,21 @@ namespace SilDev
             /// <summary>
             ///     Throws the last error code returned by the last unmanaged function.
             /// </summary>
+            /// <param name="forceMessage">
+            ///     A detailed description of the error that is thrown if no Win32 error code was found.
+            ///     <para>
+            ///         If this parameter is NULL, no exception is thrown in this case.
+            ///     </para>
+            /// </param>
             /// <exception cref="Win32Exception">
             /// </exception>
-            public static void ThrowLastError()
+            public static void ThrowLastError(string forceMessage = null)
             {
                 var code = Marshal.GetLastWin32Error();
                 if (code > 0)
                     throw new Win32Exception(code);
+                if (!string.IsNullOrWhiteSpace(forceMessage))
+                    throw new Win32Exception(forceMessage);
             }
 
             /// <summary>
@@ -5238,10 +5246,10 @@ namespace SilDev
                 NativeMethods.UnhookWindowsHookEx(hhk);
 
             /// <summary>
-            ///     The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT message to the
-            ///     window if the window's update region is not empty. The function sends a WM_PAINT message directly to the window
-            ///     procedure of the specified window, bypassing the application queue. If the update region is empty, no message
-            ///     is sent.
+            ///     The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT
+            ///     message to the window if the window's update region is not empty. The function sends a WM_PAINT
+            ///     message directly to the window procedure of the specified window, bypassing the application
+            ///     queue. If the update region is empty, no message is sent.
             /// </summary>
             /// <param name="hWnd">
             ///     Handle to the window to be updated.
