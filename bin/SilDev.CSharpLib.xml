@@ -18029,10 +18029,16 @@
                 GetExitCodeThread function to retrieve a thread's exit value.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeHelper.ThrowLastError">
+        <member name="M:SilDev.WinApi.NativeHelper.ThrowLastError(System.String)">
             <summary>
                 Throws the last error code returned by the last unmanaged function.
             </summary>
+            <param name="forceMessage">
+                A detailed description of the error that is thrown if no Win32 error code was found.
+                <para>
+                    If this parameter is NULL, no exception is thrown in this case.
+                </para>
+            </param>
             <exception cref="T:System.ComponentModel.Win32Exception">
             </exception>
         </member>
@@ -18047,10 +18053,10 @@
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.UpdateWindow(System.IntPtr)">
             <summary>
-                The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT message to the
-                window if the window's update region is not empty. The function sends a WM_PAINT message directly to the window
-                procedure of the specified window, bypassing the application queue. If the update region is empty, no message
-                is sent.
+                The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT
+                message to the window if the window's update region is not empty. The function sends a WM_PAINT
+                message directly to the window procedure of the specified window, bypassing the application
+                queue. If the update region is empty, no message is sent.
             </summary>
             <param name="hWnd">
                 Handle to the window to be updated.
