@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-03-25 00:05
+// Version:  2018-03-25 15:47
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -326,21 +326,21 @@ namespace SilDev
                             var tokenHandle = IntPtr.Zero;
                             try
                             {
-                                var currentHandle = WinApi.NativeMethods.GetCurrentProcess();
-                                if (currentHandle == IntPtr.Zero)
-                                    throw new ArgumentNullException(nameof(currentHandle));
-                                if (!WinApi.NativeMethods.OpenProcessToken(currentHandle, 0x20, out tokenHandle))
-                                    throw new OperationCanceledException("Unable to open process token for the current handle.");
+                                var pseudoHandle = WinApi.NativeMethods.GetCurrentProcess();
+                                if (pseudoHandle == IntPtr.Zero)
+                                    WinApi.NativeHelper.ThrowLastError("The pseudo handle could not be retrieved.");
+                                if (!WinApi.NativeMethods.OpenProcessToken(pseudoHandle, 0x20, out tokenHandle))
+                                    WinApi.NativeHelper.ThrowLastError("Unable to open the token for the pseudo handle.");
                                 var newState = new WinApi.TokenPrivileges
                                 {
                                     PrivilegeCount = 1,
                                     Privileges = new WinApi.LuIdAndAttributes[1]
                                 };
                                 if (!WinApi.NativeMethods.LookupPrivilegeValue(null, "SeIncreaseQuotaPrivilege", ref newState.Privileges[0].Luid))
-                                    throw new OperationCanceledException("Unable privilege value could not be retrieved.");
+                                    WinApi.NativeHelper.ThrowLastError("Privilege value could not be retrieved.");
                                 newState.Privileges[0].Attributes = 0x2;
                                 if (!WinApi.NativeHelper.AdjustTokenPrivileges(tokenHandle, false, ref newState))
-                                    throw new OperationCanceledException("Unable to adjust the token privileges.");
+                                    WinApi.NativeHelper.ThrowLastError("Unable to adjust the token privileges.");
                             }
                             finally
                             {
@@ -355,17 +355,17 @@ namespace SilDev
                             try
                             {
                                 if (WinApi.NativeMethods.GetWindowThreadProcessId(shellWindow, out var pid) <= 0)
-                                    throw new ArgumentOutOfRangeException(nameof(pid));
+                                    WinApi.NativeHelper.ThrowLastError("Unable to identifier the shell process.");
                                 shellHandle = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessQueryInformation, false, pid);
                                 if (shellHandle == IntPtr.Zero)
-                                    throw new ArgumentNullException(nameof(shellHandle));
+                                    WinApi.NativeHelper.ThrowLastError("Unable to open the shell process object.");
                                 if (!WinApi.NativeMethods.OpenProcessToken(shellHandle, 0x2, out shellToken))
-                                    throw new OperationCanceledException("Unable to open process token.");
+                                    WinApi.NativeHelper.ThrowLastError("Unable to open the shell process token.");
                                 if (!WinApi.NativeMethods.DuplicateTokenEx(shellToken, 0x18bu, IntPtr.Zero, WinApi.SecurityImpersonationLevels.SecurityImpersonation, WinApi.TokenTypes.TokenPrimary, out primaryToken))
-                                    throw new OperationCanceledException("Unable to duplicate process token.");
+                                    WinApi.NativeHelper.ThrowLastError("Unable to duplicate the shell process token.");
                                 var startupInfo = new WinApi.StartupInfo();
                                 if (!WinApi.NativeMethods.CreateProcessWithTokenW(primaryToken, 0, process.StartInfo.FileName, process.StartInfo.Arguments, 0, IntPtr.Zero, process.StartInfo.WorkingDirectory, ref startupInfo, out var processInformation))
-                                    throw new OperationCanceledException("Unable to create process with token.");
+                                    WinApi.NativeHelper.ThrowLastError("Unable to create a new process with the duplicated token.");
                                 processId = processInformation.dwProcessId;
                             }
                             finally
@@ -375,10 +375,6 @@ namespace SilDev
                                 WinApi.NativeMethods.CloseHandle(shellHandle);
                             }
                             processStarted = true;
-                        }
-                        catch (NotSupportedException)
-                        {
-                            // ignored
                         }
                         catch (Exception ex)
                         {
