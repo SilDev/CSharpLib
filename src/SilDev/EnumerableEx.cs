@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2018-03-17 10:11
+// Version:  2018-03-26 18:47
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,12 +19,127 @@ namespace SilDev
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Enumerable"/> class.
     /// </summary>
     public static class EnumerableEx
     {
+        /// <summary>
+        ///     Performs the specified <see cref="Action{T}"/> on each element of the
+        ///     <see cref="IEnumerable{T}"/> collection.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The <see cref="IEnumerable{T}"/> collection.
+        /// </param>
+        /// <param name="action">
+        ///     The <see cref="Action{T}"/> delegate to perform on each element of the
+        ///     <see cref="IEnumerable{T}"/> collection.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source or action is null.
+        /// </exception>
+        public static void ForEach<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            foreach (var item in source)
+                action(item);
+        }
+
+        /// <summary>
+        ///     Performs the specified <see cref="Action{T}"/> asynchronously on each element of the
+        ///     <see cref="IEnumerable{T}"/> collection.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The <see cref="IEnumerable{T}"/> collection.
+        /// </param>
+        /// <param name="action">
+        ///     The <see cref="Action{T}"/> delegate to perform on each element of the
+        ///     <see cref="IEnumerable{T}"/> collection.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source or action is null.
+        /// </exception>
+        public static async void ForEachAsync<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            foreach (var item in source)
+                await Task.Run(() => action(item));
+        }
+
+        /// <summary>
+        ///     Performs the specified <see cref="Action{T1, T2}"/> on each element of the
+        ///     <see cref="IDictionary{TKey, TValue}"/>.
+        /// </summary>
+        /// <typeparam name="TKey">
+        ///     The type of keys in the dictionary.
+        /// </typeparam>
+        /// <typeparam name="TValue">
+        ///     The type of values in the dictionary.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The <see cref="IDictionary{TKey, TValue}"/>.
+        /// </param>
+        /// <param name="action">
+        ///     The <see cref="Action{T1, T2}"/> delegate to perform on each element of the
+        ///     <see cref="IDictionary{TKey, TValue}"/>.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source or action is null.
+        /// </exception>
+        public static void ForEach<TKey, TValue>(this IDictionary<TKey, TValue> source, Action<TKey, TValue> action)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            foreach (var item in source)
+                action(item.Key, item.Value);
+        }
+
+        /// <summary>
+        ///     Performs the specified <see cref="Action{T1, T2}"/> asynchronously on each element of the
+        ///     <see cref="IDictionary{TKey, TValue}"/>.
+        /// </summary>
+        /// <typeparam name="TKey">
+        ///     The type of keys in the dictionary.
+        /// </typeparam>
+        /// <typeparam name="TValue">
+        ///     The type of values in the dictionary.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The <see cref="IDictionary{TKey, TValue}"/>.
+        /// </param>
+        /// <param name="action">
+        ///     The <see cref="Action{T1, T2}"/> delegate to perform on each element of the
+        ///     <see cref="IDictionary{TKey, TValue}"/>.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source or action is null.
+        /// </exception>
+        public static async void ForEachAsync<TKey, TValue>(this IDictionary<TKey, TValue> source, Action<TKey, TValue> action)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            foreach (var item in source)
+                await Task.Run(() => action(item.Key, item.Value));
+        }
+
         /// <summary>
         ///     Projects each element of a sequence into a new form.
         /// </summary>
