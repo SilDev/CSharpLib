@@ -2120,7 +2120,8 @@
         </member>
         <member name="T:SilDev.Comparison">
             <summary>
-                Provides static methods and base classes used for the comparison of two or more objects.
+                Provides static methods and base classes used for the comparison of two or
+                more objects.
             </summary>
         </member>
         <member name="M:SilDev.Comparison.IsNotEmpty(System.Object)">
@@ -2133,13 +2134,14 @@
         </member>
         <member name="M:SilDev.Comparison.IsBetween``1(``0,``0,``0)">
             <summary>
-                Determines whether the value of this object instance is between two specified values.
+                Determines whether the value of this object instance is between two specified
+                values.
             </summary>
-            <typeparam name="T">
-                The type of the object.
+            <typeparam name="TSource">
+                The type of the source.
             </typeparam>
-            <param name="item">
-                The object value to compare.
+            <param name="source">
+                The value to compare.
             </param>
             <param name="start">
                 The start index value.
@@ -2150,8 +2152,8 @@
         </member>
         <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.String[])">
             <summary>
-                Determines whether a specified substring occurs within this string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
+                Determines whether a specified substring occurs within this string. A
+                parameter specifies the culture, case, and sort rules used in the comparison.
             </summary>
             <param name="source">
                 The string to browse.
@@ -2178,8 +2180,8 @@
         </member>
         <member name="M:SilDev.Comparison.ContainsEx(System.String,System.StringComparison,System.Char[])">
             <summary>
-                Determines whether a specified characters occurs within this string. A parameter
-                specifies the culture, case, and sort rules used in the comparison.
+                Determines whether a specified characters occurs within this string. A
+                parameter specifies the culture, case, and sort rules used in the comparison.
             </summary>
             <param name="source">
                 The string to browse.
@@ -2204,6 +2206,19 @@
                 The sequence of characters to seek.
             </param>
         </member>
+        <member name="M:SilDev.Comparison.ContainsEx(System.String,System.Char)">
+            <summary>
+                Determines whether a specified character occurs within this string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to browse.
+            </param>
+            <param name="target">
+                The character to seek.
+            </param>
+        </member>
         <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.StringComparison,System.String[])">
             <summary>
                 Determines whether the beginning of this string matches a string. A parameter
@@ -2216,7 +2231,7 @@
                 One of the enumeration values that specifies the rules for the search.
             </param>
             <param name="targets">
-                The sequence of strings to compare seek.
+                The sequence of strings to compare.
             </param>
         </member>
         <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.String[])">
@@ -2229,13 +2244,14 @@
                 The string to check.
             </param>
             <param name="targets">
-                The sequence of strings to compare seek.
+                The sequence of strings to compare.
             </param>
         </member>
-        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
+        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.StringComparison,System.Char[])">
             <summary>
-                Determines whether the end of this string matches a string. A parameter specifies the
-                culture, case, and sort rules used in the comparison.
+                Determines whether the beginning of this string matches one of the specified
+                characters. A parameter specifies the culture, case, and sort rules used in
+                the comparison.
             </summary>
             <param name="source">
                 The string to check.
@@ -2244,25 +2260,123 @@
                 One of the enumeration values that specifies the rules for the search.
             </param>
             <param name="targets">
-                The sequence of strings to compare seek.
+                The sequence of characters to compare.
             </param>
         </member>
-        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String[])">
+        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.Char[])">
             <summary>
-                Determines whether the end of this string matches a string. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this comparison.
+                Determines whether the beginning of this string matches one of the specified
+                characters. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is
+                used for this comparison.
             </summary>
             <param name="source">
                 The string to check.
             </param>
             <param name="targets">
-                The sequence of strings to compare seek.
+                The sequence of characters to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.StartsWithEx(System.String,System.Char)">
+            <summary>
+                Determines whether the beginning of this string matches the specified
+                characters. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter
+                is used for this comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="target">
+                The character to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.String[])">
+            <summary>
+                Determines whether the end of this string matches a string. A parameter
+                specifies the culture, case, and sort rules used in the comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String[])">
+            <summary>
+                Determines whether the end of this string matches a string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="targets">
+                The sequence of strings to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.String)">
+            <summary>
+                Determines whether the end of this string matches the specified string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="target">
+                The string to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.StringComparison,System.Char[])">
+            <summary>
+                Determines whether the end of this string matches one of the specified
+                characters. A parameter specifies the culture, case, and sort rules used
+                in the comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+            <param name="targets">
+                The sequence of characters to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.Char[])">
+            <summary>
+                Determines whether the end of this string matches one of the specified
+                characters. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter
+                is used for this comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="targets">
+                The sequence of characters to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EndsWithEx(System.String,System.Char)">
+            <summary>
+                Determines whether the end of this string matches the specified characters.
+                The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for
+                this comparison.
+            </summary>
+            <param name="source">
+                The string to check.
+            </param>
+            <param name="target">
+                The character to compare.
             </param>
         </member>
         <member name="M:SilDev.Comparison.EqualsEx(System.String,System.StringComparison,System.String[])">
             <summary>
-                Determines whether this string instance is the same as a string of the specified string
-                array. A parameter specifies the culture, case, and sort rules used in the comparison.
+                Determines whether this string is the same as one of the string of the
+                specified sequence of strings. A parameter specifies the culture, case,
+                and sort rules used in the comparison.
             </summary>
             <param name="source">
                 The first string to compare.
@@ -2271,20 +2385,34 @@
                 The comparison type that specifies the culture, case, and sort rules.
             </param>
             <param name="targets">
-                The sequence of strings to compare with the first.
+                The sequence of strings to compare with the first string.
             </param>
         </member>
         <member name="M:SilDev.Comparison.EqualsEx(System.String,System.String[])">
             <summary>
-                Determines whether this string instance is the same as a string of the specified string
-                array. The <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
-                comparison.
+                Determines whether this string is the same as one of the string of the
+                specified sequence of strings. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for
+                this comparison.
             </summary>
             <param name="source">
                 The first string to compare.
             </param>
             <param name="targets">
-                The sequence of strings to compare with the first.
+                The sequence of strings to compare with the first string.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.EqualsEx(System.String,System.String)">
+            <summary>
+                Determines whether this string is the same as the specified string. The
+                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for
+                this comparison.
+            </summary>
+            <param name="source">
+                The first string to compare.
+            </param>
+            <param name="target">
+                The second string to compare.
             </param>
         </member>
         <member name="T:SilDev.Comparison.AlphanumericComparer">
@@ -2294,8 +2422,8 @@
         </member>
         <member name="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/> class. A
-                parameter specifies whether the order is descended.
+                Initilazies a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/>
+                class. A parameter specifies whether the order is descended.
             </summary>
             <param name="descendant">
                 true to enable the descending order; otherwise, false.
@@ -2303,8 +2431,8 @@
         </member>
         <member name="M:SilDev.Comparison.AlphanumericComparer.Compare(System.Object,System.Object)">
             <summary>
-                Compare two specified objects and returns an integer that indicates their relative
-                position in the sort order.
+                Compare two specified objects and returns an integer that indicates their
+                relative position in the sort order.
             </summary>
             <param name="a">
                 The first object to compare.
@@ -3723,6 +3851,14 @@
                 directory operations.
             </summary>
         </member>
+        <member name="M:SilDev.DirectoryEx.Exists(System.String)">
+            <summary>
+                Determines whether the specified directory exists.
+            </summary>
+            <param name="path">
+                The directory to check.
+            </param>
+        </member>
         <member name="M:SilDev.DirectoryEx.MatchAttributes(System.IO.DirectoryInfo,System.IO.FileAttributes)">
             <summary>
                 Determines whether the specified path specifies the specified attributes.
@@ -4152,9 +4288,17 @@
                 true to remove this link with highest privileges; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.DirectoryEx.GetLocks(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Find out which processes have locked the specified directories.
+            </summary>
+            <param name="dirs">
+                The directories to check.
+            </param>
+        </member>
         <member name="M:SilDev.DirectoryEx.GetLocks(System.IO.DirectoryInfo)">
             <summary>
-                Find out which processes have a lock on the files of this directory instance member.
+                Returns processes that have locked files of this directory instance member.
             </summary>
             <param name="dirInfo">
                 The directory instance member to check.
@@ -5281,6 +5425,14 @@
                 operations.
             </summary>
         </member>
+        <member name="M:SilDev.FileEx.Exists(System.String)">
+            <summary>
+                Determines whether the specified file exists.
+            </summary>
+            <param name="path">
+                The file to check.
+            </param>
+        </member>
         <member name="M:SilDev.FileEx.MatchAttributes(System.IO.FileInfo,System.IO.FileAttributes)">
             <summary>
                 Determines whether the specified path specifies the specified file attributes.
@@ -5534,6 +5686,14 @@
             </param>
             <param name="elevated">
                 true to remove this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetLocks(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Returns processes that have locked the specified files.
+            </summary>
+            <param name="files">
+                The files to check.
             </param>
         </member>
         <member name="M:SilDev.FileEx.GetLocks(System.IO.FileInfo)">
@@ -10501,6 +10661,14 @@
                 The path to check.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.IsFile(System.String)">
+            <summary>
+                Determines whether the specified path is specified as file.
+            </summary>
+            <param name="path">
+                The path to check.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.SetAttributes(System.String,System.IO.FileAttributes)">
             <summary>
                 Sets the specified attributes for the specified path.
@@ -10514,24 +10682,31 @@
         </member>
         <member name="M:SilDev.PathEx.Combine(System.Char[],System.String[])">
             <summary>
+                Combines an array of strings into a valid path.
                 <para>
-                    Combines an array of strings, based on <see cref="M:System.IO.Path.Combine(System.String[])"/>,
-                    <see cref="M:System.IO.Path.GetFullPath(System.String)"/>,
-                    <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>,
-                    <see cref="M:System.Environment.GetEnvironmentVariable(System.String)"/> and
-                    <see cref="M:System.Text.RegularExpressions.Regex.Match(System.String,System.String,System.Text.RegularExpressions.RegexOptions)"/>, into a path.
-                </para>
-                <para>
-                    <c>
-                        Hint:
-                    </c>
-                    Allows superordinate directory navigation and environment variables
+                    Hint: Allows superordinate directory navigation and environment variables
                     based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
-                    for example, write <code>"%Desktop%"</code>, cases are ignored as well.
+                    for example, write <code>"%Desktop%"</code>, cases are ignored.
                 </para>
             </summary>
             <param name="paths">
                 An array of parts of the path.
+            </param>
+            <param name="invalidPathChars">
+                A sequence of invalid chars used as a filter.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.Combine(System.Char[],System.String)">
+            <summary>
+                Filter a string into a valid path.
+                <para>
+                    Hint: Allows superordinate directory navigation and environment variables
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
+                    for example, write <code>"%Desktop%"</code>, cases are ignored.
+                </para>
+            </summary>
+            <param name="path">
+                The string to be filtered.
             </param>
             <param name="invalidPathChars">
                 A sequence of invalid chars used as a filter.
@@ -10539,37 +10714,35 @@
         </member>
         <member name="M:SilDev.PathEx.Combine(System.String[])">
             <summary>
+                Combines an array of strings into a valid path.
                 <para>
-                    Combines an array of strings, based on <see cref="M:System.IO.Path.Combine(System.String[])"/>,
-                    <see cref="M:System.IO.Path.GetFullPath(System.String)"/>,
-                    <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>,
-                    <see cref="M:System.Environment.GetEnvironmentVariable(System.String)"/> and
-                    <see cref="M:System.Text.RegularExpressions.Regex.Match(System.String,System.String,System.Text.RegularExpressions.RegexOptions)"/>, into a path.
-                </para>
-                <para>
-                    <c>
-                        Hint:
-                    </c>
-                    Allows superordinate directory navigation and environment variables
+                    Hint: Allows superordinate directory navigation and environment variables
                     based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
-                    for example, write <code>"%Desktop%"</code>, cases are ignored as well.
+                    for example, write <code>"%Desktop%"</code>, cases are ignored.
                 </para>
             </summary>
             <param name="paths">
                 An array of parts of the path.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.Combine(System.String)">
+            <summary>
+                Filter a string into a valid path.
+                <para>
+                    Hint: Allows superordinate directory navigation and environment variables
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
+                    for example, write <code>"%Desktop%"</code>, cases are ignored.
+                </para>
+            </summary>
+            <param name="path">
+                The string to be filtered.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.AltCombine(System.Char[],System.String[])">
             <summary>
+                Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a path.
                 <para>
-                    Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a
-                    path.
-                </para>
-                <para>
-                    <c>
-                        Hint:
-                    </c>
-                    <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
                 </para>
             </summary>
             <param name="paths">
@@ -10579,21 +10752,40 @@
                 A sequence of invalid chars used as a filter.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.AltCombine(System.Char[],System.String)">
+            <summary>
+                Filters a string, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a valid path.
+                <para>
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                </para>
+            </summary>
+            <param name="path">
+                The string to be filtered.
+            </param>
+            <param name="invalidPathChars">
+                A sequence of invalid chars used as a filter.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.AltCombine(System.String[])">
             <summary>
+                Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a path.
                 <para>
-                    Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a
-                    path.
-                </para>
-                <para>
-                    <c>
-                        Hint:
-                    </c>
-                    <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
                 </para>
             </summary>
             <param name="paths">
                 An array of parts of the path.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.AltCombine(System.String)">
+            <summary>
+                Filters a string, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a valid path.
+                <para>
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                </para>
+            </summary>
+            <param name="path">
+                The string to be filtered.
             </param>
         </member>
         <member name="M:SilDev.PathEx.GetDirectoryName(System.String,System.Boolean)">
@@ -10773,18 +10965,18 @@
         </member>
         <member name="M:SilDev.PathEx.GetLocks(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-                Find out which processes have a lock on this file instance member.
+                Returns processes that have locked the specified paths.
             </summary>
-            <param name="files">
-                An sequence of strings that contains the file paths to check.
+            <param name="paths">
+                An sequence of strings that contains file and/or directory paths to check.
             </param>
         </member>
         <member name="M:SilDev.PathEx.GetLocks(System.String)">
             <summary>
-                Find out which processes have a lock on the specified path.
+                Returns processes that have locked the specified path.
             </summary>
             <param name="path">
-                The full path to check.
+                The path of a file or directory to check.
             </param>
         </member>
         <member name="M:SilDev.PathEx.ForceDelete(System.String,System.Boolean,System.Int32)">
