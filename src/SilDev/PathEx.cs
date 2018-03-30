@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-03-24 17:27
+// Version:  2018-03-30 17:51
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -48,8 +48,6 @@ namespace SilDev
             '\u0022', '\u002a', '\u003c', '\u003e',
             '\u003f', '\u007c'
         };
-
-        private static Dictionary<int, string> CachedPaths { get; } = new Dictionary<int, string>();
 
         /// <summary>
         ///     Gets the full process executable path of the assembly based on
@@ -179,20 +177,11 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Combines an array of strings into a valid path.
         ///     <para>
-        ///         Combines an array of strings, based on <see cref="Path.Combine(string[])"/>,
-        ///         <see cref="Path.GetFullPath(string)"/>,
-        ///         <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/>,
-        ///         <see cref="Environment.GetEnvironmentVariable(string)"/> and
-        ///         <see cref="Regex.Match(string, string, RegexOptions)"/>, into a path.
-        ///     </para>
-        ///     <para>
-        ///         <c>
-        ///             Hint:
-        ///         </c>
-        ///         Allows superordinate directory navigation and environment variables
+        ///         Hint: Allows superordinate directory navigation and environment variables
         ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
-        ///         for example, write <code>"%Desktop%"</code>, cases are ignored as well.
+        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
         ///     </para>
         /// </summary>
         /// <param name="paths">
@@ -206,34 +195,23 @@ namespace SilDev
             var path = string.Empty;
             try
             {
-                if (paths.Length == 0 || paths.Count(string.IsNullOrWhiteSpace) == paths.Length)
+                if (paths?.Any() != true)
                     throw new ArgumentNullException(nameof(paths));
-                var hash = paths.GetHashCode();
-                if (hash != -1 && CachedPaths.ContainsKey(hash))
+                var separators = new[]
                 {
-                    path = CachedPaths[hash];
-                    goto Return;
-                }
-                var levels = paths;
-                var sepChar = Path.DirectorySeparatorChar;
-                for (var i = 0; i < levels.Length; i++)
-                {
-                    if (i > 0)
-                        levels[i] = levels[i].RemoveChar(Path.VolumeSeparatorChar);
-                    if (invalidPathChars != null)
-                        levels[i] = levels[i].RemoveChar(invalidPathChars);
-                    levels[i] = levels[i].Replace(Path.AltDirectorySeparatorChar, sepChar);
-                    if (levels[i].Contains(sepChar))
-                        levels[i] = levels[i].Split(sepChar).Where(s => !string.IsNullOrEmpty(s)).Select(s => s.Trim()).Join(sepChar);
-                    if (i > 0)
-                        continue;
-                    if (levels[i].EndsWith(Path.VolumeSeparatorChar.ToString()))
-                        levels[i] += sepChar;
-                }
-                path = Path.Combine(levels);
+                    Path.DirectorySeparatorChar,
+                    Path.AltDirectorySeparatorChar
+                };
+                IEnumerable<string> plains;
+                if (invalidPathChars?.Length > 0)
+                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries));
+                else
+                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries))
+                                  .Select(s => s.RemoveChar(invalidPathChars));
+                path = plains.Join(Path.DirectorySeparatorChar);
                 string key = null;
                 byte num = 0;
-                if (path.StartsWith("%") && (path.Contains($"%{sepChar}") || path.EndsWith("%")))
+                if (path.StartsWith("%") && (path.Contains($"%{Path.DirectorySeparatorChar}") || path.EndsWith("%")))
                 {
                     var regex = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase);
                     if (regex.Groups.Count > 1)
@@ -249,25 +227,15 @@ namespace SilDev
                         }
                     }
                 }
-                if (path.Contains($"{sepChar}.."))
+                if (path.Contains($"{Path.DirectorySeparatorChar}.."))
                     path = Path.GetFullPath(path);
-                if (path.Contains('.'))
+                if (path.EndsWith("."))
                     path = path.TrimEnd('.');
                 if (!string.IsNullOrEmpty(key) || num > 1)
                     if (string.IsNullOrEmpty(key))
                         path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
                         path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
-                if (hash != -1)
-                {
-                    if (CachedPaths.Count >= byte.MaxValue)
-                    {
-                        var code = CachedPaths.Keys.FirstOrDefault(x => x != hash);
-                        if (CachedPaths.ContainsKey(code))
-                            CachedPaths.Remove(code);
-                    }
-                    CachedPaths[hash] = path;
-                }
             }
             catch (ArgumentException ex)
             {
@@ -278,25 +246,32 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            Return:
             return path;
         }
 
         /// <summary>
+        ///     Filter a string into a valid path.
         ///     <para>
-        ///         Combines an array of strings, based on <see cref="Path.Combine(string[])"/>,
-        ///         <see cref="Path.GetFullPath(string)"/>,
-        ///         <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/>,
-        ///         <see cref="Environment.GetEnvironmentVariable(string)"/> and
-        ///         <see cref="Regex.Match(string, string, RegexOptions)"/>, into a path.
-        ///     </para>
-        ///     <para>
-        ///         <c>
-        ///             Hint:
-        ///         </c>
-        ///         Allows superordinate directory navigation and environment variables
+        ///         Hint: Allows superordinate directory navigation and environment variables
         ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
-        ///         for example, write <code>"%Desktop%"</code>, cases are ignored as well.
+        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
+        ///     </para>
+        /// </summary>
+        /// <param name="path">
+        ///     The string to be filtered.
+        /// </param>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, string path) =>
+            Combine(invalidPathChars, new[] { path });
+
+        /// <summary>
+        ///     Combines an array of strings into a valid path.
+        ///     <para>
+        ///         Hint: Allows superordinate directory navigation and environment variables
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
+        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
         ///     </para>
         /// </summary>
         /// <param name="paths">
@@ -306,15 +281,23 @@ namespace SilDev
             Combine(InvalidPathChars, paths);
 
         /// <summary>
+        ///     Filter a string into a valid path.
         ///     <para>
-        ///         Combines an array of strings, based on <see cref="Combine(string[])"/>, into a
-        ///         path.
+        ///         Hint: Allows superordinate directory navigation and environment variables
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
+        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
         ///     </para>
+        /// </summary>
+        /// <param name="path">
+        ///     The string to be filtered.
+        /// </param>
+        public static string Combine(string path) =>
+            Combine(InvalidPathChars, new[] { path });
+
+        /// <summary>
+        ///     Combines an array of strings, based on <see cref="Combine(string[])"/>, into a path.
         ///     <para>
-        ///         <c>
-        ///             Hint:
-        ///         </c>
-        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
         ///     </para>
         /// </summary>
         /// <param name="paths">
@@ -360,15 +343,24 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Filters a string, based on <see cref="Combine(string[])"/>, into a valid path.
         ///     <para>
-        ///         Combines an array of strings, based on <see cref="Combine(string[])"/>, into a
-        ///         path.
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
         ///     </para>
+        /// </summary>
+        /// <param name="path">
+        ///     The string to be filtered.
+        /// </param>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        public static string AltCombine(char[] invalidPathChars, string path) =>
+            AltCombine(invalidPathChars, new[] { path });
+
+        /// <summary>
+        ///     Combines an array of strings, based on <see cref="Combine(string[])"/>, into a path.
         ///     <para>
-        ///         <c>
-        ///             Hint:
-        ///         </c>
-        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
         ///     </para>
         /// </summary>
         /// <param name="paths">
@@ -376,6 +368,18 @@ namespace SilDev
         /// </param>
         public static string AltCombine(params string[] paths) =>
             AltCombine(InvalidPathChars, paths);
+
+        /// <summary>
+        ///     Filters a string, based on <see cref="Combine(string[])"/>, into a valid path.
+        ///     <para>
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="path">
+        ///     The string to be filtered.
+        /// </param>
+        public static string AltCombine(string path) =>
+            AltCombine(InvalidPathChars, new[] { path });
 
         /// <summary>
         ///     Returns the directory information for the specified path string.
