@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-03-21 21:34
+// Version:  2018-03-30 22:05
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,6 +30,18 @@ namespace SilDev
     /// </summary>
     public static class DirectoryEx
     {
+        /// <summary>
+        ///     Determines whether the specified directory exists.
+        /// </summary>
+        /// <param name="path">
+        ///     The directory to check.
+        /// </param>
+        public static bool Exists(string path)
+        {
+            var src = PathEx.Combine(path);
+            return Directory.Exists(src);
+        }
+
         /// <summary>
         ///     Determines whether the specified path specifies the specified attributes.
         /// </summary>
@@ -758,7 +770,19 @@ namespace SilDev
             PathEx.DestroySymbolicLink(path, true, backup, elevated);
 
         /// <summary>
-        ///     Find out which processes have a lock on the files of this directory instance member.
+        ///     Find out which processes have locked the specified directories.
+        /// </summary>
+        /// <param name="dirs">
+        ///     The directories to check.
+        /// </param>
+        public static IEnumerable<Process> GetLocks(IEnumerable<string> dirs)
+        {
+            var paths = dirs?.ToArray();
+            return paths?.Any() == true ? FileEx.GetLocks(paths.Select(PathEx.Combine).Where(PathEx.IsDir).SelectMany(s => GetFiles(s, SearchOption.AllDirectories))) : default(IEnumerable<Process>);
+        }
+
+        /// <summary>
+        ///     Returns processes that have locked files of this directory instance member.
         /// </summary>
         /// <param name="dirInfo">
         ///     The directory instance member to check.

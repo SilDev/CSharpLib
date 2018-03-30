@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-03-21 21:35
+// Version:  2018-03-30 22:05
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -27,6 +27,18 @@ namespace SilDev
     /// </summary>
     public static class FileEx
     {
+        /// <summary>
+        ///     Determines whether the specified file exists.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to check.
+        /// </param>
+        public static bool Exists(string path)
+        {
+            var src = PathEx.Combine(path);
+            return File.Exists(src);
+        }
+
         /// <summary>
         ///     Determines whether the specified path specifies the specified file attributes.
         /// </summary>
@@ -557,13 +569,63 @@ namespace SilDev
             PathEx.DestroySymbolicLink(path, false, backup, elevated);
 
         /// <summary>
+        ///     Returns processes that have locked the specified files.
+        /// </summary>
+        /// <param name="files">
+        ///     The files to check.
+        /// </param>
+        public static IEnumerable<Process> GetLocks(IEnumerable<string> files)
+        {
+            var paths = files?.Select(PathEx.Combine).Where(PathEx.IsFile).ToArray();
+            if (paths?.Any() != true)
+                yield break;
+            if (WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString()) != 0)
+                WinApi.NativeHelper.ThrowLastError("Could not begin restart session. Unable to determine file locker.");
+            IEnumerable<int> procIds;
+            try
+            {
+                if (WinApi.NativeMethods.RmRegisterResources(handle, (uint)paths.Length, paths, 0u, null, 0u, null) != 0)
+                    WinApi.NativeHelper.ThrowLastError("Could not register resource.");
+                var pnProcInfo = 0u;
+                var lpdwRebootReasons = 0u;
+                if (WinApi.NativeMethods.RmGetList(handle, out var pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons) != 234)
+                    WinApi.NativeHelper.ThrowLastError("Could not list processes locking resource. Failed to get size of result.");
+                var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];
+                pnProcInfo = pnProcInfoNeeded;
+                if (WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons) != 0)
+                    WinApi.NativeHelper.ThrowLastError("Could not list processes locking resource.");
+                procIds = processInfo.Select(e => e.Process.dwProcessId);
+            }
+            finally
+            {
+                WinApi.NativeMethods.RmEndSession(handle);
+            }
+            foreach (var id in procIds)
+            {
+                Process proc;
+                try
+                {
+                    proc = Process.GetProcessById(id);
+                }
+                catch
+                {
+                    continue;
+                }
+                yield return proc;
+            }
+        }
+
+        /// <summary>
         ///     Find out which processes have a lock on this file instance member.
         /// </summary>
         /// <param name="fileInfo">
         ///     The file instance member to check.
         /// </param>
-        public static IEnumerable<Process> GetLocks(this FileInfo fileInfo) =>
-            PathEx.GetLocks(fileInfo?.FullName);
+        public static IEnumerable<Process> GetLocks(this FileInfo fileInfo)
+        {
+            var path = fileInfo?.FullName;
+            return path != null ? GetLocks(new[] { path }) : default(IEnumerable<Process>);
+        }
 
         /// <summary>
         ///     Returns the highest version information associated with this file instance

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-03-30 17:51
+// Version:  2018-03-30 22:05
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -69,7 +69,7 @@ namespace SilDev
         ///     The file or directory to check.
         /// </param>
         public static bool DirOrFileExists(string path) =>
-            Directory.Exists(path) || File.Exists(path);
+            DirectoryEx.Exists(path) || FileEx.Exists(path);
 
         /// <summary>
         ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
@@ -156,7 +156,16 @@ namespace SilDev
         ///     The path to check.
         /// </param>
         public static bool IsDir(string path) =>
-            FileEx.MatchAttributes(path, FileAttributes.Directory);
+            DirectoryEx.Exists(path) && FileEx.MatchAttributes(path, FileAttributes.Directory);
+
+        /// <summary>
+        ///     Determines whether the specified path is specified as file.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to check.
+        /// </param>
+        public static bool IsFile(string path) =>
+            FileEx.Exists(path) && !FileEx.MatchAttributes(path, FileAttributes.Directory);
 
         /// <summary>
         ///     Sets the specified attributes for the specified path.
@@ -849,80 +858,35 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Find out which processes have a lock on this file instance member.
+        ///     Returns processes that have locked the specified paths.
         /// </summary>
-        /// <param name="files">
-        ///     An sequence of strings that contains the file paths to check.
+        /// <param name="paths">
+        ///     An sequence of strings that contains file and/or directory paths to check.
         /// </param>
-        public static IEnumerable<Process> GetLocks(IEnumerable<string> files)
+        public static IEnumerable<Process> GetLocks(IEnumerable<string> paths)
         {
-            var locks = default(IEnumerable<Process>);
-            try
+            if (paths == null)
+                return default(IEnumerable<Process>);
+            var files = new List<string>();
+            foreach (var path in paths.Select(Combine))
             {
-                var paths = files?.ToArray();
-                if (paths == null || !paths.Any())
-                    throw new ArgumentNullException(nameof(paths));
-                var result = WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString());
-                if (result != 0)
-                    throw new InvalidOperationException("Could not begin restart session. Unable to determine file locker.");
-                try
+                if (IsDir(path))
                 {
-                    var resources = paths.Select(s => Combine(s)).Where(File.Exists).ToArray();
-                    if (!resources.Any())
-                        throw new PathNotFoundException(paths.Join("'; '"));
-                    result = WinApi.NativeMethods.RmRegisterResources(handle, (uint)resources.Length, resources, 0u, null, 0u, null);
-                    if (result != 0)
-                        throw new Exception("Could not register resource.");
-                    var pnProcInfo = 0u;
-                    var lpdwRebootReasons = 0u;
-                    result = WinApi.NativeMethods.RmGetList(handle, out var pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons);
-                    if (result != 234)
-                        throw new InvalidOperationException("Could not list processes locking resource. Failed to get size of result.");
-                    var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];
-                    pnProcInfo = pnProcInfoNeeded;
-                    result = WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons);
-                    if (result != 0)
-                        throw new InvalidOperationException("Could not list processes locking resource.");
-                    var ids = processInfo.Select(e => e.Process.dwProcessId);
-                    var procs = new List<Process>();
-                    foreach (var id in ids)
-                    {
-                        Process proc;
-                        try
-                        {
-                            proc = Process.GetProcessById(id);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                        if (procs.Contains(proc))
-                            continue;
-                        procs.Add(proc);
-                    }
-                    locks = procs;
+                    var innerFiles = DirectoryEx.GetFiles(path, SearchOption.AllDirectories);
+                    if (innerFiles?.Any() == true)
+                        files.AddRange(innerFiles);
+                    continue;
                 }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                }
-                finally
-                {
-                    WinApi.NativeMethods.RmEndSession(handle);
-                }
+                files.Add(path);
             }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return locks;
+            return files.Any() ? FileEx.GetLocks(files.ToArray()) : default(IEnumerable<Process>);
         }
 
         /// <summary>
-        ///     Find out which processes have a lock on the specified path.
+        ///     Returns processes that have locked the specified path.
         /// </summary>
         /// <param name="path">
-        ///     The full path to check.
+        ///     The path of a file or directory to check.
         /// </param>
         public static IEnumerable<Process> GetLocks(string path)
         {
