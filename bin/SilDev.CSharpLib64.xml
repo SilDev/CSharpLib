@@ -4295,6 +4295,8 @@
             <param name="dirs">
                 The directories to check.
             </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
         </member>
         <member name="M:SilDev.DirectoryEx.GetLocks(System.IO.DirectoryInfo)">
             <summary>
@@ -5695,6 +5697,8 @@
             <param name="files">
                 The files to check.
             </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
         </member>
         <member name="M:SilDev.FileEx.GetLocks(System.IO.FileInfo)">
             <summary>
@@ -5703,6 +5707,8 @@
             <param name="fileInfo">
                 The file instance member to check.
             </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
         </member>
         <member name="M:SilDev.FileEx.GetVersion(System.IO.FileInfo)">
             <summary>
@@ -10970,6 +10976,8 @@
             <param name="paths">
                 An sequence of strings that contains file and/or directory paths to check.
             </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
         </member>
         <member name="M:SilDev.PathEx.GetLocks(System.String)">
             <summary>
@@ -15472,6 +15480,45 @@
                 A mask that contains all the valid bits.
             </summary>
         </member>
+        <member name="M:SilDev.WinApi.ThrowError(System.Int32,System.Int32[])">
+            <summary>
+                Throws the specified error code if it is not specified as a handled error.
+            </summary>
+            <param name="error">
+                The Win32 error code associated with this exception.
+            </param>
+            <param name="handledErrors">
+                A sequence of handled Win32 error codes.
+            </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
+        </member>
+        <member name="M:SilDev.WinApi.ThrowError(System.Int32,System.Int32)">
+            <summary>
+                Throws the specified error code if it is not specified as a handled error.
+            </summary>
+            <param name="error">
+                The Win32 error code associated with this exception.
+            </param>
+            <param name="handledError">
+                A handled Win32 error code.
+            </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
+        </member>
+        <member name="M:SilDev.WinApi.ThrowLastError(System.String)">
+            <summary>
+                Throws the last error code returned by the last unmanaged function.
+            </summary>
+            <param name="forceMessage">
+                A detailed description of the error that is thrown if no Win32 error code was found.
+                <para>
+                    If this parameter is NULL, no exception is thrown in this case.
+                </para>
+            </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
+        </member>
         <member name="T:SilDev.WinApi.AccessTokenFlags">
             <summary>
                 Provides enumerated values of token access rights.
@@ -18302,19 +18349,6 @@
                 Use the GetExitCodeProcess function to retrieve a process's exit value. Use the
                 GetExitCodeThread function to retrieve a thread's exit value.
             </param>
-        </member>
-        <member name="M:SilDev.WinApi.NativeHelper.ThrowLastError(System.String)">
-            <summary>
-                Throws the last error code returned by the last unmanaged function.
-            </summary>
-            <param name="forceMessage">
-                A detailed description of the error that is thrown if no Win32 error code was found.
-                <para>
-                    If this parameter is NULL, no exception is thrown in this case.
-                </para>
-            </param>
-            <exception cref="T:System.ComponentModel.Win32Exception">
-            </exception>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.UnhookWindowsHookEx(System.IntPtr)">
             <summary>
