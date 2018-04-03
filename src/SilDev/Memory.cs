@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2017-10-31 07:54
+// Version:  2018-04-03 20:01
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -172,14 +172,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                try
-                {
-                    WinApi.NativeHelper.ThrowLastError();
-                }
-                catch (Exception exc)
-                {
-                    Log.Write(exc);
-                }
             }
         }
 
@@ -205,14 +197,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                try
-                {
-                    WinApi.NativeHelper.ThrowLastError();
-                }
-                catch (Exception exc)
-                {
-                    Log.Write(exc);
-                }
                 return null;
             }
         }
@@ -244,14 +228,6 @@ namespace SilDev
             catch (Exception ex)
             {
                 Log.Write(ex);
-                try
-                {
-                    WinApi.NativeHelper.ThrowLastError();
-                }
-                catch (Exception exc)
-                {
-                    Log.Write(exc);
-                }
             }
         }
     }

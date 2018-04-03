@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-03-25 15:40
+// Version:  2018-04-03 20:02
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,6 +21,7 @@ namespace SilDev
     using System.Drawing;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Security;
     using System.Text;
@@ -2014,6 +2015,62 @@ namespace SilDev
             ///     A mask that contains all the valid bits.
             /// </summary>
             ValidBits = NoDrawCaption | NoDrawIcon | NoSysMenu | NoMirrorHelp
+        }
+
+        /// <summary>
+        ///     Throws the specified error code if it is not specified as a handled error.
+        /// </summary>
+        /// <param name="error">
+        ///     The Win32 error code associated with this exception.
+        /// </param>
+        /// <param name="handledErrors">
+        ///     A sequence of handled Win32 error codes.
+        /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static int ThrowError(int error, params int[] handledErrors)
+        {
+            if (handledErrors?.Any(i => i == error) == true)
+                return error;
+            throw new Win32Exception(error);
+        }
+
+        /// <summary>
+        ///     Throws the specified error code if it is not specified as a handled error.
+        /// </summary>
+        /// <param name="error">
+        ///     The Win32 error code associated with this exception.
+        /// </param>
+        /// <param name="handledError">
+        ///     A handled Win32 error code.
+        /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static int ThrowError(int error, int handledError = 0)
+        {
+            if (error != handledError)
+                throw new Win32Exception(error);
+            return error;
+        }
+
+        /// <summary>
+        ///     Throws the last error code returned by the last unmanaged function.
+        /// </summary>
+        /// <param name="forceMessage">
+        ///     A detailed description of the error that is thrown if no Win32 error code was found.
+        ///     <para>
+        ///         If this parameter is NULL, no exception is thrown in this case.
+        ///     </para>
+        /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static void ThrowLastError(string forceMessage = null)
+        {
+            var code = Marshal.GetLastWin32Error();
+            if (code != 0)
+                throw new Win32Exception(code);
+            if (!string.IsNullOrWhiteSpace(forceMessage))
+                throw new Win32Exception(forceMessage);
         }
 
         /// <summary>
@@ -5214,26 +5271,6 @@ namespace SilDev
             /// </param>
             public static bool TerminateProcess(IntPtr hProcess, uint uExitCode) =>
                 NativeMethods.TerminateProcess(hProcess, uExitCode);
-
-            /// <summary>
-            ///     Throws the last error code returned by the last unmanaged function.
-            /// </summary>
-            /// <param name="forceMessage">
-            ///     A detailed description of the error that is thrown if no Win32 error code was found.
-            ///     <para>
-            ///         If this parameter is NULL, no exception is thrown in this case.
-            ///     </para>
-            /// </param>
-            /// <exception cref="Win32Exception">
-            /// </exception>
-            public static void ThrowLastError(string forceMessage = null)
-            {
-                var code = Marshal.GetLastWin32Error();
-                if (code > 0)
-                    throw new Win32Exception(code);
-                if (!string.IsNullOrWhiteSpace(forceMessage))
-                    throw new Win32Exception(forceMessage);
-            }
 
             /// <summary>
             ///     Removes a hook procedure installed in a hook chain by the SetWindowsHookEx function.

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-03-30 22:05
+// Version:  2018-04-03 20:01
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -775,6 +776,8 @@ namespace SilDev
         /// <param name="dirs">
         ///     The directories to check.
         /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
         public static IEnumerable<Process> GetLocks(IEnumerable<string> dirs)
         {
             var paths = dirs?.ToArray();
