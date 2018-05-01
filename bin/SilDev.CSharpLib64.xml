@@ -2053,6 +2053,17 @@
                 The search symbol color, <see cref="T:System.Windows.Forms.TextBox"/>.ForeColor is used by default.
             </param>
         </member>
+        <member name="M:SilDev.Forms.TextBoxEx.AutoVerticalScrollBar(System.Windows.Forms.TextBox)">
+            <summary>
+                Displays the vertical scroll bar as needed.
+                <para>
+                    Hint: This function has no effect if word wrap is disabled.
+                </para>
+            </summary>
+            <param name="textBox">
+                The <see cref="T:System.Windows.Forms.TextBox"/> control to change.
+            </param>
+        </member>
         <member name="T:SilDev.QuickWmi.Win32_OperatingSystem">
             <summary>
                 ***This is an undocumented class and can be changed or removed in the future
