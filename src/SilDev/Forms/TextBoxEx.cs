@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2018-03-12 02:09
+// Version:  2018-05-01 15:02
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -15,6 +15,7 @@
 
 namespace SilDev.Forms
 {
+    using System;
     using System.Drawing;
     using System.Windows.Forms;
     using Drawing;
@@ -79,6 +80,33 @@ namespace SilDev.Forms
             tb.Dock = DockStyle.Fill;
             if (!panel.Parent.LayoutIsSuspended())
                 panel.Parent.Update();
+        }
+
+        /// <summary>
+        ///     Displays the vertical scroll bar as needed.
+        ///     <para>
+        ///         Hint: This function has no effect if word wrap is disabled.
+        ///     </para>
+        /// </summary>
+        /// <param name="textBox">
+        ///     The <see cref="TextBox"/> control to change.
+        /// </param>
+        public static void AutoVerticalScrollBar(this TextBox textBox)
+        {
+            textBox.SizeChanged -= SetVerticalScrollBars;
+            textBox.SizeChanged += SetVerticalScrollBars;
+            textBox.TextChanged -= SetVerticalScrollBars;
+            textBox.TextChanged += SetVerticalScrollBars;
+            if (!textBox.Parent.LayoutIsSuspended())
+                SetVerticalScrollBars(textBox, EventArgs.Empty);
+        }
+
+        private static void SetVerticalScrollBars(object sender, EventArgs e)
+        {
+            if (!(sender is TextBox tb) || !tb.Enabled || !tb.Visible || !tb.WordWrap || tb.Width < SystemInformation.VerticalScrollBarWidth * 2 || tb.Width < SystemInformation.HorizontalScrollBarHeight * 2)
+                return;
+            var rect = TextRenderer.MeasureText(tb.Text, tb.Font, new Size(tb.Width, int.MaxValue), TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl);
+            tb.ScrollBars = rect.Height > tb.Height - 8 ? ScrollBars.Vertical : ScrollBars.None;
         }
     }
 }
