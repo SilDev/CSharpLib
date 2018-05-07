@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-04-03 20:02
+// Version:  2018-05-07 17:42
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -3043,10 +3043,11 @@ namespace SilDev
                 var height = rect.Height - rect.Y;
                 if (hPar == default(IntPtr))
                 {
+                    var cursorPos = GetCursorPos();
                     var screen = Screen.PrimaryScreen;
                     foreach (var scr in Screen.AllScreens)
                     {
-                        if (!scr.Bounds.Contains(Cursor.Position))
+                        if (!scr.Bounds.Contains(cursorPos))
                             continue;
                         screen = scr;
                         break;
@@ -3573,6 +3574,16 @@ namespace SilDev
             /// </summary>
             public static uint GetCurrentThreadId() =>
                 NativeMethods.GetCurrentThreadId();
+
+            /// <summary>
+            ///     Retrieves the position of the mouse cursor, in screen coordinates.
+            /// </summary>
+            public static Point GetCursorPos()
+            {
+                if (!NativeMethods.GetCursorPos(out var point))
+                    point = new Point(0, 0);
+                return point;
+            }
 
             /// <summary>
             ///     Retrieves the identifier of the specified control.
@@ -6385,6 +6396,16 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern uint GetCurrentThreadId();
+
+            /// <summary>
+            ///     Retrieves the position of the mouse cursor, in screen coordinates.
+            /// </summary>
+            /// <returns>
+            ///     Returns nonzero if successful or zero otherwise.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool GetCursorPos(out Point lpPoint);
 
             /// <summary>
             ///     Retrieves the identifier of the specified control.
