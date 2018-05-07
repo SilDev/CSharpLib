@@ -16913,6 +16913,11 @@
                 Retrieves the thread identifier of the calling thread.
             </summary>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.GetCursorPos">
+            <summary>
+                Retrieves the position of the mouse cursor, in screen coordinates.
+            </summary>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.GetDlgCtrlId(System.IntPtr)">
             <summary>
                 Retrieves the identifier of the specified control.
@@ -19412,6 +19417,14 @@
             </summary>
             <returns>
                 The return value is the thread identifier of the calling thread.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.GetCursorPos(System.Drawing.Point@)">
+            <summary>
+                Retrieves the position of the mouse cursor, in screen coordinates.
+            </summary>
+            <returns>
+                Returns nonzero if successful or zero otherwise.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.GetDlgCtrlID(System.IntPtr)">
