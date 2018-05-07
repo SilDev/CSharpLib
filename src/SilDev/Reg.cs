@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2018-02-22 02:06
+// Version:  2018-05-07 03:52
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -105,11 +105,20 @@ namespace SilDev
         }
 
 #if x86
-        private static string RegPath { get; } = "%SystemRoot%\\System32\\reg.exe";
-        private static string RegPath64 { get; } = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative\\reg.exe" : "%SystemRoot%\\System32\\reg.exe";
+        private static string _regPath64;
+        private const string RegPath = "%SystemRoot%\\System32\\reg.exe";
+        private static string RegPath64
+        {
+            get
+            {
+                if (_regPath64 == default(string))
+                    _regPath64 = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative\\reg.exe" : RegPath;
+                return _regPath64;
+            }
+        }
 #else
-        private static string RegPath { get; } = "%SystemRoot%\\SysWOW64\\reg.exe";
-        private static string RegPath64 { get; } = "%SystemRoot%\\System32\\reg.exe";
+        private const string RegPath = "%SystemRoot%\\SysWOW64\\reg.exe";
+        private const string RegPath64 = "%SystemRoot%\\System32\\reg.exe";
 #endif
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2018-02-12 04:54
+// Version:  2018-05-07 03:52
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -50,7 +50,7 @@ namespace SilDev
                     return _machineId;
                 var id = Win32_OperatingSystem.SerialNumber;
                 if (string.IsNullOrWhiteSpace(id))
-                    id = $"{Environment.MachineName}\\{Environment.UserName}";
+                    id = string.Concat(Environment.MachineName, Path.DirectorySeparatorChar, Environment.UserName);
                 _machineId = Math.Abs(id.GetHashCode());
                 return _machineId;
             }
@@ -69,9 +69,9 @@ namespace SilDev
                 try
                 {
 #if x64
-                    var envDir = PathEx.Combine("%WinDir%\\Microsoft.NET\\Framework64");
+                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", "Framework64");
 #else
-                    var envDir = PathEx.Combine("%WinDir%\\Microsoft.NET\\Framework");
+                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", "Framework");
 #endif
                     foreach (var dir in Directory.EnumerateDirectories(envDir).Reverse())
                     {
