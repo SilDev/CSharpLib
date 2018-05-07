@@ -10706,27 +10706,56 @@
                     for example, write <code>"%Desktop%"</code>, cases are ignored.
                 </para>
             </summary>
-            <param name="paths">
-                An array of parts of the path.
-            </param>
             <param name="invalidPathChars">
                 A sequence of invalid chars used as a filter.
+            </param>
+            <param name="paths">
+                An array of parts of the path.
             </param>
         </member>
         <member name="M:SilDev.PathEx.Combine(System.Char[],System.String)">
             <summary>
-                Filter a string into a valid path.
+                Filters a string into a valid path.
                 <para>
                     Hint: Allows superordinate directory navigation and environment variables
                     based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
                     for example, write <code>"%Desktop%"</code>, cases are ignored.
                 </para>
             </summary>
+            <param name="invalidPathChars">
+                A sequence of invalid chars used as a filter.
+            </param>
             <param name="path">
                 The string to be filtered.
             </param>
+        </member>
+        <member name="M:SilDev.PathEx.Combine(System.Char[],System.Environment.SpecialFolder,System.String[])">
+            <summary>
+                Combines a <see cref="T:System.Environment.SpecialFolder"/> constant with an array of
+                strings into a valid path.
+            </summary>
             <param name="invalidPathChars">
                 A sequence of invalid chars used as a filter.
+            </param>
+            <param name="specialFolder">
+                A specified enumerated constant used to retrieve directory paths to system
+                special folders.
+            </param>
+            <param name="paths">
+                An array of parts of the path.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.Combine(System.Environment.SpecialFolder,System.String[])">
+            <summary>
+                Combines a <see cref="T:System.Environment.SpecialFolder"/> constant with an array of
+                strings into a valid path.
+            </summary>
+            <param name="specialFolder">
+                A specified enumerated constant used to retrieve directory paths to system
+                special folders.
+            </param>
+            <param name="paths">
+                An array of parts of the path.
             </param>
         </member>
         <member name="M:SilDev.PathEx.Combine(System.String[])">
@@ -10744,7 +10773,7 @@
         </member>
         <member name="M:SilDev.PathEx.Combine(System.String)">
             <summary>
-                Filter a string into a valid path.
+                Filters a string into a valid path.
                 <para>
                     Hint: Allows superordinate directory navigation and environment variables
                     based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
@@ -10762,11 +10791,11 @@
                     Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
                 </para>
             </summary>
-            <param name="paths">
-                An array of parts of the path.
-            </param>
             <param name="invalidPathChars">
                 A sequence of invalid chars used as a filter.
+            </param>
+            <param name="paths">
+                An array of parts of the path.
             </param>
         </member>
         <member name="M:SilDev.PathEx.AltCombine(System.Char[],System.String)">
@@ -10776,11 +10805,11 @@
                     Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
                 </para>
             </summary>
-            <param name="path">
-                The string to be filtered.
-            </param>
             <param name="invalidPathChars">
                 A sequence of invalid chars used as a filter.
+            </param>
+            <param name="path">
+                The string to be filtered.
             </param>
         </member>
         <member name="M:SilDev.PathEx.AltCombine(System.String[])">
