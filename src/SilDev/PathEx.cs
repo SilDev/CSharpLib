@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-04-03 20:01
+// Version:  2018-05-07 03:53
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -194,11 +194,11 @@ namespace SilDev
         ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
         ///     </para>
         /// </summary>
-        /// <param name="paths">
-        ///     An array of parts of the path.
-        /// </param>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="paths">
+        ///     An array of parts of the path.
         /// </param>
         public static string Combine(char[] invalidPathChars, params string[] paths)
         {
@@ -260,21 +260,89 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Filter a string into a valid path.
+        ///     Filters a string into a valid path.
         ///     <para>
         ///         Hint: Allows superordinate directory navigation and environment variables
         ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
         ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
         ///     </para>
         /// </summary>
-        /// <param name="path">
-        ///     The string to be filtered.
-        /// </param>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
         /// </param>
+        /// <param name="path">
+        ///     The string to be filtered.
+        /// </param>
         public static string Combine(char[] invalidPathChars, string path) =>
             Combine(invalidPathChars, new[] { path });
+
+        /// <summary>
+        ///     Combines a <see cref="Environment.SpecialFolder"/> constant with an array of
+        ///     strings into a valid path.
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
+        /// </param>
+        /// <param name="paths">
+        ///     An array of parts of the path.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder specialFolder, params string[] paths)
+        {
+            var path = string.Empty;
+            try
+            {
+                if (paths?.Any() != true)
+                    throw new ArgumentNullException(nameof(paths));
+                var separators = new[]
+                {
+                    Path.DirectorySeparatorChar,
+                    Path.AltDirectorySeparatorChar
+                };
+                path = Environment.GetFolderPath(specialFolder);
+                if (!string.IsNullOrEmpty(path))
+                    path += Path.DirectorySeparatorChar;
+                IEnumerable<string> plains;
+                if (invalidPathChars?.Length > 0)
+                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries));
+                else
+                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries))
+                                  .Select(s => s.RemoveChar(invalidPathChars));
+                path += plains.Join(Path.DirectorySeparatorChar);
+
+                if (path.Contains($"{Path.DirectorySeparatorChar}.."))
+                    path = Path.GetFullPath(path);
+                if (path.EndsWith("."))
+                    path = path.TrimEnd('.');
+            }
+            catch (ArgumentException ex)
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return path;
+        }
+
+        /// <summary>
+        ///     Combines a <see cref="Environment.SpecialFolder"/> constant with an array of
+        ///     strings into a valid path.
+        /// </summary>
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
+        /// </param>
+        /// <param name="paths">
+        ///     An array of parts of the path.
+        /// </param>
+        public static string Combine(Environment.SpecialFolder specialFolder, params string[] paths) =>
+            Combine(InvalidPathChars, specialFolder, paths);
 
         /// <summary>
         ///     Combines an array of strings into a valid path.
@@ -291,7 +359,7 @@ namespace SilDev
             Combine(InvalidPathChars, paths);
 
         /// <summary>
-        ///     Filter a string into a valid path.
+        ///     Filters a string into a valid path.
         ///     <para>
         ///         Hint: Allows superordinate directory navigation and environment variables
         ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
@@ -310,11 +378,11 @@ namespace SilDev
         ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
         ///     </para>
         /// </summary>
-        /// <param name="paths">
-        ///     An array of parts of the path.
-        /// </param>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="paths">
+        ///     An array of parts of the path.
         /// </param>
         public static string AltCombine(char[] invalidPathChars, params string[] paths)
         {
@@ -358,11 +426,11 @@ namespace SilDev
         ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
         ///     </para>
         /// </summary>
-        /// <param name="path">
-        ///     The string to be filtered.
-        /// </param>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="path">
+        ///     The string to be filtered.
         /// </param>
         public static string AltCombine(char[] invalidPathChars, string path) =>
             AltCombine(invalidPathChars, new[] { path });
