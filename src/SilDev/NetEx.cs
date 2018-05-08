@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2018-05-08 19:42
+// Version:  2018-05-08 19:49
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -51,7 +51,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the last result defined in the previous call to the <see cref="Ping(Uri)"/> function.
+        ///     Gets the last result defined in the previous call to the <see cref="Ping(Uri, int)"/> function.
         /// </summary>
         public static PingReply LastPingReply { get; private set; }
 

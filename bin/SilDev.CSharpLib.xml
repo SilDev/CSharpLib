@@ -7672,7 +7672,7 @@
         </member>
         <member name="P:SilDev.NetEx.LastPingReply">
             <summary>
-                Gets the last result defined in the previous call to the <see cref="!:Ping(Uri)"/> function.
+                Gets the last result defined in the previous call to the <see cref="M:SilDev.NetEx.Ping(System.Uri,System.Int32)"/> function.
             </summary>
         </member>
         <member name="M:SilDev.NetEx.GetDnsAddresses(SilDev.NetEx.DnsOptions)">
