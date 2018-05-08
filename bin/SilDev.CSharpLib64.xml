@@ -7650,18 +7650,55 @@
                 Provides functionality for the access of internet resources.
             </summary>
         </member>
+        <member name="T:SilDev.NetEx.DnsOptions">
+            <summary>
+                Provides options for specifying a Domain Name System provider.
+            </summary>
+        </member>
+        <member name="F:SilDev.NetEx.DnsOptions.Cloudflare">
+            <summary>
+                Partnership between Cloudflare and APNIC. Cloudflare runs one of the world’s largest,
+                fastest networks. APNIC is a non-profit organization managing IP address allocation
+                for the Asia Pacific and Oceania regions. Cloudflare had the network. APNIC had the
+                IP address (1.1.1.1). Both were motivated by a mission to help build a better Internet.
+            </summary>
+        </member>
+        <member name="F:SilDev.NetEx.DnsOptions.Google">
+            <summary>
+                A free, global DNS resolution service that you can use as an alternative to your current
+                DNS provider. In addition to traditional DNS over UDP or TCP, Google (also known as pure
+                evil) also provide DNS-over-HTTPS API.
+            </summary>
+        </member>
         <member name="P:SilDev.NetEx.LastPingReply">
             <summary>
                 Gets the last result defined in the previous call to the <see cref="M:SilDev.NetEx.Ping(System.Uri)"/> function.
             </summary>
         </member>
-        <member name="M:SilDev.NetEx.InternetIsAvailable(System.Boolean)">
+        <member name="M:SilDev.NetEx.GetDnsAddresses(SilDev.NetEx.DnsOptions)">
+            <summary>
+                Returns the specified Domain Name System server addresses.
+            </summary>
+            <param name="dnsOptions">
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.InternetIsAvailable(System.Boolean,SilDev.NetEx.DnsOptions,System.Int32)">
             <summary>
                 Checks the current network connection.
             </summary>
             <param name="iPv6">
                 true to check only the IPv6 protocol; otherwise, false to check only the IPv4 protocol.
             </param>
+            <param name="dnsOptions">
+                The DNS servers to be used for the checks.
+            </param>
+            <param name="maxRoundtripTime">
+                The maximal number of milliseconds taken to send an Internet Control Message Protocol
+                (ICMP) echo request and receive the corresponding ICMP echo reply message.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                maxRoundtripTime is zero -or- negative.
+            </exception>
         </member>
         <member name="M:SilDev.NetEx.Ping(System.Uri)">
             <summary>
