@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2018-05-08 17:19
+// Version:  2018-05-08 19:42
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -129,7 +129,7 @@ namespace SilDev
             for (var i = 0; i < addresses.GetLength(dimension); i++)
             {
                 var server = addresses[dimension, i];
-                if (Ping(server) <= maxRoundtripTime)
+                if (Ping(server, maxRoundtripTime) < maxRoundtripTime)
                     return true;
             }
             return false;
@@ -143,16 +143,20 @@ namespace SilDev
         /// <param name="uri">
         ///     The address of the server to call.
         /// </param>
-        public static long Ping(Uri uri)
+        /// <param name="timeout">
+        ///     The maximum number of milliseconds (after sending the echo message) to wait for the ICMP
+        ///     echo reply message.
+        /// </param>
+        public static long Ping(Uri uri, int timeout = 3000)
         {
-            long roundtripTime = 3000;
+            long roundtripTime = timeout;
             try
             {
                 if (uri == default(Uri))
                     throw new ArgumentNullException(nameof(uri));
                 using (var ping = new Ping())
                 {
-                    LastPingReply = ping.Send(uri.Host, 3000);
+                    LastPingReply = ping.Send(uri.Host, timeout);
                     if (LastPingReply?.Status == IPStatus.Success)
                         roundtripTime = LastPingReply.RoundtripTime;
                 }
@@ -172,8 +176,12 @@ namespace SilDev
         /// <param name="host">
         ///     The address of the server to call.
         /// </param>
-        public static long Ping(string host) =>
-            Ping(host.ToHttpUri());
+        /// <param name="timeout">
+        ///     The maximum number of milliseconds (after sending the echo message) to wait for the ICMP
+        ///     echo reply message.
+        /// </param>
+        public static long Ping(string host, int timeout = 3000) =>
+            Ping(host.ToHttpUri(), timeout);
 
         /// <summary>
         ///     Converts this <see cref="string"/> to a <see cref="Uri"/>.
