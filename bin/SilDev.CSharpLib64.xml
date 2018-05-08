@@ -7672,7 +7672,7 @@
         </member>
         <member name="P:SilDev.NetEx.LastPingReply">
             <summary>
-                Gets the last result defined in the previous call to the <see cref="M:SilDev.NetEx.Ping(System.Uri)"/> function.
+                Gets the last result defined in the previous call to the <see cref="!:Ping(Uri)"/> function.
             </summary>
         </member>
         <member name="M:SilDev.NetEx.GetDnsAddresses(SilDev.NetEx.DnsOptions)">
@@ -7700,7 +7700,7 @@
                 maxRoundtripTime is zero -or- negative.
             </exception>
         </member>
-        <member name="M:SilDev.NetEx.Ping(System.Uri)">
+        <member name="M:SilDev.NetEx.Ping(System.Uri,System.Int32)">
             <summary>
                 Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified
                 computer, and receive a corresponding ICMP echo replay message from that computer and
@@ -7709,8 +7709,12 @@
             <param name="uri">
                 The address of the server to call.
             </param>
+            <param name="timeout">
+                The maximum number of milliseconds (after sending the echo message) to wait for the ICMP
+                echo reply message.
+            </param>
         </member>
-        <member name="M:SilDev.NetEx.Ping(System.String)">
+        <member name="M:SilDev.NetEx.Ping(System.String,System.Int32)">
             <summary>
                 Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified
                 computer, and receive a corresponding ICMP echo replay message from that computer and
@@ -7718,6 +7722,10 @@
             </summary>
             <param name="host">
                 The address of the server to call.
+            </param>
+            <param name="timeout">
+                The maximum number of milliseconds (after sending the echo message) to wait for the ICMP
+                echo reply message.
             </param>
         </member>
         <member name="M:SilDev.NetEx.ToUri(System.String)">
