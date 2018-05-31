@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2018-05-08 19:49
+// Version:  2018-05-31 07:30
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -1471,14 +1471,17 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null)
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true)
             {
                 try
                 {
                     var path = PathEx.Combine(destPath);
                     if (File.Exists(path))
                         File.Delete(path);
-                    if (!FileIsAvailable(srcUri, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent))
+                    if (checkExists && !FileIsAvailable(srcUri, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent))
                         throw new PathNotFoundException(srcUri.ToString());
                     using (var wc = new WebClientEx(allowAutoRedirect, cookieContainer, timeout))
                     {
@@ -1522,8 +1525,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1549,8 +1555,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1573,8 +1582,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1598,8 +1610,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1619,8 +1634,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, null, null, true, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, null, null, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1637,8 +1655,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, null, null, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, null, null, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1668,8 +1689,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1696,8 +1720,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1723,8 +1750,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1747,8 +1777,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1772,8 +1805,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1794,8 +1830,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1815,8 +1854,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -1833,8 +1875,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public static bool DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public static bool DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource as a <see cref="byte"/> array.
@@ -2691,7 +2736,10 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null)
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true)
             {
                 try
                 {
@@ -2709,8 +2757,7 @@ namespace SilDev
                         Address = srcUri;
                         FileName = path.Split('\\').Last() ?? string.Empty;
                         FilePath = path;
-                        var exists = FileIsAvailable(Address, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
-                        if (!exists)
+                        if (checkExists && !FileIsAvailable(Address, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent))
                             throw new PathNotFoundException(srcUri.ToString());
                         if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                             _webClient.Credentials = new NetworkCredential(userName, password);
@@ -2751,8 +2798,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2778,8 +2828,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2802,8 +2855,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2827,8 +2883,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2848,8 +2907,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, null, null, true, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, null, null, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2866,8 +2928,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri, destPath, null, null, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri, destPath, null, null, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2897,8 +2962,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2925,8 +2993,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2952,8 +3023,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2976,8 +3050,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -3001,8 +3078,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -3023,8 +3103,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, null, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -3044,8 +3127,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, cookieContainer, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -3062,8 +3148,11 @@ namespace SilDev
             /// <param name="userAgent">
             ///     The value of the User-agent HTTP header.
             /// </param>
-            public void DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null) =>
-                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent);
+            /// <param name="checkExists">
+            ///     true to check the file availability before downloading; otherwise, false.
+            /// </param>
+            public void DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null, bool checkExists = true) =>
+                DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent, checkExists);
 
             private void DownloadFile_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
             {
