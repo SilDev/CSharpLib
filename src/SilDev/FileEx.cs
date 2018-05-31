@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-04-03 20:01
+// Version:  2018-05-31 07:11
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,6 +21,7 @@ namespace SilDev
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="File"/> class to perform file
@@ -149,6 +150,148 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Opens a binary file, reads the contents of the file into a byte array, and then
+        ///     closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to open for reading.
+        /// </param>
+        public static byte[] ReadAllBytes(string path)
+        {
+            var file = PathEx.Combine(path);
+            try
+            {
+                return File.ReadAllBytes(file);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return default(byte[]);
+        }
+
+        /// <summary>
+        ///     Opens a file, reads all lines of the file with the specified encoding, and then
+        ///     closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to open for reading.
+        /// </param>
+        /// <param name="encoding">
+        ///     The encoding applied to the contents of the file.
+        /// </param>
+        public static string[] ReadAllLines(string path, Encoding encoding = null)
+        {
+            var file = PathEx.Combine(path);
+            try
+            {
+                return encoding != null ? File.ReadAllLines(file, encoding) : File.ReadAllLines(file);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return default(string[]);
+        }
+
+        /// <summary>
+        ///     Opens a file, reads all lines of the file with the specified encoding, and then
+        ///     closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to open for reading.
+        /// </param>
+        /// <param name="encoding">
+        ///     The encoding applied to the contents of the file.
+        /// </param>
+        public static string ReadAllText(string path, Encoding encoding = null)
+        {
+            var file = PathEx.Combine(path);
+            try
+            {
+                return encoding != null ? File.ReadAllText(file, encoding) : File.ReadAllText(file);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return default(string);
+        }
+
+        /// <summary>
+        ///     Appends lines to a file by using a specified encoding, and then closes the file.
+        ///     If the specified file does not exist, this method creates a file, writes the
+        ///     specified lines to the file, and then closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to append the lines to. The file is created if it doesn't already exist.
+        /// </param>
+        /// <param name="contents">
+        ///     The lines to append to the file.
+        /// </param>
+        /// <param name="encoding">
+        ///     The character encoding to use.
+        /// </param>
+        public static bool AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding = null)
+        {
+            var file = PathEx.Combine(path);
+            try
+            {
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                if (encoding != null)
+                    File.AppendAllLines(file, contents, encoding);
+                else
+                    File.AppendAllLines(file, contents);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            return File.Exists(file);
+        }
+
+        /// <summary>
+        ///     Appends the specified string to the file, creating the file if it does not already
+        ///     exist.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to append the specified string to.
+        /// </param>
+        /// <param name="contents">
+        ///     The string to append to the file.
+        /// </param>
+        /// <param name="encoding">
+        ///     The character encoding to use.
+        /// </param>
+        public static bool AppendAllText(string path, string contents, Encoding encoding = null)
+        {
+            var file = PathEx.Combine(path);
+            try
+            {
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                if (encoding != null)
+                    File.AppendAllText(file, contents, encoding);
+                else
+                    File.AppendAllText(file, contents);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            return File.Exists(file);
         }
 
         /// <summary>
@@ -292,6 +435,187 @@ namespace SilDev
                 Log.Write(ex);
             }
             return true;
+        }
+
+        /// <summary>
+        ///     Creates a new file, writes the specified byte array to the file, and then
+        ///     closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to write to.
+        /// </param>
+        /// <param name="bytes">
+        ///     The bytes to write to the file.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool WriteAllBytes(string path, IEnumerable<byte> bytes, bool overwrite = true)
+        {
+            var file = PathEx.Combine(path);
+            if (!overwrite && File.Exists(file))
+                return true;
+            try
+            {
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                File.WriteAllBytes(file, bytes.ToArray());
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            return File.Exists(file);
+        }
+
+        /// <summary>
+        ///     Creates a new file by using the specified encoding, writes a collection of
+        ///     strings to the file, and then closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to write to.
+        /// </param>
+        /// <param name="contents">
+        ///     The lines to write to the file.
+        /// </param>
+        /// <param name="encoding">
+        ///     The character encoding to use.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding, bool overwrite = true)
+        {
+            var file = PathEx.Combine(path);
+            if (!overwrite && File.Exists(file))
+                return true;
+            try
+            {
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                File.WriteAllLines(file, contents, encoding);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            return File.Exists(file);
+        }
+
+        /// <summary>
+        ///     Creates a new file, writes a collection of strings to the file, and then
+        ///     closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to write to.
+        /// </param>
+        /// <param name="contents">
+        ///     The lines to write to the file.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool WriteAllLines(string path, IEnumerable<string> contents, bool overwrite = true)
+        {
+            var file = PathEx.Combine(path);
+            if (!overwrite && File.Exists(file))
+                return true;
+            try
+            {
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                File.WriteAllLines(file, contents);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            return File.Exists(file);
+        }
+
+        /// <summary>
+        ///     Creates a new file, writes the specified string to the file using the specified
+        ///     encoding, and then closes the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to write to.
+        /// </param>
+        /// <param name="contents">
+        ///     The string to write to the file.
+        /// </param>
+        /// <param name="encoding">
+        ///     The encoding to apply to the string.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool WriteAllText(string path, string contents, Encoding encoding, bool overwrite = true)
+        {
+            var file = PathEx.Combine(path);
+            if (!overwrite && File.Exists(file))
+                return true;
+            try
+            {
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                File.WriteAllText(file, contents, encoding);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            return File.Exists(file);
+        }
+
+        /// <summary>
+        ///     Creates a new file, writes the specified string to the file, and then closes
+        ///     the file.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to write to.
+        /// </param>
+        /// <param name="contents">
+        ///     The string to write to the file.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool WriteAllText(string path, string contents, bool overwrite = true)
+        {
+            var file = PathEx.Combine(path);
+            if (!overwrite && File.Exists(file))
+                return true;
+            try
+            {
+                var dir = Path.GetDirectoryName(file);
+                if (string.IsNullOrEmpty(dir))
+                    throw new ArgumentNullException(nameof(dir));
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                File.WriteAllText(file, contents);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+            return File.Exists(file);
         }
 
         /// <summary>
