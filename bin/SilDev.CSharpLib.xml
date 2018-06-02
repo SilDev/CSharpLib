@@ -129,6 +129,56 @@
               Looks up a localized string similar to %TEMP%\tmp-{0}.
             </summary>
         </member>
+        <member name="T:SilDev.AssemblyInfo">
+            <summary>
+                Provides information for the current assembly.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Company">
+            <summary>
+                Gets company name information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Configuration">
+            <summary>
+                Gets configuration information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Copyright">
+            <summary>
+                Gets copyright information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Description">
+            <summary>
+                Gets description information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.FileVersion">
+            <summary>
+                Gets file version information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Product">
+            <summary>
+                Gets product information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Title">
+            <summary>
+                Gets title information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Trademark">
+            <summary>
+                Gets trademark information.
+            </summary>
+        </member>
+        <member name="P:SilDev.AssemblyInfo.Version">
+            <summary>
+                Gets version information.
+            </summary>
+        </member>
         <member name="T:SilDev.Drawing.ColorEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Drawing.Color"/> class.
