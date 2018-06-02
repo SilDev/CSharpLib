@@ -145,7 +145,8 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex);
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
                 return false;
             }
         }
