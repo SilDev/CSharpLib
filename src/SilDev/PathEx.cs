@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-05-07 03:53
+// Version:  2018-06-03 13:12
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -296,6 +296,7 @@ namespace SilDev
             var path = string.Empty;
             try
             {
+                path = Environment.GetFolderPath(specialFolder);
                 if (paths?.Any() != true)
                     throw new ArgumentNullException(nameof(paths));
                 var separators = new[]
@@ -303,7 +304,6 @@ namespace SilDev
                     Path.DirectorySeparatorChar,
                     Path.AltDirectorySeparatorChar
                 };
-                path = Environment.GetFolderPath(specialFolder);
                 if (!string.IsNullOrEmpty(path))
                     path += Path.DirectorySeparatorChar;
                 IEnumerable<string> plains;
