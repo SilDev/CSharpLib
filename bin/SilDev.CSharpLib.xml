@@ -6439,17 +6439,6 @@
                 Provides basic functionality for the JSON format.
             </summary>
         </member>
-        <member name="M:SilDev.Json.Create(System.String,System.Object)">
-            <summary>
-                Creates a new JSON file with the specified object data.
-            </summary>
-            <param name="path">
-                The full path of the file to read.
-            </param>
-            <param name="obj">
-                The object to convert.
-            </param>
-        </member>
         <member name="M:SilDev.Json.ReadAll(System.String)">
             <summary>
                 Retrieves the full content of the specified JSON file.
@@ -6467,6 +6456,39 @@
             </param>
             <param name="keys">
                 An array of keys to navigate to the exact position of the value.
+            </param>
+        </member>
+        <member name="M:SilDev.Json.String(System.Object,System.Int32,System.Int32)">
+            <summary>
+                Converts an object to a JSON string.
+            </summary>
+            <param name="obj">
+                The object to convert.
+            </param>
+            <param name="maxLength">
+                Gets or sets the maximum length of JSON strings that are accepted by the
+                <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> class.
+            </param>
+            <param name="recursionLimit">
+                Gets or sets the limit for constraining the number of object levels to process.
+            </param>
+        </member>
+        <member name="M:SilDev.Json.Write(System.Object,System.String,System.Int32,System.Int32)">
+            <summary>
+                Creates a new JSON file with the specified object data.
+            </summary>
+            <param name="obj">
+                The object to convert.
+            </param>
+            <param name="path">
+                The full path of the file to read.
+            </param>
+            <param name="maxLength">
+                Gets or sets the maximum length of JSON strings that are accepted by the
+                <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> class.
+            </param>
+            <param name="recursionLimit">
+                Gets or sets the limit for constraining the number of object levels to process.
             </param>
         </member>
         <member name="T:SilDev.KeyState">
