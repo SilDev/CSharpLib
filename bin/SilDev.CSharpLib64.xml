@@ -2193,6 +2193,14 @@
                 The object to check.
             </param>
         </member>
+        <member name="M:SilDev.Comparison.IsNullable``1(``0)">
+            <summary>
+                Determines whether the specified value is nullable.
+            </summary>
+            <param name="value">
+                The value to check.
+            </param>
+        </member>
         <member name="M:SilDev.Comparison.IsBetween``1(``0,``0,``0)">
             <summary>
                 Determines whether the value of this object instance is between two specified
@@ -4968,7 +4976,7 @@
                 Searches for the specified one-dimensional array and returns the index of its first
                 occurrence in another one-dimensional array.
             </summary>
-            <typeparam name="T">
+            <typeparam name="TElement">
                 The type of the elements of the array.
             </typeparam>
             <param name="source">
@@ -4986,7 +4994,7 @@
                 Determines whether a specified sequence of elements occurs within this sequence of
                 elements.
             </summary>
-            <typeparam name="T">
+            <typeparam name="TElement">
                 The type of the elements of the array.
             </typeparam>
             <param name="source">
@@ -5487,6 +5495,74 @@
                 Provides static methods based on the <see cref="T:System.IO.File"/> class to perform file
                 operations.
             </summary>
+        </member>
+        <member name="M:SilDev.FileEx.Serialize``1(System.String,``0,System.Boolean)">
+            <summary>
+                Creates a new file, writes the specified object graph into to the file, and then
+                closes the file.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="path">
+                The file to write to.
+            </param>
+            <param name="value">
+                The object graph to write to the file.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Deserialize``1(``0,System.String)">
+            <summary>
+                Deserializes specified file into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the elements of result.
+            </typeparam>
+            <param name="defValue">
+                The default value.
+            </param>
+            <param name="path">
+                The file to deserialize.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Deserialize``1(``0,System.String[])">
+            <summary>
+                Deserializes the first valid file of the specified files into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the elements of result.
+            </typeparam>
+            <param name="defValue">
+                The default value.
+            </param>
+            <param name="paths">
+                The files to deserialize.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Deserialize``1(System.String)">
+            <summary>
+                Deserializes specified file into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the elements of result.
+            </typeparam>
+            <param name="path">
+                The file to deserialize.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.Deserialize``1(System.String[])">
+            <summary>
+                Deserializes the first valid file of the specified files into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the elements of result.
+            </typeparam>
+            <param name="paths">
+                The files to deserialize.
+            </param>
         </member>
         <member name="M:SilDev.FileEx.Exists(System.String)">
             <summary>
@@ -13025,6 +13101,9 @@
             <summary>
                 Serializes this object graph into a sequence of bytes.
             </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
             <param name="value">
                 The object graph to convert.
             </param>
@@ -13033,6 +13112,9 @@
             <summary>
                 Deserializes this sequence of bytes into an object graph.
             </summary>
+            <typeparam name="TResult">
+                The type of the elements of result.
+            </typeparam>
             <param name="bytes">
                 The sequence of bytes to convert.
             </param>
@@ -13338,8 +13420,8 @@
             <summary>
                 Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
             </summary>
-            <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
+            <typeparam name="TResult">
+                The type of the elements of result.
             </typeparam>
             <param name="value">
                 The value to convert.
@@ -13352,8 +13434,8 @@
             <summary>
                 Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
             </summary>
-            <typeparam name="T">
-                The value <see cref="T:System.Type"/>.
+            <typeparam name="TResult">
+                The type of the elements of result.
             </typeparam>
             <param name="value">
                 The value to convert.
@@ -13364,6 +13446,29 @@
             <param name="defValue">
                 The default value.
             </param>
+        </member>
+        <member name="M:SilDev.Reorganize.Update``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+            <summary>
+                Updates an element with the provided key and value of the specified dictionary.
+            </summary>
+            <typeparam name="TKey">
+                The type of the keys in the dictionary.
+            </typeparam>
+            <typeparam name="TValue">
+                The type of the values in the dictionary.
+            </typeparam>
+            <param name="source">
+                The generic collection of key/value pairs.
+            </param>
+            <param name="key">
+                The key of the element to update.
+            </param>
+            <param name="value">
+                The new value.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source or key is null.
+            </exception>
         </member>
         <member name="T:SilDev.ResourcesEx">
             <summary>
