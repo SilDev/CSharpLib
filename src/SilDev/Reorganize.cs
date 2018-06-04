@@ -249,7 +249,7 @@ namespace SilDev
         ///     Serializes this object graph into a sequence of bytes.
         /// </summary>
         /// <typeparam name="TSource">
-        ///     The type of the elements of source.
+        ///     The type of the source.
         /// </typeparam>
         /// <param name="value">
         ///     The object graph to convert.
@@ -278,7 +278,7 @@ namespace SilDev
         ///     Deserializes this sequence of bytes into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type of the elements of result.
+        ///     The type of the result.
         /// </typeparam>
         /// <param name="bytes">
         ///     The sequence of bytes to convert.
@@ -953,7 +953,7 @@ namespace SilDev
         ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type of the elements of result.
+        ///     The type of the result.
         /// </typeparam>
         /// <param name="value">
         ///     The value to convert.
@@ -972,7 +972,7 @@ namespace SilDev
         ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type of the elements of result.
+        ///     The type of the result.
         /// </typeparam>
         /// <param name="value">
         ///     The value to convert.

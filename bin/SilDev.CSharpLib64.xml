@@ -5502,7 +5502,7 @@
                 closes the file.
             </summary>
             <typeparam name="TSource">
-                The type of the elements of source.
+                The type of the source.
             </typeparam>
             <param name="path">
                 The file to write to.
@@ -5519,7 +5519,7 @@
                 Deserializes specified file into an object graph.
             </summary>
             <typeparam name="TResult">
-                The type of the elements of result.
+                The type of the result.
             </typeparam>
             <param name="defValue">
                 The default value.
@@ -5533,7 +5533,7 @@
                 Deserializes the first valid file of the specified files into an object graph.
             </summary>
             <typeparam name="TResult">
-                The type of the elements of result.
+                The type of the result.
             </typeparam>
             <param name="defValue">
                 The default value.
@@ -5547,7 +5547,7 @@
                 Deserializes specified file into an object graph.
             </summary>
             <typeparam name="TResult">
-                The type of the elements of result.
+                The type of the result.
             </typeparam>
             <param name="path">
                 The file to deserialize.
@@ -5558,7 +5558,7 @@
                 Deserializes the first valid file of the specified files into an object graph.
             </summary>
             <typeparam name="TResult">
-                The type of the elements of result.
+                The type of the result.
             </typeparam>
             <param name="paths">
                 The files to deserialize.
@@ -13102,7 +13102,7 @@
                 Serializes this object graph into a sequence of bytes.
             </summary>
             <typeparam name="TSource">
-                The type of the elements of source.
+                The type of the source.
             </typeparam>
             <param name="value">
                 The object graph to convert.
@@ -13113,7 +13113,7 @@
                 Deserializes this sequence of bytes into an object graph.
             </summary>
             <typeparam name="TResult">
-                The type of the elements of result.
+                The type of the result.
             </typeparam>
             <param name="bytes">
                 The sequence of bytes to convert.
@@ -13421,7 +13421,7 @@
                 Converts the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
             </summary>
             <typeparam name="TResult">
-                The type of the elements of result.
+                The type of the result.
             </typeparam>
             <param name="value">
                 The value to convert.
@@ -13435,7 +13435,7 @@
                 Try to convert the given <see cref="T:System.Object"/> value to the specified <see cref="T:System.Type"/>.
             </summary>
             <typeparam name="TResult">
-                The type of the elements of result.
+                The type of the result.
             </typeparam>
             <param name="value">
                 The value to convert.

@@ -35,7 +35,7 @@ namespace SilDev
         ///     closes the file.
         /// </summary>
         /// <typeparam name="TSource">
-        ///     The type of the elements of source.
+        ///     The type of the source.
         /// </typeparam>
         /// <param name="path">
         ///     The file to write to.
@@ -69,7 +69,7 @@ namespace SilDev
         ///     Deserializes specified file into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type of the elements of result.
+        ///     The type of the result.
         /// </typeparam>
         /// <param name="defValue">
         ///     The default value.
@@ -101,7 +101,7 @@ namespace SilDev
         ///     Deserializes the first valid file of the specified files into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type of the elements of result.
+        ///     The type of the result.
         /// </typeparam>
         /// <param name="defValue">
         ///     The default value.
@@ -132,7 +132,7 @@ namespace SilDev
         ///     Deserializes specified file into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type of the elements of result.
+        ///     The type of the result.
         /// </typeparam>
         /// <param name="path">
         ///     The file to deserialize.
@@ -144,7 +144,7 @@ namespace SilDev
         ///     Deserializes the first valid file of the specified files into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type of the elements of result.
+        ///     The type of the result.
         /// </typeparam>
         /// <param name="paths">
         ///     The files to deserialize.
