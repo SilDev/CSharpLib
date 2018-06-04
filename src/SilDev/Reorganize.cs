@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-06-04 09:57
+// Version:  2018-06-04 10:09
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
@@ -995,6 +996,46 @@ namespace SilDev
                 result = defValue;
                 return false;
             }
+        }
+
+        /// <summary>
+        ///     Updates an element with the provided key and value of the specified dictionary.
+        /// </summary>
+        /// <typeparam name="TKey">
+        ///     The type of the keys in the dictionary.
+        /// </typeparam>
+        /// <typeparam name="TValue">
+        ///     The type of the values in the dictionary.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The generic collection of key/value pairs.
+        /// </param>
+        /// <param name="key">
+        ///     The key of the element to update.
+        /// </param>
+        /// <param name="value">
+        ///     The new value.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source or key is null.
+        /// </exception>
+        public static void Update<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue value) where TValue : IComparable, IComparable<TValue>
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (source.ContainsKey(key))
+            {
+                if (value == null)
+                {
+                    source.Remove(key);
+                    return;
+                }
+                source[key] = value;
+                return;
+            }
+            source.Add(key, value);
         }
     }
 }
