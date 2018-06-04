@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-05-31 07:11
+// Version:  2018-06-04 09:46
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,6 +21,7 @@ namespace SilDev
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
 
     /// <summary>
@@ -29,6 +30,128 @@ namespace SilDev
     /// </summary>
     public static class FileEx
     {
+        /// <summary>
+        ///     Creates a new file, writes the specified object graph into to the file, and then
+        ///     closes the file.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of source.
+        /// </typeparam>
+        /// <param name="path">
+        ///     The file to write to.
+        /// </param>
+        /// <param name="value">
+        ///     The object graph to write to the file.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool Serialize<TSource>(string path, TSource value, bool overwrite = true)
+        {
+            try
+            {
+                var dest = PathEx.Combine(path);
+                using (var ms = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
+                {
+                    var bf = new BinaryFormatter();
+                    bf.Serialize(ms, value);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Deserializes specified file into an object graph.
+        /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type of the elements of result.
+        /// </typeparam>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        /// <param name="path">
+        ///     The file to deserialize.
+        /// </param>
+        public static TResult Deserialize<TResult>(TResult defValue, string path)
+        {
+            try
+            {
+                var src = PathEx.Combine(path);
+                TResult result;
+                using (var fs = new FileStream(src, FileMode.Open))
+                {
+                    var bf = new BinaryFormatter();
+                    result = (TResult)bf.Deserialize(fs);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return defValue;
+            }
+        }
+
+        /// <summary>
+        ///     Deserializes the first valid file of the specified files into an object graph.
+        /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type of the elements of result.
+        /// </typeparam>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        /// <param name="paths">
+        ///     The files to deserialize.
+        /// </param>
+        public static TResult Deserialize<TResult>(TResult defValue, params string[] paths)
+        {
+            try
+            {
+                foreach (var path in paths)
+                {
+                    var result = Deserialize(defValue, path);
+                    if (result.Equals(defValue))
+                        continue;
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return defValue;
+        }
+
+        /// <summary>
+        ///     Deserializes specified file into an object graph.
+        /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type of the elements of result.
+        /// </typeparam>
+        /// <param name="path">
+        ///     The file to deserialize.
+        /// </param>
+        public static TResult Deserialize<TResult>(string path) =>
+            Deserialize(default(TResult), path);
+
+        /// <summary>
+        ///     Deserializes the first valid file of the specified files into an object graph.
+        /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type of the elements of result.
+        /// </typeparam>
+        /// <param name="paths">
+        ///     The files to deserialize.
+        /// </param>
+        public static TResult Deserialize<TResult>(params string[] paths) =>
+            Deserialize(default(TResult), paths);
+
         /// <summary>
         ///     Determines whether the specified file exists.
         /// </summary>
