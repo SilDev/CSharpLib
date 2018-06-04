@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2018-03-30 17:49
+// Version:  2018-06-04 09:56
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -58,6 +58,22 @@ namespace SilDev
                 Log.Write(ex);
                 return false;
             }
+        }
+
+        /// <summary>
+        ///     Determines whether the specified value is nullable.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to check.
+        /// </param>
+        public static bool IsNullable<TSource>(this TSource value)
+        {
+            if (value == null)
+                return true;
+            var type = typeof(TSource);
+            if (!type.IsValueType)
+                return true;
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         /// <summary>
