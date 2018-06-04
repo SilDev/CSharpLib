@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2018-03-26 18:47
+// Version:  2018-06-04 09:57
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -720,7 +720,7 @@ namespace SilDev
         ///     Searches for the specified one-dimensional array and returns the index of its first
         ///     occurrence in another one-dimensional array.
         /// </summary>
-        /// <typeparam name="T">
+        /// <typeparam name="TElement">
         ///     The type of the elements of the array.
         /// </typeparam>
         /// <param name="source">
@@ -732,7 +732,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static IEnumerable<int> IndexOf<T>(T[] source, T[] target)
+        public static IEnumerable<int> IndexOf<TElement>(TElement[] source, TElement[] target)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -747,7 +747,7 @@ namespace SilDev
         ///     Determines whether a specified sequence of elements occurs within this sequence of
         ///     elements.
         /// </summary>
-        /// <typeparam name="T">
+        /// <typeparam name="TElement">
         ///     The type of the elements of the array.
         /// </typeparam>
         /// <param name="source">
@@ -756,7 +756,7 @@ namespace SilDev
         /// <param name="targets">
         ///     The sequence of elements to seek.
         /// </param>
-        public static bool ContainsEx<T>(this IEnumerable<T> source, params T[][] targets)
+        public static bool ContainsEx<TElement>(this IEnumerable<TElement> source, params TElement[][] targets)
         {
             try
             {

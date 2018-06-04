@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-02-26 18:30
+// Version:  2018-06-04 09:57
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -247,10 +247,13 @@ namespace SilDev
         /// <summary>
         ///     Serializes this object graph into a sequence of bytes.
         /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of source.
+        /// </typeparam>
         /// <param name="value">
         ///     The object graph to convert.
         /// </param>
-        public static byte[] SerializeObject<T>(this T value)
+        public static byte[] SerializeObject<TSource>(this TSource value)
         {
             try
             {
@@ -273,13 +276,16 @@ namespace SilDev
         /// <summary>
         ///     Deserializes this sequence of bytes into an object graph.
         /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type of the elements of result.
+        /// </typeparam>
         /// <param name="bytes">
         ///     The sequence of bytes to convert.
         /// </param>
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static T DeserializeObject<T>(this byte[] bytes, T defValue = default(T))
+        public static TResult DeserializeObject<TResult>(this byte[] bytes, TResult defValue = default(TResult))
         {
             try
             {
@@ -291,7 +297,7 @@ namespace SilDev
                     ms.Seek(0, SeekOrigin.Begin);
                     obj = bf.Deserialize(ms);
                 }
-                return (T)obj;
+                return (TResult)obj;
             }
             catch (Exception ex)
             {
@@ -945,8 +951,8 @@ namespace SilDev
         /// <summary>
         ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
         /// </summary>
-        /// <typeparam name="T">
-        ///     The value <see cref="Type"/>.
+        /// <typeparam name="TResult">
+        ///     The type of the elements of result.
         /// </typeparam>
         /// <param name="value">
         ///     The value to convert.
@@ -954,18 +960,18 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static T Parse<T>(this object value, T defValue = default(T))
+        public static TResult Parse<TResult>(this object value, TResult defValue = default(TResult))
         {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            var result = (T)converter.ConvertFrom(value);
+            var converter = TypeDescriptor.GetConverter(typeof(TResult));
+            var result = (TResult)converter.ConvertFrom(value);
             return Comparison.IsNotEmpty(result) ? result : defValue;
         }
 
         /// <summary>
         ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
         /// </summary>
-        /// <typeparam name="T">
-        ///     The value <see cref="Type"/>.
+        /// <typeparam name="TResult">
+        ///     The type of the elements of result.
         /// </typeparam>
         /// <param name="value">
         ///     The value to convert.
@@ -976,12 +982,12 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static bool TryParse<T>(this object value, out dynamic result, T defValue = default(T))
+        public static bool TryParse<TResult>(this object value, out dynamic result, TResult defValue = default(TResult))
         {
             try
             {
-                var converter = TypeDescriptor.GetConverter(typeof(T));
-                result = (T)converter.ConvertFrom(value);
+                var converter = TypeDescriptor.GetConverter(typeof(TResult));
+                result = (TResult)converter.ConvertFrom(value);
                 return true;
             }
             catch
