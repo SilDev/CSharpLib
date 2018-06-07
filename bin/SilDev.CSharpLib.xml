@@ -718,10 +718,8 @@
         </member>
         <member name="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})">
             <summary>
-                <para>
-                    Creates a small split button on the right side of this <see cref="T:System.Windows.Forms.Button"/> which is
-                    mostly used for drop down menu controls.
-                </para>
+                Creates a small split button on the right side of this <see cref="T:System.Windows.Forms.Button"/> which is mostly
+                used for drop down menu controls.
                 <para>
                     Please note that the <see cref="T:System.Windows.Forms.FlatStyle"/> is overwritten to <see cref="F:System.Windows.Forms.FlatStyle.Flat"/>
                     which is required to apply highlight effects.
@@ -856,9 +854,7 @@
                 The type of animation.
             </param>
             <param name="time">
-                <para>
-                    The time it takes to play the animation, in milliseconds.
-                </para>
+                The time it takes to play the animation, in milliseconds.
                 <para>
                     Please note that this parameter is ignored if the animation is set to
                     <see cref="F:SilDev.Forms.ContextMenuStripEx.Animations.Default"/>.
@@ -1027,9 +1023,7 @@
         </member>
         <member name="M:SilDev.Forms.FormEx.Plus(System.Windows.Forms.Form,SilDev.Forms.FormEx.PlusSettings)">
             <summary>
-                <para>
-                    Determines special settings for the specified <see cref="T:System.Windows.Forms.Form"/>.
-                </para>
+                Determines special settings for the specified <see cref="T:System.Windows.Forms.Form"/>.
                 <para>
                     Hint: This function should be called before the <see cref="T:System.Windows.Forms.Form"/> is created.
                 </para>
@@ -1155,47 +1149,47 @@
                 value that is returned to Windows in response to handling the <see cref="T:System.Windows.Forms.Message"/>.
             </returns>
         </member>
-        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.SetResizingBorders(SilDev.TaskBar.Location)">
+        <member name="M:SilDev.Forms.FormEx.BorderlessResizable.SetResizingBorders(SilDev.TaskBarLocation)">
             <summary>
                 Sets the <see cref="P:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorders"/> flags depending on the specified
-                <see cref="T:SilDev.TaskBar.Location"/> flag.
+                <see cref="T:SilDev.TaskBarLocation"/> flag.
                 <para>
-                    Result for <see cref="F:SilDev.TaskBar.Location.Left"/>:
+                    Result for <see cref="F:SilDev.TaskBarLocation.Left"/>:
                     <code>
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Right"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Bottom"/> |
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomRight"/>
                     </code>
                 </para>
                 <para>
-                    Result for <see cref="F:SilDev.TaskBar.Location.Right"/>:
+                    Result for <see cref="F:SilDev.TaskBarLocation.Right"/>:
                     <code>
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Left"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Bottom"/> |
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomLeft"/>
                     </code>
                 </para>
                 <para>
-                    Result for <see cref="F:SilDev.TaskBar.Location.Top"/>:
+                    Result for <see cref="F:SilDev.TaskBarLocation.Top"/>:
                     <code>
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Right"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Bottom"/> |
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.BottomRight"/>
                     </code>
                 </para>
                 <para>
-                    Result for <see cref="F:SilDev.TaskBar.Location.Bottom"/>:
+                    Result for <see cref="F:SilDev.TaskBarLocation.Bottom"/>:
                     <code>
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Right"/> | <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.Top"/> |
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.TopRight"/>
                     </code>
                 </para>
                 <para>
-                    Result for <see cref="F:SilDev.TaskBar.Location.Hidden"/>:
+                    Result for <see cref="F:SilDev.TaskBarLocation.Hidden"/>:
                     <code>
                         <see cref="F:SilDev.Forms.FormEx.BorderlessResizable.ResizingBorderFlags.All"/>
                     </code>
                 </para>
             </summary>
             <param name="taskBarLocation">
-                The <see cref="T:SilDev.TaskBar.Location"/> flag.
+                The <see cref="T:SilDev.TaskBarLocation"/> flag.
             </param>
         </member>
         <member name="M:SilDev.Forms.FormEx.BorderlessResizable.OnLoad(System.EventArgs)">
@@ -1340,12 +1334,10 @@
         </member>
         <member name="T:SilDev.Forms.MessageBoxEx">
             <summary>
-                <para>
-                    Displays a message window, also known as a dialog box, based on <see cref="T:System.Windows.Forms.MessageBox"/>,
-                    which presents a message to the user. It is a modal window, blocking other actions in the
-                    application until the user closes it. A <see cref="T:SilDev.Forms.MessageBoxEx"/> can contain text,
-                    buttons, and symbols that inform and instruct the user.
-                </para>
+                Displays a message window, also known as a dialog box, based on <see cref="T:System.Windows.Forms.MessageBox"/>,
+                which presents a message to the user. It is a modal window, blocking other actions in the
+                application until the user closes it. A <see cref="T:SilDev.Forms.MessageBoxEx"/> can contain text,
+                buttons, and symbols that inform and instruct the user.
                 <para>
                     The difference to <see cref="T:System.Windows.Forms.MessageBox"/> is that the message window displays
                     in the center of the specified <see cref="T:System.Windows.Forms.IWin32Window"/> owner object.
@@ -2173,11 +2165,91 @@
                 The sequence of bytes to decompress.
             </param>
         </member>
-        <member name="T:SilDev.Compaction.Zip7Helper">
+        <member name="T:SilDev.Compaction.SevenZipHelper">
             <summary>
-                ***This is an undocumented class and can be changed or removed in the future
-                without futher notice.
+                Provides functionality for compressing and decompressing files with 7-Zip.
             </summary>
+        </member>
+        <member name="T:SilDev.Compaction.SevenZipHelper.CompressMode">
+            <summary>
+                Specifies how to compress.
+            </summary>
+        </member>
+        <member name="F:SilDev.Compaction.SevenZipHelper.CompressMode.Default">
+            <summary>
+                -t7z -mx -mmt -ms
+            </summary>
+        </member>
+        <member name="F:SilDev.Compaction.SevenZipHelper.CompressMode.Ultra">
+            <summary>
+                -t7z -mx -m0=lzma -md=128m -mfb=256 -ms
+            </summary>
+        </member>
+        <member name="P:SilDev.Compaction.SevenZipHelper.Location">
+            <summary>
+                The location of the 7-Zip executable file.
+            </summary>
+        </member>
+        <member name="P:SilDev.Compaction.SevenZipHelper.FilePath">
+            <summary>
+                The file path of the 7-Zip executable file.
+            </summary>
+        </member>
+        <member name="M:SilDev.Compaction.SevenZipHelper.Zip(System.String,System.String,SilDev.Compaction.SevenZipHelper.CompressMode,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
+            <summary>
+                Compress the specified file, or all files of the specified directory, to the
+                specified file on the file system.
+            </summary>
+            <param name="srcDirOrFile">
+                The path of the file or directory to compress.
+            </param>
+            <param name="destFile">
+                The path of the archive.
+            </param>
+            <param name="compressMode">
+                One of the enumeration values that indicates how to compress the file/s.
+            </param>
+            <param name="windowStyle">
+                The window state to use when the 7-Zip process is started.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/> if the process
+                has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Compaction.SevenZipHelper.Zip(System.String,System.String,System.Diagnostics.ProcessWindowStyle)">
+            <summary>
+                Compress the specified file, or all files of the specified directory, to the
+                specified file on the file system.
+            </summary>
+            <param name="srcDirOrFile">
+                The path of the file or directory to compress.
+            </param>
+            <param name="destFile">
+                The path of the archive.
+            </param>
+            <param name="windowStyle">
+                The window state to use when the 7-Zip process is started.
+            </param>
+        </member>
+        <member name="M:SilDev.Compaction.SevenZipHelper.Unzip(System.String,System.String,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
+            <summary>
+                Extracts all the files in the specified archive to the specified directory on the
+                file system.
+            </summary>
+            <param name="srcFile">
+                The path of the archive to extract.
+            </param>
+            <param name="destDir">
+                The path to the directory to place the extracted files in.
+            </param>
+            <param name="windowStyle">
+                The window state to use when the 7-Zip process is started.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/> if the process
+                has been started; otherwise, false.
+            </param>
         </member>
         <member name="T:SilDev.Comparison">
             <summary>
@@ -2510,10 +2582,461 @@
                 The second object to compare.
             </param>
         </member>
+        <member name="T:SilDev.EncodingAlgorithms">
+            <summary>
+                Specifies enumerated constants used to encode and decode data.
+            </summary>
+        </member>
+        <member name="F:SilDev.EncodingAlgorithms.Base64">
+            <summary>
+                Base64.
+            </summary>
+        </member>
+        <member name="F:SilDev.EncodingAlgorithms.Base85">
+            <summary>
+                Base85, also called Ascii85.
+            </summary>
+        </member>
+        <member name="F:SilDev.EncodingAlgorithms.Base91">
+            <summary>
+                basE91.
+            </summary>
+        </member>
+        <member name="F:SilDev.EncodingAlgorithms.Binary">
+            <summary>
+                Base-2 binary.
+            </summary>
+        </member>
+        <member name="F:SilDev.EncodingAlgorithms.Hex">
+            <summary>
+                Hexadecimal.
+            </summary>
+        </member>
+        <member name="T:SilDev.ChecksumAlgorithms">
+            <summary>
+                Specifies enumerated constants used to encrypt data.
+            </summary>
+        </member>
+        <member name="F:SilDev.ChecksumAlgorithms.Md5">
+            <summary>
+                Message-Digest 5.
+            </summary>
+        </member>
+        <member name="F:SilDev.ChecksumAlgorithms.Sha1">
+            <summary>
+                Secure Hash Algorithm 1.
+            </summary>
+        </member>
+        <member name="F:SilDev.ChecksumAlgorithms.Sha256">
+            <summary>
+                Secure Hash Algorithm 2 (SHA-256).
+            </summary>
+        </member>
+        <member name="F:SilDev.ChecksumAlgorithms.Sha384">
+            <summary>
+                Secure Hash Algorithm 2 (SHA-384).
+            </summary>
+        </member>
+        <member name="F:SilDev.ChecksumAlgorithms.Sha512">
+            <summary>
+                Secure Hash Algorithm 2 (SHA-512).
+            </summary>
+        </member>
+        <member name="T:SilDev.RijndaelAlgorithms">
+            <summary>
+                Specifies enumerated constants used to encrypt and decrypt data.
+            </summary>
+        </member>
+        <member name="F:SilDev.RijndaelAlgorithms.Aes128">
+            <summary>
+                Advanced Encryption Standard (AES-128).
+            </summary>
+        </member>
+        <member name="F:SilDev.RijndaelAlgorithms.Aes192">
+            <summary>
+                Advanced Encryption Standard (AES-192).
+            </summary>
+        </member>
+        <member name="F:SilDev.RijndaelAlgorithms.Aes256">
+            <summary>
+                Advanced Encryption Standard (AES-256).
+            </summary>
+        </member>
         <member name="T:SilDev.Crypto">
             <summary>
                 Provides functionality for data encryption and decryption.
             </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Encode(System.Byte[],System.String,System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Encodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encode.
+            </param>
+            <param name="prefixMark">
+                The prefix mark.
+            </param>
+            <param name="suffixMark">
+                The suffix mark.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encode(System.Byte[],SilDev.EncodingAlgorithms)">
+            <summary>
+                Encodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encode.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encode(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Encodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="text">
+                The string to encode.
+            </param>
+            <param name="prefixMark">
+                The prefix mark.
+            </param>
+            <param name="suffixMark">
+                The suffix mark.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encode(System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Encodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="text">
+                The string to encode.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.EncodeFile(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Encodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to encode.
+            </param>
+            <param name="prefixMark">
+                The prefix mark.
+            </param>
+            <param name="suffixMark">
+                The suffix mark.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Decode(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Decodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="code">
+                The string to decode.
+            </param>
+            <param name="prefixMark">
+                The prefix mark.
+            </param>
+            <param name="suffixMark">
+                The suffix mark.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Decode(System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Decodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="code">
+                The string to decode.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecodeString(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Decodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="code">
+                The string to decode.
+            </param>
+            <param name="prefixMark">
+                The prefix mark.
+            </param>
+            <param name="suffixMark">
+                The suffix mark.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecodeString(System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Decodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="code">
+                The string to decode.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecodeFile(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Decodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to decode.
+            </param>
+            <param name="prefixMark">
+                The prefix mark.
+            </param>
+            <param name="suffixMark">
+                The suffix mark.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecodeFile(System.String,SilDev.EncodingAlgorithms)">
+            <summary>
+                Decodes this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to decode.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.IO.Stream,SilDev.ChecksumAlgorithms)">
+            <summary>
+                Encrypts this stream with the specified algorithm.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],SilDev.ChecksumAlgorithms)">
+            <summary>
+                Encrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encrypt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.String,SilDev.ChecksumAlgorithms)">
+            <summary>
+                Encrypts this string with the specified algorithm.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,SilDev.ChecksumAlgorithms)">
+            <summary>
+                Encrypts this file with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to encrypt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Encrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Encrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.String,System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Encrypts this string with the specified algorithm.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.String,System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Encrypts this string with the specified algorithm.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Encrypts this file with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Encrypts this file with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to encrypt.
+            </param>
+            <param name="password">
+                The string which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to decrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to decrypt.
+            </param>
+            <param name="password">
+                The string which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to decrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to decrypt.
+            </param>
+            <param name="password">
+                The string which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
         </member>
         <member name="T:SilDev.Crypto.Base64">
             <summary>
@@ -2660,99 +3183,6 @@
                 The suffix mark.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncodeToBase64(System.Byte[],System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes this sequence of bytes to a sequence of base-64 digits.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeBytesFromBase64(System.String,System.String,System.String)">
-            <summary>
-                Decodes this sequence of base-64 digits back to a sequence of bytes.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncodeToBase64(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes this string to a sequence of base-64 digits.
-            </summary>
-            <param name="text">
-                The string to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeStringFromBase64(System.String,System.String,System.String)">
-            <summary>
-                Decodes this sequence of base-64 digits back to string.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncodeFileToBase64(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specifed file to a sequence of base-64 digits.
-            </summary>
-            <param name="path">
-                The full path of the file to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeFileFromBase64(System.String,System.String,System.String)">
-            <summary>
-                Decodes the specifed sequence of base-64 digits back to a sequence of bytes which presents a file.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
         <member name="T:SilDev.Crypto.Base85">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Base85"/> class.
@@ -2788,99 +3218,6 @@
         <member name="M:SilDev.Crypto.Base85.DecodeBytes(System.String,System.String,System.String)">
             <summary>
                 Decodes the specified sequence of bytes.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncodeToBase85(System.Byte[],System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes this sequence of bytes to a sequence of base-85 digits.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeBytesFromBase85(System.String,System.String,System.String)">
-            <summary>
-                Decodes this sequence of base-85 digits back to a sequence of bytes.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncodeToBase85(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes this string to a sequence of base-85 digits.
-            </summary>
-            <param name="text">
-                The string to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeStringFromBase85(System.String,System.String,System.String)">
-            <summary>
-                Decodes this sequence of base-85 digits back to string.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncodeFileToBase85(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specifed file to a sequence of base-85 digits.
-            </summary>
-            <param name="path">
-                The full path of the file to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeFileFromBase85(System.String,System.String,System.String)">
-            <summary>
-                Decodes the specifed sequence of base-85 digits back to a sequence of bytes which presents a file.
             </summary>
             <param name="code">
                 The string to decode.
@@ -2938,102 +3275,183 @@
                 The suffix mark.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncodeToBase91(System.Byte[],System.String,System.String,System.UInt32)">
+        <member name="T:SilDev.Crypto.Md5">
             <summary>
-                Encodes this sequence of bytes to a sequence of base-91 digits.
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Md5"/> class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Crypto.Md5.HashLength">
+            <summary>
+                Gets the required hash length.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Md5.EncryptStream``1(System.IO.Stream,``0)">
+            <summary>
+                Encrypts the specified stream with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
+            </summary>
+            <typeparam name="THashAlgorithm">
+                The type of the algorithm.
+            </typeparam>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+            <param name="algorithm">
+                The algorithm to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Md5.EncryptStream(System.IO.Stream)">
+            <summary>
+                Encrypts the specified stream.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Md5.EncryptBytes(System.Byte[])">
+            <summary>
+                Encrypts the specified sequence of bytes.
             </summary>
             <param name="bytes">
-                The sequence of bytes to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
+                The sequence of bytes to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeBytesFromBase91(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Md5.EncryptString``1(System.String,``0)">
             <summary>
-                Decodes this sequence of base-91 digits back to a sequence of bytes.
+                Encrypts the specified string with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
             </summary>
-            <param name="code">
-                The string to decode.
+            <typeparam name="THashAlgorithm">
+                The type of the algorithm.
+            </typeparam>
+            <param name="text">
+                The string to encrypt.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
+            <param name="algorithm">
+                The algorithm to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncodeToBase91(System.String,System.String,System.String,System.UInt32)">
+        <member name="M:SilDev.Crypto.Md5.EncryptString(System.String)">
             <summary>
-                Encodes this string to a sequence of base-91 digits.
+                Encrypts the specified string.
             </summary>
             <param name="text">
-                The string to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
+                The string to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeStringFromBase91(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Md5.EncryptFile(System.String)">
             <summary>
-                Decodes this sequence of base-91 digits back to string.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncodeFileToBase91(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specifed file to a sequence of base-91 digits.
+                Encrypts the specified file.
             </summary>
             <param name="path">
-                The full path of the file to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
+                The full path of the file to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeFileFromBase91(System.String,System.String,System.String)">
+        <member name="T:SilDev.Crypto.Sha1">
             <summary>
-                Decodes the specifed sequence of base-91 digits back to a sequence of bytes which presents a file.
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha1"/> class.
             </summary>
-            <param name="code">
-                The string to decode.
+        </member>
+        <member name="P:SilDev.Crypto.Sha1.HashLength">
+            <summary>
+                Gets the required hash length.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Sha1.EncryptStream(System.IO.Stream)">
+            <summary>
+                Encrypts the specified stream.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
+        </member>
+        <member name="M:SilDev.Crypto.Sha1.EncryptString(System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="text">
+                The string to encrypt.
             </param>
-            <param name="suffixMark">
-                The suffix mark.
+        </member>
+        <member name="T:SilDev.Crypto.Sha256">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha256"/> class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Crypto.Sha256.HashLength">
+            <summary>
+                Gets the required hash length.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Sha256.EncryptStream(System.IO.Stream)">
+            <summary>
+                Encrypts the specified stream.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Sha256.EncryptString(System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+        </member>
+        <member name="T:SilDev.Crypto.Sha384">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha384"/> class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Crypto.Sha384.HashLength">
+            <summary>
+                Gets the required hash length.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Sha384.EncryptStream(System.IO.Stream)">
+            <summary>
+                Encrypts the specified stream.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Sha384.EncryptString(System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+        </member>
+        <member name="T:SilDev.Crypto.Sha512">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha512"/> class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Crypto.Sha512.HashLength">
+            <summary>
+                Gets the required hash length.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Sha512.EncryptStream(System.IO.Stream)">
+            <summary>
+                Encrypts the specified stream.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Sha512.EncryptString(System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="text">
+                The string to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Aes">
             <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Crypto.Aes"/> class.
+                Provides static methods to handle AES encryption and decryption.
             </summary>
         </member>
         <member name="T:SilDev.Crypto.Aes.KeySize">
@@ -3073,85 +3491,6 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptBytes(System.Byte[],System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptBytes(System.Byte[],System.String,SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptString(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptString(System.String,System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptString(System.String,System.String,SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
         <member name="M:SilDev.Crypto.Aes.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Encrypts the specified file.
@@ -3164,37 +3503,6 @@
             </param>
             <param name="salt">
                 The sequence of bytes which is used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptFile(System.String,System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptFile(System.String,System.String,SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file.
-            </param>
-            <param name="password">
-                The sequence of bytes which is used as password.
             </param>
             <param name="keySize">
                 The size of the secret key.
@@ -3217,85 +3525,6 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptBytes(System.Byte[],System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified sequence of bytes.
-            </summary>
-            <param name="code">
-                The sequence of bytes to decrypt.
-            </param>
-            <param name="password">
-                The string which was used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which was used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptBytes(System.Byte[],System.String,SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified sequence of bytes.
-            </summary>
-            <param name="code">
-                The sequence of bytes to decrypt.
-            </param>
-            <param name="password">
-                The string which was used as password.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptString(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
-            </summary>
-            <param name="code">
-                The hexadecimal sequence to decrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which was used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which was used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptString(System.String,System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
-            </summary>
-            <param name="code">
-                The hexadecimal sequence to decrypt.
-            </param>
-            <param name="password">
-                The string which was used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which was used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptString(System.String,System.String,SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
-            </summary>
-            <param name="code">
-                The hexadecimal sequence to decrypt.
-            </param>
-            <param name="password">
-                The string which was used as password.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
         <member name="M:SilDev.Crypto.Aes.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
                 Decrypts the specified file.
@@ -3313,579 +3542,64 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptFile(System.String,System.String,System.Byte[],SilDev.Crypto.Aes.KeySize)">
+        <member name="T:SilDev.Crypto.Rsa">
             <summary>
-                Decrypts the specified file.
+                Provides static methods to handle RSA encryption and decryption.
             </summary>
-            <param name="path">
-                The full path of the file to decrypt.
-            </param>
-            <param name="password">
-                The string which was used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which was used as salt.
+        </member>
+        <member name="M:SilDev.Crypto.Rsa.CreateKeyFiles(System.String,System.Int32)">
+            <summary>
+                Creates a public and private key pair at the specified location.
+            </summary>
+            <param name="dirPath">
+                The directory path.
             </param>
             <param name="keySize">
-                The size of the secret key.
+                The size of the key in bits.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptFile(System.String,System.String,SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to decrypt.
-            </param>
-            <param name="password">
-                The string which was used as password.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToAes128(System.Byte[],System.String)">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToAes128(System.String,System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToAes128(System.String,System.String)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptFromAes128(System.Byte[],System.String)">
-            <summary>
-                Decrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptStringFromAes128(System.String,System.String)">
-            <summary>
-                Decrypts this string.
-            </summary>
-            <param name="text">
-                The string to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptFileFromAes128(System.String,System.String)">
-            <summary>
-                Decrypts this file.
-            </summary>
-            <param name="path">
-                The full path of the file to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToAes192(System.Byte[],System.String)">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToAes192(System.String,System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToAes192(System.String,System.String)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptFromAes192(System.Byte[],System.String)">
-            <summary>
-                Decrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptStringFromAes192(System.String,System.String)">
-            <summary>
-                Decrypts this string.
-            </summary>
-            <param name="text">
-                The string to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptFileFromAes192(System.String,System.String)">
-            <summary>
-                Decrypts this file.
-            </summary>
-            <param name="path">
-                The full path of the file to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToAes256(System.Byte[],System.String)">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToAes256(System.String,System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToAes256(System.String,System.String)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptFromAes256(System.Byte[],System.String)">
-            <summary>
-                Decrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptStringFromAes256(System.String,System.String)">
-            <summary>
-                Decrypts this string.
-            </summary>
-            <param name="text">
-                The string to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecryptFileFromAes256(System.String,System.String)">
-            <summary>
-                Decrypts this file.
-            </summary>
-            <param name="path">
-                The full path of the file to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-        </member>
-        <member name="T:SilDev.Crypto.Md5">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Crypto.Md5"/> class.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Md5.HashLength">
-            <summary>
-                Gets the required hash length.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptStream(System.IO.Stream)">
-            <summary>
-                Encrypts the specified stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptBytes(System.Byte[])">
+        <member name="M:SilDev.Crypto.Rsa.EncryptBytes(System.String,System.Byte[])">
             <summary>
                 Encrypts the specified sequence of bytes.
             </summary>
+            <param name="publicKeyPath">
+                The path to the public key file.
+            </param>
             <param name="bytes">
-                The sequence of bytes to encrypt.
+                The data to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptString(System.String)">
+        <member name="M:SilDev.Crypto.Rsa.EncryptString(System.String,System.String)">
             <summary>
                 Encrypts the specified string.
             </summary>
+            <param name="publicKeyPath">
+                The path to the public key file.
+            </param>
             <param name="text">
-                The string to encrypt.
+                The text to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptFile(System.String)">
+        <member name="M:SilDev.Crypto.Rsa.DecryptBytes(System.String,System.String)">
             <summary>
-                Encrypts the specified file.
+                Decrypts the specified sequence of bytes.
             </summary>
-            <param name="path">
-                The full path of the file to encrypt.
+            <param name="privateKeyPath">
+                The path to the private key file.
+            </param>
+            <param name="code">
+                The cypher to decrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncryptToMd5(System.IO.Stream)">
+        <member name="M:SilDev.Crypto.Rsa.DecryptString(System.String,System.String)">
             <summary>
-                Encrypts this stream.
+                Decrypts the specified string.
             </summary>
-            <param name="stream">
-                The stream to encrypt.
+            <param name="privateKeyPath">
+                The path to the private key file.
             </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToMd5(System.Byte[])">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToMd5(System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToMd5(System.IO.FileInfo)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="file">
-                The file to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToMd5(System.String)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-        </member>
-        <member name="T:SilDev.Crypto.Sha1">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha1"/> class.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Sha1.HashLength">
-            <summary>
-                Gets the required hash length.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Sha1.EncryptStream(System.IO.Stream)">
-            <summary>
-                Encrypts the specified stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Sha1.EncryptString(System.String)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha1(System.IO.Stream)">
-            <summary>
-                Encrypts this stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha1(System.Byte[])">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha1(System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha1(System.IO.FileInfo)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="file">
-                The file to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha1(System.String)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-        </member>
-        <member name="T:SilDev.Crypto.Sha256">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha256"/> class.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Sha256.HashLength">
-            <summary>
-                Gets the required hash length.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Sha256.EncryptStream(System.IO.Stream)">
-            <summary>
-                Encrypts the specified stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Sha256.EncryptString(System.String)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha256(System.IO.Stream)">
-            <summary>
-                Encrypts this stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha256(System.Byte[])">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha256(System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha256(System.IO.FileInfo)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="file">
-                The file to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha256(System.String)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-        </member>
-        <member name="T:SilDev.Crypto.Sha384">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha384"/> class.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Sha384.HashLength">
-            <summary>
-                Gets the required hash length.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Sha384.EncryptStream(System.IO.Stream)">
-            <summary>
-                Encrypts the specified stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Sha384.EncryptString(System.String)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha384(System.IO.Stream)">
-            <summary>
-                Encrypts this stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha384(System.Byte[])">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha384(System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha384(System.IO.FileInfo)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="file">
-                The file to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha384(System.String)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-        </member>
-        <member name="T:SilDev.Crypto.Sha512">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Crypto.Sha512"/> class.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Sha512.HashLength">
-            <summary>
-                Gets the required hash length.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Sha512.EncryptStream(System.IO.Stream)">
-            <summary>
-                Encrypts the specified stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Sha512.EncryptString(System.String)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha512(System.IO.Stream)">
-            <summary>
-                Encrypts this stream.
-            </summary>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha512(System.Byte[])">
-            <summary>
-                Encrypts this sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptToSha512(System.String)">
-            <summary>
-                Encrypts this string.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha512(System.IO.FileInfo)">
-            <summary>
-                Encrypts this file.
-            </summary>
-            <param name="file">
-                The file to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFileToSha512(System.String)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
+            <param name="code">
+                The cypher to decrypt.
             </param>
         </member>
         <member name="T:SilDev.Desktop">
@@ -5142,6 +4856,143 @@
                 about the current environment.
             </summary>
         </member>
+        <member name="T:SilDev.EnvironmentEx.RedistFlags">
+            <summary>
+                Provides identity flags of redistributable packages. For more information,
+                see <see cref="M:SilDev.EnvironmentEx.Redist.IsInstalled(SilDev.EnvironmentEx.RedistFlags[])"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2005X86">
+            <summary>
+                Microsoft Visual C++ 2005 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2005X64">
+            <summary>
+                Microsoft Visual C++ 2005 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2008X86">
+            <summary>
+                Microsoft Visual C++ 2008 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2008X64">
+            <summary>
+                Microsoft Visual C++ 2008 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2010X86">
+            <summary>
+                Microsoft Visual C++ 2010 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2010X64">
+            <summary>
+                Microsoft Visual C++ 2010 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2012X86">
+            <summary>
+                Microsoft Visual C++ 2012 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2012X64">
+            <summary>
+                Microsoft Visual C++ 2012 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2013X86">
+            <summary>
+                Microsoft Visual C++ 2013 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2013X64">
+            <summary>
+                Microsoft Visual C++ 2013 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2015X86">
+            <summary>
+                Microsoft Visual C++ 2015 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2015X64">
+            <summary>
+                Microsoft Visual C++ 2015 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2017X86">
+            <summary>
+                Microsoft Visual C++ 2017 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2017X64">
+            <summary>
+                Microsoft Visual C++ 2017 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="T:SilDev.EnvironmentEx.RestoreEventType">
+            <summary>
+                The type of event. For more information, see <see cref="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.RestoreEventType,SilDev.EnvironmentEx.RestorePointType)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestoreEventType.BeginNestedSystemChange">
+            <summary>
+                A system change has begun. A subsequent nested call does not create a new restore
+                point.
+                <para>
+                    Subsequent calls must use <see cref="F:SilDev.EnvironmentEx.RestoreEventType.EndNestedSystemChange"/>, not
+                    <see cref="F:SilDev.EnvironmentEx.RestoreEventType.EndSystemChange"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestoreEventType.BeginSystemChange">
+            <summary>
+                A system change has begun.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestoreEventType.EndNestedSystemChange">
+            <summary>
+                A system change has ended.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestoreEventType.EndSystemChange">
+            <summary>
+                A system change has ended.
+            </summary>
+        </member>
+        <member name="T:SilDev.EnvironmentEx.RestorePointType">
+            <summary>
+                The type of restore point. For more information, see <see cref="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.RestoreEventType,SilDev.EnvironmentEx.RestorePointType)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationInstall">
+            <summary>
+                An application has been installed.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.ApplicationUninstall">
+            <summary>
+                An application has been uninstalled.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.CancelledOperation">
+            <summary>
+                An application needs to delete the restore point it created. For example, an
+                application would use this flag when a user cancels an installation.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.DeviceDriverInstall">
+            <summary>
+                A device driver has been installed.
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RestorePointType.ModifySettings">
+            <summary>
+                An application has had features added or removed.
+            </summary>
+        </member>
         <member name="P:SilDev.EnvironmentEx.MachineId">
             <summary>
                 Gets a unique system identification number.
@@ -5253,16 +5104,11 @@
         </member>
         <member name="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)">
             <summary>
+                Retrieves the value of an environment variable from the current process.
                 <para>
-                    Retrieves the value of an environment variable from the current process.
-                </para>
-                <para>
-                    <c>
-                        Hint:
-                    </c>
-                    Allows <see cref="T:System.Environment.SpecialFolder"/> names inlcuding a
-                    keyword "CurDir" to get the current code base location based
-                    on <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
+                    Hint: Allows <see cref="T:System.Environment.SpecialFolder"/> names inlcuding a keyword
+                    "CurDir" to get the current code base location based on
+                    <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
                 </para>
             </summary>
             <param name="variable">
@@ -5310,81 +5156,6 @@
                 Provides functionality to verify the installation of redistributable packages.
             </summary>
         </member>
-        <member name="T:SilDev.EnvironmentEx.Redist.Flags">
-            <summary>
-                Provides identity flags of redistributable packages.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2005X86">
-            <summary>
-                Microsoft Visual C++ 2005 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2005X64">
-            <summary>
-                Microsoft Visual C++ 2005 Redistributable Package (x64).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2008X86">
-            <summary>
-                Microsoft Visual C++ 2008 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2008X64">
-            <summary>
-                Microsoft Visual C++ 2008 Redistributable Package (x64).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2010X86">
-            <summary>
-                Microsoft Visual C++ 2010 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2010X64">
-            <summary>
-                Microsoft Visual C++ 2010 Redistributable Package (x64).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2012X86">
-            <summary>
-                Microsoft Visual C++ 2012 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2012X64">
-            <summary>
-                Microsoft Visual C++ 2012 Redistributable Package (x64).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2013X86">
-            <summary>
-                Microsoft Visual C++ 2013 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2013X64">
-            <summary>
-                Microsoft Visual C++ 2013 Redistributable Package (x64).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2015X86">
-            <summary>
-                Microsoft Visual C++ 2015 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2015X64">
-            <summary>
-                Microsoft Visual C++ 2015 Redistributable Package (x64).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2017X86">
-            <summary>
-                Microsoft Visual C++ 2017 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.Redist.Flags.VC2017X64">
-            <summary>
-                Microsoft Visual C++ 2017 Redistributable Package (x64).
-            </summary>
-        </member>
         <member name="M:SilDev.EnvironmentEx.Redist.GetDisplayNames(System.Boolean)">
             <summary>
                 Returns the display names of all installed Microsoft Visual C++ redistributable packages.
@@ -5397,7 +5168,7 @@
                 </para>
             </param>
         </member>
-        <member name="M:SilDev.EnvironmentEx.Redist.IsInstalled(SilDev.EnvironmentEx.Redist.Flags[])">
+        <member name="M:SilDev.EnvironmentEx.Redist.IsInstalled(SilDev.EnvironmentEx.RedistFlags[])">
             <summary>
                 Determines whether the specified redistributable package is installed.
             </summary>
@@ -5410,73 +5181,12 @@
                 Provides functionality to handle system restore points.
             </summary>
         </member>
-        <member name="T:SilDev.EnvironmentEx.SystemRestore.EventType">
-            <summary>
-                The type of event. For more information, see <see cref="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.SystemRestore.EventType,SilDev.EnvironmentEx.SystemRestore.PointType)"/>.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.BeginNestedSystemChange">
-            <summary>
-                A system change has begun. A subsequent nested call does not create a new restore
-                point.
-                <para>
-                    Subsequent calls must use <see cref="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndNestedSystemChange"/>, not
-                    <see cref="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndSystemChange"/>.
-                </para>
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.BeginSystemChange">
-            <summary>
-                A system change has begun.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndNestedSystemChange">
-            <summary>
-                A system change has ended.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.EventType.EndSystemChange">
-            <summary>
-                A system change has ended.
-            </summary>
-        </member>
-        <member name="T:SilDev.EnvironmentEx.SystemRestore.PointType">
-            <summary>
-                The type of restore point. For more information, see <see cref="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.SystemRestore.EventType,SilDev.EnvironmentEx.SystemRestore.PointType)"/>.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.ApplicationInstall">
-            <summary>
-                An application has been installed.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.ApplicationUninstall">
-            <summary>
-                An application has been uninstalled.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.CancelledOperation">
-            <summary>
-                An application needs to delete the restore point it created. For example, an
-                application would use this flag when a user cancels an installation.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.DeviceDriverInstall">
-            <summary>
-                A device driver has been installed.
-            </summary>
-        </member>
-        <member name="F:SilDev.EnvironmentEx.SystemRestore.PointType.ModifySettings">
-            <summary>
-                An application has had features added or removed.
-            </summary>
-        </member>
         <member name="P:SilDev.EnvironmentEx.SystemRestore.IsEnabled">
             <summary>
                 Determines whether the system restoring is enabled.
             </summary>
         </member>
-        <member name="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.SystemRestore.EventType,SilDev.EnvironmentEx.SystemRestore.PointType)">
+        <member name="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.RestoreEventType,SilDev.EnvironmentEx.RestorePointType)">
             <summary>
                 Creates a restore point on the local system.
             </summary>
@@ -5496,7 +5206,7 @@
                 operations.
             </summary>
         </member>
-        <member name="M:SilDev.FileEx.Serialize``1(System.String,``0,System.Boolean)">
+        <member name="M:SilDev.FileEx.Serialize``1(System.String,``0,System.Boolean,System.Boolean)">
             <summary>
                 Creates a new file, writes the specified object graph into to the file, and then
                 closes the file.
@@ -5505,46 +5215,21 @@
                 The type of the source.
             </typeparam>
             <param name="path">
-                The file to write to.
+                The file to create.
             </param>
-            <param name="value">
+            <param name="source">
                 The object graph to write to the file.
+            </param>
+            <param name="compress">
+                true to compress the file after serialization; otherwise, false.
             </param>
             <param name="overwrite">
                 true to allow an existing file to be overwritten; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.Deserialize``1(``0,System.String)">
+        <member name="M:SilDev.FileEx.Deserialize``1(System.String,System.Boolean,``0)">
             <summary>
-                Deserializes specified file into an object graph.
-            </summary>
-            <typeparam name="TResult">
-                The type of the result.
-            </typeparam>
-            <param name="defValue">
-                The default value.
-            </param>
-            <param name="path">
-                The file to deserialize.
-            </param>
-        </member>
-        <member name="M:SilDev.FileEx.Deserialize``1(``0,System.String[])">
-            <summary>
-                Deserializes the first valid file of the specified files into an object graph.
-            </summary>
-            <typeparam name="TResult">
-                The type of the result.
-            </typeparam>
-            <param name="defValue">
-                The default value.
-            </param>
-            <param name="paths">
-                The files to deserialize.
-            </param>
-        </member>
-        <member name="M:SilDev.FileEx.Deserialize``1(System.String)">
-            <summary>
-                Deserializes specified file into an object graph.
+                Deserializes the specified file into an object graph.
             </summary>
             <typeparam name="TResult">
                 The type of the result.
@@ -5552,16 +5237,25 @@
             <param name="path">
                 The file to deserialize.
             </param>
+            <param name="decompress">
+                true to decompress the file before deserialization; otherwise, false.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
         </member>
-        <member name="M:SilDev.FileEx.Deserialize``1(System.String[])">
+        <member name="M:SilDev.FileEx.Deserialize``1(System.String,``0)">
             <summary>
-                Deserializes the first valid file of the specified files into an object graph.
+                Deserializes the specified file into an object graph.
             </summary>
             <typeparam name="TResult">
                 The type of the result.
             </typeparam>
-            <param name="paths">
-                The files to deserialize.
+            <param name="path">
+                The file to deserialize.
+            </param>
+            <param name="defValue">
+                The default value.
             </param>
         </member>
         <member name="M:SilDev.FileEx.Exists(System.String)">
@@ -6080,9 +5774,7 @@
         </member>
         <member name="M:SilDev.Ini.LoadCache(System.String)">
             <summary>
-                <para>
-                    Loads the data of a cache file into memory.
-                </para>
+                Loads the data of a cache file into memory.
                 <para>
                     Please note that <see cref="P:SilDev.Ini.MaxCacheSize"/> is ignored in this case.
                 </para>
@@ -6305,10 +5997,7 @@
         </member>
         <member name="M:SilDev.Ini.ReadDirect(System.String,System.String,System.String)">
             <summary>
-                <para>
-                    Retrieves a <see cref="T:System.String"/> value from the specified section in an INI
-                    file.
-                </para>
+                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI file.
                 <para>
                     The Win32-API without file caching is used for reading in this case.
                 </para>
@@ -6328,18 +6017,14 @@
                 Writes the specifed content to an INI file on the disk.
             </summary>
             <param name="content">
-                <para>
-                    The content based on <see cref="M:SilDev.Ini.ReadAll(System.String,System.Boolean)"/>.
-                </para>
+                The content based on <see cref="M:SilDev.Ini.ReadAll(System.String,System.Boolean)"/>.
                 <para>
                     If this parameter is NULL, the function writes all the cached data from the
                     specified INI file to the disk.
                 </para>
             </param>
             <param name="file">
-                <para>
-                    The full file path of an INI file.
-                </para>
+                The full file path of an INI file.
                 <para>
                     If this parameter is NULL, the default INI file is used.
                 </para>
@@ -6357,9 +6042,7 @@
                 Writes all the cached data from the specified INI file to the disk.
             </summary>
             <param name="file">
-                <para>
-                    The full file path of an INI file.
-                </para>
+                The full file path of an INI file.
                 <para>
                     If this parameter is NULL, the default INI file is used.
                 </para>
@@ -6374,9 +6057,7 @@
         </member>
         <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.String,System.Boolean,System.Boolean,System.Int32)">
             <summary>
-                <para>
-                    Copies the specified value into the specified section of an INI file.
-                </para>
+                Copies the specified value into the specified section of an INI file.
                 <para>
                     This function updates only the cache and has no effect on the file until
                     <see cref="M:SilDev.Ini.WriteAll(System.String,System.Boolean,System.Boolean)"/> is called.
@@ -6389,18 +6070,14 @@
                 The name of the section to which the value will be copied.
             </param>
             <param name="key">
-                <para>
-                    The name of the key to be associated with a value.
-                </para>
+                The name of the key to be associated with a value.
                 <para>
                     If this parameter is NULL, the entire section, including all entries within the
                     section, is deleted.
                 </para>
             </param>
             <param name="value">
-                <para>
-                    The value to be written to the file.
-                </para>
+                The value to be written to the file.
                 <para>
                     If this parameter is NULL, the key pointed to by the key parameter is deleted.
                 </para>
@@ -6422,9 +6099,7 @@
         </member>
         <member name="M:SilDev.Ini.Write``1(System.String,System.String,``0,System.Boolean,System.Boolean,System.Int32)">
             <summary>
-                <para>
-                    Copies the specified value into the specified section of an INI file.
-                </para>
+                Copies the specified value into the specified section of an INI file.
                 <para>
                     This function updates only the cache and has no effect on the file until
                     <see cref="M:SilDev.Ini.WriteAll(System.String,System.Boolean,System.Boolean)"/> is called.
@@ -6437,18 +6112,14 @@
                 The name of the section to which the value will be copied.
             </param>
             <param name="key">
-                <para>
-                    The name of the key to be associated with a value.
-                </para>
+                The name of the key to be associated with a value.
                 <para>
                     If this parameter is NULL, the entire section, including all entries within the
                     section, is deleted.
                 </para>
             </param>
             <param name="value">
-                <para>
-                    The value to be written to the file.
-                </para>
+                The value to be written to the file.
                 <para>
                     If this parameter is NULL, the key pointed to by the key parameter is deleted.
                 </para>
@@ -6467,33 +6138,27 @@
         </member>
         <member name="M:SilDev.Ini.WriteDirect(System.String,System.String,System.Object,System.String,System.Boolean,System.Boolean)">
             <summary>
-                <para>
-                    Copies the <see cref="T:System.String"/> representation of the specified <see cref="T:System.Object"/>
-                    value into the specified section of an INI file. If the file does not exist, it is
-                    created.
-                </para>
+                Copies the <see cref="T:System.String"/> representation of the specified <see cref="T:System.Object"/>
+                value into the specified section of an INI file. If the file does not exist, it is
+                created.
                 <para>
                     The Win32-API is used for writing in this case. Please note that this function
-                    writes all changes directly on the disk. This causes many write accesses when used
-                    incorrectly.
+                    writes all changes directly on the disk. This causes many write accesses when
+                    used incorrectly.
                 </para>
             </summary>
             <param name="section">
                 The name of the section to which the value will be copied.
             </param>
             <param name="key">
-                <para>
-                    The name of the key to be associated with a value.
-                </para>
+                The name of the key to be associated with a value.
                 <para>
                     If this parameter is NULL, the entire section, including all entries within the
                     section, is deleted.
                 </para>
             </param>
             <param name="value">
-                <para>
-                    The value to be written to the file.
-                </para>
+                The value to be written to the file.
                 <para>
                     If this parameter is NULL, the key pointed to by the key parameter is deleted.
                 </para>
@@ -6515,6 +6180,64 @@
                 Provides basic functionality for the JSON format.
             </summary>
         </member>
+        <member name="M:SilDev.Json.Serialize``1(``0)">
+            <summary>
+                Serializes the specified object graph into a string representation of an JSON
+                document.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source.
+            </typeparam>
+            <param name="source">
+                The object graph to serialize.
+            </param>
+        </member>
+        <member name="M:SilDev.Json.SerializeToFile``1(System.String,``0,System.Boolean)">
+            <summary>
+                Creates a new JSON file, writes the specified object graph into to the JSON file,
+                and then closes the file.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source.
+            </typeparam>
+            <param name="path">
+                The JSON file to create.
+            </param>
+            <param name="source">
+                The object graph to write to the file.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Json.Deserialize``1(System.String,``0)">
+            <summary>
+                Deserializes a string representation of an XML document into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the result.
+            </typeparam>
+            <param name="source">
+                The string representation of an XML document to deserialize.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
+        <member name="M:SilDev.Json.DeserializeFile``1(System.String,``0)">
+            <summary>
+                Deserializes specified JSON file into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the result.
+            </typeparam>
+            <param name="path">
+                The JSON file to deserialize.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
         <member name="M:SilDev.Json.ReadAll(System.String)">
             <summary>
                 Retrieves the full content of the specified JSON file.
@@ -6532,39 +6255,6 @@
             </param>
             <param name="keys">
                 An array of keys to navigate to the exact position of the value.
-            </param>
-        </member>
-        <member name="M:SilDev.Json.String(System.Object,System.Int32,System.Int32)">
-            <summary>
-                Converts an object to a JSON string.
-            </summary>
-            <param name="obj">
-                The object to convert.
-            </param>
-            <param name="maxLength">
-                Gets or sets the maximum length of JSON strings that are accepted by the
-                <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> class.
-            </param>
-            <param name="recursionLimit">
-                Gets or sets the limit for constraining the number of object levels to process.
-            </param>
-        </member>
-        <member name="M:SilDev.Json.Write(System.Object,System.String,System.Int32,System.Int32)">
-            <summary>
-                Creates a new JSON file with the specified object data.
-            </summary>
-            <param name="obj">
-                The object to convert.
-            </param>
-            <param name="path">
-                The full path of the file to read.
-            </param>
-            <param name="maxLength">
-                Gets or sets the maximum length of JSON strings that are accepted by the
-                <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> class.
-            </param>
-            <param name="recursionLimit">
-                Gets or sets the limit for constraining the number of object levels to process.
             </param>
         </member>
         <member name="T:SilDev.KeyState">
@@ -7555,9 +7245,7 @@
         </member>
         <member name="P:SilDev.Log.FileDir">
             <summary>
-                <para>
-                    Gets or sets the location of the current LOG file.
-                </para>
+                Gets or sets the location of the current LOG file.
                 <para>
                     If the specified path doesn't exists, it is created.
                 </para>
@@ -7575,12 +7263,10 @@
         </member>
         <member name="M:SilDev.Log.ActivateLogging(System.Int32)">
             <summary>
-                <para>
-                    Specifies the <see cref="P:SilDev.Log.DebugMode"/> for the handling of <see cref="T:System.Exception"/>'s.
-                    The <see cref="P:SilDev.Log.DebugMode"/> can also specified over an command line argument or an
-                    config parameter in combination with <see cref="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)"/>.
-                    The following <see cref="P:SilDev.Log.DebugMode"/> options are available.
-                </para>
+                Specifies the <see cref="P:SilDev.Log.DebugMode"/> for the handling of <see cref="T:System.Exception"/>'s. The
+                <see cref="P:SilDev.Log.DebugMode"/> can also specified over an command line argument or an config
+                parameter in combination with <see cref="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)"/>. The
+                following <see cref="P:SilDev.Log.DebugMode"/> options are available.
                 <para>
                     0: Logging is disabled. If <see cref="P:SilDev.Log.CatchUnhandledExceptions"/> is enabled, unhandled
                     <see cref="T:System.Exception"/>'s are discarded as well. This can be useful for public releases
@@ -7769,9 +7455,7 @@
         </member>
         <member name="T:SilDev.Media.IrrKlangPlayer">
             <summary>
-                <para>
-                    Provides basic functionality of the IrrKlang library.
-                </para>
+                Provides basic functionality of the IrrKlang library.
                 <para>
                     Please note that this class requires the binaries of the IrrKlang library.
                 </para>
@@ -7959,8 +7643,8 @@
         <member name="F:SilDev.NetEx.DnsOptions.Google">
             <summary>
                 A free, global DNS resolution service that you can use as an alternative to your current
-                DNS provider. In addition to traditional DNS over UDP or TCP, Google (also known as pure
-                evil) also provide DNS-over-HTTPS API.
+                DNS provider. In addition to traditional DNS over UDP or TCP, Google also provide
+                DNS-over-HTTPS API.
             </summary>
         </member>
         <member name="P:SilDev.NetEx.LastPingReply">
@@ -7973,6 +7657,7 @@
                 Returns the specified Domain Name System server addresses.
             </summary>
             <param name="dnsOptions">
+                The Domain Name System provider to get the addresses.
             </param>
         </member>
         <member name="M:SilDev.NetEx.InternetIsAvailable(System.Boolean,SilDev.NetEx.DnsOptions,System.Int32)">
@@ -10700,23 +10385,33 @@
                 A <see cref="T:System.Uri"/> that identifies the resource to request.
             </param>
         </member>
+        <member name="T:SilDev.NotifyBoxSound">
+            <summary>
+                Provides enumerated constants used to retrieves the play sound of the notify box.
+            </summary>
+        </member>
+        <member name="T:SilDev.NotifyBoxStartPosition">
+            <summary>
+                Provides enumerated constants used to retrieves the start position of the notify box.
+            </summary>
+        </member>
         <member name="T:SilDev.NotifyBox">
             <summary>
                 Represents a notification window, simliar with a system tray notification, which presents a
                 notification to the user.
             </summary>
         </member>
-        <member name="T:SilDev.NotifyBox.NotifyBoxSound">
+        <member name="M:SilDev.NotifyBox.#ctor(System.Double,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Boolean)">
             <summary>
-                Provides enumerated constants used to retrieves the play sound of the notify box.
+                Initializes a new instance of the <see cref="T:SilDev.NotifyBox"/> class.
             </summary>
         </member>
-        <member name="T:SilDev.NotifyBox.NotifyBoxStartPosition">
+        <member name="M:SilDev.NotifyBox.#ctor(System.Double,System.Boolean)">
             <summary>
-                Provides enumerated constants used to retrieves the start position of the notify box.
+                Initializes a new instance of the <see cref="T:SilDev.NotifyBox"/> class.
             </summary>
         </member>
-        <member name="M:SilDev.NotifyBox.#ctor">
+        <member name="M:SilDev.NotifyBox.#ctor(System.Boolean)">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.NotifyBox"/> class.
             </summary>
@@ -10756,7 +10451,7 @@
                 Gets a value indicating the execution status of the current notify box.
             </summary>
         </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,SilDev.NotifyBoxSound,System.UInt16,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, sound, duration, and borders.
             </summary>
@@ -10779,7 +10474,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,SilDev.NotifyBoxSound,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, sound, and borders.
             </summary>
@@ -10799,7 +10494,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, duration, and borders.
             </summary>
@@ -10819,7 +10514,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.Boolean)">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, and borders.
             </summary>
@@ -10836,7 +10531,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBoxSound,System.UInt16,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, sound, duration, and borders.
             </summary>
@@ -10856,7 +10551,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+        <member name="M:SilDev.NotifyBox.Show(System.String,System.String,SilDev.NotifyBoxSound,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, sound, and borders.
             </summary>
@@ -10911,7 +10606,7 @@
                 notification to the user.
             </summary>
         </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,SilDev.NotifyBoxSound,System.UInt16,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, sound, duration, and borders.
             </summary>
@@ -10934,7 +10629,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,SilDev.NotifyBoxSound,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, sound, and borders.
             </summary>
@@ -10954,7 +10649,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,System.UInt16,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, duration, and borders.
             </summary>
@@ -10974,7 +10669,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxStartPosition,System.Boolean)">
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBoxStartPosition,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, position, and borders.
             </summary>
@@ -10991,7 +10686,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.UInt16,System.Boolean)">
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBoxSound,System.UInt16,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, sound, duration, and borders.
             </summary>
@@ -11011,7 +10706,7 @@
                 true to visible the window borders; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBox.NotifyBoxSound,System.Boolean)">
+        <member name="M:SilDev.NotifyBoxEx.Show(System.String,System.String,SilDev.NotifyBoxSound,System.Boolean)">
             <summary>
                 Displays a notify box with the specified text, caption, sound, and borders.
             </summary>
@@ -11516,139 +11211,139 @@
                 is set.
             </summary>
         </member>
-        <member name="T:SilDev.PortableExecutable">
-            <summary>
-                Provides basic functionality for reading PE (Portable Executable) header informations.
-            </summary>
-        </member>
-        <member name="T:SilDev.PortableExecutable.MachineTypes">
+        <member name="T:SilDev.MachineTypes">
             <summary>
                 Provides enumerated values of the machine field values that specifies its CPU type.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.Unknown">
+        <member name="F:SilDev.MachineTypes.Unknown">
             <summary>
                 The contents of this field are assumed to be applicable to any machine type.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.AM33">
+        <member name="F:SilDev.MachineTypes.AM33">
             <summary>
                 Matsushita AM33.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.AMD64">
+        <member name="F:SilDev.MachineTypes.AMD64">
             <summary>
                 AMD64 (x64).
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.ARM">
+        <member name="F:SilDev.MachineTypes.ARM">
             <summary>
                 ARM little endian.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.ARM64">
+        <member name="F:SilDev.MachineTypes.ARM64">
             <summary>
                 ARM64 little endian.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.ARMNT">
+        <member name="F:SilDev.MachineTypes.ARMNT">
             <summary>
                 ARM Thumb-2 little endian.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.EBC">
+        <member name="F:SilDev.MachineTypes.EBC">
             <summary>
                 EFI byte code.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.I386">
+        <member name="F:SilDev.MachineTypes.I386">
             <summary>
                 Intel 386 or later processors and compatible processors.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.IA64">
+        <member name="F:SilDev.MachineTypes.IA64">
             <summary>
                 Intel Itanium processor family.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.M32R">
+        <member name="F:SilDev.MachineTypes.M32R">
             <summary>
                 Mitsubishi M32R little endian.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.MIPS16">
+        <member name="F:SilDev.MachineTypes.MIPS16">
             <summary>
                 MIPS16.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.MIPSFPU">
+        <member name="F:SilDev.MachineTypes.MIPSFPU">
             <summary>
                 MIPS with FPU.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.MIPSFPU16">
+        <member name="F:SilDev.MachineTypes.MIPSFPU16">
             <summary>
                 MIPS16 with FPU.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.POWERPC">
+        <member name="F:SilDev.MachineTypes.POWERPC">
             <summary>
                 Power PC little endian.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.POWERPCFP">
+        <member name="F:SilDev.MachineTypes.POWERPCFP">
             <summary>
                 Power PC with floating point support.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.R4000">
+        <member name="F:SilDev.MachineTypes.R4000">
             <summary>
                 MIPS little endian.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.RISCV32">
+        <member name="F:SilDev.MachineTypes.RISCV32">
             <summary>
                 RISC-V 32-bit address space.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.RISCV64">
+        <member name="F:SilDev.MachineTypes.RISCV64">
             <summary>
                 RISC-V 64-bit address space.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.RISCV128">
+        <member name="F:SilDev.MachineTypes.RISCV128">
             <summary>
                 RISC-V 128-bit address space.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.SH3">
+        <member name="F:SilDev.MachineTypes.SH3">
             <summary>
                 Hitachi SH3.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.SH3DSP">
+        <member name="F:SilDev.MachineTypes.SH3DSP">
             <summary>
                 Hitachi SH3 DSP.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.SH4">
+        <member name="F:SilDev.MachineTypes.SH4">
             <summary>
                 Hitachi SH4.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.SH5">
+        <member name="F:SilDev.MachineTypes.SH5">
             <summary>
                 Hitachi SH5.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.THUMB">
+        <member name="F:SilDev.MachineTypes.THUMB">
             <summary>
                 ARM Thumb.
             </summary>
         </member>
-        <member name="F:SilDev.PortableExecutable.MachineTypes.WCEMIPSV2">
+        <member name="F:SilDev.MachineTypes.WCEMIPSV2">
             <summary>
                 MIPS little-endian WCE v2.
+            </summary>
+        </member>
+        <member name="T:SilDev.PortableExecutable">
+            <summary>
+                Provides basic functionality for reading PE (Portable Executable) header informations.
             </summary>
         </member>
         <member name="M:SilDev.PortableExecutable.GetMachineTypes(System.String)">
@@ -11704,9 +11399,7 @@
                 The filename or the full path to the application to check.
             </param>
             <param name="doubleTap">
-                <para>
-                    true to try to get firstly by the path, then by name; otherwise, false.
-                </para>
+                true to try to get firstly by the path, then by name; otherwise, false.
                 <para>
                     Please note that this option has no effect if the first parameter contains
                     only a name.
@@ -11722,9 +11415,7 @@
                 The filename or the full path to the application to check.
             </param>
             <param name="doubleTap">
-                <para>
-                    true to try to check firstly by the path, then by name; otherwise, false.
-                </para>
+                true to try to check firstly by the path, then by name; otherwise, false.
                 <para>
                     Please note that this option has no effect if the first parameter contains
                     only a name.
@@ -11739,9 +11430,7 @@
                 The filename or the full path to the application to check.
             </param>
             <param name="doubleTap">
-                <para>
-                    true to try to check firstly by the path, then by name; otherwise, false.
-                </para>
+                true to try to check firstly by the path, then by name; otherwise, false.
                 <para>
                     Please note that this option has no effect if the first parameter contains
                     only a name.
@@ -11750,10 +11439,8 @@
         </member>
         <member name="M:SilDev.ProcessEx.IsSandboxed(System.Diagnostics.Process)">
             <summary>
-                <para>
-                    Determines whether this <see cref="T:System.Diagnostics.Process"/> is running in a sandboxed
-                    environment.
-                </para>
+                Determines whether this <see cref="T:System.Diagnostics.Process"/> is running in a sandboxed
+                environment.
                 <para>
                     Hint: This function supports only the program Sandboxie.
                 </para>
@@ -11781,11 +11468,9 @@
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.Process,System.Boolean)">
             <summary>
-                <para>
-                    Starts (or reuses) the process resource that is specified by the current
-                    <see cref="T:System.Diagnostics.Process"/>.StartInfo property of this <see cref="T:System.Diagnostics.Process"/> and
-                    associates it with the component.
-                </para>
+                Starts (or reuses) the process resource that is specified by the current
+                <see cref="T:System.Diagnostics.Process"/>.StartInfo property of this <see cref="T:System.Diagnostics.Process"/> and associates
+                it with the component.
                 <para>
                     If the <see cref="T:System.Diagnostics.Process"/>.StartInfo.WorkingDirectory parameter is undefined,
                     it is created by <see cref="T:System.Diagnostics.Process"/>.StartInfo.FileName parameter.
@@ -11801,10 +11486,8 @@
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.ProcessStartInfo,System.Boolean)">
             <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
-                    <see cref="T:System.Diagnostics.ProcessStartInfo"/> and starts (or reuses) the process component.
-                </para>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class from the specified
+                <see cref="T:System.Diagnostics.ProcessStartInfo"/> and starts (or reuses) the process component.
                 <para>
                     If WorkingDirectory parameter is undefined, it is created by the FileName parameter.
                 </para>
@@ -11969,9 +11652,7 @@
         </member>
         <member name="M:SilDev.ProcessEx.Terminate(System.Collections.Generic.IEnumerable{System.Diagnostics.Process})">
             <summary>
-                <para>
-                    Immediately stops all specified processes.
-                </para>
+                Immediately stops all specified processes.
                 <para>
                     If the current process doesn't have enough privileges to stop a specified process
                     it starts an invisible elevated instance of the command prompt to run taskkill.
@@ -11983,9 +11664,7 @@
         </member>
         <member name="M:SilDev.ProcessEx.Terminate(System.Diagnostics.Process[])">
             <summary>
-                <para>
-                    Immediately stops all specified processes.
-                </para>
+                Immediately stops all specified processes.
                 <para>
                     If the current process doesn't have enough privileges to stop a specified process
                     it starts an invisible elevated instance of the command prompt to run taskkill.
@@ -11997,10 +11676,8 @@
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
             <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
-                    commands using the system command prompt ("cmd.exe").
-                </para>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
+                commands using the system command prompt ("cmd.exe").
                 <para>
                     This can be useful for an unprivileged application as a simple way to execute a
                     command with the highest user permissions, for example.
@@ -12022,10 +11699,8 @@
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Boolean)">
             <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
-                    commands using the system command prompt ("cmd.exe").
-                </para>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
+                commands using the system command prompt ("cmd.exe").
                 <para>
                     This can be useful for an unprivileged application as a simple way to execute a
                     command with the highest user permissions, for example.
@@ -12044,10 +11719,8 @@
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
             <summary>
-                <para>
-                    Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
-                    commands using the system command prompt ("cmd.exe").
-                </para>
+                Initializes a new instance of the <see cref="T:System.Diagnostics.Process"/> class to execute system
+                commands using the system command prompt ("cmd.exe").
                 <para>
                     This can be useful for an unprivileged application as a simple way to execute a
                     command with the highest user permissions, for example.
@@ -12081,9 +11754,7 @@
         </member>
         <member name="P:SilDev.ProcessEx.CurrentPrincipal.Name">
             <summary>
-                <para>
-                    Gets the original name of the current principal.
-                </para>
+                Gets the original name of the current principal.
                 <para>
                     This variable is only set if <see cref="M:SilDev.ProcessEx.CurrentPrincipal.GetOriginalName"/> was
                     previously called.
@@ -12165,10 +11836,8 @@
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenDelete(System.String,System.String,System.String,System.Boolean,System.Boolean)">
             <summary>
-                <para>
-                    Deletes the target at the specified path if there is no process running that
-                    is matched with the specified process name.
-                </para>
+                Deletes the target at the specified path if there is no process running that is
+                matched with the specified process name.
                 <para>
                     If a matched process is still running, the task will wait until all matched
                     processes has been closed.
@@ -12193,10 +11862,8 @@
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenDelete(System.String,System.String,System.Boolean,System.Boolean)">
             <summary>
-                <para>
-                    Deletes the target at the specified path if there is no process running that
-                    is matched with the specified process name.
-                </para>
+                Deletes the target at the specified path if there is no process running that is
+                matched with the specified process name.
                 <para>
                     If a matched process is still running, the task will wait until all matched
                     processes has been closed.
@@ -12667,9 +12334,7 @@
         </member>
         <member name="M:SilDev.Reg.ReadString(Microsoft.Win32.RegistryKey,System.String,System.String,System.String)">
             <summary>
-                <para>
-                    Retrives the value associated with the specified entry of the specified registry path.
-                </para>
+                Retrives the value associated with the specified entry of the specified registry path.
                 <para>
                     A non-string value is converted to a valid <see cref="T:System.String"/>.
                 </para>
@@ -12689,9 +12354,7 @@
         </member>
         <member name="M:SilDev.Reg.ReadString(System.String,System.String,System.String,System.String)">
             <summary>
-                <para>
-                    Retrives the value associated with the specified entry of the specified registry path.
-                </para>
+                Retrives the value associated with the specified entry of the specified registry path.
                 <para>
                     A non-string value is converted to a valid <see cref="T:System.String"/>.
                 </para>
@@ -12711,9 +12374,7 @@
         </member>
         <member name="M:SilDev.Reg.ReadString(System.String,System.String,System.String)">
             <summary>
-                <para>
-                    Retrives the value associated with the specified entry of the specified registry path.
-                </para>
+                Retrives the value associated with the specified entry of the specified registry path.
                 <para>
                     A non-string value is converted to a valid <see cref="T:System.String"/>.
                 </para>
@@ -12922,75 +12583,75 @@
                 The full paths of the keys to export.
             </param>
         </member>
+        <member name="T:SilDev.SizeOptions">
+            <summary>
+                Provides size format options.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeOptions.None">
+            <summary>
+                Determines that the format is not changed.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeOptions.Trim">
+            <summary>
+                Determines that all zeros are removed after the comma.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeOptions.Round">
+            <summary>
+                Determines that the value is rounded to the nearest integral value.
+            </summary>
+        </member>
+        <member name="T:SilDev.SizeUnits">
+            <summary>
+                Provides labels for size units.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeUnits.Byte">
+            <summary>
+                Stands for byte.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeUnits.KB">
+            <summary>
+                Stands for kilobyte or kibibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeUnits.MB">
+            <summary>
+                Stands for megabyte or mebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeUnits.GB">
+            <summary>
+                Stands for gigabyte or gibibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeUnits.TB">
+            <summary>
+                Stands for terabyte or tebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeUnits.PB">
+            <summary>
+                Stands for petabyte or pebibyte.
+            </summary>
+        </member>
+        <member name="F:SilDev.SizeUnits.EB">
+            <summary>
+                Stands for exabyte or exbibyte.
+            </summary>
+        </member>
         <member name="T:SilDev.Reorganize">
             <summary>
                 Provides static methods for converting or reorganizing of data.
             </summary>
         </member>
-        <member name="T:SilDev.Reorganize.SizeOptions">
-            <summary>
-                Provides size format options.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeOptions.None">
-            <summary>
-                Determines that the format is not changed.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeOptions.Trim">
-            <summary>
-                Determines that all zeros are removed after the comma.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeOptions.Round">
-            <summary>
-                Determines that the value is rounded to the nearest integral value.
-            </summary>
-        </member>
-        <member name="T:SilDev.Reorganize.SizeUnits">
-            <summary>
-                Provides labels for size units.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.Byte">
-            <summary>
-                Stands for byte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.KB">
-            <summary>
-                Stands for kilobyte or kibibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.MB">
-            <summary>
-                Stands for megabyte or mebibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.GB">
-            <summary>
-                Stands for gigabyte or gibibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.TB">
-            <summary>
-                Stands for terabyte or tebibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.PB">
-            <summary>
-                Stands for petabyte or pebibyte.
-            </summary>
-        </member>
-        <member name="F:SilDev.Reorganize.SizeUnits.EB">
-            <summary>
-                Stands for exabyte or exbibyte.
-            </summary>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,System.Boolean,SilDev.Reorganize.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnits,System.Boolean,System.Boolean,SilDev.SizeOptions)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
+                value in the specified <see cref="T:SilDev.SizeUnits"/>.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -13007,10 +12668,10 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeUnits,System.Boolean,SilDev.Reorganize.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnits,System.Boolean,SilDev.SizeOptions)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
+                value in the specified <see cref="T:SilDev.SizeUnits"/>.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -13024,10 +12685,10 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeUnits,SilDev.Reorganize.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnits,SilDev.SizeOptions)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.Reorganize.SizeUnits"/>.
+                value in the specified <see cref="T:SilDev.SizeUnits"/>.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -13038,7 +12699,7 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,System.Boolean,SilDev.Reorganize.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,System.Boolean,SilDev.SizeOptions)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
@@ -13056,7 +12717,7 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,SilDev.Reorganize.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,SilDev.SizeOptions)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
@@ -13071,7 +12732,7 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.Reorganize.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeOptions)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
@@ -13104,7 +12765,7 @@
             <typeparam name="TSource">
                 The type of the source.
             </typeparam>
-            <param name="value">
+            <param name="src">
                 The object graph to convert.
             </param>
         </member>
@@ -13231,17 +12892,61 @@
                 true to trim each line; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToBytes``1(System.String,``0)">
+            <summary>
+                Converts all the characters in the specified string into a sequence of bytes with the
+                specified <see cref="T:System.Text.Encoding"/> format.
+            </summary>
+            <typeparam name="TEncoding">
+                The type of encoding.
+            </typeparam>
+            <param name="str">
+                The string to convert.
+            </param>
+            <param name="encoding">
+                The <see cref="T:System.Text.Encoding"/> format.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToBytes(System.String)">
             <summary>
-                Converts all the characters in the specified string into a sequence of bytes.
+                Converts all the characters in the specified string into a sequence of bytes with the
+                Windows-1252 <see cref="T:System.Text.Encoding"/> format.
             </summary>
             <param name="str">
                 The string to convert.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToStringEx(System.Byte[])">
+        <member name="M:SilDev.Reorganize.ToBytesDefault(System.String)">
             <summary>
-                Converts the specified sequence of bytes into a string.
+                Converts all the characters in the specified string into a sequence of bytes with the
+                Windows-1252 <see cref="T:System.Text.Encoding"/> format.
+                <para>
+                    This method is equal to <see cref="M:SilDev.Reorganize.ToBytes(System.String)"/>.
+                </para>
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToString``1(System.Byte[],``0)">
+            <summary>
+                Converts the specified sequence of bytes into a string with the specified
+                <see cref="T:System.Text.Encoding"/> format.
+            </summary>
+            <typeparam name="TEncoding">
+                The type of encoding.
+            </typeparam>
+            <param name="bytes">
+                The sequence of bytes to convert.
+            </param>
+            <param name="encoding">
+                The <see cref="T:System.Text.Encoding"/> format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringDefault(System.Byte[])">
+            <summary>
+                Converts the specified sequence of bytes into a string with the specified
+                Windows-1252 <see cref="T:System.Text.Encoding"/> format.
             </summary>
             <param name="bytes">
                 The sequence of bytes to convert.
@@ -13335,70 +13040,6 @@
             </param>
             <param name="strs">
                 The sequence of strings to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToBin(System.String,System.Boolean)">
-            <summary>
-                Converts the specified string to its string representation of a base-2 binary sequence.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-            <param name="separator">
-                true to add a single space character as a separator between every single byte;
-                otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToStringFromBin(System.String)">
-            <summary>
-                Converts the specified base-2 binary sequence back to string.
-            </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToHexa(System.Byte[],System.Nullable{System.Char},System.Boolean)">
-            <summary>
-                Converts the specified sequence of bytes into a hexadecimal sequence.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to convert.
-            </param>
-            <param name="separator">
-                A single space character used as a separator.
-            </param>
-            <param name="upper">
-                true to convert the result to uppercase; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToHexa(System.String,System.Nullable{System.Char},System.Boolean)">
-            <summary>
-                Converts the specified string to hexadecimal sequence.
-            </summary>
-            <param name="str">
-                The string to convert.
-            </param>
-            <param name="separator">
-                A single space character used as a separator.
-            </param>
-            <param name="upper">
-                true to convert the result to uppercase; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToBytesFormHexa(System.String)">
-            <summary>
-                Converts the specified hexadecimal sequence back into a sequence of bytes.
-            </summary>
-            <param name="str">
-                The string to reconvert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ToStringFromHexa(System.String)">
-            <summary>
-                Converts the specified hexadecimal sequence back to string.
-            </summary>
-            <param name="str">
-                The string to reconvert.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Replace(System.Byte[],System.Byte[],System.Byte[])">
@@ -13582,59 +13223,59 @@
                 Disposes of the resources (other than memory) used by the <see cref="T:System.Windows.Forms.Form"/>.
             </summary>
         </member>
-        <member name="T:SilDev.Service">
-            <summary>
-                Provides static methods to control service applications.
-            </summary>
-        </member>
-        <member name="T:SilDev.Service.State">
+        <member name="T:SilDev.ServiceState">
             <summary>
                 Provides enumerated values of service states.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Continuing">
+        <member name="F:SilDev.ServiceState.Continuing">
             <summary>
                 The service continue is pending.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Pausing">
+        <member name="F:SilDev.ServiceState.Pausing">
             <summary>
                 The service pause is pending.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Paused">
+        <member name="F:SilDev.ServiceState.Paused">
             <summary>
                 The service is paused.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Running">
+        <member name="F:SilDev.ServiceState.Running">
             <summary>
                 The service is running.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Starting">
+        <member name="F:SilDev.ServiceState.Starting">
             <summary>
                 The service is starting.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Stopping">
+        <member name="F:SilDev.ServiceState.Stopping">
             <summary>
                 The service is stopping.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Stopped">
+        <member name="F:SilDev.ServiceState.Stopped">
             <summary>
                 The service is not running.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.NotFound">
+        <member name="F:SilDev.ServiceState.NotFound">
             <summary>
                 The service could not be found.
             </summary>
         </member>
-        <member name="F:SilDev.Service.State.Unknown">
+        <member name="F:SilDev.ServiceState.Unknown">
             <summary>
                 The service state could not be determined.
+            </summary>
+        </member>
+        <member name="T:SilDev.Service">
+            <summary>
+                Provides static methods to control service applications.
             </summary>
         </member>
         <member name="M:SilDev.Service.Install(System.String,System.String,System.String,System.String)">
@@ -13699,76 +13340,74 @@
         </member>
         <member name="M:SilDev.Service.GetStatus(System.String)">
             <summary>
-                Returns the current <see cref="T:SilDev.Service.State"/> of an existing service.
+                Returns the current <see cref="T:SilDev.ServiceState"/> of an existing service.
             </summary>
             <param name="serviceName">
                 The name of the service to check.
             </param>
         </member>
-        <member name="T:SilDev.TaskBar">
-            <summary>
-                Provides static methods to enable you to get or set the state of the taskbar.
-            </summary>
-        </member>
-        <member name="T:SilDev.TaskBar.Location">
+        <member name="T:SilDev.TaskBarLocation">
             <summary>
                 Provides enumerated flags of the taskbar location.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBar.Location.Hidden">
+        <member name="F:SilDev.TaskBarLocation.Hidden">
             <summary>
                 The taskbar is hidden.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBar.Location.Top">
+        <member name="F:SilDev.TaskBarLocation.Top">
             <summary>
                 The taskbar is located at the top.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBar.Location.Bottom">
+        <member name="F:SilDev.TaskBarLocation.Bottom">
             <summary>
                 The taskbar is located at the bottom.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBar.Location.Left">
+        <member name="F:SilDev.TaskBarLocation.Left">
             <summary>
                 The taskbar is on the left side.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBar.Location.Right">
+        <member name="F:SilDev.TaskBarLocation.Right">
             <summary>
                 The taskbar is on the right side.
             </summary>
         </member>
-        <member name="T:SilDev.TaskBar.State">
+        <member name="T:SilDev.TaskBarState">
             <summary>
                 Provides enumerated options that control the current state of the taskbar.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBar.State.AutoHide">
+        <member name="F:SilDev.TaskBarState.AutoHide">
             <summary>
                 The taskbar is in the autohide state.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBar.State.AlwaysOnTop">
+        <member name="F:SilDev.TaskBarState.AlwaysOnTop">
             <summary>
-                <para>
-                    The taskbar is in the always-on-top state.
-                </para>
+                The taskbar is in the always-on-top state.
                 <para>
                     Note that as of Windows 7, AlwaysOnTop is no longer returned because the taskbar
                     is always in that state.
                 </para>
             </summary>
         </member>
-        <member name="M:SilDev.TaskBar.GetState">
+        <member name="T:SilDev.TaskBar">
             <summary>
-                Returns the current <see cref="T:SilDev.TaskBar.State"/> of the taskbar.
+                Provides static methods to enable you to get or set the state of the taskbar.
             </summary>
         </member>
-        <member name="M:SilDev.TaskBar.SetState(SilDev.TaskBar.State)">
+        <member name="M:SilDev.TaskBar.GetState">
             <summary>
-                Sets the new <see cref="T:SilDev.TaskBar.State"/> of the taskbar.
+                Returns the current <see cref="T:SilDev.TaskBarState"/> of the taskbar.
+            </summary>
+        </member>
+        <member name="M:SilDev.TaskBar.SetState(SilDev.TaskBarState)">
+            <summary>
+                Sets the new <see cref="T:SilDev.TaskBarState"/> of the taskbar.
             </summary>
             <param name="state">
                 The new state to set.
@@ -13945,7 +13584,8 @@
             </param>
             <param name="defEncoding">
                 The default character encoding, which is returned if no character encoding
-                was found. If the value is NULL it returns <see cref="P:System.Text.Encoding.Default"/>.
+                was found. If the value is NULL it returns the Windows-1252
+                <see cref="T:System.Text.Encoding"/> format.
             </param>
         </member>
         <member name="M:SilDev.TextEx.ChangeEncoding(System.String,System.Text.Encoding)">
@@ -13957,7 +13597,8 @@
                 The file to change.
             </param>
             <param name="encoding">
-                The new character encoding.
+                The new character encoding. If the value is NULL it uses the Windows-1252
+                <see cref="T:System.Text.Encoding"/> format.
             </param>
         </member>
         <member name="T:SilDev.TextEx.NewLineFormats">
@@ -17903,19 +17544,13 @@
                 A handle to the window whose window procedure is to receive the message. The following values
                 have special meanings.
                 <para>
-                    <c>
-                        HWND_BROADCAST ((HWND)0xffff):
-                    </c>
-                    The message is posted to all top-level windows in the system, including disabled or invisible
-                    unowned windows, overlapped windows, and pop-up windows. The message is not posted to child
-                    windows.
+                    HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
+                    including disabled or invisible unowned windows, overlapped windows, and pop-up windows. The
+                    message is not posted to child windows.
                 </para>
                 <para>
-                    <c>
-                        NULL:
-                    </c>
-                    The function behaves like a call to PostThreadMessage with the dwThreadId parameter set to
-                    the identifier of the current thread.
+                    NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter
+                    set to the identifier of the current thread.
                 </para>
             </param>
             <param name="msg">
@@ -17937,19 +17572,13 @@
                 A handle to the window whose window procedure is to receive the message. The following values
                 have special meanings.
                 <para>
-                    <c>
-                        HWND_BROADCAST ((HWND)0xffff):
-                    </c>
-                    The message is posted to all top-level windows in the system, including disabled or invisible
-                    unowned windows, overlapped windows, and pop-up windows. The message is not posted to child
-                    windows.
+                    HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
+                    including disabled or invisible unowned windows, overlapped windows, and pop-up windows.
+                    The message is not posted to child windows.
                 </para>
                 <para>
-                    <c>
-                        NULL:
-                    </c>
-                    The function behaves like a call to PostThreadMessage with the dwThreadId parameter set to
-                    the identifier of the current thread.
+                    NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter
+                    set to the identifier of the current thread.
                 </para>
             </param>
             <param name="msg">
@@ -18236,38 +17865,24 @@
             <param name="fuFlags">
                 The behavior of this function. This parameter can be one or more of the following values.
                 <para>
-                    <c>
-                        SMTO_ABORTIFHUNG (0x2):
-                    </c>
-                    The function returns without waiting for the time-out period to elapse if the receiving
-                    thread appears to not respond or hangs.
+                    SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+                    elapse if the receiving thread appears to not respond or hangs.
                 </para>
                 <para>
-                    <c>
-                        SMTO_BLOCK (0x1):
-                    </c>
-                    Prevents the calling thread from processing any other requests until the function returns.
+                    SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until
+                    the function returns.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NORMAL (0x0):
-                    </c>
-                    The calling thread is not prevented from processing other requests while waiting for the
-                    function to return.
+                    SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+                    waiting for the function to return.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-                    </c>
-                    The function does not enforce the time-out period as long as the receiving thread is
-                    processing messages.
+                    SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+                    the receiving thread is processing messages.
                 </para>
                 <para>
-                    <c>
-                        SMTO_ERRORONEXIT (0x20):
-                    </c>
-                    The function should return 0 if the receiving window is destroyed or its owning thread dies
-                    while the message is being processed.
+                    SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
+                    or its owning thread dies while the message is being processed.
                 </para>
             </param>
             <param name="uTimeout">
@@ -18306,38 +17921,24 @@
             <param name="fuFlags">
                 The behavior of this function. This parameter can be one or more of the following values.
                 <para>
-                    <c>
-                        SMTO_ABORTIFHUNG (0x2):
-                    </c>
-                    The function returns without waiting for the time-out period to elapse if the receiving
-                    thread appears to not respond or hangs.
+                    SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+                    elapse if the receiving thread appears to not respond or hangs.
                 </para>
                 <para>
-                    <c>
-                        SMTO_BLOCK (0x1):
-                    </c>
-                    Prevents the calling thread from processing any other requests until the function returns.
+                    SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until the
+                    function returns.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NORMAL (0x0):
-                    </c>
-                    The calling thread is not prevented from processing other requests while waiting for the
-                    function to return.
+                    SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+                    waiting for the function to return.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-                    </c>
-                    The function does not enforce the time-out period as long as the receiving thread is
-                    processing messages.
+                    SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+                    the receiving thread is processing messages.
                 </para>
                 <para>
-                    <c>
-                        SMTO_ERRORONEXIT (0x20):
-                    </c>
-                    The function should return 0 if the receiving window is destroyed or its owning thread dies
-                    while the message is being processed.
+                    SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed or
+                    its owning thread dies while the message is being processed.
                 </para>
             </param>
             <param name="uTimeout">
@@ -18604,31 +18205,20 @@
                 A handle to the window to precede the positioned window in the Z order. This parameter must be a
                 window handle or one of the following values.
                 <para>
-                    <c>
-                        HWND_BOTTOM ((HWND)1):
-                    </c>
-                    Places the window at the bottom of the Z order. If the hWnd parameter identifies a topmost
-                    window, the window loses its topmost status and is placed at the bottom of all other windows.
+                    HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order. If the hWnd parameter
+                    identifies a topmost window, the window loses its topmost status and is placed at the bottom of
+                    all other windows.
                 </para>
                 <para>
-                    <c>
-                        HWND_NOTOPMOST ((HWND)-2):
-                    </c>
-                    Places the window above all non-topmost windows (that is, behind all topmost windows). This
-                    flag has no effect if the window is already a non-topmost window.
+                    HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost windows (that is, behind all
+                    topmost windows). This flag has no effect if the window is already a non-topmost window.
                 </para>
                 <para>
-                    <c>
-                        HWND_TOP ((HWND)0):
-                    </c>
-                    Places the window at the top of the Z order.
+                    HWND_TOP ((HWND)0): Places the window at the top of the Z order.
                 </para>
                 <para>
-                    <c>
-                        HWND_TOPMOST ((HWND)-1):
-                    </c>
-                    Places the window above all non-topmost windows. The window maintains its topmost position even
-                    when it is deactivated.
+                    HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost windows. The window maintains
+                    its topmost position even when it is deactivated.
                 </para>
             </param>
             <param name="x">
@@ -20256,31 +19846,24 @@
             <returns>
                 Returns one of the following values.
                 <para>
-                    <c>
-                        TRUE:
-                    </c>
-                    A visual style is enabled, and windows with visual styles applied should call OpenThemeData to start using
-                    theme drawing services.
+                    TRUE: A visual style is enabled, and windows with visual styles applied should call OpenThemeData to start
+                    using theme drawing services.
                 </para>
                 <para>
-                    <c>
-                        FALSE:
-                    </c>
-                    A visual style is not enabled, and the window message handler does not need to make another call to
+                    FALSE: A visual style is not enabled, and the window message handler does not need to make another call to
                     <see cref="M:SilDev.WinApi.NativeMethods.IsThemeActive"/> until it receives a WM_THEMECHANGED message.
                 </para>
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.LoadLibrary(System.String)">
             <summary>
-                Loads the specified module into the address space of the calling process. The
-                specified module may cause other modules to be loaded.
+                Loads the specified module into the address space of the calling process. The specified module may cause other
+                modules to be loaded.
             </summary>
             <param name="lpFileName">
-                The name of the module. This can be either a library module (a .dll file) or an
-                executable module (an .exe file). The name specified is the file name of the
-                module and is not related to the name stored in the library module itself, as
-                specified by the LIBRARY keyword in the module-definition (.def) file.
+                The name of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).
+                The name specified is the file name of the module and is not related to the name stored in the library module
+                itself, as specified by the LIBRARY keyword in the module-definition (.def) file.
             </param>
             <returns>
                 If the function succeeds, the return value is a handle to the module.
@@ -20316,17 +19899,16 @@
                 Allocates the specified number of bytes from the heap.
             </summary>
             <param name="flag">
-                The memory allocation attributes. The default is the LMEM_FIXED value. This
-                parameter can be one or more of the <see cref="T:SilDev.WinApi.LocalAllocFlags"/>.
+                The memory allocation attributes. The default is the LMEM_FIXED value. This parameter can be one or more
+                of the <see cref="T:SilDev.WinApi.LocalAllocFlags"/>.
             </param>
             <param name="size">
-                The number of bytes to allocate. If this parameter is zero and the uFlags
-                parameter specifies <see cref="F:SilDev.WinApi.LocalAllocFlags.LMemMoveable"/>, the function
-                returns a handle to a memory object that is marked as discarded.
+                The number of bytes to allocate. If this parameter is zero and the uFlags parameter specifies
+                <see cref="F:SilDev.WinApi.LocalAllocFlags.LMemMoveable"/>, the function returns a handle to a memory object that is
+                marked as discarded.
             </param>
             <returns>
-                If the function succeeds, the return value is a handle to the newly allocated
-                memory object.
+                If the function succeeds, the return value is a handle to the newly allocated memory object.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.LocalFree(System.IntPtr)">
@@ -20334,8 +19916,8 @@
                 Frees the specified local memory object and invalidates its handle.
             </summary>
             <param name="hMem">
-                A handle to the local memory object. This handle is returned by either the
-                <see cref="M:SilDev.WinApi.NativeMethods.LocalAlloc(SilDev.WinApi.LocalAllocFlags,System.UIntPtr)"/> function.
+                A handle to the local memory object. This handle is returned by either the <see cref="M:SilDev.WinApi.NativeMethods.LocalAlloc(SilDev.WinApi.LocalAllocFlags,System.UIntPtr)"/>
+                function.
             </param>
             <returns>
                 If the function succeeds, the return value is NULL.
@@ -20343,12 +19925,11 @@
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.LockWindowUpdate(System.IntPtr)">
             <summary>
-                Disables or enables drawing in the specified window. Only one window can be locked
-                at a time.
+                Disables or enables drawing in the specified window. Only one window can be locked at a time.
             </summary>
             <param name="hWndLock">
-                The window in which drawing will be disabled. If this parameter is NULL, drawing in
-                the locked window is enabled.
+                The window in which drawing will be disabled. If this parameter is NULL, drawing in the locked window
+                is enabled.
             </param>
             <returns>
                 If the function succeeds, the return value is nonzero.
@@ -20387,9 +19968,9 @@
                 privilege name.
             </summary>
             <param name="lpSystemName">
-                A pointer to a null-terminated string that specifies the name of the system on which the privilege
-                name is retrieved. If a null string is specified, the function attempts to find the privilege name
-                on the local system.
+                A pointer to a null-terminated string that specifies the name of the system on which the privilege name
+                is retrieved. If a null string is specified, the function attempts to find the privilege name on the
+                local system.
             </param>
             <param name="lpName">
                 A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
@@ -20405,15 +19986,15 @@
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.MciSendString(System.String,System.Text.StringBuilder,System.UInt32,System.IntPtr)">
             <summary>
-                The mciSendString function sends a command string to an MCI device. The device that the
-                command is sent to is specified in the command string.
+                The mciSendString function sends a command string to an MCI device. The device that the command is sent
+                to is specified in the command string.
             </summary>
             <param name="lpszCommand">
                 Pointer to a null-terminated string that specifies an MCI command string.
             </param>
             <param name="lpszReturnString">
-                Pointer to a buffer that receives return information. If no return information is needed,
-                this parameter can be NULL.
+                Pointer to a buffer that receives return information. If no return information is needed, this parameter
+                can be NULL.
             </param>
             <param name="cchReturn">
                 Size, in characters, of the return buffer specified by the lpszReturnString parameter.
@@ -20491,13 +20072,12 @@
                 Opens an existing local process object.
             </summary>
             <param name="dwDesiredAccess">
-                The access to the process object. This access right is checked against the
-                security descriptor for the process. This parameter can be one or more of the
-                process access rights.
+                The access to the process object. This access right is checked against the security descriptor for the
+                process. This parameter can be one or more of the process access rights.
             </param>
             <param name="bInheritHandle">
-                If this value is TRUE, processes created by this process will inherit the handle.
-                Otherwise, the processes do not inherit this handle.
+                If this value is TRUE, processes created by this process will inherit the handle. Otherwise, the
+                processes do not inherit this handle.
             </param>
             <param name="dwProcessId">
                 The identifier of the local process to be opened.
@@ -20588,19 +20168,13 @@
                 A handle to the window whose window procedure is to receive the message. The following values
                 have special meanings.
                 <para>
-                    <c>
-                        HWND_BROADCAST ((HWND)0xffff):
-                    </c>
-                    The message is posted to all top-level windows in the system, including disabled or invisible
-                    unowned windows, overlapped windows, and pop-up windows. The message is not posted to child
-                    windows.
+                    HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
+                    including disabled or invisible unowned windows, overlapped windows, and pop-up windows. The
+                    message is not posted to child windows.
                 </para>
                 <para>
-                    <c>
-                        NULL:
-                    </c>
-                    The function behaves like a call to PostThreadMessage with the dwThreadId parameter set to
-                    the identifier of the current thread.
+                    NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter set
+                    to the identifier of the current thread.
                 </para>
             </param>
             <param name="msg">
@@ -20946,38 +20520,24 @@
             <param name="fuFlags">
                 The behavior of this function. This parameter can be one or more of the following values.
                 <para>
-                    <c>
-                        SMTO_ABORTIFHUNG (0x2):
-                    </c>
-                    The function returns without waiting for the time-out period to elapse if the receiving
-                    thread appears to not respond or hangs.
+                    SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+                    elapse if the receiving thread appears to not respond or hangs.
                 </para>
                 <para>
-                    <c>
-                        SMTO_BLOCK (0x1):
-                    </c>
-                    Prevents the calling thread from processing any other requests until the function returns.
+                    SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until
+                    the function returns.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NORMAL (0x0):
-                    </c>
-                    The calling thread is not prevented from processing other requests while waiting for the
-                    function to return.
+                    SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+                    waiting for the function to return.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-                    </c>
-                    The function does not enforce the time-out period as long as the receiving thread is
-                    processing messages.
+                    SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+                    the receiving thread is processing messages.
                 </para>
                 <para>
-                    <c>
-                        SMTO_ERRORONEXIT (0x20):
-                    </c>
-                    The function should return 0 if the receiving window is destroyed or its owning thread dies
-                    while the message is being processed.
+                    SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
+                    or its owning thread dies while the message is being processed.
                 </para>
             </param>
             <param name="uTimeout">
@@ -21020,38 +20580,24 @@
             <param name="fuFlags">
                 The behavior of this function. This parameter can be one or more of the following values.
                 <para>
-                    <c>
-                        SMTO_ABORTIFHUNG (0x2):
-                    </c>
-                    The function returns without waiting for the time-out period to elapse if the receiving
-                    thread appears to not respond or hangs.
+                    SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+                    elapse if the receiving thread appears to not respond or hangs.
                 </para>
                 <para>
-                    <c>
-                        SMTO_BLOCK (0x1):
-                    </c>
-                    Prevents the calling thread from processing any other requests until the function returns.
+                    SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until the
+                    function returns.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NORMAL (0x0):
-                    </c>
-                    The calling thread is not prevented from processing other requests while waiting for the
-                    function to return.
+                    SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+                    waiting for the function to return.
                 </para>
                 <para>
-                    <c>
-                        SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-                    </c>
-                    The function does not enforce the time-out period as long as the receiving thread is
-                    processing messages.
+                    SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+                    the receiving thread is processing messages.
                 </para>
                 <para>
-                    <c>
-                        SMTO_ERRORONEXIT (0x20):
-                    </c>
-                    The function should return 0 if the receiving window is destroyed or its owning thread dies
-                    while the message is being processed.
+                    SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
+                    or its owning thread dies while the message is being processed.
                 </para>
             </param>
             <param name="uTimeout">
@@ -21290,31 +20836,20 @@
                 A handle to the window to precede the positioned window in the Z order. This parameter must be a
                 window handle or one of the following values.
                 <para>
-                    <c>
-                        HWND_BOTTOM ((HWND)1):
-                    </c>
-                    Places the window at the bottom of the Z order. If the hWnd parameter identifies a topmost
-                    window, the window loses its topmost status and is placed at the bottom of all other windows.
+                    HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order. If the hWnd parameter
+                    identifies a topmost window, the window loses its topmost status and is placed at the bottom
+                    of all other windows.
                 </para>
                 <para>
-                    <c>
-                        HWND_NOTOPMOST ((HWND)-2):
-                    </c>
-                    Places the window above all non-topmost windows (that is, behind all topmost windows). This
-                    flag has no effect if the window is already a non-topmost window.
+                    HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost windows (that is, behind all
+                    topmost windows). This flag has no effect if the window is already a non-topmost window.
                 </para>
                 <para>
-                    <c>
-                        HWND_TOP ((HWND)0):
-                    </c>
-                    Places the window at the top of the Z order.
+                    HWND_TOP ((HWND)0): Places the window at the top of the Z order.
                 </para>
                 <para>
-                    <c>
-                        HWND_TOPMOST ((HWND)-1):
-                    </c>
-                    Places the window above all non-topmost windows. The window maintains its topmost position even
-                    when it is deactivated.
+                    HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost windows. The window maintains
+                    its topmost position even when it is deactivated.
                 </para>
             </param>
             <param name="x">
@@ -22533,6 +22068,69 @@
             <summary>
                 A string that describes the type of file.
             </summary>
+        </member>
+        <member name="T:SilDev.Xml">
+            <summary>
+                Provides basic functionality for the XML format.
+            </summary>
+        </member>
+        <member name="M:SilDev.Xml.Serialize``1(``0)">
+            <summary>
+                Serializes the specified object graph into a string representation of an XML
+                document.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source.
+            </typeparam>
+            <param name="source">
+                The object graph to serialize.
+            </param>
+        </member>
+        <member name="M:SilDev.Xml.SerializeToFile``1(System.String,``0,System.Boolean)">
+            <summary>
+                Creates a new XML file, writes the specified object graph into to the XML file,
+                and then closes the file.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source.
+            </typeparam>
+            <param name="path">
+                The XML file to create.
+            </param>
+            <param name="source">
+                The object graph to write to the file.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Xml.Deserialize``1(System.String,``0)">
+            <summary>
+                Deserializes a string representation of an XML document into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the result.
+            </typeparam>
+            <param name="source">
+                The string representation of an XML document to deserialize.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
+        <member name="M:SilDev.Xml.DeserializeFile``1(System.String,``0)">
+            <summary>
+                Deserializes specified XML file into an object graph.
+            </summary>
+            <typeparam name="TResult">
+                The type of the result.
+            </typeparam>
+            <param name="path">
+                The XML file to deserialize.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
         </member>
     </members>
 </doc>
