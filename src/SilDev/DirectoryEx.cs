@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-07 10:08
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -605,6 +605,45 @@ namespace SilDev
                 Log.Write(ex);
                 return -1;
             }
+        }
+
+        /// <summary>
+        ///     Returns the total amount of free space available on the drive of the specified
+        ///     directory, in bytes.
+        /// </summary>
+        /// <param name="dirInfo">
+        ///     The directory instance member to check.
+        /// </param>
+        public static long GetFreeSpace(this DirectoryInfo dirInfo)
+        {
+            try
+            {
+                var root = Path.GetPathRoot(dirInfo.FullName).ToUpper();
+                var drive = DriveInfo.GetDrives().FirstOrDefault(x => root.Equals(x.Name));
+                if (drive == default(DriveInfo))
+                    throw new ArgumentNullException(nameof(drive));
+                return drive.TotalFreeSpace;
+            }
+            catch
+            {
+                return 0L;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the total amount of free space available on the drive of the specified
+        ///     directory, in bytes.
+        /// </summary>
+        /// <param name="path">
+        ///     The directory to check.
+        /// </param>
+        public static long GetFreeSpace(string path)
+        {
+            var dir = PathEx.Combine(path);
+            if (!Directory.Exists(dir))
+                return 0L;
+            var di = new DirectoryInfo(dir);
+            return di.GetFreeSpace();
         }
 
         /// <summary>
