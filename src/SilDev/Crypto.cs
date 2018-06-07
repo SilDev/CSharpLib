@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-07 09:48
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -1941,6 +1941,131 @@ namespace SilDev
                     return null;
                 }
             }
+        }
+
+        #endregion
+
+        #region Rivest-Shamir-Adleman
+
+        /// <summary>
+        ///     Provides static methods to handle RSA encryption and decryption.
+        /// </summary>
+        public static class Rsa
+        {
+            /// <summary>
+            ///     Creates a public and private key pair at the specified location.
+            /// </summary>
+            /// <param name="dirPath">
+            ///     The directory path.
+            /// </param>
+            /// <param name="keySize">
+            ///     The size of the key in bits.
+            /// </param>
+            public static void CreateKeyFiles(string dirPath, int keySize = 4096)
+            {
+                var csp = new RSACryptoServiceProvider(keySize);
+                try
+                {
+                    var keyStamp = $"rsa-{keySize}-{DateTime.Now:yyyyMMdd}";
+                    var privPath = PathEx.Combine(dirPath, $"{keyStamp}-private.xml");
+                    Xml.SerializeToFile(privPath, csp.ExportParameters(true));
+                    var pubPath = PathEx.Combine(dirPath, $"{keyStamp}-public.xml");
+                    Xml.SerializeToFile(pubPath, csp.ExportParameters(false));
+                }
+                finally
+                {
+                    csp.PersistKeyInCsp = false;
+                    csp.Dispose();
+                }
+            }
+
+            /// <summary>
+            ///     Encrypts the specified sequence of bytes.
+            /// </summary>
+            /// <param name="publicKeyPath">
+            ///     The path to the public key file.
+            /// </param>
+            /// <param name="bytes">
+            ///     The data to encrypt.
+            /// </param>
+            public static string EncryptBytes(string publicKeyPath, byte[] bytes)
+            {
+                var csp = new RSACryptoServiceProvider();
+                var text = default(string);
+                try
+                {
+                    var pubKey = Xml.DeserializeFile<RSAParameters>(publicKeyPath);
+                    csp.ImportParameters(pubKey);
+                    var cypher = csp.Encrypt(bytes, true);
+                    text = Convert.ToBase64String(cypher);
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+                finally
+                {
+                    csp.PersistKeyInCsp = false;
+                    csp.Dispose();
+                }
+                return text;
+            }
+
+            /// <summary>
+            ///     Encrypts the specified string.
+            /// </summary>
+            /// <param name="publicKeyPath">
+            ///     The path to the public key file.
+            /// </param>
+            /// <param name="text">
+            ///     The text to encrypt.
+            /// </param>
+            public static string EncryptString(string publicKeyPath, string text) =>
+                EncryptBytes(publicKeyPath, text?.ToBytesDefault());
+
+            /// <summary>
+            ///     Decrypts the specified sequence of bytes.
+            /// </summary>
+            /// <param name="privateKeyPath">
+            ///     The path to the private key file.
+            /// </param>
+            /// <param name="code">
+            ///     The cypher to decrypt.
+            /// </param>
+            public static byte[] DecryptBytes(string privateKeyPath, string code)
+            {
+                var csp = new RSACryptoServiceProvider();
+                var data = default(byte[]);
+                try
+                {
+                    var privKey = Xml.DeserializeFile<RSAParameters>(privateKeyPath);
+                    csp.ImportParameters(privKey);
+                    var cypher = Convert.FromBase64String(code);
+                    data = csp.Decrypt(cypher, true);
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+                finally
+                {
+                    csp.PersistKeyInCsp = false;
+                    csp.Dispose();
+                }
+                return data;
+            }
+
+            /// <summary>
+            ///     Decrypts the specified string.
+            /// </summary>
+            /// <param name="privateKeyPath">
+            ///     The path to the private key file.
+            /// </param>
+            /// <param name="code">
+            ///     The cypher to decrypt.
+            /// </param>
+            public static string DecryptString(string privateKeyPath, string code) =>
+                DecryptBytes(privateKeyPath, code)?.ToStringDefault();
         }
 
         #endregion
