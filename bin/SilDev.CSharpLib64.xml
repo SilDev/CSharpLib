@@ -3945,6 +3945,24 @@
                 true to include the size of each file; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.DirectoryEx.GetFreeSpace(System.IO.DirectoryInfo)">
+            <summary>
+                Returns the total amount of free space available on the drive of the specified
+                directory, in bytes.
+            </summary>
+            <param name="dirInfo">
+                The directory instance member to check.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetFreeSpace(System.String)">
+            <summary>
+                Returns the total amount of free space available on the drive of the specified
+                directory, in bytes.
+            </summary>
+            <param name="path">
+                The directory to check.
+            </param>
+        </member>
         <member name="M:SilDev.DirectoryEx.GetSize(System.IO.DirectoryInfo,System.IO.SearchOption)">
             <summary>
                 Returns the size, in bytes, of the specified directory instance member.
