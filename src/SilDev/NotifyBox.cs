@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2018-03-04 01:09
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -26,48 +26,66 @@ namespace SilDev
     using Timer = System.Windows.Forms.Timer;
 
     /// <summary>
+    ///     Provides enumerated constants used to retrieves the play sound of the notify box.
+    /// </summary>
+    public enum NotifyBoxSound
+    {
+#pragma warning disable CS1591
+        Asterisk,
+        Warning,
+        Notify,
+        Question,
+        None
+#pragma warning restore CS1591
+    }
+
+    /// <summary>
+    ///     Provides enumerated constants used to retrieves the start position of the notify box.
+    /// </summary>
+    public enum NotifyBoxStartPosition
+    {
+#pragma warning disable CS1591
+        Center,
+        CenterLeft,
+        CenterRight,
+        BottomLeft,
+        BottomRight,
+        TopLeft,
+        TopRight
+#pragma warning restore CS1591
+    }
+
+    /// <summary>
     ///     Represents a notification window, simliar with a system tray notification, which presents a
     ///     notification to the user.
     /// </summary>
     public class NotifyBox
     {
-        /// <summary>
-        ///     Provides enumerated constants used to retrieves the play sound of the notify box.
-        /// </summary>
-        public enum NotifyBoxSound
-        {
-#pragma warning disable CS1591
-            Asterisk,
-            Warning,
-            Notify,
-            Question,
-            None
-#pragma warning restore CS1591
-        }
-
-        /// <summary>
-        ///     Provides enumerated constants used to retrieves the start position of the notify box.
-        /// </summary>
-        public enum NotifyBoxStartPosition
-        {
-#pragma warning disable CS1591
-            Center,
-            CenterLeft,
-            CenterRight,
-            BottomLeft,
-            BottomRight,
-            TopLeft,
-            TopRight
-#pragma warning restore CS1591
-        }
-
-        private double _opacity = .95d;
+        private double _opacity = .90d;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
         /// </summary>
         [SuppressMessage("ReSharper", "EmptyConstructor")]
-        public NotifyBox() { }
+        public NotifyBox(double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color), bool topMost = false)
+        {
+            Opacity = opacity;
+            BackColor = backColor == default(Color) ? SystemColors.Menu : backColor;
+            BorderColor = borderColor == default(Color) ? SystemColors.MenuHighlight : borderColor;
+            CaptionColor = captionColor == default(Color) ? SystemColors.MenuHighlight : captionColor;
+            TextColor = textColor == default(Color) ? SystemColors.MenuText : textColor;
+            TopMost = topMost;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
+        /// </summary>
+        public NotifyBox(double opacity, bool topMost) : this(opacity, default(Color), default(Color), default(Color), default(Color), topMost) { }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
+        /// </summary>
+        public NotifyBox(bool topMost) : this(.90d, default(Color), default(Color), default(Color), default(Color), topMost) { }
 
         /// <summary>
         ///     Gets or sets the opacity level for the notify box.
@@ -81,22 +99,22 @@ namespace SilDev
         /// <summary>
         ///     Gets or sets the background color for the notify box.
         /// </summary>
-        public Color BackColor { get; set; } = SystemColors.Menu;
+        public Color BackColor { get; set; }
 
         /// <summary>
         ///     Gets or sets the border color for the notify box.
         /// </summary>
-        public Color BorderColor { get; set; } = SystemColors.MenuHighlight;
+        public Color BorderColor { get; set; }
 
         /// <summary>
         ///     Gets or sets the caption color for the notify box.
         /// </summary>
-        public Color CaptionColor { get; set; } = SystemColors.MenuHighlight;
+        public Color CaptionColor { get; set; }
 
         /// <summary>
         ///     Gets or sets the text color for the notify box.
         /// </summary>
-        public Color TextColor { get; set; } = SystemColors.MenuText;
+        public Color TextColor { get; set; }
 
         /// <summary>
         ///     Specifies that the notify box is placed above all non-topmost windows.
@@ -104,6 +122,7 @@ namespace SilDev
         public bool TopMost { get; set; }
 
         private NotifyForm NotifyWindow { get; set; }
+
         private Thread NotifyThread { get; set; }
 
         /// <summary>
@@ -410,12 +429,12 @@ namespace SilDev
                         case NotifyBoxStartPosition.CenterLeft:
                         case NotifyBoxStartPosition.TopLeft:
                         case NotifyBoxStartPosition.BottomLeft:
-                            Location = new Point(taskBarLocation == TaskBar.Location.Left ? taskBarSize + 3 : 3, Location.Y);
+                            Location = new Point(taskBarLocation == TaskBarLocation.Left ? taskBarSize + 3 : 3, Location.Y);
                             break;
                         case NotifyBoxStartPosition.CenterRight:
                         case NotifyBoxStartPosition.TopRight:
                         case NotifyBoxStartPosition.BottomRight:
-                            Location = new Point(Screen.PrimaryScreen.Bounds.Width - Width - (taskBarLocation == TaskBar.Location.Right ? taskBarSize + 3 : 3), Location.Y);
+                            Location = new Point(Screen.PrimaryScreen.Bounds.Width - Width - (taskBarLocation == TaskBarLocation.Right ? taskBarSize + 3 : 3), Location.Y);
                             break;
                     }
                     switch (position)
@@ -426,11 +445,11 @@ namespace SilDev
                             break;
                         case NotifyBoxStartPosition.BottomLeft:
                         case NotifyBoxStartPosition.BottomRight:
-                            Location = new Point(Location.X, Screen.PrimaryScreen.Bounds.Height - Height - (taskBarLocation == TaskBar.Location.Bottom ? taskBarSize + 3 : 3));
+                            Location = new Point(Location.X, Screen.PrimaryScreen.Bounds.Height - Height - (taskBarLocation == TaskBarLocation.Bottom ? taskBarSize + 3 : 3));
                             break;
                         case NotifyBoxStartPosition.TopLeft:
                         case NotifyBoxStartPosition.TopRight:
-                            Location = new Point(Location.X, taskBarLocation == TaskBar.Location.Top ? taskBarSize + 3 : 3);
+                            Location = new Point(Location.X, taskBarLocation == TaskBarLocation.Top ? taskBarSize + 3 : 3);
                             break;
                     }
                 }
@@ -535,7 +554,7 @@ namespace SilDev
         /// <param name="borders">
         ///     true to visible the window borders; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position = NotifyBox.NotifyBoxStartPosition.BottomRight, NotifyBox.NotifyBoxSound sound = NotifyBox.NotifyBoxSound.None, ushort duration = 5000, bool borders = true) =>
+        public static void Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 5000, bool borders = true) =>
             new NotifyBox { TopMost = true }.Show(text, caption, position, sound, (ushort)(duration < 200 ? 200 : duration), borders);
 
         /// <summary>
@@ -556,7 +575,7 @@ namespace SilDev
         /// <param name="borders">
         ///     true to visible the window borders; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position, NotifyBox.NotifyBoxSound sound, bool borders) =>
+        public static void Show(string text, string caption, NotifyBoxStartPosition position, NotifyBoxSound sound, bool borders) =>
             Show(text, caption, position, sound, 5000, borders);
 
         /// <summary>
@@ -577,8 +596,8 @@ namespace SilDev
         /// <param name="borders">
         ///     true to visible the window borders; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position, ushort duration, bool borders = true) =>
-            Show(text, caption, position, NotifyBox.NotifyBoxSound.None, duration, borders);
+        public static void Show(string text, string caption, NotifyBoxStartPosition position, ushort duration, bool borders = true) =>
+            Show(text, caption, position, NotifyBoxSound.None, duration, borders);
 
         /// <summary>
         ///     Displays a notify box with the specified text, caption, position, and borders.
@@ -595,8 +614,8 @@ namespace SilDev
         /// <param name="borders">
         ///     true to visible the window borders; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBox.NotifyBoxStartPosition position, bool borders) =>
-            Show(text, caption, position, NotifyBox.NotifyBoxSound.None, 5000, borders);
+        public static void Show(string text, string caption, NotifyBoxStartPosition position, bool borders) =>
+            Show(text, caption, position, NotifyBoxSound.None, 5000, borders);
 
         /// <summary>
         ///     Displays a notify box with the specified text, caption, sound, duration, and borders.
@@ -616,8 +635,8 @@ namespace SilDev
         /// <param name="borders">
         ///     true to visible the window borders; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBox.NotifyBoxSound sound, ushort duration = 5000, bool borders = true) =>
-            Show(text, caption, NotifyBox.NotifyBoxStartPosition.BottomRight, sound, duration, borders);
+        public static void Show(string text, string caption, NotifyBoxSound sound, ushort duration = 5000, bool borders = true) =>
+            Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, duration, borders);
 
         /// <summary>
         ///     Displays a notify box with the specified text, caption, sound, and borders.
@@ -634,8 +653,8 @@ namespace SilDev
         /// <param name="borders">
         ///     true to visible the window borders; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBox.NotifyBoxSound sound, bool borders) =>
-            Show(text, caption, NotifyBox.NotifyBoxStartPosition.BottomRight, sound, 5000, borders);
+        public static void Show(string text, string caption, NotifyBoxSound sound, bool borders) =>
+            Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, 5000, borders);
 
         /// <summary>
         ///     Displays a notify box with the specified text, caption, duration, and borders.
@@ -653,6 +672,6 @@ namespace SilDev
         ///     true to visible the window borders; otherwise, false.
         /// </param>
         public static void Show(string text, string caption, ushort duration, bool borders = true) =>
-            Show(text, caption, NotifyBox.NotifyBoxStartPosition.BottomRight, NotifyBox.NotifyBoxSound.None, duration, borders);
+            Show(text, caption, NotifyBoxStartPosition.BottomRight, NotifyBoxSound.None, duration, borders);
     }
 }

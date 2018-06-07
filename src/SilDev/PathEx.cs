@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-06-03 13:12
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -938,7 +938,7 @@ namespace SilDev
         public static IEnumerable<Process> GetLocks(IEnumerable<string> paths)
         {
             if (paths == null)
-                return default(IEnumerable<Process>);
+                return null;
             var files = new List<string>();
             foreach (var path in paths.Select(Combine))
             {
@@ -951,7 +951,7 @@ namespace SilDev
                 }
                 files.Add(path);
             }
-            return files.Any() ? FileEx.GetLocks(files.ToArray()) : default(IEnumerable<Process>);
+            return files.Any() ? FileEx.GetLocks(files.ToArray()) : null;
         }
 
         /// <summary>

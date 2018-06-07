@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2018-03-12 02:08
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -25,10 +25,8 @@ namespace SilDev.Forms
     public static class ButtonEx
     {
         /// <summary>
-        ///     <para>
-        ///         Creates a small split button on the right side of this <see cref="Button"/> which is
-        ///         mostly used for drop down menu controls.
-        ///     </para>
+        ///     Creates a small split button on the right side of this <see cref="Button"/> which is mostly
+        ///     used for drop down menu controls.
         ///     <para>
         ///         Please note that the <see cref="FlatStyle"/> is overwritten to <see cref="FlatStyle.Flat"/>
         ///         which is required to apply highlight effects.

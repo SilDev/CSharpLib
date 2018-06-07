@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-06-04 10:09
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -27,73 +27,73 @@ namespace SilDev
     using System.Text.RegularExpressions;
 
     /// <summary>
+    ///     Provides size format options.
+    /// </summary>
+    public enum SizeOptions
+    {
+        /// <summary>
+        ///     Determines that the format is not changed.
+        /// </summary>
+        None,
+
+        /// <summary>
+        ///     Determines that all zeros are removed after the comma.
+        /// </summary>
+        Trim,
+
+        /// <summary>
+        ///     Determines that the value is rounded to the nearest integral value.
+        /// </summary>
+        Round
+    }
+
+    /// <summary>
+    ///     Provides labels for size units.
+    /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    public enum SizeUnits
+    {
+        /// <summary>
+        ///     Stands for byte.
+        /// </summary>
+        Byte = 0,
+
+        /// <summary>
+        ///     Stands for kilobyte or kibibyte.
+        /// </summary>
+        KB = 1,
+
+        /// <summary>
+        ///     Stands for megabyte or mebibyte.
+        /// </summary>
+        MB = 2,
+
+        /// <summary>
+        ///     Stands for gigabyte or gibibyte.
+        /// </summary>
+        GB = 3,
+
+        /// <summary>
+        ///     Stands for terabyte or tebibyte.
+        /// </summary>
+        TB = 4,
+
+        /// <summary>
+        ///     Stands for petabyte or pebibyte.
+        /// </summary>
+        PB = 5,
+
+        /// <summary>
+        ///     Stands for exabyte or exbibyte.
+        /// </summary>
+        EB = 6
+    }
+
+    /// <summary>
     ///     Provides static methods for converting or reorganizing of data.
     /// </summary>
     public static class Reorganize
     {
-        /// <summary>
-        ///     Provides size format options.
-        /// </summary>
-        public enum SizeOptions
-        {
-            /// <summary>
-            ///     Determines that the format is not changed.
-            /// </summary>
-            None,
-
-            /// <summary>
-            ///     Determines that all zeros are removed after the comma.
-            /// </summary>
-            Trim,
-
-            /// <summary>
-            ///     Determines that the value is rounded to the nearest integral value.
-            /// </summary>
-            Round
-        }
-
-        /// <summary>
-        ///     Provides labels for size units.
-        /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum SizeUnits
-        {
-            /// <summary>
-            ///     Stands for byte.
-            /// </summary>
-            Byte = 0,
-
-            /// <summary>
-            ///     Stands for kilobyte or kibibyte.
-            /// </summary>
-            KB = 1,
-
-            /// <summary>
-            ///     Stands for megabyte or mebibyte.
-            /// </summary>
-            MB = 2,
-
-            /// <summary>
-            ///     Stands for gigabyte or gibibyte.
-            /// </summary>
-            GB = 3,
-
-            /// <summary>
-            ///     Stands for terabyte or tebibyte.
-            /// </summary>
-            TB = 4,
-
-            /// <summary>
-            ///     Stands for petabyte or pebibyte.
-            /// </summary>
-            PB = 5,
-
-            /// <summary>
-            ///     Stands for exabyte or exbibyte.
-            /// </summary>
-            EB = 6
-        }
-
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
         ///     value in the specified <see cref="SizeUnits"/>.
@@ -251,10 +251,10 @@ namespace SilDev
         /// <typeparam name="TSource">
         ///     The type of the source.
         /// </typeparam>
-        /// <param name="value">
+        /// <param name="src">
         ///     The object graph to convert.
         /// </param>
-        public static byte[] SerializeObject<TSource>(this TSource value)
+        public static byte[] SerializeObject<TSource>(this TSource src)
         {
             try
             {
@@ -262,7 +262,7 @@ namespace SilDev
                 using (var ms = new MemoryStream())
                 {
                     var bf = new BinaryFormatter();
-                    bf.Serialize(ms, value);
+                    bf.Serialize(ms, src);
                     ba = ms.ToArray();
                 }
                 return ba;
@@ -508,19 +508,25 @@ namespace SilDev
             str.SplitNewLine(StringSplitOptions.RemoveEmptyEntries, trim);
 
         /// <summary>
-        ///     Converts all the characters in the specified string into a sequence of bytes.
+        ///     Converts all the characters in the specified string into a sequence of bytes with the
+        ///     specified <see cref="Encoding"/> format.
         /// </summary>
+        /// <typeparam name="TEncoding">
+        ///     The type of encoding.
+        /// </typeparam>
         /// <param name="str">
         ///     The string to convert.
         /// </param>
-        public static byte[] ToBytes(this string str)
+        /// <param name="encoding">
+        ///     The <see cref="Encoding"/> format.
+        /// </param>
+        public static byte[] ToBytes<TEncoding>(this string str, TEncoding encoding) where TEncoding : Encoding
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(str))
                     throw new ArgumentNullException(nameof(str));
-                var ba = Encoding.UTF8.GetBytes(str);
-                return ba;
+                return encoding.GetBytes(str);
             }
             catch (Exception ex)
             {
@@ -530,19 +536,48 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified sequence of bytes into a string.
+        ///     Converts all the characters in the specified string into a sequence of bytes with the
+        ///     Windows-1252 <see cref="Encoding"/> format.
         /// </summary>
+        /// <param name="str">
+        ///     The string to convert.
+        /// </param>
+        public static byte[] ToBytes(this string str) =>
+            str.ToBytes(Encoding.GetEncoding(1252));
+
+        /// <summary>
+        ///     Converts all the characters in the specified string into a sequence of bytes with the
+        ///     Windows-1252 <see cref="Encoding"/> format.
+        ///     <para>
+        ///         This method is equal to <see cref="ToBytes"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="str">
+        ///     The string to convert.
+        /// </param>
+        public static byte[] ToBytesDefault(this string str) =>
+            str.ToBytes();
+
+        /// <summary>
+        ///     Converts the specified sequence of bytes into a string with the specified
+        ///     <see cref="Encoding"/> format.
+        /// </summary>
+        /// <typeparam name="TEncoding">
+        ///     The type of encoding.
+        /// </typeparam>
         /// <param name="bytes">
         ///     The sequence of bytes to convert.
         /// </param>
-        public static string ToStringEx(this byte[] bytes)
+        /// <param name="encoding">
+        ///     The <see cref="Encoding"/> format.
+        /// </param>
+        public static string ToString<TEncoding>(this byte[] bytes, TEncoding encoding) where TEncoding : Encoding
         {
             try
             {
                 if (bytes == null)
                     throw new ArgumentNullException(nameof(bytes));
-                var s = Encoding.UTF8.GetString(bytes);
-                return s;
+                return encoding.GetString(bytes);
             }
             catch (Exception ex)
             {
@@ -550,6 +585,16 @@ namespace SilDev
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        ///     Converts the specified sequence of bytes into a string with the specified
+        ///     Windows-1252 <see cref="Encoding"/> format.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to convert.
+        /// </param>
+        public static string ToStringDefault(this byte[] bytes) =>
+            bytes.ToString(Encoding.GetEncoding(1252));
 
         /// <summary>
         ///     Converts the specified string, which stores a set of four integers that represent the
@@ -743,164 +788,6 @@ namespace SilDev
                 return str;
             var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
             return s;
-        }
-
-        /// <summary>
-        ///     Converts the specified string to its string representation of a base-2 binary sequence.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to convert.
-        /// </param>
-        /// <param name="separator">
-        ///     true to add a single space character as a separator between every single byte;
-        ///     otherwise, false.
-        /// </param>
-        public static string ToBin(this string str, bool separator = true)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(str))
-                    throw new ArgumentNullException(nameof(str));
-                var ba = Encoding.UTF8.GetBytes(str);
-                var s = separator ? " " : string.Empty;
-                s = ba.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')).Join(s);
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified base-2 binary sequence back to string.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
-        /// </param>
-        public static string ToStringFromBin(this string str)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(str))
-                    throw new ArgumentNullException(nameof(str));
-                var s = str.RemoveChar(' ', ':', '\r', '\n');
-                if (s.Any(c => !"01".Contains(c)))
-                    throw new ArgumentOutOfRangeException(nameof(s));
-                using (var ms = new MemoryStream())
-                {
-                    for (var i = 0; i < s.Length; i += 8)
-                        ms.WriteByte(Convert.ToByte(s.Substring(i, 8), 2));
-                    s = Encoding.UTF8.GetString(ms.ToArray());
-                }
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified sequence of bytes into a hexadecimal sequence.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to convert.
-        /// </param>
-        /// <param name="separator">
-        ///     A single space character used as a separator.
-        /// </param>
-        /// <param name="upper">
-        ///     true to convert the result to uppercase; otherwise, false.
-        /// </param>
-        public static string ToHexa(this byte[] bytes, char? separator = null, bool upper = false)
-        {
-            try
-            {
-                if (bytes == null)
-                    throw new ArgumentNullException(nameof(bytes));
-                var sb = new StringBuilder(bytes.Length * 2);
-                foreach (var b in bytes)
-                    sb.Append(b.ToString("x2"));
-                var s = sb.ToString();
-                if (separator != null)
-                {
-                    var i = 0;
-                    s = s.ToLookup(c => Math.Floor(i++ / 2d)).Select(e => new string(e.ToArray())).Join(separator.ToString());
-                }
-                if (upper)
-                    s = s.ToUpper();
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified string to hexadecimal sequence.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to convert.
-        /// </param>
-        /// <param name="separator">
-        ///     A single space character used as a separator.
-        /// </param>
-        /// <param name="upper">
-        ///     true to convert the result to uppercase; otherwise, false.
-        /// </param>
-        public static string ToHexa(this string str, char? separator = null, bool upper = false) =>
-            str.ToBytes().ToHexa(separator, upper);
-
-        /// <summary>
-        ///     Converts the specified hexadecimal sequence back into a sequence of bytes.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
-        /// </param>
-        public static byte[] ToBytesFormHexa(this string str)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(str))
-                    throw new ArgumentNullException(nameof(str));
-                var s = new string(str.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
-                var ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
-                return ba;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified hexadecimal sequence back to string.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to reconvert.
-        /// </param>
-        public static string ToStringFromHexa(this string str)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(str))
-                    throw new ArgumentNullException(nameof(str));
-                var ba = str.ToBytesFormHexa();
-                if (ba == null)
-                    throw new ArgumentNullException(nameof(ba));
-                return Encoding.UTF8.GetString(ba);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2018-02-04 04:20
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,76 +23,74 @@ namespace SilDev
     using System.Windows.Forms;
 
     /// <summary>
+    ///     Provides enumerated flags of the taskbar location.
+    /// </summary>
+    public enum TaskBarLocation
+    {
+        /// <summary>
+        ///     The taskbar is hidden.
+        /// </summary>
+        Hidden,
+
+        /// <summary>
+        ///     The taskbar is located at the top.
+        /// </summary>
+        Top,
+
+        /// <summary>
+        ///     The taskbar is located at the bottom.
+        /// </summary>
+        Bottom,
+
+        /// <summary>
+        ///     The taskbar is on the left side.
+        /// </summary>
+        Left,
+
+        /// <summary>
+        ///     The taskbar is on the right side.
+        /// </summary>
+        Right
+    }
+
+    /// <summary>
+    ///     Provides enumerated options that control the current state of the taskbar.
+    /// </summary>
+    public enum TaskBarState
+    {
+        /// <summary>
+        ///     The taskbar is in the autohide state.
+        /// </summary>
+        AutoHide = 0x1,
+
+        /// <summary>
+        ///     The taskbar is in the always-on-top state.
+        ///     <para>
+        ///         Note that as of Windows 7, AlwaysOnTop is no longer returned because the taskbar
+        ///         is always in that state.
+        ///     </para>
+        /// </summary>
+        AlwaysOnTop = 0x2
+    }
+
+    /// <summary>
     ///     Provides static methods to enable you to get or set the state of the taskbar.
     /// </summary>
     public static class TaskBar
     {
-        /// <summary>
-        ///     Provides enumerated flags of the taskbar location.
-        /// </summary>
-        public enum Location
-        {
-            /// <summary>
-            ///     The taskbar is hidden.
-            /// </summary>
-            Hidden,
-
-            /// <summary>
-            ///     The taskbar is located at the top.
-            /// </summary>
-            Top,
-
-            /// <summary>
-            ///     The taskbar is located at the bottom.
-            /// </summary>
-            Bottom,
-
-            /// <summary>
-            ///     The taskbar is on the left side.
-            /// </summary>
-            Left,
-
-            /// <summary>
-            ///     The taskbar is on the right side.
-            /// </summary>
-            Right
-        }
-
-        /// <summary>
-        ///     Provides enumerated options that control the current state of the taskbar.
-        /// </summary>
-        public enum State
-        {
-            /// <summary>
-            ///     The taskbar is in the autohide state.
-            /// </summary>
-            AutoHide = 0x1,
-
-            /// <summary>
-            ///     <para>
-            ///         The taskbar is in the always-on-top state.
-            ///     </para>
-            ///     <para>
-            ///         Note that as of Windows 7, AlwaysOnTop is no longer returned because the taskbar
-            ///         is always in that state.
-            ///     </para>
-            /// </summary>
-            AlwaysOnTop = 0x2
-        }
-
         private static TaskbarInstance TaskBarInstance => new TaskbarInstance();
 
         /// <summary>
-        ///     Returns the current <see cref="State"/> of the taskbar.
+        ///     Returns the current <see cref="TaskBarState"/> of the taskbar.
         /// </summary>
-        public static State GetState()
+        public static TaskBarState GetState()
         {
             var data = new WinApi.AppBarData();
             try
             {
                 data.cbSize = (uint)Marshal.SizeOf(data);
                 data.hWnd = WinApi.NativeMethods.FindWindow("System_TrayWnd", null);
-                return (State)WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOptions.GetState, ref data);
+                return (TaskBarState)WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOptions.GetState, ref data);
             }
             finally
             {
@@ -101,12 +99,12 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Sets the new <see cref="State"/> of the taskbar.
+        ///     Sets the new <see cref="TaskBarState"/> of the taskbar.
         /// </summary>
         /// <param name="state">
         ///     The new state to set.
         /// </param>
-        public static void SetState(State state)
+        public static void SetState(TaskBarState state)
         {
             var data = new WinApi.AppBarData();
             try
@@ -128,14 +126,14 @@ namespace SilDev
         /// <param name="hWnd">
         ///     The handle of the window on which the taskbar is located.
         /// </param>
-        public static Location GetLocation(IntPtr hWnd = default(IntPtr))
+        public static TaskBarLocation GetLocation(IntPtr hWnd = default(IntPtr))
         {
             var screen = hWnd == default(IntPtr) ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
             if (screen.WorkingArea == screen.Bounds)
-                return Location.Hidden;
+                return TaskBarLocation.Hidden;
             if (screen.WorkingArea.Width != screen.Bounds.Width)
-                return screen.WorkingArea.Left > 0 ? Location.Left : Location.Right;
-            return screen.WorkingArea.Top > 0 ? Location.Top : Location.Bottom;
+                return screen.WorkingArea.Left > 0 ? TaskBarLocation.Left : TaskBarLocation.Right;
+            return screen.WorkingArea.Top > 0 ? TaskBarLocation.Top : TaskBarLocation.Bottom;
         }
 
         /// <summary>
@@ -149,13 +147,13 @@ namespace SilDev
             var screen = hWnd == default(IntPtr) ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
             switch (GetLocation())
             {
-                case Location.Top:
+                case TaskBarLocation.Top:
                     return screen.WorkingArea.Top;
-                case Location.Bottom:
+                case TaskBarLocation.Bottom:
                     return screen.Bounds.Bottom - screen.WorkingArea.Bottom;
-                case Location.Right:
+                case TaskBarLocation.Right:
                     return screen.Bounds.Right - screen.WorkingArea.Right;
-                case Location.Left:
+                case TaskBarLocation.Left:
                     return screen.WorkingArea.Left;
                 default:
                     return 0;

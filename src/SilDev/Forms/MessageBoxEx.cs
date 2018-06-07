@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2018-06-07 09:32
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,12 +22,10 @@ namespace SilDev.Forms
     using System.Windows.Forms;
 
     /// <summary>
-    ///     <para>
-    ///         Displays a message window, also known as a dialog box, based on <see cref="MessageBox"/>,
-    ///         which presents a message to the user. It is a modal window, blocking other actions in the
-    ///         application until the user closes it. A <see cref="MessageBoxEx"/> can contain text,
-    ///         buttons, and symbols that inform and instruct the user.
-    ///     </para>
+    ///     Displays a message window, also known as a dialog box, based on <see cref="MessageBox"/>,
+    ///     which presents a message to the user. It is a modal window, blocking other actions in the
+    ///     application until the user closes it. A <see cref="MessageBoxEx"/> can contain text,
+    ///     buttons, and symbols that inform and instruct the user.
     ///     <para>
     ///         The difference to <see cref="MessageBox"/> is that the message window displays
     ///         in the center of the specified <see cref="IWin32Window"/> owner object.
@@ -35,12 +33,6 @@ namespace SilDev.Forms
     /// </summary>
     public static class MessageBoxEx
     {
-        private static IWin32Window _owner;
-        private static readonly WinApi.HookProc HookProc;
-        private static readonly WinApi.EnumChildProc EnumProc;
-        [ThreadStatic] private static IntPtr _hHook;
-        [ThreadStatic] private static int _nButton;
-
         /// <summary>
         ///     Specifies that the mouse pointer moves once to a new dialog box.
         /// </summary>
@@ -51,6 +43,16 @@ namespace SilDev.Forms
         ///     option has no effect if an <see cref="IWin32Window"/> owner is defined.
         /// </summary>
         public static bool TopMost = false;
+
+        [ThreadStatic]
+        private static IntPtr _hHook;
+
+        [ThreadStatic]
+        private static int _nButton;
+
+        private static IWin32Window _owner;
+        private static readonly WinApi.EnumChildProc EnumProc;
+        private static readonly WinApi.HookProc HookProc;
 
         static MessageBoxEx()
         {

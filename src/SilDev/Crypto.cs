@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2017-10-31 07:54
+// Version:  2018-06-07 09:32
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -24,10 +24,827 @@ namespace SilDev
     using System.Text;
 
     /// <summary>
+    ///     Specifies enumerated constants used to encode and decode data.
+    /// </summary>
+    public enum EncodingAlgorithms
+    {
+        /// <summary>
+        ///     Base64.
+        /// </summary>
+        Base64,
+
+        /// <summary>
+        ///     Base85, also called Ascii85.
+        /// </summary>
+        Base85,
+
+        /// <summary>
+        ///     basE91.
+        /// </summary>
+        Base91,
+
+        /// <summary>
+        ///     Base-2 binary.
+        /// </summary>
+        Binary,
+
+        /// <summary>
+        ///     Hexadecimal.
+        /// </summary>
+        Hex
+    }
+
+    /// <summary>
+    ///     Specifies enumerated constants used to encrypt data.
+    /// </summary>
+    public enum ChecksumAlgorithms
+    {
+        /// <summary>
+        ///     Message-Digest 5.
+        /// </summary>
+        Md5,
+
+        /// <summary>
+        ///     Secure Hash Algorithm 1.
+        /// </summary>
+        Sha1,
+
+        /// <summary>
+        ///     Secure Hash Algorithm 2 (SHA-256).
+        /// </summary>
+        Sha256,
+
+        /// <summary>
+        ///     Secure Hash Algorithm 2 (SHA-384).
+        /// </summary>
+        Sha384,
+
+        /// <summary>
+        ///     Secure Hash Algorithm 2 (SHA-512).
+        /// </summary>
+        Sha512
+    }
+
+    /// <summary>
+    ///     Specifies enumerated constants used to encrypt and decrypt data.
+    /// </summary>
+    public enum RijndaelAlgorithms
+    {
+        /// <summary>
+        ///     Advanced Encryption Standard (AES-128).
+        /// </summary>
+        Aes128,
+
+        /// <summary>
+        ///     Advanced Encryption Standard (AES-192).
+        /// </summary>
+        Aes192,
+
+        /// <summary>
+        ///     Advanced Encryption Standard (AES-256).
+        /// </summary>
+        Aes256
+    }
+
+    /// <summary>
     ///     Provides functionality for data encryption and decryption.
     /// </summary>
     public static class Crypto
     {
+        /// <summary>
+        ///     Encodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to encode.
+        /// </param>
+        /// <param name="prefixMark">
+        ///     The prefix mark.
+        /// </param>
+        /// <param name="suffixMark">
+        ///     The suffix mark.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string Encode(this byte[] bytes, string prefixMark, string suffixMark, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().EncodeBytes(bytes, prefixMark, suffixMark);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().EncodeBytes(bytes, prefixMark, suffixMark);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                    return string.Concat(prefixMark, bytes.Encode(algorithm), suffixMark);
+                default:
+                    return new Base64().EncodeBytes(bytes, prefixMark, suffixMark);
+            }
+        }
+
+        /// <summary>
+        ///     Encodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to encode.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string Encode(this byte[] bytes, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().EncodeBytes(bytes);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().EncodeBytes(bytes);
+                case EncodingAlgorithms.Binary:
+                    return bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')).Join(' ');
+                case EncodingAlgorithms.Hex:
+                    return bytes.Select(b => b.ToString("x2").PadLeft(2, '0')).Join(' ');
+                default:
+                    return new Base64().EncodeBytes(bytes);
+            }
+        }
+
+        /// <summary>
+        ///     Encodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="text">
+        ///     The string to encode.
+        /// </param>
+        /// <param name="prefixMark">
+        ///     The prefix mark.
+        /// </param>
+        /// <param name="suffixMark">
+        ///     The suffix mark.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string Encode(this string text, string prefixMark, string suffixMark, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().EncodeString(text, prefixMark, suffixMark);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().EncodeString(text, prefixMark, suffixMark);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                    return Encode(text.ToBytes(), prefixMark, suffixMark, algorithm);
+                default:
+                    return new Base64().EncodeString(text, prefixMark, suffixMark);
+            }
+        }
+
+        /// <summary>
+        ///     Encodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="text">
+        ///     The string to encode.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string Encode(this string text, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().EncodeString(text);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().EncodeString(text);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                    return Encode(text.ToBytes(), algorithm);
+                default:
+                    return new Base64().EncodeString(text);
+            }
+        }
+
+        /// <summary>
+        ///     Encodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to encode.
+        /// </param>
+        /// <param name="prefixMark">
+        ///     The prefix mark.
+        /// </param>
+        /// <param name="suffixMark">
+        ///     The suffix mark.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string EncodeFile(this string path, string prefixMark, string suffixMark, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().EncodeFile(path, prefixMark, suffixMark);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().EncodeFile(path, prefixMark, suffixMark);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                    return Encode(FileEx.ReadAllBytes(path), prefixMark, suffixMark, algorithm);
+                default:
+                    return new Base64().EncodeFile(path, prefixMark, suffixMark);
+            }
+        }
+
+        /// <summary>
+        ///     Decodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="code">
+        ///     The string to decode.
+        /// </param>
+        /// <param name="prefixMark">
+        ///     The prefix mark.
+        /// </param>
+        /// <param name="suffixMark">
+        ///     The suffix mark.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Decode(this string code, string prefixMark, string suffixMark, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().DecodeBytes(code, prefixMark, suffixMark);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().DecodeBytes(code, prefixMark, suffixMark);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                {
+                    var s = code;
+                    if (s.StartsWith(prefixMark))
+                        s = s.Substring(prefixMark.Length);
+                    if (s.EndsWith(suffixMark))
+                        s = s.Substring(0, s.Length - suffixMark.Length);
+                    return Decode(s, algorithm);
+                }
+                default:
+                    return new Base64().DecodeBytes(code, prefixMark, suffixMark);
+            }
+        }
+
+        /// <summary>
+        ///     Decodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="code">
+        ///     The string to decode.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Decode(this string code, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().DecodeBytes(code);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().DecodeBytes(code);
+                case EncodingAlgorithms.Binary:
+                {
+                    var ba = default(byte[]);
+                    try
+                    {
+                        var s = code.RemoveChar(' ', ':', '\r', '\n');
+                        if (s.Any(c => !"01".Contains(c)))
+                            throw new InvalidOperationException();
+                        using (var ms = new MemoryStream())
+                        {
+                            for (var i = 0; i < s.Length; i += 8)
+                                ms.WriteByte(Convert.ToByte(s.Substring(i, 8), 2));
+                            ba = Encoding.UTF8.GetString(ms.ToArray()).ToBytes();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+                    return ba;
+                }
+                case EncodingAlgorithms.Hex:
+                {
+                    var ba = default(byte[]);
+                    try
+                    {
+                        var s = new string(code.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
+                        if (s.Any(c => !"0123456789ABCDEF".Contains(c)))
+                            throw new InvalidOperationException();
+                        ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                    }
+                    return ba;
+                }
+                default:
+                    return new Base64().DecodeBytes(code);
+            }
+        }
+
+        /// <summary>
+        ///     Decodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="code">
+        ///     The string to decode.
+        /// </param>
+        /// <param name="prefixMark">
+        ///     The prefix mark.
+        /// </param>
+        /// <param name="suffixMark">
+        ///     The suffix mark.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string DecodeString(this string code, string prefixMark, string suffixMark, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().DecodeString(code, prefixMark, suffixMark);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().DecodeString(code, prefixMark, suffixMark);
+                default:
+                    return new Base64().DecodeString(code, prefixMark, suffixMark);
+            }
+        }
+
+        /// <summary>
+        ///     Decodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="code">
+        ///     The string to decode.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string DecodeString(this string code, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().DecodeString(code);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().DecodeString(code);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                    return Encoding.UTF8.GetString(Decode(code, algorithm));
+                default:
+                    return new Base64().DecodeString(code);
+            }
+        }
+
+        /// <summary>
+        ///     Decodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to decode.
+        /// </param>
+        /// <param name="prefixMark">
+        ///     The prefix mark.
+        /// </param>
+        /// <param name="suffixMark">
+        ///     The suffix mark.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] DecodeFile(this string path, string prefixMark, string suffixMark, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().DecodeFile(path, prefixMark, suffixMark);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().DecodeFile(path, prefixMark, suffixMark);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                    return Decode(FileEx.ReadAllText(path), prefixMark, suffixMark, algorithm);
+                default:
+                    return new Base64().DecodeFile(path, prefixMark, suffixMark);
+            }
+        }
+
+        /// <summary>
+        ///     Decodes this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to decode.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] DecodeFile(this string path, EncodingAlgorithms algorithm = EncodingAlgorithms.Base64)
+        {
+            switch (algorithm)
+            {
+                case EncodingAlgorithms.Base85:
+                    return new Base85().DecodeFile(path);
+                case EncodingAlgorithms.Base91:
+                    return new Base91().DecodeFile(path);
+                case EncodingAlgorithms.Binary:
+                case EncodingAlgorithms.Hex:
+                    return Decode(FileEx.ReadAllText(path), algorithm);
+                default:
+                    return new Base64().DecodeFile(path);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this stream with the specified algorithm.
+        /// </summary>
+        /// <param name="stream">
+        ///     The stream to encrypt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string Encrypt(this Stream stream, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        {
+            switch (algorithm)
+            {
+                case ChecksumAlgorithms.Sha1:
+                    return new Sha1().EncryptStream(stream);
+                case ChecksumAlgorithms.Sha256:
+                    return new Sha256().EncryptStream(stream);
+                case ChecksumAlgorithms.Sha384:
+                    return new Sha384().EncryptStream(stream);
+                case ChecksumAlgorithms.Sha512:
+                    return new Sha512().EncryptStream(stream);
+                default:
+                    return new Md5().EncryptStream(stream);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to encrypt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string Encrypt(this byte[] bytes, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        {
+            switch (algorithm)
+            {
+                case ChecksumAlgorithms.Sha1:
+                    return new Sha1().EncryptBytes(bytes);
+                case ChecksumAlgorithms.Sha256:
+                    return new Sha256().EncryptBytes(bytes);
+                case ChecksumAlgorithms.Sha384:
+                    return new Sha384().EncryptBytes(bytes);
+                case ChecksumAlgorithms.Sha512:
+                    return new Sha512().EncryptBytes(bytes);
+                default:
+                    return new Md5().EncryptBytes(bytes);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this string with the specified algorithm.
+        /// </summary>
+        /// <param name="text">
+        ///     The string to encrypt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string Encrypt(this string text, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        {
+            switch (algorithm)
+            {
+                case ChecksumAlgorithms.Sha1:
+                    return new Sha1().EncryptString(text);
+                case ChecksumAlgorithms.Sha256:
+                    return new Sha256().EncryptString(text);
+                case ChecksumAlgorithms.Sha384:
+                    return new Sha384().EncryptString(text);
+                case ChecksumAlgorithms.Sha512:
+                    return new Sha512().EncryptString(text);
+                default:
+                    return new Md5().EncryptString(text);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this file with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to encrypt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static string EncryptFile(this string path, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        {
+            switch (algorithm)
+            {
+                case ChecksumAlgorithms.Sha1:
+                    return new Sha1().EncryptFile(path);
+                case ChecksumAlgorithms.Sha256:
+                    return new Sha256().EncryptFile(path);
+                case ChecksumAlgorithms.Sha384:
+                    return new Sha384().EncryptFile(path);
+                case ChecksumAlgorithms.Sha512:
+                    return new Sha512().EncryptFile(path);
+                default:
+                    return new Md5().EncryptFile(path);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to encrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The sequence of bytes which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Encrypt(this byte[] bytes, byte[] password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.EncryptBytes(bytes, password, salt);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to encrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The sequence of bytes which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Encrypt(this byte[] bytes, string password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.EncryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.EncryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.EncryptBytes(bytes, password.ToBytes(), salt);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this string with the specified algorithm.
+        /// </summary>
+        /// <param name="text">
+        ///     The string to encrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The sequence of bytes which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Encrypt(this string text, byte[] password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.EncryptBytes(text.ToBytes(), password, salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.EncryptBytes(text.ToBytes(), password, salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.EncryptBytes(text.ToBytes(), password, salt);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this string with the specified algorithm.
+        /// </summary>
+        /// <param name="text">
+        ///     The string to encrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The sequence of bytes which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Encrypt(this string text, string password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this file with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to encrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The sequence of bytes which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] EncryptFile(this string path, byte[] password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.EncryptFile(path, password, salt);
+            }
+        }
+
+        /// <summary>
+        ///     Encrypts this file with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to encrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The string which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] EncryptFile(this string path, string password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.EncryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.EncryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.EncryptFile(path, password.ToBytes(), salt);
+            }
+        }
+
+        /// <summary>
+        ///     Decrypts this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to decrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The sequence of bytes which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Decrypt(this byte[] bytes, byte[] password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.DecryptBytes(bytes, password, salt);
+            }
+        }
+
+        /// <summary>
+        ///     Decrypts this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to decrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The string which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] Decrypt(this byte[] bytes, string password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.DecryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.DecryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.DecryptBytes(bytes, password.ToBytes(), salt);
+            }
+        }
+
+        /// <summary>
+        ///     Decrypts this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to decrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The sequence of bytes which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] DecryptFile(this string path, byte[] password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.DecryptFile(path, password, salt);
+            }
+        }
+
+        /// <summary>
+        ///     Decrypts this sequence of bytes with the specified algorithm.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to decrypt.
+        /// </param>
+        /// <param name="password">
+        ///     The string which is used as password.
+        /// </param>
+        /// <param name="salt">
+        ///     The sequence of bytes which is used as salt.
+        /// </param>
+        /// <param name="algorithm">
+        ///     The algorithm to use.
+        /// </param>
+        public static byte[] DecryptFile(this string path, string password, byte[] salt = null, RijndaelAlgorithms algorithm = RijndaelAlgorithms.Aes256)
+        {
+            switch (algorithm)
+            {
+                case RijndaelAlgorithms.Aes128:
+                    return Aes.DecryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                case RijndaelAlgorithms.Aes192:
+                    return Aes.DecryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                default:
+                    return Aes.DecryptFile(path, password.ToBytes(), salt);
+            }
+        }
+
         #region Base64
 
         /// <summary>
@@ -301,105 +1118,6 @@ namespace SilDev
                 DecodeBytes(code, prefixMark, suffixMark);
         }
 
-        /// <summary>
-        ///     Encodes this sequence of bytes to a sequence of base-64 digits.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeToBase64(this byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base64().EncodeBytes(bytes, prefixMark, suffixMark, lineLength);
-
-        /// <summary>
-        ///     Decodes this sequence of base-64 digits back to a sequence of bytes.
-        /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static byte[] DecodeBytesFromBase64(this string code, string prefixMark = null, string suffixMark = null) =>
-            new Base64().DecodeBytes(code, prefixMark, suffixMark);
-
-        /// <summary>
-        ///     Encodes this string to a sequence of base-64 digits.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeToBase64(this string text, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base64().EncodeString(text, prefixMark, suffixMark, lineLength);
-
-        /// <summary>
-        ///     Decodes this sequence of base-64 digits back to string.
-        /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static string DecodeStringFromBase64(this string code, string prefixMark = null, string suffixMark = null) =>
-            new Base64().DecodeString(code, prefixMark, suffixMark);
-
-        /// <summary>
-        ///     Encodes the specifed file to a sequence of base-64 digits.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeFileToBase64(string path, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base64().EncodeFile(path, prefixMark, suffixMark, lineLength);
-
-        /// <summary>
-        ///     Decodes the specifed sequence of base-64 digits back to a sequence of bytes which presents a file.
-        /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static byte[] DecodeFileFromBase64(string code, string prefixMark = null, string suffixMark = null) =>
-            new Base64().DecodeFile(code, prefixMark, suffixMark);
-
         #endregion
 
         #region Base85
@@ -585,105 +1303,6 @@ namespace SilDev
                 return LastDecodedResult;
             }
         }
-
-        /// <summary>
-        ///     Encodes this sequence of bytes to a sequence of base-85 digits.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeToBase85(this byte[] bytes, string prefixMark = "<~", string suffixMark = "~>", uint lineLength = 0) =>
-            new Base85().EncodeBytes(bytes, prefixMark, suffixMark, lineLength);
-
-        /// <summary>
-        ///     Decodes this sequence of base-85 digits back to a sequence of bytes.
-        /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static byte[] DecodeBytesFromBase85(this string code, string prefixMark = "<~", string suffixMark = "~>") =>
-            new Base85().DecodeBytes(code, prefixMark, suffixMark);
-
-        /// <summary>
-        ///     Encodes this string to a sequence of base-85 digits.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeToBase85(this string text, string prefixMark = "<~", string suffixMark = "~>", uint lineLength = 0) =>
-            new Base85().EncodeString(text, prefixMark, suffixMark, lineLength);
-
-        /// <summary>
-        ///     Decodes this sequence of base-85 digits back to string.
-        /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static string DecodeStringFromBase85(this string code, string prefixMark = "<~", string suffixMark = "~>") =>
-            new Base85().DecodeString(code, prefixMark, suffixMark);
-
-        /// <summary>
-        ///     Encodes the specifed file to a sequence of base-85 digits.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeFileToBase85(string path, string prefixMark = "<~", string suffixMark = "~>", uint lineLength = 0) =>
-            new Base85().EncodeFile(path, prefixMark, suffixMark, lineLength);
-
-        /// <summary>
-        ///     Decodes the specifed sequence of base-85 digits back to a sequence of bytes which presents a file.
-        /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static byte[] DecodeFileFromBase85(string code, string prefixMark = "<~", string suffixMark = "~>") =>
-            new Base85().DecodeFile(code, prefixMark, suffixMark);
 
         #endregion
 
@@ -897,111 +1516,256 @@ namespace SilDev
             }
         }
 
-        /// <summary>
-        ///     Encodes this sequence of bytes to a sequence of base-91 digits.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeToBase91(this byte[] bytes, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base91().EncodeBytes(bytes, prefixMark, suffixMark, lineLength);
+        #endregion
+
+        #region Message-Digest 5
 
         /// <summary>
-        ///     Decodes this sequence of base-91 digits back to a sequence of bytes.
+        ///     Initializes a new instance of the <see cref="Md5"/> class.
         /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static byte[] DecodeBytesFromBase91(this string code, string prefixMark = null, string suffixMark = null) =>
-            new Base91().DecodeBytes(code, prefixMark, suffixMark);
+        public class Md5
+        {
+            /// <summary>
+            ///     Gets the required hash length.
+            /// </summary>
+            public virtual int HashLength => 32;
+
+            /// <summary>
+            ///     Encrypts the specified stream with the specified <see cref="HashAlgorithm"/>.
+            /// </summary>
+            /// <typeparam name="THashAlgorithm">
+            ///     The type of the algorithm.
+            /// </typeparam>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            /// <param name="algorithm">
+            ///     The algorithm to encrypt.
+            /// </param>
+            protected string EncryptStream<THashAlgorithm>(Stream stream, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
+            {
+                byte[] ba;
+                using (var csp = algorithm)
+                    ba = csp.ComputeHash(stream);
+                var sb = new StringBuilder(ba.Length * 2);
+                foreach (var b in ba)
+                    sb.Append(b.ToString("x2"));
+                return sb.ToString();
+            }
+
+            /// <summary>
+            ///     Encrypts the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public virtual string EncryptStream(Stream stream) =>
+                EncryptStream(stream, new MD5CryptoServiceProvider());
+
+            /// <summary>
+            ///     Encrypts the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt.
+            /// </param>
+            public string EncryptBytes(byte[] bytes)
+            {
+                if (bytes == null || !bytes.Any())
+                    return string.Empty;
+                string s;
+                using (var ms = new MemoryStream())
+                {
+                    ms.Read(bytes, 0, bytes.Length);
+                    s = EncryptStream(ms);
+                }
+                return s;
+            }
+
+            /// <summary>
+            ///     Encrypts the specified string with the specified <see cref="HashAlgorithm"/>.
+            /// </summary>
+            /// <typeparam name="THashAlgorithm">
+            ///     The type of the algorithm.
+            /// </typeparam>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            /// <param name="algorithm">
+            ///     The algorithm to encrypt.
+            /// </param>
+            protected string EncryptString<THashAlgorithm>(string text, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
+            {
+                if (string.IsNullOrEmpty(text))
+                    return string.Empty;
+                var ba = text.ToBytes();
+                using (var csp = algorithm)
+                    ba = csp.ComputeHash(ba);
+                var s = BitConverter.ToString(ba);
+                return s.RemoveChar('-').ToLower();
+            }
+
+            /// <summary>
+            ///     Encrypts the specified string.
+            /// </summary>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            public virtual string EncryptString(string text) =>
+                EncryptString(text, MD5.Create());
+
+            /// <summary>
+            ///     Encrypts the specified file.
+            /// </summary>
+            /// <param name="path">
+            ///     The full path of the file to encrypt.
+            /// </param>
+            public string EncryptFile(string path)
+            {
+                try
+                {
+                    var s = PathEx.Combine(path);
+                    using (var fs = File.OpenRead(s))
+                        s = EncryptStream(fs);
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                    return string.Empty;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Secure Hash Algorithm 1
 
         /// <summary>
-        ///     Encodes this string to a sequence of base-91 digits.
+        ///     Initializes a new instance of the <see cref="Sha1"/> class.
         /// </summary>
-        /// <param name="text">
-        ///     The string to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeToBase91(this string text, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base91().EncodeString(text, prefixMark, suffixMark, lineLength);
+        public class Sha1 : Md5
+        {
+            /// <summary>
+            ///     Gets the required hash length.
+            /// </summary>
+            public override int HashLength => 40;
+
+            /// <summary>
+            ///     Encrypts the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public override string EncryptStream(Stream stream) =>
+                EncryptStream(stream, new SHA1CryptoServiceProvider());
+
+            /// <summary>
+            ///     Encrypts the specified string.
+            /// </summary>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            public override string EncryptString(string text) =>
+                EncryptString(text, SHA1.Create());
+        }
+
+        #endregion
+
+        #region Secure Hash Algorithm 2
 
         /// <summary>
-        ///     Decodes this sequence of base-91 digits back to string.
+        ///     Initializes a new instance of the <see cref="Sha256"/> class.
         /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static string DecodeStringFromBase91(this string code, string prefixMark = null, string suffixMark = null) =>
-            new Base91().DecodeString(code, prefixMark, suffixMark);
+        public class Sha256 : Md5
+        {
+            /// <summary>
+            ///     Gets the required hash length.
+            /// </summary>
+            public override int HashLength => 64;
+
+            /// <summary>
+            ///     Encrypts the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public override string EncryptStream(Stream stream) =>
+                EncryptStream(stream, new SHA256CryptoServiceProvider());
+
+            /// <summary>
+            ///     Encrypts the specified string.
+            /// </summary>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            public override string EncryptString(string text) =>
+                EncryptString(text, SHA256.Create());
+        }
 
         /// <summary>
-        ///     Encodes the specifed file to a sequence of base-91 digits.
+        ///     Initializes a new instance of the <see cref="Sha384"/> class.
         /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        /// <param name="lineLength">
-        ///     The length of lines.
-        /// </param>
-        public static string EncodeFileToBase91(string path, string prefixMark = null, string suffixMark = null, uint lineLength = 0) =>
-            new Base91().EncodeFile(path, prefixMark, suffixMark, lineLength);
+        public class Sha384 : Md5
+        {
+            /// <summary>
+            ///     Gets the required hash length.
+            /// </summary>
+            public override int HashLength => 96;
+
+            /// <summary>
+            ///     Encrypts the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public override string EncryptStream(Stream stream) =>
+                EncryptStream(stream, new SHA384CryptoServiceProvider());
+
+            /// <summary>
+            ///     Encrypts the specified string.
+            /// </summary>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            public override string EncryptString(string text) =>
+                EncryptString(text, SHA384.Create());
+        }
 
         /// <summary>
-        ///     Decodes the specifed sequence of base-91 digits back to a sequence of bytes which presents a file.
+        ///     Initializes a new instance of the <see cref="Sha512"/> class.
         /// </summary>
-        /// <param name="code">
-        ///     The string to decode.
-        /// </param>
-        /// <param name="prefixMark">
-        ///     The prefix mark.
-        /// </param>
-        /// <param name="suffixMark">
-        ///     The suffix mark.
-        /// </param>
-        public static byte[] DecodeFileFromBase91(string code, string prefixMark = null, string suffixMark = null) =>
-            new Base91().DecodeFile(code, prefixMark, suffixMark);
+        public class Sha512 : Md5
+        {
+            /// <summary>
+            ///     Gets the required hash length.
+            /// </summary>
+            public override int HashLength => 128;
+
+            /// <summary>
+            ///     Encrypts the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public override string EncryptStream(Stream stream) =>
+                EncryptStream(stream, new SHA512CryptoServiceProvider());
+
+            /// <summary>
+            ///     Encrypts the specified string.
+            /// </summary>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            public override string EncryptString(string text) =>
+                EncryptString(text, SHA512.Create());
+        }
 
         #endregion
 
         #region Advanced Encryption Standard
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Aes"/> class.
+        ///     Provides static methods to handle AES encryption and decryption.
         /// </summary>
         public static class Aes
         {
@@ -1050,7 +1814,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.EncryptToSha512().ToBytes(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithms.Sha512).ToBytes(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1069,90 +1833,6 @@ namespace SilDev
                     return null;
                 }
             }
-
-            /// <summary>
-            ///     Encrypts the specified sequence of bytes.
-            /// </summary>
-            /// <param name="bytes">
-            ///     The sequence of bytes to encrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which is used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which is used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] EncryptBytes(byte[] bytes, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                EncryptBytes(bytes, password.ToBytes(), salt, keySize);
-
-            /// <summary>
-            ///     Encrypts the specified sequence of bytes.
-            /// </summary>
-            /// <param name="bytes">
-            ///     The sequence of bytes to encrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which is used as password.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] EncryptBytes(byte[] bytes, string password, KeySize keySize = KeySize.Aes256) =>
-                EncryptBytes(bytes, password, null, keySize);
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The sequence of bytes which is used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which is used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] EncryptString(string text, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256) =>
-                EncryptBytes(text.ToBytes(), password, salt, keySize);
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which is used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which is used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] EncryptString(string text, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                EncryptString(text, password.ToBytes(), salt, keySize);
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which is used as password.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] EncryptString(string text, string password, KeySize keySize = KeySize.Aes256) =>
-                EncryptString(text, password.ToBytes(), null, keySize);
 
             /// <summary>
             ///     Encrypts the specified file.
@@ -1187,39 +1867,6 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Encrypts the specified file.
-            /// </summary>
-            /// <param name="path">
-            ///     The full path of the file.
-            /// </param>
-            /// <param name="password">
-            ///     The string which is used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which is used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] EncryptFile(string path, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                EncryptFile(path, password.ToBytes(), salt, keySize);
-
-            /// <summary>
-            ///     Encrypts the specified file.
-            /// </summary>
-            /// <param name="path">
-            ///     The full path of the file.
-            /// </param>
-            /// <param name="password">
-            ///     The sequence of bytes which is used as password.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] EncryptFile(string path, string password, KeySize keySize = KeySize.Aes256) =>
-                EncryptFile(path, password.ToBytes(), null, keySize);
-
-            /// <summary>
             ///     Decrypts the specified sequence of bytes.
             /// </summary>
             /// <param name="code">
@@ -1243,7 +1890,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.EncryptToSha512().ToBytes(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithms.Sha512).ToBytes(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1262,90 +1909,6 @@ namespace SilDev
                     return null;
                 }
             }
-
-            /// <summary>
-            ///     Decrypts the specified sequence of bytes.
-            /// </summary>
-            /// <param name="code">
-            ///     The sequence of bytes to decrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which was used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which was used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] DecryptBytes(byte[] code, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                DecryptBytes(code, password.ToBytes(), salt, keySize);
-
-            /// <summary>
-            ///     Decrypts the specified sequence of bytes.
-            /// </summary>
-            /// <param name="code">
-            ///     The sequence of bytes to decrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which was used as password.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] DecryptBytes(byte[] code, string password, KeySize keySize = KeySize.Aes256) =>
-                DecryptBytes(code, password, null, keySize);
-
-            /// <summary>
-            ///     Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
-            /// </summary>
-            /// <param name="code">
-            ///     The hexadecimal sequence to decrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The sequence of bytes which was used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which was used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] DecryptString(string code, byte[] password, byte[] salt = null, KeySize keySize = KeySize.Aes256) =>
-                DecryptBytes(code.ToBytesFormHexa(), password, salt, keySize);
-
-            /// <summary>
-            ///     Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
-            /// </summary>
-            /// <param name="code">
-            ///     The hexadecimal sequence to decrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which was used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which was used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] DecryptString(string code, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                DecryptString(code, password.ToBytes(), salt, keySize);
-
-            /// <summary>
-            ///     Decrypts the specified hexadecimal sequence which represents a enctrypted sequence of bytes.
-            /// </summary>
-            /// <param name="code">
-            ///     The hexadecimal sequence to decrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which was used as password.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] DecryptString(string code, string password, KeySize keySize = KeySize.Aes256) =>
-                DecryptString(code, password.ToBytes(), null, keySize);
 
             /// <summary>
             ///     Decrypts the specified file.
@@ -1378,820 +1941,7 @@ namespace SilDev
                     return null;
                 }
             }
-
-            /// <summary>
-            ///     Decrypts the specified file.
-            /// </summary>
-            /// <param name="path">
-            ///     The full path of the file to decrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which was used as password.
-            /// </param>
-            /// <param name="salt">
-            ///     The sequence of bytes which was used as salt.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] DecryptFile(string path, string password, byte[] salt, KeySize keySize = KeySize.Aes256) =>
-                DecryptFile(path, password.ToBytes(), salt, keySize);
-
-            /// <summary>
-            ///     Decrypts the specified file.
-            /// </summary>
-            /// <param name="path">
-            ///     The full path of the file to decrypt.
-            /// </param>
-            /// <param name="password">
-            ///     The string which was used as password.
-            /// </param>
-            /// <param name="keySize">
-            ///     The size of the secret key.
-            /// </param>
-            public static byte[] DecryptFile(string path, string password, KeySize keySize = KeySize.Aes256) =>
-                DecryptFile(path, password.ToBytes(), null, keySize);
         }
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptToAes128(this byte[] bytes, string password) =>
-            Aes.EncryptBytes(bytes, password, Aes.KeySize.Aes128);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptToAes128(this string text, string password) =>
-            Aes.EncryptString(text, password, Aes.KeySize.Aes128);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptFileToAes128(this string path, string password) =>
-            Aes.EncryptFile(path, password, Aes.KeySize.Aes128);
-
-        /// <summary>
-        ///     Decrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptFromAes128(this byte[] bytes, string password) =>
-            Aes.DecryptBytes(bytes, password, Aes.KeySize.Aes128);
-
-        /// <summary>
-        ///     Decrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptStringFromAes128(this string text, string password) =>
-            Aes.DecryptString(text, password, Aes.KeySize.Aes128);
-
-        /// <summary>
-        ///     Decrypts this file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptFileFromAes128(this string path, string password) =>
-            Aes.DecryptFile(path, password, Aes.KeySize.Aes128);
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptToAes192(this byte[] bytes, string password) =>
-            Aes.EncryptBytes(bytes, password, Aes.KeySize.Aes192);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptToAes192(this string text, string password) =>
-            Aes.EncryptString(text, password, Aes.KeySize.Aes192);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptFileToAes192(this string path, string password) =>
-            Aes.EncryptFile(path, password, Aes.KeySize.Aes192);
-
-        /// <summary>
-        ///     Decrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptFromAes192(this byte[] bytes, string password) =>
-            Aes.DecryptBytes(bytes, password, Aes.KeySize.Aes192);
-
-        /// <summary>
-        ///     Decrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptStringFromAes192(this string text, string password) =>
-            Aes.DecryptString(text, password, Aes.KeySize.Aes192);
-
-        /// <summary>
-        ///     Decrypts this file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptFileFromAes192(this string path, string password) =>
-            Aes.DecryptFile(path, password, Aes.KeySize.Aes192);
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptToAes256(this byte[] bytes, string password) =>
-            Aes.EncryptBytes(bytes, password);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptToAes256(this string text, string password) =>
-            Aes.EncryptString(text, password);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] EncryptFileToAes256(this string path, string password) =>
-            Aes.EncryptFile(path, password);
-
-        /// <summary>
-        ///     Decrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptFromAes256(this byte[] bytes, string password) =>
-            Aes.DecryptBytes(bytes, password);
-
-        /// <summary>
-        ///     Decrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptStringFromAes256(this string text, string password) =>
-            Aes.DecryptString(text, password);
-
-        /// <summary>
-        ///     Decrypts this file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to decrypt.
-        /// </param>
-        /// <param name="password">
-        ///     The string which is used as password.
-        /// </param>
-        public static byte[] DecryptFileFromAes256(this string path, string password) =>
-            Aes.DecryptFile(path, password);
-
-        #endregion
-
-        #region Message-Digest 5
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Md5"/> class.
-        /// </summary>
-        public class Md5
-        {
-            /// <summary>
-            ///     Gets the required hash length.
-            /// </summary>
-            public virtual int HashLength => 32;
-
-            /// <summary>
-            ///     Encrypts the specified stream.
-            /// </summary>
-            /// <param name="stream">
-            ///     The stream to encrypt.
-            /// </param>
-            public virtual string EncryptStream(Stream stream)
-            {
-                try
-                {
-                    byte[] ba;
-                    using (var csp = new MD5CryptoServiceProvider())
-                        ba = csp.ComputeHash(stream);
-                    return ba.ToHexa();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-
-            /// <summary>
-            ///     Encrypts the specified sequence of bytes.
-            /// </summary>
-            /// <param name="bytes">
-            ///     The sequence of bytes to encrypt.
-            /// </param>
-            public string EncryptBytes(byte[] bytes)
-            {
-                try
-                {
-                    string s;
-                    using (var ms = new MemoryStream())
-                    {
-                        ms.Read(bytes, 0, bytes.Length);
-                        s = EncryptStream(ms);
-                    }
-                    return s;
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            public virtual string EncryptString(string text)
-            {
-                try
-                {
-                    var ba = text.ToBytes();
-                    using (var csp = MD5.Create())
-                        ba = csp.ComputeHash(ba);
-                    var s = BitConverter.ToString(ba);
-                    return s.RemoveChar('-').ToLower();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-
-            /// <summary>
-            ///     Encrypts the specified file.
-            /// </summary>
-            /// <param name="path">
-            ///     The full path of the file to encrypt.
-            /// </param>
-            public string EncryptFile(string path)
-            {
-                try
-                {
-                    var s = PathEx.Combine(path);
-                    using (var fs = File.OpenRead(s))
-                        s = EncryptStream(fs);
-                    return s;
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Encrypts this stream.
-        /// </summary>
-        /// <param name="stream">
-        ///     The stream to encrypt.
-        /// </param>
-        public static string EncryptToMd5(this Stream stream) =>
-            new Md5().EncryptStream(stream);
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        public static string EncryptToMd5(this byte[] bytes) =>
-            new Md5().EncryptBytes(bytes);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        public static string EncryptToMd5(this string text) =>
-            new Md5().EncryptString(text);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="file">
-        ///     The file to encrypt.
-        /// </param>
-        public static string EncryptFileToMd5(this FileInfo file) =>
-            new Md5().EncryptFile(file.FullName);
-
-        /// <summary>
-        ///     Encrypts the specified file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        public static string EncryptFileToMd5(string path) =>
-            new Md5().EncryptFile(path);
-
-        #endregion
-
-        #region Secure Hash Algorithm 1
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha1"/> class.
-        /// </summary>
-        public class Sha1 : Md5
-        {
-            /// <summary>
-            ///     Gets the required hash length.
-            /// </summary>
-            public override int HashLength => 40;
-
-            /// <summary>
-            ///     Encrypts the specified stream.
-            /// </summary>
-            /// <param name="stream">
-            ///     The stream to encrypt.
-            /// </param>
-            public override string EncryptStream(Stream stream)
-            {
-                try
-                {
-                    byte[] ba;
-                    using (var csp = new SHA1CryptoServiceProvider())
-                        ba = csp.ComputeHash(stream);
-                    return ba.ToHexa();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            public override string EncryptString(string text)
-            {
-                try
-                {
-                    var ba = text.ToBytes();
-                    using (var csp = SHA1.Create())
-                        ba = csp.ComputeHash(ba);
-                    var s = BitConverter.ToString(ba);
-                    return s.RemoveChar('-').ToLower();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Encrypts this stream.
-        /// </summary>
-        /// <param name="stream">
-        ///     The stream to encrypt.
-        /// </param>
-        public static string EncryptToSha1(this Stream stream) =>
-            new Sha1().EncryptStream(stream);
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        public static string EncryptToSha1(this byte[] bytes) =>
-            new Sha1().EncryptBytes(bytes);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        public static string EncryptToSha1(this string text) =>
-            new Sha1().EncryptString(text);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="file">
-        ///     The file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha1(this FileInfo file) =>
-            new Sha1().EncryptFile(file.FullName);
-
-        /// <summary>
-        ///     Encrypts the specified file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha1(string path) =>
-            new Sha1().EncryptFile(path);
-
-        #endregion
-
-        #region Secure Hash Algorithm 2
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha256"/> class.
-        /// </summary>
-        public class Sha256 : Md5
-        {
-            /// <summary>
-            ///     Gets the required hash length.
-            /// </summary>
-            public override int HashLength => 64;
-
-            /// <summary>
-            ///     Encrypts the specified stream.
-            /// </summary>
-            /// <param name="stream">
-            ///     The stream to encrypt.
-            /// </param>
-            public override string EncryptStream(Stream stream)
-            {
-                try
-                {
-                    byte[] ba;
-                    using (var csp = new SHA256CryptoServiceProvider())
-                        ba = csp.ComputeHash(stream);
-                    return ba.ToHexa();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            public override string EncryptString(string text)
-            {
-                try
-                {
-                    var ba = text.ToBytes();
-                    using (var csp = SHA256.Create())
-                        ba = csp.ComputeHash(ba);
-                    var s = BitConverter.ToString(ba);
-                    return s.RemoveChar('-').ToLower();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Encrypts this stream.
-        /// </summary>
-        /// <param name="stream">
-        ///     The stream to encrypt.
-        /// </param>
-        public static string EncryptToSha256(this Stream stream) =>
-            new Sha256().EncryptStream(stream);
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        public static string EncryptToSha256(this byte[] bytes) =>
-            new Sha256().EncryptBytes(bytes);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        public static string EncryptToSha256(this string text) =>
-            new Sha256().EncryptString(text);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="file">
-        ///     The file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha256(this FileInfo file) =>
-            new Sha256().EncryptFile(file.FullName);
-
-        /// <summary>
-        ///     Encrypts the specified file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha256(string path) =>
-            new Sha256().EncryptFile(path);
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha384"/> class.
-        /// </summary>
-        public class Sha384 : Md5
-        {
-            /// <summary>
-            ///     Gets the required hash length.
-            /// </summary>
-            public override int HashLength => 96;
-
-            /// <summary>
-            ///     Encrypts the specified stream.
-            /// </summary>
-            /// <param name="stream">
-            ///     The stream to encrypt.
-            /// </param>
-            public override string EncryptStream(Stream stream)
-            {
-                try
-                {
-                    byte[] ba;
-                    using (var csp = new SHA384CryptoServiceProvider())
-                        ba = csp.ComputeHash(stream);
-                    return ba.ToHexa();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            public override string EncryptString(string text)
-            {
-                try
-                {
-                    var ba = text.ToBytes();
-                    using (var csp = SHA384.Create())
-                        ba = csp.ComputeHash(ba);
-                    var s = BitConverter.ToString(ba);
-                    return s.RemoveChar('-').ToLower();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Encrypts this stream.
-        /// </summary>
-        /// <param name="stream">
-        ///     The stream to encrypt.
-        /// </param>
-        public static string EncryptToSha384(this Stream stream) =>
-            new Sha384().EncryptStream(stream);
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        public static string EncryptToSha384(this byte[] bytes) =>
-            new Sha384().EncryptBytes(bytes);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        public static string EncryptToSha384(this string text) =>
-            new Sha384().EncryptString(text);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="file">
-        ///     The file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha384(this FileInfo file) =>
-            new Sha384().EncryptFile(file.FullName);
-
-        /// <summary>
-        ///     Encrypts the specified file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha384(string path) =>
-            new Sha384().EncryptFile(path);
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha512"/> class.
-        /// </summary>
-        public class Sha512 : Md5
-        {
-            /// <summary>
-            ///     Gets the required hash length.
-            /// </summary>
-            public override int HashLength => 128;
-
-            /// <summary>
-            ///     Encrypts the specified stream.
-            /// </summary>
-            /// <param name="stream">
-            ///     The stream to encrypt.
-            /// </param>
-            public override string EncryptStream(Stream stream)
-            {
-                try
-                {
-                    byte[] ba;
-                    using (var csp = new SHA512CryptoServiceProvider())
-                        ba = csp.ComputeHash(stream);
-                    return ba.ToHexa();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-
-            /// <summary>
-            ///     Encrypts the specified string.
-            /// </summary>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            public override string EncryptString(string text)
-            {
-                try
-                {
-                    var ba = text.ToBytes();
-                    using (var csp = SHA512.Create())
-                        ba = csp.ComputeHash(ba);
-                    var s = BitConverter.ToString(ba);
-                    return s.RemoveChar('-').ToLower();
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
-                    return string.Empty;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Encrypts this stream.
-        /// </summary>
-        /// <param name="stream">
-        ///     The stream to encrypt.
-        /// </param>
-        public static string EncryptToSha512(this Stream stream) =>
-            new Sha512().EncryptStream(stream);
-
-        /// <summary>
-        ///     Encrypts this sequence of bytes.
-        /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
-        /// </param>
-        public static string EncryptToSha512(this byte[] bytes) =>
-            new Sha512().EncryptBytes(bytes);
-
-        /// <summary>
-        ///     Encrypts this string.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        public static string EncryptToSha512(this string text) =>
-            new Sha512().EncryptString(text);
-
-        /// <summary>
-        ///     Encrypts this file.
-        /// </summary>
-        /// <param name="file">
-        ///     The file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha512(this FileInfo file) =>
-            new Sha512().EncryptFile(file.FullName);
-
-        /// <summary>
-        ///     Encrypts the specified file.
-        /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to encrypt.
-        /// </param>
-        public static string EncryptFileToSha512(string path) =>
-            new Sha512().EncryptFile(path);
 
         #endregion
     }

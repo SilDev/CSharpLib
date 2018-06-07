@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-05-07 17:42
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -4210,19 +4210,13 @@ namespace SilDev
             ///     A handle to the window whose window procedure is to receive the message. The following values
             ///     have special meanings.
             ///     <para>
-            ///         <c>
-            ///             HWND_BROADCAST ((HWND)0xffff):
-            ///         </c>
-            ///         The message is posted to all top-level windows in the system, including disabled or invisible
-            ///         unowned windows, overlapped windows, and pop-up windows. The message is not posted to child
-            ///         windows.
+            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
+            ///         including disabled or invisible unowned windows, overlapped windows, and pop-up windows. The
+            ///         message is not posted to child windows.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             NULL:
-            ///         </c>
-            ///         The function behaves like a call to PostThreadMessage with the dwThreadId parameter set to
-            ///         the identifier of the current thread.
+            ///         NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter
+            ///         set to the identifier of the current thread.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -4245,19 +4239,13 @@ namespace SilDev
             ///     A handle to the window whose window procedure is to receive the message. The following values
             ///     have special meanings.
             ///     <para>
-            ///         <c>
-            ///             HWND_BROADCAST ((HWND)0xffff):
-            ///         </c>
-            ///         The message is posted to all top-level windows in the system, including disabled or invisible
-            ///         unowned windows, overlapped windows, and pop-up windows. The message is not posted to child
-            ///         windows.
+            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
+            ///         including disabled or invisible unowned windows, overlapped windows, and pop-up windows.
+            ///         The message is not posted to child windows.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             NULL:
-            ///         </c>
-            ///         The function behaves like a call to PostThreadMessage with the dwThreadId parameter set to
-            ///         the identifier of the current thread.
+            ///         NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter
+            ///         set to the identifier of the current thread.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -4616,38 +4604,24 @@ namespace SilDev
             /// <param name="fuFlags">
             ///     The behavior of this function. This parameter can be one or more of the following values.
             ///     <para>
-            ///         <c>
-            ///             SMTO_ABORTIFHUNG (0x2):
-            ///         </c>
-            ///         The function returns without waiting for the time-out period to elapse if the receiving
-            ///         thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+            ///         elapse if the receiving thread appears to not respond or hangs.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_BLOCK (0x1):
-            ///         </c>
-            ///         Prevents the calling thread from processing any other requests until the function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until
+            ///         the function returns.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NORMAL (0x0):
-            ///         </c>
-            ///         The calling thread is not prevented from processing other requests while waiting for the
-            ///         function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+            ///         waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-            ///         </c>
-            ///         The function does not enforce the time-out period as long as the receiving thread is
-            ///         processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+            ///         the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_ERRORONEXIT (0x20):
-            ///         </c>
-            ///         The function should return 0 if the receiving window is destroyed or its owning thread dies
-            ///         while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
+            ///         or its owning thread dies while the message is being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
@@ -4687,38 +4661,24 @@ namespace SilDev
             /// <param name="fuFlags">
             ///     The behavior of this function. This parameter can be one or more of the following values.
             ///     <para>
-            ///         <c>
-            ///             SMTO_ABORTIFHUNG (0x2):
-            ///         </c>
-            ///         The function returns without waiting for the time-out period to elapse if the receiving
-            ///         thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+            ///         elapse if the receiving thread appears to not respond or hangs.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_BLOCK (0x1):
-            ///         </c>
-            ///         Prevents the calling thread from processing any other requests until the function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until the
+            ///         function returns.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NORMAL (0x0):
-            ///         </c>
-            ///         The calling thread is not prevented from processing other requests while waiting for the
-            ///         function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+            ///         waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-            ///         </c>
-            ///         The function does not enforce the time-out period as long as the receiving thread is
-            ///         processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+            ///         the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_ERRORONEXIT (0x20):
-            ///         </c>
-            ///         The function should return 0 if the receiving window is destroyed or its owning thread dies
-            ///         while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed or
+            ///         its owning thread dies while the message is being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
@@ -5011,31 +4971,20 @@ namespace SilDev
             ///     A handle to the window to precede the positioned window in the Z order. This parameter must be a
             ///     window handle or one of the following values.
             ///     <para>
-            ///         <c>
-            ///             HWND_BOTTOM ((HWND)1):
-            ///         </c>
-            ///         Places the window at the bottom of the Z order. If the hWnd parameter identifies a topmost
-            ///         window, the window loses its topmost status and is placed at the bottom of all other windows.
+            ///         HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order. If the hWnd parameter
+            ///         identifies a topmost window, the window loses its topmost status and is placed at the bottom of
+            ///         all other windows.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             HWND_NOTOPMOST ((HWND)-2):
-            ///         </c>
-            ///         Places the window above all non-topmost windows (that is, behind all topmost windows). This
-            ///         flag has no effect if the window is already a non-topmost window.
+            ///         HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost windows (that is, behind all
+            ///         topmost windows). This flag has no effect if the window is already a non-topmost window.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             HWND_TOP ((HWND)0):
-            ///         </c>
-            ///         Places the window at the top of the Z order.
+            ///         HWND_TOP ((HWND)0): Places the window at the top of the Z order.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             HWND_TOPMOST ((HWND)-1):
-            ///         </c>
-            ///         Places the window above all non-topmost windows. The window maintains its topmost position even
-            ///         when it is deactivated.
+            ///         HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost windows. The window maintains
+            ///         its topmost position even when it is deactivated.
             ///     </para>
             /// </param>
             /// <param name="x">
@@ -6800,17 +6749,11 @@ namespace SilDev
             /// <returns>
             ///     Returns one of the following values.
             ///     <para>
-            ///         <c>
-            ///             TRUE:
-            ///         </c>
-            ///         A visual style is enabled, and windows with visual styles applied should call OpenThemeData to start using
-            ///         theme drawing services.
+            ///         TRUE: A visual style is enabled, and windows with visual styles applied should call OpenThemeData to start
+            ///         using theme drawing services.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             FALSE:
-            ///         </c>
-            ///         A visual style is not enabled, and the window message handler does not need to make another call to
+            ///         FALSE: A visual style is not enabled, and the window message handler does not need to make another call to
             ///         <see cref="IsThemeActive"/> until it receives a WM_THEMECHANGED message.
             ///     </para>
             /// </returns>
@@ -6819,14 +6762,13 @@ namespace SilDev
             internal static extern bool IsThemeActive();
 
             /// <summary>
-            ///     Loads the specified module into the address space of the calling process. The
-            ///     specified module may cause other modules to be loaded.
+            ///     Loads the specified module into the address space of the calling process. The specified module may cause other
+            ///     modules to be loaded.
             /// </summary>
             /// <param name="lpFileName">
-            ///     The name of the module. This can be either a library module (a .dll file) or an
-            ///     executable module (an .exe file). The name specified is the file name of the
-            ///     module and is not related to the name stored in the library module itself, as
-            ///     specified by the LIBRARY keyword in the module-definition (.def) file.
+            ///     The name of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).
+            ///     The name specified is the file name of the module and is not related to the name stored in the library module
+            ///     itself, as specified by the LIBRARY keyword in the module-definition (.def) file.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is a handle to the module.
@@ -6864,17 +6806,16 @@ namespace SilDev
             ///     Allocates the specified number of bytes from the heap.
             /// </summary>
             /// <param name="flag">
-            ///     The memory allocation attributes. The default is the LMEM_FIXED value. This
-            ///     parameter can be one or more of the <see cref="LocalAllocFlags"/>.
+            ///     The memory allocation attributes. The default is the LMEM_FIXED value. This parameter can be one or more
+            ///     of the <see cref="LocalAllocFlags"/>.
             /// </param>
             /// <param name="size">
-            ///     The number of bytes to allocate. If this parameter is zero and the uFlags
-            ///     parameter specifies <see cref="LocalAllocFlags.LMemMoveable"/>, the function
-            ///     returns a handle to a memory object that is marked as discarded.
+            ///     The number of bytes to allocate. If this parameter is zero and the uFlags parameter specifies
+            ///     <see cref="LocalAllocFlags.LMemMoveable"/>, the function returns a handle to a memory object that is
+            ///     marked as discarded.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the newly allocated
-            ///     memory object.
+            ///     If the function succeeds, the return value is a handle to the newly allocated memory object.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr LocalAlloc(LocalAllocFlags flag, UIntPtr size);
@@ -6883,8 +6824,8 @@ namespace SilDev
             ///     Frees the specified local memory object and invalidates its handle.
             /// </summary>
             /// <param name="hMem">
-            ///     A handle to the local memory object. This handle is returned by either the
-            ///     <see cref="LocalAlloc"/> function.
+            ///     A handle to the local memory object. This handle is returned by either the <see cref="LocalAlloc"/>
+            ///     function.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is NULL.
@@ -6893,12 +6834,11 @@ namespace SilDev
             internal static extern IntPtr LocalFree(IntPtr hMem);
 
             /// <summary>
-            ///     Disables or enables drawing in the specified window. Only one window can be locked
-            ///     at a time.
+            ///     Disables or enables drawing in the specified window. Only one window can be locked at a time.
             /// </summary>
             /// <param name="hWndLock">
-            ///     The window in which drawing will be disabled. If this parameter is NULL, drawing in
-            ///     the locked window is enabled.
+            ///     The window in which drawing will be disabled. If this parameter is NULL, drawing in the locked window
+            ///     is enabled.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6940,9 +6880,9 @@ namespace SilDev
             ///     privilege name.
             /// </summary>
             /// <param name="lpSystemName">
-            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
-            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
-            ///     on the local system.
+            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege name
+            ///     is retrieved. If a null string is specified, the function attempts to find the privilege name on the
+            ///     local system.
             /// </param>
             /// <param name="lpName">
             ///     A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
@@ -6959,15 +6899,15 @@ namespace SilDev
             internal static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid);
 
             /// <summary>
-            ///     The mciSendString function sends a command string to an MCI device. The device that the
-            ///     command is sent to is specified in the command string.
+            ///     The mciSendString function sends a command string to an MCI device. The device that the command is sent
+            ///     to is specified in the command string.
             /// </summary>
             /// <param name="lpszCommand">
             ///     Pointer to a null-terminated string that specifies an MCI command string.
             /// </param>
             /// <param name="lpszReturnString">
-            ///     Pointer to a buffer that receives return information. If no return information is needed,
-            ///     this parameter can be NULL.
+            ///     Pointer to a buffer that receives return information. If no return information is needed, this parameter
+            ///     can be NULL.
             /// </param>
             /// <param name="cchReturn">
             ///     Size, in characters, of the return buffer specified by the lpszReturnString parameter.
@@ -7048,13 +6988,12 @@ namespace SilDev
             ///     Opens an existing local process object.
             /// </summary>
             /// <param name="dwDesiredAccess">
-            ///     The access to the process object. This access right is checked against the
-            ///     security descriptor for the process. This parameter can be one or more of the
-            ///     process access rights.
+            ///     The access to the process object. This access right is checked against the security descriptor for the
+            ///     process. This parameter can be one or more of the process access rights.
             /// </param>
             /// <param name="bInheritHandle">
-            ///     If this value is TRUE, processes created by this process will inherit the handle.
-            ///     Otherwise, the processes do not inherit this handle.
+            ///     If this value is TRUE, processes created by this process will inherit the handle. Otherwise, the
+            ///     processes do not inherit this handle.
             /// </param>
             /// <param name="dwProcessId">
             ///     The identifier of the local process to be opened.
@@ -7150,19 +7089,13 @@ namespace SilDev
             ///     A handle to the window whose window procedure is to receive the message. The following values
             ///     have special meanings.
             ///     <para>
-            ///         <c>
-            ///             HWND_BROADCAST ((HWND)0xffff):
-            ///         </c>
-            ///         The message is posted to all top-level windows in the system, including disabled or invisible
-            ///         unowned windows, overlapped windows, and pop-up windows. The message is not posted to child
-            ///         windows.
+            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
+            ///         including disabled or invisible unowned windows, overlapped windows, and pop-up windows. The
+            ///         message is not posted to child windows.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             NULL:
-            ///         </c>
-            ///         The function behaves like a call to PostThreadMessage with the dwThreadId parameter set to
-            ///         the identifier of the current thread.
+            ///         NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter set
+            ///         to the identifier of the current thread.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -7523,38 +7456,24 @@ namespace SilDev
             /// <param name="fuFlags">
             ///     The behavior of this function. This parameter can be one or more of the following values.
             ///     <para>
-            ///         <c>
-            ///             SMTO_ABORTIFHUNG (0x2):
-            ///         </c>
-            ///         The function returns without waiting for the time-out period to elapse if the receiving
-            ///         thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+            ///         elapse if the receiving thread appears to not respond or hangs.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_BLOCK (0x1):
-            ///         </c>
-            ///         Prevents the calling thread from processing any other requests until the function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until
+            ///         the function returns.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NORMAL (0x0):
-            ///         </c>
-            ///         The calling thread is not prevented from processing other requests while waiting for the
-            ///         function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+            ///         waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-            ///         </c>
-            ///         The function does not enforce the time-out period as long as the receiving thread is
-            ///         processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+            ///         the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_ERRORONEXIT (0x20):
-            ///         </c>
-            ///         The function should return 0 if the receiving window is destroyed or its owning thread dies
-            ///         while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
+            ///         or its owning thread dies while the message is being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
@@ -7598,38 +7517,24 @@ namespace SilDev
             /// <param name="fuFlags">
             ///     The behavior of this function. This parameter can be one or more of the following values.
             ///     <para>
-            ///         <c>
-            ///             SMTO_ABORTIFHUNG (0x2):
-            ///         </c>
-            ///         The function returns without waiting for the time-out period to elapse if the receiving
-            ///         thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
+            ///         elapse if the receiving thread appears to not respond or hangs.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_BLOCK (0x1):
-            ///         </c>
-            ///         Prevents the calling thread from processing any other requests until the function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until the
+            ///         function returns.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NORMAL (0x0):
-            ///         </c>
-            ///         The calling thread is not prevented from processing other requests while waiting for the
-            ///         function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
+            ///         waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_NOTIMEOUTIFNOTHUNG (0x8):
-            ///         </c>
-            ///         The function does not enforce the time-out period as long as the receiving thread is
-            ///         processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
+            ///         the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             SMTO_ERRORONEXIT (0x20):
-            ///         </c>
-            ///         The function should return 0 if the receiving window is destroyed or its owning thread dies
-            ///         while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
+            ///         or its owning thread dies while the message is being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
@@ -7886,31 +7791,20 @@ namespace SilDev
             ///     A handle to the window to precede the positioned window in the Z order. This parameter must be a
             ///     window handle or one of the following values.
             ///     <para>
-            ///         <c>
-            ///             HWND_BOTTOM ((HWND)1):
-            ///         </c>
-            ///         Places the window at the bottom of the Z order. If the hWnd parameter identifies a topmost
-            ///         window, the window loses its topmost status and is placed at the bottom of all other windows.
+            ///         HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order. If the hWnd parameter
+            ///         identifies a topmost window, the window loses its topmost status and is placed at the bottom
+            ///         of all other windows.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             HWND_NOTOPMOST ((HWND)-2):
-            ///         </c>
-            ///         Places the window above all non-topmost windows (that is, behind all topmost windows). This
-            ///         flag has no effect if the window is already a non-topmost window.
+            ///         HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost windows (that is, behind all
+            ///         topmost windows). This flag has no effect if the window is already a non-topmost window.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             HWND_TOP ((HWND)0):
-            ///         </c>
-            ///         Places the window at the top of the Z order.
+            ///         HWND_TOP ((HWND)0): Places the window at the top of the Z order.
             ///     </para>
             ///     <para>
-            ///         <c>
-            ///             HWND_TOPMOST ((HWND)-1):
-            ///         </c>
-            ///         Places the window above all non-topmost windows. The window maintains its topmost position even
-            ///         when it is deactivated.
+            ///         HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost windows. The window maintains
+            ///         its topmost position even when it is deactivated.
             ///     </para>
             /// </param>
             /// <param name="x">
@@ -8991,7 +8885,8 @@ namespace SilDev
         public struct MouseKeyboardHardwareInput
         {
 #pragma warning disable CS1591
-            [FieldOffset(0)] public MouseInput Mouse;
+            [FieldOffset(0)]
+            public MouseInput Mouse;
             /*
             [FieldOffset(1)]
             public KeyboardInput Keyboard;
@@ -9062,7 +8957,8 @@ namespace SilDev
             ///     <see cref="NativeHelper.LookupPrivilegeName"/> function, passing the address of
             ///     the <see cref="LuId"/> as the value of the lpLuid parameter.
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)] public LuIdAndAttributes[] Privileges;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+            public LuIdAndAttributes[] Privileges;
         }
 
         /// <summary>
@@ -9163,13 +9059,15 @@ namespace SilDev
             ///     critical process. If the process is a critical process, and the installer is run as a
             ///     service, this parameter returns the long name of the critical process.
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] public string strAppName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string strAppName;
 
             /// <summary>
             ///     If the process is a service, this is the short name for the service. This member is
             ///     not used if the process is not a service.
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)] public string strServiceShortName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+            public string strServiceShortName;
 
             /// <summary>
             ///     Contains an RM_APP_TYPE enumeration value that specifies the type of application as
@@ -9195,7 +9093,8 @@ namespace SilDev
             ///     member is always TRUE if the process is a service. This member is always FALSE if the
             ///     process is a critical system process.
             /// </summary>
-            [MarshalAs(UnmanagedType.Bool)] public bool bRestartable;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool bRestartable;
         }
 
         /// <summary>
@@ -9244,12 +9143,14 @@ namespace SilDev
             ///     A string that contains the name of the file as it appears in the Windows Shell, or the path and
             ///     file name of the file that contains the icon representing the file.
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] internal string szDisplayName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            internal string szDisplayName;
 
             /// <summary>
             ///     A string that describes the type of file.
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)] internal string szTypeName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            internal string szTypeName;
         }
     }
 }

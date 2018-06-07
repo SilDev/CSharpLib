@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2018-03-23 22:28
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -87,13 +87,14 @@ namespace SilDev
         /// </param>
         /// <param name="defEncoding">
         ///     The default character encoding, which is returned if no character encoding
-        ///     was found. If the value is NULL it returns <see cref="Encoding.Default"/>.
+        ///     was found. If the value is NULL it returns the Windows-1252
+        ///     <see cref="Encoding"/> format.
         /// </param>
         [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
         public static Encoding GetEncoding(string file, Encoding defEncoding = default(Encoding))
         {
             var path = PathEx.Combine(file);
-            var encoding = defEncoding ?? Encoding.Default;
+            var encoding = defEncoding ?? Encoding.GetEncoding(1252);
             if (!File.Exists(path))
                 return encoding;
             using (var sr = new StreamReader(file, true))
@@ -112,15 +113,18 @@ namespace SilDev
         ///     The file to change.
         /// </param>
         /// <param name="encoding">
-        ///     The new character encoding.
+        ///     The new character encoding. If the value is NULL it uses the Windows-1252
+        ///     <see cref="Encoding"/> format.
         /// </param>
-        public static bool ChangeEncoding(string file, Encoding encoding)
+        public static bool ChangeEncoding(string file, Encoding encoding = default(Encoding))
         {
-            if (string.IsNullOrEmpty(file) || encoding == null)
+            if (string.IsNullOrEmpty(file))
                 return false;
             var srcFile = PathEx.Combine(file);
             if (!File.Exists(srcFile))
                 return false;
+            if (encoding == null)
+                encoding = Encoding.GetEncoding(1252);
             if (encoding.Equals(GetEncoding(srcFile)))
                 return true;
             try

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-06-04 09:46
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -38,24 +38,31 @@ namespace SilDev
         ///     The type of the source.
         /// </typeparam>
         /// <param name="path">
-        ///     The file to write to.
+        ///     The file to create.
         /// </param>
-        /// <param name="value">
+        /// <param name="source">
         ///     The object graph to write to the file.
+        /// </param>
+        /// <param name="compress">
+        ///     true to compress the file after serialization; otherwise, false.
         /// </param>
         /// <param name="overwrite">
         ///     true to allow an existing file to be overwritten; otherwise, false.
         /// </param>
-        public static bool Serialize<TSource>(string path, TSource value, bool overwrite = true)
+        public static bool Serialize<TSource>(string path, TSource source, bool compress = false, bool overwrite = true)
         {
             try
             {
                 var dest = PathEx.Combine(path);
-                using (var ms = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                {
-                    var bf = new BinaryFormatter();
-                    bf.Serialize(ms, value);
-                }
+                using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
+                    if (compress)
+                        using (var ms = new MemoryStream(source.SerializeObject().Zip()))
+                            ms.WriteTo(fs);
+                    else
+                    {
+                        var bf = new BinaryFormatter();
+                        bf.Serialize(fs, source);
+                    }
                 return true;
             }
             catch (Exception ex)
@@ -66,28 +73,40 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Deserializes specified file into an object graph.
+        ///     Deserializes the specified file into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
         /// </typeparam>
-        /// <param name="defValue">
-        ///     The default value.
-        /// </param>
         /// <param name="path">
         ///     The file to deserialize.
         /// </param>
-        public static TResult Deserialize<TResult>(TResult defValue, string path)
+        /// <param name="decompress">
+        ///     true to decompress the file before deserialization; otherwise, false.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        public static TResult Deserialize<TResult>(string path, bool decompress = false, TResult defValue = default(TResult))
         {
             try
             {
                 var src = PathEx.Combine(path);
+                if (!File.Exists(src))
+                    return defValue;
                 TResult result;
                 using (var fs = new FileStream(src, FileMode.Open))
-                {
-                    var bf = new BinaryFormatter();
-                    result = (TResult)bf.Deserialize(fs);
-                }
+                    if (decompress)
+                        using (var ms = new MemoryStream())
+                        {
+                            fs.CopyTo(ms);
+                            result = ms.ToArray().Unzip().DeserializeObject<TResult>();
+                        }
+                    else
+                    {
+                        var bf = new BinaryFormatter();
+                        result = (TResult)bf.Deserialize(fs);
+                    }
                 return result;
             }
             catch (Exception ex)
@@ -98,38 +117,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Deserializes the first valid file of the specified files into an object graph.
-        /// </summary>
-        /// <typeparam name="TResult">
-        ///     The type of the result.
-        /// </typeparam>
-        /// <param name="defValue">
-        ///     The default value.
-        /// </param>
-        /// <param name="paths">
-        ///     The files to deserialize.
-        /// </param>
-        public static TResult Deserialize<TResult>(TResult defValue, params string[] paths)
-        {
-            try
-            {
-                foreach (var path in paths)
-                {
-                    var result = Deserialize(defValue, path);
-                    if (result.Equals(defValue))
-                        continue;
-                    return result;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return defValue;
-        }
-
-        /// <summary>
-        ///     Deserializes specified file into an object graph.
+        ///     Deserializes the specified file into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
@@ -137,20 +125,11 @@ namespace SilDev
         /// <param name="path">
         ///     The file to deserialize.
         /// </param>
-        public static TResult Deserialize<TResult>(string path) =>
-            Deserialize(default(TResult), path);
-
-        /// <summary>
-        ///     Deserializes the first valid file of the specified files into an object graph.
-        /// </summary>
-        /// <typeparam name="TResult">
-        ///     The type of the result.
-        /// </typeparam>
-        /// <param name="paths">
-        ///     The files to deserialize.
+        /// <param name="defValue">
+        ///     The default value.
         /// </param>
-        public static TResult Deserialize<TResult>(params string[] paths) =>
-            Deserialize(default(TResult), paths);
+        public static TResult Deserialize<TResult>(string path, TResult defValue) =>
+            Deserialize(path, false, defValue);
 
         /// <summary>
         ///     Determines whether the specified file exists.
@@ -293,7 +272,7 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            return default(byte[]);
+            return null;
         }
 
         /// <summary>
@@ -317,7 +296,7 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            return default(string[]);
+            return null;
         }
 
         /// <summary>
@@ -341,7 +320,7 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            return default(string);
+            return null;
         }
 
         /// <summary>
@@ -1073,7 +1052,7 @@ namespace SilDev
         public static IEnumerable<Process> GetLocks(this FileInfo fileInfo)
         {
             var path = fileInfo?.FullName;
-            return path != null ? GetLocks(new[] { path }) : default(IEnumerable<Process>);
+            return path != null ? GetLocks(new[] { path }) : null;
         }
 
         /// <summary>

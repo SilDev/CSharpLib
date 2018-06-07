@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-04-03 20:02
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -119,9 +119,7 @@ namespace SilDev
         ///     The filename or the full path to the application to check.
         /// </param>
         /// <param name="doubleTap">
-        ///     <para>
-        ///         true to try to get firstly by the path, then by name; otherwise, false.
-        ///     </para>
+        ///     true to try to get firstly by the path, then by name; otherwise, false.
         ///     <para>
         ///         Please note that this option has no effect if the first parameter contains
         ///         only a name.
@@ -166,9 +164,7 @@ namespace SilDev
         ///     The filename or the full path to the application to check.
         /// </param>
         /// <param name="doubleTap">
-        ///     <para>
-        ///         true to try to check firstly by the path, then by name; otherwise, false.
-        ///     </para>
+        ///     true to try to check firstly by the path, then by name; otherwise, false.
         ///     <para>
         ///         Please note that this option has no effect if the first parameter contains
         ///         only a name.
@@ -199,9 +195,7 @@ namespace SilDev
         ///     The filename or the full path to the application to check.
         /// </param>
         /// <param name="doubleTap">
-        ///     <para>
-        ///         true to try to check firstly by the path, then by name; otherwise, false.
-        ///     </para>
+        ///     true to try to check firstly by the path, then by name; otherwise, false.
         ///     <para>
         ///         Please note that this option has no effect if the first parameter contains
         ///         only a name.
@@ -211,10 +205,8 @@ namespace SilDev
             InstancesCount(nameOrPath, doubleTap) > 0;
 
         /// <summary>
-        ///     <para>
-        ///         Determines whether this <see cref="Process"/> is running in a sandboxed
-        ///         environment.
-        ///     </para>
+        ///     Determines whether this <see cref="Process"/> is running in a sandboxed
+        ///     environment.
         ///     <para>
         ///         Hint: This function supports only the program Sandboxie.
         ///     </para>
@@ -274,11 +266,9 @@ namespace SilDev
             process.GetCommandLineArgs().Join(' ');
 
         /// <summary>
-        ///     <para>
-        ///         Starts (or reuses) the process resource that is specified by the current
-        ///         <see cref="Process"/>.StartInfo property of this <see cref="Process"/> and
-        ///         associates it with the component.
-        ///     </para>
+        ///     Starts (or reuses) the process resource that is specified by the current
+        ///     <see cref="Process"/>.StartInfo property of this <see cref="Process"/> and associates
+        ///     it with the component.
         ///     <para>
         ///         If the <see cref="Process"/>.StartInfo.WorkingDirectory parameter is undefined,
         ///         it is created by <see cref="Process"/>.StartInfo.FileName parameter.
@@ -401,10 +391,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///         <see cref="ProcessStartInfo"/> and starts (or reuses) the process component.
-        ///     </para>
+        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
+        ///     <see cref="ProcessStartInfo"/> and starts (or reuses) the process component.
         ///     <para>
         ///         If WorkingDirectory parameter is undefined, it is created by the FileName parameter.
         ///     </para>
@@ -632,9 +620,7 @@ namespace SilDev
             Close(processes.ToList());
 
         /// <summary>
-        ///     <para>
-        ///         Immediately stops all specified processes.
-        ///     </para>
+        ///     Immediately stops all specified processes.
         ///     <para>
         ///         If the current process doesn't have enough privileges to stop a specified process
         ///         it starts an invisible elevated instance of the command prompt to run taskkill.
@@ -682,9 +668,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Immediately stops all specified processes.
-        ///     </para>
+        ///     Immediately stops all specified processes.
         ///     <para>
         ///         If the current process doesn't have enough privileges to stop a specified process
         ///         it starts an invisible elevated instance of the command prompt to run taskkill.
@@ -697,10 +681,8 @@ namespace SilDev
             Terminate(processes.ToList());
 
         /// <summary>
-        ///     <para>
-        ///         Initializes a new instance of the <see cref="Process"/> class to execute system
-        ///         commands using the system command prompt ("cmd.exe").
-        ///     </para>
+        ///     Initializes a new instance of the <see cref="Process"/> class to execute system
+        ///     commands using the system command prompt ("cmd.exe").
         ///     <para>
         ///         This can be useful for an unprivileged application as a simple way to execute a
         ///         command with the highest user permissions, for example.
@@ -760,10 +742,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Initializes a new instance of the <see cref="Process"/> class to execute system
-        ///         commands using the system command prompt ("cmd.exe").
-        ///     </para>
+        ///     Initializes a new instance of the <see cref="Process"/> class to execute system
+        ///     commands using the system command prompt ("cmd.exe").
         ///     <para>
         ///         This can be useful for an unprivileged application as a simple way to execute a
         ///         command with the highest user permissions, for example.
@@ -783,10 +763,8 @@ namespace SilDev
             Send(command, runAsAdmin, ProcessWindowStyle.Hidden, dispose);
 
         /// <summary>
-        ///     <para>
-        ///         Initializes a new instance of the <see cref="Process"/> class to execute system
-        ///         commands using the system command prompt ("cmd.exe").
-        ///     </para>
+        ///     Initializes a new instance of the <see cref="Process"/> class to execute system
+        ///     commands using the system command prompt ("cmd.exe").
         ///     <para>
         ///         This can be useful for an unprivileged application as a simple way to execute a
         ///         command with the highest user permissions, for example.
@@ -853,9 +831,7 @@ namespace SilDev
         public static class CurrentPrincipal
         {
             /// <summary>
-            ///     <para>
-            ///         Gets the original name of the current principal.
-            ///     </para>
+            ///     Gets the original name of the current principal.
             ///     <para>
             ///         This variable is only set if <see cref="GetOriginalName"/> was
             ///         previously called.
@@ -1058,10 +1034,8 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     <para>
-            ///         Deletes the target at the specified path if there is no process running that
-            ///         is matched with the specified process name.
-            ///     </para>
+            ///     Deletes the target at the specified path if there is no process running that is
+            ///     matched with the specified process name.
             ///     <para>
             ///         If a matched process is still running, the task will wait until all matched
             ///         processes has been closed.
@@ -1099,10 +1073,8 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     <para>
-            ///         Deletes the target at the specified path if there is no process running that
-            ///         is matched with the specified process name.
-            ///     </para>
+            ///     Deletes the target at the specified path if there is no process running that is
+            ///     matched with the specified process name.
             ///     <para>
             ///         If a matched process is still running, the task will wait until all matched
             ///         processes has been closed.

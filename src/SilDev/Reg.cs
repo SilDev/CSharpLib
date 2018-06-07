@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2018-05-07 03:52
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,6 +30,7 @@ namespace SilDev
     public static class Reg
     {
         private static Dictionary<int, string> CachedKeyFilters { get; set; }
+
         private const int MaxCacheSize = 16;
         private const int MaxPathLength = 255;
 
@@ -678,9 +679,7 @@ namespace SilDev
             Read(keyPath.GetKey(), keyPath.GetSubKeyName(), entry, defValue);
 
         /// <summary>
-        ///     <para>
-        ///         Retrives the value associated with the specified entry of the specified registry path.
-        ///     </para>
+        ///     Retrives the value associated with the specified entry of the specified registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -709,7 +708,7 @@ namespace SilDev
                 if (objValue is string[])
                     value = (objValue as string[]).Join(Environment.NewLine);
                 else if (objValue is byte[])
-                    value = (objValue as byte[]).ToHexa();
+                    value = (objValue as byte[]).Encode(EncodingAlgorithms.Hex).RemoveChar(' ');
                 else
                     value = objValue.ToString();
             }
@@ -721,9 +720,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Retrives the value associated with the specified entry of the specified registry path.
-        ///     </para>
+        ///     Retrives the value associated with the specified entry of the specified registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -744,9 +741,7 @@ namespace SilDev
             ReadString(key.AsRegistryKey(), subKey, entry, defValue);
 
         /// <summary>
-        ///     <para>
-        ///         Retrives the value associated with the specified entry of the specified registry path.
-        ///     </para>
+        ///     Retrives the value associated with the specified entry of the specified registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>

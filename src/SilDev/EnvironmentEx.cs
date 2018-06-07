@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2018-05-07 03:52
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -33,10 +33,151 @@ namespace SilDev
     /// </summary>
     public static class EnvironmentEx
     {
+        /// <summary>
+        ///     Provides identity flags of redistributable packages. For more information,
+        ///     see <see cref="Redist.IsInstalled(RedistFlags[])"/>.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public enum RedistFlags
+        {
+            /// <summary>
+            ///     Microsoft Visual C++ 2005 Redistributable Package (x86).
+            /// </summary>
+            VC2005X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2005 Redistributable Package (x64).
+            /// </summary>
+            VC2005X64,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2008 Redistributable Package (x86).
+            /// </summary>
+            VC2008X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2008 Redistributable Package (x64).
+            /// </summary>
+            VC2008X64,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2010 Redistributable Package (x86).
+            /// </summary>
+            VC2010X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2010 Redistributable Package (x64).
+            /// </summary>
+            VC2010X64,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2012 Redistributable Package (x86).
+            /// </summary>
+            VC2012X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2012 Redistributable Package (x64).
+            /// </summary>
+            VC2012X64,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2013 Redistributable Package (x86).
+            /// </summary>
+            VC2013X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2013 Redistributable Package (x64).
+            /// </summary>
+            VC2013X64,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2015 Redistributable Package (x86).
+            /// </summary>
+            VC2015X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2015 Redistributable Package (x64).
+            /// </summary>
+            VC2015X64,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2017 Redistributable Package (x86).
+            /// </summary>
+            VC2017X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
+            /// </summary>
+            VC2017X64
+        }
+
+        /// <summary>
+        ///     The type of event. For more information, see <see cref="SystemRestore.Create"/>.
+        /// </summary>
+        public enum RestoreEventType
+        {
+            /// <summary>
+            ///     A system change has begun. A subsequent nested call does not create a new restore
+            ///     point.
+            ///     <para>
+            ///         Subsequent calls must use <see cref="EndNestedSystemChange"/>, not
+            ///         <see cref="EndSystemChange"/>.
+            ///     </para>
+            /// </summary>
+            BeginNestedSystemChange = 0x66,
+
+            /// <summary>
+            ///     A system change has begun.
+            /// </summary>
+            BeginSystemChange = 0x64,
+
+            /// <summary>
+            ///     A system change has ended.
+            /// </summary>
+            EndNestedSystemChange = 0x67,
+
+            /// <summary>
+            ///     A system change has ended.
+            /// </summary>
+            EndSystemChange = 0x65
+        }
+
+        /// <summary>
+        ///     The type of restore point. For more information, see <see cref="SystemRestore.Create"/>.
+        /// </summary>
+        public enum RestorePointType
+        {
+            /// <summary>
+            ///     An application has been installed.
+            /// </summary>
+            ApplicationInstall = 0x0,
+
+            /// <summary>
+            ///     An application has been uninstalled.
+            /// </summary>
+            ApplicationUninstall = 0x1,
+
+            /// <summary>
+            ///     An application needs to delete the restore point it created. For example, an
+            ///     application would use this flag when a user cancels an installation.
+            /// </summary>
+            CancelledOperation = 0xd,
+
+            /// <summary>
+            ///     A device driver has been installed.
+            /// </summary>
+            DeviceDriverInstall = 0xa,
+
+            /// <summary>
+            ///     An application has had features added or removed.
+            /// </summary>
+            ModifySettings = 0xc
+        }
+
         private static List<string> _cmdLineArgs;
         private static bool _cmdLineArgsQuotes;
         private static string _commandLine;
-        private static int _machineId;
+        private static int? _machineId;
         private static Version _version;
 
         /// <summary>
@@ -46,13 +187,13 @@ namespace SilDev
         {
             get
             {
-                if (_machineId != default(int))
-                    return _machineId;
+                if (_machineId.HasValue)
+                    return (int)_machineId;
                 var id = Win32_OperatingSystem.SerialNumber;
                 if (string.IsNullOrWhiteSpace(id))
                     id = string.Concat(Environment.MachineName, Path.DirectorySeparatorChar, Environment.UserName);
                 _machineId = Math.Abs(id.GetHashCode());
-                return _machineId;
+                return (int)_machineId;
             }
         }
 
@@ -287,16 +428,11 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Retrieves the value of an environment variable from the current process.
         ///     <para>
-        ///         Retrieves the value of an environment variable from the current process.
-        ///     </para>
-        ///     <para>
-        ///         <c>
-        ///             Hint:
-        ///         </c>
-        ///         Allows <see cref="Environment.SpecialFolder"/> names inlcuding a
-        ///         keyword "CurDir" to get the current code base location based
-        ///         on <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
+        ///         Hint: Allows <see cref="Environment.SpecialFolder"/> names inlcuding a keyword
+        ///         "CurDir" to get the current code base location based on
+        ///         <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         ///     </para>
         /// </summary>
         /// <param name="variable">
@@ -456,83 +592,6 @@ namespace SilDev
         /// </summary>
         public static class Redist
         {
-            /// <summary>
-            ///     Provides identity flags of redistributable packages.
-            /// </summary>
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public enum Flags
-            {
-                /// <summary>
-                ///     Microsoft Visual C++ 2005 Redistributable Package (x86).
-                /// </summary>
-                VC2005X86,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2005 Redistributable Package (x64).
-                /// </summary>
-                VC2005X64,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2008 Redistributable Package (x86).
-                /// </summary>
-                VC2008X86,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2008 Redistributable Package (x64).
-                /// </summary>
-                VC2008X64,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2010 Redistributable Package (x86).
-                /// </summary>
-                VC2010X86,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2010 Redistributable Package (x64).
-                /// </summary>
-                VC2010X64,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2012 Redistributable Package (x86).
-                /// </summary>
-                VC2012X86,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2012 Redistributable Package (x64).
-                /// </summary>
-                VC2012X64,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2013 Redistributable Package (x86).
-                /// </summary>
-                VC2013X86,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2013 Redistributable Package (x64).
-                /// </summary>
-                VC2013X64,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2015 Redistributable Package (x86).
-                /// </summary>
-                VC2015X86,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2015 Redistributable Package (x64).
-                /// </summary>
-                VC2015X64,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2017 Redistributable Package (x86).
-                /// </summary>
-                VC2017X86,
-
-                /// <summary>
-                ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
-                /// </summary>
-                VC2017X64
-            }
-
             private static string[] _displayNames;
 
             /// <summary>
@@ -577,7 +636,7 @@ namespace SilDev
             /// <param name="keys">
             ///     The redistributable package keys to check.
             /// </param>
-            public static bool IsInstalled(params Flags[] keys)
+            public static bool IsInstalled(params RedistFlags[] keys)
             {
                 try
                 {
@@ -623,69 +682,6 @@ namespace SilDev
         public static class SystemRestore
         {
             /// <summary>
-            ///     The type of event. For more information, see <see cref="Create"/>.
-            /// </summary>
-            public enum EventType
-            {
-                /// <summary>
-                ///     A system change has begun. A subsequent nested call does not create a new restore
-                ///     point.
-                ///     <para>
-                ///         Subsequent calls must use <see cref="EndNestedSystemChange"/>, not
-                ///         <see cref="EndSystemChange"/>.
-                ///     </para>
-                /// </summary>
-                BeginNestedSystemChange = 0x66,
-
-                /// <summary>
-                ///     A system change has begun.
-                /// </summary>
-                BeginSystemChange = 0x64,
-
-                /// <summary>
-                ///     A system change has ended.
-                /// </summary>
-                EndNestedSystemChange = 0x67,
-
-                /// <summary>
-                ///     A system change has ended.
-                /// </summary>
-                EndSystemChange = 0x65
-            }
-
-            /// <summary>
-            ///     The type of restore point. For more information, see <see cref="Create"/>.
-            /// </summary>
-            public enum PointType
-            {
-                /// <summary>
-                ///     An application has been installed.
-                /// </summary>
-                ApplicationInstall = 0x0,
-
-                /// <summary>
-                ///     An application has been uninstalled.
-                /// </summary>
-                ApplicationUninstall = 0x1,
-
-                /// <summary>
-                ///     An application needs to delete the restore point it created. For example, an
-                ///     application would use this flag when a user cancels an installation.
-                /// </summary>
-                CancelledOperation = 0xd,
-
-                /// <summary>
-                ///     A device driver has been installed.
-                /// </summary>
-                DeviceDriverInstall = 0xa,
-
-                /// <summary>
-                ///     An application has had features added or removed.
-                /// </summary>
-                ModifySettings = 0xc
-            }
-
-            /// <summary>
             ///     Determines whether the system restoring is enabled.
             /// </summary>
             public static bool IsEnabled =>
@@ -703,7 +699,7 @@ namespace SilDev
             /// <param name="restorePointType">
             ///     The type of restore point.
             /// </param>
-            public static void Create(string description, EventType eventType, PointType restorePointType)
+            public static void Create(string description, RestoreEventType eventType, RestorePointType restorePointType)
             {
                 try
                 {

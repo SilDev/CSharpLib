@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2018-01-29 05:49
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -386,9 +386,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Provides basic functionality of the IrrKlang library.
-        ///     </para>
+        ///     Provides basic functionality of the IrrKlang library.
         ///     <para>
         ///         Please note that this class requires the binaries of the IrrKlang library.
         ///     </para>

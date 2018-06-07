@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Service.cs
-// Version:  2017-06-23 12:07
+// Version:  2018-06-07 09:32
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,61 +22,61 @@ namespace SilDev
     using System.Threading;
 
     /// <summary>
+    ///     Provides enumerated values of service states.
+    /// </summary>
+    public enum ServiceState
+    {
+        /// <summary>
+        ///     The service continue is pending.
+        /// </summary>
+        Continuing = 0x5,
+
+        /// <summary>
+        ///     The service pause is pending.
+        /// </summary>
+        Pausing = 0x6,
+
+        /// <summary>
+        ///     The service is paused.
+        /// </summary>
+        Paused = 0x7,
+
+        /// <summary>
+        ///     The service is running.
+        /// </summary>
+        Running = 0x4,
+
+        /// <summary>
+        ///     The service is starting.
+        /// </summary>
+        Starting = 0x2,
+
+        /// <summary>
+        ///     The service is stopping.
+        /// </summary>
+        Stopping = 0x3,
+
+        /// <summary>
+        ///     The service is not running.
+        /// </summary>
+        Stopped = 0x1,
+
+        /// <summary>
+        ///     The service could not be found.
+        /// </summary>
+        NotFound = 0x0,
+
+        /// <summary>
+        ///     The service state could not be determined.
+        /// </summary>
+        Unknown = -0x1
+    }
+
+    /// <summary>
     ///     Provides static methods to control service applications.
     /// </summary>
     public static class Service
     {
-        /// <summary>
-        ///     Provides enumerated values of service states.
-        /// </summary>
-        public enum State
-        {
-            /// <summary>
-            ///     The service continue is pending.
-            /// </summary>
-            Continuing = 0x5,
-
-            /// <summary>
-            ///     The service pause is pending.
-            /// </summary>
-            Pausing = 0x6,
-
-            /// <summary>
-            ///     The service is paused.
-            /// </summary>
-            Paused = 0x7,
-
-            /// <summary>
-            ///     The service is running.
-            /// </summary>
-            Running = 0x4,
-
-            /// <summary>
-            ///     The service is starting.
-            /// </summary>
-            Starting = 0x2,
-
-            /// <summary>
-            ///     The service is stopping.
-            /// </summary>
-            Stopping = 0x3,
-
-            /// <summary>
-            ///     The service is not running.
-            /// </summary>
-            Stopped = 0x1,
-
-            /// <summary>
-            ///     The service could not be found.
-            /// </summary>
-            NotFound = 0x0,
-
-            /// <summary>
-            ///     The service state could not be determined.
-            /// </summary>
-            Unknown = -0x1
-        }
-
         private static IntPtr OpenServiceControlManager(WinApi.ServiceManagerAccessRights serviceRights)
         {
             var scman = WinApi.NativeMethods.OpenSCManager(null, null, serviceRights);
@@ -285,19 +285,19 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the current <see cref="State"/> of an existing service.
+        ///     Returns the current <see cref="ServiceState"/> of an existing service.
         /// </summary>
         /// <param name="serviceName">
         ///     The name of the service to check.
         /// </param>
-        public static State GetStatus(string serviceName)
+        public static ServiceState GetStatus(string serviceName)
         {
             var scman = OpenServiceControlManager(WinApi.ServiceManagerAccessRights.Connect);
             try
             {
                 var hService = WinApi.NativeMethods.OpenService(scman, serviceName, WinApi.ServiceAccessRights.QueryStatus);
                 if (hService == IntPtr.Zero)
-                    return State.NotFound;
+                    return ServiceState.NotFound;
                 try
                 {
                     return GetStatus(hService);
@@ -315,10 +315,10 @@ namespace SilDev
             {
                 WinApi.NativeMethods.CloseServiceHandle(scman);
             }
-            return State.NotFound;
+            return ServiceState.NotFound;
         }
 
-        private static State GetStatus(IntPtr hService)
+        private static ServiceState GetStatus(IntPtr hService)
         {
             var ssStatus = new WinApi.ServiceStatus();
             try
@@ -330,7 +330,7 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            return (State)ssStatus.dwCurrentState;
+            return (ServiceState)ssStatus.dwCurrentState;
         }
 
         private static void WaitForStatus(IntPtr hService, WinApi.ServiceStateTypes waitStatus, WinApi.ServiceStateTypes desiredStatus)

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2018-05-31 07:30
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -44,8 +44,8 @@ namespace SilDev
 
             /// <summary>
             ///     A free, global DNS resolution service that you can use as an alternative to your current
-            ///     DNS provider. In addition to traditional DNS over UDP or TCP, Google (also known as pure
-            ///     evil) also provide DNS-over-HTTPS API.
+            ///     DNS provider. In addition to traditional DNS over UDP or TCP, Google also provide
+            ///     DNS-over-HTTPS API.
             /// </summary>
             Google
         }
@@ -59,6 +59,7 @@ namespace SilDev
         ///     Returns the specified Domain Name System server addresses.
         /// </summary>
         /// <param name="dnsOptions">
+        ///     The Domain Name System provider to get the addresses.
         /// </param>
         public static string[,] GetDnsAddresses(DnsOptions dnsOptions)
         {
@@ -152,7 +153,7 @@ namespace SilDev
             long roundtripTime = timeout;
             try
             {
-                if (uri == default(Uri))
+                if (uri == null)
                     throw new ArgumentNullException(nameof(uri));
                 using (var ping = new Ping())
                 {
@@ -2659,8 +2660,8 @@ namespace SilDev
             {
                 get
                 {
-                    var current = BytesReceived.FormatSize(Reorganize.SizeUnits.MB);
-                    var total = TotalBytesToReceive.FormatSize(Reorganize.SizeUnits.MB);
+                    var current = BytesReceived.FormatSize(SizeUnits.MB);
+                    var total = TotalBytesToReceive.FormatSize(SizeUnits.MB);
                     return $"{current} / {total}";
                 }
             }
@@ -3294,7 +3295,7 @@ namespace SilDev
             protected override WebRequest GetWebRequest(Uri address)
             {
                 if (!(base.GetWebRequest(address) is HttpWebRequest request))
-                    return default(WebRequest);
+                    return null;
                 request.AllowAutoRedirect = AllowAutoRedirect;
                 if (CookieContainer != null)
                     request.CookieContainer = CookieContainer;

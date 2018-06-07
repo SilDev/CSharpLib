@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2018-06-03 08:33
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,8 +16,10 @@
 namespace SilDev
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using System.Runtime.Serialization;
     using System.Text;
     using System.Web.Script.Serialization;
 
@@ -27,24 +29,25 @@ namespace SilDev
     public static class Json
     {
         /// <summary>
-        ///     Retrieves the full content of the specified JSON file.
+        ///     Serializes the specified object graph into a string representation of an JSON
+        ///     document.
         /// </summary>
-        /// <param name="path">
-        ///     The full path of the file to read.
+        /// <typeparam name="TSource">
+        ///     The type of the source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The object graph to serialize.
         /// </param>
-        public static Dictionary<string, object> ReadAll(string path)
+        public static string Serialize<TSource>(TSource source)
         {
             try
             {
-                if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException(nameof(path));
-                var s = PathEx.Combine(path);
-                if (!File.Exists(s))
-                    throw new PathNotFoundException(s);
-                s = File.ReadAllText(s);
+                if (source == null)
+                    throw new ArgumentNullException(nameof(source));
                 var js = new JavaScriptSerializer();
-                var json = js.DeserializeObject(s);
-                return (Dictionary<string, object>)json;
+                var sb = new StringBuilder();
+                js.Serialize(source, sb);
+                return sb.ToString();
             }
             catch (Exception ex)
             {
@@ -52,6 +55,112 @@ namespace SilDev
                 return null;
             }
         }
+
+        /// <summary>
+        ///     Creates a new JSON file, writes the specified object graph into to the JSON file,
+        ///     and then closes the file.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source.
+        /// </typeparam>
+        /// <param name="path">
+        ///     The JSON file to create.
+        /// </param>
+        /// <param name="source">
+        ///     The object graph to write to the file.
+        /// </param>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public static bool SerializeToFile<TSource>(string path, TSource source, bool overwrite = true)
+        {
+            try
+            {
+                if (path == null)
+                    throw new ArgumentNullException(nameof(path));
+                var output = Serialize(source);
+                if (output == null)
+                    throw new ArgumentNullException(nameof(output));
+                var dest = PathEx.Combine(path);
+                if (!overwrite && File.Exists(dest))
+                    return false;
+                File.WriteAllText(dest, output);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Deserializes a string representation of an XML document into an object graph.
+        /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type of the result.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The string representation of an XML document to deserialize.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        public static TResult Deserialize<TResult>(string source, TResult defValue = default(TResult)) where TResult : IEnumerable, IDictionary, ICollection, ISerializable
+        {
+            try
+            {
+                if (source == null)
+                    throw new ArgumentNullException(nameof(source));
+                var js = new JavaScriptSerializer();
+                return js.Deserialize<TResult>(source);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return defValue;
+            }
+        }
+
+        /// <summary>
+        ///     Deserializes specified JSON file into an object graph.
+        /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type of the result.
+        /// </typeparam>
+        /// <param name="path">
+        ///     The JSON file to deserialize.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        public static TResult DeserializeFile<TResult>(string path, TResult defValue = default(TResult)) where TResult : IEnumerable, IDictionary, ICollection, ISerializable
+        {
+            try
+            {
+                if (path == null)
+                    throw new ArgumentNullException(nameof(path));
+                var src = PathEx.Combine(path);
+                if (!File.Exists(src))
+                    throw new PathNotFoundException(src);
+                var input = File.ReadAllText(src);
+                return Deserialize<TResult>(input);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return defValue;
+            }
+        }
+
+        /// <summary>
+        ///     Retrieves the full content of the specified JSON file.
+        /// </summary>
+        /// <param name="path">
+        ///     The full path of the file to read.
+        /// </param>
+        public static Dictionary<string, object> ReadAll(string path) =>
+            DeserializeFile<Dictionary<string, object>>(path);
 
         /// <summary>
         ///     Retrieves a value from the specified key in a JSON file.
@@ -74,81 +183,6 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Converts an object to a JSON string.
-        /// </summary>
-        /// <param name="obj">
-        ///     The object to convert.
-        /// </param>
-        /// <param name="maxLength">
-        ///     Gets or sets the maximum length of JSON strings that are accepted by the
-        ///     <see cref="JavaScriptSerializer"/> class.
-        /// </param>
-        /// <param name="recursionLimit">
-        ///     Gets or sets the limit for constraining the number of object levels to process.
-        /// </param>
-        public static string String(object obj, int maxLength = 0x200000, int recursionLimit = 0x64)
-        {
-            try
-            {
-                if (obj == default(object))
-                    throw new ArgumentNullException(nameof(obj));
-                if (maxLength < short.MaxValue)
-                    throw new ArgumentOutOfRangeException(nameof(maxLength));
-                if (recursionLimit < 0x10)
-                    throw new ArgumentOutOfRangeException(nameof(recursionLimit));
-                var sb = new StringBuilder();
-                var js = new JavaScriptSerializer();
-                if (maxLength > 0)
-                    js.MaxJsonLength = maxLength;
-                if (recursionLimit > 0)
-                    js.RecursionLimit = recursionLimit;
-                js.Serialize(obj, sb);
-                return sb.ToString();
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        ///     Creates a new JSON file with the specified object data.
-        /// </summary>
-        /// <param name="obj">
-        ///     The object to convert.
-        /// </param>
-        /// <param name="path">
-        ///     The full path of the file to read.
-        /// </param>
-        /// <param name="maxLength">
-        ///     Gets or sets the maximum length of JSON strings that are accepted by the
-        ///     <see cref="JavaScriptSerializer"/> class.
-        /// </param>
-        /// <param name="recursionLimit">
-        ///     Gets or sets the limit for constraining the number of object levels to process.
-        /// </param>
-        public static void Write(object obj, string path, int maxLength = 0x200000, int recursionLimit = 0x64)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException(nameof(path));
-                var s1 = PathEx.Combine(path);
-                if (!PathEx.IsValidPath(s1))
-                    throw new ArgumentException();
-                var s2 = String(obj, maxLength, recursionLimit);
-                if (string.IsNullOrEmpty(s2))
-                    throw new ArgumentNullException(nameof(s2));
-                File.WriteAllText(s1, s2);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
             }
         }
     }

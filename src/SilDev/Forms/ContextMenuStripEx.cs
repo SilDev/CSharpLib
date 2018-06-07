@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2018-03-08 01:37
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -114,9 +114,7 @@ namespace SilDev.Forms
         ///     The type of animation.
         /// </param>
         /// <param name="time">
-        ///     <para>
-        ///         The time it takes to play the animation, in milliseconds.
-        ///     </para>
+        ///     The time it takes to play the animation, in milliseconds.
         ///     <para>
         ///         Please note that this parameter is ignored if the animation is set to
         ///         <see cref="Animations.Default"/>.
@@ -203,6 +201,7 @@ namespace SilDev.Forms
         private class ColorTable : ProfessionalColorTable
         {
             public override Color MenuItemBorder => _menuBorder;
+
             public override Color MenuItemSelected => ProfessionalColors.ButtonSelectedHighlight;
         }
     }

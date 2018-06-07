@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2018-03-23 22:29
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -34,6 +34,7 @@ namespace SilDev
         private const string ObjectPrefix = "\u0001Object\u0002";
         private const string ObjectSuffix = "\u0003";
         private static string _filePath, _tmpFileGuid;
+
         private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles { get; set; }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace SilDev
 
         private static void InitializeCache(int code, string section = null, string key = null)
         {
-            if (CachedFiles == default(Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>))
+            if (CachedFiles == null)
                 CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
 
             if (!CachedFiles.ContainsKey(code))
@@ -151,9 +152,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Loads the data of a cache file into memory.
-        ///     </para>
+        ///     Loads the data of a cache file into memory.
         ///     <para>
         ///         Please note that <see cref="MaxCacheSize"/> is ignored in this case.
         ///     </para>
@@ -687,7 +686,7 @@ namespace SilDev
                         msg.AppendLine("The value is not defined.");
                         msg.AppendLine($"   Section: '{section}'");
                         msg.AppendLine($"   Key: '{key}'");
-                        msg.Append($"   FileOrContent: '{(fileOrContent?.Any(TextEx.IsLineSeparator) == true ? fileOrContent.EncodeToBase85() : GetFile()) ?? "NULL"}'");
+                        msg.Append($"   FileOrContent: '{(fileOrContent?.Any(TextEx.IsLineSeparator) == true ? fileOrContent.Encrypt() : GetFile()) ?? "NULL"}'");
                         throw new WarningException(msg.ToString());
                     }
                     newValue = (object)defValue ?? string.Empty;
@@ -696,7 +695,7 @@ namespace SilDev
                 {
                     var startIndex = ObjectPrefix.Length;
                     var length = strValue.Length - ObjectPrefix.Length - ObjectSuffix.Length;
-                    var bytes = strValue.Substring(startIndex, length).DecodeBytesFromBase85(null, null);
+                    var bytes = strValue.Substring(startIndex, length).Decode(null, null, EncodingAlgorithms.Base85);
                     var unzipped = bytes?.Unzip();
                     if (unzipped != null)
                         bytes = unzipped;
@@ -762,10 +761,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Retrieves a <see cref="string"/> value from the specified section in an INI
-        ///         file.
-        ///     </para>
+        ///     Retrieves a <see cref="string"/> value from the specified section in an INI file.
         ///     <para>
         ///         The Win32-API without file caching is used for reading in this case.
         ///     </para>
@@ -802,18 +798,14 @@ namespace SilDev
         ///     Writes the specifed content to an INI file on the disk.
         /// </summary>
         /// <param name="content">
-        ///     <para>
-        ///         The content based on <see cref="ReadAll(string,bool)"/>.
-        ///     </para>
+        ///     The content based on <see cref="ReadAll(string,bool)"/>.
         ///     <para>
         ///         If this parameter is NULL, the function writes all the cached data from the
         ///         specified INI file to the disk.
         ///     </para>
         /// </param>
         /// <param name="file">
-        ///     <para>
-        ///         The full file path of an INI file.
-        ///     </para>
+        ///     The full file path of an INI file.
         ///     <para>
         ///         If this parameter is NULL, the default INI file is used.
         ///     </para>
@@ -903,9 +895,7 @@ namespace SilDev
         ///     Writes all the cached data from the specified INI file to the disk.
         /// </summary>
         /// <param name="file">
-        ///     <para>
-        ///         The full file path of an INI file.
-        ///     </para>
+        ///     The full file path of an INI file.
         ///     <para>
         ///         If this parameter is NULL, the default INI file is used.
         ///     </para>
@@ -921,9 +911,7 @@ namespace SilDev
             WriteAll(null, file, sorted);
 
         /// <summary>
-        ///     <para>
-        ///         Copies the specified value into the specified section of an INI file.
-        ///     </para>
+        ///     Copies the specified value into the specified section of an INI file.
         ///     <para>
         ///         This function updates only the cache and has no effect on the file until
         ///         <see cref="WriteAll(string,bool,bool)"/> is called.
@@ -936,18 +924,14 @@ namespace SilDev
         ///     The name of the section to which the value will be copied.
         /// </param>
         /// <param name="key">
-        ///     <para>
-        ///         The name of the key to be associated with a value.
-        ///     </para>
+        ///     The name of the key to be associated with a value.
         ///     <para>
         ///         If this parameter is NULL, the entire section, including all entries within the
         ///         section, is deleted.
         ///     </para>
         /// </param>
         /// <param name="value">
-        ///     <para>
-        ///         The value to be written to the file.
-        ///     </para>
+        ///     The value to be written to the file.
         ///     <para>
         ///         If this parameter is NULL, the key pointed to by the key parameter is deleted.
         ///     </para>
@@ -1000,7 +984,7 @@ namespace SilDev
                         var zipped = bytes?.Zip();
                         if (zipped?.Length < bytes?.Length)
                             bytes = zipped;
-                        val = string.Concat(ObjectPrefix, bytes.EncodeToBase85(null, null), ObjectSuffix);
+                        val = string.Concat(ObjectPrefix, bytes.Encode(null, null, EncodingAlgorithms.Base85), ObjectSuffix);
                     }
                     else
                         val = str;
@@ -1054,9 +1038,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Copies the specified value into the specified section of an INI file.
-        ///     </para>
+        ///     Copies the specified value into the specified section of an INI file.
         ///     <para>
         ///         This function updates only the cache and has no effect on the file until
         ///         <see cref="WriteAll(string,bool,bool)"/> is called.
@@ -1069,18 +1051,14 @@ namespace SilDev
         ///     The name of the section to which the value will be copied.
         /// </param>
         /// <param name="key">
-        ///     <para>
-        ///         The name of the key to be associated with a value.
-        ///     </para>
+        ///     The name of the key to be associated with a value.
         ///     <para>
         ///         If this parameter is NULL, the entire section, including all entries within the
         ///         section, is deleted.
         ///     </para>
         /// </param>
         /// <param name="value">
-        ///     <para>
-        ///         The value to be written to the file.
-        ///     </para>
+        ///     The value to be written to the file.
         ///     <para>
         ///         If this parameter is NULL, the key pointed to by the key parameter is deleted.
         ///     </para>
@@ -1100,33 +1078,27 @@ namespace SilDev
             Write(section, key, value, null, forceOverwrite, skipExistValue);
 
         /// <summary>
-        ///     <para>
-        ///         Copies the <see cref="string"/> representation of the specified <see cref="object"/>
-        ///         value into the specified section of an INI file. If the file does not exist, it is
-        ///         created.
-        ///     </para>
+        ///     Copies the <see cref="string"/> representation of the specified <see cref="object"/>
+        ///     value into the specified section of an INI file. If the file does not exist, it is
+        ///     created.
         ///     <para>
         ///         The Win32-API is used for writing in this case. Please note that this function
-        ///         writes all changes directly on the disk. This causes many write accesses when used
-        ///         incorrectly.
+        ///         writes all changes directly on the disk. This causes many write accesses when
+        ///         used incorrectly.
         ///     </para>
         /// </summary>
         /// <param name="section">
         ///     The name of the section to which the value will be copied.
         /// </param>
         /// <param name="key">
-        ///     <para>
-        ///         The name of the key to be associated with a value.
-        ///     </para>
+        ///     The name of the key to be associated with a value.
         ///     <para>
         ///         If this parameter is NULL, the entire section, including all entries within the
         ///         section, is deleted.
         ///     </para>
         /// </param>
         /// <param name="value">
-        ///     <para>
-        ///         The value to be written to the file.
-        ///     </para>
+        ///     The value to be written to the file.
         ///     <para>
         ///         If this parameter is NULL, the key pointed to by the key parameter is deleted.
         ///     </para>

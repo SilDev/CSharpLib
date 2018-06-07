@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-04-03 20:01
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -622,7 +622,7 @@ namespace SilDev
             try
             {
                 var len = 0L;
-                if (dirInfo == default(DirectoryInfo))
+                if (dirInfo == null)
                     return len;
                 foreach (var fi in dirInfo.GetFiles())
                     Interlocked.Add(ref len, fi.Length);
@@ -781,7 +781,7 @@ namespace SilDev
         public static IEnumerable<Process> GetLocks(IEnumerable<string> dirs)
         {
             var paths = dirs?.ToArray();
-            return paths?.Any() == true ? FileEx.GetLocks(paths.Select(PathEx.Combine).Where(PathEx.IsDir).SelectMany(s => GetFiles(s, SearchOption.AllDirectories))) : default(IEnumerable<Process>);
+            return paths?.Any() == true ? FileEx.GetLocks(paths.Select(PathEx.Combine).Where(PathEx.IsDir).SelectMany(s => GetFiles(s, SearchOption.AllDirectories))) : null;
         }
 
         /// <summary>

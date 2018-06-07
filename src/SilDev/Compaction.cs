@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2018-02-20 16:14
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,9 @@
 namespace SilDev
 {
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.IO.Compression;
     using System.Text;
@@ -34,22 +36,17 @@ namespace SilDev
         /// </param>
         public static byte[] Zip(this byte[] bytes)
         {
-            try
-            {
-                using (var msi = new MemoryStream(bytes))
-                {
-                    var mso = new MemoryStream();
-                    using (var gs = new GZipStream(mso, CompressionMode.Compress))
-                        msi.CopyTo(gs);
-                    bytes = mso.ToArray();
-                }
-                return bytes;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+            if (bytes == null)
                 return null;
+            byte[] ba;
+            using (var msi = new MemoryStream(bytes))
+            {
+                var mso = new MemoryStream();
+                using (var gs = new GZipStream(mso, CompressionMode.Compress))
+                    msi.CopyTo(gs);
+                ba = mso.ToArray();
             }
+            return ba;
         }
 
         /// <summary>
@@ -60,16 +57,10 @@ namespace SilDev
         /// </param>
         public static byte[] ZipText(this string text)
         {
-            try
-            {
-                var ba = Encoding.UTF8.GetBytes(text);
-                ba = ba.Zip();
-                return ba;
-            }
-            catch
-            {
+            if (string.IsNullOrEmpty(text))
                 return null;
-            }
+            var ba = Encoding.UTF8.GetBytes(text);
+            return ba.Zip();
         }
 
         /// <summary>
@@ -80,6 +71,8 @@ namespace SilDev
         /// </param>
         public static byte[] Unzip(this byte[] bytes)
         {
+            if (bytes == null)
+                return null;
             try
             {
                 byte[] ba;
@@ -181,60 +174,183 @@ namespace SilDev
         /// </param>
         public static string UnzipText(this byte[] bytes)
         {
-            try
-            {
-                var ba = bytes.Unzip();
-                var s = Encoding.UTF8.GetString(ba);
-                return s;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return null;
-            }
+            var ba = bytes?.Unzip();
+            return ba == null ? null : Encoding.UTF8.GetString(ba);
         }
-
-        #region 7-Zip Helper
 
         /// <summary>
-        ///     ***This is an undocumented class and can be changed or removed in the future
-        ///     without futher notice.
+        ///     Provides functionality for compressing and decompressing files with 7-Zip.
         /// </summary>
-        public static class Zip7Helper
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public static class SevenZipHelper
         {
-#pragma warning disable 1591
-            public static string ExePath { get; set; } =
+            /// <summary>
+            ///     Specifies how to compress.
+            /// </summary>
+            public enum CompressMode
+            {
+                /// <summary>
+                ///     -t7z -mx -mmt -ms
+                /// </summary>
+                Default,
+
+                /// <summary>
+                ///     -t7z -mx -m0=lzma -md=128m -mfb=256 -ms
+                /// </summary>
+                Ultra
+            }
+
+            private static string _location, _filePath;
+
+            /// <summary>
+            ///     The location of the 7-Zip executable file.
+            /// </summary>
+            public static string Location
+            {
+                get
+                {
+                    if (_location != default(string))
+                        return _location;
+                    var dirs = new[]
+                    {
 #if x64
-                PathEx.Combine(PathEx.LocalDir, "Helper\\7z\\x64\\7zG.exe");
-#else
-                PathEx.Combine(PathEx.LocalDir, "Helper\\7z\\7zG.exe");
+                        "Helper\\7z\\x64",
+                        "Binaries\\Helper\\7z\\x64",
 #endif
-
-            public struct CompressTemplates
-            {
-                public const string Default = "-t7z -mx -mmt -ms";
-                public const string Ultra = "-t7z -mx -m0=lzma -md=128m -mfb=256 -ms";
+                        "Helper\\7z",
+                        "Binaries\\Helper\\7z"
+                    };
+                    foreach (var dir in dirs)
+                    {
+                        if (SetPathsIfValid(PathEx.Combine(PathEx.LocalDir, dir)))
+                            break;
+                        _location = string.Empty;
+                    }
+                    return _location;
+                }
+                set
+                {
+                    if (SetPathsIfValid(value?.RemoveText("7zG.exe", "7z.exe")))
+                        return;
+                    _location = string.Empty;
+                    _filePath = default(string);
+                }
             }
 
-            public static Process Zip(string srcDirOrFile, string destFile, string args = null, ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden, bool dispose = false)
+            /// <summary>
+            ///     The file path of the 7-Zip executable file.
+            /// </summary>
+            public static string FilePath
             {
-                args = args ?? CompressTemplates.Default;
-                var prfx = PathEx.IsDir(srcDirOrFile) ? "\\*" : string.Empty;
-                args = $"a {args} \"\"\"{destFile}\"\"\" \"\"\"{srcDirOrFile}{prfx}\"\"\"";
-                return ProcessEx.Start(ExePath, args, false, windowStyle, dispose);
+                get
+                {
+                    if (_filePath != default(string) && Directory.Exists(Location))
+                        return _filePath;
+                    return default(string);
+                }
             }
 
+            private static bool SetPathsIfValid(string dir)
+            {
+                if (dir == default(string))
+                    return false;
+                var fileDir = dir;
+                if (!Directory.Exists(fileDir))
+                    return false;
+                var dllPath = Path.Combine(fileDir, "7z.dll");
+                if (!File.Exists(dllPath))
+                    return false;
+                var exePath = Path.Combine(fileDir, "7zG.exe");
+                if (!File.Exists(exePath))
+                    exePath = Path.Combine(fileDir, "7z.exe");
+                if (!File.Exists(exePath))
+                    return false;
+                _location = fileDir;
+                _filePath = exePath;
+                return true;
+            }
+
+            /// <summary>
+            ///     Compress the specified file, or all files of the specified directory, to the
+            ///     specified file on the file system.
+            /// </summary>
+            /// <param name="srcDirOrFile">
+            ///     The path of the file or directory to compress.
+            /// </param>
+            /// <param name="destFile">
+            ///     The path of the archive.
+            /// </param>
+            /// <param name="compressMode">
+            ///     One of the enumeration values that indicates how to compress the file/s.
+            /// </param>
+            /// <param name="windowStyle">
+            ///     The window state to use when the 7-Zip process is started.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/> if the process
+            ///     has been started; otherwise, false.
+            /// </param>
+            public static Process Zip(string srcDirOrFile, string destFile, CompressMode compressMode = CompressMode.Default, ProcessWindowStyle windowStyle = ProcessWindowStyle.Minimized, bool dispose = false)
+            {
+                if (!File.Exists(FilePath))
+                    return null;
+                string args;
+                switch (compressMode)
+                {
+                    case CompressMode.Ultra:
+                        args = "-t7z -mx -m0=lzma -md=128m -mfb=256 -ms";
+                        break;
+                    default:
+                        args = "-t7z -mx -mmt -ms";
+                        break;
+                }
+                var src = PathEx.Combine(srcDirOrFile);
+                var dest = PathEx.Combine(destFile);
+                var prfx = PathEx.IsDir(src) ? "\\*" : string.Empty;
+                args = $"a {args} \"\"\"{dest}\"\"\" \"\"\"{src}{prfx}\"\"\"";
+                return ProcessEx.Start(_filePath, args, false, windowStyle, dispose);
+            }
+
+            /// <summary>
+            ///     Compress the specified file, or all files of the specified directory, to the
+            ///     specified file on the file system.
+            /// </summary>
+            /// <param name="srcDirOrFile">
+            ///     The path of the file or directory to compress.
+            /// </param>
+            /// <param name="destFile">
+            ///     The path of the archive.
+            /// </param>
+            /// <param name="windowStyle">
+            ///     The window state to use when the 7-Zip process is started.
+            /// </param>
             public static Process Zip(string srcDirOrFile, string destFile, ProcessWindowStyle windowStyle) =>
-                Zip(srcDirOrFile, destFile, null, windowStyle);
+                Zip(srcDirOrFile, destFile, CompressMode.Default, windowStyle);
 
-            public static Process Unzip(string srcFile, string destDir, ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden, bool dispose = false)
+            /// <summary>
+            ///     Extracts all the files in the specified archive to the specified directory on the
+            ///     file system.
+            /// </summary>
+            /// <param name="srcFile">
+            ///     The path of the archive to extract.
+            /// </param>
+            /// <param name="destDir">
+            ///     The path to the directory to place the extracted files in.
+            /// </param>
+            /// <param name="windowStyle">
+            ///     The window state to use when the 7-Zip process is started.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/> if the process
+            ///     has been started; otherwise, false.
+            /// </param>
+            public static Process Unzip(string srcFile, string destDir, ProcessWindowStyle windowStyle = ProcessWindowStyle.Minimized, bool dispose = false)
             {
+                if (!File.Exists(FilePath))
+                    return null;
                 var args = $"x \"\"\"{srcFile}\"\"\" -o\"\"\"{destDir}\"\"\" -y";
-                return ProcessEx.Start(ExePath, args, false, windowStyle, dispose);
+                return ProcessEx.Start(_filePath, args, false, windowStyle, dispose);
             }
-#pragma warning restore 1591
         }
-
-        #endregion
     }
 }

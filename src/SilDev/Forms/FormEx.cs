@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2018-03-08 23:48
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -58,9 +58,7 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     <para>
-        ///         Determines special settings for the specified <see cref="Form"/>.
-        ///     </para>
+        ///     Determines special settings for the specified <see cref="Form"/>.
         ///     <para>
         ///         Hint: This function should be called before the <see cref="Form"/> is created.
         ///     </para>
@@ -254,62 +252,62 @@ namespace SilDev.Forms
 
             /// <summary>
             ///     Sets the <see cref="ResizingBorders"/> flags depending on the specified
-            ///     <see cref="TaskBar.Location"/> flag.
+            ///     <see cref="TaskBarLocation"/> flag.
             ///     <para>
-            ///         Result for <see cref="TaskBar.Location.Left"/>:
+            ///         Result for <see cref="TaskBarLocation.Left"/>:
             ///         <code>
             ///             <see cref="ResizingBorderFlags.Right"/> | <see cref="ResizingBorderFlags.Bottom"/> |
             ///             <see cref="ResizingBorderFlags.BottomRight"/>
             ///         </code>
             ///     </para>
             ///     <para>
-            ///         Result for <see cref="TaskBar.Location.Right"/>:
+            ///         Result for <see cref="TaskBarLocation.Right"/>:
             ///         <code>
             ///             <see cref="ResizingBorderFlags.Left"/> | <see cref="ResizingBorderFlags.Bottom"/> |
             ///             <see cref="ResizingBorderFlags.BottomLeft"/>
             ///         </code>
             ///     </para>
             ///     <para>
-            ///         Result for <see cref="TaskBar.Location.Top"/>:
+            ///         Result for <see cref="TaskBarLocation.Top"/>:
             ///         <code>
             ///             <see cref="ResizingBorderFlags.Right"/> | <see cref="ResizingBorderFlags.Bottom"/> |
             ///             <see cref="ResizingBorderFlags.BottomRight"/>
             ///         </code>
             ///     </para>
             ///     <para>
-            ///         Result for <see cref="TaskBar.Location.Bottom"/>:
+            ///         Result for <see cref="TaskBarLocation.Bottom"/>:
             ///         <code>
             ///             <see cref="ResizingBorderFlags.Right"/> | <see cref="ResizingBorderFlags.Top"/> |
             ///             <see cref="ResizingBorderFlags.TopRight"/>
             ///         </code>
             ///     </para>
             ///     <para>
-            ///         Result for <see cref="TaskBar.Location.Hidden"/>:
+            ///         Result for <see cref="TaskBarLocation.Hidden"/>:
             ///         <code>
             ///             <see cref="ResizingBorderFlags.All"/>
             ///         </code>
             ///     </para>
             /// </summary>
             /// <param name="taskBarLocation">
-            ///     The <see cref="TaskBar.Location"/> flag.
+            ///     The <see cref="TaskBarLocation"/> flag.
             /// </param>
-            protected void SetResizingBorders(TaskBar.Location taskBarLocation)
+            protected void SetResizingBorders(TaskBarLocation taskBarLocation)
             {
                 ResizingBorderFlags flags;
                 switch (taskBarLocation)
                 {
-                    case TaskBar.Location.Left:
-                    case TaskBar.Location.Top:
+                    case TaskBarLocation.Left:
+                    case TaskBarLocation.Top:
                         flags = ResizingBorderFlags.Right |
                                 ResizingBorderFlags.Bottom |
                                 ResizingBorderFlags.BottomRight;
                         break;
-                    case TaskBar.Location.Right:
+                    case TaskBarLocation.Right:
                         flags = ResizingBorderFlags.Left |
                                 ResizingBorderFlags.Bottom |
                                 ResizingBorderFlags.BottomLeft;
                         break;
-                    case TaskBar.Location.Bottom:
+                    case TaskBarLocation.Bottom:
                         flags = ResizingBorderFlags.Right |
                                 ResizingBorderFlags.Top |
                                 ResizingBorderFlags.TopRight;

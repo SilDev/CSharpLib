@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2018-03-25 15:48
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -69,9 +69,7 @@ namespace SilDev
         public static string FileName { get; } = $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
 
         /// <summary>
-        ///     <para>
-        ///         Gets or sets the location of the current LOG file.
-        ///     </para>
+        ///     Gets or sets the location of the current LOG file.
         ///     <para>
         ///         If the specified path doesn't exists, it is created.
         ///     </para>
@@ -115,12 +113,10 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Specifies the <see cref="DebugMode"/> for the handling of <see cref="Exception"/>'s.
-        ///         The <see cref="DebugMode"/> can also specified over an command line argument or an
-        ///         config parameter in combination with <see cref="AllowLogging(string, string, Regex)"/>.
-        ///         The following <see cref="DebugMode"/> options are available.
-        ///     </para>
+        ///     Specifies the <see cref="DebugMode"/> for the handling of <see cref="Exception"/>'s. The
+        ///     <see cref="DebugMode"/> can also specified over an command line argument or an config
+        ///     parameter in combination with <see cref="AllowLogging(string, string, Regex)"/>. The
+        ///     following <see cref="DebugMode"/> options are available.
         ///     <para>
         ///         0: Logging is disabled. If <see cref="CatchUnhandledExceptions"/> is enabled, unhandled
         ///         <see cref="Exception"/>'s are discarded as well. This can be useful for public releases

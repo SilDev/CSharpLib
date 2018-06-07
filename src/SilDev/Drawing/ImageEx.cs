@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2018-03-03 02:10
+// Version:  2018-06-07 09:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -477,7 +477,7 @@ namespace SilDev.Drawing
                 {
                     var bmp = i == 0 ? bitmap1 : bitmap2;
                     bmp.Save(ms, bmp.RawFormat);
-                    hashes[i] = ms.ToArray().EncryptToSha256();
+                    hashes[i] = ms.ToArray().Encrypt(ChecksumAlgorithms.Sha256);
                 }
             return hashes.First().Equals(hashes.Last());
         }
