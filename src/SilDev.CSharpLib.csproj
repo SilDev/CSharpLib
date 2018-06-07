@@ -48,6 +48,8 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="SilDev\TextEx.cs" />
     <Compile Include="SilDev\Tray.cs" />
     <Compile Include="SilDev\WinApi.cs" />
+    <Compile Include="SilDev\Xml.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest">
