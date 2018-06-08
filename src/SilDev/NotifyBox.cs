@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-08 21:20
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,7 +17,6 @@ namespace SilDev
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.IO;
     using System.Media;
@@ -31,11 +30,11 @@ namespace SilDev
     public enum NotifyBoxSound
     {
 #pragma warning disable CS1591
-        Asterisk,
-        Warning,
-        Notify,
-        Question,
-        None
+        None = 0,
+        Asterisk = 1,
+        Warning = 2,
+        Notify = 3,
+        Question = 4,
 #pragma warning restore CS1591
     }
 
@@ -45,13 +44,13 @@ namespace SilDev
     public enum NotifyBoxStartPosition
     {
 #pragma warning disable CS1591
-        Center,
-        CenterLeft,
-        CenterRight,
-        BottomLeft,
-        BottomRight,
-        TopLeft,
-        TopRight
+        Center = 0,
+        CenterLeft = 1,
+        CenterRight = 2,
+        BottomLeft = 3,
+        BottomRight = 4,
+        TopLeft = 5,
+        TopRight = 6
 #pragma warning restore CS1591
     }
 
@@ -66,14 +65,35 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
         /// </summary>
-        [SuppressMessage("ReSharper", "EmptyConstructor")]
+        /// <param name="opacity">
+        ///     The opacity level.
+        /// </param>
+        /// <param name="backColor">
+        ///     The background color.
+        /// </param>
+        /// <param name="borderColor">
+        ///     The border color.
+        /// </param>
+        /// <param name="captionColor">
+        ///     The caption color.
+        /// </param>
+        /// <param name="textColor">
+        ///     The text color.
+        /// </param>
+        /// <param name="topMost">
+        ///     true to place the notify box above all non-topmost windows; otherwise, false.
+        /// </param>
         public NotifyBox(double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color), bool topMost = false)
         {
             Opacity = opacity;
-            BackColor = backColor == default(Color) ? SystemColors.Menu : backColor;
-            BorderColor = borderColor == default(Color) ? SystemColors.MenuHighlight : borderColor;
-            CaptionColor = captionColor == default(Color) ? SystemColors.MenuHighlight : captionColor;
-            TextColor = textColor == default(Color) ? SystemColors.MenuText : textColor;
+            if (backColor != default(Color))
+                BackColor = backColor;
+            if (borderColor != default(Color))
+                BorderColor = borderColor;
+            if (captionColor != default(Color))
+                CaptionColor = captionColor;
+            if (textColor != default(Color))
+                TextColor = textColor;
             TopMost = topMost;
         }
 
@@ -99,29 +119,29 @@ namespace SilDev
         /// <summary>
         ///     Gets or sets the background color for the notify box.
         /// </summary>
-        public Color BackColor { get; set; }
+        public Color BackColor { get; set; } = SystemColors.Menu;
 
         /// <summary>
         ///     Gets or sets the border color for the notify box.
         /// </summary>
-        public Color BorderColor { get; set; }
+        public Color BorderColor { get; set; } = SystemColors.MenuHighlight;
 
         /// <summary>
         ///     Gets or sets the caption color for the notify box.
         /// </summary>
-        public Color CaptionColor { get; set; }
+        public Color CaptionColor { get; set; } = SystemColors.MenuHighlight;
 
         /// <summary>
         ///     Gets or sets the text color for the notify box.
         /// </summary>
-        public Color TextColor { get; set; }
+        public Color TextColor { get; set; } = SystemColors.MenuText;
 
         /// <summary>
         ///     Specifies that the notify box is placed above all non-topmost windows.
         /// </summary>
         public bool TopMost { get; set; }
 
-        private NotifyForm NotifyWindow { get; set; }
+        private NotifyBoxForm NotifyWindow { get; set; }
 
         private Thread NotifyThread { get; set; }
 
@@ -161,16 +181,13 @@ namespace SilDev
         /// <param name="duration">
         ///     The duration of the time, in milliseconds, which the notify box remains active.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public void Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 0, bool borders = true)
+        public void Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 0)
         {
             try
             {
                 if (IsAlive)
                     throw new NotSupportedException();
-                NotifyWindow = new NotifyForm(text, caption, position, duration, borders, _opacity, BackColor, BorderColor, CaptionColor, TextColor, TopMost);
+                NotifyWindow = new NotifyBoxForm(text, caption, position, duration, TopMost, _opacity, BackColor, BorderColor, CaptionColor, TextColor);
                 NotifyThread = new Thread(() => NotifyWindow.ShowDialog());
                 NotifyThread.Start();
                 switch (sound)
@@ -198,27 +215,6 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, sound, and borders.
-        /// </summary>
-        /// <param name="text">
-        ///     The notification text to display in the notify box.
-        /// </param>
-        /// <param name="caption">
-        ///     The caption text to display in the notify box.
-        /// </param>
-        /// <param name="position">
-        ///     The window position for the notify box.
-        /// </param>
-        /// <param name="sound">
-        ///     The play sound for the notify box.
-        /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public void Show(string text, string caption, NotifyBoxStartPosition position, NotifyBoxSound sound, bool borders) =>
-            Show(text, caption, position, sound, 0, borders);
-
-        /// <summary>
         ///     Displays a notify box with the specified text, caption, position, duration, and borders.
         /// </summary>
         /// <param name="text">
@@ -233,29 +229,8 @@ namespace SilDev
         /// <param name="duration">
         ///     The duration of the time, in milliseconds, which the notify box remains active.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public void Show(string text, string caption, NotifyBoxStartPosition position, ushort duration, bool borders = true) =>
-            Show(text, caption, position, NotifyBoxSound.None, duration, borders);
-
-        /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, and borders.
-        /// </summary>
-        /// <param name="text">
-        ///     The notification text to display in the notify box.
-        /// </param>
-        /// <param name="caption">
-        ///     The caption text to display in the notify box.
-        /// </param>
-        /// <param name="position">
-        ///     The window position for the notify box.
-        /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public void Show(string text, string caption, NotifyBoxStartPosition position, bool borders) =>
-            Show(text, caption, position, NotifyBoxSound.None, 0, borders);
+        public void Show(string text, string caption, NotifyBoxStartPosition position, ushort duration) =>
+            Show(text, caption, position, NotifyBoxSound.None, duration);
 
         /// <summary>
         ///     Displays a notify box with the specified text, caption, sound, duration, and borders.
@@ -272,29 +247,8 @@ namespace SilDev
         /// <param name="duration">
         ///     The duration of the time, in milliseconds, which the notify box remains active.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public void Show(string text, string caption, NotifyBoxSound sound, ushort duration = 0, bool borders = true) =>
-            Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, duration, borders);
-
-        /// <summary>
-        ///     Displays a notify box with the specified text, caption, sound, and borders.
-        /// </summary>
-        /// <param name="text">
-        ///     The notification text to display in the notify box.
-        /// </param>
-        /// <param name="caption">
-        ///     The caption text to display in the notify box.
-        /// </param>
-        /// <param name="sound">
-        ///     The play sound for the notify box.
-        /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public void Show(string text, string caption, NotifyBoxSound sound, bool borders) =>
-            Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, 0, borders);
+        public void Show(string text, string caption, NotifyBoxSound sound, ushort duration = 0) =>
+            Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, duration);
 
         /// <summary>
         ///     Displays a notify box with the specified text, caption, duration, and borders.
@@ -308,11 +262,8 @@ namespace SilDev
         /// <param name="duration">
         ///     The duration of the time, in milliseconds, which the notify box remains active.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public void Show(string text, string caption, ushort duration, bool borders = true) =>
-            Show(text, caption, NotifyBoxStartPosition.BottomRight, NotifyBoxSound.None, duration, borders);
+        public void Show(string text, string caption, ushort duration) =>
+            Show(text, caption, NotifyBoxStartPosition.BottomRight, NotifyBoxSound.None, duration);
 
         /// <summary>
         ///     Closes the current notify box.
@@ -346,7 +297,7 @@ namespace SilDev
             }
         }
 
-        private sealed class NotifyForm : Form
+        private sealed class NotifyBoxForm : Form
         {
             private readonly BackgroundWorker _bgWorker;
             private readonly IContainer _components;
@@ -356,7 +307,7 @@ namespace SilDev
             private readonly Timer _timer, _timer2;
             private bool _visible;
 
-            public NotifyForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool borders, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor, bool topMost)
+            public NotifyBoxForm(string text, string title, NotifyBoxStartPosition position, ushort duration, bool topMost, double opacity, Color backColor, Color borderColor, Color captionColor, Color textColor)
             {
                 _components = new Container();
                 _duration = Convert.ToInt32(duration).IsBetween(1, 999) ? 1000 : duration;
@@ -382,7 +333,7 @@ namespace SilDev
                     Text = text
                 };
                 Controls.Add(_textLabel);
-                if (borders)
+                if (backColor != borderColor)
                     for (var i = 0; i < 4; i++)
                         Controls.Add(new Panel
                         {
@@ -534,7 +485,7 @@ namespace SilDev
     public static class NotifyBoxEx
     {
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, sound, duration, and borders.
+        ///     Displays a notification box with the specified parameters.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -551,14 +502,33 @@ namespace SilDev
         /// <param name="duration">
         ///     The duration of the time, in milliseconds, which the notify box remains active.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
+        /// <param name="topMost">
+        ///     true to place the notify box above all non-topmost windows; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 5000, bool borders = true) =>
-            new NotifyBox { TopMost = true }.Show(text, caption, position, sound, (ushort)(duration < 200 ? 200 : duration), borders);
+        /// <param name="opacity">
+        ///     The opacity level.
+        /// </param>
+        /// <param name="backColor">
+        ///     The background color.
+        /// </param>
+        /// <param name="borderColor">
+        ///     The border color.
+        /// </param>
+        /// <param name="captionColor">
+        ///     The caption color.
+        /// </param>
+        /// <param name="textColor">
+        ///     The text color.
+        /// </param>
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 5000, bool topMost = true, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color))
+        {
+            var notifyBox = new NotifyBox(opacity, backColor, borderColor, captionColor, textColor, topMost);
+            notifyBox.Show(text, caption, position, sound, duration);
+            return notifyBox;
+        }
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, sound, and borders.
+        ///     Displays a notification box with the specified parameters for 5 seconds.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -572,14 +542,29 @@ namespace SilDev
         /// <param name="sound">
         ///     The play sound for the notify box.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
+        /// <param name="topMost">
+        ///     true to place the notify box above all non-topmost windows; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBoxStartPosition position, NotifyBoxSound sound, bool borders) =>
-            Show(text, caption, position, sound, 5000, borders);
+        /// <param name="opacity">
+        ///     The opacity level.
+        /// </param>
+        /// <param name="backColor">
+        ///     The background color.
+        /// </param>
+        /// <param name="borderColor">
+        ///     The border color.
+        /// </param>
+        /// <param name="captionColor">
+        ///     The caption color.
+        /// </param>
+        /// <param name="textColor">
+        ///     The text color.
+        /// </param>
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, NotifyBoxSound sound, bool topMost, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color)) =>
+            Show(text, caption, position, sound, 5000, topMost, opacity, backColor, borderColor, captionColor, textColor);
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, duration, and borders.
+        ///     Displays a notification box with the specified parameters.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -593,14 +578,29 @@ namespace SilDev
         /// <param name="duration">
         ///     The duration of the time, in milliseconds, which the notify box remains active.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
+        /// <param name="topMost">
+        ///     true to place the notify box above all non-topmost windows; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBoxStartPosition position, ushort duration, bool borders = true) =>
-            Show(text, caption, position, NotifyBoxSound.None, duration, borders);
+        /// <param name="opacity">
+        ///     The opacity level.
+        /// </param>
+        /// <param name="backColor">
+        ///     The background color.
+        /// </param>
+        /// <param name="borderColor">
+        ///     The border color.
+        /// </param>
+        /// <param name="captionColor">
+        ///     The caption color.
+        /// </param>
+        /// <param name="textColor">
+        ///     The text color.
+        /// </param>
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, ushort duration, bool topMost = true, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color)) =>
+            Show(text, caption, position, NotifyBoxSound.None, duration, topMost, opacity, backColor, borderColor, captionColor, textColor);
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, and borders.
+        ///     Displays a notification box with the specified parameters for 5 seconds.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -611,67 +611,25 @@ namespace SilDev
         /// <param name="position">
         ///     The window position for the notify box.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
+        /// <param name="topMost">
+        ///     true to place the notify box above all non-topmost windows; otherwise, false.
         /// </param>
-        public static void Show(string text, string caption, NotifyBoxStartPosition position, bool borders) =>
-            Show(text, caption, position, NotifyBoxSound.None, 5000, borders);
-
-        /// <summary>
-        ///     Displays a notify box with the specified text, caption, sound, duration, and borders.
-        /// </summary>
-        /// <param name="text">
-        ///     The notification text to display in the notify box.
+        /// <param name="opacity">
+        ///     The opacity level.
         /// </param>
-        /// <param name="caption">
-        ///     The caption text to display in the notify box.
+        /// <param name="backColor">
+        ///     The background color.
         /// </param>
-        /// <param name="sound">
-        ///     The play sound for the notify box.
+        /// <param name="borderColor">
+        ///     The border color.
         /// </param>
-        /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        /// <param name="captionColor">
+        ///     The caption color.
         /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
+        /// <param name="textColor">
+        ///     The text color.
         /// </param>
-        public static void Show(string text, string caption, NotifyBoxSound sound, ushort duration = 5000, bool borders = true) =>
-            Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, duration, borders);
-
-        /// <summary>
-        ///     Displays a notify box with the specified text, caption, sound, and borders.
-        /// </summary>
-        /// <param name="text">
-        ///     The notification text to display in the notify box.
-        /// </param>
-        /// <param name="caption">
-        ///     The caption text to display in the notify box.
-        /// </param>
-        /// <param name="sound">
-        ///     The play sound for the notify box.
-        /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public static void Show(string text, string caption, NotifyBoxSound sound, bool borders) =>
-            Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, 5000, borders);
-
-        /// <summary>
-        ///     Displays a notify box with the specified text, caption, duration, and borders.
-        /// </summary>
-        /// <param name="text">
-        ///     The notification text to display in the notify box.
-        /// </param>
-        /// <param name="caption">
-        ///     The caption text to display in the notify box.
-        /// </param>
-        /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
-        /// </param>
-        /// <param name="borders">
-        ///     true to visible the window borders; otherwise, false.
-        /// </param>
-        public static void Show(string text, string caption, ushort duration, bool borders = true) =>
-            Show(text, caption, NotifyBoxStartPosition.BottomRight, NotifyBoxSound.None, duration, borders);
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, bool topMost, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color)) =>
+            Show(text, caption, position, NotifyBoxSound.None, 5000, topMost, opacity, backColor, borderColor, captionColor, textColor);
     }
 }
