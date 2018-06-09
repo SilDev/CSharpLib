@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-09 10:51
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -3858,6 +3858,17 @@ namespace SilDev
                 NativeMethods.GetWindowThreadProcessId(hWnd, out lpdwProcessId);
 
             /// <summary>
+            ///     Removes the caret from the screen. Hiding a caret does not destroy its current shape or invalidate the
+            ///     insertion point.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window that owns the caret. If this parameter is NULL, HideCaret searches the current
+            ///     task for the window that owns the caret.
+            /// </param>
+            public static bool HideCaret(IntPtr hWnd) =>
+                NativeMethods.HideCaret(hWnd);
+
+            /// <summary>
             ///     Minimizes and hides the specified window.
             /// </summary>
             /// <param name="hWnd">
@@ -6689,6 +6700,21 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+            /// <summary>
+            ///     Removes the caret from the screen. Hiding a caret does not destroy its current shape or invalidate the
+            ///     insertion point.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window that owns the caret. If this parameter is NULL, HideCaret searches the current
+            ///     task for the window that owns the caret.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool HideCaret(IntPtr hWnd);
 
             /// <summary>
             ///     Note  The InsertMenu function has been superseded by the InsertMenuItem function. You can still use
