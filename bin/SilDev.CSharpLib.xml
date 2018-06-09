@@ -6230,13 +6230,13 @@
         </member>
         <member name="M:SilDev.Json.Deserialize``1(System.String,``0)">
             <summary>
-                Deserializes a string representation of an XML document into an object graph.
+                Deserializes a string representation of an JSON document into an object graph.
             </summary>
             <typeparam name="TResult">
                 The type of the result.
             </typeparam>
             <param name="source">
-                The string representation of an XML document to deserialize.
+                The string representation of an JSON document to deserialize.
             </param>
             <param name="defValue">
                 The default value.
