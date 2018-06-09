@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-09 21:44
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,10 +16,8 @@
 namespace SilDev
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
-    using System.Runtime.Serialization;
     using System.Text;
     using System.Web.Script.Serialization;
 
@@ -95,18 +93,18 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Deserializes a string representation of an XML document into an object graph.
+        ///     Deserializes a string representation of an JSON document into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
         /// </typeparam>
         /// <param name="source">
-        ///     The string representation of an XML document to deserialize.
+        ///     The string representation of an JSON document to deserialize.
         /// </param>
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult Deserialize<TResult>(string source, TResult defValue = default(TResult)) where TResult : IEnumerable, IDictionary, ICollection, ISerializable
+        public static TResult Deserialize<TResult>(string source, TResult defValue = default(TResult))
         {
             try
             {
@@ -134,7 +132,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult DeserializeFile<TResult>(string path, TResult defValue = default(TResult)) where TResult : IEnumerable, IDictionary, ICollection, ISerializable
+        public static TResult DeserializeFile<TResult>(string path, TResult defValue = default(TResult))
         {
             try
             {
