@@ -17215,6 +17215,16 @@
                 GetWindowThreadProcessId copies the identifier of the process to the variable; otherwise, it does not.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.HideCaret(System.IntPtr)">
+            <summary>
+                Removes the caret from the screen. Hiding a caret does not destroy its current shape or invalidate the
+                insertion point.
+            </summary>
+            <param name="hWnd">
+                A handle to the window that owns the caret. If this parameter is NULL, HideCaret searches the current
+                task for the window that owns the caret.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.HideWindow(System.IntPtr)">
             <summary>
                 Minimizes and hides the specified window.
@@ -19762,6 +19772,19 @@
             </param>
             <returns>
                 The return value is the identifier of the thread that created the window.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.HideCaret(System.IntPtr)">
+            <summary>
+                Removes the caret from the screen. Hiding a caret does not destroy its current shape or invalidate the
+                insertion point.
+            </summary>
+            <param name="hWnd">
+                A handle to the window that owns the caret. If this parameter is NULL, HideCaret searches the current
+                task for the window that owns the caret.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.InsertMenu(System.IntPtr,System.UInt32,SilDev.WinApi.ModifyMenuFlags,System.UIntPtr,System.String)">
