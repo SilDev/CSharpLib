@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-10 16:16
+// Version:  2018-06-10 16:31
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -290,14 +290,14 @@ namespace SilDev
                     return new Base91().DecodeBytes(code, prefixMark, suffixMark);
                 case EncodingAlgorithms.Binary:
                 case EncodingAlgorithms.Hex:
-                {
-                    var s = code;
-                    if (s.StartsWith(prefixMark))
-                        s = s.Substring(prefixMark.Length);
-                    if (s.EndsWith(suffixMark))
-                        s = s.Substring(0, s.Length - suffixMark.Length);
-                    return Decode(s, algorithm);
-                }
+                    {
+                        var s = code;
+                        if (s.StartsWith(prefixMark))
+                            s = s.Substring(prefixMark.Length);
+                        if (s.EndsWith(suffixMark))
+                            s = s.Substring(0, s.Length - suffixMark.Length);
+                        return Decode(s, algorithm);
+                    }
                 default:
                     return new Base64().DecodeBytes(code, prefixMark, suffixMark);
             }
@@ -321,42 +321,42 @@ namespace SilDev
                 case EncodingAlgorithms.Base91:
                     return new Base91().DecodeBytes(code);
                 case EncodingAlgorithms.Binary:
-                {
-                    var ba = default(byte[]);
-                    try
                     {
-                        var s = code.RemoveChar(' ', ':', '\r', '\n');
-                        if (s.Any(c => !"01".Contains(c)))
-                            throw new InvalidOperationException();
-                        using (var ms = new MemoryStream())
+                        var ba = default(byte[]);
+                        try
                         {
-                            for (var i = 0; i < s.Length; i += 8)
-                                ms.WriteByte(Convert.ToByte(s.Substring(i, 8), 2));
-                            ba = Encoding.UTF8.GetString(ms.ToArray()).ToBytes();
+                            var s = code.RemoveChar(' ', ':', '\r', '\n');
+                            if (s.Any(c => !"01".Contains(c)))
+                                throw new InvalidOperationException();
+                            using (var ms = new MemoryStream())
+                            {
+                                for (var i = 0; i < s.Length; i += 8)
+                                    ms.WriteByte(Convert.ToByte(s.Substring(i, 8), 2));
+                                ba = Encoding.UTF8.GetString(ms.ToArray()).ToBytes();
+                            }
                         }
+                        catch (Exception ex)
+                        {
+                            Log.Write(ex);
+                        }
+                        return ba;
                     }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
-                    return ba;
-                }
                 case EncodingAlgorithms.Hex:
-                {
-                    var ba = default(byte[]);
-                    try
                     {
-                        var s = new string(code.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
-                        if (s.Any(c => !"0123456789ABCDEF".Contains(c)))
-                            throw new InvalidOperationException();
-                        ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
+                        var ba = default(byte[]);
+                        try
+                        {
+                            var s = new string(code.Where(char.IsLetterOrDigit).ToArray()).ToUpper();
+                            if (s.Any(c => !"0123456789ABCDEF".Contains(c)))
+                                throw new InvalidOperationException();
+                            ba = Enumerable.Range(0, s.Length).Where(x => x % 2 == 0).Select(x => Convert.ToByte(s.Substring(x, 2), 16)).ToArray();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Write(ex);
+                        }
+                        return ba;
                     }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                    }
-                    return ba;
-                }
                 default:
                     return new Base64().DecodeBytes(code);
             }
@@ -1740,7 +1740,7 @@ namespace SilDev
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
-            public virtual int HashLength => 32;
+            public const int HashLength = 32;
 
             /// <summary>
             ///     Encrypts the specified stream with the specified <see cref="HashAlgorithm"/>.
@@ -1860,7 +1860,7 @@ namespace SilDev
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
-            public override int HashLength => 40;
+            public new const int HashLength = 40;
 
             /// <summary>
             ///     Encrypts the specified stream.
@@ -1893,7 +1893,7 @@ namespace SilDev
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
-            public override int HashLength => 64;
+            public new const int HashLength = 64;
 
             /// <summary>
             ///     Encrypts the specified stream.
@@ -1922,7 +1922,7 @@ namespace SilDev
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
-            public override int HashLength => 96;
+            public new const int HashLength = 96;
 
             /// <summary>
             ///     Encrypts the specified stream.
@@ -1951,7 +1951,7 @@ namespace SilDev
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
-            public override int HashLength => 128;
+            public new const int HashLength = 128;
 
             /// <summary>
             ///     Encrypts the specified stream.
