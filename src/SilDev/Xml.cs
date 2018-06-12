@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Xml.cs
-// Version:  2018-06-07 09:39
+// Version:  2018-06-12 23:23
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -127,7 +127,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Deserializes specified XML file into an object graph.
+        ///     Deserializes the specified XML file into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.

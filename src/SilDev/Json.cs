@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2018-06-09 21:44
+// Version:  2018-06-12 23:23
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -121,7 +121,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Deserializes specified JSON file into an object graph.
+        ///     Deserializes the specified JSON file into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
