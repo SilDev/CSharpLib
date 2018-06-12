@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-12 23:24
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -708,7 +708,7 @@ namespace SilDev
                 if (objValue is string[])
                     value = (objValue as string[]).Join(Environment.NewLine);
                 else if (objValue is byte[])
-                    value = (objValue as byte[]).Encode(EncodingAlgorithms.Hex).RemoveChar(' ');
+                    value = (objValue as byte[]).Encode(BinaryToTextEncodings.Base16);
                 else
                     value = objValue.ToString();
             }

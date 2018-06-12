@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-12 23:24
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -695,7 +695,7 @@ namespace SilDev
                 {
                     var startIndex = ObjectPrefix.Length;
                     var length = strValue.Length - ObjectPrefix.Length - ObjectSuffix.Length;
-                    var bytes = strValue.Substring(startIndex, length).Decode(null, null, EncodingAlgorithms.Base85);
+                    var bytes = strValue.Substring(startIndex, length).Decode(BinaryToTextEncodings.Base85);
                     var unzipped = bytes?.Unzip();
                     if (unzipped != null)
                         bytes = unzipped;
@@ -984,7 +984,7 @@ namespace SilDev
                         var zipped = bytes?.Zip();
                         if (zipped?.Length < bytes?.Length)
                             bytes = zipped;
-                        val = string.Concat(ObjectPrefix, bytes.Encode(null, null, EncodingAlgorithms.Base85), ObjectSuffix);
+                        val = string.Concat(ObjectPrefix, bytes.Encode(BinaryToTextEncodings.Base85), ObjectSuffix);
                     }
                     else
                         val = str;
