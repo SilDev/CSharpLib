@@ -2582,34 +2582,69 @@
                 The second object to compare.
             </param>
         </member>
-        <member name="T:SilDev.EncodingAlgorithms">
+        <member name="T:SilDev.SymmetricKeyAlgorithms">
+            <summary>
+                Specifies enumerated constants used to encrypt and decrypt data.
+            </summary>
+        </member>
+        <member name="F:SilDev.SymmetricKeyAlgorithms.Aes128">
+            <summary>
+                Advanced Encryption Standard (AES-128).
+            </summary>
+        </member>
+        <member name="F:SilDev.SymmetricKeyAlgorithms.Aes192">
+            <summary>
+                Advanced Encryption Standard (AES-192).
+            </summary>
+        </member>
+        <member name="F:SilDev.SymmetricKeyAlgorithms.Aes256">
+            <summary>
+                Advanced Encryption Standard (AES-256).
+            </summary>
+        </member>
+        <member name="T:SilDev.BinaryToTextEncodings">
             <summary>
                 Specifies enumerated constants used to encode and decode data.
             </summary>
         </member>
-        <member name="F:SilDev.EncodingAlgorithms.Base64">
+        <member name="F:SilDev.BinaryToTextEncodings.Base2">
+            <summary>
+                Binary.
+            </summary>
+        </member>
+        <member name="F:SilDev.BinaryToTextEncodings.Base8">
+            <summary>
+                Octal.
+            </summary>
+        </member>
+        <member name="F:SilDev.BinaryToTextEncodings.Base10">
+            <summary>
+                Decimal.
+            </summary>
+        </member>
+        <member name="F:SilDev.BinaryToTextEncodings.Base16">
+            <summary>
+                Hexadecimal.
+            </summary>
+        </member>
+        <member name="F:SilDev.BinaryToTextEncodings.Base32">
+            <summary>
+                Base32.
+            </summary>
+        </member>
+        <member name="F:SilDev.BinaryToTextEncodings.Base64">
             <summary>
                 Base64.
             </summary>
         </member>
-        <member name="F:SilDev.EncodingAlgorithms.Base85">
+        <member name="F:SilDev.BinaryToTextEncodings.Base85">
             <summary>
-                Base85, also called Ascii85.
+                Base85 (Ascii85).
             </summary>
         </member>
-        <member name="F:SilDev.EncodingAlgorithms.Base91">
+        <member name="F:SilDev.BinaryToTextEncodings.Base91">
             <summary>
-                basE91.
-            </summary>
-        </member>
-        <member name="F:SilDev.EncodingAlgorithms.Binary">
-            <summary>
-                Base-2 binary.
-            </summary>
-        </member>
-        <member name="F:SilDev.EncodingAlgorithms.Hex">
-            <summary>
-                Hexadecimal.
+                Base91 (basE91).
             </summary>
         </member>
         <member name="T:SilDev.ChecksumAlgorithms">
@@ -2617,14 +2652,19 @@
                 Specifies enumerated constants used to encrypt data.
             </summary>
         </member>
+        <member name="F:SilDev.ChecksumAlgorithms.Adler32">
+            <summary>
+                Adler-32.
+            </summary>
+        </member>
         <member name="F:SilDev.ChecksumAlgorithms.Crc16">
             <summary>
-                Cyclic redundancy check (CRC-16).
+                Cyclic Redundancy Check (CRC-16).
             </summary>
         </member>
         <member name="F:SilDev.ChecksumAlgorithms.Crc32">
             <summary>
-                Cyclic redundancy check (CRC-32).
+                Cyclic Redundancy Check (CRC-32).
             </summary>
         </member>
         <member name="F:SilDev.ChecksumAlgorithms.Md5">
@@ -2652,79 +2692,195 @@
                 Secure Hash Algorithm 2 (SHA-512).
             </summary>
         </member>
-        <member name="T:SilDev.RijndaelAlgorithms">
-            <summary>
-                Specifies enumerated constants used to encrypt and decrypt data.
-            </summary>
-        </member>
-        <member name="F:SilDev.RijndaelAlgorithms.Aes128">
-            <summary>
-                Advanced Encryption Standard (AES-128).
-            </summary>
-        </member>
-        <member name="F:SilDev.RijndaelAlgorithms.Aes192">
-            <summary>
-                Advanced Encryption Standard (AES-192).
-            </summary>
-        </member>
-        <member name="F:SilDev.RijndaelAlgorithms.Aes256">
-            <summary>
-                Advanced Encryption Standard (AES-256).
-            </summary>
-        </member>
         <member name="T:SilDev.Crypto">
             <summary>
                 Provides functionality for data encryption and decryption.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.Encode(System.Byte[],System.String,System.String,SilDev.EncodingAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Encrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Encrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Encrypts this string with the specified algorithm.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encrypt(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Encrypts this string with the specified algorithm.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Encrypts this file with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to encrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Encrypts this file with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to encrypt.
+            </param>
+            <param name="password">
+                The string which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to decrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to decrypt.
+            </param>
+            <param name="password">
+                The string which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to decrypt.
+            </param>
+            <param name="password">
+                The sequence of bytes which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+            <summary>
+                Decrypts this sequence of bytes with the specified algorithm.
+            </summary>
+            <param name="path">
+                The full path of the file to decrypt.
+            </param>
+            <param name="password">
+                The string which is used as password.
+            </param>
+            <param name="salt">
+                The sequence of bytes which is used as salt.
+            </param>
+            <param name="algorithm">
+                The algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Encode(System.Byte[],SilDev.BinaryToTextEncodings)">
             <summary>
                 Encodes this sequence of bytes with the specified algorithm.
             </summary>
             <param name="bytes">
                 The sequence of bytes to encode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
             <param name="algorithm">
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encode(System.Byte[],SilDev.EncodingAlgorithms)">
+        <member name="M:SilDev.Crypto.Encode(System.String,SilDev.BinaryToTextEncodings)">
             <summary>
-                Encodes this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encode.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Encode(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
-            <summary>
-                Encodes this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="text">
-                The string to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Encode(System.String,SilDev.EncodingAlgorithms)">
-            <summary>
-                Encodes this sequence of bytes with the specified algorithm.
+                Encodes this string with the specified algorithm.
             </summary>
             <param name="text">
                 The string to encode.
@@ -2733,43 +2889,20 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncodeFile(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+        <member name="M:SilDev.Crypto.EncodeFile(System.String,SilDev.BinaryToTextEncodings)">
             <summary>
-                Encodes this sequence of bytes with the specified algorithm.
+                Encodes this file into a sequence of bytes with the specified algorithm.
             </summary>
             <param name="path">
                 The full path of the file to encode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
             <param name="algorithm">
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Decode(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+        <member name="M:SilDev.Crypto.Decode(System.String,SilDev.BinaryToTextEncodings)">
             <summary>
-                Decodes this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Decode(System.String,SilDev.EncodingAlgorithms)">
-            <summary>
-                Decodes this sequence of bytes with the specified algorithm.
+                Decodes this string into a sequence of bytes with the specified algorithm.
             </summary>
             <param name="code">
                 The string to decode.
@@ -2778,26 +2911,9 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeString(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+        <member name="M:SilDev.Crypto.DecodeString(System.String,SilDev.BinaryToTextEncodings)">
             <summary>
-                Decodes this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeString(System.String,SilDev.EncodingAlgorithms)">
-            <summary>
-                Decodes this sequence of bytes with the specified algorithm.
+                Decodes this string into a sequence of bytes with the specified algorithm.
             </summary>
             <param name="code">
                 The string to decode.
@@ -2806,26 +2922,9 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeFile(System.String,System.String,System.String,SilDev.EncodingAlgorithms)">
+        <member name="M:SilDev.Crypto.DecodeFile(System.String,SilDev.BinaryToTextEncodings)">
             <summary>
-                Decodes this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="path">
-                The full path of the file to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.DecodeFile(System.String,SilDev.EncodingAlgorithms)">
-            <summary>
-                Decodes this sequence of bytes with the specified algorithm.
+                Decodes this file into a sequence of bytes with the specified algorithm.
             </summary>
             <param name="path">
                 The full path of the file to decode.
@@ -2878,9 +2977,94 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
+        <member name="T:SilDev.Crypto.Rsa">
             <summary>
-                Encrypts this sequence of bytes with the specified algorithm.
+                Provides static methods to handle RSA encryption and decryption.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Rsa.CreateKeyFiles(System.String,System.Int32)">
+            <summary>
+                Creates a public and private key pair at the specified location.
+            </summary>
+            <param name="dirPath">
+                The directory path.
+            </param>
+            <param name="keySize">
+                The size of the key in bits.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Rsa.EncryptBytes(System.String,System.Byte[])">
+            <summary>
+                Encrypts the specified sequence of bytes.
+            </summary>
+            <param name="publicKeyPath">
+                The path to the public key file.
+            </param>
+            <param name="bytes">
+                The data to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Rsa.EncryptString(System.String,System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="publicKeyPath">
+                The path to the public key file.
+            </param>
+            <param name="text">
+                The text to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Rsa.DecryptBytes(System.String,System.String)">
+            <summary>
+                Decrypts the specified sequence of bytes.
+            </summary>
+            <param name="privateKeyPath">
+                The path to the private key file.
+            </param>
+            <param name="code">
+                The cypher to decrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Rsa.DecryptString(System.String,System.String)">
+            <summary>
+                Decrypts the specified string.
+            </summary>
+            <param name="privateKeyPath">
+                The path to the private key file.
+            </param>
+            <param name="code">
+                The cypher to decrypt.
+            </param>
+        </member>
+        <member name="T:SilDev.Crypto.Aes">
+            <summary>
+                Provides static methods to handle AES encryption and decryption.
+            </summary>
+        </member>
+        <member name="T:SilDev.Crypto.Aes.KeySize">
+            <summary>
+                Provides enumerated bits of the key size.
+            </summary>
+        </member>
+        <member name="F:SilDev.Crypto.Aes.KeySize.Aes128">
+            <summary>
+                128 bits.
+            </summary>
+        </member>
+        <member name="F:SilDev.Crypto.Aes.KeySize.Aes192">
+            <summary>
+                192 bits.
+            </summary>
+        </member>
+        <member name="F:SilDev.Crypto.Aes.KeySize.Aes256">
+            <summary>
+                256 bits.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Aes.EncryptBytes(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
+            <summary>
+                Encrypts the specified sequence of bytes.
             </summary>
             <param name="bytes">
                 The sequence of bytes to encrypt.
@@ -2891,64 +3075,13 @@
             <param name="salt">
                 The sequence of bytes which is used as salt.
             </param>
-            <param name="algorithm">
-                The algorithm to use.
+            <param name="keySize">
+                The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+        <member name="M:SilDev.Crypto.Aes.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
-                Encrypts this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.String,System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
-            <summary>
-                Encrypts this string with the specified algorithm.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.String,System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
-            <summary>
-                Encrypts this string with the specified algorithm.
-            </summary>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
-            <summary>
-                Encrypts this file with the specified algorithm.
+                Encrypts the specified file.
             </summary>
             <param name="path">
                 The full path of the file to encrypt.
@@ -2959,330 +3092,890 @@
             <param name="salt">
                 The sequence of bytes which is used as salt.
             </param>
-            <param name="algorithm">
-                The algorithm to use.
+            <param name="keySize">
+                The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+        <member name="M:SilDev.Crypto.Aes.DecryptBytes(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
-                Encrypts this file with the specified algorithm.
+                Decrypts the specified sequence of bytes.
             </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
-            <summary>
-                Decrypts this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="bytes">
+            <param name="code">
                 The sequence of bytes to decrypt.
             </param>
             <param name="password">
-                The sequence of bytes which is used as password.
+                The sequence of bytes which was used as password.
             </param>
             <param name="salt">
-                The sequence of bytes which is used as salt.
+                The sequence of bytes which was used as salt.
             </param>
-            <param name="algorithm">
-                The algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
-            <summary>
-                Decrypts this sequence of bytes with the specified algorithm.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to decrypt.
-            </param>
-            <param name="password">
-                The string which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="algorithm">
-                The algorithm to use.
+            <param name="keySize">
+                The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.RijndaelAlgorithms)">
+        <member name="M:SilDev.Crypto.Aes.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
             <summary>
-                Decrypts this sequence of bytes with the specified algorithm.
+                Decrypts the specified file.
             </summary>
             <param name="path">
                 The full path of the file to decrypt.
             </param>
             <param name="password">
-                The sequence of bytes which is used as password.
+                The sequence of bytes which was used as password.
             </param>
             <param name="salt">
-                The sequence of bytes which is used as salt.
+                The sequence of bytes which was used as salt.
             </param>
-            <param name="algorithm">
-                The algorithm to use.
+            <param name="keySize">
+                The size of the secret key.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.String,System.Byte[],SilDev.RijndaelAlgorithms)">
+        <member name="T:SilDev.Crypto.BinaryToTextEncoding">
             <summary>
-                Decrypts this sequence of bytes with the specified algorithm.
+                Represents the base class from which all implementations of binary-to-text encoding
+                algorithms must derive.
+            </summary>
+        </member>
+        <member name="P:SilDev.Crypto.BinaryToTextEncoding.Separator">
+            <summary>
+                Gets the separator.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+            <summary>
+                Encodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to encode.
+            </param>
+            <param name="outputStream">
+                The output stream for encoding.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The current method has no functionality.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+            <summary>
+                Encodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to encode.
+            </param>
+            <param name="outputStream">
+                The output stream for encoding.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                <see cref="M:SilDev.Crypto.BinaryToTextEncoding.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)"/> method has no functionality.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeBytes(System.Byte[],System.Int32)">
+            <summary>
+                Encodes the specified sequence of bytes.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encode.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeString(System.String,System.Int32)">
+            <summary>
+                Encodes the specified string.
+            </summary>
+            <param name="text">
+                The string to encode.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeFile(System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+                Encodes the specified source file to the specified destination file.
+            </summary>
+            <param name="srcPath">
+                The source file to encode.
+            </param>
+            <param name="destPath">
+                The destination file to create.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeFile(System.String,System.Int32)">
+            <summary>
+                Encodes the specified file.
             </summary>
             <param name="path">
-                The full path of the file to decrypt.
+                The full path of the file to encode.
             </param>
-            <param name="password">
-                The string which is used as password.
+            <param name="lineLength">
+                The length of lines.
             </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+            <summary>
+                Decodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to decode.
             </param>
-            <param name="algorithm">
-                The algorithm to use.
+            <param name="outputStream">
+                The output stream for decoding.
             </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The current method has no functionality.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeBytes(System.String)">
+            <summary>
+                Decodes the specified string into a sequence of bytes.
+            </summary>
+            <param name="code">
+                The string to decode.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeString(System.String)">
+            <summary>
+                Decodes the specified string into a string.
+            </summary>
+            <param name="code">
+                The string to decode.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeFile(System.String,System.String,System.Boolean)">
+            <summary>
+                Decodes the specified source file to the specified destination file.
+            </summary>
+            <param name="srcPath">
+                The source file to encode.
+            </param>
+            <param name="destPath">
+                The destination file to create.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeFile(System.String,System.String,System.String)">
+            <summary>
+                Decodes the specified string into a sequence of bytes containing a small file.
+            </summary>
+            <param name="code">
+                The string to decode.
+            </param>
+            <param name="prefixMark">
+                The prefix mark.
+            </param>
+            <param name="suffixMark">
+                The suffix mark.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.BinaryToTextEncoding.WriteLine(System.IO.Stream,System.Byte,System.Int32,System.Int32@)">
+            <summary>
+                Write the specified byte into the stream and add a line separator depending
+                on the specified line length.
+            </summary>
+            <param name="stream">
+                The stream in which to write the single byte.
+            </param>
+            <param name="single">
+                The single byte.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="linePos">
+                The position in the line.
+            </param>
+        </member>
+        <member name="T:SilDev.Crypto.Base2">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Base2"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Base2.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+            <summary>
+                Encodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to encode.
+            </param>
+            <param name="outputStream">
+                The output stream for encoding.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.Base2.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+            <summary>
+                Decodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to decode.
+            </param>
+            <param name="outputStream">
+                The output stream for decoding.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.Text.DecoderFallbackException">
+                inputStream contains invalid characters.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="T:SilDev.Crypto.Base8">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Base8"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Base8.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+            <summary>
+                Encodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to encode.
+            </param>
+            <param name="outputStream">
+                The output stream for encoding.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.Base8.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+            <summary>
+                Decodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to decode.
+            </param>
+            <param name="outputStream">
+                The output stream for decoding.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.Text.DecoderFallbackException">
+                inputStream contains invalid characters.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="T:SilDev.Crypto.Base10">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Base10"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Base10.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+            <summary>
+                Encodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to encode.
+            </param>
+            <param name="outputStream">
+                The output stream for encoding.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.Base10.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+            <summary>
+                Decodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to decode.
+            </param>
+            <param name="outputStream">
+                The output stream for decoding.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.Text.DecoderFallbackException">
+                inputStream contains invalid characters.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="T:SilDev.Crypto.Base16">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Base16"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Base16.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+            <summary>
+                Encodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to encode.
+            </param>
+            <param name="outputStream">
+                The output stream for encoding.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.Base16.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+            <summary>
+                Decodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to decode.
+            </param>
+            <param name="outputStream">
+                The output stream for decoding.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.Text.DecoderFallbackException">
+                inputStream contains invalid characters.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="T:SilDev.Crypto.Base32">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Base32"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Base32.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+            <summary>
+                Encodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to encode.
+            </param>
+            <param name="outputStream">
+                The output stream for encoding.
+            </param>
+            <param name="lineLength">
+                The length of lines.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                inputStream is larger than 128 MB.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.Base32.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+            <summary>
+                Decodes the specified input stream into the specified output stream.
+            </summary>
+            <param name="inputStream">
+                The input stream to decode.
+            </param>
+            <param name="outputStream">
+                The output stream for decoding.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                inputStream is larger than 128 MB.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.Text.DecoderFallbackException">
+                inputStream contains invalid characters.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
         </member>
         <member name="T:SilDev.Crypto.Base64">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Base64"/> class.
             </summary>
         </member>
-        <member name="P:SilDev.Crypto.Base64.LineLength">
+        <member name="M:SilDev.Crypto.Base64.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
             <summary>
-                The length of lines.
+                Encodes the specified input stream into the specified output stream.
             </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Base64.PrefixMark">
-            <summary>
-                The prefix mark.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Base64.SuffixMark">
-            <summary>
-                The suffix mark.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Base64.LastEncodedResult">
-            <summary>
-                Gets the encoded result of the last object.
-            </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Base64.LastDecodedResult">
-            <summary>
-                Gets the decoded result of the last object.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Base64.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encode.
+            <param name="inputStream">
+                The input stream to encode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
+            <param name="outputStream">
+                The output stream for encoding.
             </param>
             <param name="lineLength">
                 The length of lines.
             </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
         </member>
-        <member name="M:SilDev.Crypto.Base64.DecodeBytes(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Base64.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
-                Decodes the specified sequence of bytes.
+                Decodes the specified input stream into the specified output stream.
             </summary>
-            <param name="code">
-                The string to decode.
+            <param name="inputStream">
+                The input stream to decode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
+            <param name="outputStream">
+                The output stream for decoding.
             </param>
-            <param name="suffixMark">
-                The suffix mark.
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
             </param>
-        </member>
-        <member name="M:SilDev.Crypto.Base64.EncodeString(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specified string.
-            </summary>
-            <param name="text">
-                The string to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Base64.EncodeString(System.String,System.UInt32)">
-            <summary>
-                Encodes the specified string.
-            </summary>
-            <param name="text">
-                The string to encode.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Base64.DecodeString(System.String,System.String,System.String)">
-            <summary>
-                Decodes the specified string.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Base64.EncodeFile(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Base64.EncodeFile(System.String,System.UInt32)">
-            <summary>
-                Encodes the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encode.
-            </param>
-            <param name="lineLength">
-                The length of lines.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Base64.DecodeFile(System.String,System.String,System.String)">
-            <summary>
-                Decodes the specified sequence of bytes which presents a file.
-            </summary>
-            <param name="code">
-                The string to decode.
-            </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
         </member>
         <member name="T:SilDev.Crypto.Base85">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Base85"/> class.
             </summary>
         </member>
-        <member name="P:SilDev.Crypto.Base85.PrefixMark">
+        <member name="M:SilDev.Crypto.Base85.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
             <summary>
-                The prefix mark.
+                Encodes the specified input stream into the specified output stream.
             </summary>
-        </member>
-        <member name="P:SilDev.Crypto.Base85.SuffixMark">
-            <summary>
-                The suffix mark.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Base85.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encode.
+            <param name="inputStream">
+                The input stream to encode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
+            <param name="outputStream">
+                The output stream for encoding.
             </param>
             <param name="lineLength">
                 The length of lines.
             </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
         </member>
-        <member name="M:SilDev.Crypto.Base85.DecodeBytes(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Base85.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
-                Decodes the specified sequence of bytes.
+                Decodes the specified input stream into the specified output stream.
             </summary>
-            <param name="code">
-                The string to decode.
+            <param name="inputStream">
+                The input stream to decode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
+            <param name="outputStream">
+                The output stream for decoding.
             </param>
-            <param name="suffixMark">
-                The suffix mark.
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.Text.DecoderFallbackException">
+                inputStream contains invalid characters.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
         </member>
         <member name="T:SilDev.Crypto.Base91">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Base91"/> class.
             </summary>
         </member>
-        <member name="P:SilDev.Crypto.Base91.DefaultEncodeTable">
+        <member name="P:SilDev.Crypto.Base91.CharacterTable91">
             <summary>
-                Gets the default encode table.
+                The character table for translation.
             </summary>
         </member>
-        <member name="P:SilDev.Crypto.Base91.EncodeTable">
+        <member name="M:SilDev.Crypto.Base91.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
             <summary>
-                Gets or sets the encode table.
+                Encodes the specified input stream into the specified output stream.
             </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Base91.EncodeBytes(System.Byte[],System.String,System.String,System.UInt32)">
-            <summary>
-                Encodes the specified sequence of bytes to a sequence of base-91 digits.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encode.
+            <param name="inputStream">
+                The input stream to encode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
+            <param name="outputStream">
+                The output stream for encoding.
             </param>
             <param name="lineLength">
                 The length of lines.
             </param>
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                inputStream or outputStream is invalid.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
         </member>
-        <member name="M:SilDev.Crypto.Base91.DecodeBytes(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.Base91.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
-                Decodes the specified sequence of base-91 digits back to a sequence of bytes.
+                Decodes the specified input stream into the specified output stream.
             </summary>
-            <param name="code">
-                The string to decode.
+            <param name="inputStream">
+                The input stream to decode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
+            <param name="outputStream">
+                The output stream for decoding.
             </param>
-            <param name="suffixMark">
-                The suffix mark.
+            <param name="dispose">
+                true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
+                otherwise, false.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                inputStream or outputStream is null.
+            </exception>
+            <exception cref="T:System.Text.DecoderFallbackException">
+                inputStream contains invalid characters.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                inputStream is not readable -or- outputStream is not writable.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                Methods were called after the inputStream or outputStream was closed.
+            </exception>
+        </member>
+        <member name="T:SilDev.Crypto.ChecksumAlgorithm">
+            <summary>
+                Represents the base class from which all implementations of checksum encryption
+                algorithms must derive.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptStream``1(System.IO.Stream,``0)">
+            <summary>
+                Encrypts the specified stream with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
+            </summary>
+            <typeparam name="THashAlgorithm">
+                The type of the algorithm.
+            </typeparam>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+            <param name="algorithm">
+                The algorithm to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptStream(System.IO.Stream)">
+            <summary>
+                Encrypts the specified stream.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The current method has no functionality.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptBytes(System.Byte[])">
+            <summary>
+                Encrypts the specified sequence of bytes.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptString``1(System.String,``0)">
+            <summary>
+                Encrypts the specified string with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
+            </summary>
+            <typeparam name="THashAlgorithm">
+                The type of the algorithm.
+            </typeparam>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <param name="algorithm">
+                The algorithm to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptString(System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The current method has no functionality.
+            </exception>
+        </member>
+        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptFile(System.String)">
+            <summary>
+                Encrypts the specified file.
+            </summary>
+            <param name="path">
+                The full path of the file to encrypt.
+            </param>
+        </member>
+        <member name="T:SilDev.Crypto.Adler32">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Crypto.Adler32"/> class.
+            </summary>
+        </member>
+        <member name="F:SilDev.Crypto.Adler32.HashLength">
+            <summary>
+                Gets the required hash length.
+            </summary>
+        </member>
+        <member name="M:SilDev.Crypto.Adler32.EncryptStream(System.IO.Stream)">
+            <summary>
+                Encrypts the specified stream.
+            </summary>
+            <param name="stream">
+                The stream to encrypt.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.Adler32.EncryptString(System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="text">
+                The string to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Crc16">
@@ -3303,28 +3996,12 @@
                 The stream to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Crc16.EncryptBytes(System.Byte[])">
-            <summary>
-                Encrypts the specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-        </member>
         <member name="M:SilDev.Crypto.Crc16.EncryptString(System.String)">
             <summary>
                 Encrypts the specified string.
             </summary>
             <param name="text">
                 The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Crc16.EncryptFile(System.String)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Crc32">
@@ -3345,6 +4022,14 @@
                 The stream to encrypt.
             </param>
         </member>
+        <member name="M:SilDev.Crypto.Crc32.EncryptString(System.String)">
+            <summary>
+                Encrypts the specified string.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+        </member>
         <member name="T:SilDev.Crypto.Md5">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Md5"/> class.
@@ -3355,20 +4040,6 @@
                 Gets the required hash length.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptStream``1(System.IO.Stream,``0)">
-            <summary>
-                Encrypts the specified stream with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
-            </summary>
-            <typeparam name="THashAlgorithm">
-                The type of the algorithm.
-            </typeparam>
-            <param name="stream">
-                The stream to encrypt.
-            </param>
-            <param name="algorithm">
-                The algorithm to encrypt.
-            </param>
-        </member>
         <member name="M:SilDev.Crypto.Md5.EncryptStream(System.IO.Stream)">
             <summary>
                 Encrypts the specified stream.
@@ -3377,42 +4048,12 @@
                 The stream to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptBytes(System.Byte[])">
-            <summary>
-                Encrypts the specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptString``1(System.String,``0)">
-            <summary>
-                Encrypts the specified string with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
-            </summary>
-            <typeparam name="THashAlgorithm">
-                The type of the algorithm.
-            </typeparam>
-            <param name="text">
-                The string to encrypt.
-            </param>
-            <param name="algorithm">
-                The algorithm to encrypt.
-            </param>
-        </member>
         <member name="M:SilDev.Crypto.Md5.EncryptString(System.String)">
             <summary>
                 Encrypts the specified string.
             </summary>
             <param name="text">
                 The string to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Md5.EncryptFile(System.String)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
             </param>
         </member>
         <member name="T:SilDev.Crypto.Sha1">
@@ -3517,159 +4158,6 @@
             </summary>
             <param name="text">
                 The string to encrypt.
-            </param>
-        </member>
-        <member name="T:SilDev.Crypto.Aes">
-            <summary>
-                Provides static methods to handle AES encryption and decryption.
-            </summary>
-        </member>
-        <member name="T:SilDev.Crypto.Aes.KeySize">
-            <summary>
-                Provides enumerated bits of the key size.
-            </summary>
-        </member>
-        <member name="F:SilDev.Crypto.Aes.KeySize.Aes128">
-            <summary>
-                128 bits.
-            </summary>
-        </member>
-        <member name="F:SilDev.Crypto.Aes.KeySize.Aes192">
-            <summary>
-                192 bits.
-            </summary>
-        </member>
-        <member name="F:SilDev.Crypto.Aes.KeySize.Aes256">
-            <summary>
-                256 bits.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptBytes(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified sequence of bytes.
-            </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Encrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to encrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which is used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which is used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptBytes(System.Byte[],System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified sequence of bytes.
-            </summary>
-            <param name="code">
-                The sequence of bytes to decrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which was used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which was used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Aes.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.Crypto.Aes.KeySize)">
-            <summary>
-                Decrypts the specified file.
-            </summary>
-            <param name="path">
-                The full path of the file to decrypt.
-            </param>
-            <param name="password">
-                The sequence of bytes which was used as password.
-            </param>
-            <param name="salt">
-                The sequence of bytes which was used as salt.
-            </param>
-            <param name="keySize">
-                The size of the secret key.
-            </param>
-        </member>
-        <member name="T:SilDev.Crypto.Rsa">
-            <summary>
-                Provides static methods to handle RSA encryption and decryption.
-            </summary>
-        </member>
-        <member name="M:SilDev.Crypto.Rsa.CreateKeyFiles(System.String,System.Int32)">
-            <summary>
-                Creates a public and private key pair at the specified location.
-            </summary>
-            <param name="dirPath">
-                The directory path.
-            </param>
-            <param name="keySize">
-                The size of the key in bits.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Rsa.EncryptBytes(System.String,System.Byte[])">
-            <summary>
-                Encrypts the specified sequence of bytes.
-            </summary>
-            <param name="publicKeyPath">
-                The path to the public key file.
-            </param>
-            <param name="bytes">
-                The data to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Rsa.EncryptString(System.String,System.String)">
-            <summary>
-                Encrypts the specified string.
-            </summary>
-            <param name="publicKeyPath">
-                The path to the public key file.
-            </param>
-            <param name="text">
-                The text to encrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Rsa.DecryptBytes(System.String,System.String)">
-            <summary>
-                Decrypts the specified sequence of bytes.
-            </summary>
-            <param name="privateKeyPath">
-                The path to the private key file.
-            </param>
-            <param name="code">
-                The cypher to decrypt.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.Rsa.DecryptString(System.String,System.String)">
-            <summary>
-                Decrypts the specified string.
-            </summary>
-            <param name="privateKeyPath">
-                The path to the private key file.
-            </param>
-            <param name="code">
-                The cypher to decrypt.
             </param>
         </member>
         <member name="T:SilDev.Desktop">
@@ -6314,7 +6802,7 @@
         </member>
         <member name="M:SilDev.Json.DeserializeFile``1(System.String,``0)">
             <summary>
-                Deserializes specified JSON file into an object graph.
+                Deserializes the specified JSON file into an object graph.
             </summary>
             <typeparam name="TResult">
                 The type of the result.
@@ -22189,7 +22677,7 @@
         </member>
         <member name="M:SilDev.Xml.DeserializeFile``1(System.String,``0)">
             <summary>
-                Deserializes specified XML file into an object graph.
+                Deserializes the specified XML file into an object graph.
             </summary>
             <typeparam name="TResult">
                 The type of the result.
