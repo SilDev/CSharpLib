@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-13 00:15
+// Version:  2018-06-13 13:04
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -2641,11 +2641,8 @@ namespace SilDev
                 if (bytes == null || !bytes.Any())
                     return string.Empty;
                 string s;
-                using (var ms = new MemoryStream())
-                {
-                    ms.Read(bytes, 0, bytes.Length);
+                using (var ms = new MemoryStream(bytes))
                     s = EncryptStream(ms);
-                }
                 return s;
             }
 
