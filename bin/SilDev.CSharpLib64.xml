@@ -184,55 +184,185 @@
                 Expands the functionality for the <see cref="T:System.Drawing.Color"/> class.
             </summary>
         </member>
-        <member name="M:SilDev.Drawing.ColorEx.FromHtmlToColor(System.String,System.Drawing.Color)">
+        <member name="M:SilDev.Drawing.ColorEx.RangeOf(System.Drawing.Color,System.Drawing.Color)">
             <summary>
-                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
+                Returns the range value between two colors based on their <see cref="M:System.Drawing.Color.GetHue"/>
+                value.
             </summary>
-            <param name="htmlColor">
-                The string representation of the HTML color to translate.
+            <param name="colorA">
+                The first color to compare.
             </param>
-            <param name="defColor">
-                The color that is set if no HTML color was found.
+            <param name="colorB">
+                The second color to compare.
             </param>
         </member>
-        <member name="M:SilDev.Drawing.ColorEx.FromHtmlToColor(System.String,System.Drawing.Color,System.Byte)">
+        <member name="M:SilDev.Drawing.ColorEx.IsInRange(System.Drawing.Color,System.Drawing.Color,System.Int32)">
             <summary>
-                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
+                Determines whether this color is in range of the specified color.
             </summary>
-            <param name="htmlColor">
-                The string representation of the HTML color to translate.
+            <param name="colorA">
+                The first color to compare.
             </param>
-            <param name="defColor">
-                The color that is set if no HTML color was found.
+            <param name="colorB">
+                The second color to compare.
             </param>
-            <param name="alpha">
-                The alpha component. Valid values are 0 through 255.
+            <param name="threshold">
+                The threshold.
             </param>
         </member>
-        <member name="M:SilDev.Drawing.ColorEx.FromHtmlToColor(System.String,System.Byte)">
+        <member name="M:SilDev.Drawing.ColorEx.IsDark(System.Drawing.Color)">
             <summary>
-                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
-            </summary>
-            <param name="htmlColor">
-                The string representation of the HTML color to translate.
-            </param>
-            <param name="alpha">
-                The alpha component. Valid values are 0 through 255.
-            </param>
-        </member>
-        <member name="M:SilDev.Drawing.ColorEx.ToHtmlString(System.Drawing.Color,System.Nullable{System.Byte})">
-            <summary>
-                Translates the specified <see cref="T:System.Drawing.Color"/> structure to an HTML string color
-                representation.
+                Determines whether this color is dark.
             </summary>
             <param name="color">
-                The <see cref="T:System.Drawing.Color"/> structure to translate.
+                The color to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.IsDarkDark(System.Drawing.Color)">
+            <summary>
+                Determines whether this color is pretty dark.
+            </summary>
+            <param name="color">
+                The color to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.IsDarkDarkDark(System.Drawing.Color)">
+            <summary>
+                Determines whether this color is extremely dark.
+            </summary>
+            <param name="color">
+                The color to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.IsLight(System.Drawing.Color)">
+            <summary>
+                Determines whether this color is light.
+            </summary>
+            <param name="color">
+                The color to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.IsLightLight(System.Drawing.Color)">
+            <summary>
+                Determines whether this color is pretty light.
+            </summary>
+            <param name="color">
+                The color to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.IsLightLightLight(System.Drawing.Color)">
+            <summary>
+                Determines whether this color is extremely light.
+            </summary>
+            <param name="color">
+                The color to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.EnsureDark(System.Drawing.Color)">
+            <summary>
+                Decreases the brightness of the specified color if it is too bright based on
+                <see cref="M:SilDev.Drawing.ColorEx.IsDark(System.Drawing.Color)"/>.
+            </summary>
+            <param name="color">
+                The color to be adjusted.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.EnsureDarkDark(System.Drawing.Color)">
+            <summary>
+                Decreases the brightness of the specified color if it is too bright based on
+                <see cref="M:SilDev.Drawing.ColorEx.IsDarkDark(System.Drawing.Color)"/>.
+            </summary>
+            <param name="color">
+                The color to be adjusted.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.EnsureDarkDarkDark(System.Drawing.Color)">
+            <summary>
+                Decreases the brightness of the specified color if it is too bright based on
+                <see cref="M:SilDev.Drawing.ColorEx.IsDarkDarkDark(System.Drawing.Color)"/>.
+            </summary>
+            <param name="color">
+                The color to be adjusted.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.EnsureLight(System.Drawing.Color)">
+            <summary>
+                Increases the brightness of the specified color if it is too dark based on
+                <see cref="M:SilDev.Drawing.ColorEx.IsLight(System.Drawing.Color)"/>.
+            </summary>
+            <param name="color">
+                The color to be adjusted.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.EnsureLightLight(System.Drawing.Color)">
+            <summary>
+                Increases the brightness of the specified color if it is too dark based on
+                <see cref="M:SilDev.Drawing.ColorEx.IsLightLight(System.Drawing.Color)"/>.
+            </summary>
+            <param name="color">
+                The color to be adjusted.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.EnsureLightLightLight(System.Drawing.Color)">
+            <summary>
+                Increases the brightness of the specified color if it is too dark based on
+                <see cref="M:SilDev.Drawing.ColorEx.IsLightLightLight(System.Drawing.Color)"/>.
+            </summary>
+            <param name="color">
+                The color to be adjusted.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.GetRandomColor(System.Int32)">
+            <summary>
+                Creates a random color based on the specified seed.
+            </summary>
+            <param name="seed">
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.GetRandomKnownColor(System.Int32)">
+            <summary>
+                Creates a random known system color based on the specified seed.
+            </summary>
+            <param name="seed">
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.FromHtml(System.String,System.Drawing.Color)">
+            <summary>
+                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
+            </summary>
+            <param name="htmlColor">
+                The string representation of the HTML color to translate.
+            </param>
+            <param name="defColor">
+                The color that is set if no HTML color was found.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.FromHtml(System.String,System.Drawing.Color,System.Byte)">
+            <summary>
+                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
+            </summary>
+            <param name="htmlColor">
+                The string representation of the HTML color to translate.
+            </param>
+            <param name="defColor">
+                The color that is set if no HTML color was found.
             </param>
             <param name="alpha">
                 The alpha component. Valid values are 0 through 255.
             </param>
         </member>
-        <member name="M:SilDev.Drawing.ColorEx.ToHtmlString(System.Drawing.Color,System.Boolean)">
+        <member name="M:SilDev.Drawing.ColorEx.FromHtml(System.String,System.Byte)">
+            <summary>
+                Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color"/> structure.
+            </summary>
+            <param name="htmlColor">
+                The string representation of the HTML color to translate.
+            </param>
+            <param name="alpha">
+                The alpha component. Valid values are 0 through 255.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToHtml(System.Drawing.Color,System.Boolean)">
             <summary>
                 Translates the specified <see cref="T:System.Drawing.Color"/> structure to an HTML string color
                 representation.
@@ -242,6 +372,52 @@
             </param>
             <param name="alpha">
                 true to translate also the alpha value; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToHtml(System.Drawing.Color,System.Nullable{System.Byte})">
+            <summary>
+                Translates the specified <see cref="T:System.Drawing.Color"/> structure to an HTML string color
+                representation.
+            </summary>
+            <param name="color">
+                The <see cref="T:System.Drawing.Color"/> structure to translate.
+            </param>
+            <param name="alpha">
+                The alpha component. Valid values are 0 through 255.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.FromRgb(System.Int32)">
+            <summary>
+                Creates a <see cref="T:System.Drawing.Color"/> structure from a 32-bit RGB value.
+            </summary>
+            <param name="rgb">
+                A value specifying the 32-bit RGB value.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToRgb(System.Drawing.Color)">
+            <summary>
+                Gets the 32-bit RGB value of this <see cref="T:System.Drawing.Color"/> structure.
+            </summary>
+            <param name="color">
+                The <see cref="T:System.Drawing.Color"/> structure to translate.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToArgbArray(System.Drawing.Color)">
+            <summary>
+                Copies the elements of the 32-bit ARGB value of this <see cref="T:System.Drawing.Color"/> structure
+                to a new array.
+            </summary>
+            <param name="color">
+                The <see cref="T:System.Drawing.Color"/> structure to translate.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToRgbArray(System.Drawing.Color)">
+            <summary>
+                Copies the elements of the 32-bit RGB value of this <see cref="T:System.Drawing.Color"/> structure
+                to a new array.
+            </summary>
+            <param name="color">
+                The <see cref="T:System.Drawing.Color"/> structure to translate.
             </param>
         </member>
         <member name="M:SilDev.Drawing.ColorEx.InvertRgb(System.Drawing.Color,System.Nullable{System.Byte})">
@@ -638,7 +814,7 @@
         </member>
         <member name="T:SilDev.Drawing.ImageEx.ImagePair">
             <summary>
-                An base class that provides a pair of two elements of the <see cref="T:System.Drawing.Image"/>
+                A base class that provides a pair of two elements of the <see cref="T:System.Drawing.Image"/>
                 class.
             </summary>
         </member>
@@ -2106,10 +2282,520 @@
                 The <see cref="T:System.Windows.Forms.TextBox"/> control to change.
             </param>
         </member>
+        <member name="T:SilDev.Investment.CounterInvestor`1">
+            <summary>
+                A base class that provides numerical values that are used as counters.
+            </summary>
+            <typeparam name="TCounter">
+                The type of the counters.
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.CounterInvestor`1"/> class.
+                <para>
+                    Allowed types: <see cref="T:System.SByte"/>, <see cref="T:System.Byte"/>, <see cref="T:System.Char"/>,
+                    <see cref="T:System.Int16"/>, <see cref="T:System.UInt16"/>, <see cref="T:System.Int32"/>, <see cref="T:System.UInt32"/>,
+                    <see cref="T:System.Int64"/>, <see cref="T:System.UInt64"/>, and <see cref="T:System.Decimal"/>.
+                </para>
+            </summary>
+            <exception cref="T:System.NotSupportedException">
+                The generic type is not sbyte, byte, char, short, ushort, int, uint, long, ulong,
+                or decimal.
+            </exception>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.Increase(System.Int32)">
+            <summary>
+                Increases the value of the counter associated with the specified index.
+            </summary>
+            <param name="index">
+                The index of the counter.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.Reset(System.Int32)">
+            <summary>
+                Resets the value of the counter associated with the specified index.
+            </summary>
+            <param name="index">
+                The index of the counter.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.GetValue(System.Int32)">
+            <summary>
+                Gets the value of the counter associated with the specified index.
+            </summary>
+            <param name="index">
+                The index of the counter.
+            </param>
+        </member>
+        <member name="T:SilDev.Investment.RandomInvestor">
+            <summary>
+                A base class that provides multiple <see cref="T:System.Random"/> instances.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.RandomInvestor.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.RandomInvestor"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.RandomInvestor.GetGenerator(System.Int32)">
+            <summary>
+                Gets the <see cref="T:System.Random"/> instance associated with the specified seed.
+            </summary>
+            <param name="seed">
+                A number used to calculate a starting value for the pseudo-random number sequence.
+            </param>
+        </member>
         <member name="T:SilDev.QuickWmi.Win32_OperatingSystem">
             <summary>
-                ***This is an undocumented class and can be changed or removed in the future
-                without futher notice.
+                Provides quick access to <see cref="T:SilDev.QuickWmi.Win32_OperatingSystem"/> WMI class properties.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.BootDevice">
+            <summary>
+                Gets the name of the disk drive from which the Windows operating system starts.
+                <para>
+                    Example: "\\Device\Harddisk0"
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.BuildNumber">
+            <summary>
+                Gets the build number of an operating system. It can be used for more precise
+                version information than product release version numbers.
+                <para>
+                    Example: "1381".
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.BuildType">
+            <summary>
+                Gets the type of build used for an operating system.
+                <para>
+                    Examples: "retail build", "checked build"
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Caption">
+            <summary>
+                Gets the operating system version.
+                <para>
+                    Example: "Microsoft Windows 7 Enterprise"
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.CodeSet">
+            <summary>
+                Gets the code page value an operating system uses. A code page contains a character
+                table that an operating system uses to translate strings for different languages.
+                The American National Standards Institute (ANSI) lists values that represent defined
+                code pages. If an operating system does not use an ANSI code page, this member is set
+                to 0 (zero). The CodeSet string can use a maximum of six characters to define the code
+                page value.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.CountryCode">
+            <summary>
+                Gets the code for the country/region that an operating system uses. Values are based on
+                international phone dialing prefixes-also referred to as IBM country/region codes. This
+                property can use a maximum of six characters to define the country/region code value.
+                <para>
+                    Example: "1" (United States)
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.CreationClassName">
+            <summary>
+                Gets the name of the first concrete class that appears in the inheritance chain used in
+                the creation of an instance. When used with other key properties of the class, this
+                property allows all instances of this class and its subclasses to be identified uniquely.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.CSCreationClassName">
+            <summary>
+                Gets the creation class name of the scoping computer system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.CSDVersion">
+            <summary>
+                Gets a NULL-terminated string that indicates the latest service pack installed on a
+                computer. If no service pack is installed, the string is NULL.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.CSName">
+            <summary>
+                Gets the name of the scoping computer system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.CurrentTimeZone">
+            <summary>
+                Gets the number, in minutes, an operating system is offset from Greenwich mean time (GMT).
+                The number is positive, negative, or zero.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.DataExecutionPrevention_32BitApplications">
+            <summary>
+                Gets the Data Execution Prevention. When the Data Execution Prevention hardware feature is
+                available, this property indicates that the feature is set to work for 32-bit applications
+                if True. On 64-bit computers, the Data Execution Prevention feature is configured in the
+                Boot Configuration Data (BCD) store and the properties in <see cref="T:SilDev.QuickWmi.Win32_OperatingSystem"/>
+                are set accordingly.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.DataExecutionPrevention_Available">
+            <summary>
+                Gets the Data Execution Prevention that is a hardware feature to prevent buffer overrun
+                attacks by stopping the execution of code on data-type memory pages. If True, then this
+                feature is available. On 64-bit computers, the Data Execution Prevention feature is
+                configured in the BCD store and the properties in <see cref="T:SilDev.QuickWmi.Win32_OperatingSystem"/> are
+                set accordingly.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.DataExecutionPrevention_Drivers">
+            <summary>
+                Gets the Data Execution Prevention. When the Data Execution Prevention hardware feature is
+                available, this property indicates that the feature is set to work for drivers if True. On
+                64-bit computers, the Data Execution Prevention feature is configured in the BCD store and
+                the properties in <see cref="T:SilDev.QuickWmi.Win32_OperatingSystem"/> are set accordingly.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.DataExecutionPrevention_SupportPolicy">
+            <summary>
+                Gets the value indicating which Data Execution Prevention (DEP) setting is applied. The
+                DEP setting specifies the extent to which DEP applies to 32-bit applications on the system.
+                DEP is always applied to the Windows kernel.
+                <para>
+                    Always Off (0): DEP is turned off for all 32-bit applications on the computer with no
+                    exceptions. This setting is not available for the user interface.
+                </para>
+                <para>
+                    Always On (1): DEP is enabled for all 32-bit applications on the computer. This setting
+                    is not available for the user interface.
+                </para>
+                <para>
+                    Opt In (2): DEP is enabled for a limited number of binaries, the kernel, and all
+                    Windows-based services. However, it is off by default for all 32-bit applications. A
+                    user or administrator must explicitly choose either the Always On or the Opt Out setting
+                    before DEP can be applied to 32-bit applications.
+                </para>
+                <para>
+                    Opt Out (3): DEP is enabled by default for all 32-bit applications. A user or
+                    administrator can explicitly remove support for a 32-bit application by adding the
+                    application to an exceptions list.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Debug">
+            <summary>
+                Gets the value indicating that the operating system is a checked (debug) build. If True, the
+                debugging version is installed. Checked builds provide error checking, argument verification,
+                and system debugging code. Additional code in a checked binary generates a kernel debugger
+                error message and breaks into the debugger. This helps immediately determine the cause and
+                location of the error. Performance may be affected in a checked build due to the additional
+                code that is executed.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Description">
+            <summary>
+                Gets the description of the Windows operating system. Some user interfaces for example, those
+                that allow editing of this description, limit its length to 48 characters.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Distributed">
+            <summary>
+                Gets the value that specifies if the operating system is distributed across several computer
+                system nodes. If so, these nodes should be grouped as a cluster.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.EncryptionLevel">
+            <summary>
+                Gets the encryption level for secure transactions: 40-bit, 128-bit, or n-bit.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.ForegroundApplicationBoost">
+            <summary>
+                Gets the value that increases in priority is given to the foreground application. Application
+                boost is implemented by giving an application more execution time slices (quantum lengths).
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.FreePhysicalMemory">
+            <summary>
+                Gets the number, in kilobytes, of physical memory currently unused and available.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.FreeSpaceInPagingFiles">
+            <summary>
+                Gets the number, in kilobytes, that can be mapped into the operating system paging files
+                without causing any other pages to be swapped out.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.FreeVirtualMemory">
+            <summary>
+                Gets the number, in kilobytes, of virtual memory currently unused and available.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.InstallDate">
+            <summary>
+                Gets the install date of the operating system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.LargeSystemCache">
+            <summary>
+                Gets the operating system cache optimize option.
+                <para>
+                    0: Optimize memory for applications.
+                </para>
+                <para>
+                    1: Optimize memory for system performance.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.LastBootUpTime">
+            <summary>
+                Gets the date and time the operating system was last restarted.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.LocalDateTime">
+            <summary>
+                Gets the operating system version of the local date and time-of-day.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Locale">
+            <summary>
+                Gets the language identifier used by the operating system. A language identifier is a
+                standard international numeric abbreviation for a country/region. Each language has a
+                unique language identifier (LANGID), a 16-bit value that consists of a primary language
+                identifier and a secondary language identifier.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Manufacturer">
+            <summary>
+                Gets the name of the operating system manufacturer. For Windows-based systems, this
+                value is "Microsoft Corporation".
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.MaxNumberOfProcesses">
+            <summary>
+                Gets the maximum number of process contexts the operating system can support. The default
+                value set by the provider is 4294967295 (0xFFFFFFFF). If there is no fixed maximum, the
+                value should be 0 (zero). On systems that have a fixed maximum, this object can help
+                diagnose failures that occur when the maximum is reached-if unknown, enter 4294967295
+                (0xFFFFFFFF).
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.MaxProcessMemorySize">
+            <summary>
+                Gets the maximum number, in kilobytes, of memory that can be allocated to a process. For
+                operating systems with no virtual memory, typically this value is equal to the total
+                amount of physical memory minus the memory used by the BIOS and the operating system.
+                For some operating systems, this value may be infinity, in which case 0 (zero) should
+                be entered. In other cases, this value could be a constant, for example, 2G or 4G.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.MUILanguages">
+            <summary>
+                Gets the Multilingual User Interface Pack (MUI Pack) languages installed on the computer.
+                For example, "en-us". MUI Pack languages are resource files that can be installed on the
+                English version of the operating system. When an MUI Pack is installed, you can can change
+                the user interface language to one of 33 supported languages.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Name">
+            <summary>
+                Gets the name of the operating system instance within a computer system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.NumberOfLicensedUsers">
+            <summary>
+                Gets the number of user licenses for the operating system. If unlimited, enter 0 (zero).
+                If unknown, enter -1.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.NumberOfProcesses">
+            <summary>
+                Gets the number of process contexts currently loaded or running on the operating system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.NumberOfUsers">
+            <summary>
+                Gets the number of user sessions for which the operating system is storing state
+                information currently.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.OperatingSystemSKU">
+            <summary>
+                Gets the Stock Keeping Unit (SKU) number for the operating system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Organization">
+            <summary>
+                Gets the company name for the registered user of the operating system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.OSArchitecture">
+            <summary>
+                Gets the architecture of the operating system, as opposed to the processor. This
+                property can be localized.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.OSLanguage">
+            <summary>
+                Gets the language version of the operating system installed. The following list lists
+                the possible values. Example: 0x0807 (German, Switzerland).
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.OSProductSuite">
+            <summary>
+                Gets the installed and licensed system product additions to the operating system.
+                For example, the value of 146 (0x92) for OSProductSuite indicates Enterprise, Terminal
+                Services, and Data Center (bits one, four, and seven set). The following list lists
+                possible values.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.OSType">
+            <summary>
+                Gets the type of operating system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.OtherTypeDescription">
+            <summary>
+                Gets the additional description for the current operating system version.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.PAEEnabled">
+            <summary>
+                Gets the value that specifies whether the physical address extensions (PAE) are
+                enabled by the operating system running on Intel processors. PAE allows applications
+                to address more than 4 GB of physical memory. When PAE is enabled, the operating system
+                uses three-level linear address translation rather than two-level. Providing more physical
+                memory to an application reduces the need to swap memory to the page file and increases
+                performance.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.PortableOperatingSystem">
+            <summary>
+                Gets the value that specifies whether the operating system booted from an external USB
+                device. If true, the operating system has detected it is booting on a supported locally
+                connected storage device.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Primary">
+            <summary>
+                Gets the value that specifies whether this is the primary operating system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.ProductType">
+            <summary>
+                Gets additional system information.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.RegisteredUser">
+            <summary>
+                Gets the name of the registered user of the operating system.
+                <para>
+                    Example: "Ben Smith"
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.SerialNumber">
+            <summary>
+                Gets the operating system product serial identification number.
+                <para>
+                    Example: "10497-OEM-0031416-71674"
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.ServicePackMajorVersion">
+            <summary>
+                Gets the major version number of the service pack installed on the computer system. If
+                no service pack has been installed, the value is 0 (zero).
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.ServicePackMinorVersion">
+            <summary>
+                Gets the minor version number of the service pack installed on the computer system. If
+                no service pack has been installed, the value is 0 (zero).
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.SizeStoredInPagingFiles">
+            <summary>
+                Gets the total number of kilobytes that can be stored in the operating system paging
+                files-0 (zero) indicates that there are no paging files. Be aware that this number does
+                not represent the actual physical size of the paging file on disk.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Status">
+            <summary>
+                Gets the current status of the object. Various operational and nonoperational statuses
+                can be defined. Operational statuses include: "OK", "Degraded", and "Pred Fail" (an
+                element, such as a SMART-enabled hard disk drive may function properly, but predicts a
+                failure in the near future). Nonoperational statuses include: "Error", "Starting",
+                "Stopping", and "Service". The Service status applies to administrative work, such as
+                mirror-resilvering of a disk, reload of a user permissions list, or other administrative
+                work. Not all such work is online, but the managed element is neither "OK" nor in one of
+                the other states.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.SuiteMask">
+            <summary>
+                Gets the bit flags that identify the product suites available on the system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.SystemDevice">
+            <summary>
+                Gets the physical disk partition on which the operating system is installed.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.SystemDirectory">
+            <summary>
+                Gets the system directory of the operating system.
+                <para>
+                    Example: "C:\WINDOWS\SYSTEM32"
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.SystemDrive">
+            <summary>
+                Gets the letter of the disk drive on which the operating system resides.
+                <para>
+                    Example: "C:"
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.TotalSwapSpaceSize">
+            <summary>
+                Gets the total swap space in kilobytes. This value may be NULL (unspecified) if the swap
+                space is not distinguished from page files. However, some operating systems distinguish
+                these concepts. For example, in UNIX, whole processes can be swapped out when the free
+                page list falls and remains below a specified amount.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.TotalVirtualMemorySize">
+            <summary>
+                Gets the number, in kilobytes, of virtual memory. For example, this may be calculated by
+                adding the amount of total RAM to the amount of paging space, that is, adding the amount of
+                memory in or aggregated by the computer system to the property,
+                <see cref="P:SilDev.QuickWmi.Win32_OperatingSystem.SizeStoredInPagingFiles"/>.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.TotalVisibleMemorySize">
+            <summary>
+                Gets the total amount, in kilobytes, of physical memory available to the operating system.
+                This value does not necessarily indicate the true amount of physical memory, but what is
+                reported to the operating system as available to it.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.Version">
+            <summary>
+                Gets the version number of the operating system.
+            </summary>
+        </member>
+        <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.WindowsDirectory">
+            <summary>
+                Gets the Windows directory of the operating system.
+                <para>
+                    Example: "C:\WINDOWS"
+                </para>
             </summary>
         </member>
         <member name="T:SilDev.Compaction">
