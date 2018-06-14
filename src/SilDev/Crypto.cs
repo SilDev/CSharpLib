@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-14 18:24
+// Version:  2018-06-14 22:20
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -2163,12 +2163,12 @@ namespace SilDev
                 {
                     var bai = new byte[4096];
                     var bao = new byte[bai.Length];
-                    using (var cs = new FromBase64Transform())
+                    using (var fbt = new FromBase64Transform())
                     {
                         int i;
                         while ((i = si.Read(bai, 0, bai.Length)) > 0)
                         {
-                            i = cs.TransformBlock(bai, 0, i, bao, 0);
+                            i = fbt.TransformBlock(bai, 0, i, bao, 0);
                             so.Write(bao, 0, i);
                         }
                     }
