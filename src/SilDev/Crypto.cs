@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-13 13:04
+// Version:  2018-06-14 18:24
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -2102,17 +2102,15 @@ namespace SilDev
                 var so = outputStream;
                 try
                 {
+                    int i;
+                    var cs = new CryptoStream(si, new ToBase64Transform(), CryptoStreamMode.Read);
                     var ba = new byte[lineLength < 1 ? 4096 : lineLength];
-                    using (var cs = new CryptoStream(si, new ToBase64Transform(), CryptoStreamMode.Read))
+                    while ((i = cs.Read(ba, 0, ba.Length)) > 0)
                     {
-                        int i;
-                        while ((i = cs.Read(ba, 0, ba.Length)) > 0)
-                        {
-                            so.Write(ba, 0, i);
-                            if (lineLength < 1 || i < ba.Length)
-                                continue;
-                            so.Write(Separator, 0, Separator.Length);
-                        }
+                        so.Write(ba, 0, i);
+                        if (lineLength < 1 || i < ba.Length)
+                            continue;
+                        so.Write(Separator, 0, Separator.Length);
                     }
                 }
                 finally
