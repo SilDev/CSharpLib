@@ -83,6 +83,8 @@
     <Compile Include="SilDev\Forms\TextBoxEx.cs" />
     <Compile Include="SilDev\Intern\IrrKlangEngine\Player.cs" />
     <Compile Include="SilDev\Intern\IrrKlangInitializer.cs" />
+    <Compile Include="SilDev\Investment\CounterInvestor.cs" />
+    <Compile Include="SilDev\Investment\RandomInvestor.cs" />
     <Compile Include="SilDev\QuickWmi\Win32_OperatingSystem.cs" />
     <Compile Include="SilDev\Compaction.cs" />
     <Compile Include="SilDev\Comparison.cs" />
