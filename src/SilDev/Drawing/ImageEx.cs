@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-14 18:31
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -500,7 +500,7 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     An base class that provides a pair of two elements of the <see cref="Image"/>
+        ///     A base class that provides a pair of two elements of the <see cref="Image"/>
         ///     class.
         /// </summary>
         public class ImagePair : IDisposable
