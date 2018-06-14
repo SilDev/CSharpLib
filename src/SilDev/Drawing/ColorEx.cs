@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2018-03-08 02:47
+// Version:  2018-06-14 22:20
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,13 +18,225 @@ namespace SilDev.Drawing
     using System;
     using System.Drawing;
     using System.Drawing.Drawing2D;
+    using System.Globalization;
     using System.Linq;
+    using System.Text;
+    using System.Windows.Forms;
+    using Investment;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="Color"/> class.
     /// </summary>
     public static class ColorEx
     {
+        private static RandomInvestor _randomInvestor;
+
+        /// <summary>
+        ///     Returns the range value between two colors based on their <see cref="Color.GetHue"/>
+        ///     value.
+        /// </summary>
+        /// <param name="colorA">
+        ///     The first color to compare.
+        /// </param>
+        /// <param name="colorB">
+        ///     The second color to compare.
+        /// </param>
+        public static int RangeOf(this Color colorA, Color colorB)
+        {
+            var range = Math.Abs(colorA.GetHue() - colorB.GetHue());
+            if (range > 180f)
+                range = 360f - range;
+            return (int)range;
+        }
+
+        /// <summary>
+        ///     Determines whether this color is in range of the specified color.
+        /// </summary>
+        /// <param name="colorA">
+        ///     The first color to compare.
+        /// </param>
+        /// <param name="colorB">
+        ///     The second color to compare.
+        /// </param>
+        /// <param name="threshold">
+        ///     The threshold.
+        /// </param>
+        public static bool IsInRange(this Color colorA, Color colorB, int threshold = 25) =>
+            colorA.RangeOf(colorB) < threshold;
+
+        /// <summary>
+        ///     Determines whether this color is dark.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to check.
+        /// </param>
+        public static bool IsDark(this Color color) =>
+            color.ToRgbArray().Sum() < byte.MaxValue * 3 / 2;
+
+        /// <summary>
+        ///     Determines whether this color is pretty dark.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to check.
+        /// </param>
+        public static bool IsDarkDark(this Color color) =>
+            color.ToRgbArray().Sum() <= byte.MaxValue;
+
+        /// <summary>
+        ///     Determines whether this color is extremely dark.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to check.
+        /// </param>
+        public static bool IsDarkDarkDark(this Color color) =>
+            color.ToRgbArray().Sum() <= sbyte.MaxValue;
+
+        /// <summary>
+        ///     Determines whether this color is light.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to check.
+        /// </param>
+        public static bool IsLight(this Color color) =>
+            color.ToRgbArray().Sum() >= byte.MaxValue * 3 / 2;
+
+        /// <summary>
+        ///     Determines whether this color is pretty light.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to check.
+        /// </param>
+        public static bool IsLightLight(this Color color) =>
+            color.ToRgbArray().Sum() >= byte.MaxValue * 2;
+
+        /// <summary>
+        ///     Determines whether this color is extremely light.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to check.
+        /// </param>
+        public static bool IsLightLightLight(this Color color) =>
+            color.ToRgbArray().Sum() >= byte.MaxValue * 2 + sbyte.MaxValue;
+
+        /// <summary>
+        ///     Decreases the brightness of the specified color if it is too bright based on
+        ///     <see cref="IsDark"/>.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to be adjusted.
+        /// </param>
+        public static Color EnsureDark(this Color color)
+        {
+            var current = color;
+            while (!current.IsDark())
+                current = ControlPaint.Dark(current);
+            return current;
+        }
+
+        /// <summary>
+        ///     Decreases the brightness of the specified color if it is too bright based on
+        ///     <see cref="IsDarkDark"/>.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to be adjusted.
+        /// </param>
+        public static Color EnsureDarkDark(this Color color)
+        {
+            var current = color;
+            while (!current.IsDarkDark())
+                current = ControlPaint.Dark(current);
+            return current;
+        }
+
+        /// <summary>
+        ///     Decreases the brightness of the specified color if it is too bright based on
+        ///     <see cref="IsDarkDarkDark"/>.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to be adjusted.
+        /// </param>
+        public static Color EnsureDarkDarkDark(this Color color)
+        {
+            var current = color;
+            while (!current.IsDarkDarkDark())
+                current = ControlPaint.Dark(current);
+            return current;
+        }
+
+        /// <summary>
+        ///     Increases the brightness of the specified color if it is too dark based on
+        ///     <see cref="IsLight"/>.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to be adjusted.
+        /// </param>
+        public static Color EnsureLight(this Color color)
+        {
+            var current = color;
+            while (!current.IsLight())
+                current = ControlPaint.Light(current);
+            return current;
+        }
+
+        /// <summary>
+        ///     Increases the brightness of the specified color if it is too dark based on
+        ///     <see cref="IsLightLight"/>.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to be adjusted.
+        /// </param>
+        public static Color EnsureLightLight(this Color color)
+        {
+            var current = color;
+            while (!current.IsLightLight())
+                current = ControlPaint.Light(current);
+            return current;
+        }
+
+        /// <summary>
+        ///     Increases the brightness of the specified color if it is too dark based on
+        ///     <see cref="IsLightLightLight"/>.
+        /// </summary>
+        /// <param name="color">
+        ///     The color to be adjusted.
+        /// </param>
+        public static Color EnsureLightLightLight(this Color color)
+        {
+            var current = color;
+            while (!current.IsLightLightLight())
+                current = ControlPaint.Light(current);
+            return current;
+        }
+
+        /// <summary>
+        ///     Creates a random color based on the specified seed.
+        /// </summary>
+        /// <param name="seed">
+        /// </param>
+        public static Color GetRandomColor(int seed = -1)
+        {
+            if (_randomInvestor == default(RandomInvestor))
+                _randomInvestor = new RandomInvestor();
+            var random = _randomInvestor.GetGenerator(seed);
+            var buffer = new byte[3];
+            random.NextBytes(buffer);
+            return Color.FromArgb(buffer.First(), buffer.Second(), buffer.Last());
+        }
+
+        /// <summary>
+        ///     Creates a random known system color based on the specified seed.
+        /// </summary>
+        /// <param name="seed">
+        /// </param>
+        public static Color GetRandomKnownColor(int seed = -1)
+        {
+            if (_randomInvestor == default(RandomInvestor))
+                _randomInvestor = new RandomInvestor();
+            var random = _randomInvestor.GetGenerator(seed);
+            var names = Enum.GetValues(typeof(KnownColor)).Cast<KnownColor>().ToArray();
+            return Color.FromKnownColor(names.Just(random.Next(names.Length)));
+        }
+
         /// <summary>
         ///     Translates an HTML color representation to a GDI+ <see cref="Color"/> structure.
         /// </summary>
@@ -34,53 +246,43 @@ namespace SilDev.Drawing
         /// <param name="defColor">
         ///     The color that is set if no HTML color was found.
         /// </param>
-        public static Color FromHtmlToColor(this string htmlColor, Color defColor = default(Color))
+        public static Color FromHtml(string htmlColor, Color defColor = default(Color))
         {
             try
             {
                 var code = htmlColor?.TrimStart('#').ToUpper();
                 if (string.IsNullOrEmpty(code))
                     throw new ArgumentNullException(nameof(htmlColor));
-                if (!code.Length.IsBetween(1, 8) || !code.All(x => "0123456789ABCDEF".Contains(x)))
+                if (!code.Length.IsBetween(1, 8) || code.Any(x => !"0123456789ABCDEF".Contains(x)))
                     throw new ArgumentOutOfRangeException(nameof(htmlColor));
-                string a, r, g, b;
+                var sb = new StringBuilder();
                 Switch:
                 switch (code.Length)
                 {
                     case 8:
-                        a = code.Substring(0, 2);
-                        r = code.Substring(2, 2);
-                        g = code.Substring(4, 2);
-                        b = code.Substring(6, 2);
-                        break;
+                        return Color.FromArgb(int.Parse(code, NumberStyles.HexNumber));
                     case 6:
-                        a = byte.MaxValue.ToString("X2");
-                        r = code.Substring(0, 2);
-                        g = code.Substring(2, 2);
-                        b = code.Substring(4, 2);
-                        break;
+                        return FromRgb(int.Parse(code, NumberStyles.HexNumber));
                     case 3:
-                        a = byte.MaxValue.ToString("X2");
-                        r = code[0].ToString();
-                        r += r;
-                        g = code[1].ToString();
-                        g += g;
-                        b = code[2].ToString();
-                        b += b;
-                        break;
+                        foreach (var c in code)
+                        {
+                            sb.Append(c);
+                            sb.Append(c);
+                        }
+                        code = sb.ToString();
+                        goto Switch;
                     default:
-                        while (code.Length < 6)
-                            code += code;
-                        code = code.Substring(6);
+                        while (sb.Length < 6)
+                            sb.Append(code);
+                        code = sb.ToString(0, 6);
                         goto Switch;
                 }
-                var c = Color.FromArgb(Convert.ToInt32(a, 16), Convert.ToInt32(r, 16), Convert.ToInt32(g, 16), Convert.ToInt32(b, 16));
-                return c;
             }
-            catch
+            catch (Exception ex)
             {
-                return defColor;
+                Log.Write(ex);
             }
+            return defColor;
         }
 
         /// <summary>
@@ -95,13 +297,10 @@ namespace SilDev.Drawing
         /// <param name="alpha">
         ///     The alpha component. Valid values are 0 through 255.
         /// </param>
-        public static Color FromHtmlToColor(this string htmlColor, Color defColor, byte alpha)
+        public static Color FromHtml(string htmlColor, Color defColor, byte alpha)
         {
-            var c = htmlColor.FromHtmlToColor(defColor);
-            if (c == default(Color))
-                return c;
-            c = Color.FromArgb(alpha, c.R, c.G, c.B);
-            return c;
+            var color = FromHtml(htmlColor, defColor);
+            return color == default(Color) ? color : Color.FromArgb(alpha, color);
         }
 
         /// <summary>
@@ -113,30 +312,8 @@ namespace SilDev.Drawing
         /// <param name="alpha">
         ///     The alpha component. Valid values are 0 through 255.
         /// </param>
-        public static Color FromHtmlToColor(this string htmlColor, byte alpha) =>
-            htmlColor.FromHtmlToColor(default(Color), alpha);
-
-        /// <summary>
-        ///     Translates the specified <see cref="Color"/> structure to an HTML string color
-        ///     representation.
-        /// </summary>
-        /// <param name="color">
-        ///     The <see cref="Color"/> structure to translate.
-        /// </param>
-        /// <param name="alpha">
-        ///     The alpha component. Valid values are 0 through 255.
-        /// </param>
-        public static string ToHtmlString(this Color color, byte? alpha = null)
-        {
-            var c = color;
-            var s = string.Empty;
-            if (c == default(Color))
-                return s;
-            if (alpha.HasValue)
-                s += $"{alpha.Value:X2}";
-            s = $"#{s}{c.R:X2}{c.G:X2}{c.B:X2}";
-            return s;
-        }
+        public static Color FromHtml(string htmlColor, byte alpha) =>
+            FromHtml(htmlColor, default(Color), alpha);
 
         /// <summary>
         ///     Translates the specified <see cref="Color"/> structure to an HTML string color
@@ -148,12 +325,59 @@ namespace SilDev.Drawing
         /// <param name="alpha">
         ///     true to translate also the alpha value; otherwise, false.
         /// </param>
-        public static string ToHtmlString(this Color color, bool alpha)
-        {
-            var c = color;
-            var a = c.A;
-            return c.ToHtmlString(a);
-        }
+        public static string ToHtml(Color color, bool alpha = false) =>
+            color == default(Color) ? null : alpha ? $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}" : $"#{color.ToRgb():X}";
+
+        /// <summary>
+        ///     Translates the specified <see cref="Color"/> structure to an HTML string color
+        ///     representation.
+        /// </summary>
+        /// <param name="color">
+        ///     The <see cref="Color"/> structure to translate.
+        /// </param>
+        /// <param name="alpha">
+        ///     The alpha component. Valid values are 0 through 255.
+        /// </param>
+        public static string ToHtml(Color color, byte? alpha) =>
+            color == default(Color) ? null : alpha.HasValue ? ToHtml(Color.FromArgb((int)alpha, color)) : ToHtml(color);
+
+        /// <summary>
+        ///     Creates a <see cref="Color"/> structure from a 32-bit RGB value.
+        /// </summary>
+        /// <param name="rgb">
+        ///     A value specifying the 32-bit RGB value.
+        /// </param>
+        public static Color FromRgb(int rgb) =>
+            Color.FromArgb(byte.MaxValue, (byte)((rgb & 0xff0000) >> 16), (byte)((rgb & 0xff00) >> 8), (byte)(rgb & 0xff));
+
+        /// <summary>
+        ///     Gets the 32-bit RGB value of this <see cref="Color"/> structure.
+        /// </summary>
+        /// <param name="color">
+        ///     The <see cref="Color"/> structure to translate.
+        /// </param>
+        public static int ToRgb(this Color color) =>
+            (int)(((color.R << 16) | (color.G << 8) | color.B | (0 << 24)) & 0xFFFFFFL);
+
+        /// <summary>
+        ///     Copies the elements of the 32-bit ARGB value of this <see cref="Color"/> structure
+        ///     to a new array.
+        /// </summary>
+        /// <param name="color">
+        ///     The <see cref="Color"/> structure to translate.
+        /// </param>
+        public static int[] ToArgbArray(this Color color) =>
+            new int[] { color.A, color.R, color.G, color.B };
+
+        /// <summary>
+        ///     Copies the elements of the 32-bit RGB value of this <see cref="Color"/> structure
+        ///     to a new array.
+        /// </summary>
+        /// <param name="color">
+        ///     The <see cref="Color"/> structure to translate.
+        /// </param>
+        public static int[] ToRgbArray(this Color color) =>
+            new int[] { color.R, color.G, color.B };
 
         /// <summary>
         ///     Inverts the three RGB component (red, green, blue) values of the specified
