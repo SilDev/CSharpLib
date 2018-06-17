@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-14 22:20
+// Version:  2018-06-17 18:39
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -925,7 +925,7 @@ namespace SilDev
                         rm.Mode = CipherMode.CBC;
                         var ms = new MemoryStream();
                         using (var cs = new CryptoStream(ms, rm.CreateEncryptor(), CryptoStreamMode.Write))
-                            cs.Write(bytes, 0, bytes.Length);
+                            cs.WriteBytes(bytes);
                         ba = ms.ToArray();
                     }
                     return ba;
@@ -1001,7 +1001,7 @@ namespace SilDev
                         rm.Mode = CipherMode.CBC;
                         var ms = new MemoryStream();
                         using (var cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write))
-                            cs.Write(code, 0, code.Length);
+                            cs.WriteBytes(code);
                         ba = ms.ToArray();
                     }
                     return ba;
@@ -1365,7 +1365,7 @@ namespace SilDev
                 if (lineLength < 1 || lineLength > ++linePos)
                     return;
                 linePos = 0;
-                stream.Write(Separator, 0, Separator.Length);
+                stream.WriteBytes(Separator);
             }
         }
 
@@ -2110,7 +2110,7 @@ namespace SilDev
                         so.Write(ba, 0, i);
                         if (lineLength < 1 || i < ba.Length)
                             continue;
-                        so.Write(Separator, 0, Separator.Length);
+                        so.WriteBytes(Separator);
                     }
                 }
                 finally

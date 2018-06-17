@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-06-17 18:13
+// Version:  2018-06-17 18:39
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -249,6 +249,38 @@ namespace SilDev
             var ba = new byte[4096];
             while ((i = srcStream.Read(ba, 0, ba.Length)) > 0)
                 destStream.Write(ba, 0, i);
+        }
+
+        /// <summary>
+        ///     Writes a sequence of bytes to the this stream and advances the current position within
+        ///     this stream by the number of bytes written.
+        /// </summary>
+        /// <param name="stream">
+        ///     The <see cref="Stream"/> to write.
+        /// </param>
+        /// <param name="buffer">
+        ///     An array of bytes to write.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stream or bytes is null.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occured, such as the specified file cannot be found.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     The stream does not support writing.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///     stream was closed while the bytes were being written.
+        /// </exception>
+        public static void WriteBytes(this Stream stream, byte[] buffer)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+            var ba = buffer;
+            stream.Write(ba, 0, ba.Length);
         }
 
         /// <summary>
@@ -824,7 +856,7 @@ namespace SilDev
                     for (i = 0; i <= bytes.Length - oldValue.Length; i++)
                         if (!oldValue.Where((t, j) => bytes[i + j] != t).Any())
                         {
-                            ms.Write(newValue, 0, newValue.Length);
+                            ms.WriteBytes(newValue);
                             i += oldValue.Length - 1;
                         }
                         else
