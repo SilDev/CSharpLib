@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2018-06-17 16:10
+// Version:  2018-06-17 16:18
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -47,6 +47,40 @@ namespace SilDev
                 ba = mso.ToArray();
             }
             return ba;
+        }
+
+        /// <summary>
+        ///     Creates a archive that contains the files and directories from the specified
+        ///     directory.
+        /// </summary>
+        /// <param name="srcDir">
+        ///     The path to the directory to be archived.
+        /// </param>
+        /// <param name="destPath">
+        ///     The path of the archive to be created.
+        /// </param>
+        public static void ZipDir(string srcDir, string destPath)
+        {
+            try
+            {
+                var src = PathEx.Combine(srcDir);
+                if (string.IsNullOrEmpty(src))
+                    throw new ArgumentNullException(nameof(src));
+                if (!Directory.Exists(src))
+                    throw new DirectoryNotFoundException();
+                var dest = PathEx.Combine(destPath);
+                if (string.IsNullOrEmpty(dest))
+                    throw new ArgumentNullException(nameof(dest));
+                if (!PathEx.IsValidPath(dest))
+                    throw new ArgumentException();
+                if (File.Exists(dest))
+                    File.Delete(dest);
+                ZipFile.CreateFromDirectory(src, dest);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
         }
 
         /// <summary>
