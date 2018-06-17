@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-06-17 16:09
+// Version:  2018-06-17 18:13
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -221,28 +221,34 @@ namespace SilDev
         /// <summary>
         ///     Reads the bytes from the specified stream and writes them to another stream.
         /// </summary>
-        /// <param name="src">
+        /// <param name="srcStream">
         ///     The <see cref="Stream"/> to copy.
         /// </param>
-        /// <param name="dest">
+        /// <param name="destStream">
         ///     The <see cref="Stream"/> to override.
         /// </param>
-        /// <param name="buffer">
-        ///     The maximum number of bytes to buffer.
-        /// </param>
-        public static void CopyTo(this Stream src, Stream dest, int buffer = 4096)
+        /// <exception cref="ArgumentNullException">
+        ///     stream or bytes is null.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occured, such as the specified file cannot be found.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     The stream does not support writing.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///     stream was closed while the bytes were being written.
+        /// </exception>
+        public static void CopyTo(this Stream srcStream, Stream destStream)
         {
-            try
-            {
-                var ba = new byte[buffer];
-                int i;
-                while ((i = src.Read(ba, 0, ba.Length)) > 0)
-                    dest.Write(ba, 0, i);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
+            if (srcStream == null)
+                throw new ArgumentNullException(nameof(srcStream));
+            if (destStream == null)
+                throw new ArgumentNullException(nameof(destStream));
+            int i;
+            var ba = new byte[4096];
+            while ((i = srcStream.Read(ba, 0, ba.Length)) > 0)
+                destStream.Write(ba, 0, i);
         }
 
         /// <summary>
