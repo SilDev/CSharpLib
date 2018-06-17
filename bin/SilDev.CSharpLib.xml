@@ -2811,6 +2811,18 @@
                 The sequence of bytes to compress.
             </param>
         </member>
+        <member name="M:SilDev.Compaction.ZipDir(System.String,System.String)">
+            <summary>
+                Creates a archive that contains the files and directories from the specified
+                directory.
+            </summary>
+            <param name="srcDir">
+                The path to the directory to be archived.
+            </param>
+            <param name="destPath">
+                The path of the archive to be created.
+            </param>
+        </member>
         <member name="M:SilDev.Compaction.ZipText(System.String)">
             <summary>
                 Compresses the specifed <see cref="T:System.String"/> value.
@@ -13964,19 +13976,52 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.CopyTo(System.IO.Stream,System.IO.Stream,System.Int32)">
+        <member name="M:SilDev.Reorganize.CopyTo(System.IO.Stream,System.IO.Stream)">
             <summary>
                 Reads the bytes from the specified stream and writes them to another stream.
             </summary>
-            <param name="src">
+            <param name="srcStream">
                 The <see cref="T:System.IO.Stream"/> to copy.
             </param>
-            <param name="dest">
+            <param name="destStream">
                 The <see cref="T:System.IO.Stream"/> to override.
             </param>
-            <param name="buffer">
-                The maximum number of bytes to buffer.
+            <exception cref="T:System.ArgumentNullException">
+                stream or bytes is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.Reorganize.WriteBytes(System.IO.Stream,System.Byte[])">
+            <summary>
+                Writes a sequence of bytes to the this stream and advances the current position within
+                this stream by the number of bytes written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
             </param>
+            <param name="buffer">
+                An array of bytes to write.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream or bytes is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
         </member>
         <member name="M:SilDev.Reorganize.SerializeObject``1(``0)">
             <summary>
@@ -14130,7 +14175,7 @@
         <member name="M:SilDev.Reorganize.ToBytes(System.String)">
             <summary>
                 Converts all the characters in the specified string into a sequence of bytes with the
-                Windows-1252 <see cref="T:System.Text.Encoding"/> format.
+                <see cref="P:SilDev.TextEx.DefaultEncoding"/> format.
             </summary>
             <param name="str">
                 The string to convert.
@@ -14166,7 +14211,7 @@
         <member name="M:SilDev.Reorganize.ToStringDefault(System.Byte[])">
             <summary>
                 Converts the specified sequence of bytes into a string with the specified
-                Windows-1252 <see cref="T:System.Text.Encoding"/> format.
+                <see cref="P:SilDev.TextEx.DefaultEncoding"/> format.
             </summary>
             <param name="bytes">
                 The sequence of bytes to convert.
@@ -14764,6 +14809,11 @@
         <member name="T:SilDev.TextEx">
             <summary>
                 Provides static methods for converting or reorganizing of data.
+            </summary>
+        </member>
+        <member name="P:SilDev.TextEx.DefaultEncoding">
+            <summary>
+                Gets the character encoding of the operating system.
             </summary>
         </member>
         <member name="M:SilDev.TextEx.IsLineSeparator(System.Char)">
