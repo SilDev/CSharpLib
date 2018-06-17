@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-17 16:09
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -537,13 +537,13 @@ namespace SilDev
 
         /// <summary>
         ///     Converts all the characters in the specified string into a sequence of bytes with the
-        ///     Windows-1252 <see cref="Encoding"/> format.
+        ///     <see cref="TextEx.DefaultEncoding"/> format.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
         /// </param>
         public static byte[] ToBytes(this string str) =>
-            str.ToBytes(Encoding.GetEncoding(1252));
+            str.ToBytes(TextEx.DefaultEncoding);
 
         /// <summary>
         ///     Converts all the characters in the specified string into a sequence of bytes with the
@@ -588,13 +588,13 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the specified sequence of bytes into a string with the specified
-        ///     Windows-1252 <see cref="Encoding"/> format.
+        ///     <see cref="TextEx.DefaultEncoding"/> format.
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to convert.
         /// </param>
         public static string ToStringDefault(this byte[] bytes) =>
-            bytes.ToString(Encoding.GetEncoding(1252));
+            bytes.ToString(TextEx.DefaultEncoding);
 
         /// <summary>
         ///     Converts the specified string, which stores a set of four integers that represent the

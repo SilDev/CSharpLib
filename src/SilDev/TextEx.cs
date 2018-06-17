@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-17 16:09
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,12 +20,31 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Text;
+    using QuickWmi;
 
     /// <summary>
     ///     Provides static methods for converting or reorganizing of data.
     /// </summary>
     public static class TextEx
     {
+        private static object _defaultEncoding;
+
+        /// <summary>
+        ///     Gets the character encoding of the operating system.
+        /// </summary>
+        public static Encoding DefaultEncoding
+        {
+            get
+            {
+                if (_defaultEncoding != default(object))
+                    return (Encoding)_defaultEncoding;
+                if (!int.TryParse(Win32_OperatingSystem.CodeSet, out var codePage))
+                    codePage = 1252;
+                _defaultEncoding = Encoding.GetEncoding(codePage);
+                return (Encoding)_defaultEncoding;
+            }
+        }
+
         /// <summary>
         ///     Indicates whether the specified character is categorized as a line separator
         ///     character.
@@ -94,7 +113,7 @@ namespace SilDev
         public static Encoding GetEncoding(string file, Encoding defEncoding = default(Encoding))
         {
             var path = PathEx.Combine(file);
-            var encoding = defEncoding ?? Encoding.GetEncoding(1252);
+            var encoding = defEncoding ?? DefaultEncoding;
             if (!File.Exists(path))
                 return encoding;
             using (var sr = new StreamReader(file, true))
@@ -124,7 +143,7 @@ namespace SilDev
             if (!File.Exists(srcFile))
                 return false;
             if (encoding == null)
-                encoding = Encoding.GetEncoding(1252);
+                encoding = DefaultEncoding;
             if (encoding.Equals(GetEncoding(srcFile)))
                 return true;
             try

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-17 16:10
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -59,7 +59,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(text))
                 return null;
-            var ba = Encoding.UTF8.GetBytes(text);
+            var ba = TextEx.DefaultEncoding.GetBytes(text);
             return ba.Zip();
         }
 
