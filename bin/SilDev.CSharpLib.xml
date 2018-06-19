@@ -362,6 +362,30 @@
                 The alpha component. Valid values are 0 through 255.
             </param>
         </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToHtml(System.UInt32,System.Boolean)">
+            <summary>
+                Translates the specified 32-bit (A)RGB value to an HTML string color
+                representation.
+            </summary>
+            <param name="argb">
+                A value specifying the 32-bit (A)RGB value.
+            </param>
+            <param name="alpha">
+                true to translate also the alpha value; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.ToHtml(System.Int64,System.Boolean)">
+            <summary>
+                Translates the specified 32-bit (A)RGB value to an HTML string color
+                representation.
+            </summary>
+            <param name="argb">
+                A value specifying the 32-bit (A)RGB value.
+            </param>
+            <param name="alpha">
+                true to translate also the alpha value; otherwise, false.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ColorEx.ToHtml(System.Drawing.Color,System.Boolean)">
             <summary>
                 Translates the specified <see cref="T:System.Drawing.Color"/> structure to an HTML string color
