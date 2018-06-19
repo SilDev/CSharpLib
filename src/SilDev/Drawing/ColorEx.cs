@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2018-06-14 22:20
+// Version:  2018-06-19 14:33
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -316,6 +316,32 @@ namespace SilDev.Drawing
             FromHtml(htmlColor, default(Color), alpha);
 
         /// <summary>
+        ///     Translates the specified 32-bit (A)RGB value to an HTML string color
+        ///     representation.
+        /// </summary>
+        /// <param name="argb">
+        ///     A value specifying the 32-bit (A)RGB value.
+        /// </param>
+        /// <param name="alpha">
+        ///     true to translate also the alpha value; otherwise, false.
+        /// </param>
+        public static string ToHtml(uint argb, bool alpha = false) =>
+            $"#{new string(argb.ToString("X").TakeLast(alpha ? 8 : 6).ToArray()).PadLeft(alpha ? 8 : 6, '0')}";
+
+        /// <summary>
+        ///     Translates the specified 32-bit (A)RGB value to an HTML string color
+        ///     representation.
+        /// </summary>
+        /// <param name="argb">
+        ///     A value specifying the 32-bit (A)RGB value.
+        /// </param>
+        /// <param name="alpha">
+        ///     true to translate also the alpha value; otherwise, false.
+        /// </param>
+        public static string ToHtml(long argb, bool alpha = false) =>
+            ToHtml((uint)Math.Abs(argb), alpha);
+
+        /// <summary>
         ///     Translates the specified <see cref="Color"/> structure to an HTML string color
         ///     representation.
         /// </summary>
@@ -326,7 +352,7 @@ namespace SilDev.Drawing
         ///     true to translate also the alpha value; otherwise, false.
         /// </param>
         public static string ToHtml(Color color, bool alpha = false) =>
-            color == default(Color) ? null : alpha ? $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}" : $"#{color.ToRgb():X}";
+            color == default(Color) ? null : ToHtml(alpha ? color.ToArgb() : color.ToRgb(), alpha);
 
         /// <summary>
         ///     Translates the specified <see cref="Color"/> structure to an HTML string color
@@ -357,7 +383,7 @@ namespace SilDev.Drawing
         ///     The <see cref="Color"/> structure to translate.
         /// </param>
         public static int ToRgb(this Color color) =>
-            (int)(((color.R << 16) | (color.G << 8) | color.B | (0 << 24)) & 0xFFFFFFL);
+            (int)(((color.R << 16) | (color.G << 8) | color.B | (0 << 24)) & 0xffffffL);
 
         /// <summary>
         ///     Copies the elements of the 32-bit ARGB value of this <see cref="Color"/> structure
@@ -401,18 +427,12 @@ namespace SilDev.Drawing
         /// </param>
         public static Color ToGrayScale(this Color color)
         {
-            try
-            {
-                var c = color;
-                var scale = (byte)(c.R * .3f + c.G * .59f + c.B * .11f);
-                c = Color.FromArgb(c.A, scale, scale, scale);
-                return c;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return Color.Empty;
-            }
+            if (color == default(Color))
+                return color;
+            var c = color;
+            var scale = (byte)(c.R * .3f + c.G * .59f + c.B * .11f);
+            c = Color.FromArgb(c.A, scale, scale, scale);
+            return c;
         }
 
         /// <summary>
