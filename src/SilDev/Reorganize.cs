@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-06-17 18:39
+// Version:  2018-06-21 16:25
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -90,10 +90,60 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Provides static methods for converting or reorganizing of data.
+    ///     Provides static uncategorized extension methods for converting or reorganizing of data.
     /// </summary>
     public static class Reorganize
     {
+        /// <summary>
+        ///     Appends the string returned by processing a composite format string, which contains
+        ///     zero or more format items followed by the default line terminator to the end, to this
+        ///     <see cref="StringBuilder"/> instance. Each format item is replaced by the string
+        ///     representation of a corresponding argument in a parameter array using a specified
+        ///     format provider.
+        /// </summary>
+        /// <param name="stringBuilder">
+        ///     The <see cref="StringBuilder"/> instance to which the string should be append.
+        /// </param>
+        /// <param name="provider">
+        ///     An object that supplies culture-specific formatting information.
+        /// </param>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     An array of objects to format.
+        /// </param>
+        public static StringBuilder AppendFormatLine(this StringBuilder stringBuilder, IFormatProvider provider, string format, params object[] args)
+        {
+            var sb = stringBuilder;
+            sb.AppendFormat(provider, format, args);
+            sb.AppendLine();
+            return sb;
+        }
+
+        /// <summary>
+        ///     Appends the string returned by processing a composite format string, which contains
+        ///     zero or more format items followed by the default line terminator to the end, to this
+        ///     <see cref="StringBuilder"/> instance. Each format item is replaced by the string
+        ///     representation of a corresponding argument in a parameter array.
+        /// </summary>
+        /// <param name="stringBuilder">
+        ///     The <see cref="StringBuilder"/> instance to which the string should be append.
+        /// </param>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     An array of objects to format.
+        /// </param>
+        public static StringBuilder AppendFormatLine(this StringBuilder stringBuilder, string format, params object[] args)
+        {
+            var sb = stringBuilder;
+            sb.AppendFormat(format, args);
+            sb.AppendLine();
+            return sb;
+        }
+
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
         ///     value in the specified <see cref="SizeUnits"/>.
