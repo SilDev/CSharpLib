@@ -20,75 +20,19 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_Call">
+        <member name="P:SilDev.Properties.Resources.BackupFormat">
             <summary>
-              Looks up a localized string similar to CALL &quot;{0}&quot;.
+              Looks up a localized string similar to {0}-{{1}}.backup.
             </summary>
         </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_CallPre">
+        <member name="P:SilDev.Properties.Resources.C91Path">
             <summary>
-              Looks up a localized string similar to /C CALL &quot;{0}&quot;.
+              Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,NKg,ZT;I(x:xcQ5)^I.
             </summary>
         </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_Copy">
+        <member name="P:SilDev.Properties.Resources.C91PathN">
             <summary>
-              Looks up a localized string similar to COPY /Y &quot;{0}&quot; &quot;{1}&quot;.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_DeleteDir">
-            <summary>
-              Looks up a localized string similar to RMDIR /S /Q &quot;{0}&quot;.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_DeleteFile">
-            <summary>
-              Looks up a localized string similar to DEL /F /Q &quot;{0}&quot;.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_DeleteForce">
-             <summary>
-               Looks up a localized string similar to @ECHO OFF
-            ROBOCOPY &quot;{0}&quot; &quot;{1}&quot; /MIR
-            RMDIR /S /Q &quot;{0}&quot;
-            RMDIR /S /Q &quot;{1}&quot;
-            EXIT.
-             </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_Script">
-             <summary>
-               Looks up a localized string similar to @ECHO OFF
-            {0}
-            EXIT.
-             </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_Terminate">
-            <summary>
-              Looks up a localized string similar to TASKKILL /F /IM &quot;{0}&quot;.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_TerminateJoin">
-            <summary>
-              Looks up a localized string similar to &quot; &amp;&amp; TASKKILL /F /IM &quot;.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_WaitForProcThenCmd">
-            <summary>
-              Looks up a localized string similar to FOR /L %X in (1,0,2) DO (TASKLIST | FIND /I &quot;{0}&quot; &amp; IF ERRORLEVEL 1 ({1} &amp;&amp; EXIT)).
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.Cmd_WaitThenCmd">
-            <summary>
-              Looks up a localized string similar to PING LOCALHOST -n {0} &gt; NUL &amp;&amp; {1}.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.CmdFile">
-            <summary>
-              Looks up a localized string similar to cmd.exe.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.CmdPath">
-            <summary>
-              Looks up a localized string similar to %System%\cmd.exe.
+              Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,O3v)R1;%`n58cj0OIhZ.
             </summary>
         </member>
         <member name="P:SilDev.Properties.Resources.DimEmptyImage">
@@ -124,7 +68,7 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:SilDev.Properties.Resources.TempDir">
+        <member name="P:SilDev.Properties.Resources.TempDirFormat">
             <summary>
               Looks up a localized string similar to %TEMP%\tmp-{0}.
             </summary>
@@ -12629,6 +12573,11 @@
                 Gets the handle of the current process instance.
             </summary>
         </member>
+        <member name="P:SilDev.ProcessEx.CurrentId">
+            <summary>
+                Gets the unique identifier of the current process instance.
+            </summary>
+        </member>
         <member name="P:SilDev.ProcessEx.CurrentName">
             <summary>
                 Gets the name of the current process instance.
@@ -13072,15 +13021,112 @@
                 true to wait indefinitely for the associated process to exit; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitThenCmd(System.String,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+                Waits for the specified seconds to execute the specified command.
+            </summary>
+            <param name="command">
+                The command to execute.
+            </param>
+            <param name="seconds">
+                The time to wait in seconds.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitThenCmd(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Waits for the specified seconds to execute the specified command.
+            </summary>
+            <param name="command">
+                The command to execute.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitThenDelete(System.String,System.Int32,System.Boolean,System.Boolean)">
             <summary>
-                Waits before the system is instructed to delete the target at the specified path.
+                Waits for the specified seconds to delete the target at the specified path.
             </summary>
             <param name="path">
                 The path to the file or directory to be deleted.
             </param>
             <param name="seconds">
                 The time to wait in seconds.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitThenDelete(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Waits for the specified seconds to delete the target at the specified path.
+            </summary>
+            <param name="path">
+                The path to the file or directory to be deleted.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenCmd(System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Executes the specified command if there is no process running that is matched with the
+                specified process name.
+                <para>
+                    If a matched process is still running, the task will wait until all matched
+                    processes has been closed.
+                </para>
+            </summary>
+            <param name="command">
+                The command to execute.
+            </param>
+            <param name="processName">
+                The name of the process to be waited.
+            </param>
+            <param name="extension">
+                The file extension of the specified process.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
+                been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenCmd(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Executes the specified command if there is no process running that is matched with the
+                specified process name.
+                <para>
+                    If a matched process is still running, the task will wait until all matched
+                    processes has been closed.
+                </para>
+            </summary>
+            <param name="command">
+                The command to execute.
+            </param>
+            <param name="processName">
+                The name of the process to be waited.
             </param>
             <param name="runAsAdmin">
                 true to run this task with administrator privileges; otherwise, false.
@@ -13901,8 +13947,46 @@
         </member>
         <member name="T:SilDev.Reorganize">
             <summary>
-                Provides static methods for converting or reorganizing of data.
+                Provides static uncategorized extension methods for converting or reorganizing of data.
             </summary>
+        </member>
+        <member name="M:SilDev.Reorganize.AppendFormatLine(System.Text.StringBuilder,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+                Appends the string returned by processing a composite format string, which contains
+                zero or more format items followed by the default line terminator to the end, to this
+                <see cref="T:System.Text.StringBuilder"/> instance. Each format item is replaced by the string
+                representation of a corresponding argument in a parameter array using a specified
+                format provider.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be append.
+            </param>
+            <param name="provider">
+                An object that supplies culture-specific formatting information.
+            </param>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                An array of objects to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.AppendFormatLine(System.Text.StringBuilder,System.String,System.Object[])">
+            <summary>
+                Appends the string returned by processing a composite format string, which contains
+                zero or more format items followed by the default line terminator to the end, to this
+                <see cref="T:System.Text.StringBuilder"/> instance. Each format item is replaced by the string
+                representation of a corresponding argument in a parameter array.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be append.
+            </param>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                An array of objects to format.
+            </param>
         </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnits,System.Boolean,System.Boolean,SilDev.SizeOptions)">
             <summary>
