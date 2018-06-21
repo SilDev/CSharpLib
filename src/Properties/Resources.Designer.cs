@@ -61,125 +61,29 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CALL &quot;{0}&quot;.
+        ///   Looks up a localized string similar to {0}-{{1}}.backup.
         /// </summary>
-        internal static string Cmd_Call {
+        internal static string BackupFormat {
             get {
-                return ResourceManager.GetString("Cmd_Call", resourceCulture);
+                return ResourceManager.GetString("BackupFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /C CALL &quot;{0}&quot;.
+        ///   Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,NKg,ZT;I(x:xcQ5)^I.
         /// </summary>
-        internal static string Cmd_CallPre {
+        internal static string C91Path {
             get {
-                return ResourceManager.GetString("Cmd_CallPre", resourceCulture);
+                return ResourceManager.GetString("C91Path", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to COPY /Y &quot;{0}&quot; &quot;{1}&quot;.
+        ///   Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,O3v)R1;%`n58cj0OIhZ.
         /// </summary>
-        internal static string Cmd_Copy {
+        internal static string C91PathN {
             get {
-                return ResourceManager.GetString("Cmd_Copy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to RMDIR /S /Q &quot;{0}&quot;.
-        /// </summary>
-        internal static string Cmd_DeleteDir {
-            get {
-                return ResourceManager.GetString("Cmd_DeleteDir", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to DEL /F /Q &quot;{0}&quot;.
-        /// </summary>
-        internal static string Cmd_DeleteFile {
-            get {
-                return ResourceManager.GetString("Cmd_DeleteFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to @ECHO OFF
-        ///ROBOCOPY &quot;{0}&quot; &quot;{1}&quot; /MIR
-        ///RMDIR /S /Q &quot;{0}&quot;
-        ///RMDIR /S /Q &quot;{1}&quot;
-        ///EXIT.
-        /// </summary>
-        internal static string Cmd_DeleteForce {
-            get {
-                return ResourceManager.GetString("Cmd_DeleteForce", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to @ECHO OFF
-        ///{0}
-        ///EXIT.
-        /// </summary>
-        internal static string Cmd_Script {
-            get {
-                return ResourceManager.GetString("Cmd_Script", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to TASKKILL /F /IM &quot;{0}&quot;.
-        /// </summary>
-        internal static string Cmd_Terminate {
-            get {
-                return ResourceManager.GetString("Cmd_Terminate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &quot; &amp;&amp; TASKKILL /F /IM &quot;.
-        /// </summary>
-        internal static string Cmd_TerminateJoin {
-            get {
-                return ResourceManager.GetString("Cmd_TerminateJoin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to FOR /L %X in (1,0,2) DO (TASKLIST | FIND /I &quot;{0}&quot; &amp; IF ERRORLEVEL 1 ({1} &amp;&amp; EXIT)).
-        /// </summary>
-        internal static string Cmd_WaitForProcThenCmd {
-            get {
-                return ResourceManager.GetString("Cmd_WaitForProcThenCmd", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PING LOCALHOST -n {0} &gt; NUL &amp;&amp; {1}.
-        /// </summary>
-        internal static string Cmd_WaitThenCmd {
-            get {
-                return ResourceManager.GetString("Cmd_WaitThenCmd", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to cmd.exe.
-        /// </summary>
-        internal static string CmdFile {
-            get {
-                return ResourceManager.GetString("CmdFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to %System%\cmd.exe.
-        /// </summary>
-        internal static string CmdPath {
-            get {
-                return ResourceManager.GetString("CmdPath", resourceCulture);
+                return ResourceManager.GetString("C91PathN", resourceCulture);
             }
         }
         
@@ -238,9 +142,9 @@ namespace SilDev.Properties {
         /// <summary>
         ///   Looks up a localized string similar to %TEMP%\tmp-{0}.
         /// </summary>
-        internal static string TempDir {
+        internal static string TempDirFormat {
             get {
-                return ResourceManager.GetString("TempDir", resourceCulture);
+                return ResourceManager.GetString("TempDirFormat", resourceCulture);
             }
         }
     }

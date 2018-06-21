@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-21 16:27
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,7 +22,9 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Management;
+    using System.Resources;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Threading;
     using Microsoft.Win32.SafeHandles;
     using Properties;
@@ -712,14 +714,27 @@ namespace SilDev
                     cmd = $"/C {cmd}";
                 if (cmd.Length < 16)
                     throw new ArgumentNullException(nameof(cmd));
-                var path = PathEx.Combine(Resources.CmdPath);
+#if x86
+                var path = PathEx.Combine((Environment.Is64BitOperatingSystem ? Resources.C91PathN : Resources.C91Path));
+#else
+                var path = PathEx.Combine(GetCmd91(nameof(Resources.C91Path)));
+#endif
                 if ((path + cmd).Length > 8192)
                 {
-                    var batch = PathEx.Combine(Path.GetTempPath(), PathEx.GetTempFileName("tmp", ".cmd"));
-                    var content = cmd.Substring(3).Replace("FOR /L %", "FOR /L %%").Replace("EXIT /B", "EXIT");
-                    content = string.Format(Resources.Cmd_Script, content);
-                    File.WriteAllText(batch, content);
-                    cmd = string.Format(Resources.Cmd_CallPre, batch);
+                    var sb = new StringBuilder();
+                    var file = PathEx.Combine(Path.GetTempPath(), PathEx.GetTempFileName("tmp", ".cmd"));
+                    var content = cmd.Substring(3).Replace("FOR /L %", "FOR /L %%").RemoveText("EXIT /B").TrimEnd(null);
+
+                    if (!content.StartsWithEx("@ECHO OFF", "@ECHO ON"))
+                        sb.AppendLine("@ECHO OFF");
+                    if (content.EndsWithEx("EXIT"))
+                        content = content.Substring(0, content.Length - 4).TrimEnd('\r', '\n', '&');
+                    sb.AppendLine(content);
+                    sb.AppendFormat("DEL /F /Q \"{0}\"", file);
+                    sb.AppendLine("EXIT");
+
+                    File.WriteAllText(file, sb.ToString());
+                    cmd = $"/C CALL \"{file}\"";
                 }
                 var psi = new ProcessStartInfo
                 {
@@ -795,7 +810,11 @@ namespace SilDev
         {
             try
             {
-                var path = PathEx.Combine(Resources.CmdPath);
+#if x86
+                var path = PathEx.Combine((Environment.Is64BitOperatingSystem ? Resources.C91PathN : Resources.C91Path));
+#else
+                var path = PathEx.Combine(GetCmd91(nameof(Resources.C91Path)));
+#endif
                 using (var p = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -822,6 +841,20 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return false;
+            }
+        }
+
+        internal static string GetCmd91(string key)
+        {
+            try
+            {
+                var rm = new ResourceManager($"{nameof(SilDev)}.{nameof(Properties)}.{nameof(Resources)}", typeof(Resources).Assembly);
+                return rm.GetString(key).DecodeString(BinaryToTextEncodings.Base91);
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return string.Empty;
             }
         }
 
@@ -962,7 +995,7 @@ namespace SilDev
                     return false;
                 var dest = PathEx.Combine(destPath);
                 int exitCode;
-                using (var p = Send(string.Format(Resources.Cmd_Copy, src, dest), runAsAdmin, false))
+                using (var p = Send($"COPY /Y \"{src}\" \"{dest}\"", runAsAdmin, false))
                 {
                     if (!wait)
                         return true;
@@ -989,11 +1022,11 @@ namespace SilDev
             {
                 if (string.IsNullOrWhiteSpace(path))
                     return false;
-                var fullPath = PathEx.Combine(path);
-                if (!PathEx.DirOrFileExists(fullPath))
+                var src = PathEx.Combine(path);
+                if (!PathEx.DirOrFileExists(src))
                     return true;
                 int exitCode;
-                using (var p = Send(string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, fullPath), runAsAdmin, false))
+                using (var p = Send(string.Format(GetCmd91(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\""), src), runAsAdmin, false))
                 {
                     if (!wait)
                         return true;
@@ -1005,7 +1038,47 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Waits before the system is instructed to delete the target at the specified path.
+            ///     Waits for the specified seconds to execute the specified command.
+            /// </summary>
+            /// <param name="command">
+            ///     The command to execute.
+            /// </param>
+            /// <param name="seconds">
+            ///     The time to wait in seconds.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitThenCmd(string command, int seconds = 5, bool runAsAdmin = false, bool dispose = true)
+            {
+                if (string.IsNullOrWhiteSpace(command))
+                    return null;
+                var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
+                return Send($"PING LOCALHOST -n {time} > NUL && {command}", runAsAdmin, dispose);
+            }
+
+            /// <summary>
+            ///     Waits for the specified seconds to execute the specified command.
+            /// </summary>
+            /// <param name="command">
+            ///     The command to execute.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitThenCmd(string command, bool runAsAdmin, bool dispose = true) =>
+                WaitThenCmd(command, 5, runAsAdmin, dispose);
+
+            /// <summary>
+            ///     Waits for the specified seconds to delete the target at the specified path.
             /// </summary>
             /// <param name="path">
             ///     The path to the file or directory to be deleted.
@@ -1024,14 +1097,87 @@ namespace SilDev
             {
                 if (string.IsNullOrWhiteSpace(path))
                     return null;
-                var fullPath = PathEx.Combine(path);
-                if (!PathEx.DirOrFileExists(fullPath))
+                var src = PathEx.Combine(path);
+                if (!PathEx.DirOrFileExists(src))
                     return null;
                 var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, fullPath);
-                command = string.Format(Resources.Cmd_WaitThenCmd, time, command);
-                return Send(command, runAsAdmin, dispose);
+                var command = string.Format(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                return WaitThenCmd(command, time, runAsAdmin, dispose);
             }
+
+            /// <summary>
+            ///     Waits for the specified seconds to delete the target at the specified path.
+            /// </summary>
+            /// <param name="path">
+            ///     The path to the file or directory to be deleted.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitThenDelete(string path, bool runAsAdmin, bool dispose = true) =>
+                WaitThenDelete(path, 5, runAsAdmin, dispose);
+
+            /// <summary>
+            ///     Executes the specified command if there is no process running that is matched with the
+            ///     specified process name.
+            ///     <para>
+            ///         If a matched process is still running, the task will wait until all matched
+            ///         processes has been closed.
+            ///     </para>
+            /// </summary>
+            /// <param name="command">
+            ///     The command to execute.
+            /// </param>
+            /// <param name="processName">
+            ///     The name of the process to be waited.
+            /// </param>
+            /// <param name="extension">
+            ///     The file extension of the specified process.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitForExitThenCmd(string command, string processName, string extension, bool runAsAdmin = false, bool dispose = true)
+            {
+                if (string.IsNullOrWhiteSpace(command) || string.IsNullOrWhiteSpace(processName))
+                    return null;
+                var name = processName;
+                if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
+                    name += extension;
+                return Send($"FOR /L %X in (1,0,2) DO (TASKLIST | FIND /I \"{name}\" & IF ERRORLEVEL 1 ({command} && EXIT))", runAsAdmin, dispose);
+            }
+
+            /// <summary>
+            ///     Executes the specified command if there is no process running that is matched with the
+            ///     specified process name.
+            ///     <para>
+            ///         If a matched process is still running, the task will wait until all matched
+            ///         processes has been closed.
+            ///     </para>
+            /// </summary>
+            /// <param name="command">
+            ///     The command to execute.
+            /// </param>
+            /// <param name="processName">
+            ///     The name of the process to be waited.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Component"/>, if this task has
+            ///     been started; otherwise, false.
+            /// </param>
+            public static Process WaitForExitThenCmd(string command, string processName, bool runAsAdmin = false, bool dispose = true) =>
+                WaitForExitThenCmd(command, processName, ".exe", runAsAdmin, dispose);
 
             /// <summary>
             ///     Deletes the target at the specified path if there is no process running that is
@@ -1061,15 +1207,11 @@ namespace SilDev
             {
                 if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(processName))
                     return null;
-                var fullPath = PathEx.Combine(path);
-                if (!PathEx.DirOrFileExists(fullPath))
+                var src = PathEx.Combine(path);
+                if (!PathEx.DirOrFileExists(src))
                     return null;
-                var name = processName;
-                if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
-                    name += extension;
-                var command = string.Format(PathEx.IsDir(fullPath) ? Resources.Cmd_DeleteDir : Resources.Cmd_DeleteFile, fullPath);
-                command = string.Format(Resources.Cmd_WaitForProcThenCmd, name, command);
-                return Send(command, runAsAdmin, dispose);
+                var command = string.Format(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                return WaitForExitThenCmd(command, processName, extension, runAsAdmin, dispose);
             }
 
             /// <summary>
@@ -1119,8 +1261,7 @@ namespace SilDev
                 var name = processName;
                 if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
                     name += extension;
-                var command = string.Format(Resources.Cmd_Terminate, name);
-                return Send(command, runAsAdmin, dispose);
+                return Send($"TASKKILL /F /IM \"{name}\"", runAsAdmin, dispose);
             }
 
             /// <summary>
@@ -1162,7 +1303,7 @@ namespace SilDev
                 var names = processNames.Where(Comparison.IsNotEmpty);
                 if (!string.IsNullOrWhiteSpace(extension))
                     names = names.Select(x => !x.EndsWithEx(extension) ? x + extension : x);
-                var command = string.Format(Resources.Cmd_Terminate, names.Join(Resources.Cmd_TerminateJoin));
+                var command = $"TASKKILL /F /IM \"{names.Join("\" && TASKKILL /F /IM \"")}\"";
                 return Send(command, runAsAdmin, dispose);
             }
 

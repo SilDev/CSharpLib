@@ -117,54 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CmdFile" xml:space="preserve">
-    <value>cmd.exe</value>
-  </data>
-  <data name="CmdPath" xml:space="preserve">
-    <value>%System%\cmd.exe</value>
-  </data>
-  <data name="Cmd_Call" xml:space="preserve">
-    <value>CALL "{0}"</value>
-  </data>
-  <data name="Cmd_CallPre" xml:space="preserve">
-    <value>/C CALL "{0}"</value>
-  </data>
-  <data name="Cmd_Copy" xml:space="preserve">
-    <value>COPY /Y "{0}" "{1}"</value>
-  </data>
-  <data name="Cmd_DeleteDir" xml:space="preserve">
-    <value>RMDIR /S /Q "{0}"</value>
-  </data>
-  <data name="Cmd_DeleteFile" xml:space="preserve">
-    <value>DEL /F /Q "{0}"</value>
-  </data>
-  <data name="Cmd_DeleteForce" xml:space="preserve">
-    <value>@ECHO OFF
-ROBOCOPY "{0}" "{1}" /MIR
-RMDIR /S /Q "{0}"
-RMDIR /S /Q "{1}"
-EXIT</value>
-  </data>
-  <data name="Cmd_Script" xml:space="preserve">
-    <value>@ECHO OFF
-{0}
-EXIT</value>
-  </data>
-  <data name="Cmd_Terminate" xml:space="preserve">
-    <value>TASKKILL /F /IM "{0}"</value>
-  </data>
-  <data name="Cmd_TerminateJoin" xml:space="preserve">
-    <value>" &amp;&amp; TASKKILL /F /IM "</value>
-  </data>
-  <data name="Cmd_WaitForProcThenCmd" xml:space="preserve">
-    <value>FOR /L %X in (1,0,2) DO (TASKLIST | FIND /I "{0}" &amp; IF ERRORLEVEL 1 ({1} &amp;&amp; EXIT))</value>
-  </data>
-  <data name="Cmd_WaitThenCmd" xml:space="preserve">
-    <value>PING LOCALHOST -n {0} &gt; NUL &amp;&amp; {1}</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="DimEmptyImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DimEmptyImage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SearchImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SearchImage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SizeGripImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SizeGripImage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BackupFormat" xml:space="preserve">
+    <value>{0}-{{1}}.backup</value>
+  </data>
+  <data name="C91Path" xml:space="preserve">
+    <value>&gt;1Q&gt;[[h;t7%&amp;i9kgW,NKg,ZT;I(x:xcQ5)^I</value>
+    <comment>%SystemRoot%\System32\cmd.exe</comment>
+  </data>
+  <data name="C91PathN" xml:space="preserve">
+    <value>&gt;1Q&gt;[[h;t7%&amp;i9kgW,O3v)R1;%`n58cj0OIhZ</value>
+    <comment>%SystemRoot%\Sysnative\cmd.exe</comment>
   </data>
   <data name="ReferenceDirs" xml:space="preserve">
     <value>%CurrentDir%\Bin
@@ -185,15 +157,11 @@ EXIT</value>
 %MyDocuments%\Visual Studio 2015\References\dotNet4\irrKlang
 %MyDocuments%\Visual Studio 2017\References
 %MyDocuments%\Visual Studio 2017\References\dotNet4\irrKlang
+%MyDocuments%\Visual Studio 2019\References
+%MyDocuments%\Visual Studio 2019\References\dotNet4\irrKlang
 %TEMP%\tmp-{0}</value>
   </data>
-  <data name="SearchImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SearchImage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SizeGripImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SizeGripImage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="TempDir" xml:space="preserve">
+  <data name="TempDirFormat" xml:space="preserve">
     <value>%TEMP%\tmp-{0}</value>
   </data>
 </root>

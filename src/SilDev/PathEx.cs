@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-21 16:27
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -749,6 +749,8 @@ namespace SilDev
         /// </param>
         public static bool CreateSymbolicLink(string linkPath, string destPath, bool destIsDir, bool backup = false, bool elevated = false)
         {
+            #region p/invoke
+
             /*
              * The idea was to replace the code below with this code that uses the
              * p/invoke method to create symbolic links. But this doesn't work
@@ -823,6 +825,8 @@ namespace SilDev
             return created;
             */
 
+            #endregion
+
             var dest = Combine(destPath);
             try
             {
@@ -847,9 +851,8 @@ namespace SilDev
             try
             {
                 var linkDir = Path.GetDirectoryName(link);
-                if (!Directory.Exists(linkDir))
-                    if (linkDir != null)
-                        Directory.CreateDirectory(linkDir);
+                if (!Directory.Exists(linkDir) && linkDir != null)
+                    Directory.CreateDirectory(linkDir);
             }
             catch (Exception ex)
             {
@@ -857,33 +860,38 @@ namespace SilDev
                 return false;
             }
 
-            var cmd = string.Empty;
-            if (backup)
-                if (DirOrFileExists(link))
-                    if (!DirectoryEx.IsLink(link))
-                        cmd += $"MOVE /Y \"{link}\" \"{link}-{{{EnvironmentEx.MachineId}}}.backup\"";
-                    else
-                        DestroySymbolicLink(link, true, true, elevated);
+            var sb = new StringBuilder();
+            if (backup && DirOrFileExists(link))
+                if (!DirectoryEx.IsLink(link))
+                {
+                    var prior = string.Format(Resources.BackupFormat, link, EnvironmentEx.MachineId);
+                    sb.AppendFormat("MOVE /Y \"{0}\" \"{1}\"", link, prior);
+                }
+                else
+                    DestroySymbolicLink(link, true, true, elevated);
 
             if (DirOrFileExists(link))
             {
-                if (!string.IsNullOrEmpty(cmd))
-                    cmd += " & ";
-                cmd += $"{(destIsDir ? "RD /S /Q" : "DEL /F /Q")} \"{link}\"";
+                if (sb.Length > 0)
+                    sb.Append(" & ");
+                sb.AppendFormat(destIsDir ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", link);
             }
 
             if (DirOrFileExists(dest))
             {
-                if (!string.IsNullOrEmpty(cmd))
-                    cmd += " & ";
-                cmd += $"MKLINK {(destIsDir ? "/J " : string.Empty)}\"{link}\" \"{dest}\" && ATTRIB +H \"{link}\" /L";
+                if (sb.Length > 0)
+                    sb.Append(" & ");
+                sb.Append("MKLINK");
+                if (destIsDir)
+                    sb.Append(" /J");
+                sb.AppendFormat(" \"{0}\" \"{1}\" && ATTRIB +H \"{0}\" /L", link, dest);
             }
 
-            if (string.IsNullOrEmpty(cmd))
+            if (sb.Length <= 0)
                 return false;
 
             int? exitCode;
-            using (var p = ProcessEx.Send(cmd, elevated, false))
+            using (var p = ProcessEx.Send(sb.ToString(), elevated, false))
             {
                 if (p?.HasExited == false)
                     p.WaitForExit();
@@ -912,18 +920,25 @@ namespace SilDev
         {
             var link = Combine(path);
             var isLink = DirOrFileIsLink(link);
-            var cmd = $"{(pathIsDir ? "RD /Q" : "DEL /F /Q")}{(!pathIsDir && isLink ? " /A:L" : string.Empty)} \"{link}\"";
-            if (backup && DirOrFileExists($"{link}-{{{EnvironmentEx.MachineId}}}.backup"))
-                cmd += $" & MOVE /Y \"{link}-{{{EnvironmentEx.MachineId}}}.backup\" \"{link}\"";
-            if (string.IsNullOrEmpty(cmd))
+
+            var sb = new StringBuilder();
+            sb.AppendFormat(pathIsDir ? "RMDIR /Q \"{0}\"" : isLink ? "DEL /F /Q /A:L \"{0}\"" : "DEL /F /Q \"{0}\"", link);
+
+            var prior = string.Format(Resources.BackupFormat, link, EnvironmentEx.MachineId);
+            if (backup && DirOrFileExists(prior))
+                sb.AppendFormat(" && MOVE /Y \"{0}\" \"{1}\"", prior, link);
+
+            if (sb.Length <= 0)
                 return false;
+
             int? exitCode;
-            using (var p = ProcessEx.Send(cmd, elevated, false))
+            using (var p = ProcessEx.Send(sb.ToString(), elevated, false))
             {
                 if (p?.HasExited == false)
                     p.WaitForExit();
                 exitCode = p?.ExitCode;
             }
+
             return exitCode == 0 && isLink;
         }
 
@@ -1011,6 +1026,7 @@ namespace SilDev
             {
                 if (!DirOrFileExists(target))
                     throw new PathNotFoundException(target);
+
                 var locked = false;
                 using (var current = Process.GetCurrentProcess())
                 {
@@ -1028,31 +1044,34 @@ namespace SilDev
                             p?.Dispose();
                         }
                 }
+
+                var sb = new StringBuilder();
                 var curName = $"{ProcessEx.CurrentName}.exe";
                 if (IsDir(target))
                 {
                     var tmpDir = Combine(Path.GetTempPath(), GetTempDirName());
                     if (!Directory.Exists(tmpDir))
                         Directory.CreateDirectory(tmpDir);
+
                     var helper = Combine(Path.GetTempPath(), GetTempFileName("tmp", ".cmd"));
-                    var content = string.Format(Resources.Cmd_DeleteForce, tmpDir, target);
-                    File.WriteAllText(helper, content);
-                    var command = string.Format(Resources.Cmd_Call, helper);
+                    sb.AppendLine("@ECHO OFF");
+                    sb.AppendFormatLine("ROBOCOPY \"{0}\" \"{1}\" /MIR", tmpDir, target);
+                    sb.AppendFormatLine("RMDIR /S /Q \"{0}\"", tmpDir);
+                    sb.AppendFormatLine("RMDIR /S /Q \"{0}\"", target);
+                    sb.AppendLine("EXIT");
+                    File.WriteAllText(helper, sb.ToString());
+
+                    var call = $"CALL \"{helper}\"";
                     if (locked)
-                    {
-                        command = string.Format(Resources.Cmd_WaitForProcThenCmd, curName, command);
-                        ProcessEx.Send(command, elevated);
-                    }
+                        ProcessEx.SendHelper.WaitForExitThenCmd(call, curName, elevated);
                     else
-                        using (var p = ProcessEx.Send(command, elevated, false))
+                        using (var p = ProcessEx.Send(call, elevated, false))
                             if (p?.HasExited == false)
                                 p.WaitForExit(timelimit);
+
                     DirectoryEx.Delete(tmpDir);
                     DirectoryEx.Delete(target);
-                    command = string.Format(Resources.Cmd_DeleteFile, helper);
-                    command = string.Format(Resources.Cmd_WaitThenCmd, 5, command);
-                    command = string.Format(Resources.Cmd_WaitForProcThenCmd, curName, command);
-                    ProcessEx.Send(command);
+                    ProcessEx.SendHelper.WaitThenDelete(helper, elevated);
                 }
                 else
                     try
@@ -1061,14 +1080,10 @@ namespace SilDev
                     }
                     catch
                     {
-                        var command = string.Format(Resources.Cmd_DeleteFile, target);
                         if (locked)
-                        {
-                            command = string.Format(Resources.Cmd_WaitForProcThenCmd, curName, command);
-                            ProcessEx.Send(command, true);
-                        }
+                            ProcessEx.SendHelper.WaitForExitThenDelete(target, curName, true);
                         else
-                            using (var p = ProcessEx.Send(command, elevated, false))
+                            using (var p = ProcessEx.Send(sb.ToString(), elevated, false))
                                 if (p?.HasExited == false)
                                     p.WaitForExit(timelimit);
                     }
