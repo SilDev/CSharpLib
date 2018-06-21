@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-21 16:31
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -95,7 +95,7 @@ namespace SilDev
                 if (!File.Exists(src))
                     return defValue;
                 TResult result;
-                using (var fs = new FileStream(src, FileMode.Open))
+                using (var fs = new FileStream(src, FileMode.Open, FileAccess.Read))
                     if (decompress)
                         using (var ms = new MemoryStream())
                         {

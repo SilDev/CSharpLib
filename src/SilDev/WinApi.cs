@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-06-09 10:51
+// Version:  2018-06-21 16:31
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -3411,11 +3411,8 @@ namespace SilDev
                     if (!File.Exists(file))
                         throw new PathNotFoundException(file);
                     var buffer = new byte[256];
-                    using (var fs = new FileStream(file, FileMode.Open))
-                        if (fs.Length >= 256)
-                            fs.Read(buffer, 0, 256);
-                        else
-                            fs.Read(buffer, 0, (int)fs.Length);
+                    using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                        fs.Read(buffer, 0, fs.Length >= buffer.Length ? buffer.Length : (int)fs.Length);
                     NativeMethods.FindMimeFromData(IntPtr.Zero, null, buffer, 256, null, dwMimeFlags, out var mimetype, 0);
                     var mime = Marshal.PtrToStringUni(mimetype);
                     Marshal.FreeCoTaskMem(mimetype);
@@ -8913,6 +8910,7 @@ namespace SilDev
 #pragma warning disable CS1591
             [FieldOffset(0)]
             public MouseInput Mouse;
+
             /*
             [FieldOffset(1)]
             public KeyboardInput Keyboard;
