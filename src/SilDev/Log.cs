@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-21 18:07
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -269,37 +269,71 @@ namespace SilDev
             {
                 if (!_firstCall || DebugMode < 1 || !_firstEntry && string.IsNullOrEmpty(logMessage))
                     return;
+
+                Build:
                 if (!_firstEntry)
-                    Builder.AppendLine(DateTime.Now.ToString(DateTimeFormat));
+                {
+                    Builder.Append(ProcessEx.CurrentId);
+                    Builder.Append(" ");
+                    Builder.Append(DateTime.Now.ToString(DateTimeFormat));
+                    Builder.Append(" | ");
+                }
                 else
                 {
                     _firstEntry = false;
-                    if (Directory.Exists(FileDir) && File.Exists(FilePath))
-                    {
-                        Builder.AppendLine();
-                        Builder.AppendLine(new string('-', 120));
-                        Builder.AppendLine();
-                        AppendToFile();
-                    }
-                    Builder.AppendLine(DateTime.Now.ToString(DateTimeFormat));
-                    Builder.Append("System: '");
+                    var separator = new string('=', 65);
+
+                    Builder.Append("New Process ");
+                    Builder.Append(DateTime.Now.ToString(DateTimeFormat));
+                    Builder.Append(" ");
+
+                    var front = Builder.ToString();
+                    Builder.AppendLine(separator);
+
+                    Builder.Append(front);
+                    Builder.Append(" Operating System: '");
                     Builder.Append(Environment.OSVersion);
-                    Builder.Append("'; Runtime: '");
+                    Builder.AppendLine("'");
+
+                    Builder.Append(front);
+                    Builder.Append(" DotNET Runtime:   '");
                     Builder.Append(EnvironmentEx.Version);
-                    Builder.Append("'; Assembly: '");
-                    Builder.Append(AssemblyName);
-                    Builder.Append("'; Version: '");
+                    Builder.AppendLine("'");
+
+                    Builder.Append(front);
+                    Builder.Append(" Process ID:       '");
+                    Builder.Append(ProcessEx.CurrentId);
+                    Builder.AppendLine("'");
+
+                    Builder.Append(front);
+                    Builder.Append(" Process Name:     '");
+                    Builder.Append(ProcessEx.CurrentName);
+                    Builder.AppendLine("'");
+
+                    Builder.Append(front);
+                    Builder.Append(" File Path:        '");
+                    Builder.Append(PathEx.LocalPath);
+                    Builder.AppendLine("'");
+
+                    Builder.Append(front);
+                    Builder.Append(" File Version:     '");
                     Builder.Append(AssemblyVersion);
-                    Builder.AppendLine("';");
+                    Builder.AppendLine("'");
+
+                    Builder.Append(front);
+                    Builder.AppendLine(separator);
+
                     Builder.AppendLine();
                     if (!string.IsNullOrEmpty(logMessage))
-                        Builder.AppendLine(DateTime.Now.ToString(DateTimeFormat));
+                        goto Build;
                 }
+
                 if (!string.IsNullOrEmpty(logMessage))
                 {
                     Builder.AppendLine(logMessage);
                     Builder.AppendLine();
                 }
+
                 var content = AppendToFile();
                 if (DebugMode < 2)
                 {
@@ -308,9 +342,11 @@ namespace SilDev
                     Environment.ExitCode = 1;
                     Environment.Exit(Environment.ExitCode);
                 }
+
                 if (!_conIsOpen)
                 {
                     _conIsOpen = true;
+
                     WinApi.NativeMethods.AllocConsole();
                     var hWnd = WinApi.NativeMethods.GetConsoleWindow();
                     if (hWnd != IntPtr.Zero)
@@ -319,9 +355,11 @@ namespace SilDev
                         if (hMenu != IntPtr.Zero)
                             WinApi.NativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
                     }
+
                     _stdHandle = WinApi.NativeMethods.GetStdHandle(-0xb);
                     _sfh = new SafeFileHandle(_stdHandle, true);
                     _fs = new FileStream(_sfh, FileAccess.Write);
+
                     var title = $"Debug Console ('{AssemblyName}')";
                     if (Console.Title != title)
                     {
@@ -335,8 +373,13 @@ namespace SilDev
                     }
                 }
                 Console.Write(content);
-                _sw = new StreamWriter(_fs, Encoding.ASCII) { AutoFlush = true };
+
+                _sw = new StreamWriter(_fs, Encoding.ASCII)
+                {
+                    AutoFlush = true
+                };
                 Console.SetOut(_sw);
+
                 if (!exitProcess)
                     return;
                 Environment.ExitCode = 1;
