@@ -3802,7 +3802,7 @@
                 algorithms must derive.
             </summary>
         </member>
-        <member name="P:SilDev.Crypto.BinaryToTextEncoding.Separator">
+        <member name="F:SilDev.Crypto.BinaryToTextEncoding.Separator">
             <summary>
                 Gets the separator.
             </summary>
@@ -4476,6 +4476,11 @@
         <member name="T:SilDev.Crypto.Base91">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Crypto.Base91"/> class.
+            </summary>
+        </member>
+        <member name="F:SilDev.Crypto.Base91.DefaultCharacterTable91">
+            <summary>
+                The default character table for translation.
             </summary>
         </member>
         <member name="P:SilDev.Crypto.Base91.CharacterTable91">
