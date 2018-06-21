@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-06-21 16:27
+// Version:  2018-06-21 17:36
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -36,6 +36,7 @@ namespace SilDev
     public static class ProcessEx
     {
         private static IntPtr _currentHandle;
+        private static int? _currentId;
         private static string _currentName;
 
         /// <summary>
@@ -50,6 +51,21 @@ namespace SilDev
                 using (var p = Process.GetCurrentProcess())
                     _currentHandle = p.Handle;
                 return _currentHandle;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the unique identifier of the current process instance.
+        /// </summary>
+        public static int CurrentId
+        {
+            get
+            {
+                if (_currentId.HasValue)
+                    return (int)_currentId;
+                using (var p = Process.GetCurrentProcess())
+                    _currentId = p.Id;
+                return (int)_currentId;
             }
         }
 
