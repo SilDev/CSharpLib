@@ -98,7 +98,8 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to %CurrentDir%\Bin
+        ///   Looks up a localized string similar to %CurrentDir%
+        ///%CurrentDir%\Bin
         ///%CurrentDir%\Binaries
         ///%ApplicationData%\References
         ///%ApplicationData%\References\dotNet4\irrKlang
@@ -111,7 +112,7 @@ namespace SilDev.Properties {
         ///%MyDocuments%\References
         ///%MyDocuments%\References\dotNet4\irrKlang
         ///%MyDocuments%\Visual Studio\References
-        ///%MyDocuments%\Visual Studio\References\d [rest of string was truncated]&quot;;.
+        ///%MyDocuments%\Visual Studi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ReferenceDirs {
             get {

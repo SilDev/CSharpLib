@@ -139,7 +139,8 @@
     <comment>%SystemRoot%\Sysnative\cmd.exe</comment>
   </data>
   <data name="ReferenceDirs" xml:space="preserve">
-    <value>%CurrentDir%\Bin
+    <value>%CurrentDir%
+%CurrentDir%\Bin
 %CurrentDir%\Binaries
 %ApplicationData%\References
 %ApplicationData%\References\dotNet4\irrKlang
