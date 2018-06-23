@@ -42,7 +42,8 @@
         </member>
         <member name="P:SilDev.Properties.Resources.ReferenceDirs">
              <summary>
-               Looks up a localized string similar to %CurrentDir%\Bin
+               Looks up a localized string similar to %CurrentDir%
+            %CurrentDir%\Bin
             %CurrentDir%\Binaries
             %ApplicationData%\References
             %ApplicationData%\References\dotNet4\irrKlang
@@ -55,7 +56,7 @@
             %MyDocuments%\References
             %MyDocuments%\References\dotNet4\irrKlang
             %MyDocuments%\Visual Studio\References
-            %MyDocuments%\Visual Studio\References\d [rest of string was truncated]&quot;;.
+            %MyDocuments%\Visual Studi [rest of string was truncated]&quot;;.
              </summary>
         </member>
         <member name="P:SilDev.Properties.Resources.SearchImage">
@@ -6932,6 +6933,25 @@
             </param>
             <exception cref="T:System.ComponentModel.Win32Exception">
             </exception>
+        </member>
+        <member name="M:SilDev.FileEx.GetSignatureSubject(System.String,System.Boolean)">
+            <summary>
+                Gets the subject distinguished name from the certificate of the specified file.
+            </summary>
+            <param name="path">
+                The path to the file to be checked.
+            </param>
+            <param name="multiLine">
+                true if the return string should contain carriage returns; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetSignatureStatus(System.String)">
+            <summary>
+                Gets the certificate status of the specified file.
+            </summary>
+            <param name="path">
+                The path to the file to be checked.
+            </param>
         </member>
         <member name="M:SilDev.FileEx.GetVersion(System.IO.FileInfo)">
             <summary>
