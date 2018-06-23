@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-06-23 22:44
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -411,7 +411,7 @@ namespace SilDev
             {
                 try
                 {
-                    if (!IrrKlangInitializer.AssemblyLoaded && !IrrKlangInitializer.LoadAssembly())
+                    if (IrrKlangReference.Assembly == null)
                         throw new NotSupportedException("The required assembly could not be found.");
                     var file = PathEx.Combine(path);
                     if (!File.Exists(file))
@@ -420,7 +420,7 @@ namespace SilDev
                     if (!_assemblyFinalizer)
                     {
                         curDir = Directory.GetCurrentDirectory();
-                        Directory.SetCurrentDirectory(IrrKlangInitializer.AssemblyDirectory);
+                        Directory.SetCurrentDirectory(IrrKlangReference.Location);
                     }
                     if (WindowsPlayer.GetSoundVolume() != volume)
                         WindowsPlayer.SetSoundVolume(volume);
@@ -455,8 +455,8 @@ namespace SilDev
             {
                 try
                 {
-                    if (!IrrKlangInitializer.AssemblyLoaded)
-                        throw new NotSupportedException();
+                    if (IrrKlangReference.Assembly == null)
+                        throw new NotSupportedException("The required assembly could not be found.");
                     Player.Stop();
                 }
                 catch (Exception ex)
