@@ -35,10 +35,6 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="irrKlang.NET4">
-      <HintPath>..\..\..\References\dotNet4\irrKlang\x86\irrKlang.NET4.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
@@ -82,7 +78,8 @@
     <Compile Include="SilDev\Forms\RichTextBoxEx.cs" />
     <Compile Include="SilDev\Forms\TextBoxEx.cs" />
     <Compile Include="SilDev\Intern\IrrKlangEngine\Player.cs" />
-    <Compile Include="SilDev\Intern\IrrKlangInitializer.cs" />
+    <Compile Include="SilDev\Intern\IrrKlangReference.cs" />
+    <Compile Include="SilDev\Intern\PowerShellReference.cs" />
     <Compile Include="SilDev\Investment\CounterInvestor.cs" />
     <Compile Include="SilDev\Investment\RandomInvestor.cs" />
     <Compile Include="SilDev\QuickWmi\Win32_OperatingSystem.cs" />
