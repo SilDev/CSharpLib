@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-06-21 16:31
+// Version:  2018-06-23 22:46
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,7 +22,9 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Security.Cryptography.X509Certificates;
     using System.Text;
+    using Intern;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="File"/> class to perform file
@@ -1053,6 +1055,85 @@ namespace SilDev
         {
             var path = fileInfo?.FullName;
             return path != null ? GetLocks(new[] { path }) : null;
+        }
+
+        /// <summary>
+        ///     Gets the subject distinguished name from the certificate of the specified file.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to the file to be checked.
+        /// </param>
+        /// <param name="multiLine">
+        ///     true if the return string should contain carriage returns; otherwise, false.
+        /// </param>
+        public static string GetSignatureSubject(string path, bool multiLine = true)
+        {
+            if (path == null)
+                return null;
+            var file = PathEx.Combine(path);
+            if (!File.Exists(file))
+                return null;
+            try
+            {
+                using (var cert1 = X509Certificate.CreateFromSignedFile(file))
+                    using (var cert2 = new X509Certificate2(cert1))
+                        return cert2.SubjectName.Format(multiLine);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the certificate status of the specified file.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to the file to be checked.
+        /// </param>
+        public static string GetSignatureStatus(string path)
+        {
+            if (path == null)
+                return null;
+
+            var file = PathEx.Combine(path);
+            if (!File.Exists(file))
+                return null;
+
+            try
+            {
+                if (PowerShellReference.Assembly == null)
+                    throw new NotSupportedException("The required assembly could not be found.");
+
+                const string rcClass = "System.Management.Automation.Runspaces.RunspaceConfiguration";
+                const string rcFunc = "Create";
+                var rcType = PowerShellReference.Assembly.GetType(rcClass, true);
+                var rcMethod = rcType.GetMethods().First(x => x.Name == rcFunc && x.GetParameters().Length == 0);
+
+                const string rfClass = "System.Management.Automation.Runspaces.RunspaceFactory";
+                const string rfFunc = "CreateRunspace";
+                const string rfPara = "runspaceConfiguration";
+                var rfType = PowerShellReference.Assembly.GetType(rfClass, true);
+                var rfMethod = rfType.GetMethods().First(x => x.Name == rfFunc && x.GetParameters().FirstOrDefault()?.Name == rfPara);
+
+                using (var rf = (dynamic)rfMethod.Invoke(null, new[] { (dynamic)rcMethod.Invoke(null, null) }))
+                {
+                    rf.Open();
+                    using (var p = rf.CreatePipeline())
+                    {
+                        const string command = "Get-AuthenticodeSignature \"{0}\"";
+                        p.Commands.AddScript(string.Format(command, path));
+                        var s = p.Invoke()[0];
+                        rf.Close();
+                        return s.Status.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return null;
+            }
         }
 
         /// <summary>
