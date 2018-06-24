@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2018-06-23 22:44
+// Version:  2018-06-24 03:32
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -395,36 +395,26 @@ namespace SilDev
         {
             private static bool _assemblyFinalizer;
 
-            /// <summary>
-            ///     Plays the specified sound file.
-            /// </summary>
-            /// <param name="path">
-            ///     THe full path of the sound file to play.
-            /// </param>
-            /// <param name="loop">
-            ///     true to repeat the sound track; otherwise, false.
-            /// </param>
-            /// <param name="volume">
-            ///     The sound volume value, in percent.
-            /// </param>
-            public static void Play(string path, bool loop = false, int volume = 100)
+            private static void PlayIntern(dynamic source, bool loop, int volume)
             {
                 try
                 {
                     if (IrrKlangReference.Assembly == null)
                         throw new NotSupportedException("The required assembly could not be found.");
-                    var file = PathEx.Combine(path);
-                    if (!File.Exists(file))
-                        throw new PathNotFoundException(file);
+                    switch (source)
+                    {
+                        case null:
+                            throw new ArgumentNullException(nameof(source));
+                        case string file when !File.Exists(file):
+                            throw new PathNotFoundException(file);
+                    }
                     string curDir = null;
                     if (!_assemblyFinalizer)
                     {
                         curDir = Directory.GetCurrentDirectory();
                         Directory.SetCurrentDirectory(IrrKlangReference.Location);
                     }
-                    if (WindowsPlayer.GetSoundVolume() != volume)
-                        WindowsPlayer.SetSoundVolume(volume);
-                    Player.Play(file, loop);
+                    Player.Play(source, loop, volume / 100f);
                     if (curDir == null)
                         return;
                     _assemblyFinalizer = true;
@@ -437,16 +427,85 @@ namespace SilDev
             }
 
             /// <summary>
+            ///     Plays the sound data from the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The sound data to play.
+            /// </param>
+            /// <param name="loop">
+            ///     true to repeat the sound track; otherwise, false.
+            /// </param>
+            /// <param name="volume">
+            ///     The sound volume value, in percent.
+            /// </param>
+            public static void Play(Stream stream, bool loop = false, int volume = 100) =>
+                PlayIntern(stream, loop, volume);
+
+            /// <summary>
+            ///     Plays the sound data from the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The sound data to play.
+            /// </param>
+            /// <param name="volume">
+            ///     The sound volume value, in percent.
+            /// </param>
+            public static void Play(Stream stream, int volume) =>
+                PlayIntern(stream, false, volume);
+
+            /// <summary>
+            ///     Plays the sound data from the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sound data to play.
+            /// </param>
+            /// <param name="loop">
+            ///     true to repeat the sound track; otherwise, false.
+            /// </param>
+            /// <param name="volume">
+            ///     The sound volume value, in percent.
+            /// </param>
+            public static void Play(byte[] bytes, bool loop = false, int volume = 100) =>
+                PlayIntern(bytes, loop, volume);
+
+            /// <summary>
+            ///     Plays the sound data from the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sound data to play.
+            /// </param>
+            /// <param name="volume">
+            ///     The sound volume value, in percent.
+            /// </param>
+            public static void Play(byte[] bytes, int volume) =>
+                PlayIntern(bytes, false, volume);
+
+            /// <summary>
             ///     Plays the specified sound file.
             /// </summary>
             /// <param name="path">
-            ///     THe full path of the sound file to play.
+            ///     The file to play.
+            /// </param>
+            /// <param name="loop">
+            ///     true to repeat the sound track; otherwise, false.
+            /// </param>
+            /// <param name="volume">
+            ///     The sound volume value, in percent.
+            /// </param>
+            public static void Play(string path, bool loop = false, int volume = 100) =>
+                PlayIntern(path, loop, volume);
+
+            /// <summary>
+            ///     Plays the specified sound file.
+            /// </summary>
+            /// <param name="path">
+            ///     The file to play.
             /// </param>
             /// <param name="volume">
             ///     The sound volume value, in percent.
             /// </param>
             public static void Play(string path, int volume) =>
-                Play(path, false, volume);
+                PlayIntern(path, false, volume);
 
             /// <summary>
             ///     Stops playing sounds.
