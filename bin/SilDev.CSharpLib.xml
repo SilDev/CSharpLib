@@ -8728,12 +8728,62 @@
                 </para>
             </summary>
         </member>
+        <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.IO.Stream,System.Boolean,System.Int32)">
+            <summary>
+                Plays the sound data from the specified stream.
+            </summary>
+            <param name="stream">
+                The sound data to play.
+            </param>
+            <param name="loop">
+                true to repeat the sound track; otherwise, false.
+            </param>
+            <param name="volume">
+                The sound volume value, in percent.
+            </param>
+        </member>
+        <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.IO.Stream,System.Int32)">
+            <summary>
+                Plays the sound data from the specified stream.
+            </summary>
+            <param name="stream">
+                The sound data to play.
+            </param>
+            <param name="volume">
+                The sound volume value, in percent.
+            </param>
+        </member>
+        <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.Byte[],System.Boolean,System.Int32)">
+            <summary>
+                Plays the sound data from the specified sequence of bytes.
+            </summary>
+            <param name="bytes">
+                The sound data to play.
+            </param>
+            <param name="loop">
+                true to repeat the sound track; otherwise, false.
+            </param>
+            <param name="volume">
+                The sound volume value, in percent.
+            </param>
+        </member>
+        <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.Byte[],System.Int32)">
+            <summary>
+                Plays the sound data from the specified sequence of bytes.
+            </summary>
+            <param name="bytes">
+                The sound data to play.
+            </param>
+            <param name="volume">
+                The sound volume value, in percent.
+            </param>
+        </member>
         <member name="M:SilDev.Media.IrrKlangPlayer.Play(System.String,System.Boolean,System.Int32)">
             <summary>
                 Plays the specified sound file.
             </summary>
             <param name="path">
-                THe full path of the sound file to play.
+                The file to play.
             </param>
             <param name="loop">
                 true to repeat the sound track; otherwise, false.
@@ -8747,7 +8797,7 @@
                 Plays the specified sound file.
             </summary>
             <param name="path">
-                THe full path of the sound file to play.
+                The file to play.
             </param>
             <param name="volume">
                 The sound volume value, in percent.
