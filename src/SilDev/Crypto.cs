@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-21 18:49
+// Version:  2018-06-24 03:26
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -1417,7 +1417,7 @@ namespace SilDev
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                         foreach (var b in Convert.ToString(i, 2).PadLeft(8, '0').ToBytes())
                             WriteLine(so, b, lineLength, ref p);
                 }
@@ -1474,7 +1474,7 @@ namespace SilDev
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                     {
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
@@ -1546,7 +1546,7 @@ namespace SilDev
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                         foreach (var b in Convert.ToString(i, 8).PadLeft(3, '0').ToBytes())
                             WriteLine(so, b, lineLength, ref p);
                 }
@@ -1603,7 +1603,7 @@ namespace SilDev
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                     {
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
@@ -1675,7 +1675,7 @@ namespace SilDev
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                         foreach (var b in Convert.ToString(i, 10).PadLeft(3, '0').ToBytes())
                             WriteLine(so, b, lineLength, ref p);
                 }
@@ -1732,7 +1732,7 @@ namespace SilDev
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                     {
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
@@ -1804,7 +1804,7 @@ namespace SilDev
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                         foreach (var b in i.ToString("x2").PadLeft(2, '0').ToBytes())
                             WriteLine(so, b, lineLength, ref p);
                 }
@@ -1861,7 +1861,7 @@ namespace SilDev
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) > 0)
+                    while ((i = si.ReadByte()) != -1)
                     {
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
@@ -2246,7 +2246,7 @@ namespace SilDev
                     var n = 0;
                     var t = 0u;
                     var p = 0;
-                    while ((b = si.ReadByte()) > 0)
+                    while ((b = si.ReadByte()) != -1)
                     {
                         if (n + 1 < DecodeBlock.Length)
                         {
@@ -2331,7 +2331,7 @@ namespace SilDev
                     int b;
                     var n = 0;
                     var t = 0u;
-                    while ((b = si.ReadByte()) > 0)
+                    while ((b = si.ReadByte()) != -1)
                     {
                         if (b == 0x7a)
                         {
@@ -2461,7 +2461,7 @@ namespace SilDev
                     int b;
                     int[] ia = { 0, 0, 0 };
                     var p = 0;
-                    while ((b = si.ReadByte()) > 0)
+                    while ((b = si.ReadByte()) != -1)
                     {
                         ia[0] |= b << ia[1];
                         ia[1] += 8;
@@ -2543,7 +2543,7 @@ namespace SilDev
                         a91[i] = -1;
                     for (var i = 0; i < CharacterTable91.Length; i++)
                         a91[CharacterTable91[i]] = i;
-                    while ((b = si.ReadByte()) > 0)
+                    while ((b = si.ReadByte()) != -1)
                     {
                         switch (b)
                         {
@@ -2769,7 +2769,7 @@ namespace SilDev
             public override string EncryptStream(Stream stream)
             {
                 int i, x = 0xffff;
-                while ((i = stream.ReadByte()) > 0)
+                while ((i = stream.ReadByte()) != -1)
                     for (var j = 0; j < 8; j++)
                     {
                         if (((x ^ i) & 1) == 1)
@@ -2822,7 +2822,7 @@ namespace SilDev
             {
                 int i;
                 var ui = 0xffffffffu;
-                while ((i = stream.ReadByte()) > 0)
+                while ((i = stream.ReadByte()) != -1)
                 {
                     ui = ui ^ (uint)i;
                     for (var j = 0; j < 8; j++)
