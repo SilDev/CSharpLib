@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2018-06-25 20:34
+// Version:  2018-06-25 22:46
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,7 +20,6 @@ namespace SilDev.Drawing
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
-    using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Security;
@@ -421,6 +420,23 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
+        ///     Converts this image into a sequence of bytes.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to convert.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     image is null.
+        /// </exception>
+        public static byte[] ToBytes(this Image image)
+        {
+            if (!(image is Bitmap bmp))
+                throw new ArgumentNullException(nameof(image));
+            var converter = new ImageConverter();
+            return converter.ConvertTo(bmp, typeof(byte[])) as byte[];
+        }
+
+        /// <summary>
         ///     Gets the frames of the specified <see cref="Image"/>.
         /// </summary>
         /// <param name="image">
@@ -459,52 +475,68 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Tests whether the specified object is a <see cref="Bitmap"/> object and is
-        ///     equivalent to this <see cref="Bitmap"/> object.
+        ///     Returns the hash code for this <see cref="Bitmap"/> based on its sequence
+        ///     of bytes.
         /// </summary>
-        /// <param name="bitmap1">
-        ///     The first <see cref="Bitmap"/> object to compare.
+        /// <param name="bitmap">
+        ///     The <see cref="Bitmap"/> to get the hash code.
         /// </param>
-        /// <param name="bitmap2">
-        ///     The second <see cref="Bitmap"/> object to compare.
-        /// </param>
-        public static bool EqualsEx(this Bitmap bitmap1, Bitmap bitmap2)
+        public static int GetHashCodeEx(this Bitmap bitmap)
         {
-            if (bitmap1 == null)
-                return bitmap2 == null;
-            if (bitmap2 == null)
-                return false;
-            if (!bitmap1.PixelFormat.Equals(bitmap2.PixelFormat))
-                return false;
-            if (!bitmap1.RawFormat.Equals(bitmap2.RawFormat))
-                return false;
-            var hashes = new string[2];
-            for (var i = 0; i < hashes.Length; i++)
-                using (var ms = new MemoryStream())
-                {
-                    var bmp = i == 0 ? bitmap1 : bitmap2;
-                    bmp.Save(ms, bmp.RawFormat);
-                    hashes[i] = ms.ToArray().Encrypt(ChecksumAlgorithms.Sha256);
-                }
-            return hashes.First().Equals(hashes.Last());
+            var hasher = new Crypto.Sha256();
+            var bytes = bitmap?.ToBytes();
+            return hasher.EncryptBytes(bytes).GetHashCode();
         }
 
         /// <summary>
-        ///     Tests whether the specified object is a <see cref="Image"/> object and is
-        ///     equivalent to this <see cref="Image"/> object.
+        ///     Returns the hash code for this <see cref="Image"/> based on its sequence
+        ///     of bytes.
         /// </summary>
-        /// <param name="image1">
-        ///     The first <see cref="Image"/> object to compare.
+        /// <param name="image">
+        ///     The <see cref="Image"/> to get the hash code.
         /// </param>
-        /// <param name="image2">
-        ///     The second <see cref="Image"/> object to compare.
+        public static int GetHashCodeEx(this Image image) =>
+            (image as Bitmap).GetHashCodeEx();
+
+        /// <summary>
+        ///     Determines whether this <see cref="Bitmap"/> has the same value as the
+        ///     specified <see cref="Bitmap"/> based on its <see cref="PixelFormat"/>,
+        ///     <see cref="ImageFormat"/>, and <see cref="GetHashCodeEx(Bitmap)"/>.
+        /// </summary>
+        /// <param name="source">
+        ///     The <see cref="Bitmap"/> to check.
         /// </param>
-        public static bool EqualsEx(this Image image1, Image image2)
+        /// <param name="target">
+        ///     The <see cref="Bitmap"/> to compare.
+        /// </param>
+        public static bool EqualsEx(this Bitmap source, Bitmap target)
         {
-            var bmp1 = image1 as Bitmap;
-            var bmp2 = image2 as Bitmap;
-            return EqualsEx(bmp1, bmp2);
+            if (source == null)
+                return target == null;
+            if (target == null)
+                return false;
+            if (!source.PixelFormat.Equals(target.PixelFormat))
+                return false;
+            if (!source.RawFormat.Equals(target.RawFormat))
+                return false;
+            var hash1 = source.GetHashCodeEx();
+            var hash2 = target.GetHashCodeEx();
+            return hash1.Equals(hash2);
         }
+
+        /// <summary>
+        ///     Determines whether this <see cref="Image"/> has the same value as the
+        ///     specified <see cref="Image"/> based on its <see cref="PixelFormat"/>,
+        ///     <see cref="ImageFormat"/>, and <see cref="GetHashCodeEx(Image)"/>.
+        /// </summary>
+        /// <param name="source">
+        ///     The <see cref="Image"/> to check.
+        /// </param>
+        /// <param name="target">
+        ///     The <see cref="Image"/> to compare.
+        /// </param>
+        public static bool EqualsEx(this Image source, Image target) =>
+            (source as Bitmap).EqualsEx(target as Bitmap);
 
         /// <summary>
         ///     A base class that provides a pair of two elements of the <see cref="Image"/>
@@ -649,7 +681,7 @@ namespace SilDev.Drawing
             ///     Returns the hash code for the current image pair.
             /// </summary>
             public override int GetHashCode() =>
-                Tuple.Create(Image1, Image2).GetHashCode();
+                unchecked((Image1.GetHashCode() * 0x18d) ^ Image2.GetHashCode());
 
             /// <summary>
             ///     Determines whether two specified image pairs have the same value.
@@ -823,7 +855,7 @@ namespace SilDev.Drawing
             ///     Returns the hash code for the current image pair.
             /// </summary>
             public override int GetHashCode() =>
-                Tuple.Create(Image, Duration).GetHashCode();
+                unchecked((Image.GetHashCode() * 0x18d) ^ Duration.GetHashCode());
 
             /// <summary>
             ///     Determines whether two specified frames have the same value.
