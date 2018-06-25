@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2018-06-25 22:46
+// Version:  2018-06-26 01:17
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -445,33 +445,41 @@ namespace SilDev.Drawing
         /// <param name="disposeImage">
         ///     true to dispose the original image; otherwise, false.
         /// </param>
-        public static List<Frame> GetFrames(this Image image, bool disposeImage = true)
+        /// <exception cref="ArgumentNullException">
+        ///     image is null.
+        /// </exception>
+        public static IEnumerable<Frame> GetFrames(this Image image, bool disposeImage = true)
         {
-            var images = new List<Frame>();
             if (!(image is Image img))
-                return images;
-            var frames = img.GetFrameCount(FrameDimension.Time);
-            if (frames <= 1)
+                throw new ArgumentNullException(nameof(image));
+            try
             {
-                var bmp = new Bitmap(img);
-                var frame = new Frame(bmp, 0);
-                images.Add(frame);
-            }
-            else
-            {
-                var times = img.GetPropertyItem(0x5100).Value;
-                for (var i = 0; i < frames; i++)
+                var count = img.GetFrameCount(FrameDimension.Time);
+                if (count <= 1)
                 {
                     var bmp = new Bitmap(img);
-                    var duration = BitConverter.ToInt32(times, 4 * i);
-                    var frame = new Frame(bmp, duration);
-                    images.Add(frame);
-                    img.SelectActiveFrame(FrameDimension.Time, i);
+                    var frame = new Frame(bmp, 0);
+                    yield return frame;
+                }
+                else
+                {
+                    var times = img.GetPropertyItem(0x5100).Value;
+                    for (var i = 0; i < count; i++)
+                    {
+                        var bmp = new Bitmap(img);
+                        var duration = BitConverter.ToInt32(times, 4 * i);
+                        var frame = new Frame(bmp, duration);
+                        yield return frame;
+                        if (i + 1 < count)
+                            img.SelectActiveFrame(FrameDimension.Time, i);
+                    }
                 }
             }
-            if (disposeImage)
-                img.Dispose();
-            return images;
+            finally
+            {
+                if (disposeImage)
+                    img.Dispose();
+            }
         }
 
         /// <summary>
