@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2018-06-14 18:31
+// Version:  2018-06-25 18:51
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -31,7 +31,8 @@ namespace SilDev.Drawing
     /// </summary>
     public static class ImageEx
     {
-        private static readonly Dictionary<object, ImagePair> SwitcherCache = new Dictionary<object, ImagePair>();
+        private static Dictionary<int, ImagePair> _switcherCache;
+        private static readonly object SwitcherLocker = new object();
 
         /// <summary>
         ///     Gets an <see cref="Image"/> object which consists of a semi-transparent black color.
@@ -363,26 +364,32 @@ namespace SilDev.Drawing
         /// </param>
         public static Image SwitchGrayScale(this Image image, object key, bool dispose = false)
         {
-            if (!(image is Image img))
-                return default(Image);
-            if (!SwitcherCache.ContainsKey(key))
+            lock (SwitcherLocker)
             {
-                var imgPair = new ImagePair(img, img.ToGrayScale());
-                SwitcherCache.Add(key, imgPair);
-                img = imgPair.Image2;
-            }
-            else
-            {
-                if (!dispose)
-                    img = img == SwitcherCache[key].Image1 ? SwitcherCache[key].Image2 : SwitcherCache[key].Image1;
+                if (!(image is Image img))
+                    return default(Image);
+                if (_switcherCache == null)
+                    _switcherCache = new Dictionary<int, ImagePair>();
+                var code = key.GetHashCode();
+                if (!_switcherCache.ContainsKey(code))
+                {
+                    var imgPair = new ImagePair(img, img.ToGrayScale());
+                    _switcherCache.Add(code, imgPair);
+                    img = imgPair.Image2;
+                }
                 else
                 {
-                    img = new Bitmap(SwitcherCache[key].Image1);
-                    SwitcherCache[key].Dispose();
-                    SwitcherCache.Remove(key);
+                    if (!dispose)
+                        img = img == _switcherCache[code].Image1 ? _switcherCache[code].Image2 : _switcherCache[code].Image1;
+                    else
+                    {
+                        img = new Bitmap(_switcherCache[code].Image1);
+                        _switcherCache[code].Dispose();
+                        _switcherCache.Remove(code);
+                    }
                 }
+                return img;
             }
-            return img;
         }
 
         /// <summary>
@@ -407,7 +414,7 @@ namespace SilDev.Drawing
                 for (var y = 0; y < img.Height; y++)
                 {
                     var px = bmp.GetPixel(x, y);
-                    if (Color.FromArgb(0, px.R, px.G, px.B) == Color.FromArgb(0, from.R, from.G, from.B))
+                    if (px.R == from.R && px.G == from.G && px.B == from.B)
                         bmp.SetPixel(x, y, Color.FromArgb(px.A, to.R, to.G, to.B));
                 }
             return bmp;
