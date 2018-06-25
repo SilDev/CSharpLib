@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2018-06-25 18:51
+// Version:  2018-06-25 20:34
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,8 +22,8 @@ namespace SilDev.Drawing
     using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
-    using System.Runtime.InteropServices;
-    using Microsoft.Win32.SafeHandles;
+    using System.Runtime.Serialization;
+    using System.Security;
     using Properties;
 
     /// <summary>
@@ -510,11 +510,9 @@ namespace SilDev.Drawing
         ///     A base class that provides a pair of two elements of the <see cref="Image"/>
         ///     class.
         /// </summary>
-        public class ImagePair : IDisposable
+        [Serializable]
+        public class ImagePair : IDisposable, ISerializable
         {
-            private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
-            private bool _disposed;
-
             /// <summary>
             ///     Initilazies a new instance of the <see cref="ImagePair"/> class.
             /// </summary>
@@ -524,19 +522,48 @@ namespace SilDev.Drawing
             /// <param name="image2">
             ///     The second <see cref="Image"/>.
             /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     image1 or image2 is null.
+            /// </exception>
             public ImagePair(Image image1, Image image2)
             {
-                Image1 = image1;
-                Image2 = image2;
+                Image1 = image1 ?? throw new ArgumentNullException(nameof(image1));
+                Image2 = image2 ?? throw new ArgumentNullException(nameof(image2));
             }
 
             /// <summary>
-            ///     Gets the first image of this <see cref="ImagePair"/>.
+            ///     Initilazies a new instance of the <see cref="ImagePair"/> class.
+            /// </summary>
+            /// <param name="info">
+            ///     The object that holds the serialized object data.
+            /// </param>
+            /// <param name="context">
+            ///     An object that describes the source or destination of the serialized data.
+            /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     info is null.
+            /// </exception>
+            protected ImagePair(SerializationInfo info, StreamingContext context)
+            {
+                if (info == null)
+                    throw new ArgumentNullException(nameof(info));
+                Image1 = (Image)info.GetValue(nameof(Image1), typeof(Image));
+                Image2 = (Image)info.GetValue(nameof(Image2), typeof(Image));
+            }
+
+            /// <summary>
+            ///     Determines that the current image pair has been disposed by
+            ///     <see cref="Dispose(bool)"/>.
+            /// </summary>
+            protected bool Disposed { get; private set; }
+
+            /// <summary>
+            ///     Gets the first <see cref="Image"/> of current image pair.
             /// </summary>
             public Image Image1 { get; }
 
             /// <summary>
-            ///     Gets the second image of this <see cref="ImagePair"/>.
+            ///     Gets the second <see cref="Image"/> of current image pair.
             /// </summary>
             public Image Image2 { get; }
 
@@ -550,31 +577,112 @@ namespace SilDev.Drawing
             }
 
             /// <summary>
+            ///     Populates a <see cref="SerializationInfo"/> with the data needed to serialize
+            ///     the target object.
+            /// </summary>
+            /// <param name="info">
+            ///     The <see cref="SerializationInfo"/> to populate with data.
+            /// </param>
+            /// <param name="context">
+            ///     The destination (see <see cref="StreamingContext"/>) for this serialization.
+            /// </param>
+            [SecurityCritical]
+            public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                if (info == null)
+                    throw new ArgumentNullException(nameof(info));
+                info.AddValue(nameof(Image1), Image1);
+                info.AddValue(nameof(Image2), Image2);
+            }
+
+            /// <summary>
             ///     Releases all resources used by this <see cref="ImagePair"/>.
             /// </summary>
+            /// <param name="disposing">
+            ///     true to release both managed and unmanaged resources; false to release only
+            ///     unmanaged resources.
+            ///     <para>
+            ///         Please note that this parameter is ignored for the
+            ///         <see cref="ImagePair"/> class.
+            ///     </para>
+            /// </param>
             protected virtual void Dispose(bool disposing)
             {
-                if (_disposed)
+                if (Disposed)
                     return;
-                if (disposing)
-                {
-                    _handle.Dispose();
-                    Image1.Dispose();
-                    Image2.Dispose();
-                }
-                _disposed = true;
+                Image1?.Dispose();
+                Image2?.Dispose();
+                Disposed = true;
             }
+
+            /// <summary>
+            ///     Allows an object to try to free resources and perform other cleanup
+            ///     operations before it is reclaimed by garbage collection.
+            /// </summary>
+            ~ImagePair() =>
+                Dispose(false);
+
+            /// <summary>
+            ///     Determines whether the specified image pair is equal to the current
+            ///     image pair.
+            /// </summary>
+            /// <param name="imagePair">
+            ///     The image pair to compare with the current image pair.
+            /// </param>
+            public virtual bool Equals(ImagePair imagePair) =>
+                Equals(GetHashCode(), imagePair.GetHashCode());
+
+            /// <summary>
+            ///     Determines whether the specified object is equal to the current object.
+            /// </summary>
+            /// <param name="obj">
+            ///     The object to compare with the current object.
+            /// </param>
+            public override bool Equals(object obj)
+            {
+                if (obj is ImagePair imagePair)
+                    return Equals(imagePair);
+                return false;
+            }
+
+            /// <summary>
+            ///     Returns the hash code for the current image pair.
+            /// </summary>
+            public override int GetHashCode() =>
+                Tuple.Create(Image1, Image2).GetHashCode();
+
+            /// <summary>
+            ///     Determines whether two specified image pairs have the same value.
+            /// </summary>
+            /// <param name="left">
+            ///     The first image pair to compare, or null.
+            /// </param>
+            /// <param name="right">
+            ///     The second image pair to compare, or null.
+            /// </param>
+            public static bool operator ==(ImagePair left, ImagePair right) =>
+                Equals(left, right);
+
+            /// <summary>
+            ///     Determines whether two specified image pairs have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first image pair to compare, or null.
+            /// </param>
+            /// <param name="right">
+            ///     The second image pair to compare, or null.
+            /// </param>
+            public static bool operator !=(ImagePair left, ImagePair right) =>
+                !Equals(left, right);
         }
 
         /// <summary>
-        ///     An base class that provides the <see cref="System.Drawing.Image"/> and duration
-        ///     of a single frame.
+        ///     An base class that provides the <see cref="System.Drawing.Image"/> and
+        ///     duration of a single frame.
         /// </summary>
-        public class Frame : IDisposable
+        [Serializable]
+        public class Frame : IDisposable, ISerializable
         {
-            private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
-            private bool _disposed;
-
             /// <summary>
             ///     Initilazies a new instance of the <see cref="Frame"/> class from the
             ///     specified existing image and duration time of a single frame.
@@ -585,11 +693,45 @@ namespace SilDev.Drawing
             /// <param name="duration">
             ///     The duration time, in milliseconds, of the new frame.
             /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     image is null.
+            /// </exception>
+            /// <exception cref="ArgumentOutOfRangeException">
+            ///     duration is negative or zero.
+            /// </exception>
             public Frame(Image image, int duration)
             {
-                Image = image;
+                Image = image ?? throw new ArgumentNullException(nameof(image));
+                if (duration < 1)
+                    throw new ArgumentOutOfRangeException(nameof(duration));
                 Duration = duration;
             }
+
+            /// <summary>
+            ///     Initilazies a new instance of the <see cref="Frame"/> class.
+            /// </summary>
+            /// <param name="info">
+            ///     The object that holds the serialized object data.
+            /// </param>
+            /// <param name="context">
+            ///     An object that describes the source or destination of the serialized data.
+            /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     info is null.
+            /// </exception>
+            protected Frame(SerializationInfo info, StreamingContext context)
+            {
+                if (info == null)
+                    throw new ArgumentNullException(nameof(info));
+                Image = (Image)info.GetValue(nameof(Image), typeof(Image));
+                Duration = info.GetInt32(nameof(Duration));
+            }
+
+            /// <summary>
+            ///     Determines that the current image pair has been disposed by
+            ///     <see cref="Dispose(bool)"/>.
+            /// </summary>
+            protected bool Disposed { get; private set; }
 
             /// <summary>
             ///     Gets the image of this <see cref="Frame"/>.
@@ -611,19 +753,101 @@ namespace SilDev.Drawing
             }
 
             /// <summary>
+            ///     Populates a <see cref="SerializationInfo"/> with the data needed to serialize
+            ///     the target object.
+            /// </summary>
+            /// <param name="info">
+            ///     The <see cref="SerializationInfo"/> to populate with data.
+            /// </param>
+            /// <param name="context">
+            ///     The destination (see <see cref="StreamingContext"/>) for this serialization.
+            /// </param>
+            [SecurityCritical]
+            public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                if (info == null)
+                    throw new ArgumentNullException(nameof(info));
+                info.AddValue(nameof(Image), Image);
+                info.AddValue(nameof(Duration), Duration);
+            }
+
+            /// <summary>
             ///     Releases all resources used by this <see cref="Frame"/>.
             /// </summary>
+            /// <param name="disposing">
+            ///     true to release both managed and unmanaged resources; false to release only
+            ///     unmanaged resources.
+            ///     <para>
+            ///         Please note that this parameter is ignored for the
+            ///         <see cref="Frame"/> class.
+            ///     </para>
+            /// </param>
             protected virtual void Dispose(bool disposing)
             {
-                if (_disposed)
+                if (Disposed)
                     return;
-                if (disposing)
-                {
-                    _handle.Dispose();
-                    Image.Dispose();
-                }
-                _disposed = true;
+                Image?.Dispose();
+                Disposed = true;
             }
+
+            /// <summary>
+            ///     Allows an object to try to free resources and perform other cleanup
+            ///     operations before it is reclaimed by garbage collection.
+            /// </summary>
+            ~Frame() =>
+                Dispose(false);
+
+            /// <summary>
+            ///     Determines whether the specified frame is equal to the current frame.
+            /// </summary>
+            /// <param name="frame">
+            ///     The frame to compare with the current frame.
+            /// </param>
+            public virtual bool Equals(Frame frame) =>
+                Equals(GetHashCode(), frame.GetHashCode());
+
+            /// <summary>
+            ///     Determines whether the specified object is equal to the current object.
+            /// </summary>
+            /// <param name="obj">
+            ///     The object to compare with the current object.
+            /// </param>
+            public override bool Equals(object obj)
+            {
+                if (obj is Frame frame)
+                    return Equals(frame);
+                return false;
+            }
+
+            /// <summary>
+            ///     Returns the hash code for the current image pair.
+            /// </summary>
+            public override int GetHashCode() =>
+                Tuple.Create(Image, Duration).GetHashCode();
+
+            /// <summary>
+            ///     Determines whether two specified frames have the same value.
+            /// </summary>
+            /// <param name="left">
+            ///     The first frame to compare, or null.
+            /// </param>
+            /// <param name="right">
+            ///     The second frame to compare, or null.
+            /// </param>
+            public static bool operator ==(Frame left, Frame right) =>
+                Equals(left, right);
+
+            /// <summary>
+            ///     Determines whether two specified frames have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first frame to compare, or null.
+            /// </param>
+            /// <param name="right">
+            ///     The second frame to compare, or null.
+            /// </param>
+            public static bool operator !=(Frame left, Frame right) =>
+                !Equals(left, right);
         }
     }
 }
