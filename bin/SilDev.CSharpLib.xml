@@ -797,15 +797,38 @@
             <param name="image2">
                 The second <see cref="T:System.Drawing.Image"/>.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                image1 or image2 is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/> class.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                An object that describes the source or destination of the serialized data.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                info is null.
+            </exception>
+        </member>
+        <member name="P:SilDev.Drawing.ImageEx.ImagePair.Disposed">
+            <summary>
+                Determines that the current image pair has been disposed by
+                <see cref="M:SilDev.Drawing.ImageEx.ImagePair.Dispose(System.Boolean)"/>.
+            </summary>
         </member>
         <member name="P:SilDev.Drawing.ImageEx.ImagePair.Image1">
             <summary>
-                Gets the first image of this <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/>.
+                Gets the first <see cref="T:System.Drawing.Image"/> of current image pair.
             </summary>
         </member>
         <member name="P:SilDev.Drawing.ImageEx.ImagePair.Image2">
             <summary>
-                Gets the second image of this <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/>.
+                Gets the second <see cref="T:System.Drawing.Image"/> of current image pair.
             </summary>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.ImagePair.Dispose">
@@ -813,15 +836,85 @@
                 Releases all resources used by this <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/>.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize
+                the target object.
+            </summary>
+            <param name="info">
+                The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.
+            </param>
+            <param name="context">
+                The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.ImagePair.Dispose(System.Boolean)">
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/>.
             </summary>
+            <param name="disposing">
+                true to release both managed and unmanaged resources; false to release only
+                unmanaged resources.
+                <para>
+                    Please note that this parameter is ignored for the
+                    <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/> class.
+                </para>
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.Finalize">
+            <summary>
+                Allows an object to try to free resources and perform other cleanup
+                operations before it is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.Equals(SilDev.Drawing.ImageEx.ImagePair)">
+            <summary>
+                Determines whether the specified image pair is equal to the current
+                image pair.
+            </summary>
+            <param name="imagePair">
+                The image pair to compare with the current image pair.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.Equals(System.Object)">
+            <summary>
+                Determines whether the specified object is equal to the current object.
+            </summary>
+            <param name="obj">
+                The object to compare with the current object.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.GetHashCode">
+            <summary>
+                Returns the hash code for the current image pair.
+            </summary>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.op_Equality(SilDev.Drawing.ImageEx.ImagePair,SilDev.Drawing.ImageEx.ImagePair)">
+            <summary>
+                Determines whether two specified image pairs have the same value.
+            </summary>
+            <param name="left">
+                The first image pair to compare, or null.
+            </param>
+            <param name="right">
+                The second image pair to compare, or null.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.op_Inequality(SilDev.Drawing.ImageEx.ImagePair,SilDev.Drawing.ImageEx.ImagePair)">
+            <summary>
+                Determines whether two specified image pairs have different values.
+            </summary>
+            <param name="left">
+                The first image pair to compare, or null.
+            </param>
+            <param name="right">
+                The second image pair to compare, or null.
+            </param>
         </member>
         <member name="T:SilDev.Drawing.ImageEx.Frame">
             <summary>
-                An base class that provides the <see cref="T:System.Drawing.Image"/> and duration
-                of a single frame.
+                An base class that provides the <see cref="T:System.Drawing.Image"/> and
+                duration of a single frame.
             </summary>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.Frame.#ctor(System.Drawing.Image,System.Int32)">
@@ -835,6 +928,32 @@
             <param name="duration">
                 The duration time, in milliseconds, of the new frame.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                image is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                duration is negative or zero.
+            </exception>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initilazies a new instance of the <see cref="T:SilDev.Drawing.ImageEx.Frame"/> class.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                An object that describes the source or destination of the serialized data.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                info is null.
+            </exception>
+        </member>
+        <member name="P:SilDev.Drawing.ImageEx.Frame.Disposed">
+            <summary>
+                Determines that the current image pair has been disposed by
+                <see cref="M:SilDev.Drawing.ImageEx.Frame.Dispose(System.Boolean)"/>.
+            </summary>
         </member>
         <member name="P:SilDev.Drawing.ImageEx.Frame.Image">
             <summary>
@@ -851,10 +970,79 @@
                 Releases all resources used by this <see cref="T:SilDev.Drawing.ImageEx.Frame"/>.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize
+                the target object.
+            </summary>
+            <param name="info">
+                The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.
+            </param>
+            <param name="context">
+                The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.Frame.Dispose(System.Boolean)">
             <summary>
                 Releases all resources used by this <see cref="T:SilDev.Drawing.ImageEx.Frame"/>.
             </summary>
+            <param name="disposing">
+                true to release both managed and unmanaged resources; false to release only
+                unmanaged resources.
+                <para>
+                    Please note that this parameter is ignored for the
+                    <see cref="T:SilDev.Drawing.ImageEx.Frame"/> class.
+                </para>
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.Finalize">
+            <summary>
+                Allows an object to try to free resources and perform other cleanup
+                operations before it is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.Equals(SilDev.Drawing.ImageEx.Frame)">
+            <summary>
+                Determines whether the specified frame is equal to the current frame.
+            </summary>
+            <param name="frame">
+                The frame to compare with the current frame.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.Equals(System.Object)">
+            <summary>
+                Determines whether the specified object is equal to the current object.
+            </summary>
+            <param name="obj">
+                The object to compare with the current object.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.GetHashCode">
+            <summary>
+                Returns the hash code for the current image pair.
+            </summary>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.op_Equality(SilDev.Drawing.ImageEx.Frame,SilDev.Drawing.ImageEx.Frame)">
+            <summary>
+                Determines whether two specified frames have the same value.
+            </summary>
+            <param name="left">
+                The first frame to compare, or null.
+            </param>
+            <param name="right">
+                The second frame to compare, or null.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.op_Inequality(SilDev.Drawing.ImageEx.Frame,SilDev.Drawing.ImageEx.Frame)">
+            <summary>
+                Determines whether two specified frames have different values.
+            </summary>
+            <param name="left">
+                The first frame to compare, or null.
+            </param>
+            <param name="right">
+                The second frame to compare, or null.
+            </param>
         </member>
         <member name="T:SilDev.Forms.ButtonEx">
             <summary>
