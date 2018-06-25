@@ -767,6 +767,9 @@
             <param name="disposeImage">
                 true to dispose the original image; otherwise, false.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                image is null.
+            </exception>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.GetHashCodeEx(System.Drawing.Bitmap)">
             <summary>
