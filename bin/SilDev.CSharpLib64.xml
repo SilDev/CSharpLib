@@ -746,6 +746,17 @@
                 The new color of the pixel.
             </param>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.ToBytes(System.Drawing.Image)">
+            <summary>
+                Converts this image into a sequence of bytes.
+            </summary>
+            <param name="image">
+                The image to convert.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                image is null.
+            </exception>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.GetFrames(System.Drawing.Image,System.Boolean)">
             <summary>
                 Gets the frames of the specified <see cref="T:System.Drawing.Image"/>.
@@ -757,28 +768,48 @@
                 true to dispose the original image; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.GetHashCodeEx(System.Drawing.Bitmap)">
+            <summary>
+                Returns the hash code for this <see cref="T:System.Drawing.Bitmap"/> based on its sequence
+                of bytes.
+            </summary>
+            <param name="bitmap">
+                The <see cref="T:System.Drawing.Bitmap"/> to get the hash code.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.GetHashCodeEx(System.Drawing.Image)">
+            <summary>
+                Returns the hash code for this <see cref="T:System.Drawing.Image"/> based on its sequence
+                of bytes.
+            </summary>
+            <param name="image">
+                The <see cref="T:System.Drawing.Image"/> to get the hash code.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.EqualsEx(System.Drawing.Bitmap,System.Drawing.Bitmap)">
             <summary>
-                Tests whether the specified object is a <see cref="T:System.Drawing.Bitmap"/> object and is
-                equivalent to this <see cref="T:System.Drawing.Bitmap"/> object.
+                Determines whether this <see cref="T:System.Drawing.Bitmap"/> has the same value as the
+                specified <see cref="T:System.Drawing.Bitmap"/> based on its <see cref="T:System.Drawing.Imaging.PixelFormat"/>,
+                <see cref="T:System.Drawing.Imaging.ImageFormat"/>, and <see cref="M:SilDev.Drawing.ImageEx.GetHashCodeEx(System.Drawing.Bitmap)"/>.
             </summary>
-            <param name="bitmap1">
-                The first <see cref="T:System.Drawing.Bitmap"/> object to compare.
+            <param name="source">
+                The <see cref="T:System.Drawing.Bitmap"/> to check.
             </param>
-            <param name="bitmap2">
-                The second <see cref="T:System.Drawing.Bitmap"/> object to compare.
+            <param name="target">
+                The <see cref="T:System.Drawing.Bitmap"/> to compare.
             </param>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.EqualsEx(System.Drawing.Image,System.Drawing.Image)">
             <summary>
-                Tests whether the specified object is a <see cref="T:System.Drawing.Image"/> object and is
-                equivalent to this <see cref="T:System.Drawing.Image"/> object.
+                Determines whether this <see cref="T:System.Drawing.Image"/> has the same value as the
+                specified <see cref="T:System.Drawing.Image"/> based on its <see cref="T:System.Drawing.Imaging.PixelFormat"/>,
+                <see cref="T:System.Drawing.Imaging.ImageFormat"/>, and <see cref="M:SilDev.Drawing.ImageEx.GetHashCodeEx(System.Drawing.Image)"/>.
             </summary>
-            <param name="image1">
-                The first <see cref="T:System.Drawing.Image"/> object to compare.
+            <param name="source">
+                The <see cref="T:System.Drawing.Image"/> to check.
             </param>
-            <param name="image2">
-                The second <see cref="T:System.Drawing.Image"/> object to compare.
+            <param name="target">
+                The <see cref="T:System.Drawing.Image"/> to compare.
             </param>
         </member>
         <member name="T:SilDev.Drawing.ImageEx.ImagePair">
