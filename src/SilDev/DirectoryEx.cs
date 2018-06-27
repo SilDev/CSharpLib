@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-06-07 10:08
+// Version:  2018-06-27 21:21
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -663,10 +663,14 @@ namespace SilDev
                 var len = 0L;
                 if (dirInfo == null)
                     return len;
-                foreach (var fi in dirInfo.GetFiles())
-                    Interlocked.Add(ref len, fi.Length);
-                if (searchOption == SearchOption.AllDirectories)
-                    Parallel.ForEach(dirInfo.GetDirectories(), di => Interlocked.Add(ref len, di.GetSize()));
+                var files = dirInfo.GetFiles();
+                if (files.Any())
+                    Parallel.ForEach(files, fi => Interlocked.Add(ref len, fi.Length));
+                if (searchOption == SearchOption.TopDirectoryOnly)
+                    return len;
+                var dirs = dirInfo.GetDirectories();
+                if (dirs.Any())
+                    Parallel.ForEach(dirs, di => Interlocked.Add(ref len, di.GetSize()));
                 return len;
             }
             catch (OverflowException)
