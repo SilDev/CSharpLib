@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconEx.cs
-// Version:  2018-03-09 00:57
+// Version:  2018-06-29 00:37
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -221,7 +221,7 @@ namespace SilDev.Drawing
                     throw new ArgumentNullException(nameof(images));
                 if (stream == null)
                     throw new ArgumentNullException(nameof(stream));
-                var array = ImageCorrection(images.OrderBy(x => x.Width).ThenBy(x => x.Height)).ToArray();
+                var array = ImageCorrection(images.OrderByDescending(x => x.Width).ThenByDescending(x => x.Height)).ToArray();
                 var bw = new BinaryWriter(stream);
                 try
                 {
