@@ -18824,6 +18824,14 @@
                 true to get also the alpha channel; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.GetUserDefaultUILanguage">
+            <summary>
+                Returns the language identifier for the user UI language for the current user. If the current user
+                has not set a language, <see cref="M:SilDev.WinApi.NativeHelper.GetUserDefaultUILanguage"/> returns the preferred language set
+                for the system. If there is no preferred language set for the system, then the system default UI
+                language (also known as "install language") is returned.
+            </summary>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.GetWindowLong(System.IntPtr,SilDev.WinApi.WindowLongFlags)">
             <summary>
                 Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD)
@@ -21368,6 +21376,17 @@
             <returns>
                 If the bRevert parameter is FALSE, the return value is a handle to a copy of the window menu. If
                 the bRevert parameter is TRUE, the return value is NULL.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.GetUserDefaultUILanguage">
+            <summary>
+                Returns the language identifier for the user UI language for the current user. If the current user
+                has not set a language, <see cref="M:SilDev.WinApi.NativeMethods.GetUserDefaultUILanguage"/> returns the preferred language set
+                for the system. If there is no preferred language set for the system, then the system default UI
+                language (also known as "install language") is returned.
+            </summary>
+            <returns>
+                Returns the language identifier for the user UI language for the current user.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.GetWindowLong(System.IntPtr,SilDev.WinApi.WindowLongFlags)">
