@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-06-21 16:31
+// Version:  2018-06-30 22:52
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -3754,6 +3754,15 @@ namespace SilDev
             }
 
             /// <summary>
+            ///     Returns the language identifier for the user UI language for the current user. If the current user
+            ///     has not set a language, <see cref="GetUserDefaultUILanguage"/> returns the preferred language set
+            ///     for the system. If there is no preferred language set for the system, then the system default UI
+            ///     language (also known as "install language") is returned.
+            /// </summary>
+            public static ushort GetUserDefaultUILanguage() =>
+                NativeMethods.GetUserDefaultUILanguage();
+
+            /// <summary>
             ///     Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD)
             ///     value at the specified offset into the extra window memory.
             /// </summary>
@@ -6587,6 +6596,18 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+            /// <summary>
+            ///     Returns the language identifier for the user UI language for the current user. If the current user
+            ///     has not set a language, <see cref="GetUserDefaultUILanguage"/> returns the preferred language set
+            ///     for the system. If there is no preferred language set for the system, then the system default UI
+            ///     language (also known as "install language") is returned.
+            /// </summary>
+            /// <returns>
+            ///     Returns the language identifier for the user UI language for the current user.
+            /// </returns>
+            [DllImport(DllNames.Kernel32, CharSet = CharSet.Auto)]
+            internal static extern ushort GetUserDefaultUILanguage();
 
             /// <summary>
             ///     Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD)
