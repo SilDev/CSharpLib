@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2018-03-04 01:09
+// Version:  2018-07-04 12:36
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,6 @@
 namespace SilDev
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
     using System.IO;
@@ -180,8 +179,7 @@ namespace SilDev
                     path = PathEx.Combine("%system%\\imageres.dll");
                 if (!File.Exists(path))
                     throw new PathNotFoundException(path);
-                var ico = GetIconFromFile(path, (int)index, large);
-                return ico;
+                return GetIconFromFile(path, (int)index, large);
             }
             catch (PathNotFoundException ex)
             {
@@ -282,12 +280,10 @@ namespace SilDev
 
         /// <summary>
         ///     Displays a dialog box that prompts to the user to browse the icon resource of a file.
-        ///     <see cref="OpenFileDialog"/>
         /// </summary>
         public sealed class IconBrowserDialog : Form
         {
             private static readonly object Locker = new object();
-            private readonly List<IconBox> _boxes = new List<IconBox>();
             private readonly Button _button;
             private readonly Panel _buttonPanel;
             private readonly IContainer _components;
@@ -295,6 +291,7 @@ namespace SilDev
             private readonly ProgressCircle _progressCircle;
             private readonly TextBox _textBox;
             private readonly Timer _timer;
+            private int _count;
             private string _path;
 
             /// <summary>
@@ -430,7 +427,7 @@ namespace SilDev
                     Interval = 1
                 };
                 _timer.Tick += Timer_Tick;
-                Shown += (sender, args) => TaskBar.Progress.SetState(Handle, TaskBar.Progress.Flags.Indeterminate);
+                Shown += (sender, args) => TaskBarProgress.SetState(Handle, TaskBarProgressFlags.Indeterminate);
                 ResumeLayout(false);
                 PerformLayout();
                 var curPath = PathEx.Combine(path);
@@ -440,6 +437,16 @@ namespace SilDev
                     return;
                 _textBox.Text = curPath;
             }
+
+            /// <summary>
+            ///     Gets the icon resource path.
+            /// </summary>
+            public string IconPath { get; private set; }
+
+            /// <summary>
+            ///     Gets the icon resource identifier.
+            /// </summary>
+            public int IconId { get; private set; }
 
             /// <summary>
             ///     Disposes of the resources (other than memory) used by the <see cref="Form"/>.
@@ -458,7 +465,7 @@ namespace SilDev
                 var path = PathEx.Combine(textBox.Text);
                 if (string.IsNullOrWhiteSpace(path) || _path == path || !File.Exists(path) || GetIconFromFile(path, 0, true) == null)
                     return;
-                TaskBar.Progress.SetState(Handle, TaskBar.Progress.Flags.Indeterminate);
+                TaskBarProgress.SetState(Handle, TaskBarProgressFlags.Indeterminate);
                 _path = path;
                 _panel.Enabled = false;
                 _textBox.Enabled = false;
@@ -496,29 +503,30 @@ namespace SilDev
                 {
                     if (!(sender is Timer timer))
                         return;
-                    if (_boxes.Count == 0 && _panel.Controls.Count > 0)
+                    if (_count == 0 && _panel.Controls.Count > 0)
                         _panel.Controls.Clear();
-                    const int speed = 3; // Higher value loads the icons faster, but hangs more the UI while loading
-                    for (var i = 0; i < speed; i++)
+                    for (var i = 0; i < 3; i++)
+                    {
+                        _panel.SuspendLayout();
                         try
                         {
-                            _boxes.Add(new IconBox(_path, _boxes.Count, _button.BackColor, _button.ForeColor, _button.FlatAppearance.MouseOverBackColor));
-                            if (_boxes.Count <= 0)
+                            var box = new IconBox(_path, _count++, _button.BackColor, _button.ForeColor, _button.FlatAppearance.MouseOverBackColor);
+                            if (_panel.Controls.Contains(box))
                                 continue;
-                            var last = _boxes.Last();
-                            if (_panel.Controls.Contains(last))
-                                continue;
-                            _panel.SuspendLayout();
-                            _panel.Controls.Add(last);
-                            _panel.ResumeLayout(false);
+                            _panel.Controls.Add(box);
                         }
                         catch
                         {
                             timer.Enabled = false;
-                            if (_boxes.Count > 0)
-                                _boxes.Clear();
+                            if (_count > 0)
+                                _count = 0;
                             break;
                         }
+                        finally
+                        {
+                            _panel.ResumeLayout(false);
+                        }
+                    }
                     var max = _panel.Width / _panel.Controls[0].Width;
                     for (var i = 0; i < _panel.Controls.Count; i++)
                     {
@@ -538,7 +546,7 @@ namespace SilDev
                     _buttonPanel.Controls.Add(_button);
                     _buttonPanel.BorderStyle = BorderStyle.FixedSingle;
                     _buttonPanel.ResumeLayout(false);
-                    TaskBar.Progress.SetState(Handle, TaskBar.Progress.Flags.NoProgress);
+                    TaskBarProgress.SetState(Handle, TaskBarProgressFlags.NoProgress);
                     if (!_panel.Focus())
                         _panel.Select();
                 }
@@ -578,11 +586,11 @@ namespace SilDev
                     _button.Click += Button_Click;
                     Controls.Add(_button);
                     ResumeLayout(false);
-                    if (_file != null && _file != path)
+                    if (_file?.EqualsEx(path) == false)
                         _icons = null;
                     _file = path;
-                    var myIcon = GetIcons(index);
-                    _button.Image = new Bitmap(myIcon.ToBitmap(), myIcon.Width, myIcon.Height);
+                    var icon = GetIcons(index);
+                    _button.Image = new Bitmap(icon.ToBitmap(), icon.Width, icon.Height);
                     _button.Text = index.ToString();
                 }
 
@@ -604,10 +612,18 @@ namespace SilDev
 
                 private void Button_Click(object sender, EventArgs e)
                 {
-                    if (ParentForm == null)
+                    if (!(ParentForm is IconBrowserDialog dialog))
                         return;
-                    ParentForm.Text = File.Exists(_file) ? $"{_file},{_button.Text}" : string.Empty;
-                    ParentForm.Close();
+                    if (int.TryParse(_button.Text, out var index))
+                    {
+                        var path = EnvironmentEx.GetVariablePathFull(_file, false, false);
+                        dialog.IconPath = path;
+                        if (path.Any(char.IsSeparator))
+                            path = $"\"{path}\"";
+                        dialog.IconId = index;
+                        dialog.Text = $@"{path},{index}";
+                    }
+                    dialog.Close();
                 }
             }
         }

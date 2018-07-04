@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SilDev</RootNamespace>
     <AssemblyName>SilDev.CSharpLib64</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -77,6 +78,7 @@
     </Compile>
     <Compile Include="SilDev\Forms\RichTextBoxEx.cs" />
     <Compile Include="SilDev\Forms\TextBoxEx.cs" />
+    <Compile Include="SilDev\Intern\ComImports.cs" />
     <Compile Include="SilDev\Intern\IrrKlangEngine\Player.cs" />
     <Compile Include="SilDev\Intern\IrrKlangReference.cs" />
     <Compile Include="SilDev\Intern\PowerShellReference.cs" />
@@ -107,11 +109,13 @@
     <Compile Include="SilDev\Reorganize.cs" />
     <Compile Include="SilDev\ResourcesEx.cs" />
     <Compile Include="SilDev\Service.cs" />
+    <Compile Include="SilDev\ShellLink.cs" />
     <Compile Include="SilDev\TaskBar.cs" />
     <Compile Include="SilDev\TextEx.cs" />
     <Compile Include="SilDev\Tray.cs" />
     <Compile Include="SilDev\WinApi.cs" />
     <Compile Include="SilDev\Xml.cs" />
+    <Compile Include="SilDev\SymbolicLink.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app64.manifest">

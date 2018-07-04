@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-07-04 12:36
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -21,6 +21,7 @@ namespace SilDev
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Windows.Forms;
+    using Intern;
 
     /// <summary>
     ///     Provides enumerated flags of the taskbar location.
@@ -54,6 +55,53 @@ namespace SilDev
     }
 
     /// <summary>
+    ///     Provides enumerated options that control the current state of the progres
+    ///     button.
+    /// </summary>
+    public enum TaskBarProgressFlags
+    {
+        /// <summary>
+        ///     Stops displaying progress and returns the button to its normal state. Call this
+        ///     method with this flag to dismiss the progress bar when the operation is complete
+        ///     or canceled.
+        /// </summary>
+        NoProgress = 0x0,
+
+        /// <summary>
+        ///     The progress indicator does not grow in size, but cycles repeatedly along the
+        ///     length of the taskbar button. This indicates activity without specifying what
+        ///     proportion of the progress is complete. Progress is taking place, but there is
+        ///     no prediction as to how long the operation will take.
+        /// </summary>
+        Indeterminate = 0x1,
+
+        /// <summary>
+        ///     The progress indicator grows in size from left to right in proportion to the
+        ///     estimated amount of the operation completed. This is a determinate progress
+        ///     indicator; a prediction is being made as to the duration of the operation.
+        /// </summary>
+        Normal = 0x2,
+
+        /// <summary>
+        ///     The progress indicator turns red to show that an error has occurred in one of
+        ///     the windows that is broadcasting progress. This is a determinate state. If the
+        ///     progress indicator is in the indeterminate state, it switches to a red
+        ///     determinate display of a generic percentage not indicative of actual progress.
+        /// </summary>
+        Error = 0x4,
+
+        /// <summary>
+        ///     The progress indicator turns yellow to show that progress is currently stopped
+        ///     in one of the windows but can be resumed by the user. No error condition exists
+        ///     and nothing is preventing the progress from continuing. This is a determinate
+        ///     state. If the progress indicator is in the indeterminate state, it switches to a
+        ///     yellow determinate display of a generic percentage not indicative of actual
+        ///     progress.
+        /// </summary>
+        Paused = 0x8
+    }
+
+    /// <summary>
     ///     Provides enumerated options that control the current state of the taskbar.
     /// </summary>
     public enum TaskBarState
@@ -78,7 +126,7 @@ namespace SilDev
     /// </summary>
     public static class TaskBar
     {
-        private static TaskbarInstance TaskBarInstance => new TaskbarInstance();
+        internal static ComImports.TaskbarInstance TaskBarInstance => new ComImports.TaskbarInstance();
 
         /// <summary>
         ///     Returns the current <see cref="TaskBarState"/> of the taskbar.
@@ -168,7 +216,7 @@ namespace SilDev
         /// </param>
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public static void AddTab(IntPtr hWnd) =>
-            (TaskBarInstance as ITaskBarList3)?.AddTab(hWnd);
+            (TaskBarInstance as ComImports.ITaskBarList3)?.AddTab(hWnd);
 
         /// <summary>
         ///     Deletes an item from the taskbar.
@@ -178,7 +226,7 @@ namespace SilDev
         /// </param>
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public static void DeleteTab(IntPtr hWnd) =>
-            (TaskBarInstance as ITaskBarList3)?.DeleteTab(hWnd);
+            (TaskBarInstance as ComImports.ITaskBarList3)?.DeleteTab(hWnd);
 
         private static bool PinUnpin(string path, bool pin)
         {
@@ -239,125 +287,43 @@ namespace SilDev
         /// </param>
         public static bool Unpin(string path) =>
             PinUnpin(path, false);
+    }
+
+    /// <summary>
+    ///     Provides static methods to manage a progress bar hosted in a taskbar button.
+    /// </summary>
+    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+    public static class TaskBarProgress
+    {
+        /// <summary>
+        ///     Sets the type and state of the progress indicator displayed on a taskbar button.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     The handle of the window in which the progress of an operation is being shown.
+        /// </param>
+        /// <param name="flags">
+        ///     The flag that control the current state of the progress button.
+        /// </param>
+        public static void SetState(IntPtr hWnd, TaskBarProgressFlags flags) =>
+            (TaskBar.TaskBarInstance as ComImports.ITaskBarList3)?.SetProgressState(hWnd, flags);
 
         /// <summary>
-        ///     Provides static methods to manage a progress bar hosted in a taskbar button.
+        ///     Displays or updates a progress bar hosted in a taskbar button to show the specific
+        ///     percentage completed of the full operation.
         /// </summary>
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
-        public static class Progress
-        {
-            /// <summary>
-            ///     Provides enumerated options that control the current state of the progres
-            ///     button.
-            /// </summary>
-            public enum Flags
-            {
-                /// <summary>
-                ///     Stops displaying progress and returns the button to its normal state. Call this
-                ///     method with this flag to dismiss the progress bar when the operation is complete
-                ///     or canceled.
-                /// </summary>
-                NoProgress = 0x0,
-
-                /// <summary>
-                ///     The progress indicator does not grow in size, but cycles repeatedly along the
-                ///     length of the taskbar button. This indicates activity without specifying what
-                ///     proportion of the progress is complete. Progress is taking place, but there is
-                ///     no prediction as to how long the operation will take.
-                /// </summary>
-                Indeterminate = 0x1,
-
-                /// <summary>
-                ///     The progress indicator grows in size from left to right in proportion to the
-                ///     estimated amount of the operation completed. This is a determinate progress
-                ///     indicator; a prediction is being made as to the duration of the operation.
-                /// </summary>
-                Normal = 0x2,
-
-                /// <summary>
-                ///     The progress indicator turns red to show that an error has occurred in one of
-                ///     the windows that is broadcasting progress. This is a determinate state. If the
-                ///     progress indicator is in the indeterminate state, it switches to a red
-                ///     determinate display of a generic percentage not indicative of actual progress.
-                /// </summary>
-                Error = 0x4,
-
-                /// <summary>
-                ///     The progress indicator turns yellow to show that progress is currently stopped
-                ///     in one of the windows but can be resumed by the user. No error condition exists
-                ///     and nothing is preventing the progress from continuing. This is a determinate
-                ///     state. If the progress indicator is in the indeterminate state, it switches to a
-                ///     yellow determinate display of a generic percentage not indicative of actual
-                ///     progress.
-                /// </summary>
-                Paused = 0x8
-            }
-
-            /// <summary>
-            ///     Sets the type and state of the progress indicator displayed on a taskbar button.
-            /// </summary>
-            /// <param name="hWnd">
-            ///     The handle of the window in which the progress of an operation is being shown.
-            /// </param>
-            /// <param name="flags">
-            ///     The flag that control the current state of the progress button.
-            /// </param>
-            public static void SetState(IntPtr hWnd, Flags flags) =>
-                (TaskBarInstance as ITaskBarList3)?.SetProgressState(hWnd, flags);
-
-            /// <summary>
-            ///     Displays or updates a progress bar hosted in a taskbar button to show the specific
-            ///     percentage completed of the full operation.
-            /// </summary>
-            /// <param name="hWnd">
-            ///     The handle of the window whose associated taskbar button is being used as a progress
-            ///     indicator.
-            /// </param>
-            /// <param name="progressValue">
-            ///     An application-defined value that indicates the proportion of the operation that has
-            ///     been completed at the time the method is called.
-            /// </param>
-            /// <param name="progressMax">
-            ///     An application-defined value that specifies the value ullCompleted will have when the
-            ///     operation is complete.
-            /// </param>
-            public static void SetValue(IntPtr hWnd, double progressValue, double progressMax) =>
-                (TaskBarInstance as ITaskBarList3)?.SetProgressValue(hWnd, (ulong)progressValue, (ulong)progressMax);
-        }
-
-        [ComImport]
-        [Guid("EA1AFB91-9E28-4B86-90E9-9E9F8A5EEFAF")]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        private interface ITaskBarList3
-        {
-            [PreserveSig]
-            void HrInit();
-
-            [PreserveSig]
-            void AddTab(IntPtr hwnd);
-
-            [PreserveSig]
-            void DeleteTab(IntPtr hwnd);
-
-            [PreserveSig]
-            void ActivateTab(IntPtr hwnd);
-
-            [PreserveSig]
-            void SetActiveAlt(IntPtr hwnd);
-
-            [PreserveSig]
-            void MarkFullscreenWindow(IntPtr hwnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
-
-            [PreserveSig]
-            void SetProgressValue(IntPtr hwnd, ulong ullCompleted, ulong ullTotal);
-
-            [PreserveSig]
-            void SetProgressState(IntPtr hwnd, Progress.Flags tbpFlags);
-        }
-
-        [ComImport]
-        [Guid("56FDF344-FD6D-11D0-958A-006097C9A090")]
-        [ClassInterface(ClassInterfaceType.None)]
-        private class TaskbarInstance { }
+        /// <param name="hWnd">
+        ///     The handle of the window whose associated taskbar button is being used as a progress
+        ///     indicator.
+        /// </param>
+        /// <param name="progressValue">
+        ///     An application-defined value that indicates the proportion of the operation that has
+        ///     been completed at the time the method is called.
+        /// </param>
+        /// <param name="progressMax">
+        ///     An application-defined value that specifies the value ullCompleted will have when the
+        ///     operation is complete.
+        /// </param>
+        public static void SetValue(IntPtr hWnd, double progressValue, double progressMax) =>
+            (TaskBar.TaskBarInstance as ComImports.ITaskBarList3)?.SetProgressValue(hWnd, (ulong)progressValue, (ulong)progressMax);
     }
 }

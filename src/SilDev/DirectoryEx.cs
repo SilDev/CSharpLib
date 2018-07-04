@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-06-27 21:21
+// Version:  2018-07-04 12:28
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -712,23 +712,31 @@ namespace SilDev
         ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="startArgs">
-        ///     The arguments which applies when this shortcut is executed.
+        ///     The arguments which applies when the link is started.
         /// </param>
-        /// <param name="linkIcon">
-        ///     The icon resource path for this shortcut.
-        /// </param>
-        /// <param name="linkIconId">
-        ///     The icon resource id for this shortcut.
+        /// <param name="iconLocation">
+        ///     The icon resource path and resource identifier.
         /// </param>
         /// <param name="skipExists">
         ///     true to skip existing shortcuts, even if the target path of
         ///     the same; otherwise, false.
         /// </param>
-        public static bool CreateShortcut(string targetPath, string linkPath, string startArgs = null, string linkIcon = null, int linkIconId = 0, bool skipExists = false) =>
-            PathEx.IsDir(targetPath) && PathEx.CreateShortcut(targetPath, linkPath, startArgs, linkIcon, linkIconId, skipExists);
+        public static bool CreateShellLink(string targetPath, string linkPath, string startArgs = null, (string, int) iconLocation = default((string, int)), bool skipExists = false)
+        {
+            if (!PathEx.IsDir(targetPath))
+                return false;
+            var linkInfo = new ShellLinkInfo
+            {
+                Arguments = startArgs,
+                IconLocation = iconLocation,
+                LinkPath = linkPath,
+                TargetPath = targetPath
+            };
+            return ShellLink.Create(linkInfo, skipExists);
+        }
 
         /// <summary>
-        ///     Creates a link to the specified path.
+        ///     Creates a link to the specified directory.
         /// </summary>
         /// <param name="targetPath">
         ///     The directory to be linked.
@@ -737,17 +745,17 @@ namespace SilDev
         ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="startArgs">
-        ///     The arguments which applies when this shortcut is executed.
+        ///     The arguments which applies when the link is started.
         /// </param>
         /// <param name="skipExists">
         ///     true to skip existing shortcuts, even if the target path of
         ///     the same; otherwise, false.
         /// </param>
-        public static bool CreateShortcut(string targetPath, string linkPath, string startArgs, bool skipExists) =>
-            CreateShortcut(targetPath, linkPath, startArgs, null, 0, skipExists);
+        public static bool CreateShellLink(string targetPath, string linkPath, string startArgs, bool skipExists) =>
+            CreateShellLink(targetPath, linkPath, startArgs, (null, 0), skipExists);
 
         /// <summary>
-        ///     Creates a link to the specified path.
+        ///     Creates a link to the specified directory.
         /// </summary>
         /// <param name="targetPath">
         ///     The directory to be linked.
@@ -759,22 +767,27 @@ namespace SilDev
         ///     true to skip existing shortcuts, even if the target path of
         ///     the same; otherwise, false.
         /// </param>
-        public static bool CreateShortcut(string targetPath, string linkPath, bool skipExists) =>
-            CreateShortcut(targetPath, linkPath, null, null, 0, skipExists);
+        public static bool CreateShellLink(string targetPath, string linkPath, bool skipExists) =>
+            CreateShellLink(targetPath, linkPath, null, (null, 0), skipExists);
 
         /// <summary>
-        ///     Returns the target path of the specified link.
-        ///     <para>
-        ///         The target path is returned only if the specified target is an existing
-        ///         directory.
-        ///     </para>
+        ///     Removes a link of the specified directory.
         /// </summary>
         /// <param name="path">
-        ///     The shortcut path to get the target path.
+        ///     The shortcut to be removed.
         /// </param>
-        public static string GetShortcutTarget(string path)
+        public static bool DestroyShellLink(string path) =>
+            ShellLink.Destroy(path);
+
+        /// <summary>
+        ///     Returns the target path of the specified link if the target is a directory.
+        /// </summary>
+        /// <param name="path">
+        ///     The link to get the target path.
+        /// </param>
+        public static string GetShellLinkTarget(string path)
         {
-            var target = PathEx.GetShortcutTarget(path);
+            var target = ShellLink.GetTarget(path);
             return PathEx.IsDir(target) ? target : string.Empty;
         }
 
@@ -795,7 +808,7 @@ namespace SilDev
         ///     true to create this link with highest privileges; otherwise, false.
         /// </param>
         public static bool CreateSymbolicLink(string linkPath, string srcDir, bool backup = false, bool elevated = false) =>
-            PathEx.CreateSymbolicLink(linkPath, srcDir, true, backup, elevated);
+            SymbolicLink.Create(linkPath, srcDir, true, backup, elevated);
 
         /// <summary>
         ///     Removes an symbolic link of the specified directory link based on command prompt
@@ -811,7 +824,7 @@ namespace SilDev
         ///     true to remove this link with highest privileges; otherwise, false.
         /// </param>
         public static bool DestroySymbolicLink(string path, bool backup = false, bool elevated = false) =>
-            PathEx.DestroySymbolicLink(path, true, backup, elevated);
+            SymbolicLink.Destroy(path, true, backup, elevated);
 
         /// <summary>
         ///     Find out which processes have locked the specified directories.

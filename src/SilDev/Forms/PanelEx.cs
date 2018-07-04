@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PanelEx.cs
-// Version:  2018-02-22 03:14
+// Version:  2018-07-04 12:36
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -40,9 +40,9 @@ namespace SilDev.Forms
                 var hWnd = panel.GetAncestor()?.Handle ?? IntPtr.Zero;
                 if (hWnd != IntPtr.Zero)
                     if (value == 0)
-                        TaskBar.Progress.SetState(hWnd, TaskBar.Progress.Flags.Indeterminate);
+                        TaskBarProgress.SetState(hWnd, TaskBarProgressFlags.Indeterminate);
                     else
-                        TaskBar.Progress.SetValue(hWnd, value, maxValue);
+                        TaskBarProgress.SetValue(hWnd, value, maxValue);
                 var color = ForeColor;
                 if (ForeColor == default(Color))
                     color = Color.FromArgb(byte.MaxValue - (byte)(value * (byte.MaxValue / (float)maxValue)), byte.MaxValue, value);

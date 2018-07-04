@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2018-06-24 03:32
+// Version:  2018-07-04 11:54
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,11 +16,9 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Media;
     using System.Reflection;
-    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading;
     using Intern;
@@ -85,7 +83,7 @@ namespace SilDev
             /// </param>
             public static float? GetApplicationVolume(string name)
             {
-                var volume = GetVolumeObject(name);
+                var volume = ComImports.GetVolumeObject(name);
                 if (volume == null)
                     return null;
                 volume.GetMasterVolume(out var level);
@@ -100,7 +98,7 @@ namespace SilDev
             /// </param>
             public static bool? GetApplicationMute(string name)
             {
-                var volume = GetVolumeObject(name);
+                var volume = ComImports.GetVolumeObject(name);
                 if (volume == null)
                     return null;
                 volume.GetMute(out var mute);
@@ -118,7 +116,7 @@ namespace SilDev
             /// </param>
             public static void SetApplicationVolume(string name, float level)
             {
-                var volume = GetVolumeObject(name);
+                var volume = ComImports.GetVolumeObject(name);
                 if (volume == null)
                     return;
                 var guid = Guid.Empty;
@@ -136,133 +134,11 @@ namespace SilDev
             /// </param>
             public static void SetApplicationMute(string name, bool mute)
             {
-                var volume = GetVolumeObject(name);
+                var volume = ComImports.GetVolumeObject(name);
                 if (volume == null)
                     return;
                 var guid = Guid.Empty;
                 volume.SetMute(mute, ref guid);
-            }
-
-            [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
-            private static ISimpleAudioVolume GetVolumeObject(string name)
-            {
-                var deviceEnumerator = (IMMDeviceEnumerator)new MMDeviceEnumerator();
-                deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out var speakers);
-                var iidIAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
-                speakers.Activate(ref iidIAudioSessionManager2, 0, IntPtr.Zero, out var o);
-                var mgr = (IAudioSessionManager2)o;
-                mgr.GetSessionEnumerator(out var sessionEnumerator);
-                sessionEnumerator.GetCount(out var count);
-                ISimpleAudioVolume volumeControl = null;
-                for (var i = 0; i < count; i++)
-                {
-                    sessionEnumerator.GetSession(i, out var ctl);
-                    ctl.GetDisplayName(out var dn);
-                    if (name.EqualsEx(dn))
-                    {
-                        volumeControl = ctl as ISimpleAudioVolume;
-                        break;
-                    }
-                    Marshal.ReleaseComObject(ctl);
-                }
-                Marshal.ReleaseComObject(sessionEnumerator);
-                Marshal.ReleaseComObject(mgr);
-                Marshal.ReleaseComObject(speakers);
-                Marshal.ReleaseComObject(deviceEnumerator);
-                return volumeControl;
-            }
-
-            [ComImport]
-            [Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
-            private class MMDeviceEnumerator { }
-
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
-            [SuppressMessage("ReSharper", "UnusedMember.Local")]
-            private enum EDataFlow
-            {
-                eRender,
-                eCapture,
-                eAll,
-                EDataFlow_enum_count
-            }
-
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
-            [SuppressMessage("ReSharper", "UnusedMember.Local")]
-            private enum ERole
-            {
-                eConsole,
-                eMultimedia,
-                eCommunications,
-                ERole_enum_count
-            }
-
-            [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
-            private interface IMMDeviceEnumerator
-            {
-                int NotImpl1();
-
-                [PreserveSig]
-                int GetDefaultAudioEndpoint(EDataFlow dataFlow, ERole role, out IMMDevice ppDevice);
-            }
-
-            [Guid("D666063F-1587-4E43-81F1-B948E807363F")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
-            private interface IMMDevice
-            {
-                [PreserveSig]
-                int Activate(ref Guid iid, int dwClsCtx, IntPtr pActivationParams, [MarshalAs(UnmanagedType.IUnknown)] out object ppInterface);
-            }
-
-            [Guid("77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            private interface IAudioSessionManager2
-            {
-                int NotImpl1();
-                int NotImpl2();
-
-                [PreserveSig]
-                int GetSessionEnumerator(out IAudioSessionEnumerator sessionEnum);
-            }
-
-            [Guid("E2F5BB11-0570-40CA-ACDD-3AA01277DEE8")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            private interface IAudioSessionEnumerator
-            {
-                [PreserveSig]
-                int GetCount(out int sessionCount);
-
-                [PreserveSig]
-                int GetSession(int sessionCount, out IAudioSessionControl session);
-            }
-
-            [Guid("F4B1A599-7266-4319-A8CA-E70ACB11E8CD")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            private interface IAudioSessionControl
-            {
-                int NotImpl1();
-
-                [PreserveSig]
-                int GetDisplayName([MarshalAs(UnmanagedType.LPWStr)] out string pRetVal);
-            }
-
-            [Guid("87CE5498-68D6-44E5-9215-6DA47EF883D8")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            private interface ISimpleAudioVolume
-            {
-                [PreserveSig]
-                int SetMasterVolume(float fLevel, ref Guid eventContext);
-
-                [PreserveSig]
-                int GetMasterVolume(out float pfLevel);
-
-                [PreserveSig]
-                int SetMute(bool bMute, ref Guid eventContext);
-
-                [PreserveSig]
-                int GetMute(out bool pbMute);
             }
         }
 
