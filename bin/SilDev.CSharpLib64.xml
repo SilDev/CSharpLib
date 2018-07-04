@@ -5439,7 +5439,7 @@
                 only the current directory or all subdirectories.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
+        <member name="M:SilDev.DirectoryEx.CreateShellLink(System.String,System.String,System.String,System.ValueTuple{System.String,System.Int32},System.Boolean)">
             <summary>
                 Creates a link to the specified directory.
             </summary>
@@ -5450,22 +5450,19 @@
                 The fully qualified name of the new link.
             </param>
             <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
+                The arguments which applies when the link is started.
             </param>
-            <param name="linkIcon">
-                The icon resource path for this shortcut.
-            </param>
-            <param name="linkIconId">
-                The icon resource id for this shortcut.
+            <param name="iconLocation">
+                The icon resource path and resource identifier.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
                 the same; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.DirectoryEx.CreateShellLink(System.String,System.String,System.String,System.Boolean)">
             <summary>
-                Creates a link to the specified path.
+                Creates a link to the specified directory.
             </summary>
             <param name="targetPath">
                 The directory to be linked.
@@ -5474,16 +5471,16 @@
                 The fully qualified name of the new link.
             </param>
             <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
+                The arguments which applies when the link is started.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
                 the same; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.CreateShortcut(System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.DirectoryEx.CreateShellLink(System.String,System.String,System.Boolean)">
             <summary>
-                Creates a link to the specified path.
+                Creates a link to the specified directory.
             </summary>
             <param name="targetPath">
                 The directory to be linked.
@@ -5496,16 +5493,20 @@
                 the same; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.DirectoryEx.GetShortcutTarget(System.String)">
+        <member name="M:SilDev.DirectoryEx.DestroyShellLink(System.String)">
             <summary>
-                Returns the target path of the specified link.
-                <para>
-                    The target path is returned only if the specified target is an existing
-                    directory.
-                </para>
+                Removes a link of the specified directory.
             </summary>
             <param name="path">
-                The shortcut path to get the target path.
+                The shortcut to be removed.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetShellLinkTarget(System.String)">
+            <summary>
+                Returns the target path of the specified link if the target is a directory.
+            </summary>
+            <param name="path">
+                The link to get the target path.
             </param>
         </member>
         <member name="M:SilDev.DirectoryEx.CreateSymbolicLink(System.String,System.String,System.Boolean,System.Boolean)">
@@ -7026,9 +7027,9 @@
                 The path of the file to be deleted.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
+        <member name="M:SilDev.FileEx.CreateShellLink(System.String,System.String,System.String,System.ValueTuple{System.String,System.Int32},System.Boolean)">
             <summary>
-                Creates a link to the specified path.
+                Creates a link to the specified file.
             </summary>
             <param name="targetPath">
                 The file to be linked.
@@ -7037,45 +7038,42 @@
                 The fully qualified name of the new link.
             </param>
             <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
+                The arguments which applies when the link is started.
             </param>
-            <param name="linkIcon">
-                The icon resource path for this shortcut.
-            </param>
-            <param name="linkIconId">
-                The icon resource id for this shortcut.
+            <param name="iconLocation">
+                The icon resource path and resource identifier.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
                 the same; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.FileEx.CreateShellLink(System.String,System.String,System.String,System.Boolean)">
             <summary>
-                Creates a link to the specified path.
+                Creates a link to the specified file.
             </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
             <param name="targetPath">
+                The file to be linked.
+            </param>
+            <param name="linkPath">
                 The fully qualified name of the new link.
             </param>
             <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
+                The arguments which applies when the link is started.
             </param>
             <param name="skipExists">
                 true to skip existing shortcuts, even if the target path of
                 the same; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.CreateShortcut(System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.FileEx.CreateShellLink(System.String,System.String,System.Boolean)">
             <summary>
-                Creates a link to the specified path.
+                Creates a link to the specified file.
             </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
             <param name="targetPath">
+                The file to be linked.
+            </param>
+            <param name="linkPath">
                 The fully qualified name of the new link.
             </param>
             <param name="skipExists">
@@ -7083,7 +7081,7 @@
                 the same; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.DestroyShortcut(System.String)">
+        <member name="M:SilDev.FileEx.DestroyShellLink(System.String)">
             <summary>
                 Removes a link of the specified file.
             </summary>
@@ -7091,16 +7089,12 @@
                 The shortcut to be removed.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.GetShortcutTarget(System.String)">
+        <member name="M:SilDev.FileEx.GetShellLinkTarget(System.String)">
             <summary>
-                Returns the target path of the specified link.
-                <para>
-                    The target path is returned only if the specified target is an existing
-                    file.
-                </para>
+                Returns the target path of the specified link if the target is a file.
             </summary>
             <param name="path">
-                The shortcut path to get the target path.
+                The link to get the target path.
             </param>
         </member>
         <member name="M:SilDev.FileEx.CreateSymbolicLink(System.String,System.String,System.Boolean,System.Boolean)">
@@ -12517,118 +12511,6 @@
                 The length of the hash. Valid values are 4 through 24.
             </param>
         </member>
-        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
-            <summary>
-                Creates a link to the specified path.
-            </summary>
-            <param name="targetPath">
-                The file or directory to be linked.
-            </param>
-            <param name="linkPath">
-                The fully qualified name of the new link.
-            </param>
-            <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
-            </param>
-            <param name="linkIcon">
-                The icon resource path for this shortcut.
-            </param>
-            <param name="linkIconId">
-                The icon resource id for this shortcut.
-            </param>
-            <param name="skipExists">
-                true to skip existing shortcuts, even if the target path of
-                the same; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.String,System.Boolean)">
-            <summary>
-                Creates a link to the specified path.
-            </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
-            <param name="targetPath">
-                The fully qualified name of the new link.
-            </param>
-            <param name="startArgs">
-                The arguments which applies when this shortcut is executed.
-            </param>
-            <param name="skipExists">
-                true to skip existing shortcuts, even if the target path of
-                the same; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.CreateShortcut(System.String,System.String,System.Boolean)">
-            <summary>
-                Creates a link to the specified path.
-            </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
-            <param name="targetPath">
-                The fully qualified name of the new link.
-            </param>
-            <param name="skipExists">
-                true to skip existing shortcuts, even if the target path of
-                the same; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.DestroyShortcut(System.String)">
-            <summary>
-                Removes a link of the specified file or directory.
-            </summary>
-            <param name="path">
-                The shortcut to be removed.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.GetShortcutTarget(System.String)">
-            <summary>
-                Returns the target path of the specified link.
-            </summary>
-            <param name="path">
-                The shortcut path to get the target path.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.CreateSymbolicLink(System.String,System.String,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-                Creates a symbolic link to the specified file or directory based on command prompt
-                which allows a simple solution for the elevated execution of this order.
-            </summary>
-            <param name="linkPath">
-                The file or directory to be linked.
-            </param>
-            <param name="destPath">
-                The fully qualified name of the new link.
-            </param>
-            <param name="destIsDir">
-                true to determine that the destination path is a directory; otherwise, false.
-            </param>
-            <param name="backup">
-                true to create an backup for existing files; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to create this link with highest privileges; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.DestroySymbolicLink(System.String,System.Boolean,System.Boolean,System.Boolean)">
-            <summary>
-                Removes an symbolic link of the specified file or directory link based on command
-                prompt which allows a simple solution for the elevated execution of this order.
-            </summary>
-            <param name="path">
-                The link to be removed.
-            </param>
-            <param name="pathIsDir">
-                true to determine that the path is a directory; otherwise, false.
-            </param>
-            <param name="backup">
-                true to restore found backups; otherwise, false.
-            </param>
-            <param name="elevated">
-                true to remove this link with highest privileges; otherwise, false.
-            </param>
-        </member>
         <member name="M:SilDev.PathEx.GetLocks(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Returns processes that have locked the specified paths.
@@ -14862,7 +14744,6 @@
         <member name="T:SilDev.ResourcesEx.IconBrowserDialog">
             <summary>
                 Displays a dialog box that prompts to the user to browse the icon resource of a file.
-                <see cref="T:System.Windows.Forms.OpenFileDialog"/>
             </summary>
         </member>
         <member name="M:SilDev.ResourcesEx.IconBrowserDialog.#ctor(System.String,System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color},System.Nullable{System.Drawing.Color})">
@@ -14887,6 +14768,16 @@
             <param name="buttonHighlight">
                 The button highlight color of the dialog box.
             </param>
+        </member>
+        <member name="P:SilDev.ResourcesEx.IconBrowserDialog.IconPath">
+            <summary>
+                Gets the icon resource path.
+            </summary>
+        </member>
+        <member name="P:SilDev.ResourcesEx.IconBrowserDialog.IconId">
+            <summary>
+                Gets the icon resource identifier.
+            </summary>
         </member>
         <member name="M:SilDev.ResourcesEx.IconBrowserDialog.Dispose(System.Boolean)">
             <summary>
@@ -15016,6 +14907,98 @@
                 The name of the service to check.
             </param>
         </member>
+        <member name="T:SilDev.ShellLinkShowState">
+            <summary>
+                Provides enumerated values of window show statements.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkShowState.Normal">
+            <summary>
+                Activates and displays a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkShowState.Maximized">
+            <summary>
+                Activates the window and displays it as a maximized window.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkShowState.MinNoActive">
+            <summary>
+                Displays the window as a minimized window.
+            </summary>
+        </member>
+        <member name="T:SilDev.ShellLinkInfo">
+            <summary>
+                Specifies a set of values that are used when you create a shell link.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkInfo.Description">
+            <summary>
+                The description for the link.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkInfo.Arguments">
+            <summary>
+                The arguments which applies when the link is started.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkInfo.TargetPath">
+            <summary>
+                The file or directory to be linked.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkInfo.WorkingDirectory">
+            <summary>
+                The working directory for the link to be started.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkInfo.IconLocation">
+            <summary>
+                The icon resource path and resource identifier.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkInfo.ShowState">
+            <summary>
+                The show state of the window.
+            </summary>
+        </member>
+        <member name="F:SilDev.ShellLinkInfo.LinkPath">
+            <summary>
+                The fully qualified name of the link.
+            </summary>
+        </member>
+        <member name="T:SilDev.ShellLink">
+            <summary>
+                Provides the functionality to handle shell links.
+            </summary>
+        </member>
+        <member name="M:SilDev.ShellLink.Create(SilDev.ShellLinkInfo,System.Boolean)">
+            <summary>
+                Creates a shell link based on the specified <see cref="T:SilDev.ShellLinkInfo"/> structure.
+            </summary>
+            <param name="shellLinkInfo">
+                The <see cref="T:SilDev.ShellLinkInfo"/> structure.
+            </param>
+            <param name="skipExists">
+                true to skip existing links without further checks; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ShellLink.Destroy(System.String)">
+            <summary>
+                Removes a link of the specified file or directory.
+            </summary>
+            <param name="path">
+                The shell link to be removed.
+            </param>
+        </member>
+        <member name="M:SilDev.ShellLink.GetTarget(System.String)">
+            <summary>
+                Returns the target path of the specified link.
+            </summary>
+            <param name="path">
+                The link to get the target path.
+            </param>
+        </member>
         <member name="T:SilDev.TaskBarLocation">
             <summary>
                 Provides enumerated flags of the taskbar location.
@@ -15044,6 +15027,52 @@
         <member name="F:SilDev.TaskBarLocation.Right">
             <summary>
                 The taskbar is on the right side.
+            </summary>
+        </member>
+        <member name="T:SilDev.TaskBarProgressFlags">
+            <summary>
+                Provides enumerated options that control the current state of the progres
+                button.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBarProgressFlags.NoProgress">
+            <summary>
+                Stops displaying progress and returns the button to its normal state. Call this
+                method with this flag to dismiss the progress bar when the operation is complete
+                or canceled.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBarProgressFlags.Indeterminate">
+            <summary>
+                The progress indicator does not grow in size, but cycles repeatedly along the
+                length of the taskbar button. This indicates activity without specifying what
+                proportion of the progress is complete. Progress is taking place, but there is
+                no prediction as to how long the operation will take.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBarProgressFlags.Normal">
+            <summary>
+                The progress indicator grows in size from left to right in proportion to the
+                estimated amount of the operation completed. This is a determinate progress
+                indicator; a prediction is being made as to the duration of the operation.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBarProgressFlags.Error">
+            <summary>
+                The progress indicator turns red to show that an error has occurred in one of
+                the windows that is broadcasting progress. This is a determinate state. If the
+                progress indicator is in the indeterminate state, it switches to a red
+                determinate display of a generic percentage not indicative of actual progress.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBarProgressFlags.Paused">
+            <summary>
+                The progress indicator turns yellow to show that progress is currently stopped
+                in one of the windows but can be resumed by the user. No error condition exists
+                and nothing is preventing the progress from continuing. This is a determinate
+                state. If the progress indicator is in the indeterminate state, it switches to a
+                yellow determinate display of a generic percentage not indicative of actual
+                progress.
             </summary>
         </member>
         <member name="T:SilDev.TaskBarState">
@@ -15131,58 +15160,12 @@
                 The file to be unpinned.
             </param>
         </member>
-        <member name="T:SilDev.TaskBar.Progress">
+        <member name="T:SilDev.TaskBarProgress">
             <summary>
                 Provides static methods to manage a progress bar hosted in a taskbar button.
             </summary>
         </member>
-        <member name="T:SilDev.TaskBar.Progress.Flags">
-            <summary>
-                Provides enumerated options that control the current state of the progres
-                button.
-            </summary>
-        </member>
-        <member name="F:SilDev.TaskBar.Progress.Flags.NoProgress">
-            <summary>
-                Stops displaying progress and returns the button to its normal state. Call this
-                method with this flag to dismiss the progress bar when the operation is complete
-                or canceled.
-            </summary>
-        </member>
-        <member name="F:SilDev.TaskBar.Progress.Flags.Indeterminate">
-            <summary>
-                The progress indicator does not grow in size, but cycles repeatedly along the
-                length of the taskbar button. This indicates activity without specifying what
-                proportion of the progress is complete. Progress is taking place, but there is
-                no prediction as to how long the operation will take.
-            </summary>
-        </member>
-        <member name="F:SilDev.TaskBar.Progress.Flags.Normal">
-            <summary>
-                The progress indicator grows in size from left to right in proportion to the
-                estimated amount of the operation completed. This is a determinate progress
-                indicator; a prediction is being made as to the duration of the operation.
-            </summary>
-        </member>
-        <member name="F:SilDev.TaskBar.Progress.Flags.Error">
-            <summary>
-                The progress indicator turns red to show that an error has occurred in one of
-                the windows that is broadcasting progress. This is a determinate state. If the
-                progress indicator is in the indeterminate state, it switches to a red
-                determinate display of a generic percentage not indicative of actual progress.
-            </summary>
-        </member>
-        <member name="F:SilDev.TaskBar.Progress.Flags.Paused">
-            <summary>
-                The progress indicator turns yellow to show that progress is currently stopped
-                in one of the windows but can be resumed by the user. No error condition exists
-                and nothing is preventing the progress from continuing. This is a determinate
-                state. If the progress indicator is in the indeterminate state, it switches to a
-                yellow determinate display of a generic percentage not indicative of actual
-                progress.
-            </summary>
-        </member>
-        <member name="M:SilDev.TaskBar.Progress.SetState(System.IntPtr,SilDev.TaskBar.Progress.Flags)">
+        <member name="M:SilDev.TaskBarProgress.SetState(System.IntPtr,SilDev.TaskBarProgressFlags)">
             <summary>
                 Sets the type and state of the progress indicator displayed on a taskbar button.
             </summary>
@@ -15193,7 +15176,7 @@
                 The flag that control the current state of the progress button.
             </param>
         </member>
-        <member name="M:SilDev.TaskBar.Progress.SetValue(System.IntPtr,System.Double,System.Double)">
+        <member name="M:SilDev.TaskBarProgress.SetValue(System.IntPtr,System.Double,System.Double)">
             <summary>
                 Displays or updates a progress bar hosted in a taskbar button to show the specific
                 percentage completed of the full operation.
@@ -23847,6 +23830,50 @@
             </param>
             <param name="defValue">
                 The default value.
+            </param>
+        </member>
+        <member name="T:SilDev.SymbolicLink">
+            <summary>
+                Provides the functionality to handle symbolic links.
+            </summary>
+        </member>
+        <member name="M:SilDev.SymbolicLink.Create(System.String,System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+                Creates a symbolic link to the specified file or directory based on command prompt
+                which allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="linkPath">
+                The file or directory to be linked.
+            </param>
+            <param name="destPath">
+                The fully qualified name of the new link.
+            </param>
+            <param name="destIsDir">
+                true to determine that the destination path is a directory; otherwise, false.
+            </param>
+            <param name="backup">
+                true to create an backup for existing files; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to create this link with highest privileges; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.SymbolicLink.Destroy(System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+                Removes an symbolic link of the specified file or directory link based on command
+                prompt which allows a simple solution for the elevated execution of this order.
+            </summary>
+            <param name="path">
+                The link to be removed.
+            </param>
+            <param name="pathIsDir">
+                true to determine that the path is a directory; otherwise, false.
+            </param>
+            <param name="backup">
+                true to restore found backups; otherwise, false.
+            </param>
+            <param name="elevated">
+                true to remove this link with highest privileges; otherwise, false.
             </param>
         </member>
     </members>
