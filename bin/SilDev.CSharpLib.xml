@@ -14364,6 +14364,14 @@
                 One of the enumeration values that specifies the rules for the search.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ReduceWhiteSpace(System.String)">
+            <summary>
+                Reduce all white space characters in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.Reverse(System.String)">
             <summary>
                 Reverses the sequence of all characters in a string.
@@ -14592,6 +14600,17 @@
             </param>
             <param name="strs">
                 The sequence of strings to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.RemoveTextIgnoreCase(System.String,System.String[])">
+            <summary>
+                Removes the specified strings in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="patterns">
+                The sequence of regular expression patterns to match.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Replace(System.Byte[],System.Byte[],System.Byte[])">
