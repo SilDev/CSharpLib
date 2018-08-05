@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-06-21 16:25
+// Version:  2018-08-05 15:30
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -443,6 +443,41 @@ namespace SilDev
             s = s.Remove(i, oldValue.Length);
             s = s.Insert(i, newValue);
             goto Replace;
+        }
+
+        /// <summary>
+        ///     Reduce all white space characters in a string.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        public static string ReduceWhiteSpace(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return str?.Trim();
+            var isWhiteSpace = false;
+            var startFound = false;
+            var builder = new StringBuilder();
+            foreach (var c in str)
+            {
+                if (char.IsWhiteSpace(c))
+                {
+                    if (isWhiteSpace)
+                        continue;
+                    isWhiteSpace = true;
+                }
+                else
+                {
+                    isWhiteSpace = false;
+                    startFound = true;
+                }
+                if (!startFound)
+                    continue;
+                builder.Append(c);
+            }
+            if (isWhiteSpace)
+                builder.Length--;
+            return builder.ToString();
         }
 
         /// <summary>
