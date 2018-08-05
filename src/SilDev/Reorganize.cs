@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-08-05 15:30
+// Version:  2018-08-05 15:44
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -910,6 +910,24 @@ namespace SilDev
             if (string.IsNullOrEmpty(str) || strs == null || strs.All(string.IsNullOrEmpty))
                 return str;
             var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
+            return s;
+        }
+
+        /// <summary>
+        ///     Removes the specified strings in a string.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to change.
+        /// </param>
+        /// <param name="patterns">
+        ///     The sequence of regular expression patterns to match.
+        /// </param>
+        public static string RemoveTextIgnoreCase(this string str, params string[] patterns)
+        {
+            if (string.IsNullOrEmpty(str) || patterns == null || patterns.All(string.IsNullOrEmpty))
+                return str;
+            var p = patterns.Distinct().Join('|');
+            var s = new Regex(p, RegexOptions.IgnoreCase).Replace(str, string.Empty);
             return s;
         }
 
