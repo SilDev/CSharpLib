@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2018-09-21 17:19
 // 
 // Copyright (c) 2018, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -23,6 +24,7 @@ namespace SilDev
     using System.Linq;
     using System.Net;
     using System.Net.NetworkInformation;
+    using System.Threading;
 
     /// <summary>
     ///     Provides functionality for the access of internet resources.
@@ -48,6 +50,143 @@ namespace SilDev
             ///     DNS-over-HTTPS API.
             /// </summary>
             Google
+        }
+
+        private static string[] _internalDownloadMirrors;
+        private static bool? _ipv4IsAvalaible, _ipv6IsAvalaible;
+
+        /// <summary>
+        ///     Gets internal download mirrors.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public static string[] InternalDownloadMirrors
+        {
+            get
+            {
+                if (_internalDownloadMirrors?.Any() == true)
+                    return _internalDownloadMirrors;
+
+                if (!IPv4IsAvalaible)
+                {
+                    Log.Write("Network: IPv4 connection not available.");
+                    if (!IPv6IsAvalaible)
+                    {
+                        Log.Write("Network: IPv6 connection not available.");
+                        return default(string[]);
+                    }
+                }
+
+                var servers = new List<string>();
+                for (var i = 0; i < 3; i++)
+                    servers.Add($"https://ns.{i}.si13n7.de");
+                for (var i = 0; i < 6; i++)
+                    servers.Add($"http://ns.{i}.si13n7.com");
+
+                var timeout = 60000;
+                var info = default(string);
+                for (var i = 0; i < servers.Count; i++)
+                {
+                    try
+                    {
+                        var server = servers[i];
+                        if (!FileIsAvailable(server, timeout))
+                        {
+                            if (timeout > 20000)
+                                timeout -= 20000;
+                            throw new PathNotFoundException(server);
+                        }
+                        info = Transfer.DownloadString(server);
+                        if (string.IsNullOrWhiteSpace(info))
+                            throw new ArgumentNullException(nameof(info));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Write(ex);
+                        continue;
+                    }
+                    if (string.IsNullOrWhiteSpace(info) && i < servers.Count - 1)
+                    {
+                        Thread.Sleep(1000);
+                        continue;
+                    }
+                    break;
+                }
+
+                var mirrors = new List<string>();
+                if (string.IsNullOrEmpty(info))
+                    return default(string[]);
+                if (info.StartsWith("["))
+                    goto Ini;
+                if (info.StartsWith("{"))
+                    goto Json;
+                return default(string[]);
+
+                Ini:
+                Ini.Detach(info);
+                foreach (var section in Ini.GetSections(info))
+                {
+                    var addr = Ini.Read(section, IPv4IsAvalaible ? "addr" : "ipv6", info);
+                    if (IPv6IsAvalaible && string.IsNullOrEmpty(addr))
+                        addr = Ini.Read(section, "ipv6", info);
+                    if (string.IsNullOrEmpty(addr))
+                        continue;
+                    var domain = Ini.Read(section, "domain", info);
+                    if (string.IsNullOrEmpty(domain))
+                        continue;
+                    var ssl = Ini.Read(section, "ssl", false, info);
+                    domain = PathEx.AltCombine(ssl ? "https:" : "http:", domain.ToLower(), "Downloads");
+                    if (!mirrors.Contains(domain))
+                        mirrors.Add(domain);
+                }
+                Ini.Detach(info);
+                goto Done;
+
+                Json:
+                var json = Json.Deserialize<Dictionary<string, object>>(info);
+                foreach (var outer in json)
+                {
+                    var inner = (Dictionary<string, object>)outer.Value;
+                    if (!IPv4IsAvalaible && IPv6IsAvalaible && (!inner.TryGetValue("IPv6", out var ipv6) || !ipv6.ToString().ToBoolean()))
+                        continue;
+                    if (IPv4IsAvalaible && !IPv6IsAvalaible && (!inner.TryGetValue("IPv6Only", out var ipv6Only) || !ipv6Only.ToString().ToBoolean()))
+                        continue;
+                    var domain = PathEx.AltCombine(inner.TryGetValue("SSL", out var ssl) && ssl.ToString().ToBoolean() ? "https://" : "http://", outer.Key.ToLower(), "Downloads");
+                    if (!mirrors.Contains(domain))
+                        mirrors.Add(domain);
+                }
+
+                Done:
+                _internalDownloadMirrors = mirrors.ToArray();
+                return _internalDownloadMirrors;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether the current IPv4 connection is avalable.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public static bool IPv4IsAvalaible
+        {
+            get
+            {
+                if (!_ipv4IsAvalaible.HasValue)
+                    _ipv4IsAvalaible = InternetIsAvailable();
+                return (bool)_ipv4IsAvalaible;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether the current IPv6 connection is avalable.
+        /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public static bool IPv6IsAvalaible
+        {
+            get
+            {
+                if (!_ipv6IsAvalaible.HasValue)
+                    _ipv6IsAvalaible = InternetIsAvailable(true);
+                return (bool)_ipv6IsAvalaible;
+            }
         }
 
         /// <summary>
@@ -93,6 +232,77 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Gets the full host component of this <see cref="Uri"/> instance.
+        /// </summary>
+        /// <param name="uri">
+        ///     The <see cref="Uri"/> instance.
+        /// </param>
+        public static string GetFullHost(this Uri uri)
+        {
+            try
+            {
+                return uri.Host.ToLower();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Gets the full host component of this URL string.
+        /// </summary>
+        /// <param name="url">
+        ///     The URL string.
+        /// </param>
+        public static string GetFullHost(string url)
+        {
+            try
+            {
+                var uri = new Uri(url);
+                return uri.Host.ToLower();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Gets the short host component of this <see cref="Uri"/> instance.
+        /// </summary>
+        /// <param name="uri">
+        ///     The <see cref="Uri"/> instance.
+        /// </param>
+        public static string GetShortHost(this Uri uri)
+        {
+            var host = uri?.GetFullHost();
+            if (string.IsNullOrEmpty(host))
+                return null;
+            if (host.Count(x => x == '.') > 1)
+                host = host.Split('.').TakeLast(2).Join('.');
+            return host;
+        }
+
+        /// <summary>
+        ///     Gets the short host component of this URL string.
+        /// </summary>
+        /// <param name="url">
+        ///     The URL string.
+        /// </param>
+        public static string GetShortHost(string url)
+        {
+            var host = GetFullHost(url);
+            if (string.IsNullOrEmpty(host))
+                return null;
+            if (host.Count(x => x == '.') > 1)
+                host = host.Split('.').TakeLast(2).Join('.');
+            return host;
+        }
+
+        /// <summary>
         ///     Checks the current network connection.
         /// </summary>
         /// <param name="iPv6">
@@ -130,7 +340,8 @@ namespace SilDev
             for (var i = 0; i < addresses.GetLength(dimension); i++)
             {
                 var server = addresses[dimension, i];
-                if (Ping(server, maxRoundtripTime) < maxRoundtripTime)
+                var isAvailable = Ping(server, maxRoundtripTime) < maxRoundtripTime;
+                if (!iPv6 && (_ipv4IsAvalaible = isAvailable) == true || iPv6 && (_ipv6IsAvalaible = isAvailable) == true)
                     return true;
             }
             return false;
