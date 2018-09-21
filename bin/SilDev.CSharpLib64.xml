@@ -9180,6 +9180,21 @@
                 DNS-over-HTTPS API.
             </summary>
         </member>
+        <member name="P:SilDev.NetEx.InternalDownloadMirrors">
+            <summary>
+                Gets internal download mirrors.
+            </summary>
+        </member>
+        <member name="P:SilDev.NetEx.IPv4IsAvalaible">
+            <summary>
+                Determines whether the current IPv4 connection is avalable.
+            </summary>
+        </member>
+        <member name="P:SilDev.NetEx.IPv6IsAvalaible">
+            <summary>
+                Determines whether the current IPv6 connection is avalable.
+            </summary>
+        </member>
         <member name="P:SilDev.NetEx.LastPingReply">
             <summary>
                 Gets the last result defined in the previous call to the <see cref="M:SilDev.NetEx.Ping(System.Uri,System.Int32)"/> function.
@@ -9191,6 +9206,38 @@
             </summary>
             <param name="dnsOptions">
                 The Domain Name System provider to get the addresses.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.GetFullHost(System.Uri)">
+            <summary>
+                Gets the full host component of this <see cref="T:System.Uri"/> instance.
+            </summary>
+            <param name="uri">
+                The <see cref="T:System.Uri"/> instance.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.GetFullHost(System.String)">
+            <summary>
+                Gets the full host component of this URL string.
+            </summary>
+            <param name="url">
+                The URL string.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.GetShortHost(System.Uri)">
+            <summary>
+                Gets the short host component of this <see cref="T:System.Uri"/> instance.
+            </summary>
+            <param name="uri">
+                The <see cref="T:System.Uri"/> instance.
+            </param>
+        </member>
+        <member name="M:SilDev.NetEx.GetShortHost(System.String)">
+            <summary>
+                Gets the short host component of this URL string.
+            </summary>
+            <param name="url">
+                The URL string.
             </param>
         </member>
         <member name="M:SilDev.NetEx.InternetIsAvailable(System.Boolean,SilDev.NetEx.DnsOptions,System.Int32)">
