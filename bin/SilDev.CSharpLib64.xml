@@ -74,6 +74,61 @@
               Looks up a localized string similar to %TEMP%\tmp-{0}.
             </summary>
         </member>
+        <member name="T:SilDev.ArgumentInvalidException">
+            <summary>
+                The exception that is thrown when a reference is passed to a method that does not
+                accept it as a valid argument.
+            </summary>
+        </member>
+        <member name="M:SilDev.ArgumentInvalidException.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.ArgumentInvalidException.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
+                with the name of the parameter that causes this exception.
+            </summary>
+            <param name="paramName">
+                The name of the parameter that caused the exception.
+            </param>
+        </member>
+        <member name="M:SilDev.ArgumentInvalidException.#ctor(System.String,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
+                with the parameter name and the exception that is the cause of this exception.
+            </summary>
+            <param name="paramName">
+                The name of the parameter that caused the exception.
+            </param>
+            <param name="innerException">
+                The exception that is the cause of the current exception, or a null reference.
+            </param>
+        </member>
+        <member name="M:SilDev.ArgumentInvalidException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
+                with serialized data.
+            </summary>
+        </member>
+        <member name="P:SilDev.ArgumentInvalidException.Message">
+            <summary>
+                Gets a message that describes the current exception.
+            </summary>
+        </member>
+        <member name="M:SilDev.ArgumentInvalidException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object with the parameter name and
+                additional exception information.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
         <member name="T:SilDev.AssemblyInfo">
             <summary>
                 Provides information for the current assembly.
@@ -9129,31 +9184,45 @@
         </member>
         <member name="T:SilDev.MemoryException">
             <summary>
-                The exception that is thrown when an attempt to access some data in memory.
+                The exception that is thrown when an attempt to access some data in memory fails.
             </summary>
         </member>
         <member name="M:SilDev.MemoryException.#ctor">
             <summary>
-                Create the exception.
+                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class.
             </summary>
         </member>
         <member name="M:SilDev.MemoryException.#ctor(System.String)">
             <summary>
-                Create the exception with a specified error message.
+                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
+                with a specified error message.
             </summary>
             <param name="message">
-                Exception message.
+                The message that describes the error.
             </param>
         </member>
         <member name="M:SilDev.MemoryException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-                Initializes a new instance of the <see cref="T:SilDev.MemoryException"/> class with serialized data.
+                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
+                with serialized data.
             </summary>
         </member>
         <member name="P:SilDev.MemoryException.Message">
             <summary>
-                Gets the error message.
+                Gets a message that describes the current exception.
             </summary>
+        </member>
+        <member name="M:SilDev.MemoryException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object with the additional exception
+                information.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
         </member>
         <member name="T:SilDev.NetEx">
             <summary>
@@ -12598,44 +12667,58 @@
         </member>
         <member name="T:SilDev.PathNotFoundException">
             <summary>
-                The exception that is thrown when an attempt to access a target that does not exist
-                fails.
+                The exception thrown when an attempt to access an target fails.
             </summary>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor">
             <summary>
-                Create the exception.
+                Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class.
             </summary>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor(System.String)">
             <summary>
-                Create the exception with path.
+                Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class
+                with the target that causes this exception.
             </summary>
             <param name="target">
-                Exception target.
+                The target that caused the exception.
             </param>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor(System.String,System.Exception)">
             <summary>
-                Create the exception with path and inner cause.
+                Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class
+                with a specified error message and the exception that is the cause of this
+                exception.
             </summary>
             <param name="target">
-                Exception target.
+                The target that caused the exception.
             </param>
             <param name="innerException">
-                Exception inner cause.
+                The exception that is the cause of the current exception, or a null reference.
             </param>
         </member>
         <member name="M:SilDev.PathNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-                Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class with serialized data.
+                Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class
+                with serialized data.
             </summary>
         </member>
         <member name="P:SilDev.PathNotFoundException.Message">
             <summary>
-                Gets the error message and the path, or only the exception message if no path
-                is set.
+                Gets a message that describes the current exception.
             </summary>
+        </member>
+        <member name="M:SilDev.PathNotFoundException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object with the target and additional
+                exception information.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
         </member>
         <member name="T:SilDev.MachineTypes">
             <summary>
@@ -23378,7 +23461,7 @@
                 The size of the structure, in bytes.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarData.hWnd">
+        <member name="P:SilDev.WinApi.AppBarData.hWnd">
             <summary>
                 The handle to the appbar window. Not all messages use this member. See the individual message
                 page to see if you need to provide an hWind value.
@@ -23452,19 +23535,19 @@
                 hook procedure.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.CallWndProcRet.lResult">
+        <member name="P:SilDev.WinApi.CallWndProcRet.lResult">
             <summary>
                 The return value of the window procedure that processed the message specified by
                 the message value.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.CallWndProcRet.lParam">
+        <member name="P:SilDev.WinApi.CallWndProcRet.lParam">
             <summary>
                 Additional information about the message. The exact meaning depends on the message
                 value.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.CallWndProcRet.wParam">
+        <member name="P:SilDev.WinApi.CallWndProcRet.wParam">
             <summary>
                 Additional information about the message. The exact meaning depends on the message
                 value.
@@ -23475,7 +23558,7 @@
                 The message.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.CallWndProcRet.hwnd">
+        <member name="P:SilDev.WinApi.CallWndProcRet.hwnd">
             <summary>
                 A handle to the window that processed the message specified by the message value.
             </summary>
@@ -23486,7 +23569,7 @@
                 <see cref="F:SilDev.WinApi.WindowMenuFlags.WmCopyData"/> message.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.CopyData.dwData">
+        <member name="P:SilDev.WinApi.CopyData.dwData">
             <summary>
                 The data to be passed to the receiving application.
             </summary>
@@ -23496,7 +23579,7 @@
                 The size, in bytes, of the data pointed to by the lpData member.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.CopyData.lpData">
+        <member name="P:SilDev.WinApi.CopyData.lpData">
             <summary>
                 The data to be passed to the receiving application. This member can be NULL.
             </summary>
@@ -23607,7 +23690,7 @@
                 its own time stamp.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.MouseInput.ExtraInfo">
+        <member name="P:SilDev.WinApi.MouseInput.ExtraInfo">
             <summary>
                 An additional value associated with the mouse event. An application calls GetMessageExtraInfo
                 to obtain this extra information.
