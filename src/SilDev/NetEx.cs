@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2018-09-21 17:19
+// Version:  2019-01-30 11:37
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -76,87 +76,7 @@ namespace SilDev
                     }
                 }
 
-                var servers = new List<string>();
-                for (var i = 0; i < 3; i++)
-                    servers.Add($"https://ns.{i}.si13n7.de");
-                for (var i = 0; i < 6; i++)
-                    servers.Add($"http://ns.{i}.si13n7.com");
-
-                var timeout = 60000;
-                var info = default(string);
-                for (var i = 0; i < servers.Count; i++)
-                {
-                    try
-                    {
-                        var server = servers[i];
-                        if (!FileIsAvailable(server, timeout))
-                        {
-                            if (timeout > 20000)
-                                timeout -= 20000;
-                            throw new PathNotFoundException(server);
-                        }
-                        info = Transfer.DownloadString(server);
-                        if (string.IsNullOrWhiteSpace(info))
-                            throw new ArgumentNullException(nameof(info));
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex);
-                        continue;
-                    }
-                    if (string.IsNullOrWhiteSpace(info) && i < servers.Count - 1)
-                    {
-                        Thread.Sleep(1000);
-                        continue;
-                    }
-                    break;
-                }
-
-                var mirrors = new List<string>();
-                if (string.IsNullOrEmpty(info))
-                    return default(string[]);
-                if (info.StartsWith("["))
-                    goto Ini;
-                if (info.StartsWith("{"))
-                    goto Json;
-                return default(string[]);
-
-                Ini:
-                Ini.Detach(info);
-                foreach (var section in Ini.GetSections(info))
-                {
-                    var addr = Ini.Read(section, IPv4IsAvalaible ? "addr" : "ipv6", info);
-                    if (IPv6IsAvalaible && string.IsNullOrEmpty(addr))
-                        addr = Ini.Read(section, "ipv6", info);
-                    if (string.IsNullOrEmpty(addr))
-                        continue;
-                    var domain = Ini.Read(section, "domain", info);
-                    if (string.IsNullOrEmpty(domain))
-                        continue;
-                    var ssl = Ini.Read(section, "ssl", false, info);
-                    domain = PathEx.AltCombine(ssl ? "https:" : "http:", domain.ToLower(), "Downloads");
-                    if (!mirrors.Contains(domain))
-                        mirrors.Add(domain);
-                }
-                Ini.Detach(info);
-                goto Done;
-
-                Json:
-                var json = Json.Deserialize<Dictionary<string, object>>(info);
-                foreach (var outer in json)
-                {
-                    var inner = (Dictionary<string, object>)outer.Value;
-                    if (!IPv4IsAvalaible && IPv6IsAvalaible && (!inner.TryGetValue("IPv6", out var ipv6) || !ipv6.ToString().ToBoolean()))
-                        continue;
-                    if (IPv4IsAvalaible && !IPv6IsAvalaible && (!inner.TryGetValue("IPv6Only", out var ipv6Only) || !ipv6Only.ToString().ToBoolean()))
-                        continue;
-                    var domain = PathEx.AltCombine(inner.TryGetValue("SSL", out var ssl) && ssl.ToString().ToBoolean() ? "https://" : "http://", outer.Key.ToLower(), "Downloads");
-                    if (!mirrors.Contains(domain))
-                        mirrors.Add(domain);
-                }
-
-                Done:
-                _internalDownloadMirrors = mirrors.ToArray();
+                _internalDownloadMirrors = FindInternalDownloadMirrors();
                 return _internalDownloadMirrors;
             }
         }
@@ -193,6 +113,91 @@ namespace SilDev
         ///     Gets the last result defined in the previous call to the <see cref="Ping(Uri, int)"/> function.
         /// </summary>
         public static PingReply LastPingReply { get; private set; }
+
+        private static string[] FindInternalDownloadMirrors()
+        {
+            var servers = new List<string>();
+            for (var i = 0; i < 3; i++)
+                servers.Add($"https://ns.{i}.si13n7.de");
+            for (var i = 0; i < 6; i++)
+                servers.Add($"http://ns.{i}.si13n7.com");
+
+            var timeout = 60000;
+            var info = default(string);
+            for (var i = 0; i < servers.Count; i++)
+            {
+                try
+                {
+                    var server = servers[i];
+                    if (!FileIsAvailable(server, timeout))
+                    {
+                        if (timeout > 20000)
+                            timeout -= 20000;
+                        throw new PathNotFoundException(server);
+                    }
+                    info = Transfer.DownloadString(server);
+                    if (string.IsNullOrWhiteSpace(info))
+                        throw new ArgumentNullException(nameof(info));
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(info) && i < servers.Count - 1)
+                {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+                break;
+            }
+
+            var mirrors = new List<string>();
+            if (string.IsNullOrEmpty(info))
+                return default(string[]);
+            if (info.StartsWith("["))
+                goto Ini;
+            if (info.StartsWith("{"))
+                goto Json;
+            return default(string[]);
+
+            Ini:
+            Ini.Detach(info);
+            foreach (var section in Ini.GetSections(info))
+            {
+                var addr = Ini.Read(section, IPv4IsAvalaible ? "addr" : "ipv6", info);
+                if (IPv6IsAvalaible && string.IsNullOrEmpty(addr))
+                    addr = Ini.Read(section, "ipv6", info);
+                if (string.IsNullOrEmpty(addr))
+                    continue;
+                var domain = Ini.Read(section, "domain", info);
+                if (string.IsNullOrEmpty(domain))
+                    continue;
+                var ssl = Ini.Read(section, "ssl", false, info);
+                domain = PathEx.AltCombine(ssl ? "https:" : "http:", domain.ToLower(), "Downloads");
+                if (!mirrors.Contains(domain))
+                    mirrors.Add(domain);
+            }
+            Ini.Detach(info);
+            goto Done;
+
+            Json:
+            var json = Json.Deserialize<Dictionary<string, object>>(info);
+            foreach (var outer in json)
+            {
+                var inner = (Dictionary<string, object>)outer.Value;
+                if (!IPv4IsAvalaible && IPv6IsAvalaible && (!inner.TryGetValue("IPv6", out var ipv6) || !ipv6.ToString().ToBoolean()))
+                    continue;
+                if (IPv4IsAvalaible && !IPv6IsAvalaible && (!inner.TryGetValue("IPv6Only", out var ipv6Only) || !ipv6Only.ToString().ToBoolean()))
+                    continue;
+                var domain = PathEx.AltCombine(inner.TryGetValue("SSL", out var ssl) && ssl.ToString().ToBoolean() ? "https://" : "http://", outer.Key.ToLower(), "Downloads");
+                if (!mirrors.Contains(domain))
+                    mirrors.Add(domain);
+            }
+
+            Done:
+            return mirrors.ToArray();
+        }
 
         /// <summary>
         ///     Returns the specified Domain Name System server addresses.
