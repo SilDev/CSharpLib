@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2018-06-30 22:52
+// Version:  2019-01-30 11:48
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -8651,8 +8651,9 @@ namespace SilDev
             ///     The handle to the appbar window. Not all messages use this member. See the individual message
             ///     page to see if you need to provide an hWind value.
             /// </summary>
-            public IntPtr hWnd;
-
+#pragma warning disable IDE1006
+            public IntPtr hWnd { get; internal set; }
+#pragma warning restore IDE1006
             /// <summary>
             ///     An application-defined message identifier. The application uses the specified identifier for
             ///     notification messages that it sends to the appbar identified by the hWnd member.
@@ -8733,20 +8734,21 @@ namespace SilDev
             ///     The return value of the window procedure that processed the message specified by
             ///     the message value.
             /// </summary>
-            public IntPtr lResult;
+#pragma warning disable IDE1006
+            public IntPtr lResult { get; internal set; }
 
             /// <summary>
             ///     Additional information about the message. The exact meaning depends on the message
             ///     value.
             /// </summary>
-            public IntPtr lParam;
+            public IntPtr lParam { get; internal set; }
 
             /// <summary>
             ///     Additional information about the message. The exact meaning depends on the message
             ///     value.
             /// </summary>
-            public IntPtr wParam;
-
+            public IntPtr wParam { get; internal set; }
+#pragma warning restore IDE1006
             /// <summary>
             ///     The message.
             /// </summary>
@@ -8755,7 +8757,9 @@ namespace SilDev
             /// <summary>
             ///     A handle to the window that processed the message specified by the message value.
             /// </summary>
-            public IntPtr hwnd;
+#pragma warning disable IDE1006
+            public IntPtr hwnd { get; internal set; }
+#pragma warning restore IDE1006
         }
 
         /// <summary>
@@ -8768,8 +8772,9 @@ namespace SilDev
             /// <summary>
             ///     The data to be passed to the receiving application.
             /// </summary>
-            public IntPtr dwData;
-
+#pragma warning disable IDE1006
+            public IntPtr dwData { get; internal set; }
+#pragma warning restore IDE1006
             /// <summary>
             ///     The size, in bytes, of the data pointed to by the lpData member.
             /// </summary>
@@ -8778,8 +8783,9 @@ namespace SilDev
             /// <summary>
             ///     The data to be passed to the receiving application. This member can be NULL.
             /// </summary>
-            public IntPtr lpData;
-
+#pragma warning disable IDE1006
+            public IntPtr lpData { get; internal set; }
+#pragma warning restore IDE1006
             /// <summary>
             ///     Releases all resources used by this <see cref="CopyData"/>.
             /// </summary>
@@ -8919,7 +8925,7 @@ namespace SilDev
             ///     An additional value associated with the mouse event. An application calls GetMessageExtraInfo
             ///     to obtain this extra information.
             /// </summary>
-            public IntPtr ExtraInfo;
+            public IntPtr ExtraInfo { get; internal set; }
         }
 
         /// <summary>
@@ -8948,12 +8954,17 @@ namespace SilDev
         public struct ProcessBasicInformation
         {
 #pragma warning disable CS1591
-            public IntPtr ExitStatus;
-            public IntPtr PebBaseAddress;
-            public IntPtr AffinityMask;
-            public IntPtr BasePriority;
-            public UIntPtr UniqueProcessId;
-            public IntPtr InheritedFromUniqueProcessId;
+            public IntPtr ExitStatus { get; internal set; }
+
+            public IntPtr PebBaseAddress { get; internal set; }
+
+            public IntPtr AffinityMask { get; internal set; }
+
+            public IntPtr BasePriority { get; internal set; }
+
+            public UIntPtr UniqueProcessId { get; internal set; }
+
+            public IntPtr InheritedFromUniqueProcessId { get; internal set; }
 #pragma warning restore CS1591
         }
 
