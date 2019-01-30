@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2018-04-03 20:01
+// Version:  2019-01-30 10:22
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.Collections;
     using System.Runtime.InteropServices;
-    using System.Runtime.Serialization;
     using System.Text;
 
     /// <summary>
@@ -67,7 +66,6 @@ namespace SilDev
                 return;
             GC.SuppressFinalize(this);
         }
-
 #pragma warning disable 1591
         ~MemoryPinner() =>
             Dispose(false);
@@ -117,12 +115,10 @@ namespace SilDev
                 return;
             GC.SuppressFinalize(this);
         }
-
 #pragma warning disable 1591
         ~ProcessMemory() =>
             Dispose(false);
 #pragma warning restore 1591
-
         /// <summary>
         ///     Gets the file name of the process image.
         /// </summary>
@@ -230,35 +226,5 @@ namespace SilDev
                 Log.Write(ex);
             }
         }
-    }
-
-    /// <summary>
-    ///     The exception that is thrown when an attempt to access some data in memory.
-    /// </summary>
-    [Serializable]
-    public class MemoryException : Exception
-    {
-        /// <summary>
-        ///     Create the exception.
-        /// </summary>
-        public MemoryException() { }
-
-        /// <summary>
-        ///     Create the exception with a specified error message.
-        /// </summary>
-        /// <param name="message">
-        ///     Exception message.
-        /// </param>
-        public MemoryException(string message) : base(message) { }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MemoryException"/> class with serialized data.
-        /// </summary>
-        protected MemoryException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        /// <summary>
-        ///     Gets the error message.
-        /// </summary>
-        public sealed override string Message { get; } = "Unable to access to the specified area of the memory.";
     }
 }
