@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2018-07-04 12:12
+// Version:  2019-01-30 10:22
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,7 +22,6 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -703,50 +702,5 @@ namespace SilDev
             }
             return !DirOrFileExists(target);
         }
-    }
-
-    /// <summary>
-    ///     The exception that is thrown when an attempt to access a target that does not exist
-    ///     fails.
-    /// </summary>
-    [Serializable]
-    public class PathNotFoundException : Exception
-    {
-        /// <summary>
-        ///     Create the exception.
-        /// </summary>
-        public PathNotFoundException() { }
-
-        /// <summary>
-        ///     Create the exception with path.
-        /// </summary>
-        /// <param name="target">
-        ///     Exception target.
-        /// </param>
-        public PathNotFoundException(string target) : base(target) =>
-            Message = $"Could not find target \'{target}\'.";
-
-        /// <summary>
-        ///     Create the exception with path and inner cause.
-        /// </summary>
-        /// <param name="target">
-        ///     Exception target.
-        /// </param>
-        /// <param name="innerException">
-        ///     Exception inner cause.
-        /// </param>
-        public PathNotFoundException(string target, Exception innerException) : base(target, innerException) =>
-            Message = $"Could not find target \'{target}\'.";
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class with serialized data.
-        /// </summary>
-        protected PathNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        /// <summary>
-        ///     Gets the error message and the path, or only the exception message if no path
-        ///     is set.
-        /// </summary>
-        public sealed override string Message { get; } = "Unable to find the target from the specified path.";
     }
 }
