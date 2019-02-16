@@ -74,6 +74,196 @@
               Looks up a localized string similar to %TEMP%\tmp-{0}.
             </summary>
         </member>
+        <member name="T:SilDev.AppCompatColorModes">
+            <summary>
+                Provides color mode options. For more information, see
+                <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatColorModes.Default">
+            <summary>
+                System default.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatColorModes._256Color">
+            <summary>
+                Reduce color mode to 8-bit (256).
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatColorModes._16BitColor">
+            <summary>
+                Reduce color mode to 16-bit (65536).
+            </summary>
+        </member>
+        <member name="T:SilDev.AppCompatDpiScalingBehaviors">
+            <summary>
+                Provides DPI scaling behavior options. For more information, see
+                <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatDpiScalingBehaviors.Default">
+            <summary>
+                System default.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatDpiScalingBehaviors.HighDpiWare">
+            <summary>
+                DPI scaling performed by application.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatDpiScalingBehaviors.DpiUnaware">
+            <summary>
+                DPI scaling performed by system.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatDpiScalingBehaviors.GdiDpiScaling_DpiUnaware">
+            <summary>
+                DPI scaling performed by system (enhanced).
+            </summary>
+        </member>
+        <member name="T:SilDev.AppCompatDpiScalingSystems">
+            <summary>
+                Provides DPI scaling system options. For more information, see
+                <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatDpiScalingSystems.Default">
+            <summary>
+                System default.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatDpiScalingSystems.PerProcessSystemDpiForceOff">
+            <summary>
+                Windows logon.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatDpiScalingSystems.PerProcessSystemDpiForceOn">
+            <summary>
+                Application start.
+            </summary>
+        </member>
+        <member name="T:SilDev.AppCompatSystemVersions">
+            <summary>
+                Provides OS version options. For more information, see
+                <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.Default">
+            <summary>
+                System default.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.Win95">
+            <summary>
+                Windows 95.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.Win98">
+            <summary>
+                Windows 98 / Windows ME.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.WinXPSP2">
+            <summary>
+                Windows XP (Service Pack 2).
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.WinXPSP3">
+            <summary>
+                Windows XP (Service Pack 3).
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.VistaRTM">
+            <summary>
+                Windows Vista.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.VistaSP1">
+            <summary>
+                Windows Vista (Service Pack 1).
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.VistaSP2">
+            <summary>
+                Windows Vista (Service Pack 2).
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.Win7RTM">
+            <summary>
+                Windows 7.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatSystemVersions.Win8RTM">
+            <summary>
+                Windows 8.
+            </summary>
+        </member>
+        <member name="T:SilDev.AppCompatLayers">
+            <summary>
+                Appliciation compatiblity layers struct. For more information, see
+                <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatLayers.ColorMode">
+            <summary>
+                The color mode.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatLayers.DpiScalingBehavior">
+            <summary>
+                The DPI scaling behavior.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatLayers.DpiScalingSystem">
+            <summary>
+                The DPI scaling system.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatLayers.OperatingSystem">
+            <summary>
+                The operating system.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatLayers.DisableFullscreenOptimizations">
+            <summary>
+                true to disable the Windows 10 fullscreen optimizations; otherwise, false.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatLayers.RunIn640x480ScreenResolution">
+            <summary>
+                true to run the program in 640x480 screen resolution; otherwise, false.
+            </summary>
+        </member>
+        <member name="F:SilDev.AppCompatLayers.RunAsAdministrator">
+            <summary>
+                true to run the program as administrator; otherwise, false.
+            </summary>
+        </member>
+        <member name="T:SilDev.AppCompat">
+            <summary>
+                Provides functionality for the Windows application compatibility layers.
+            </summary>
+        </member>
+        <member name="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)">
+            <summary>
+                Enables the specified application compatibility layers for the specified executable file.
+            </summary>
+            <param name="path">
+                The path to the file to be configured.
+            </param>
+            <param name="compatLayers">
+                The compatibility layers.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                path is null or empty.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                path is not a valid executable file.
+            </exception>
+            <exception cref="T:SilDev.PathNotFoundException">
+                target does not exist.
+            </exception>
+        </member>
         <member name="T:SilDev.ArgumentInvalidException">
             <summary>
                 The exception that is thrown when a reference is passed to a method that does not
