@@ -55,6 +55,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SilDev\AppCompat.cs" />
     <Compile Include="SilDev\ArgumentInvalidException.cs" />
     <Compile Include="SilDev\AssemblyInfo.cs" />
     <Compile Include="SilDev\Drawing\ColorEx.cs" />
