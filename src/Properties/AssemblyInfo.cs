@@ -3,12 +3,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 #if x64
-[assembly: AssemblyTitle("Si13n7 Dev. ® CSharp Library (64-bit)")]
-[assembly: AssemblyDescription("Si13n7 Dev. ® CSharp Library compiled for 64-bit platform environments")]
+[assembly: AssemblyTitle("Si13n7 Dev.™ CSharp Library (64-bit)")]
+[assembly: AssemblyDescription("Si13n7 Dev.™ CSharp Library compiled for 64-bit platform environments")]
 [assembly: AssemblyProduct("SilDev.CSharpLib64")]
 #else
-[assembly: AssemblyTitle("Si13n7 Dev. ® CSharp Library")]
-[assembly: AssemblyDescription("Si13n7 Dev. ® CSharp Library compiled for 32-bit platform environments")]
+[assembly: AssemblyTitle("Si13n7 Dev.™ CSharp Library")]
+[assembly: AssemblyDescription("Si13n7 Dev.™ CSharp Library compiled for 32-bit platform environments")]
 [assembly: AssemblyProduct("SilDev.CSharpLib")]
 #endif
 
@@ -18,16 +18,16 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("Release")]
 #endif
 
-[assembly: AssemblyCompany("Si13n7 Dev. ®")]
-[assembly: AssemblyCopyright("Copyright © Si13n7 Dev. ® 2019")]
-[assembly: AssemblyTrademark("Si13n7 Dev. ®")]
+[assembly: AssemblyCompany("Si13n7 Dev.™")]
+[assembly: AssemblyCopyright("Copyright © Si13n7 Dev.™ 2019")]
+[assembly: AssemblyTrademark("Si13n7 Dev.™")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
 
 [assembly: Guid("901502cc-aa7d-444e-944a-7fc063c34917")]
 
-[assembly: AssemblyVersion("19.2.16.0")]
+[assembly: AssemblyVersion("19.3.7.0")]
 
 [assembly: NeutralResourcesLanguage("")]
 
