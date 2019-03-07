@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2019-01-30 11:37
+// Version:  2019-03-07 11:15
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,6 @@
 namespace SilDev
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -24,7 +23,6 @@ namespace SilDev
     using System.Linq;
     using System.Net;
     using System.Net.NetworkInformation;
-    using System.Threading;
 
     /// <summary>
     ///     Provides functionality for the access of internet resources.
@@ -52,31 +50,30 @@ namespace SilDev
             Google
         }
 
+        private static bool _defSecurityProtocolIsEnabled;
         private static string[] _internalDownloadMirrors;
         private static bool? _ipv4IsAvalaible, _ipv6IsAvalaible;
 
         /// <summary>
         ///     Gets internal download mirrors.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static string[] InternalDownloadMirrors
         {
             get
             {
                 if (_internalDownloadMirrors?.Any() == true)
                     return _internalDownloadMirrors;
-
-                if (!IPv4IsAvalaible)
+                _internalDownloadMirrors = new[]
                 {
-                    Log.Write("Network: IPv4 connection not available.");
-                    if (!IPv6IsAvalaible)
-                    {
-                        Log.Write("Network: IPv6 connection not available.");
-                        return default(string[]);
-                    }
-                }
-
-                _internalDownloadMirrors = FindInternalDownloadMirrors();
+                    "https://dl.si13n7.com",
+                    "https://dl.si13n7.de",
+                    "http://dl-0.de",
+                    "http://dl-1.de",
+                    "http://dl-2.de",
+                    "http://dl-3.de",
+                    "http://dl-4.de",
+                    "http://dl-5.de"
+                };
                 return _internalDownloadMirrors;
             }
         }
@@ -114,89 +111,17 @@ namespace SilDev
         /// </summary>
         public static PingReply LastPingReply { get; private set; }
 
-        private static string[] FindInternalDownloadMirrors()
+        private static void EnsureDefaultSecurityProtocol()
         {
-            var servers = new List<string>();
-            for (var i = 0; i < 3; i++)
-                servers.Add($"https://ns.{i}.si13n7.de");
-            for (var i = 0; i < 6; i++)
-                servers.Add($"http://ns.{i}.si13n7.com");
-
-            var timeout = 60000;
-            var info = default(string);
-            for (var i = 0; i < servers.Count; i++)
+            if (_defSecurityProtocolIsEnabled)
+                return;
+            _defSecurityProtocolIsEnabled = true;
+            foreach (var type in Enum.GetValues(typeof(SecurityProtocolType)).Cast<SecurityProtocolType>())
             {
-                try
-                {
-                    var server = servers[i];
-                    if (!FileIsAvailable(server, timeout))
-                    {
-                        if (timeout > 20000)
-                            timeout -= 20000;
-                        throw new PathNotFoundException(server);
-                    }
-                    info = Transfer.DownloadString(server);
-                    if (string.IsNullOrWhiteSpace(info))
-                        throw new ArgumentNullException(nameof(info));
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex);
+                if (type == SecurityProtocolType.SystemDefault)
                     continue;
-                }
-                if (string.IsNullOrWhiteSpace(info) && i < servers.Count - 1)
-                {
-                    Thread.Sleep(1000);
-                    continue;
-                }
-                break;
+                ServicePointManager.SecurityProtocol |= type;
             }
-
-            var mirrors = new List<string>();
-            if (string.IsNullOrEmpty(info))
-                return default(string[]);
-            if (info.StartsWith("["))
-                goto Ini;
-            if (info.StartsWith("{"))
-                goto Json;
-            return default(string[]);
-
-            Ini:
-            Ini.Detach(info);
-            foreach (var section in Ini.GetSections(info))
-            {
-                var addr = Ini.Read(section, IPv4IsAvalaible ? "addr" : "ipv6", info);
-                if (IPv6IsAvalaible && string.IsNullOrEmpty(addr))
-                    addr = Ini.Read(section, "ipv6", info);
-                if (string.IsNullOrEmpty(addr))
-                    continue;
-                var domain = Ini.Read(section, "domain", info);
-                if (string.IsNullOrEmpty(domain))
-                    continue;
-                var ssl = Ini.Read(section, "ssl", false, info);
-                domain = PathEx.AltCombine(ssl ? "https:" : "http:", domain.ToLower(), "Downloads");
-                if (!mirrors.Contains(domain))
-                    mirrors.Add(domain);
-            }
-            Ini.Detach(info);
-            goto Done;
-
-            Json:
-            var json = Json.Deserialize<Dictionary<string, object>>(info);
-            foreach (var outer in json)
-            {
-                var inner = (Dictionary<string, object>)outer.Value;
-                if (!IPv4IsAvalaible && IPv6IsAvalaible && (!inner.TryGetValue("IPv6", out var ipv6) || !ipv6.ToString().ToBoolean()))
-                    continue;
-                if (IPv4IsAvalaible && !IPv6IsAvalaible && (!inner.TryGetValue("IPv6Only", out var ipv6Only) || !ipv6Only.ToString().ToBoolean()))
-                    continue;
-                var domain = PathEx.AltCombine(inner.TryGetValue("SSL", out var ssl) && ssl.ToString().ToBoolean() ? "https://" : "http://", outer.Key.ToLower(), "Downloads");
-                if (!mirrors.Contains(domain))
-                    mirrors.Add(domain);
-            }
-
-            Done:
-            return mirrors.ToArray();
         }
 
         /// <summary>
@@ -327,6 +252,7 @@ namespace SilDev
         {
             if (maxRoundtripTime <= 0)
                 throw new ArgumentOutOfRangeException(nameof(maxRoundtripTime));
+            EnsureDefaultSecurityProtocol();
             try
             {
                 var interfaces = NetworkInterface.GetAllNetworkInterfaces();
@@ -366,6 +292,7 @@ namespace SilDev
         /// </param>
         public static long Ping(Uri uri, int timeout = 3000)
         {
+            EnsureDefaultSecurityProtocol();
             long roundtripTime = timeout;
             try
             {
@@ -476,6 +403,7 @@ namespace SilDev
         /// </param>
         public static bool IsValid(this Uri uri, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null)
         {
+            EnsureDefaultSecurityProtocol();
             var statusCode = 500;
             try
             {
@@ -579,6 +507,7 @@ namespace SilDev
         /// </param>
         public static bool FileIsAvailable(this Uri srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null)
         {
+            EnsureDefaultSecurityProtocol();
             long contentLength = 0;
             try
             {
@@ -945,6 +874,7 @@ namespace SilDev
         /// </param>
         public static DateTime GetFileDate(this Uri srcUri, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 3000, string userAgent = null)
         {
+            EnsureDefaultSecurityProtocol();
             var lastModified = DateTime.Now;
             try
             {
@@ -3456,6 +3386,7 @@ namespace SilDev
             /// </param>
             public WebClientEx(bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000)
             {
+                EnsureDefaultSecurityProtocol();
                 AllowAutoRedirect = allowAutoRedirect;
                 CookieContainer = cookieContainer;
                 Timeout = timeout;
