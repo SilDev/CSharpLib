@@ -12617,6 +12617,22 @@
                 The attributes to set.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.Combine(System.Char[],System.Nullable{System.Environment.SpecialFolder},System.String[])">
+            <summary>
+                Combines a <see cref="T:System.Environment.SpecialFolder"/> constant with an array of
+                strings into a valid path.
+            </summary>
+            <param name="invalidPathChars">
+                A sequence of invalid chars used as a filter.
+            </param>
+            <param name="specialFolder">
+                A specified enumerated constant used to retrieve directory paths to system
+                special folders.
+            </param>
+            <param name="paths">
+                An array of parts of the path.
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.Combine(System.Char[],System.String[])">
             <summary>
                 Combines an array of strings into a valid path.
@@ -12649,23 +12665,7 @@
                 The string to be filtered.
             </param>
         </member>
-        <member name="M:SilDev.PathEx.Combine(System.Char[],System.Environment.SpecialFolder,System.String[])">
-            <summary>
-                Combines a <see cref="T:System.Environment.SpecialFolder"/> constant with an array of
-                strings into a valid path.
-            </summary>
-            <param name="invalidPathChars">
-                A sequence of invalid chars used as a filter.
-            </param>
-            <param name="specialFolder">
-                A specified enumerated constant used to retrieve directory paths to system
-                special folders.
-            </param>
-            <param name="paths">
-                An array of parts of the path.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.Combine(System.Environment.SpecialFolder,System.String[])">
+        <member name="M:SilDev.PathEx.Combine(System.Nullable{System.Environment.SpecialFolder},System.String[])">
             <summary>
                 Combines a <see cref="T:System.Environment.SpecialFolder"/> constant with an array of
                 strings into a valid path.
@@ -15481,6 +15481,22 @@
             </summary>
             <param name="hWnd">
                 A handle to the window to be deleted from the taskbar.
+            </param>
+        </member>
+        <member name="M:SilDev.TaskBar.GetPinLink(System.String)">
+            <summary>
+                Gets the link path from a pinned item based on its file path.
+            </summary>
+            <param name="path">
+                The file to get the link.
+            </param>
+        </member>
+        <member name="M:SilDev.TaskBar.IsPinned(System.String)">
+            <summary>
+                Determines whether the specified file is pinned.
+            </summary>
+            <param name="path">
+                The file to be checked.
             </param>
         </member>
         <member name="M:SilDev.TaskBar.Pin(System.String)">
