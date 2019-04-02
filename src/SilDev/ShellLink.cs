@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2018-07-04 12:06
+// Version:  2019-04-02 21:46
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -239,7 +239,8 @@ namespace SilDev
             }
             catch (Exception ex)
             {
-                Log.Write(ex);
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
                 return null;
             }
         }
