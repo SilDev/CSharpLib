@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-01-30 10:22
+// Version:  2019-04-02 21:38
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -183,24 +183,26 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Combines an array of strings into a valid path.
-        ///     <para>
-        ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
-        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
-        ///     </para>
+        ///     Combines a <see cref="Environment.SpecialFolder"/> constant with an array of
+        ///     strings into a valid path.
         /// </summary>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
         /// </param>
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
+        /// </param>
         /// <param name="paths">
         ///     An array of parts of the path.
         /// </param>
-        public static string Combine(char[] invalidPathChars, params string[] paths)
+        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder? specialFolder, params string[] paths)
         {
             var path = string.Empty;
             try
             {
+                if (specialFolder != null)
+                    path = Environment.GetFolderPath((Environment.SpecialFolder)specialFolder);
                 if (paths?.Any() != true)
                     throw new ArgumentNullException(nameof(paths));
                 var separators = new[]
@@ -208,13 +210,11 @@ namespace SilDev
                     Path.DirectorySeparatorChar,
                     Path.AltDirectorySeparatorChar
                 };
-                IEnumerable<string> plains;
-                if (invalidPathChars?.Length > 0)
-                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries));
-                else
-                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries))
-                                  .Select(s => s.RemoveChar(invalidPathChars));
-                path = plains.Join(Path.DirectorySeparatorChar);
+                var plains = paths.SelectMany(x => x.Split(separators, StringSplitOptions.RemoveEmptyEntries));
+                if (invalidPathChars?.Any() == true)
+                    plains = plains.Select(x => x.RemoveChar(invalidPathChars));
+                path = !string.IsNullOrEmpty(path) ? Path.Combine(path, plains.Join(Path.DirectorySeparatorChar)) : plains.Join(Path.DirectorySeparatorChar);
+
                 string key = null;
                 byte num = 0;
                 if (path.StartsWith("%") && (path.Contains($"%{Path.DirectorySeparatorChar}") || path.EndsWith("%")))
@@ -233,10 +233,12 @@ namespace SilDev
                         }
                     }
                 }
+
                 if (path.Contains($"{Path.DirectorySeparatorChar}.."))
                     path = Path.GetFullPath(path);
                 if (path.EndsWith("."))
                     path = path.TrimEnd('.');
+
                 if (!string.IsNullOrEmpty(key) || num > 1)
                     if (string.IsNullOrEmpty(key))
                         path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
@@ -254,6 +256,23 @@ namespace SilDev
             }
             return path;
         }
+
+        /// <summary>
+        ///     Combines an array of strings into a valid path.
+        ///     <para>
+        ///         Hint: Allows superordinate directory navigation and environment variables
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
+        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="paths">
+        ///     An array of parts of the path.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, params string[] paths) =>
+            Combine(invalidPathChars, null, paths);
 
         /// <summary>
         ///     Filters a string into a valid path.
@@ -276,9 +295,6 @@ namespace SilDev
         ///     Combines a <see cref="Environment.SpecialFolder"/> constant with an array of
         ///     strings into a valid path.
         /// </summary>
-        /// <param name="invalidPathChars">
-        ///     A sequence of invalid chars used as a filter.
-        /// </param>
         /// <param name="specialFolder">
         ///     A specified enumerated constant used to retrieve directory paths to system
         ///     special folders.
@@ -286,58 +302,7 @@ namespace SilDev
         /// <param name="paths">
         ///     An array of parts of the path.
         /// </param>
-        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder specialFolder, params string[] paths)
-        {
-            var path = string.Empty;
-            try
-            {
-                path = Environment.GetFolderPath(specialFolder);
-                if (paths?.Any() != true)
-                    throw new ArgumentNullException(nameof(paths));
-                var separators = new[]
-                {
-                    Path.DirectorySeparatorChar,
-                    Path.AltDirectorySeparatorChar
-                };
-                if (!string.IsNullOrEmpty(path))
-                    path += Path.DirectorySeparatorChar;
-                IEnumerable<string> plains;
-                if (invalidPathChars?.Length > 0)
-                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries));
-                else
-                    plains = paths.SelectMany(s => s.Split(separators, StringSplitOptions.RemoveEmptyEntries))
-                                  .Select(s => s.RemoveChar(invalidPathChars));
-                path += plains.Join(Path.DirectorySeparatorChar);
-
-                if (path.Contains($"{Path.DirectorySeparatorChar}.."))
-                    path = Path.GetFullPath(path);
-                if (path.EndsWith("."))
-                    path = path.TrimEnd('.');
-            }
-            catch (ArgumentException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-            }
-            return path;
-        }
-
-        /// <summary>
-        ///     Combines a <see cref="Environment.SpecialFolder"/> constant with an array of
-        ///     strings into a valid path.
-        /// </summary>
-        /// <param name="specialFolder">
-        ///     A specified enumerated constant used to retrieve directory paths to system
-        ///     special folders.
-        /// </param>
-        /// <param name="paths">
-        ///     An array of parts of the path.
-        /// </param>
-        public static string Combine(Environment.SpecialFolder specialFolder, params string[] paths) =>
+        public static string Combine(Environment.SpecialFolder? specialFolder, params string[] paths) =>
             Combine(InvalidPathChars, specialFolder, paths);
 
         /// <summary>
