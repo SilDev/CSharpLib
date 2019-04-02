@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2018-07-04 12:36
+// Version:  2019-04-02 21:53
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,6 +22,7 @@ namespace SilDev
     using System.Text;
     using System.Windows.Forms;
     using Intern;
+    using Microsoft.Win32;
 
     /// <summary>
     ///     Provides enumerated flags of the taskbar location.
@@ -228,34 +229,108 @@ namespace SilDev
         public static void DeleteTab(IntPtr hWnd) =>
             (TaskBarInstance as ComImports.ITaskBarList3)?.DeleteTab(hWnd);
 
+        /// <summary>
+        ///     Gets the link path from a pinned item based on its file path.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to get the link.
+        /// </param>
+        public static string GetPinLink(string path)
+        {
+            var file = PathEx.Combine(path);
+            var dir = PathEx.Combine(Environment.SpecialFolder.ApplicationData, "Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar");
+            foreach (var link in DirectoryEx.EnumerateFiles(dir, "*.lnk"))
+            {
+                var target = ShellLink.GetTarget(link);
+                if (string.IsNullOrEmpty(target))
+                    continue;
+                if (target.StartsWith("%"))
+                    target = PathEx.Combine(target);
+                if (!File.Exists(target))
+                    continue;
+                if (target.EqualsEx(file))
+                    return link;
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Determines whether the specified file is pinned.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to be checked.
+        /// </param>
+        public static bool IsPinned(string path) =>
+            File.Exists(GetPinLink(path));
+
         private static bool PinUnpin(string path, bool pin)
         {
-            var fPath = PathEx.Combine(path);
+            if (string.IsNullOrWhiteSpace(path))
+                return false;
+
+            var file = PathEx.Combine(path);
+            if (!File.Exists(file))
+                return false;
+
+            if (IsPinned(file) == pin)
+                return true;
+
+            var isPresentWindows = Environment.OSVersion.Version.Major >= 10;
+            var shellKeyPath = default(string);
             try
             {
-                if (!File.Exists(fPath))
-                    throw new PathNotFoundException(path);
-                if (Environment.OSVersion.Version.Major >= 10)
+                if (isPresentWindows)
                     ProcessEx.CurrentPrincipal.ChangeName("explorer.exe");
+
+                dynamic shell = Activator.CreateInstance(Type.GetTypeFromProgID("Shell.Application"));
+                var dir = shell.NameSpace(Path.GetDirectoryName(path));
+                var name = Path.GetFileName(path);
+                var link = dir.ParseName(name);
+                var verbs = link.Verbs();
+
                 var sb = new StringBuilder(byte.MaxValue);
                 var lib = WinApi.NativeMethods.LoadLibrary(WinApi.DllNames.Shell32);
                 WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
-                var type = Type.GetTypeFromProgID("Shell.Application");
-                dynamic shell = Activator.CreateInstance(type);
-                var fDir = Path.GetDirectoryName(path);
-                var dir = shell.NameSpace(fDir);
-                var fName = Path.GetFileName(path);
-                var link = dir.ParseName(fName);
                 var verb = sb.ToString();
-                var verbs = link.Verbs();
-                for (var i = 0; i < verbs.Count(); i++)
+
+                if (!isPresentWindows)
                 {
-                    var d = verbs.Item(i);
-                    if ((!pin || !d.Name.Equals(verb)) && (pin || !d.Name.Contains(verb)))
-                        continue;
-                    d.DoIt();
-                    break;
+                    var applied = false;
+                    for (var i = 0; i < verbs.Count(); i++)
+                    {
+                        var e = verbs.Item(i);
+                        if ((pin || !e.Name.ContainsEx(verb)) && (!pin || !e.Name.EqualsEx(verb)))
+                            continue;
+                        e.DoIt();
+                        applied = true;
+                        break;
+                    }
+                    if (applied)
+                        goto Done;
                 }
+
+                if (string.IsNullOrWhiteSpace(verb))
+                    verb = "Toggle Taskbar Pin";
+                const string cmdKeyPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CommandStore\\shell\\Windows.taskbarpin";
+                var cmdHandler = Reg.ReadString(Registry.LocalMachine, cmdKeyPath, "ExplorerCommandHandler");
+                if (!string.IsNullOrEmpty(cmdHandler))
+                {
+                    shellKeyPath = $"Software\\Classes\\*\\shell\\{verb}";
+                    Reg.Write(Registry.CurrentUser, shellKeyPath, "ExplorerCommandHandler", cmdHandler);
+                }
+                if (Reg.EntryExists(Registry.CurrentUser, shellKeyPath, "ExplorerCommandHandler"))
+                    link.InvokeVerb(verb);
+
+                Done:
+                if (!pin)
+                    return IsPinned(file) == false;
+                var curLink = GetPinLink(path);
+                if (!File.Exists(curLink))
+                    return false;
+                var target = ShellLink.GetTarget(curLink);
+                var envVar = EnvironmentEx.GetVariablePathFull(target, false, false);
+                if (!target.EqualsEx(envVar))
+                    FileEx.CreateShellLink(file, curLink);
                 return true;
             }
             catch (Exception ex)
@@ -265,8 +340,10 @@ namespace SilDev
             }
             finally
             {
-                if (File.Exists(fPath) && Environment.OSVersion.Version.Major >= 10)
+                if (isPresentWindows)
                     ProcessEx.CurrentPrincipal.RestoreName();
+                if (!string.IsNullOrEmpty(shellKeyPath))
+                    Reg.RemoveSubKey(Registry.CurrentUser, shellKeyPath);
             }
         }
 
