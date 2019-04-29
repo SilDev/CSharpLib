@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconEx.cs
-// Version:  2018-06-29 00:37
+// Version:  2019-04-29 16:04
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -102,6 +102,9 @@ namespace SilDev.Drawing
             ///     Represents the smallest possible width of an icon.
             /// </summary>
             public const int MinWidth = 2;
+
+            private const int SizeIconDir = 6;
+            private const int SizeIconDirEntry = 16;
 
             private static IEnumerable<int> GetSizes(SizeOption option)
             {
@@ -199,6 +202,63 @@ namespace SilDev.Drawing
                 image.Width >= MaxWidth ? byte.MinValue : (byte)image.Width;
 
             /// <summary>
+            ///     Extracts all the <see cref="Image"/>'s from a valid icon file.
+            /// </summary>
+            /// <param name="path">
+            ///     The full path to the icon to be extracted.
+            /// </param>
+            public static void Extract(string path)
+            {
+                try
+                {
+                    var file = PathEx.Combine(path);
+                    if (!File.Exists(file))
+                        throw new PathNotFoundException(file);
+                    var dir = Path.GetDirectoryName(file);
+                    if (string.IsNullOrEmpty(dir))
+                        throw new ArgumentNullException(nameof(dir));
+                    var name = Path.GetFileNameWithoutExtension(file);
+                    if (string.IsNullOrEmpty(name))
+                        throw new ArgumentNullException(nameof(name));
+                    dir = Path.Combine(dir, $"{name} sources");
+                    if (Directory.Exists(dir))
+                        DirectoryEx.EnumerateFiles(dir, "*.png")?.ForEach(x => FileEx.Delete(x));
+                    else
+                        Directory.CreateDirectory(dir);
+                    var buffer = File.ReadAllBytes(file);
+                    var length = BitConverter.ToInt16(buffer, 4);
+                    for (var i = 0; i < length; i++)
+                    {
+                        var imageWidth = buffer[SizeIconDir + SizeIconDirEntry * i];
+                        var imageHeight = buffer[SizeIconDir + SizeIconDirEntry * i + 1];
+                        var pixelFormat = (int)BitConverter.ToInt16(buffer, SizeIconDir + SizeIconDirEntry * i + 6);
+                        var imagePath = Path.Combine(dir, $"{pixelFormat}@{imageWidth}x{imageHeight}.png");
+                        if (File.Exists(imagePath))
+                            for (var j = 0; j < byte.MaxValue; j++)
+                            {
+                                if (!File.Exists(imagePath))
+                                    break;
+                                imagePath = Path.Combine(dir, $"{pixelFormat}@{imageWidth}x{imageHeight}_{i}.png");
+                            }
+                        var formatSize = BitConverter.ToInt32(buffer, SizeIconDir + SizeIconDirEntry * i + 8);
+                        var offset = BitConverter.ToInt32(buffer, SizeIconDir + SizeIconDirEntry * i + 12);
+                        using (var ms = new MemoryStream())
+                        {
+                            var bw = new BinaryWriter(ms);
+                            bw.Write(buffer, offset, formatSize);
+                            ms.Seek(0, SeekOrigin.Begin);
+                            var bmp = new Bitmap(ms);
+                            bmp.Save(imagePath);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex);
+                }
+            }
+
+            /// <summary>
             ///     Saves the specified sequence of <see cref="Image"/>'s as a single icon
             ///     into the output stream.
             /// </summary>
@@ -229,19 +289,19 @@ namespace SilDev.Drawing
                     bw.Write((ushort)1);
                     bw.Write((ushort)array.Length);
                     var buffers = new Dictionary<uint, byte[]>();
-                    var offset = (uint)(6 + 16 * array.Length);
+                    var offset = (uint)(6 + SizeIconDir + SizeIconDirEntry * array.Length);
                     foreach (var image in array)
                     {
                         var buffer = CreateBuffer(image);
                         var imageWidth = GetWidth(image);
                         var imageHeight = GetHeight(image);
-                        var formatSize = Image.GetPixelFormatSize(image.PixelFormat);
+                        var pixelFormat = Image.GetPixelFormatSize(image.PixelFormat);
                         bw.Write(imageWidth);
                         bw.Write(imageHeight);
                         bw.Write((byte)0);
                         bw.Write((byte)0);
                         bw.Write((ushort)1);
-                        bw.Write((ushort)formatSize);
+                        bw.Write((ushort)pixelFormat);
                         bw.Write((uint)buffer.Length);
                         bw.Write(offset);
                         buffers.Add(offset, buffer);
@@ -256,7 +316,11 @@ namespace SilDev.Drawing
                 finally
                 {
                     if (dispose)
+                    {
+                        foreach (var image in array)
+                            image.Dispose();
                         bw.Dispose();
+                    }
                 }
             }
 
