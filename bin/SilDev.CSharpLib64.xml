@@ -726,6 +726,14 @@
                 Represents the smallest possible width of an icon.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.IconEx.Factory.Extract(System.String)">
+            <summary>
+                Extracts all the <see cref="T:System.Drawing.Image"/>'s from a valid icon file.
+            </summary>
+            <param name="path">
+                The full path to the icon to be extracted.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.IconEx.Factory.Save(System.Collections.Generic.IEnumerable{System.Drawing.Image},System.IO.Stream,System.Boolean)">
             <summary>
                 Saves the specified sequence of <see cref="T:System.Drawing.Image"/>'s as a single icon
