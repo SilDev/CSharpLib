@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-04-02 21:38
+// Version:  2019-05-21 11:21
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -49,7 +49,7 @@ namespace SilDev
         ///     Gets the full process executable path of the assembly based on
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
-        public static string LocalPath { get; } = Assembly.GetEntryAssembly().CodeBase.ToUri()?.LocalPath;
+        public static string LocalPath { get; } = Assembly.GetEntryAssembly()?.CodeBase.ToUri()?.LocalPath;
 
         /// <summary>
         ///     Gets the process executable located directory path of the assembly based on
