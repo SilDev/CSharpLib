@@ -6656,6 +6656,16 @@
                 Microsoft Visual C++ 2017 Redistributable Package (x64).
             </summary>
         </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2019X86">
+            <summary>
+                Microsoft Visual C++ 2019 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.EnvironmentEx.RedistFlags.VC2019X64">
+            <summary>
+                Microsoft Visual C++ 2019 Redistributable Package (x64).
+            </summary>
+        </member>
         <member name="T:SilDev.EnvironmentEx.RestoreEventType">
             <summary>
                 The type of event. For more information, see <see cref="M:SilDev.EnvironmentEx.SystemRestore.Create(System.String,SilDev.EnvironmentEx.RestoreEventType,SilDev.EnvironmentEx.RestorePointType)"/>.
