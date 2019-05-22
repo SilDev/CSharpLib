@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2019-05-22 18:22
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -108,7 +108,17 @@ namespace SilDev
             /// <summary>
             ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
             /// </summary>
-            VC2017X64
+            VC2017X64,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2019 Redistributable Package (x86).
+            /// </summary>
+            VC2019X86,
+
+            /// <summary>
+            ///     Microsoft Visual C++ 2019 Redistributable Package (x64).
+            /// </summary>
+            VC2019X64
         }
 
         /// <summary>
@@ -662,6 +672,9 @@ namespace SilDev
                         {
                             case "2015":
                                 year = "2017";
+                                goto Recheck;
+                            case "2017":
+                                year = "2019";
                                 goto Recheck;
                         }
                         break;
