@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2018-06-24 03:26
+// Version:  2019-05-26 15:44
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -140,6 +140,76 @@ namespace SilDev
     /// </summary>
     public static class Crypto
     {
+        private static void CombineHashes(StringBuilder builder, string hash1, string hash2, bool braces)
+        {
+            if (braces)
+                builder.Append('{');
+            var first = hash1 ?? new string('0', 8);
+            if (first.Length < 8)
+                first = first.PadLeft(8, '0');
+            if (first.Length > 8)
+                first = first.Substring(0, 8);
+            builder.Append(first);
+            var second = hash2 ?? new string('0', 12);
+            if (second.Length < 12)
+                second = first.PadRight(12, '0');
+            for (var i = 0; i < 3; i++)
+            {
+                builder.Append('-');
+                builder.Append(second.Substring(i * 4, 4));
+            }
+            builder.Append('-');
+            builder.Append(second.Substring(second.Length - 12));
+            if (braces)
+                builder.Append('}');
+        }
+
+        /// <summary>
+        ///     Encrypts this sequence of bytes with the specified <see cref="ChecksumAlgorithms"/>
+        ///     and combines both hashes into a unique GUID.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to encrypt.
+        /// </param>
+        /// <param name="braces">
+        ///     true to place the GUID between braces; otherwise, false.
+        /// </param>
+        /// <param name="algorithm1">
+        ///     The first algorithm to use.
+        /// </param>
+        /// <param name="algorithm2">
+        ///     The second algorithm to use.
+        /// </param>
+        public static string GetGuid(byte[] bytes, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
+        {
+            var guid = new StringBuilder(braces ? 38 : 36);
+            CombineHashes(guid, bytes?.Encrypt(algorithm1), bytes?.Encrypt(algorithm2), braces);
+            return guid.ToString();
+        }
+
+        /// <summary>
+        ///     Encrypts this string with the specified <see cref="ChecksumAlgorithms"/> and
+        ///     combines both hashes into a unique GUID.
+        /// </summary>
+        /// <param name="text">
+        ///     The string to encrypt.
+        /// </param>
+        /// <param name="braces">
+        ///     true to place the GUID between braces; otherwise, false.
+        /// </param>
+        /// <param name="algorithm1">
+        ///     The first algorithm to use.
+        /// </param>
+        /// <param name="algorithm2">
+        ///     The second algorithm to use.
+        /// </param>
+        public static string GetGuid(string text, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
+        {
+            var guid = new StringBuilder(braces ? 38 : 36);
+            CombineHashes(guid, text?.Encrypt(algorithm1), text?.Encrypt(algorithm2), braces);
+            return guid.ToString();
+        }
+
         /// <summary>
         ///     Encrypts this sequence of bytes with the specified algorithm.
         /// </summary>
