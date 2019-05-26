@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2019-05-26 15:44
+// Version:  2019-05-26 15:54
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -180,7 +180,7 @@ namespace SilDev
         /// <param name="algorithm2">
         ///     The second algorithm to use.
         /// </param>
-        public static string GetGuid(byte[] bytes, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
+        public static string GetGuid(this byte[] bytes, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
         {
             var guid = new StringBuilder(braces ? 38 : 36);
             CombineHashes(guid, bytes?.Encrypt(algorithm1), bytes?.Encrypt(algorithm2), braces);
@@ -203,7 +203,7 @@ namespace SilDev
         /// <param name="algorithm2">
         ///     The second algorithm to use.
         /// </param>
-        public static string GetGuid(string text, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
+        public static string GetGuid(this string text, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
         {
             var guid = new StringBuilder(braces ? 38 : 36);
             CombineHashes(guid, text?.Encrypt(algorithm1), text?.Encrypt(algorithm2), braces);
