@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-01-30 11:48
+// Version:  2019-06-16 10:37
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -4071,6 +4071,21 @@ namespace SilDev
                 NativeMethods.LookupPrivilegeValue(lpSystemName, lpName, ref lpLuid);
 
             /// <summary>
+            ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code
+            ///     into a virtual-key code.
+            /// </summary>
+            /// <param name="uCode">
+            ///     The virtual key code or scan code for a key. How this value is interpreted depends on the value of
+            ///     the uMapType parameter.
+            /// </param>
+            /// <param name="uMapType">
+            ///     The translation to be performed. The value of this parameter depends on the value of the uCode
+            ///     parameter.
+            /// </param>
+            public static uint MapVirtualKey(uint uCode, uint uMapType) =>
+                NativeMethods.MapVirtualKey(uCode, uMapType);
+
+            /// <summary>
             ///     Changes the position and dimensions of the specified window.
             /// </summary>
             /// <param name="hWnd">
@@ -6941,6 +6956,25 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Advapi32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid);
+
+            /// <summary>
+            ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code
+            ///     into a virtual-key code.
+            /// </summary>
+            /// <param name="uCode">
+            ///     The virtual key code or scan code for a key. How this value is interpreted depends on the value of
+            ///     the uMapType parameter.
+            /// </param>
+            /// <param name="uMapType">
+            ///     The translation to be performed. The value of this parameter depends on the value of the uCode
+            ///     parameter.
+            /// </param>
+            /// <returns>
+            ///     The return value is either a scan code, a virtual-key code, or a character value, depending on the
+            ///     value of uCode and uMapType. If there is no translation, the return value is zero.
+            /// </returns>
+            [DllImport(DllNames.User32, CharSet = CharSet.Auto)]
+            internal static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
             /// <summary>
             ///     The mciSendString function sends a command string to an MCI device. The device that the command is sent
