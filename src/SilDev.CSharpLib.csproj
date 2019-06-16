@@ -103,7 +103,7 @@
     <Compile Include="SilDev\FileEx.cs" />
     <Compile Include="SilDev\Ini.cs" />
     <Compile Include="SilDev\Json.cs" />
-    <Compile Include="SilDev\KeyState.cs" />
+    <Compile Include="SilDev\InputDevice.cs" />
     <Compile Include="SilDev\Log.cs" />
     <Compile Include="SilDev\Media.cs" />
     <Compile Include="SilDev\Memory.cs" />
