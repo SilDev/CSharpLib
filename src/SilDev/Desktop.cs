@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2017-11-09 15:37
+// Version:  2019-06-16 11:03
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -43,7 +43,8 @@ namespace SilDev
             };
             foreach (var cName in cNames)
                 WinApi.NativeHelper.FindNestedWindow(ref hWnd, cName);
-            KeyState.SendState(hWnd, KeyState.VKey.VK_F5);
+            InputDevice.SendKeyState(hWnd, VirtualKeys.F5, VirtualKeyStates.KeyDown);
+            InputDevice.SendKeyState(hWnd, VirtualKeys.F5, VirtualKeyStates.KeyUp);
             if (explorer)
                 RefreshExplorer(extended);
         }
@@ -60,7 +61,6 @@ namespace SilDev
             var hasUpdated = extended;
             var shellWindows = new ShellWindows();
             do
-            {
                 foreach (InternetExplorer window in shellWindows)
                 {
                     var name = Path.GetFileName(window?.FullName);
@@ -69,7 +69,6 @@ namespace SilDev
                     window.Refresh();
                     hasUpdated = true;
                 }
-            }
             while (!hasUpdated);
         }
     }
