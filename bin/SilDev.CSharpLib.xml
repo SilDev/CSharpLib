@@ -3839,6 +3839,42 @@
                 Provides functionality for data encryption and decryption.
             </summary>
         </member>
+        <member name="M:SilDev.Crypto.GetGuid(System.Byte[],System.Boolean,SilDev.ChecksumAlgorithms,SilDev.ChecksumAlgorithms)">
+            <summary>
+                Encrypts this sequence of bytes with the specified <see cref="T:SilDev.ChecksumAlgorithms"/>
+                and combines both hashes into a unique GUID.
+            </summary>
+            <param name="bytes">
+                The sequence of bytes to encrypt.
+            </param>
+            <param name="braces">
+                true to place the GUID between braces; otherwise, false.
+            </param>
+            <param name="algorithm1">
+                The first algorithm to use.
+            </param>
+            <param name="algorithm2">
+                The second algorithm to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.GetGuid(System.String,System.Boolean,SilDev.ChecksumAlgorithms,SilDev.ChecksumAlgorithms)">
+            <summary>
+                Encrypts this string with the specified <see cref="T:SilDev.ChecksumAlgorithms"/> and
+                combines both hashes into a unique GUID.
+            </summary>
+            <param name="text">
+                The string to encrypt.
+            </param>
+            <param name="braces">
+                true to place the GUID between braces; otherwise, false.
+            </param>
+            <param name="algorithm1">
+                The first algorithm to use.
+            </param>
+            <param name="algorithm2">
+                The second algorithm to use.
+            </param>
+        </member>
         <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
             <summary>
                 Encrypts this sequence of bytes with the specified algorithm.
@@ -8003,889 +8039,916 @@
                 An array of keys to navigate to the exact position of the value.
             </param>
         </member>
-        <member name="T:SilDev.KeyState">
-            <summary>
-                Provides the functionality to send or detect key states.
-            </summary>
-        </member>
-        <member name="T:SilDev.KeyState.VKey">
+        <member name="T:SilDev.VirtualKeys">
             <summary>
                 Provides enumerated values of Virtual-Key codes.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LBUTTON">
+        <member name="F:SilDev.VirtualKeys.LButton">
             <summary>
                 Left mouse button.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_RBUTTON">
+        <member name="F:SilDev.VirtualKeys.RButton">
             <summary>
                 Right mouse button.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_CANCEL">
+        <member name="F:SilDev.VirtualKeys.Cancel">
             <summary>
                 Control-break processing.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MBUTTON">
+        <member name="F:SilDev.VirtualKeys.MButton">
             <summary>
                 Middle mouse button (three-button mouse).
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_XBUTTON1">
+        <member name="F:SilDev.VirtualKeys.XButton1">
             <summary>
                 X1 mouse button.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_XBUTTON2">
+        <member name="F:SilDev.VirtualKeys.XButton2">
             <summary>
                 X2 mouse button.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BACK">
+        <member name="F:SilDev.VirtualKeys.Back">
             <summary>
                 BACKSPACE key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_TAB">
+        <member name="F:SilDev.VirtualKeys.Tab">
             <summary>
                 TAB key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_CLEAR">
+        <member name="F:SilDev.VirtualKeys.Clear">
             <summary>
                 CLEAR key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_RETURN">
+        <member name="F:SilDev.VirtualKeys.Return">
             <summary>
                 ENTER key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SHIFT">
+        <member name="F:SilDev.VirtualKeys.Shift">
             <summary>
                 SHIFT key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_CONTROL">
+        <member name="F:SilDev.VirtualKeys.Control">
             <summary>
                 CTRL key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MENU">
+        <member name="F:SilDev.VirtualKeys.Menu">
             <summary>
                 ALT key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_PAUSE">
+        <member name="F:SilDev.VirtualKeys.Pause">
             <summary>
                 PAUSE key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_CAPITAL">
+        <member name="F:SilDev.VirtualKeys.Capital">
             <summary>
                 CAPS LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_KANA_HANGUL">
+        <member name="F:SilDev.VirtualKeys.KanaHangul">
             <summary>
                 IME Kana/Hangul mode.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_JUNJA">
+        <member name="F:SilDev.VirtualKeys.Junja">
             <summary>
                 IME Junja mode.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_FINAL">
+        <member name="F:SilDev.VirtualKeys.Final">
             <summary>
                 IME final mode.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_HANJA_KANJI">
+        <member name="F:SilDev.VirtualKeys.HanjaKanji">
             <summary>
                 IME Hanja/Kanji mode.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_ESCAPE">
+        <member name="F:SilDev.VirtualKeys.Escape">
             <summary>
                 ESC key
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_CONVERT">
+        <member name="F:SilDev.VirtualKeys.Convert">
             <summary>
                 IME convert.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NONCONVERT">
+        <member name="F:SilDev.VirtualKeys.NonConvert">
             <summary>
-                IME nonconvert.
+                IME non-convert.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_ACCEPT">
+        <member name="F:SilDev.VirtualKeys.Accept">
             <summary>
                 IME accept.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MODECHANGE">
+        <member name="F:SilDev.VirtualKeys.ModeChange">
             <summary>
                 IME mode change request.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SPACE">
+        <member name="F:SilDev.VirtualKeys.Space">
             <summary>
                 SPACEBAR key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_PRIOR">
+        <member name="F:SilDev.VirtualKeys.Prior">
             <summary>
                 PAGE UP key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NEXT">
+        <member name="F:SilDev.VirtualKeys.Next">
             <summary>
                 PAGE DOWN key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_END">
+        <member name="F:SilDev.VirtualKeys.End">
             <summary>
                 END key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_HOME">
+        <member name="F:SilDev.VirtualKeys.Home">
             <summary>
                 HOME key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LEFT">
+        <member name="F:SilDev.VirtualKeys.Left">
             <summary>
                 LEFT ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_UP">
+        <member name="F:SilDev.VirtualKeys.Up">
             <summary>
                 UP ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_RIGHT">
+        <member name="F:SilDev.VirtualKeys.Right">
             <summary>
                 RIGHT ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_DOWN">
+        <member name="F:SilDev.VirtualKeys.Down">
             <summary>
                 DOWN ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SELECT">
+        <member name="F:SilDev.VirtualKeys.Select">
             <summary>
                 SELECT key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_PRINT">
+        <member name="F:SilDev.VirtualKeys.Print">
             <summary>
                 PRINT key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_EXECUTE">
+        <member name="F:SilDev.VirtualKeys.Execute">
             <summary>
                 EXECUTE key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SNAPSHOT">
+        <member name="F:SilDev.VirtualKeys.Snapshot">
             <summary>
                 PRINT SCREEN key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_INSERT">
+        <member name="F:SilDev.VirtualKeys.Insert">
             <summary>
                 INS key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_DELETE">
+        <member name="F:SilDev.VirtualKeys.Delete">
             <summary>
                 DEL key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_HELP">
+        <member name="F:SilDev.VirtualKeys.Help">
             <summary>
                 HELP key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_0">
+        <member name="F:SilDev.VirtualKeys.Num0">
             <summary>
                 0 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_1">
+        <member name="F:SilDev.VirtualKeys.Num1">
             <summary>
                 1 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_2">
+        <member name="F:SilDev.VirtualKeys.Num2">
             <summary>
                 2 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_3">
+        <member name="F:SilDev.VirtualKeys.Num3">
             <summary>
                 3 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_4">
+        <member name="F:SilDev.VirtualKeys.Num4">
             <summary>
                 4 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_5">
+        <member name="F:SilDev.VirtualKeys.Num5">
             <summary>
                 5 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_6">
+        <member name="F:SilDev.VirtualKeys.Num6">
             <summary>
                 6 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_7">
+        <member name="F:SilDev.VirtualKeys.Num7">
             <summary>
                 7 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_8">
+        <member name="F:SilDev.VirtualKeys.Num8">
             <summary>
                 8 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_9">
+        <member name="F:SilDev.VirtualKeys.Num9">
             <summary>
                 9 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_A">
+        <member name="F:SilDev.VirtualKeys.A">
             <summary>
                 A key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_B">
+        <member name="F:SilDev.VirtualKeys.B">
             <summary>
                 B key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_C">
+        <member name="F:SilDev.VirtualKeys.C">
             <summary>
                 C key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_D">
+        <member name="F:SilDev.VirtualKeys.D">
             <summary>
                 D key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_E">
+        <member name="F:SilDev.VirtualKeys.E">
             <summary>
                 E key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F">
+        <member name="F:SilDev.VirtualKeys.F">
             <summary>
                 F key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_G">
+        <member name="F:SilDev.VirtualKeys.G">
             <summary>
                 G key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_H">
+        <member name="F:SilDev.VirtualKeys.H">
             <summary>
                 H key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_I">
+        <member name="F:SilDev.VirtualKeys.I">
             <summary>
                 I key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_J">
+        <member name="F:SilDev.VirtualKeys.J">
             <summary>
                 J key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_K">
+        <member name="F:SilDev.VirtualKeys.K">
             <summary>
                 K key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_L">
+        <member name="F:SilDev.VirtualKeys.L">
             <summary>
                 L key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_M">
+        <member name="F:SilDev.VirtualKeys.M">
             <summary>
                 M key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_N">
+        <member name="F:SilDev.VirtualKeys.N">
             <summary>
                 N key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_O">
+        <member name="F:SilDev.VirtualKeys.O">
             <summary>
                 O key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_P">
+        <member name="F:SilDev.VirtualKeys.P">
             <summary>
                 P key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_Q">
+        <member name="F:SilDev.VirtualKeys.Q">
             <summary>
                 Q key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_R">
+        <member name="F:SilDev.VirtualKeys.R">
             <summary>
                 R key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_S">
+        <member name="F:SilDev.VirtualKeys.S">
             <summary>
                 S key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_T">
+        <member name="F:SilDev.VirtualKeys.T">
             <summary>
                 T key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_U">
+        <member name="F:SilDev.VirtualKeys.U">
             <summary>
                 U key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_V">
+        <member name="F:SilDev.VirtualKeys.V">
             <summary>
                 V key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_W">
+        <member name="F:SilDev.VirtualKeys.W">
             <summary>
                 W key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_X">
+        <member name="F:SilDev.VirtualKeys.X">
             <summary>
                 X key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_Y">
+        <member name="F:SilDev.VirtualKeys.Y">
             <summary>
                 Y key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_Z">
+        <member name="F:SilDev.VirtualKeys.Z">
             <summary>
                 Z key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LWIN">
+        <member name="F:SilDev.VirtualKeys.LWin">
             <summary>
                 Left Windows key (natural keyboard).
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_RWIN">
+        <member name="F:SilDev.VirtualKeys.RWin">
             <summary>
                 Right Windows key (natural keyboard).
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_APPS">
+        <member name="F:SilDev.VirtualKeys.Apps">
             <summary>
                 Applications key (natural keyboard).
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SLEEP">
+        <member name="F:SilDev.VirtualKeys.Sleep">
             <summary>
                 Computer Sleep key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD0">
+        <member name="F:SilDev.VirtualKeys.Numpad0">
             <summary>
                 Numeric keypad 0 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD1">
+        <member name="F:SilDev.VirtualKeys.Numpad1">
             <summary>
                 Numeric keypad 1 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD2">
+        <member name="F:SilDev.VirtualKeys.Numpad2">
             <summary>
                 Numeric keypad 2 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD3">
+        <member name="F:SilDev.VirtualKeys.Numpad3">
             <summary>
                 Numeric keypad 3 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD4">
+        <member name="F:SilDev.VirtualKeys.Numpad4">
             <summary>
                 Numeric keypad 4 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD5">
+        <member name="F:SilDev.VirtualKeys.Numpad5">
             <summary>
                 Numeric keypad 5 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD6">
+        <member name="F:SilDev.VirtualKeys.Numpad6">
             <summary>
                 Numeric keypad 6 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD7">
+        <member name="F:SilDev.VirtualKeys.Numpad7">
             <summary>
                 Numeric keypad 7 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD8">
+        <member name="F:SilDev.VirtualKeys.Numpad8">
             <summary>
                 Numeric keypad 8 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMPAD9">
+        <member name="F:SilDev.VirtualKeys.Numpad9">
             <summary>
                 Numeric keypad 9 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MULTIPLY">
+        <member name="F:SilDev.VirtualKeys.Multiply">
             <summary>
                 Multiply key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_ADD">
+        <member name="F:SilDev.VirtualKeys.Add">
             <summary>
                 Add key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SEPARATOR">
+        <member name="F:SilDev.VirtualKeys.Separator">
             <summary>
                 Separator key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SUBTRACT">
+        <member name="F:SilDev.VirtualKeys.Subtract">
             <summary>
                 Subtract key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_DECIMAL">
+        <member name="F:SilDev.VirtualKeys.Decimal">
             <summary>
                 Decimal key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_DIVIDE">
+        <member name="F:SilDev.VirtualKeys.Divide">
             <summary>
                 Divide key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F1">
+        <member name="F:SilDev.VirtualKeys.F1">
             <summary>
                 F1 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F2">
+        <member name="F:SilDev.VirtualKeys.F2">
             <summary>
                 F2 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F3">
+        <member name="F:SilDev.VirtualKeys.F3">
             <summary>
                 F3 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F4">
+        <member name="F:SilDev.VirtualKeys.F4">
             <summary>
                 F4 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F5">
+        <member name="F:SilDev.VirtualKeys.F5">
             <summary>
                 F5 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F6">
+        <member name="F:SilDev.VirtualKeys.F6">
             <summary>
                 F6 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F7">
+        <member name="F:SilDev.VirtualKeys.F7">
             <summary>
                 F7 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F8">
+        <member name="F:SilDev.VirtualKeys.F8">
             <summary>
                 F8 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F9">
+        <member name="F:SilDev.VirtualKeys.F9">
             <summary>
                 F9 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F10">
+        <member name="F:SilDev.VirtualKeys.F10">
             <summary>
                 F10 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F11">
+        <member name="F:SilDev.VirtualKeys.F11">
             <summary>
                 F11 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F12">
+        <member name="F:SilDev.VirtualKeys.F12">
             <summary>
                 F12 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F13">
+        <member name="F:SilDev.VirtualKeys.F13">
             <summary>
                 F13 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F14">
+        <member name="F:SilDev.VirtualKeys.F14">
             <summary>
                 F14 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F15">
+        <member name="F:SilDev.VirtualKeys.F15">
             <summary>
                 F15 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F16">
+        <member name="F:SilDev.VirtualKeys.F16">
             <summary>
                 F16 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F17">
+        <member name="F:SilDev.VirtualKeys.F17">
             <summary>
                 F17 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F18">
+        <member name="F:SilDev.VirtualKeys.F18">
             <summary>
                 F18 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F19">
+        <member name="F:SilDev.VirtualKeys.F19">
             <summary>
                 F19 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F20">
+        <member name="F:SilDev.VirtualKeys.F20">
             <summary>
                 F20 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F21">
+        <member name="F:SilDev.VirtualKeys.F21">
             <summary>
                 F21 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F22">
+        <member name="F:SilDev.VirtualKeys.F22">
             <summary>
                 F22 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F23">
+        <member name="F:SilDev.VirtualKeys.F23">
             <summary>
                 F23 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_F24">
+        <member name="F:SilDev.VirtualKeys.F24">
             <summary>
                 F24 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_NUMLOCK">
+        <member name="F:SilDev.VirtualKeys.NumLock">
             <summary>
                 NUM LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_SCROLL">
+        <member name="F:SilDev.VirtualKeys.Scroll">
             <summary>
                 SCROLL LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LSHIFT">
+        <member name="F:SilDev.VirtualKeys.LShift">
             <summary>
                 Left SHIFT key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_RSHIFT">
+        <member name="F:SilDev.VirtualKeys.RShift">
             <summary>
                 Right SHIFT key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LCONTROL">
+        <member name="F:SilDev.VirtualKeys.LControl">
             <summary>
                 Left CONTROL key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_RCONTROL">
+        <member name="F:SilDev.VirtualKeys.RControl">
             <summary>
                 Right CONTROL key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LMENU">
+        <member name="F:SilDev.VirtualKeys.LMenu">
             <summary>
                 Left MENU key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_RMENU">
+        <member name="F:SilDev.VirtualKeys.RMenu">
             <summary>
                 Right MENU key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BROWSER_BACK">
+        <member name="F:SilDev.VirtualKeys.BrowserBack">
             <summary>
                 Browser Back key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BROWSER_FORWARD">
+        <member name="F:SilDev.VirtualKeys.BrowserForward">
             <summary>
                 Browser Forward key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BROWSER_REFRESH">
+        <member name="F:SilDev.VirtualKeys.BrowserRefresh">
             <summary>
                 Browser Refresh key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BROWSER_STOP">
+        <member name="F:SilDev.VirtualKeys.BrowserStop">
             <summary>
                 Browser Stop key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BROWSER_SEARCH">
+        <member name="F:SilDev.VirtualKeys.BrowserSearch">
             <summary>
                 Browser Search key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BROWSER_FAVORITES">
+        <member name="F:SilDev.VirtualKeys.BrowserFavorites">
             <summary>
                 Browser Favorites key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_BROWSER_HOME">
+        <member name="F:SilDev.VirtualKeys.BrowserHome">
             <summary>
                 Browser Start and Home key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_VOLUME_MUTE">
+        <member name="F:SilDev.VirtualKeys.VolumeMute">
             <summary>
                 Volume Mute key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_VOLUME_DOWN">
+        <member name="F:SilDev.VirtualKeys.VolumeDown">
             <summary>
                 Volume Down key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_VOLUME_UP">
+        <member name="F:SilDev.VirtualKeys.VolumeUp">
             <summary>
                 Volume Up key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MEDIA_NEXT_TRACK">
+        <member name="F:SilDev.VirtualKeys.MediaNextTrack">
             <summary>
                 Next Track key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MEDIA_PREV_TRACK">
+        <member name="F:SilDev.VirtualKeys.MediaPrevTrack">
             <summary>
                 Previous Track key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MEDIA_STOP">
+        <member name="F:SilDev.VirtualKeys.MediaStop">
             <summary>
                 Stop Media key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_MEDIA_PLAY_PAUSE">
+        <member name="F:SilDev.VirtualKeys.MediaPlayPause">
             <summary>
                 Play/Pause Media key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LAUNCH_MAIL">
+        <member name="F:SilDev.VirtualKeys.LaunchMail">
             <summary>
                 Start Mail key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LAUNCH_MEDIA_SELECT">
+        <member name="F:SilDev.VirtualKeys.LaunchMediaSelect">
             <summary>
                 Select Media key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LAUNCH_APP1">
+        <member name="F:SilDev.VirtualKeys.LaunchApp1">
             <summary>
                 Select Media key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_LAUNCH_APP2">
+        <member name="F:SilDev.VirtualKeys.LaunchApp2">
             <summary>
                 Start Application 2 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_1">
+        <member name="F:SilDev.VirtualKeys.Oem1">
             <summary>
                 For the US standard keyboard, the ",:" key .
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_PLUS">
+        <member name="F:SilDev.VirtualKeys.OemPlus">
             <summary>
                 For any country/region, the "+" key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_COMMA">
+        <member name="F:SilDev.VirtualKeys.OemComma">
             <summary>
                 For any country/region, the "," key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_MINUS">
+        <member name="F:SilDev.VirtualKeys.OemMinus">
             <summary>
                 For any country/region, the "-" key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_PERIOD">
+        <member name="F:SilDev.VirtualKeys.OemPeriod">
             <summary>
                 For any country/region, the "." key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_2">
+        <member name="F:SilDev.VirtualKeys.Oem2">
             <summary>
                 For the US standard keyboard, the "/?" key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_3">
+        <member name="F:SilDev.VirtualKeys.Oem3">
             <summary>
                 For the US standard keyboard, the "`~" key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_4">
+        <member name="F:SilDev.VirtualKeys.Oem4">
             <summary>
                 For the US standard keyboard, the "[{" key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_5">
+        <member name="F:SilDev.VirtualKeys.Oem5">
             <summary>
                 For the US standard keyboard, the "\|" key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_6">
+        <member name="F:SilDev.VirtualKeys.Oem6">
             <summary>
                 For the US standard keyboard, the "]}" key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_7">
+        <member name="F:SilDev.VirtualKeys.Oem7">
             <summary>
                 For the US standard keyboard, the "single-quote/double-quote" key
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_8">
+        <member name="F:SilDev.VirtualKeys.Oem8">
             <summary>
                 Used for miscellaneous characters, it can vary by keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_102">
+        <member name="F:SilDev.VirtualKeys.Oem102">
             <summary>
                 Either the angle bracket key or the backslash key on the RT 102-key keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_PROCESSKEY">
+        <member name="F:SilDev.VirtualKeys.ProcessKey">
             <summary>
                 IME PROCESS key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_PACKET">
+        <member name="F:SilDev.VirtualKeys.Packet">
             <summary>
-                Used to pass Unicode characters as if they were keystrokes. The <see cref="F:SilDev.KeyState.VKey.VK_PACKET"/>
+                Used to pass Unicode characters as if they were keystrokes. The <see cref="F:SilDev.VirtualKeys.Packet"/>
                 key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_ATTN">
+        <member name="F:SilDev.VirtualKeys.Attn">
             <summary>
                 Attn key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_CRSEL">
+        <member name="F:SilDev.VirtualKeys.CrSel">
             <summary>
                 CrSel key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_EXSEL">
+        <member name="F:SilDev.VirtualKeys.ExSel">
             <summary>
                 ExSel key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_EREOF">
+        <member name="F:SilDev.VirtualKeys.ErEof">
             <summary>
                 Erase EOF key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_PLAY">
+        <member name="F:SilDev.VirtualKeys.Play">
             <summary>
                 Play key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_ZOOM">
+        <member name="F:SilDev.VirtualKeys.Zoom">
             <summary>
                 Zoom key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_PA1">
+        <member name="F:SilDev.VirtualKeys.Pa1">
             <summary>
                 PA1 key.
             </summary>
         </member>
-        <member name="F:SilDev.KeyState.VKey.VK_OEM_CLEAR">
+        <member name="F:SilDev.VirtualKeys.OemClear">
             <summary>
                 Clear key.
             </summary>
         </member>
-        <member name="M:SilDev.KeyState.GetVKeyValue(System.UInt16)">
+        <member name="T:SilDev.VirtualKeyStates">
             <summary>
-                Returns the <see cref="T:SilDev.KeyState.VKey"/> of the <see cref="T:System.UInt16"/> representation of a
+                Provides enumerated values of Virtual-Key code states.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeyStates.KeyDown">
+            <summary>
+                Posted to the window with the keyboard focus when a nonsystem key is pressed.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeyStates.KeyUp">
+            <summary>
+                Posted to the window with the keyboard focus when a nonsystem key is released.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeyStates.SysKeyDown">
+            <summary>
+                Posted to the window with the keyboard focus when the user presses the F10 key (which
+                activates the menu bar) or holds down the ALT key and then presses another key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeyStates.SysKeyUp">
+            <summary>
+                Posted to the window with the keyboard focus when the user releases a key that was
+                pressed while the ALT key was held down.
+            </summary>
+        </member>
+        <member name="T:SilDev.InputDevice">
+            <summary>
+                Provides the functionality to send or detect key states.
+            </summary>
+        </member>
+        <member name="M:SilDev.InputDevice.GetKey(System.UInt16)">
+            <summary>
+                Returns the <see cref="T:SilDev.VirtualKeys"/> of the <see cref="T:System.UInt16"/> representation of a
                 Virtual-Key code.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.KeyState.VKey"/> value.
+                The <see cref="T:SilDev.VirtualKeys"/> value.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetVKeyValue(System.String)">
+        <member name="M:SilDev.InputDevice.GetKey(System.String)">
             <summary>
-                Returns the <see cref="T:SilDev.KeyState.VKey"/> of the <see cref="T:System.String"/> representation of a
+                Returns the <see cref="T:SilDev.VirtualKeys"/> of the <see cref="T:System.String"/> representation of a
                 Virtual-Key code.
             </summary>
             <param name="key">
                 The <see cref="T:System.String"/> representation of a Virtual-Key code.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetVKeyCode(SilDev.KeyState.VKey)">
+        <member name="M:SilDev.InputDevice.GetKeyCode(SilDev.VirtualKeys)">
             <summary>
-                Returns the <see cref="T:System.UInt16"/> representation of the <see cref="T:SilDev.KeyState.VKey"/> value.
+                Returns the <see cref="T:System.UInt16"/> representation of the <see cref="T:SilDev.VirtualKeys"/> value.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.KeyState.VKey"/> value.
+                The <see cref="T:SilDev.VirtualKeys"/> value.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetVKeyCode(System.String)">
+        <member name="M:SilDev.InputDevice.GetKeyCode(System.String)">
             <summary>
                 Returns the <see cref="T:System.UInt16"/> representation of the <see cref="T:System.String"/> representation
                 of a Virtual-Key code.
@@ -8894,15 +8957,15 @@
                 The <see cref="T:System.String"/> representation of a Virtual-Key code.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetVKeyString(SilDev.KeyState.VKey)">
+        <member name="M:SilDev.InputDevice.GetKeyName(SilDev.VirtualKeys)">
             <summary>
-                Returns the <see cref="T:System.String"/> representation of the <see cref="T:SilDev.KeyState.VKey"/> value.
+                Returns the <see cref="T:System.String"/> representation of the <see cref="T:SilDev.VirtualKeys"/> value.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.KeyState.VKey"/> value.
+                The <see cref="T:SilDev.VirtualKeys"/> value.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetVKeyString(System.UInt16)">
+        <member name="M:SilDev.InputDevice.GetKeyName(System.UInt16)">
             <summary>
                 Returns the <see cref="T:System.String"/> representation of the <see cref="T:System.UInt16"/> representation
                 of a Virtual-Key code.
@@ -8911,56 +8974,97 @@
                 The <see cref="T:System.UInt16"/> representation of a Virtual-Key code.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetState(SilDev.KeyState.VKey)">
+        <member name="M:SilDev.InputDevice.GetScanCode(SilDev.VirtualKeys,System.Boolean)">
             <summary>
-                Determines whether a key is up or down at the time the function is called, and whether the
-                key was pressed after a previous call to <see cref="M:SilDev.KeyState.GetState(SilDev.KeyState.VKey)"/>.
+                Returns the Virtual-Key scan code.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.KeyState.VKey"/> value to check.
+                The <see cref="T:SilDev.VirtualKeys"/> value.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetState(System.UInt16)">
+        <member name="M:SilDev.InputDevice.GetScanCode(System.UInt16,System.Boolean)">
+            <summary>
+                Returns the Virtual-Key scan code.
+            </summary>
+            <param name="key">
+                The <see cref="T:System.UInt16"/> representation of a Virtual-Key code.
+            </param>
+        </member>
+        <member name="M:SilDev.InputDevice.GetKeyState(SilDev.VirtualKeys)">
             <summary>
                 Determines whether a key is up or down at the time the function is called, and whether the
-                key was pressed after a previous call to <see cref="M:SilDev.KeyState.GetState(System.UInt16)"/>.
+                key was pressed after a previous call to <see cref="M:SilDev.InputDevice.GetKeyState(SilDev.VirtualKeys)"/>.
+            </summary>
+            <param name="key">
+                The <see cref="T:SilDev.VirtualKeys"/> value to check.
+            </param>
+        </member>
+        <member name="M:SilDev.InputDevice.GetKeyState(System.UInt16)">
+            <summary>
+                Determines whether a key is up or down at the time the function is called, and whether the
+                key was pressed after a previous call to <see cref="M:SilDev.InputDevice.GetKeyState(System.UInt16)"/>.
             </summary>
             <param name="key">
                 The <see cref="T:System.UInt16"/> representation of a Virtual-Key code to check.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetState(System.String)">
+        <member name="M:SilDev.InputDevice.GetKeyState(System.String)">
             <summary>
                 Determines whether a key is up or down at the time the function is called, and whether the
-                key was pressed after a previous call to <see cref="M:SilDev.KeyState.GetState(System.String)"/>.
+                key was pressed after a previous call to <see cref="M:SilDev.InputDevice.GetKeyState(System.String)"/>.
             </summary>
             <param name="key">
                 The <see cref="T:System.String"/> representation of a Virtual-Key code to check.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.GetStates">
+        <member name="M:SilDev.InputDevice.GetKeyStates">
             <summary>
                 Determines which keys were up or down at the time the function is called, and which keys
                 were pressed.
             </summary>
         </member>
-        <member name="M:SilDev.KeyState.SendState(System.IntPtr,SilDev.KeyState.VKey)">
+        <member name="M:SilDev.InputDevice.PostKeyState(System.IntPtr,SilDev.VirtualKeys,SilDev.VirtualKeyStates,System.Boolean)">
             <summary>
-                Places (posts) a key up and down message in the message queue associated with the thread
-                that created the specified window and returns without waiting for the thread to process
-                the message.
+                Places (posts) the specified key in the message queue associated with the thread that created
+                the specified window and returns without waiting for the thread to process the message.
             </summary>
             <param name="hWnd">
                 A handle to the window whose window procedure is to receive the message.
             </param>
             <param name="key">
-                The <see cref="T:SilDev.KeyState.VKey"/> value to send.
+                The key to post.
+            </param>
+            <param name="keyState">
+                The key state to post.
+            </param>
+            <param name="scanCode">
+                true to post the scan code of the specified key; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.KeyState.SendMouseClick">
+        <member name="M:SilDev.InputDevice.SendKeyState(System.IntPtr,SilDev.VirtualKeys,SilDev.VirtualKeyStates,System.Boolean)">
+            <summary>
+                Sends the specified key to a window. This function calls the window procedure for the
+                specified window and does not return until the window procedure has processed the message.
+            </summary>
+            <param name="hWnd">
+                A handle to the window whose window procedure is to receive the message.
+            </param>
+            <param name="key">
+                The key to send.
+            </param>
+            <param name="keyState">
+                The key state to send.
+            </param>
+            <param name="scanCode">
+                true to send the scan code of the specified key; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.InputDevice.SendMouseClick(System.Boolean)">
             <summary>
                 Synthesizes a left mouse button click to the active window.
             </summary>
+            <param name="directInput">
+            </param>
         </member>
         <member name="T:SilDev.Log">
             <summary>
@@ -19499,6 +19603,20 @@
                 the system specified by the lpSystemName parameter.
             </param>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.MapVirtualKey(System.UInt32,System.UInt32)">
+            <summary>
+                Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code
+                into a virtual-key code.
+            </summary>
+            <param name="uCode">
+                The virtual key code or scan code for a key. How this value is interpreted depends on the value of
+                the uMapType parameter.
+            </param>
+            <param name="uMapType">
+                The translation to be performed. The value of this parameter depends on the value of the uCode
+                parameter.
+            </param>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.MoveWindow(System.IntPtr,System.Drawing.Rectangle)">
             <summary>
                 Changes the position and dimensions of the specified window.
@@ -22099,6 +22217,24 @@
             </param>
             <returns>
                 If the function succeeds, the function returns nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.MapVirtualKey(System.UInt32,System.UInt32)">
+            <summary>
+                Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code
+                into a virtual-key code.
+            </summary>
+            <param name="uCode">
+                The virtual key code or scan code for a key. How this value is interpreted depends on the value of
+                the uMapType parameter.
+            </param>
+            <param name="uMapType">
+                The translation to be performed. The value of this parameter depends on the value of the uCode
+                parameter.
+            </param>
+            <returns>
+                The return value is either a scan code, a virtual-key code, or a character value, depending on the
+                value of uCode and uMapType. If there is no translation, the return value is zero.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.MciSendString(System.String,System.Text.StringBuilder,System.UInt32,System.IntPtr)">
