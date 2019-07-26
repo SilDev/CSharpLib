@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2018-06-21 18:07
+// Version:  2019-07-26 05:03
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -42,7 +43,10 @@ namespace SilDev
         private static SafeFileHandle _sfh;
         private static IntPtr _stdHandle = IntPtr.Zero;
         private static StreamWriter _sw;
+
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly().GetName();
+
         private static readonly string AssemblyName = AssemblyEntryName.Name;
         private static readonly Version AssemblyVersion = AssemblyEntryName.Version;
         private static readonly StringBuilder Builder = new StringBuilder();

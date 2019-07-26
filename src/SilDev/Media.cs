@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2018-07-04 11:54
+// Version:  2019-07-26 05:03
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Media;
     using System.Reflection;
@@ -147,6 +148,7 @@ namespace SilDev
         /// </summary>
         public static class WindowsPlayer
         {
+            [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
             private static readonly string Alias = Assembly.GetEntryAssembly().GetName().Name.RemoveChar(' ');
 
             /// <summary>

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: AssemblyInfo.cs
-// Version:  2018-06-02 15:41
+// Version:  2019-07-26 05:03
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
     /// <summary>
@@ -68,6 +69,7 @@ namespace SilDev
         /// </summary>
         public static string Version => Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
 
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         private static TSource GetAssembly<TSource>() where TSource : Attribute
         {
             try

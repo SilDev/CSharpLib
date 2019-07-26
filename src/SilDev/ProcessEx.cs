@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2018-06-21 17:36
+// Version:  2019-07-26 05:03
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -157,7 +157,7 @@ namespace SilDev
                         doubleTap = true;
                         throw new ArgumentException();
                     }
-                    instances = Process.GetProcesses().Where(p => p.ProcessName.EqualsEx(name) && p.MainModule.FileName.EqualsEx(path));
+                    instances = Process.GetProcesses().Where(p => p.ProcessName.EqualsEx(name) && (p.MainModule ?? throw new ArgumentException()).FileName.EqualsEx(path));
                 }
                 catch
                 {
