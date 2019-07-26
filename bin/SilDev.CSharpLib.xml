@@ -8046,848 +8046,943 @@
         </member>
         <member name="F:SilDev.VirtualKeys.LButton">
             <summary>
-                Left mouse button.
+                The left mouse button.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.RButton">
             <summary>
-                Right mouse button.
+                The right mouse button.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Cancel">
             <summary>
-                Control-break processing.
+                The CANCEL key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.MButton">
             <summary>
-                Middle mouse button (three-button mouse).
+                The middle mouse button (three-button mouse).
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.XButton1">
             <summary>
-                X1 mouse button.
+                The first x mouse button (five-button mouse).
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.XButton2">
             <summary>
-                X2 mouse button.
+                The second x mouse button (five-button mouse).
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Back">
             <summary>
-                BACKSPACE key.
+                The BACKSPACE key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Tab">
             <summary>
-                TAB key.
+                The TAB key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.LineFeed">
+            <summary>
+                The LINEFEED key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Clear">
             <summary>
-                CLEAR key.
+                The CLEAR key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Return">
             <summary>
-                ENTER key.
+                The RETURN key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.Enter">
+            <summary>
+                The ENTER key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Shift">
             <summary>
-                SHIFT key.
+                The SHIFT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Control">
             <summary>
-                CTRL key.
+                The CTRL key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.Alt">
+            <summary>
+                The ALT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Menu">
             <summary>
-                ALT key.
+                The ALT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Pause">
             <summary>
-                PAUSE key.
+                The PAUSE key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.CapsLock">
+            <summary>
+                The CAPS LOCK key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Capital">
             <summary>
-                CAPS LOCK key.
+                The CAPS LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.KanaHangul">
+        <member name="F:SilDev.VirtualKeys.KanaMode">
             <summary>
-                IME Kana/Hangul mode.
+                The IME Kana mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Junja">
+        <member name="F:SilDev.VirtualKeys.HangulMode">
             <summary>
-                IME Junja mode.
+                The IME Hangul mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Final">
+        <member name="F:SilDev.VirtualKeys.JunjaMode">
             <summary>
-                IME final mode.
+                The IME Junja mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.HanjaKanji">
+        <member name="F:SilDev.VirtualKeys.FinalMode">
             <summary>
-                IME Hanja/Kanji mode.
+                The IME final mode key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.HanjaMode">
+            <summary>
+                The IME Hanja mode key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.KanjiMode">
+            <summary>
+                The IME Kanji mode key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Escape">
             <summary>
-                ESC key
+                The ESC key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Convert">
+        <member name="F:SilDev.VirtualKeys.ImeConvert">
             <summary>
-                IME convert.
+                The IME convert key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NonConvert">
+        <member name="F:SilDev.VirtualKeys.ImeNonconvert">
             <summary>
-                IME non-convert.
+                The IME nonconvert key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Accept">
+        <member name="F:SilDev.VirtualKeys.ImeAccept">
             <summary>
-                IME accept.
+                The IME accept key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ModeChange">
+        <member name="F:SilDev.VirtualKeys.ImeModeChange">
             <summary>
-                IME mode change request.
+                The IME mode change key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Space">
             <summary>
-                SPACEBAR key.
+                The SPACEBAR key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.PageUp">
+            <summary>
+                The PAGE UP key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Prior">
             <summary>
-                PAGE UP key.
+                The PAGE UP key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.PageDown">
+            <summary>
+                The PAGE DOWN key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Next">
             <summary>
-                PAGE DOWN key.
+                The PAGE DOWN key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.End">
             <summary>
-                END key.
+                The END key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Home">
             <summary>
-                HOME key.
+                The HOME key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Left">
             <summary>
-                LEFT ARROW key.
+                The LEFT ARROW key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Up">
             <summary>
-                UP ARROW key.
+                The UP ARROW key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Right">
             <summary>
-                RIGHT ARROW key.
+                The RIGHT ARROW key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Down">
             <summary>
-                DOWN ARROW key.
+                The DOWN ARROW key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Select">
             <summary>
-                SELECT key.
+                The SELECT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Print">
             <summary>
-                PRINT key.
+                The PRINT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Execute">
             <summary>
-                EXECUTE key.
+                The EXECUTE key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.PrintScreen">
+            <summary>
+                The PRINT SCREEN key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Snapshot">
             <summary>
-                PRINT SCREEN key.
+                The PRINT SCREEN key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Insert">
             <summary>
-                INS key.
+                The INS key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Delete">
             <summary>
-                DEL key.
+                The DEL key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Help">
             <summary>
-                HELP key.
+                The HELP key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num0">
+        <member name="F:SilDev.VirtualKeys.D0">
             <summary>
-                0 key.
+                The 0 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num1">
+        <member name="F:SilDev.VirtualKeys.D1">
             <summary>
-                1 key.
+                The 1 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num2">
+        <member name="F:SilDev.VirtualKeys.D2">
             <summary>
-                2 key.
+                The 2 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num3">
+        <member name="F:SilDev.VirtualKeys.D3">
             <summary>
-                3 key.
+                The 3 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num4">
+        <member name="F:SilDev.VirtualKeys.D4">
             <summary>
-                4 key.
+                The 4 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num5">
+        <member name="F:SilDev.VirtualKeys.D5">
             <summary>
-                5 key.
+                The 5 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num6">
+        <member name="F:SilDev.VirtualKeys.D6">
             <summary>
-                6 key.
+                The 6 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num7">
+        <member name="F:SilDev.VirtualKeys.D7">
             <summary>
-                7 key.
+                The 7 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num8">
+        <member name="F:SilDev.VirtualKeys.D8">
             <summary>
-                8 key.
+                The 8 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Num9">
+        <member name="F:SilDev.VirtualKeys.D9">
             <summary>
-                9 key.
+                The 9 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.A">
             <summary>
-                A key.
+                The A key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.B">
             <summary>
-                B key.
+                The B key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.C">
             <summary>
-                C key.
+                The C key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.D">
             <summary>
-                D key.
+                The D key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.E">
             <summary>
-                E key.
+                The E key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F">
             <summary>
-                F key.
+                The F key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.G">
             <summary>
-                G key.
+                The G key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.H">
             <summary>
-                H key.
+                The H key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.I">
             <summary>
-                I key.
+                The I key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.J">
             <summary>
-                J key.
+                The J key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.K">
             <summary>
-                K key.
+                The K key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.L">
             <summary>
-                L key.
+                The L key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.M">
             <summary>
-                M key.
+                The M key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.N">
             <summary>
-                N key.
+                The N key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.O">
             <summary>
-                O key.
+                The O key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.P">
             <summary>
-                P key.
+                The P key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Q">
             <summary>
-                Q key.
+                The Q key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.R">
             <summary>
-                R key.
+                The R key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.S">
             <summary>
-                S key.
+                The S key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.T">
             <summary>
-                T key.
+                The T key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.U">
             <summary>
-                U key.
+                The U key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.V">
             <summary>
-                V key.
+                The V key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.W">
             <summary>
-                W key.
+                The W key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.X">
             <summary>
-                X key.
+                The X key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Y">
             <summary>
-                Y key.
+                The Y key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Z">
             <summary>
-                Z key.
+                The Z key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.LWin">
             <summary>
-                Left Windows key (natural keyboard).
+                The left Windows logo key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.RWin">
             <summary>
-                Right Windows key (natural keyboard).
+                The right Windows logo key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Apps">
             <summary>
-                Applications key (natural keyboard).
+                The application key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Sleep">
             <summary>
-                Computer Sleep key.
+                The computer sleep key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad0">
+        <member name="F:SilDev.VirtualKeys.NumPad0">
             <summary>
-                Numeric keypad 0 key.
+                The 0 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad1">
+        <member name="F:SilDev.VirtualKeys.NumPad1">
             <summary>
-                Numeric keypad 1 key.
+                The 1 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad2">
+        <member name="F:SilDev.VirtualKeys.NumPad2">
             <summary>
-                Numeric keypad 2 key.
+                The 2 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad3">
+        <member name="F:SilDev.VirtualKeys.NumPad3">
             <summary>
-                Numeric keypad 3 key.
+                The 3 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad4">
+        <member name="F:SilDev.VirtualKeys.NumPad4">
             <summary>
-                Numeric keypad 4 key.
+                The 4 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad5">
+        <member name="F:SilDev.VirtualKeys.NumPad5">
             <summary>
-                Numeric keypad 5 key.
+                The 5 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad6">
+        <member name="F:SilDev.VirtualKeys.NumPad6">
             <summary>
-                Numeric keypad 6 key.
+                The 6 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad7">
+        <member name="F:SilDev.VirtualKeys.NumPad7">
             <summary>
-                Numeric keypad 7 key.
+                The 7 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad8">
+        <member name="F:SilDev.VirtualKeys.NumPad8">
             <summary>
-                Numeric keypad 8 key.
+                The 8 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Numpad9">
+        <member name="F:SilDev.VirtualKeys.NumPad9">
             <summary>
-                Numeric keypad 9 key.
+                The 9 key on the numeric keypad.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Multiply">
             <summary>
-                Multiply key.
+                The multiply key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Add">
             <summary>
-                Add key.
+                The add key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Separator">
             <summary>
-                Separator key.
+                The separator key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Subtract">
             <summary>
-                Subtract key.
+                The subtract key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Decimal">
             <summary>
-                Decimal key.
+                The decimal key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Divide">
             <summary>
-                Divide key.
+                The divide key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F1">
             <summary>
-                F1 key.
+                The F1 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F2">
             <summary>
-                F2 key.
+                The F2 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F3">
             <summary>
-                F3 key.
+                The F3 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F4">
             <summary>
-                F4 key.
+                The F4 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F5">
             <summary>
-                F5 key.
+                The F5 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F6">
             <summary>
-                F6 key.
+                The F6 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F7">
             <summary>
-                F7 key.
+                The F7 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F8">
             <summary>
-                F8 key.
+                The F8 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F9">
             <summary>
-                F9 key.
+                The F9 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F10">
             <summary>
-                F10 key.
+                The F10 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F11">
             <summary>
-                F11 key.
+                The F11 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F12">
             <summary>
-                F12 key.
+                The F12 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F13">
             <summary>
-                F13 key.
+                The F13 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F14">
             <summary>
-                F14 key.
+                The F14 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F15">
             <summary>
-                F15 key.
+                The F15 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F16">
             <summary>
-                F16 key.
+                The F16 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F17">
             <summary>
-                F17 key.
+                The F17 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F18">
             <summary>
-                F18 key.
+                The F18 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F19">
             <summary>
-                F19 key.
+                The F19 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F20">
             <summary>
-                F20 key.
+                The F20 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F21">
             <summary>
-                F21 key.
+                The F21 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F22">
             <summary>
-                F22 key.
+                The F22 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F23">
             <summary>
-                F23 key.
+                The F23 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.F24">
             <summary>
-                F24 key.
+                The F24 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.NumLock">
             <summary>
-                NUM LOCK key.
+                The NUM LOCK key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Scroll">
             <summary>
-                SCROLL LOCK key.
+                The SCROLL LOCK key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.LShift">
             <summary>
-                Left SHIFT key.
+                The left SHIFT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.RShift">
             <summary>
-                Right SHIFT key.
+                The right SHIFT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.LControl">
             <summary>
-                Left CONTROL key.
+                The left CTRL key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.RControl">
             <summary>
-                Right CONTROL key.
+                The right CTRL key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.LAlt">
+            <summary>
+                The left ALT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.LMenu">
             <summary>
-                Left MENU key.
+                The left ALT key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.RAlt">
+            <summary>
+                The right ALT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.RMenu">
             <summary>
-                Right MENU key.
+                The right ALT key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.BrowserBack">
             <summary>
-                Browser Back key.
+                The browser back key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.BrowserForward">
             <summary>
-                Browser Forward key.
+                The browser forward key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.BrowserRefresh">
             <summary>
-                Browser Refresh key.
+                The browser refresh key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.BrowserStop">
             <summary>
-                Browser Stop key.
+                The browser stop key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.BrowserSearch">
             <summary>
-                Browser Search key.
+                The browser search key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.BrowserFavorites">
             <summary>
-                Browser Favorites key.
+                The browser favorites key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.BrowserHome">
             <summary>
-                Browser Start and Home key.
+                The browser home key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.VolumeMute">
             <summary>
-                Volume Mute key.
+                The volume mute key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.VolumeDown">
             <summary>
-                Volume Down key.
+                The volume down key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.VolumeUp">
             <summary>
-                Volume Up key.
+                The volume up key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.MediaNextTrack">
             <summary>
-                Next Track key.
+                The media next track key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.MediaPrevTrack">
+        <member name="F:SilDev.VirtualKeys.MediaPreviousTrack">
             <summary>
-                Previous Track key.
+                The media previous track key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.MediaStop">
             <summary>
-                Stop Media key.
+                The media Stop key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.MediaPlayPause">
             <summary>
-                Play/Pause Media key.
+                The media play pause key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.LaunchMail">
             <summary>
-                Start Mail key.
+                The launch mail key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LaunchMediaSelect">
+        <member name="F:SilDev.VirtualKeys.SelectMedia">
             <summary>
-                Select Media key.
+                The select media key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LaunchApp1">
+        <member name="F:SilDev.VirtualKeys.LaunchApplication1">
             <summary>
-                Select Media key.
+                The start application one key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LaunchApp2">
+        <member name="F:SilDev.VirtualKeys.LaunchApplication2">
             <summary>
-                Start Application 2 key.
+                The start application two key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.OemSemicolon">
+            <summary>
+                The OEM Semicolon key on a US standard keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem1">
             <summary>
-                For the US standard keyboard, the ",:" key .
+                The OEM 1 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemPlus">
+        <member name="F:SilDev.VirtualKeys.Oemplus">
             <summary>
-                For any country/region, the "+" key.
+                The OEM plus key on any country/region keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemComma">
+        <member name="F:SilDev.VirtualKeys.Oemcomma">
             <summary>
-                For any country/region, the "," key.
+                The OEM comma key on any country/region keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.OemMinus">
             <summary>
-                For any country/region, the "-" key.
+                The OEM minus key on any country/region keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.OemPeriod">
             <summary>
-                For any country/region, the "." key.
+                The OEM period key on any country/region keyboard.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.OemQuestion">
+            <summary>
+                The OEM question mark key on a US standard keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem2">
             <summary>
-                For the US standard keyboard, the "/?" key.
+                The OEM 2 key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.Oemtilde">
+            <summary>
+                The OEM tilde key on a US standard keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem3">
             <summary>
-                For the US standard keyboard, the "`~" key.
+                The OEM 3 key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.OemOpenBrackets">
+            <summary>
+                The OEM open bracket key on a US standard keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem4">
             <summary>
-                For the US standard keyboard, the "[{" key.
+                The OEM 4 key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.OemPipe">
+            <summary>
+                The OEM pipe key on a US standard keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem5">
             <summary>
-                For the US standard keyboard, the "\|" key.
+                The OEM 5 key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.OemCloseBrackets">
+            <summary>
+                The OEM close bracket key on a US standard keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem6">
             <summary>
-                For the US standard keyboard, the "]}" key.
+                The OEM 6 key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.OemQuotes">
+            <summary>
+                The OEM singled/double quote key on a US standard keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem7">
             <summary>
-                For the US standard keyboard, the "single-quote/double-quote" key
+                The OEM 7 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem8">
             <summary>
-                Used for miscellaneous characters, it can vary by keyboard.
+                The OEM 8 key.
+            </summary>
+        </member>
+        <member name="F:SilDev.VirtualKeys.OemBackslash">
+            <summary>
+                The OEM angle bracket or backslash key on the RT 102 key keyboard.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Oem102">
             <summary>
-                Either the angle bracket key or the backslash key on the RT 102-key keyboard.
+                The OEM 102 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ProcessKey">
+        <member name="F:SilDev.VirtualKeys.Process">
             <summary>
-                IME PROCESS key.
+                The PROCESS KEY key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Packet">
             <summary>
-                Used to pass Unicode characters as if they were keystrokes. The <see cref="F:SilDev.VirtualKeys.Packet"/>
-                key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods.
+                Used to pass Unicode characters as if they were keystrokes. The Packet key value
+                is the low word of a 32-bit virtual-key value used for non-keyboard input methods.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Attn">
             <summary>
-                Attn key.
+                The ATTN key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.CrSel">
+        <member name="F:SilDev.VirtualKeys.Crsel">
             <summary>
-                CrSel key.
+                The CRSEL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ExSel">
+        <member name="F:SilDev.VirtualKeys.Exsel">
             <summary>
-                ExSel key.
+                The EXSEL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ErEof">
+        <member name="F:SilDev.VirtualKeys.EraseEof">
             <summary>
-                Erase EOF key.
+                The ERASE EOF key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Play">
             <summary>
-                Play key.
+                The PLAY key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Zoom">
             <summary>
-                Zoom key.
+                The ZOOM key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.Pa1">
             <summary>
-                PA1 key.
+                The PA1 key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.OemClear">
             <summary>
-                Clear key.
+                The CLEAR key.
             </summary>
         </member>
         <member name="T:SilDev.VirtualKeyStates">
