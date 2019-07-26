@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-06-16 10:37
+// Version:  2019-07-26 05:04
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -3759,6 +3759,7 @@ namespace SilDev
             ///     for the system. If there is no preferred language set for the system, then the system default UI
             ///     language (also known as "install language") is returned.
             /// </summary>
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
             public static ushort GetUserDefaultUILanguage() =>
                 NativeMethods.GetUserDefaultUILanguage();
 
@@ -8686,6 +8687,7 @@ namespace SilDev
             ///     page to see if you need to provide an hWind value.
             /// </summary>
 #pragma warning disable IDE1006
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
             public IntPtr hWnd { get; internal set; }
 #pragma warning restore IDE1006
             /// <summary>
@@ -8761,6 +8763,7 @@ namespace SilDev
         ///     Defines the message parameters passed to a <see cref="Win32HookFlags.WhCallWndProcRet"/>
         ///     hook procedure.
         /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         [StructLayout(LayoutKind.Sequential)]
         public struct CallWndProcRet
         {
@@ -8800,6 +8803,7 @@ namespace SilDev
         ///     Contains data to be passed to another application by the
         ///     <see cref="F:SilDev.WinApi.WindowMenuFlags.WmCopyData"/> message.
         /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         [StructLayout(LayoutKind.Sequential)]
         public struct CopyData : IDisposable
         {
