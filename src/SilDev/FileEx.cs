@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2018-07-04 12:28
+// Version:  2019-07-27 07:04
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -414,8 +414,13 @@ namespace SilDev
         /// <param name="backup">
         ///     true to create a backup; otherwise, false.
         /// </param>
-        public static bool BinaryReplace(string file, byte[] oldValue, byte[] newValue, bool backup = true)
+        /// <param name="offsets">
+        ///     A list with all positions where bytes were overwritten.
+        /// </param>
+        public static bool BinaryReplace(string file, byte[] oldValue, byte[] newValue, bool backup, out List<long[]> offsets)
         {
+            offsets = new List<long[]>();
+
             var targetPath = PathEx.Combine(file);
             try
             {
@@ -459,6 +464,13 @@ namespace SilDev
                     if (oldValue[index] == position)
                         if (index == oldValue.Length - 1)
                         {
+                            var offsetStart = targetStream.Length;
+                            var offsetEnd = offsetStart + newValue.Length;
+                            var offsetList = new List<long>();
+                            for (var i = offsetStart; i < offsetEnd; i++)
+                                offsetList.Add(i);
+                            offsets.Add(offsetList.ToArray());
+
                             targetStream.Write(newValue, 0, newValue.Length);
                             offset = -1;
                             index = 0;
@@ -540,6 +552,25 @@ namespace SilDev
             }
             return true;
         }
+
+        /// <summary>
+        ///     Replaces all occurrences of a specifed sequence of bytes in the specified file
+        ///     with another sequence of bytes.
+        /// </summary>
+        /// <param name="file">
+        ///     The file to overwrite.
+        /// </param>
+        /// <param name="oldValue">
+        ///     The sequence of bytes to be replaced.
+        /// </param>
+        /// <param name="newValue">
+        ///     The sequence of bytes to replace all all occurrences of oldValue.
+        /// </param>
+        /// <param name="backup">
+        ///     true to create a backup; otherwise, false.
+        /// </param>
+        public static bool BinaryReplace(string file, byte[] oldValue, byte[] newValue, bool backup = true) =>
+            BinaryReplace(file, oldValue, newValue, backup, out var _);
 
         /// <summary>
         ///     Creates a new file, writes the specified byte array to the file, and then
