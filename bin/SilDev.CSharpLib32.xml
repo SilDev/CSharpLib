@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>SilDev.CSharpLib64</name>
+        <name>SilDev.CSharpLib32</name>
     </assembly>
     <members>
         <member name="T:SilDev.Properties.Resources">

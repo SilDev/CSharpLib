@@ -25,39 +25,10 @@
               Looks up a localized string similar to {0}-{{1}}.backup.
             </summary>
         </member>
-        <member name="P:SilDev.Properties.Resources.C91Path">
-            <summary>
-              Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,NKg,ZT;I(x:xcQ5)^I.
-            </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.C91PathN">
-            <summary>
-              Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,O3v)R1;%`n58cj0OIhZ.
-            </summary>
-        </member>
         <member name="P:SilDev.Properties.Resources.DimEmptyImage">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
-        </member>
-        <member name="P:SilDev.Properties.Resources.ReferenceDirs">
-             <summary>
-               Looks up a localized string similar to %CurrentDir%
-            %CurrentDir%\Bin
-            %CurrentDir%\Binaries
-            %ApplicationData%\References
-            %ApplicationData%\References\dotNet4\irrKlang
-            %LocalApplicationData%\References
-            %LocalApplicationData%\References\dotNet4\irrKlang
-            %CommonApplicationData%\References
-            %CommonApplicationData%\References\dotNet4\irrKlang
-            %UserProfile%\References
-            %UserProfile%\References\dotNet4\irrKlang
-            %MyDocuments%\References
-            %MyDocuments%\References\dotNet4\irrKlang
-            %MyDocuments%\Visual Studio\References
-            %MyDocuments%\Visual Studi [rest of string was truncated]&quot;;.
-             </summary>
         </member>
         <member name="P:SilDev.Properties.Resources.SearchImage">
             <summary>
@@ -7163,6 +7134,27 @@
             </param>
             <param name="encoding">
                 The character encoding to use.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.BinaryReplace(System.String,System.Byte[],System.Byte[],System.Boolean,System.Collections.Generic.List{System.Int64[]}@)">
+            <summary>
+                Replaces all occurrences of a specifed sequence of bytes in the specified file
+                with another sequence of bytes.
+            </summary>
+            <param name="file">
+                The file to overwrite.
+            </param>
+            <param name="oldValue">
+                The sequence of bytes to be replaced.
+            </param>
+            <param name="newValue">
+                The sequence of bytes to replace all all occurrences of oldValue.
+            </param>
+            <param name="backup">
+                true to create a backup; otherwise, false.
+            </param>
+            <param name="offsets">
+                A list with all positions where bytes were overwritten.
             </param>
         </member>
         <member name="M:SilDev.FileEx.BinaryReplace(System.String,System.Byte[],System.Byte[],System.Boolean)">
