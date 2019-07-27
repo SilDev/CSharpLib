@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2018-06-17 16:18
+// Version:  2019-07-27 08:23
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -21,6 +21,7 @@ namespace SilDev
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.IO.Compression;
+    using System.Linq;
     using System.Text;
 
     /// <summary>
@@ -247,13 +248,17 @@ namespace SilDev
                         return _location;
                     var dirs = new[]
                     {
-#if x64
+#if any || x64
                         "Helper\\7z\\x64",
                         "Binaries\\Helper\\7z\\x64",
 #endif
                         "Helper\\7z",
                         "Binaries\\Helper\\7z"
                     };
+#if any
+                    if (!Environment.Is64BitOperatingSystem)
+                        dirs = dirs.Skip(2).ToArray();
+#endif
                     foreach (var dir in dirs)
                     {
                         if (SetPathsIfValid(PathEx.Combine(PathEx.LocalDir, dir)))

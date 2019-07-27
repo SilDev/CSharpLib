@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2018-06-26 01:17
+// Version:  2019-07-27 09:41
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -61,8 +61,10 @@ namespace SilDev.Drawing
         {
 #if x86
             const double memoryLimit = 0x40000000;
-#else
+#elif x64
             const double memoryLimit = 0x80000000;
+#else
+            var memoryLimit = Environment.Is64BitProcess ? 0x80000000d : 0x40000000;
 #endif
             double bit;
             switch (pixelFormat)

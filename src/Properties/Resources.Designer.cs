@@ -70,53 +70,12 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,NKg,ZT;I(x:xcQ5)^I.
-        /// </summary>
-        internal static string C91Path {
-            get {
-                return ResourceManager.GetString("C91Path", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &gt;1Q&gt;[[h;t7%&amp;i9kgW,O3v)R1;%`n58cj0OIhZ.
-        /// </summary>
-        internal static string C91PathN {
-            get {
-                return ResourceManager.GetString("C91PathN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap DimEmptyImage {
             get {
                 object obj = ResourceManager.GetObject("DimEmptyImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to %CurrentDir%
-        ///%CurrentDir%\Bin
-        ///%CurrentDir%\Binaries
-        ///%ApplicationData%\References
-        ///%ApplicationData%\References\dotNet4\irrKlang
-        ///%LocalApplicationData%\References
-        ///%LocalApplicationData%\References\dotNet4\irrKlang
-        ///%CommonApplicationData%\References
-        ///%CommonApplicationData%\References\dotNet4\irrKlang
-        ///%UserProfile%\References
-        ///%UserProfile%\References\dotNet4\irrKlang
-        ///%MyDocuments%\References
-        ///%MyDocuments%\References\dotNet4\irrKlang
-        ///%MyDocuments%\Visual Studio\References
-        ///%MyDocuments%\Visual Studi [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string ReferenceDirs {
-            get {
-                return ResourceManager.GetString("ReferenceDirs", resourceCulture);
             }
         }
         

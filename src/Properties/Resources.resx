@@ -130,38 +130,6 @@
   <data name="BackupFormat" xml:space="preserve">
     <value>{0}-{{1}}.backup</value>
   </data>
-  <data name="C91Path" xml:space="preserve">
-    <value>&gt;1Q&gt;[[h;t7%&amp;i9kgW,NKg,ZT;I(x:xcQ5)^I</value>
-    <comment>%SystemRoot%\System32\cmd.exe</comment>
-  </data>
-  <data name="C91PathN" xml:space="preserve">
-    <value>&gt;1Q&gt;[[h;t7%&amp;i9kgW,O3v)R1;%`n58cj0OIhZ</value>
-    <comment>%SystemRoot%\Sysnative\cmd.exe</comment>
-  </data>
-  <data name="ReferenceDirs" xml:space="preserve">
-    <value>%CurrentDir%
-%CurrentDir%\Bin
-%CurrentDir%\Binaries
-%ApplicationData%\References
-%ApplicationData%\References\dotNet4\irrKlang
-%LocalApplicationData%\References
-%LocalApplicationData%\References\dotNet4\irrKlang
-%CommonApplicationData%\References
-%CommonApplicationData%\References\dotNet4\irrKlang
-%UserProfile%\References
-%UserProfile%\References\dotNet4\irrKlang
-%MyDocuments%\References
-%MyDocuments%\References\dotNet4\irrKlang
-%MyDocuments%\Visual Studio\References
-%MyDocuments%\Visual Studio\References\dotNet4\irrKlang
-%MyDocuments%\Visual Studio 2015\References
-%MyDocuments%\Visual Studio 2015\References\dotNet4\irrKlang
-%MyDocuments%\Visual Studio 2017\References
-%MyDocuments%\Visual Studio 2017\References\dotNet4\irrKlang
-%MyDocuments%\Visual Studio 2019\References
-%MyDocuments%\Visual Studio 2019\References\dotNet4\irrKlang
-%TEMP%\tmp-{0}</value>
-  </data>
   <data name="TempDirFormat" xml:space="preserve">
     <value>%TEMP%\tmp-{0}</value>
   </data>

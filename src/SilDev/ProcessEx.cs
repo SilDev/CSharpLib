@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-07-26 05:03
+// Version:  2019-07-27 08:24
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,12 +22,11 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Management;
-    using System.Resources;
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading;
+    using Intern;
     using Microsoft.Win32.SafeHandles;
-    using Properties;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Process"/> class to enable you to start
@@ -730,10 +729,10 @@ namespace SilDev
                     cmd = $"/C {cmd}";
                 if (cmd.Length < 16)
                     throw new ArgumentNullException(nameof(cmd));
-#if x86
-                var path = PathEx.Combine((Environment.Is64BitOperatingSystem ? Resources.C91PathN : Resources.C91Path));
+#if any || x86
+                var path = ComSpec.SysNativePath;
 #else
-                var path = PathEx.Combine(GetCmd91(nameof(Resources.C91Path)));
+                var path = ComSpec.DefaultPath;
 #endif
                 if ((path + cmd).Length > 8192)
                 {
@@ -826,10 +825,10 @@ namespace SilDev
         {
             try
             {
-#if x86
-                var path = PathEx.Combine((Environment.Is64BitOperatingSystem ? Resources.C91PathN : Resources.C91Path));
+#if any || x86
+                var path = ComSpec.SysNativePath;
 #else
-                var path = PathEx.Combine(GetCmd91(nameof(Resources.C91Path)));
+                var path = ComSpec.DefaultPath;
 #endif
                 using (var p = new Process
                 {
@@ -857,20 +856,6 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return false;
-            }
-        }
-
-        internal static string GetCmd91(string key)
-        {
-            try
-            {
-                var rm = new ResourceManager($"{nameof(SilDev)}.{nameof(Properties)}.{nameof(Resources)}", typeof(Resources).Assembly);
-                return rm.GetString(key).DecodeString(BinaryToTextEncodings.Base91);
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
-                return string.Empty;
             }
         }
 
@@ -1042,7 +1027,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return true;
                 int exitCode;
-                using (var p = Send(string.Format(GetCmd91(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\""), src), runAsAdmin, false))
+                using (var p = Send(string.Format(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src), runAsAdmin, false))
                 {
                     if (!wait)
                         return true;

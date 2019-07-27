@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2018-06-12 23:24
+// Version:  2019-07-27 08:55
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,6 +22,7 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Text;
+    using Intern;
     using Microsoft.Win32;
 
     /// <summary>
@@ -105,21 +106,32 @@ namespace SilDev
             }
         }
 
-#if x86
-        private static string _regPath64;
-        private const string RegPath = "%SystemRoot%\\System32\\reg.exe";
-        private static string RegPath64
+#if any || x86
+        private static string _regLowEnvPath,
+                              _regNatEnvPath;
+
+        private static string RegLowEnvPath
         {
             get
             {
-                if (_regPath64 == default(string))
-                    _regPath64 = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative\\reg.exe" : RegPath;
-                return _regPath64;
+                if (_regLowEnvPath == default(string))
+                    _regLowEnvPath = Path.Combine(ComSpec.LowestEnvDir, "reg.exe");
+                return _regLowEnvPath;
+            }
+        }
+
+        private static string RegNatEnvPath
+        {
+            get
+            {
+                if (_regNatEnvPath == default(string))
+                    _regNatEnvPath = Path.Combine(ComSpec.SysNativeEnvDir, "reg.exe");
+                return _regNatEnvPath;
             }
         }
 #else
-        private const string RegPath = "%SystemRoot%\\SysWOW64\\reg.exe";
-        private const string RegPath64 = "%SystemRoot%\\System32\\reg.exe";
+        private const string RegLowEnvPath = "%SystemRoot%\\SysWOW64\\reg.exe";
+        private const string RegNatEnvPath = "%SystemRoot%\\System32\\reg.exe";
 #endif
 
         /// <summary>
@@ -931,7 +943,7 @@ namespace SilDev
         /// <param name="native">
         ///     true to import with the system native architecture; otherwise, false.
         /// </param>
-#if x86
+#if any || x86
         public static bool ImportFile(string path, bool elevated = false, bool native = false)
 #else
         public static bool ImportFile(string path, bool elevated = false, bool native = true)
@@ -946,7 +958,7 @@ namespace SilDev
                     throw new PathNotFoundException(filePath);
                 if (Log.DebugMode > 1)
                     Log.Write($"IMPORT: \"{filePath}\"");
-                using (var p = ProcessEx.Start(native ? RegPath64 : RegPath, $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false))
+                using (var p = ProcessEx.Start(native ? RegNatEnvPath : RegLowEnvPath, $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false))
                     if (p?.HasExited == false)
                         p.WaitForExit(3000);
                 return true;
@@ -974,7 +986,7 @@ namespace SilDev
         /// <param name="native">
         ///     true to import with the system native architecture; otherwise, false.
         /// </param>
-#if x86
+#if any || x86
         public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
 #else
         public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
@@ -1035,7 +1047,7 @@ namespace SilDev
         /// <param name="native">
         ///     true to import with the system native architecture; otherwise, false.
         /// </param>
-#if x86
+#if any || x86
         public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
 #else
         public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
@@ -1078,7 +1090,7 @@ namespace SilDev
                     var path = Path.Combine(Path.GetTempPath(), PathEx.GetTempFileName("reg", 8));
                     if (Log.DebugMode > 1)
                         Log.Write($"EXPORT: \"{key}\" TO \"{path}\"");
-                    using (var p = ProcessEx.Start(native ? RegPath64 : RegPath, $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
+                    using (var p = ProcessEx.Start(native ? RegNatEnvPath : RegLowEnvPath, $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
                         if (p?.HasExited == false)
                             p.WaitForExit(5000);
                     var lines = File.ReadAllLines(path).Skip(1);
@@ -1108,11 +1120,12 @@ namespace SilDev
         ///     The full paths of the keys to export.
         /// </param>
         public static bool ExportKeys(string destPath, bool elevated, params string[] keyPaths) =>
-#if x86
+#if any || x86
             ExportKeys(destPath, elevated, false, keyPaths);
 #else
             ExportKeys(destPath, elevated, true, keyPaths);
 #endif
+
         /// <summary>
         ///     Exports the full content of the specified registry paths into an REG file.
         /// </summary>
@@ -1123,7 +1136,7 @@ namespace SilDev
         ///     The full paths of the keys to export.
         /// </param>
         public static bool ExportKeys(string destPath, params string[] keyPaths) =>
-#if x86
+#if any || x86
             ExportKeys(destPath, false, false, keyPaths);
 #else
             ExportKeys(destPath, false, true, keyPaths);

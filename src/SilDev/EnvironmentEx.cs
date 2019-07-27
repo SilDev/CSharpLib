@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2019-05-22 18:22
+// Version:  2019-07-27 08:23
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -219,10 +219,12 @@ namespace SilDev
                     return _version;
                 try
                 {
-#if x64
+#if x86
+                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", "Framework");
+#elif x64
                     var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", "Framework64");
 #else
-                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", "Framework");
+                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", Environment.Is64BitProcess ? "Framework64" : "Framework");
 #endif
                     foreach (var dir in Directory.EnumerateDirectories(envDir).Reverse())
                     {
