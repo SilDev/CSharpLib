@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ComSpec.cs
-// Version:  2019-07-27 08:50
+// Version:  2019-07-28 02:21
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -38,7 +38,7 @@ namespace SilDev.Intern
             }
         }
 #endif
-#if x86 || x64
+#if x64
         internal const string SysNativeEnvDir = "%SystemRoot%\\System32";
 #else
         private static string _sysNativeEnvDir;
@@ -48,7 +48,7 @@ namespace SilDev.Intern
             get
             {
                 if (_sysNativeEnvDir == default(string))
-                    _sysNativeEnvDir = Environment.Is64BitProcess ? "%SystemRoot%\\Sysnative" : "%SystemRoot%\\System32";
+                    _sysNativeEnvDir = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative" : "%SystemRoot%\\System32";
                 return _sysNativeEnvDir;
             }
         }
