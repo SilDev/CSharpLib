@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-07-27 08:55
+// Version:  2019-07-28 07:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -392,20 +392,6 @@ namespace SilDev
         public static IEnumerable<string> GetSubKeyTree(string keyPath, int timelimit = 30000) =>
             GetSubKeyTree(keyPath.GetKey(), keyPath.GetSubKeyName(), timelimit);
 
-        private static void CopyKeyIntern(RegistryKey srcKey, RegistryKey destKey)
-        {
-            foreach (var valueName in srcKey.GetValueNames())
-            {
-                var value = srcKey.GetValue(valueName);
-                var kind = srcKey.GetValueKind(valueName);
-                destKey.SetValue(valueName, value, kind);
-            }
-            foreach (var keyName in srcKey.GetSubKeyNames())
-                using (var key1 = srcKey.OpenSubKey(keyName))
-                    using (var key2 = destKey.CreateSubKey(keyName))
-                        CopyKeyIntern(key1, key2);
-        }
-
         /// <summary>
         ///     Copies an existing subkey to a new location.
         /// </summary>
@@ -435,9 +421,46 @@ namespace SilDev
                     throw new ArgumentOutOfRangeException(nameof(destPath));
                 if (overwrite && SubKeyExists(destKey, destSubKey))
                     RemoveSubKey(destKey, destSubKey);
-                using (var key1 = srcKey.OpenSubKey(srcSubKey.KeyFilter()))
-                    using (var key2 = destKey.CreateSubKey(destSubKey.KeyFilter()))
-                        CopyKeyIntern(key1, key2);
+                var releaseQueue = new Queue<RegistryKey>();
+                var srcItem = srcKey.OpenSubKey(srcSubKey.KeyFilter());
+                releaseQueue.Enqueue(srcItem);
+                var destItem = destKey.CreateSubKey(destSubKey.KeyFilter());
+                releaseQueue.Enqueue(destItem);
+                var copyQueue = new Queue<(RegistryKey, RegistryKey)>();
+                copyQueue.Enqueue((srcItem, destItem));
+                try
+                {
+                    do
+                    {
+                        var queue = copyQueue.Dequeue();
+                        srcItem = queue.Item1;
+                        destItem = queue.Item2;
+                        foreach (var entry in srcItem.GetValueNames())
+                        {
+                            var value = srcItem.GetValue(entry);
+                            var kind = srcItem.GetValueKind(entry);
+                            destItem.SetValue(entry, value, kind);
+                        }
+                        foreach (var name in srcItem.GetSubKeyNames())
+                        {
+                            var srcSubItem = srcItem.OpenSubKey(name);
+                            releaseQueue.Enqueue(srcSubItem);
+                            var destSubItem = destItem.CreateSubKey(name);
+                            releaseQueue.Enqueue(destSubItem);
+                            copyQueue.Enqueue((srcSubItem, destSubItem));
+                        }
+                    }
+                    while (copyQueue.Any());
+                }
+                finally
+                {
+                    do
+                    {
+                        var item = releaseQueue.Dequeue();
+                        item?.Dispose();
+                    }
+                    while (releaseQueue.Any());
+                }
                 return SubKeyExists(destKey, destSubKey);
             }
             catch (Exception ex)
