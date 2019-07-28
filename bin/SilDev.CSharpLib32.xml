@@ -1378,49 +1378,49 @@
                 The new title of the window.
             </param>
         </member>
-        <member name="T:SilDev.Forms.ContextMenuStripEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> class.
-            </summary>
-        </member>
-        <member name="T:SilDev.Forms.ContextMenuStripEx.Animations">
+        <member name="T:SilDev.Forms.ContextMenuStripExAnimations">
             <summary>
                 Provides enumerated values of <see cref="T:System.Windows.Forms.ContextMenuStrip"/> animations.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.Default">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.Default">
             <summary>
                 Smooth fade in animation.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.Blend">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.Blend">
             <summary>
                 Fade in animation.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.Center">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.Center">
             <summary>
                 Makes the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> appear to collapse inward.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideHorPositive">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideHorPositive">
             <summary>
                 Slide animation from left to right.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideHorNegative">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideHorNegative">
             <summary>
                 Slide animation from right to left.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideVerPositive">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideVerPositive">
             <summary>
                 Slide animation from top to bottom.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripEx.Animations.SlideVerNegative">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideVerNegative">
             <summary>
                 Slide animation from bottom to top.
+            </summary>
+        </member>
+        <member name="T:SilDev.Forms.ContextMenuStripEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.ContextMenuStripEx.CloseOnMouseLeave(System.Windows.Forms.ContextMenuStrip,System.Int32)">
@@ -1434,7 +1434,7 @@
                 The toleration in pixel.
             </param>
         </member>
-        <member name="M:SilDev.Forms.ContextMenuStripEx.EnableAnimation(System.Windows.Forms.ContextMenuStrip,SilDev.Forms.ContextMenuStripEx.Animations,System.Int32)">
+        <member name="M:SilDev.Forms.ContextMenuStripEx.EnableAnimation(System.Windows.Forms.ContextMenuStrip,SilDev.Forms.ContextMenuStripExAnimations,System.Int32)">
             <summary>
                 Enables you to produce special effects when showing this <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
             </summary>
@@ -1448,7 +1448,7 @@
                 The time it takes to play the animation, in milliseconds.
                 <para>
                     Please note that this parameter is ignored if the animation is set to
-                    <see cref="F:SilDev.Forms.ContextMenuStripEx.Animations.Default"/>.
+                    <see cref="F:SilDev.Forms.ContextMenuStripExAnimations.Default"/>.
                 </para>
             </param>
         </member>
@@ -1463,29 +1463,29 @@
                 The border color.
             </param>
         </member>
-        <member name="T:SilDev.Forms.ControlEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.Control"/> class.
-            </summary>
-        </member>
-        <member name="T:SilDev.Forms.ControlEx.BorderStyle">
+        <member name="T:SilDev.Forms.ControlExBorderStyle">
             <summary>
                 Specifies the border style for a control.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ControlEx.BorderStyle.Dotted">
+        <member name="F:SilDev.Forms.ControlExBorderStyle.Dotted">
             <summary>
                 A dotted border.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ControlEx.BorderStyle.Dashed">
+        <member name="F:SilDev.Forms.ControlExBorderStyle.Dashed">
             <summary>
                 A dashed border.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ControlEx.BorderStyle.Solid">
+        <member name="F:SilDev.Forms.ControlExBorderStyle.Solid">
             <summary>
                 A solid border.
+            </summary>
+        </member>
+        <member name="T:SilDev.Forms.ControlEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.Control"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.ControlEx.GetAncestor(System.Windows.Forms.Control)">
@@ -1543,6 +1543,20 @@
                 true to enable the specified styles; otherwise, false to disable the specified styles.
             </param>
         </member>
+        <member name="M:SilDev.Forms.ControlEx.SetBorderStyleOfType``1(System.Windows.Forms.Control,System.Windows.Forms.BorderStyle)">
+            <summary>
+                Set the border style for the entire tree.
+            </summary>
+            <typeparam name="TControl">
+                The type of the <see cref="T:System.Windows.Forms.Control"/> to be changed.
+            </typeparam>
+            <param name="control">
+                The control with the child controls to change.
+            </param>
+            <param name="borderStyle">
+                The style to set.
+            </param>
+        </member>
         <member name="M:SilDev.Forms.ControlEx.SetChildVisibility(System.Windows.Forms.Control,System.Boolean,System.Windows.Forms.Control[])">
             <summary>
                 Sets a value indicating whether all child controls of this control are displayed.
@@ -1557,7 +1571,7 @@
                 A sequence of child controls that remain visible.
             </param>
         </member>
-        <member name="M:SilDev.Forms.ControlEx.DrawBorder(System.Windows.Forms.Control,System.Drawing.Color,SilDev.Forms.ControlEx.BorderStyle)">
+        <member name="M:SilDev.Forms.ControlEx.DrawBorder(System.Windows.Forms.Control,System.Drawing.Color,SilDev.Forms.ControlExBorderStyle)">
             <summary>
                 Draws a border with the specified color and style on a control.
             </summary>
@@ -1568,7 +1582,7 @@
                 The <see cref="T:System.Drawing.Color"/> of the border.
             </param>
             <param name="style">
-                One of the <see cref="T:SilDev.Forms.ControlEx.BorderStyle"/> values that specifies the style of the border.
+                One of the <see cref="T:SilDev.Forms.ControlExBorderStyle"/> values that specifies the style of the border.
             </param>
         </member>
         <member name="M:SilDev.Forms.ControlEx.DrawSizeGrip(System.Windows.Forms.Control,System.Nullable{System.Drawing.Color},System.Windows.Forms.MouseEventHandler,System.EventHandler)">
@@ -1589,19 +1603,19 @@
                 Occurs when the mouse pointer enters the control.
             </param>
         </member>
-        <member name="T:SilDev.Forms.FormEx">
-            <summary>
-                Expands the functionality for the <see cref="T:System.Windows.Forms.Form"/> class.
-            </summary>
-        </member>
-        <member name="T:SilDev.Forms.FormEx.PlusSettings">
+        <member name="T:SilDev.Forms.FormExPlusSettings">
             <summary>
                 Provides special <see cref="T:System.Windows.Forms.Form"/> settings.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.FormEx.PlusSettings.LogLoadingTime">
+        <member name="F:SilDev.Forms.FormExPlusSettings.LogLoadingTime">
             <summary>
                 Logs the loading time of the specified <see cref="T:System.Windows.Forms.Form"/>.
+            </summary>
+        </member>
+        <member name="T:SilDev.Forms.FormEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Windows.Forms.Form"/> class.
             </summary>
         </member>
         <member name="M:SilDev.Forms.FormEx.Dockable(System.Windows.Forms.Form)">
@@ -1612,7 +1626,7 @@
                 The form window to be dockable.
             </param>
         </member>
-        <member name="M:SilDev.Forms.FormEx.Plus(System.Windows.Forms.Form,SilDev.Forms.FormEx.PlusSettings)">
+        <member name="M:SilDev.Forms.FormEx.Plus(System.Windows.Forms.Form,SilDev.Forms.FormExPlusSettings)">
             <summary>
                 Determines special settings for the specified <see cref="T:System.Windows.Forms.Form"/>.
                 <para>
