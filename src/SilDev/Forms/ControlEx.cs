@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2019-07-28 07:12
+// Version:  2019-07-28 07:50
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,34 +23,33 @@ namespace SilDev.Forms
     using System.Windows.Forms;
     using Drawing;
     using Properties;
-    using FormsBorderStyle = System.Windows.Forms.BorderStyle;
+
+    /// <summary>
+    ///     Specifies the border style for a control.
+    /// </summary>
+    public enum ControlExBorderStyle
+    {
+        /// <summary>
+        ///     A dotted border.
+        /// </summary>
+        Dotted = 1,
+
+        /// <summary>
+        ///     A dashed border.
+        /// </summary>
+        Dashed = 2,
+
+        /// <summary>
+        ///     A solid border.
+        /// </summary>
+        Solid = 3
+    }
 
     /// <summary>
     ///     Expands the functionality for the <see cref="Control"/> class.
     /// </summary>
     public static class ControlEx
     {
-        /// <summary>
-        ///     Specifies the border style for a control.
-        /// </summary>
-        public enum BorderStyle
-        {
-            /// <summary>
-            ///     A dotted border.
-            /// </summary>
-            Dotted = 1,
-
-            /// <summary>
-            ///     A dashed border.
-            /// </summary>
-            Dashed = 2,
-
-            /// <summary>
-            ///     A solid border.
-            /// </summary>
-            Solid = 3
-        }
-
         /// <summary>
         ///     Gets the ancestor of this <see cref="Control"/>.
         /// </summary>
@@ -202,7 +201,7 @@ namespace SilDev.Forms
         /// <param name="borderStyle">
         ///     The style to set.
         /// </param>
-        public static void SetBorderStyleOfType<TControl>(Control control, FormsBorderStyle borderStyle) where TControl : Control
+        public static void SetBorderStyleOfType<TControl>(Control control, BorderStyle borderStyle) where TControl : Control
         {
             var queue = new Queue<Control>();
             queue.Enqueue(control);
@@ -256,9 +255,9 @@ namespace SilDev.Forms
         ///     The <see cref="Color"/> of the border.
         /// </param>
         /// <param name="style">
-        ///     One of the <see cref="BorderStyle"/> values that specifies the style of the border.
+        ///     One of the <see cref="ControlExBorderStyle"/> values that specifies the style of the border.
         /// </param>
-        public static void DrawBorder(Control control, Color color, BorderStyle style = BorderStyle.Solid)
+        public static void DrawBorder(Control control, Color color, ControlExBorderStyle style = ControlExBorderStyle.Solid)
         {
             if (!(control is Control ctrl))
                 return;

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2019-07-28 07:53
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -24,22 +24,22 @@ namespace SilDev.Forms
     using System.Windows.Forms;
 
     /// <summary>
+    ///     Provides special <see cref="Form"/> settings.
+    /// </summary>
+    [Flags]
+    public enum FormExPlusSettings
+    {
+        /// <summary>
+        ///     Logs the loading time of the specified <see cref="Form"/>.
+        /// </summary>
+        LogLoadingTime = 0x10
+    }
+
+    /// <summary>
     ///     Expands the functionality for the <see cref="Form"/> class.
     /// </summary>
     public static class FormEx
     {
-        /// <summary>
-        ///     Provides special <see cref="Form"/> settings.
-        /// </summary>
-        [Flags]
-        public enum PlusSettings
-        {
-            /// <summary>
-            ///     Logs the loading time of the specified <see cref="Form"/>.
-            /// </summary>
-            LogLoadingTime = 0x10
-        }
-
         /// <summary>
         ///     Allows to dock the specifed <see cref="Form"/> to the virtual screen edges.
         /// </summary>
@@ -69,9 +69,9 @@ namespace SilDev.Forms
         /// <param name="settings">
         ///     The settings to be applied.
         /// </param>
-        public static Form Plus(this Form form, PlusSettings settings = PlusSettings.LogLoadingTime)
+        public static Form Plus(this Form form, FormExPlusSettings settings = FormExPlusSettings.LogLoadingTime)
         {
-            if (Log.DebugMode <= 0 || !settings.HasFlag(PlusSettings.LogLoadingTime))
+            if (Log.DebugMode <= 0 || !settings.HasFlag(FormExPlusSettings.LogLoadingTime))
                 return form;
             try
             {

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2019-07-28 07:52
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,51 +22,51 @@ namespace SilDev.Forms
     using System.Windows.Forms;
 
     /// <summary>
+    ///     Provides enumerated values of <see cref="ContextMenuStrip"/> animations.
+    /// </summary>
+    public enum ContextMenuStripExAnimations : uint
+    {
+        /// <summary>
+        ///     Smooth fade in animation.
+        /// </summary>
+        Default = 0x0,
+
+        /// <summary>
+        ///     Fade in animation.
+        /// </summary>
+        Blend = WinApi.AnimateWindowFlags.Blend,
+
+        /// <summary>
+        ///     Makes the <see cref="ContextMenuStrip"/> appear to collapse inward.
+        /// </summary>
+        Center = WinApi.AnimateWindowFlags.Center,
+
+        /// <summary>
+        ///     Slide animation from left to right.
+        /// </summary>
+        SlideHorPositive = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.HorPositive,
+
+        /// <summary>
+        ///     Slide animation from right to left.
+        /// </summary>
+        SlideHorNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.HorNegative,
+
+        /// <summary>
+        ///     Slide animation from top to bottom.
+        /// </summary>
+        SlideVerPositive = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerPositive,
+
+        /// <summary>
+        ///     Slide animation from bottom to top.
+        /// </summary>
+        SlideVerNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerNegative
+    }
+
+    /// <summary>
     ///     Expands the functionality for the <see cref="ContextMenuStrip"/> class.
     /// </summary>
     public static class ContextMenuStripEx
     {
-        /// <summary>
-        ///     Provides enumerated values of <see cref="ContextMenuStrip"/> animations.
-        /// </summary>
-        public enum Animations : uint
-        {
-            /// <summary>
-            ///     Smooth fade in animation.
-            /// </summary>
-            Default = 0x0,
-
-            /// <summary>
-            ///     Fade in animation.
-            /// </summary>
-            Blend = WinApi.AnimateWindowFlags.Blend,
-
-            /// <summary>
-            ///     Makes the <see cref="ContextMenuStrip"/> appear to collapse inward.
-            /// </summary>
-            Center = WinApi.AnimateWindowFlags.Center,
-
-            /// <summary>
-            ///     Slide animation from left to right.
-            /// </summary>
-            SlideHorPositive = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.HorPositive,
-
-            /// <summary>
-            ///     Slide animation from right to left.
-            /// </summary>
-            SlideHorNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.HorNegative,
-
-            /// <summary>
-            ///     Slide animation from top to bottom.
-            /// </summary>
-            SlideVerPositive = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerPositive,
-
-            /// <summary>
-            ///     Slide animation from bottom to top.
-            /// </summary>
-            SlideVerNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerNegative
-        }
-
         private static Color _menuBorder = SystemColors.ControlDark;
         private static readonly Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>> EnabledAnimation = new Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>>();
 
@@ -117,10 +117,10 @@ namespace SilDev.Forms
         ///     The time it takes to play the animation, in milliseconds.
         ///     <para>
         ///         Please note that this parameter is ignored if the animation is set to
-        ///         <see cref="Animations.Default"/>.
+        ///         <see cref="ContextMenuStripExAnimations.Default"/>.
         ///     </para>
         /// </param>
-        public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, Animations animation = Animations.Default, int time = 200)
+        public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, ContextMenuStripExAnimations animation = ContextMenuStripExAnimations.Default, int time = 200)
         {
             if (!(contextMenuStrip is ContextMenuStrip cms))
                 return;
@@ -134,7 +134,7 @@ namespace SilDev.Forms
             var loaded = false;
             cms.Opening += (sender, args) =>
             {
-                if (animation != Animations.Default)
+                if (animation != ContextMenuStripExAnimations.Default)
                 {
                     WinApi.NativeMethods.AnimateWindow(cms.Handle, EnabledAnimation[cms].Key, EnabledAnimation[cms].Value);
                     if (loaded)
