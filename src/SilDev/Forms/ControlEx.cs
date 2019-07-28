@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2018-03-12 02:09
+// Version:  2019-07-28 07:12
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,12 +16,14 @@
 namespace SilDev.Forms
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
     using Drawing;
     using Properties;
+    using FormsBorderStyle = System.Windows.Forms.BorderStyle;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="Control"/> class.
@@ -186,6 +188,42 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Set the border style for the entire tree.
+        /// </summary>
+        /// <typeparam name="TControl">
+        ///     The type of the <see cref="Control"/> to be changed.
+        /// </typeparam>
+        /// <param name="control">
+        ///     The control with the child controls to change.
+        /// </param>
+        /// <param name="borderStyle">
+        ///     The style to set.
+        /// </param>
+        public static void SetBorderStyleOfType<TControl>(Control control, FormsBorderStyle borderStyle) where TControl : Control
+        {
+            var queue = new Queue<Control>();
+            queue.Enqueue(control);
+            do
+            {
+                var parent = queue.Dequeue();
+                foreach (var child in parent.Controls.OfType<Control>())
+                    queue.Enqueue(child);
+                if (!(parent is TControl obj))
+                    continue;
+                try
+                {
+                    ((dynamic)obj).BorderStyle = borderStyle;
+                }
+                catch (Exception ex)
+                {
+                    if (Log.DebugMode > 1)
+                        Log.Write(ex);
+                }
+            }
+            while (queue.Any());
         }
 
         /// <summary>
