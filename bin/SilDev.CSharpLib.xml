@@ -171,7 +171,7 @@
         </member>
         <member name="T:SilDev.AppCompatLayers">
             <summary>
-                Appliciation compatiblity layers struct. For more information, see
+                Application compatibility layers struct. For more information, see
                 <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
             </summary>
         </member>
@@ -853,7 +853,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.ToImage(System.Drawing.Color,System.Int32,System.Int32)">
             <summary>
-                Initilazies a new instance of the <see cref="T:System.Drawing.Image"/> class with
+                Initializes a new instance of the <see cref="T:System.Drawing.Image"/> class with
                 the specified color as background.
             </summary>
             <param name="color">
@@ -878,7 +878,7 @@
                 The new width of the image.
             </param>
             <param name="heigth">
-                The new heigth of the image.
+                The new height of the image.
             </param>
             <param name="quality">
                 The rendering quality for the image.
@@ -1047,7 +1047,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.ImagePair.#ctor(System.Drawing.Image,System.Drawing.Image)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/> class.
+                Initializes a new instance of the <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/> class.
             </summary>
             <param name="image1">
                 The first <see cref="T:System.Drawing.Image"/>.
@@ -1061,7 +1061,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.ImagePair.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/> class.
+                Initializes a new instance of the <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/> class.
             </summary>
             <param name="info">
                 The object that holds the serialized object data.
@@ -1177,7 +1177,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.Frame.#ctor(System.Drawing.Image,System.Int32)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Drawing.ImageEx.Frame"/> class from the
+                Initializes a new instance of the <see cref="T:SilDev.Drawing.ImageEx.Frame"/> class from the
                 specified existing image and duration time of a single frame.
             </summary>
             <param name="image">
@@ -1195,7 +1195,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.Frame.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Drawing.ImageEx.Frame"/> class.
+                Initializes a new instance of the <see cref="T:SilDev.Drawing.ImageEx.Frame"/> class.
             </summary>
             <param name="info">
                 The object that holds the serialized object data.
@@ -1330,10 +1330,10 @@
                 specified <see cref="T:System.Windows.Forms.ContextMenuStrip"/> control, is clicked.
             </summary>
             <param name="button">
-                The button that contains a splitted area, which is created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
+                The button that contains a split area, which is created by <see cref="M:SilDev.Forms.ButtonEx.Split(System.Windows.Forms.Button,System.Nullable{System.Drawing.Color})"/>.
             </param>
             <param name="contextMenuStrip">
-                The drop down menu that opens for the splitted area.
+                The drop down menu that opens for the split area.
             </param>
         </member>
         <member name="T:SilDev.Forms.ColorDialogEx">
@@ -1620,10 +1620,10 @@
         </member>
         <member name="M:SilDev.Forms.FormEx.Dockable(System.Windows.Forms.Form)">
             <summary>
-                Allows to dock the specifed <see cref="T:System.Windows.Forms.Form"/> to the virtual screen edges.
+                Allows to dock the specified <see cref="T:System.Windows.Forms.Form"/> to the virtual screen edges.
             </summary>
             <param name="form">
-                The form window to be dockable.
+                The form window to be dock-able.
             </param>
         </member>
         <member name="M:SilDev.Forms.FormEx.Plus(System.Windows.Forms.Form,SilDev.Forms.FormExPlusSettings)">
@@ -1874,7 +1874,7 @@
         </member>
         <member name="M:SilDev.Forms.ListViewEx.ItemFromPoint(System.Windows.Forms.ListView)">
             <summary>
-                Retrives the <see cref="T:System.Windows.Forms.ListViewItem"/> at the current cursor's position.
+                Retrieves the <see cref="T:System.Windows.Forms.ListViewItem"/> at the current cursor's position.
             </summary>
             <param name="listView">
                 The <see cref="T:System.Windows.Forms.ListView"/> control to check.
@@ -1918,7 +1918,7 @@
         </member>
         <member name="M:SilDev.Forms.ListViewEx.AlphanumericComparer.#ctor(System.Boolean)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Forms.ListViewEx.AlphanumericComparer"/> class. A
+                Initializes a new instance of the <see cref="T:SilDev.Forms.ListViewEx.AlphanumericComparer"/> class. A
                 parameter specifies whether the order is descended.
             </summary>
             <param name="descendent">
@@ -2482,7 +2482,7 @@
         <member name="T:SilDev.Forms.PanelEx.FakeProgressBar">
             <summary>
                 ***This is an undocumented class and can be changed or removed in the future
-                without futher notice.
+                without further notice.
             </summary>
         </member>
         <member name="T:SilDev.Forms.PictureBoxEx">
@@ -2492,7 +2492,7 @@
         </member>
         <member name="T:SilDev.Forms.PictureBoxEx.NonClickable">
             <summary>
-                Represents a Windows non-clickable picture box control for displaying an image.
+                Represents a Windows non-click-able picture box control for displaying an image.
             </summary>
         </member>
         <member name="M:SilDev.Forms.PictureBoxEx.NonClickable.#ctor(System.Boolean)">
@@ -2500,7 +2500,7 @@
                 Initializes a new instance of the <see cref="T:SilDev.Forms.PictureBoxEx.NonClickable"/> picture box class.
             </summary>
             <param name="clickable">
-                true to determine that the picture box is clickable; otherwise, false.
+                true to determine that the picture box is click-able; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Forms.PictureBoxEx.NonClickable.WndProc(System.Windows.Forms.Message@)">
@@ -2617,7 +2617,7 @@
                 The text to mark.
             </param>
             <param name="foreColor">
-                The new forground color.
+                The new foreground color.
             </param>
             <param name="backColor">
                 The new background color.
@@ -2640,7 +2640,7 @@
                 The end keyword for the text to mark.
             </param>
             <param name="foreColor">
-                The new forground color.
+                The new foreground color.
             </param>
             <param name="backColor">
                 The new background color.
@@ -2663,7 +2663,7 @@
                 The number of keywords to be marked.
             </param>
             <param name="foreColor">
-                The new forground color.
+                The new foreground color.
             </param>
             <param name="backColor">
                 The new background color.
@@ -3234,7 +3234,7 @@
         </member>
         <member name="M:SilDev.Compaction.Zip(System.Byte[])">
             <summary>
-                Compresses the specifed sequence of bytes.
+                Compresses the specified sequence of bytes.
             </summary>
             <param name="bytes">
                 The sequence of bytes to compress.
@@ -3254,7 +3254,7 @@
         </member>
         <member name="M:SilDev.Compaction.ZipText(System.String)">
             <summary>
-                Compresses the specifed <see cref="T:System.String"/> value.
+                Compresses the specified <see cref="T:System.String"/> value.
             </summary>
             <param name="text">
                 The string to compress.
@@ -3690,7 +3690,7 @@
         </member>
         <member name="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Boolean)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/>
+                Initializes a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/>
                 class. A parameter specifies whether the order is descended.
             </summary>
             <param name="descendant">
@@ -5589,7 +5589,7 @@
                 The fully qualified name of the destination directory.
             </param>
             <param name="subDirs">
-                true to inlcude subdirectories; otherwise, false.
+                true to include subdirectories; otherwise, false.
             </param>
             <param name="overwrite">
                 true to allow existing files to be overwritten; otherwise, false.
@@ -5606,7 +5606,7 @@
                 The fully qualified name of the destination directory.
             </param>
             <param name="subDirs">
-                true to inlcude subdirectories; otherwise, false.
+                true to include subdirectories; otherwise, false.
             </param>
             <param name="overwrite">
                 true to allow existing files to be overwritten; otherwise, false.
@@ -6597,7 +6597,7 @@
         </member>
         <member name="T:SilDev.EnvironmentEx">
             <summary>
-                Provides static methods based on the <see cref="T:System.Environment"/> class to provide informations
+                Provides static methods based on the <see cref="T:System.Environment"/> class to provide information
                 about the current environment.
             </summary>
         </member>
@@ -6861,7 +6861,7 @@
             <summary>
                 Retrieves the value of an environment variable from the current process.
                 <para>
-                    Hint: Allows <see cref="T:System.Environment.SpecialFolder"/> names inlcuding a keyword
+                    Hint: Allows <see cref="T:System.Environment.SpecialFolder"/> names including a keyword
                     "CurDir" to get the current code base location based on
                     <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
                 </para>
@@ -7152,7 +7152,7 @@
         </member>
         <member name="M:SilDev.FileEx.BinaryReplace(System.String,System.Byte[],System.Byte[],System.Boolean,System.Collections.Generic.List{System.Int64[]}@)">
             <summary>
-                Replaces all occurrences of a specifed sequence of bytes in the specified file
+                Replaces all occurrences of a specified sequence of bytes in the specified file
                 with another sequence of bytes.
             </summary>
             <param name="file">
@@ -7173,7 +7173,7 @@
         </member>
         <member name="M:SilDev.FileEx.BinaryReplace(System.String,System.Byte[],System.Byte[],System.Boolean)">
             <summary>
-                Replaces all occurrences of a specifed sequence of bytes in the specified file
+                Replaces all occurrences of a specified sequence of bytes in the specified file
                 with another sequence of bytes.
             </summary>
             <param name="file">
@@ -7758,7 +7758,7 @@
                 true to reread the INI file; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Ini.ReadOnly``1(System.String,System.String,``0,System.String,System.Int32)">
+        <member name="M:SilDev.Ini.ReadOnly``1(System.String,System.String,``0,System.String)">
             <summary>
                 Retrieves a value from the specified section in an INI file or an INI file
                 formatted string value and release all cached resources used by the
@@ -7778,9 +7778,6 @@
             </param>
             <param name="fileOrContent">
                 The full file path or content of an INI file.
-            </param>
-            <param name="index">
-                The value index used to handle multiple key value pairs.
             </param>
         </member>
         <member name="M:SilDev.Ini.ReadDirect(System.String,System.String,System.String)">
@@ -7802,7 +7799,7 @@
         </member>
         <member name="M:SilDev.Ini.WriteAll(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}},System.String,System.Boolean,System.Boolean)">
             <summary>
-                Writes the specifed content to an INI file on the disk.
+                Writes the specified content to an INI file on the disk.
             </summary>
             <param name="content">
                 The content based on <see cref="M:SilDev.Ini.ReadAll(System.String,System.Boolean)"/>.
@@ -8187,7 +8184,7 @@
         </member>
         <member name="F:SilDev.VirtualKeys.ImeNonconvert">
             <summary>
-                The IME nonconvert key.
+                The IME non-convert key.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeys.ImeAccept">
@@ -8998,12 +8995,12 @@
         </member>
         <member name="F:SilDev.VirtualKeyStates.KeyDown">
             <summary>
-                Posted to the window with the keyboard focus when a nonsystem key is pressed.
+                Posted to the window with the keyboard focus when a non-system key is pressed.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeyStates.KeyUp">
             <summary>
-                Posted to the window with the keyboard focus when a nonsystem key is released.
+                Posted to the window with the keyboard focus when a non-system key is released.
             </summary>
         </member>
         <member name="F:SilDev.VirtualKeyStates.SysKeyDown">
@@ -9186,7 +9183,7 @@
         <member name="P:SilDev.Log.DebugMode">
             <summary>
                 Gets the current <see cref="P:SilDev.Log.DebugMode"/> value that determines how <see cref="T:System.Exception"/>'s
-                are handled. For more informations see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
+                are handled. For more information see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
             </summary>
         </member>
         <member name="P:SilDev.Log.FileName">
@@ -9237,7 +9234,7 @@
         <member name="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)">
             <summary>
                 Allows you to enable logging by command line arguments or a specified configuration file. For
-                more informations see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
+                more information see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
             </summary>
             <param name="configPath">
                 The full path of the configuration file.
@@ -9499,7 +9496,7 @@
         </member>
         <member name="M:SilDev.MemoryPinner.#ctor(System.Object)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.MemoryPinner"/> class with
+                Initializes a new instance of the <see cref="T:SilDev.MemoryPinner"/> class with
                 the specified object to pin.
             </summary>
             <param name="value">
@@ -9528,7 +9525,7 @@
         </member>
         <member name="M:SilDev.ProcessMemory.#ctor(System.IntPtr)">
             <summary>
-                Initilazies a new instance of the <see cref="T:SilDev.ProcessMemory"/> class with
+                Initializes a new instance of the <see cref="T:SilDev.ProcessMemory"/> class with
                 the specified window handle.
             </summary>
             <param name="hWnd">
@@ -9552,7 +9549,7 @@
         </member>
         <member name="M:SilDev.ProcessMemory.Allocate(System.Object)">
             <summary>
-                Allocates a chunck of memory in the process.
+                Allocates a chunk of memory in the process.
             </summary>
             <param name="value">
                 The structure to be allocated.
@@ -9669,12 +9666,12 @@
         </member>
         <member name="P:SilDev.NetEx.IPv4IsAvalaible">
             <summary>
-                Determines whether the current IPv4 connection is avalable.
+                Determines whether the current IPv4 connection is available.
             </summary>
         </member>
         <member name="P:SilDev.NetEx.IPv6IsAvalaible">
             <summary>
-                Determines whether the current IPv6 connection is avalable.
+                Determines whether the current IPv6 connection is available.
             </summary>
         </member>
         <member name="P:SilDev.NetEx.LastPingReply">
@@ -11901,7 +11898,7 @@
         </member>
         <member name="T:SilDev.NetEx.AsyncTransfer">
             <summary>
-                Provides asynchonous downloading of internet resources.
+                Provides asynchronous downloading of internet resources.
             </summary>
         </member>
         <member name="M:SilDev.NetEx.AsyncTransfer.#ctor">
@@ -12372,7 +12369,7 @@
         </member>
         <member name="M:SilDev.NetEx.AsyncTransfer.CancelAsync">
             <summary>
-                Cancels a pending asynchonous transfer.
+                Cancels a pending asynchronous transfer.
             </summary>
         </member>
         <member name="T:SilDev.NetEx.WebClientEx">
@@ -12459,7 +12456,7 @@
         </member>
         <member name="T:SilDev.NotifyBox">
             <summary>
-                Represents a notification window, simliar with a system tray notification, which presents a
+                Represents a notification window, similar with a system tray notification, which presents a
                 notification to the user.
             </summary>
         </member>
@@ -12616,7 +12613,7 @@
         </member>
         <member name="T:SilDev.NotifyBoxEx">
             <summary>
-                Displays a notification window, simliar with a system tray notification, which presents a
+                Displays a notification window, similar with a system tray notification, which presents a
                 notification to the user.
             </summary>
         </member>
@@ -12931,7 +12928,7 @@
             <summary>
                 Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a path.
                 <para>
-                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to separate path levels.
                 </para>
             </summary>
             <param name="invalidPathChars">
@@ -12945,7 +12942,7 @@
             <summary>
                 Filters a string, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a valid path.
                 <para>
-                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to separate path levels.
                 </para>
             </summary>
             <param name="invalidPathChars">
@@ -12959,7 +12956,7 @@
             <summary>
                 Combines an array of strings, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a path.
                 <para>
-                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to separate path levels.
                 </para>
             </summary>
             <param name="paths">
@@ -12970,7 +12967,7 @@
             <summary>
                 Filters a string, based on <see cref="M:SilDev.PathEx.Combine(System.String[])"/>, into a valid path.
                 <para>
-                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+                    Hint: <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/> is used to separate path levels.
                 </para>
             </summary>
             <param name="path">
@@ -13265,7 +13262,7 @@
         </member>
         <member name="T:SilDev.PortableExecutable">
             <summary>
-                Provides basic functionality for reading PE (Portable Executable) header informations.
+                Provides basic functionality for reading PE (Portable Executable) header information.
             </summary>
         </member>
         <member name="M:SilDev.PortableExecutable.GetMachineTypes(System.String)">
@@ -13366,7 +13363,7 @@
         </member>
         <member name="M:SilDev.ProcessEx.IsSandboxed(System.Diagnostics.Process)">
             <summary>
-                Determines whether this <see cref="T:System.Diagnostics.Process"/> is running in a sandboxed
+                Determines whether this <see cref="T:System.Diagnostics.Process"/> is running in a sandbox
                 environment.
                 <para>
                     Hint: This function supports only the program Sandboxie.
@@ -14301,7 +14298,7 @@
         </member>
         <member name="M:SilDev.Reg.Read``1(Microsoft.Win32.RegistryKey,System.String,System.String,``0)">
             <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
+                Retrieves the value associated with the specified entry of the specified registry path.
             </summary>
             <typeparam name="TValue">
                 The value type.
@@ -14321,7 +14318,7 @@
         </member>
         <member name="M:SilDev.Reg.Read``1(System.String,System.String,System.String,``0)">
             <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
+                Retrieves the value associated with the specified entry of the specified registry path.
             </summary>
             <typeparam name="TValue">
                 The value type.
@@ -14341,7 +14338,7 @@
         </member>
         <member name="M:SilDev.Reg.Read``1(System.String,System.String,``0)">
             <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
+                Retrieves the value associated with the specified entry of the specified registry path.
             </summary>
             <typeparam name="TValue">
                 The value type.
@@ -14358,7 +14355,7 @@
         </member>
         <member name="M:SilDev.Reg.ReadString(Microsoft.Win32.RegistryKey,System.String,System.String,System.String)">
             <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
+                Retrieves the value associated with the specified entry of the specified registry path.
                 <para>
                     A non-string value is converted to a valid <see cref="T:System.String"/>.
                 </para>
@@ -14378,7 +14375,7 @@
         </member>
         <member name="M:SilDev.Reg.ReadString(System.String,System.String,System.String,System.String)">
             <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
+                Retrieves the value associated with the specified entry of the specified registry path.
                 <para>
                     A non-string value is converted to a valid <see cref="T:System.String"/>.
                 </para>
@@ -14398,7 +14395,7 @@
         </member>
         <member name="M:SilDev.Reg.ReadString(System.String,System.String,System.String)">
             <summary>
-                Retrives the value associated with the specified entry of the specified registry path.
+                Retrieves the value associated with the specified entry of the specified registry path.
                 <para>
                     A non-string value is converted to a valid <see cref="T:System.String"/>.
                 </para>
@@ -14669,7 +14666,7 @@
         </member>
         <member name="T:SilDev.Reorganize">
             <summary>
-                Provides static uncategorized extension methods for converting or reorganizing of data.
+                Provides static un-categorized extension methods for converting or reorganizing of data.
             </summary>
         </member>
         <member name="M:SilDev.Reorganize.AppendFormatLine(System.Text.StringBuilder,System.IFormatProvider,System.String,System.Object[])">
@@ -14958,7 +14955,7 @@
         <member name="M:SilDev.Reorganize.Split(System.String,System.String,System.StringSplitOptions)">
             <summary>
                 Splits a string into substrings based on the strings in an array. You can specify whether
-                the substrings inlcude empty array elements.
+                the substrings include empty array elements.
             </summary>
             <param name="str">
                 The string to split.
@@ -15637,7 +15634,7 @@
         </member>
         <member name="T:SilDev.TaskBarProgressFlags">
             <summary>
-                Provides enumerated options that control the current state of the progres
+                Provides enumerated options that control the current state of the progress
                 button.
             </summary>
         </member>
