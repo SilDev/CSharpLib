@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2019-04-02 21:53
+// Version:  2019-10-15 11:48
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -56,7 +56,7 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Provides enumerated options that control the current state of the progres
+    ///     Provides enumerated options that control the current state of the progress
     ///     button.
     /// </summary>
     public enum TaskBarProgressFlags
@@ -175,9 +175,9 @@ namespace SilDev
         /// <param name="hWnd">
         ///     The handle of the window on which the taskbar is located.
         /// </param>
-        public static TaskBarLocation GetLocation(IntPtr hWnd = default(IntPtr))
+        public static TaskBarLocation GetLocation(IntPtr hWnd = default)
         {
-            var screen = hWnd == default(IntPtr) ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
+            var screen = hWnd == default ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
             if (screen.WorkingArea == screen.Bounds)
                 return TaskBarLocation.Hidden;
             if (screen.WorkingArea.Width != screen.Bounds.Width)
@@ -191,9 +191,9 @@ namespace SilDev
         /// <param name="hWnd">
         ///     The handle of the window on which the taskbar is located.
         /// </param>
-        public static int GetSize(IntPtr hWnd = default(IntPtr))
+        public static int GetSize(IntPtr hWnd = default)
         {
-            var screen = hWnd == default(IntPtr) ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
+            var screen = hWnd == default ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
             switch (GetLocation())
             {
                 case TaskBarLocation.Top:

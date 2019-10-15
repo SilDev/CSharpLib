@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2019-03-07 11:15
+// Version:  2019-10-15 11:32
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -32,6 +32,7 @@ namespace SilDev
         /// <summary>
         ///     Provides options for specifying a Domain Name System provider.
         /// </summary>
+        [SuppressMessage("ReSharper", "CommentTypo")]
         public enum DnsOptions
         {
             /// <summary>
@@ -79,7 +80,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the current IPv4 connection is avalable.
+        ///     Determines whether the current IPv4 connection is available.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static bool IPv4IsAvalaible
@@ -93,7 +94,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the current IPv6 connection is avalable.
+        ///     Determines whether the current IPv6 connection is available.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public static bool IPv6IsAvalaible
@@ -445,7 +446,7 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         public static bool IsValid(this Uri uri, bool allowAutoRedirect, int timeout, string userAgent = null) =>
-            uri.IsValid(true, null, timeout, userAgent);
+            uri.IsValid(allowAutoRedirect, null, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet address.
@@ -578,7 +579,7 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         public static bool FileIsAvailable(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
-            srcUri.FileIsAvailable(userName, password, true, null, timeout, userAgent);
+            srcUri.FileIsAvailable(userName, password, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Determines the availability of the specified internet resource.
@@ -945,7 +946,7 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         public static DateTime GetFileDate(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
-            srcUri.GetFileDate(userName, password, true, null, timeout, userAgent);
+            srcUri.GetFileDate(userName, password, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the last date and time of the specified internet resource.
@@ -1316,7 +1317,7 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         public static string GetFileName(this Uri srcUri, string userName, string password, CookieContainer cookieContainer, int timeout = 3000, string userAgent = null) =>
-            srcUri.GetFileName(userName, password, true, null, timeout, userAgent);
+            srcUri.GetFileName(userName, password, true, cookieContainer, timeout, userAgent);
 
         /// <summary>
         ///     Gets the filename of the specified internet resource.
@@ -1706,7 +1707,7 @@ namespace SilDev
             ///     true to check the file availability before downloading; otherwise, false.
             /// </param>
             public static bool DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
-                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent, checkExists);
+                DownloadFile(srcUri, destPath, userName, password, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -2760,7 +2761,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides asynchonous downloading of internet resources.
+        ///     Provides asynchronous downloading of internet resources.
         /// </summary>
         public sealed class AsyncTransfer
         {
@@ -2979,7 +2980,7 @@ namespace SilDev
             ///     true to check the file availability before downloading; otherwise, false.
             /// </param>
             public void DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
-                DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent, checkExists);
+                DownloadFile(srcUri, destPath, userName, password, true, cookieContainer, timeout, userAgent, checkExists);
 
             /// <summary>
             ///     Downloads the specified internet resource to a local file.
@@ -3354,7 +3355,7 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Cancels a pending asynchonous transfer.
+            ///     Cancels a pending asynchronous transfer.
             /// </summary>
             public void CancelAsync()
             {

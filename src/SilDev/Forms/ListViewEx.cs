@@ -27,7 +27,7 @@ namespace SilDev.Forms
         private const int LvmSetHotCursor = 0x103e;
 
         /// <summary>
-        ///     Retrives the <see cref="ListViewItem"/> at the current cursor's position.
+        ///     Retrieves the <see cref="ListViewItem"/> at the current cursor's position.
         /// </summary>
         /// <param name="listView">
         ///     The <see cref="ListView"/> control to check.
@@ -50,7 +50,7 @@ namespace SilDev.Forms
         /// <param name="cursor">
         ///     The <see cref="Cursor"/> to set.
         /// </param>
-        public static void SetMouseOverCursor(this ListView listView, Cursor cursor = default(Cursor)) =>
+        public static void SetMouseOverCursor(this ListView listView, Cursor cursor = default) =>
             WinApi.NativeHelper.SendMessage(listView.Handle, LvmSetHotCursor, IntPtr.Zero, (cursor ?? Cursors.Arrow).Handle);
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SilDev.Forms
             private readonly bool _d;
 
             /// <summary>
-            ///     Initilazies a new instance of the <see cref="AlphanumericComparer"/> class. A
+            ///     Initializes a new instance of the <see cref="AlphanumericComparer"/> class. A
             ///     parameter specifies whether the order is descended.
             /// </summary>
             /// <param name="descendent">

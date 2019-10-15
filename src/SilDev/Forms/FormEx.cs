@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2019-07-28 07:53
+// Version:  2019-10-15 11:03
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -41,10 +41,10 @@ namespace SilDev.Forms
     public static class FormEx
     {
         /// <summary>
-        ///     Allows to dock the specifed <see cref="Form"/> to the virtual screen edges.
+        ///     Allows to dock the specified <see cref="Form"/> to the virtual screen edges.
         /// </summary>
         /// <param name="form">
-        ///     The form window to be dockable.
+        ///     The form window to be dock-able.
         /// </param>
         public static void Dockable(Form form)
         {
@@ -184,10 +184,11 @@ namespace SilDev.Forms
             ///     the position of the cursor hot spot, as key; and a <see cref="Rectangle"/> with the border
             ///     coordinates as value.
             /// </returns>
+            [SuppressMessage("ReSharper", "CommentTypo")]
             protected Dictionary<IntPtr, Rectangle> GetResizingBorderAreas(ResizingBorderFlags flags, int thickness = 6)
             {
                 if (flags.HasFlag(ResizingBorderFlags.None))
-                    return default(Dictionary<IntPtr, Rectangle>);
+                    return default;
                 var d = new Dictionary<IntPtr, Rectangle>();
                 var s = Size;
                 var t = Math.Max(1, thickness);
@@ -232,6 +233,7 @@ namespace SilDev.Forms
             ///     or HTBOTTOMRIGHT, indicating the position of the cursor hot spot, used to specify the
             ///     value that is returned to Windows in response to handling the <see cref="Message"/>.
             /// </returns>
+            [SuppressMessage("ReSharper", "CommentTypo")]
             protected IntPtr GetActiveResizingBorderMessage(ResizingBorderFlags flags, IntPtr lParam, int thickness = 6)
             {
                 var result = IntPtr.Zero;

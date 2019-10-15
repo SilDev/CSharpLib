@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2018-06-12 23:24
+// Version:  2019-10-15 11:23
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -51,7 +51,7 @@ namespace SilDev
         {
             get
             {
-                if (_tmpFileGuid != default(string))
+                if (_tmpFileGuid != default)
                     return _tmpFileGuid;
                 _tmpFileGuid = Guid.NewGuid().ToString();
                 return _tmpFileGuid;
@@ -672,7 +672,7 @@ namespace SilDev
         /// <param name="reread">
         ///     true to reread the INI file; otherwise, false.
         /// </param>
-        public static TValue Read<TValue>(string section, string key, TValue defValue = default(TValue), string fileOrContent = null, bool reread = false)
+        public static TValue Read<TValue>(string section, string key, TValue defValue = default, string fileOrContent = null, bool reread = false)
         {
             try
             {
@@ -750,10 +750,7 @@ namespace SilDev
         /// <param name="fileOrContent">
         ///     The full file path or content of an INI file.
         /// </param>
-        /// <param name="index">
-        ///     The value index used to handle multiple key value pairs.
-        /// </param>
-        public static TValue ReadOnly<TValue>(string section, string key, TValue defValue, string fileOrContent, int index = 0)
+        public static TValue ReadOnly<TValue>(string section, string key, TValue defValue, string fileOrContent)
         {
             var output = Read(section, key, defValue, fileOrContent);
             Detach(fileOrContent);
@@ -795,7 +792,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes the specifed content to an INI file on the disk.
+        ///     Writes the specified content to an INI file on the disk.
         /// </summary>
         /// <param name="content">
         ///     The content based on <see cref="ReadAll(string,bool)"/>.
@@ -908,7 +905,7 @@ namespace SilDev
         ///     false.
         /// </param>
         public static bool WriteAll(string file, bool sorted = true, bool detach = false) =>
-            WriteAll(null, file, sorted);
+            WriteAll(null, file, sorted, detach);
 
         /// <summary>
         ///     Copies the specified value into the specified section of an INI file.
@@ -1075,7 +1072,7 @@ namespace SilDev
         ///     The value index used to handle multiple key value pairs.
         /// </param>
         public static bool Write<TValue>(string section, string key, TValue value, bool forceOverwrite, bool skipExistValue = false, int index = 0) =>
-            Write(section, key, value, null, forceOverwrite, skipExistValue);
+            Write(section, key, value, null, forceOverwrite, skipExistValue, index);
 
         /// <summary>
         ///     Copies the <see cref="string"/> representation of the specified <see cref="object"/>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2019-07-28 07:50
+// Version:  2019-10-15 11:01
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -59,7 +59,7 @@ namespace SilDev.Forms
         public static Control GetAncestor(this Control control)
         {
             if (!(control is Control ctrl))
-                return default(Control);
+                return default;
             var c = ctrl;
             while (c.Parent != null)
                 c = c.Parent;

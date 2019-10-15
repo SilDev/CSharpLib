@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-07-27 09:41
+// Version:  2019-10-15 10:58
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -151,7 +151,7 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Initilazies a new instance of the <see cref="Image"/> class with
+        ///     Initializes a new instance of the <see cref="Image"/> class with
         ///     the specified color as background.
         /// </summary>
         /// <param name="color">
@@ -183,7 +183,7 @@ namespace SilDev.Drawing
         ///     The new width of the image.
         /// </param>
         /// <param name="heigth">
-        ///     The new heigth of the image.
+        ///     The new height of the image.
         /// </param>
         /// <param name="quality">
         ///     The rendering quality for the image.
@@ -191,7 +191,7 @@ namespace SilDev.Drawing
         public static Image Redraw(this Image image, int width, int heigth, SmoothingMode quality = SmoothingMode.HighQuality)
         {
             if (!(image is Image img))
-                return default(Image);
+                return default;
             try
             {
                 if (!SizeIsValid(width, heigth, PixelFormat.Format32bppArgb))
@@ -254,7 +254,7 @@ namespace SilDev.Drawing
         public static Image Redraw(this Image image, SmoothingMode quality = SmoothingMode.HighQuality, int indicator = 1024)
         {
             if (!(image is Image img))
-                return default(Image);
+                return default;
             int[] size =
             {
                 img.Width,
@@ -301,7 +301,7 @@ namespace SilDev.Drawing
         public static Image SetColorMatrix(this Image image, ColorMatrix colorMatrix)
         {
             if (!(image is Image img))
-                return default(Image);
+                return default;
             var bmp = new Bitmap(img.Width, img.Height);
             using (var g = Graphics.FromImage(bmp))
                 using (var ia = new ImageAttributes())
@@ -368,7 +368,7 @@ namespace SilDev.Drawing
             lock (SwitcherLocker)
             {
                 if (!(image is Image img))
-                    return default(Image);
+                    return default;
                 if (_switcherCache == null)
                     _switcherCache = new Dictionary<int, ImagePair>();
                 var code = key.GetHashCode();
@@ -409,7 +409,7 @@ namespace SilDev.Drawing
         public static Image RecolorPixels(this Image image, Color from, Color to)
         {
             if (!(image is Image img))
-                return default(Image);
+                return default;
             var bmp = (Bitmap)img;
             for (var x = 0; x < img.Width; x++)
                 for (var y = 0; y < img.Height; y++)
@@ -556,7 +556,7 @@ namespace SilDev.Drawing
         public class ImagePair : IDisposable, ISerializable
         {
             /// <summary>
-            ///     Initilazies a new instance of the <see cref="ImagePair"/> class.
+            ///     Initializes a new instance of the <see cref="ImagePair"/> class.
             /// </summary>
             /// <param name="image1">
             ///     The first <see cref="Image"/>.
@@ -574,7 +574,7 @@ namespace SilDev.Drawing
             }
 
             /// <summary>
-            ///     Initilazies a new instance of the <see cref="ImagePair"/> class.
+            ///     Initializes a new instance of the <see cref="ImagePair"/> class.
             /// </summary>
             /// <param name="info">
             ///     The object that holds the serialized object data.
@@ -726,7 +726,7 @@ namespace SilDev.Drawing
         public class Frame : IDisposable, ISerializable
         {
             /// <summary>
-            ///     Initilazies a new instance of the <see cref="Frame"/> class from the
+            ///     Initializes a new instance of the <see cref="Frame"/> class from the
             ///     specified existing image and duration time of a single frame.
             /// </summary>
             /// <param name="image">
@@ -750,7 +750,7 @@ namespace SilDev.Drawing
             }
 
             /// <summary>
-            ///     Initilazies a new instance of the <see cref="Frame"/> class.
+            ///     Initializes a new instance of the <see cref="Frame"/> class.
             /// </summary>
             /// <param name="info">
             ///     The object that holds the serialized object data.

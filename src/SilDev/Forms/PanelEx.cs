@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PanelEx.cs
-// Version:  2018-07-04 12:36
+// Version:  2019-10-15 11:05
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -26,12 +26,12 @@ namespace SilDev.Forms
     {
         /// <summary>
         ///     ***This is an undocumented class and can be changed or removed in the future
-        ///     without futher notice.
+        ///     without further notice.
         /// </summary>
         public static class FakeProgressBar
         {
 #pragma warning disable 1591
-            public static Color ForeColor { get; set; } = default(Color);
+            public static Color ForeColor { get; set; } = default;
 
             public static Color Update(Panel panel, int value, int maxValue = 100)
             {
@@ -44,7 +44,7 @@ namespace SilDev.Forms
                     else
                         TaskBarProgress.SetValue(hWnd, value, maxValue);
                 var color = ForeColor;
-                if (ForeColor == default(Color))
+                if (ForeColor == default)
                     color = Color.FromArgb(byte.MaxValue - (byte)(value * (byte.MaxValue / (float)maxValue)), byte.MaxValue, value);
                 using (var g = panel.CreateGraphics())
                 {

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2018-06-08 21:20
+// Version:  2019-10-15 11:33
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -55,7 +55,7 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Represents a notification window, simliar with a system tray notification, which presents a
+    ///     Represents a notification window, similar with a system tray notification, which presents a
     ///     notification to the user.
     /// </summary>
     public class NotifyBox
@@ -83,16 +83,16 @@ namespace SilDev
         /// <param name="topMost">
         ///     true to place the notify box above all non-topmost windows; otherwise, false.
         /// </param>
-        public NotifyBox(double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color), bool topMost = false)
+        public NotifyBox(double opacity = .90d, Color backColor = default, Color borderColor = default, Color captionColor = default, Color textColor = default, bool topMost = false)
         {
             Opacity = opacity;
-            if (backColor != default(Color))
+            if (backColor != default)
                 BackColor = backColor;
-            if (borderColor != default(Color))
+            if (borderColor != default)
                 BorderColor = borderColor;
-            if (captionColor != default(Color))
+            if (captionColor != default)
                 CaptionColor = captionColor;
-            if (textColor != default(Color))
+            if (textColor != default)
                 TextColor = textColor;
             TopMost = topMost;
         }
@@ -100,12 +100,12 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
         /// </summary>
-        public NotifyBox(double opacity, bool topMost) : this(opacity, default(Color), default(Color), default(Color), default(Color), topMost) { }
+        public NotifyBox(double opacity, bool topMost) : this(opacity, default, default, default, default, topMost) { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
         /// </summary>
-        public NotifyBox(bool topMost) : this(.90d, default(Color), default(Color), default(Color), default(Color), topMost) { }
+        public NotifyBox(bool topMost) : this(.90d, default, default, default, default, topMost) { }
 
         /// <summary>
         ///     Gets or sets the opacity level for the notify box.
@@ -479,7 +479,7 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Displays a notification window, simliar with a system tray notification, which presents a
+    ///     Displays a notification window, similar with a system tray notification, which presents a
     ///     notification to the user.
     /// </summary>
     public static class NotifyBoxEx
@@ -520,7 +520,7 @@ namespace SilDev
         /// <param name="textColor">
         ///     The text color.
         /// </param>
-        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 5000, bool topMost = true, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color))
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 5000, bool topMost = true, double opacity = .90d, Color backColor = default, Color borderColor = default, Color captionColor = default, Color textColor = default)
         {
             var notifyBox = new NotifyBox(opacity, backColor, borderColor, captionColor, textColor, topMost);
             notifyBox.Show(text, caption, position, sound, duration);
@@ -560,7 +560,7 @@ namespace SilDev
         /// <param name="textColor">
         ///     The text color.
         /// </param>
-        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, NotifyBoxSound sound, bool topMost, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color)) =>
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, NotifyBoxSound sound, bool topMost, double opacity = .90d, Color backColor = default, Color borderColor = default, Color captionColor = default, Color textColor = default) =>
             Show(text, caption, position, sound, 5000, topMost, opacity, backColor, borderColor, captionColor, textColor);
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace SilDev
         /// <param name="textColor">
         ///     The text color.
         /// </param>
-        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, ushort duration, bool topMost = true, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color)) =>
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, ushort duration, bool topMost = true, double opacity = .90d, Color backColor = default, Color borderColor = default, Color captionColor = default, Color textColor = default) =>
             Show(text, caption, position, NotifyBoxSound.None, duration, topMost, opacity, backColor, borderColor, captionColor, textColor);
 
         /// <summary>
@@ -629,7 +629,7 @@ namespace SilDev
         /// <param name="textColor">
         ///     The text color.
         /// </param>
-        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, bool topMost, double opacity = .90d, Color backColor = default(Color), Color borderColor = default(Color), Color captionColor = default(Color), Color textColor = default(Color)) =>
+        public static NotifyBox Show(string text, string caption, NotifyBoxStartPosition position, bool topMost, double opacity = .90d, Color backColor = default, Color borderColor = default, Color captionColor = default, Color textColor = default) =>
             Show(text, caption, position, NotifyBoxSound.None, 5000, topMost, opacity, backColor, borderColor, captionColor, textColor);
     }
 }

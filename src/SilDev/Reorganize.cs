@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2018-08-05 15:44
+// Version:  2019-10-15 11:45
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -51,6 +51,7 @@ namespace SilDev
     ///     Provides labels for size units.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public enum SizeUnits
     {
         /// <summary>
@@ -90,7 +91,7 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Provides static uncategorized extension methods for converting or reorganizing of data.
+    ///     Provides static un-categorized extension methods for converting or reorganizing of data.
     /// </summary>
     public static class Reorganize
     {
@@ -374,7 +375,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult DeserializeObject<TResult>(this byte[] bytes, TResult defValue = default(TResult))
+        public static TResult DeserializeObject<TResult>(this byte[] bytes, TResult defValue = default)
         {
             try
             {
@@ -572,7 +573,7 @@ namespace SilDev
 
         /// <summary>
         ///     Splits a string into substrings based on the strings in an array. You can specify whether
-        ///     the substrings inlcude empty array elements.
+        ///     the substrings include empty array elements.
         /// </summary>
         /// <param name="str">
         ///     The string to split.
@@ -989,7 +990,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult Parse<TResult>(this object value, TResult defValue = default(TResult))
+        public static TResult Parse<TResult>(this object value, TResult defValue = default)
         {
             var converter = TypeDescriptor.GetConverter(typeof(TResult));
             var result = (TResult)converter.ConvertFrom(value);
@@ -1011,7 +1012,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static bool TryParse<TResult>(this object value, out dynamic result, TResult defValue = default(TResult))
+        public static bool TryParse<TResult>(this object value, out dynamic result, TResult defValue = default)
         {
             try
             {

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2018-07-04 12:28
+// Version:  2019-10-15 11:15
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -414,7 +414,7 @@ namespace SilDev
         ///     The fully qualified name of the destination directory.
         /// </param>
         /// <param name="subDirs">
-        ///     true to inlcude subdirectories; otherwise, false.
+        ///     true to include subdirectories; otherwise, false.
         /// </param>
         /// <param name="overwrite">
         ///     true to allow existing files to be overwritten; otherwise, false.
@@ -464,7 +464,7 @@ namespace SilDev
         ///     The fully qualified name of the destination directory.
         /// </param>
         /// <param name="subDirs">
-        ///     true to inlcude subdirectories; otherwise, false.
+        ///     true to include subdirectories; otherwise, false.
         /// </param>
         /// <param name="overwrite">
         ///     true to allow existing files to be overwritten; otherwise, false.
@@ -721,7 +721,7 @@ namespace SilDev
         ///     true to skip existing shortcuts, even if the target path of
         ///     the same; otherwise, false.
         /// </param>
-        public static bool CreateShellLink(string targetPath, string linkPath, string startArgs = null, (string, int) iconLocation = default((string, int)), bool skipExists = false)
+        public static bool CreateShellLink(string targetPath, string linkPath, string startArgs = null, (string, int) iconLocation = default, bool skipExists = false)
         {
             if (!PathEx.IsDir(targetPath))
                 return false;

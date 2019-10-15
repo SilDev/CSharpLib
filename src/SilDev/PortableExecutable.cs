@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PortableExecutable.cs
-// Version:  2018-06-07 09:32
+// Version:  2019-10-15 11:36
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -23,6 +23,7 @@ namespace SilDev
     ///     Provides enumerated values of the machine field values that specifies its CPU type.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public enum MachineTypes : ushort
     {
         /// <summary>
@@ -152,7 +153,7 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Provides basic functionality for reading PE (Portable Executable) header informations.
+    ///     Provides basic functionality for reading PE (Portable Executable) header information.
     /// </summary>
     public static class PortableExecutable
     {

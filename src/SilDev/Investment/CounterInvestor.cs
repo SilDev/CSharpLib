@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: CounterInvestor.cs
-// Version:  2018-06-14 22:14
+// Version:  2019-10-15 11:10
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -87,7 +87,7 @@ namespace SilDev.Investment
         private TCounter Handler(int index, bool? state)
         {
             if (!_counter.ContainsKey(index))
-                _counter.Add(index, default(TCounter));
+                _counter.Add(index, default);
             switch (state)
             {
                 case true:
@@ -95,7 +95,7 @@ namespace SilDev.Investment
                         _counter[index] = (dynamic)_counter[index] + 1;
                     break;
                 case false:
-                    _counter[index] = default(TCounter);
+                    _counter[index] = default;
                     break;
             }
             return _counter[index];

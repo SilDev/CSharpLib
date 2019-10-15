@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2018-06-04 09:56
+// Version:  2019-10-15 11:14
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -429,7 +429,7 @@ namespace SilDev
             private readonly bool _d;
 
             /// <summary>
-            ///     Initilazies a new instance of the <see cref="AlphanumericComparer"/>
+            ///     Initializes a new instance of the <see cref="AlphanumericComparer"/>
             ///     class. A parameter specifies whether the order is descended.
             /// </summary>
             /// <param name="descendant">

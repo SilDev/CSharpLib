@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ComSpec.cs
-// Version:  2019-07-28 02:21
+// Version:  2019-10-15 11:09
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -28,30 +28,16 @@ namespace SilDev.Intern
 #else
         private static string _lowestEnvDir;
 
-        internal static string LowestEnvDir
-        {
-            get
-            {
-                if (_lowestEnvDir == default(string))
-                    _lowestEnvDir = Environment.Is64BitProcess ? "%SystemRoot%\\SysWOW64" : "%SystemRoot%\\System32";
-                return _lowestEnvDir;
-            }
-        }
+        internal static string LowestEnvDir =>
+            _lowestEnvDir ?? (_lowestEnvDir = Environment.Is64BitProcess ? "%SystemRoot%\\SysWOW64" : "%SystemRoot%\\System32");
 #endif
 #if x64
         internal const string SysNativeEnvDir = "%SystemRoot%\\System32";
 #else
         private static string _sysNativeEnvDir;
 
-        internal static string SysNativeEnvDir
-        {
-            get
-            {
-                if (_sysNativeEnvDir == default(string))
-                    _sysNativeEnvDir = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative" : "%SystemRoot%\\System32";
-                return _sysNativeEnvDir;
-            }
-        }
+        internal static string SysNativeEnvDir =>
+            _sysNativeEnvDir ?? (_sysNativeEnvDir = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative" : "%SystemRoot%\\System32");
 #endif
 
         private static string _defaultEnvPath,
@@ -61,64 +47,22 @@ namespace SilDev.Intern
                               _sysNativeEnvPath,
                               _sysNativePath;
 
-        internal static string DefaultEnvPath
-        {
-            get
-            {
-                if (_defaultEnvPath == default(string))
-                    _defaultEnvPath = Path.Combine(DefaultEnvDir, "cmd.exe");
-                return _defaultEnvPath;
-            }
-        }
+        internal static string DefaultEnvPath =>
+            _defaultEnvPath ?? (_defaultEnvPath = Path.Combine(DefaultEnvDir, "cmd.exe"));
 
-        internal static string DefaultPath
-        {
-            get
-            {
-                if (_defaultPath == default(string))
-                    _defaultPath = PathEx.Combine(DefaultEnvPath);
-                return _defaultPath;
-            }
-        }
+        internal static string DefaultPath =>
+            _defaultPath ?? (_defaultPath = PathEx.Combine(DefaultEnvPath));
 
-        internal static string LowestEnvPath
-        {
-            get
-            {
-                if (_lowestEnvPath == default(string))
-                    _lowestEnvPath = Path.Combine(LowestEnvDir, "cmd.exe");
-                return _lowestEnvPath;
-            }
-        }
+        internal static string LowestEnvPath =>
+            _lowestEnvPath ?? (_lowestEnvPath = Path.Combine(LowestEnvDir, "cmd.exe"));
 
-        internal static string LowestPath
-        {
-            get
-            {
-                if (_lowestPath == default(string))
-                    _lowestPath = PathEx.Combine(LowestEnvPath);
-                return _lowestPath;
-            }
-        }
+        internal static string LowestPath =>
+            _lowestPath ?? (_lowestPath = PathEx.Combine(LowestEnvPath));
 
-        internal static string SysNativeEnvPath
-        {
-            get
-            {
-                if (_sysNativeEnvPath == default(string))
-                    _sysNativeEnvPath = Path.Combine(SysNativeEnvDir, "cmd.exe");
-                return _sysNativeEnvPath;
-            }
-        }
+        internal static string SysNativeEnvPath =>
+            _sysNativeEnvPath ?? (_sysNativeEnvPath = Path.Combine(SysNativeEnvDir, "cmd.exe"));
 
-        internal static string SysNativePath
-        {
-            get
-            {
-                if (_sysNativePath == default(string))
-                    _sysNativePath = PathEx.Combine(SysNativeEnvPath);
-                return _sysNativePath;
-            }
-        }
+        internal static string SysNativePath =>
+            _sysNativePath ?? (_sysNativePath = PathEx.Combine(SysNativeEnvPath));
     }
 }

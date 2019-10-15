@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: InputDevice.cs
-// Version:  2019-07-26 04:31
+// Version:  2019-10-15 11:25
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,12 +17,14 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.InteropServices;
 
     /// <summary>
     ///     Provides enumerated values of Virtual-Key codes.
     /// </summary>
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public enum VirtualKeys : ushort
     {
         /// <summary>
@@ -161,7 +163,7 @@ namespace SilDev
         ImeConvert = 0x1c,
 
         /// <summary>
-        ///     The IME nonconvert key.
+        ///     The IME non-convert key.
         /// </summary>
         ImeNonconvert = 0x1d,
 
@@ -973,12 +975,12 @@ namespace SilDev
     public enum VirtualKeyStates
     {
         /// <summary>
-        ///     Posted to the window with the keyboard focus when a nonsystem key is pressed.
+        ///     Posted to the window with the keyboard focus when a non-system key is pressed.
         /// </summary>
         KeyDown = 0x100,
 
         /// <summary>
-        ///     Posted to the window with the keyboard focus when a nonsystem key is released.
+        ///     Posted to the window with the keyboard focus when a non-system key is released.
         /// </summary>
         KeyUp = 0x101,
 
@@ -1083,7 +1085,7 @@ namespace SilDev
         ///     The <see cref="ushort"/> representation of a Virtual-Key code.
         /// </param>
         public static uint GetScanCode(ushort key, bool extended = false) =>
-            GetScanCode(GetKey(key));
+            GetScanCode(GetKey(key), extended);
 
         /// <summary>
         ///     Determines whether a key is up or down at the time the function is called, and whether the

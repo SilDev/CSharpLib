@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Win32_OperatingSystem.cs
-// Version:  2018-06-14 23:47
+// Version:  2019-10-15 11:11
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -23,6 +23,7 @@ namespace SilDev.QuickWmi
     ///     Provides quick access to <see cref="Win32_OperatingSystem"/> WMI class properties.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public static class Win32_OperatingSystem
     {
         /// <summary>

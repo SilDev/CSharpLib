@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2019-01-30 10:22
+// Version:  2019-10-15 11:28
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -29,7 +29,7 @@ namespace SilDev
         private GCHandle _handle;
 
         /// <summary>
-        ///     Initilazies a new instance of the <see cref="MemoryPinner"/> class with
+        ///     Initializes a new instance of the <see cref="MemoryPinner"/> class with
         ///     the specified object to pin.
         /// </summary>
         /// <param name="value">
@@ -82,7 +82,7 @@ namespace SilDev
         private bool _disposed;
 
         /// <summary>
-        ///     Initilazies a new instance of the <see cref="ProcessMemory"/> class with
+        ///     Initializes a new instance of the <see cref="ProcessMemory"/> class with
         ///     the specified window handle.
         /// </summary>
         /// <param name="hWnd">
@@ -129,7 +129,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Allocates a chunck of memory in the process.
+        ///     Allocates a chunk of memory in the process.
         /// </summary>
         /// <param name="value">
         ///     The structure to be allocated.

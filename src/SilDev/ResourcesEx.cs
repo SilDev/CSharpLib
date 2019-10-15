@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2018-07-04 12:36
+// Version:  2019-10-15 11:47
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 

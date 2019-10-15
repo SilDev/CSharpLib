@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-07-26 05:03
+// Version:  2019-10-15 11:25
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -63,7 +63,7 @@ namespace SilDev
 
         /// <summary>
         ///     Gets the current <see cref="DebugMode"/> value that determines how <see cref="Exception"/>'s
-        ///     are handled. For more informations see <see cref="ActivateLogging(int)"/>.
+        ///     are handled. For more information see <see cref="ActivateLogging(int)"/>.
         /// </summary>
         public static int DebugMode { get; private set; }
 
@@ -87,7 +87,7 @@ namespace SilDev
         {
             get
             {
-                if (_fileDir == default(string))
+                if (_fileDir == default)
                     FileDir = Path.GetTempPath();
                 return _fileDir;
             }
@@ -169,7 +169,7 @@ namespace SilDev
 
         /// <summary>
         ///     Allows you to enable logging by command line arguments or a specified configuration file. For
-        ///     more informations see <see cref="ActivateLogging(int)"/>.
+        ///     more information see <see cref="ActivateLogging(int)"/>.
         /// </summary>
         /// <param name="configPath">
         ///     The full path of the configuration file.

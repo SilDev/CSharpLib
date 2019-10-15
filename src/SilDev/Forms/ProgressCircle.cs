@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2017-10-31 07:52
+// Version:  2019-10-15 11:06
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -224,7 +224,7 @@ namespace SilDev.Forms
                 var pos = _progressValue;
                 for (var i = 0; i < _spokes; i++)
                 {
-                    pos = pos % _spokes;
+                    pos %= _spokes;
                     using (var pen = new Pen(new SolidBrush(_colors[i]), _thickness))
                     {
                         pen.StartCap = LineCap.Round;

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AppCompat.cs
-// Version:  2019-02-16 20:15
+// Version:  2019-10-15 11:12
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -153,7 +153,7 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Appliciation compatiblity layers struct. For more information, see
+    ///     Application compatibility layers struct. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
     public struct AppCompatLayers

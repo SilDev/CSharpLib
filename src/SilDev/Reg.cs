@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-07-28 07:44
+// Version:  2019-10-15 11:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -110,25 +110,11 @@ namespace SilDev
         private static string _regLowEnvPath,
                               _regNatEnvPath;
 
-        private static string RegLowEnvPath
-        {
-            get
-            {
-                if (_regLowEnvPath == default(string))
-                    _regLowEnvPath = Path.Combine(ComSpec.LowestEnvDir, "reg.exe");
-                return _regLowEnvPath;
-            }
-        }
+        private static string RegLowEnvPath =>
+            _regLowEnvPath ?? (_regLowEnvPath = Path.Combine(ComSpec.LowestEnvDir, "reg.exe"));
 
-        private static string RegNatEnvPath
-        {
-            get
-            {
-                if (_regNatEnvPath == default(string))
-                    _regNatEnvPath = Path.Combine(ComSpec.SysNativeEnvDir, "reg.exe");
-                return _regNatEnvPath;
-            }
-        }
+        private static string RegNatEnvPath =>
+            _regNatEnvPath ?? (_regNatEnvPath = Path.Combine(ComSpec.SysNativeEnvDir, "reg.exe"));
 #else
         private const string RegLowEnvPath = "%SystemRoot%\\SysWOW64\\reg.exe";
         private const string RegNatEnvPath = "%SystemRoot%\\System32\\reg.exe";
@@ -625,7 +611,7 @@ namespace SilDev
             EntryExists(keyPath.GetKey(), keyPath.GetSubKeyName(), entry);
 
         /// <summary>
-        ///     Retrives the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified registry path.
         /// </summary>
         /// <typeparam name="TValue">
         ///     The value type.
@@ -642,7 +628,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The value that is used as default.
         /// </param>
-        public static TValue Read<TValue>(RegistryKey key, string subKey, string entry, TValue defValue = default(TValue))
+        public static TValue Read<TValue>(RegistryKey key, string subKey, string entry, TValue defValue = default)
         {
             var value = defValue;
             try
@@ -675,7 +661,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Retrives the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified registry path.
         /// </summary>
         /// <typeparam name="TValue">
         ///     The value type.
@@ -692,11 +678,11 @@ namespace SilDev
         /// <param name="defValue">
         ///     The value that is used as default.
         /// </param>
-        public static TValue Read<TValue>(string key, string subKey, string entry, TValue defValue = default(TValue)) =>
+        public static TValue Read<TValue>(string key, string subKey, string entry, TValue defValue = default) =>
             Read(key.AsRegistryKey(), subKey, entry, defValue);
 
         /// <summary>
-        ///     Retrives the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified registry path.
         /// </summary>
         /// <typeparam name="TValue">
         ///     The value type.
@@ -710,11 +696,11 @@ namespace SilDev
         /// <param name="defValue">
         ///     The value that is used as default.
         /// </param>
-        public static TValue Read<TValue>(string keyPath, string entry, TValue defValue = default(TValue)) =>
+        public static TValue Read<TValue>(string keyPath, string entry, TValue defValue = default) =>
             Read(keyPath.GetKey(), keyPath.GetSubKeyName(), entry, defValue);
 
         /// <summary>
-        ///     Retrives the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -740,10 +726,10 @@ namespace SilDev
                 var objValue = Read<object>(key, subKey, entry, defValue);
                 if (objValue == null)
                     throw new ArgumentNullException(nameof(objValue));
-                if (objValue is string[])
-                    value = (objValue as string[]).Join(Environment.NewLine);
-                else if (objValue is byte[])
-                    value = (objValue as byte[]).Encode(BinaryToTextEncodings.Base16);
+                if (objValue is string[] strs)
+                    value = strs.Join(Environment.NewLine);
+                else if (objValue is byte[] bytes)
+                    value = bytes.Encode(BinaryToTextEncodings.Base16);
                 else
                     value = objValue.ToString();
             }
@@ -755,7 +741,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Retrives the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -776,7 +762,7 @@ namespace SilDev
             ReadString(key.AsRegistryKey(), subKey, entry, defValue);
 
         /// <summary>
-        ///     Retrives the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -967,7 +953,7 @@ namespace SilDev
         ///     true to import with the system native architecture; otherwise, false.
         /// </param>
 #if any || x86
-        public static bool ImportFile(string path, bool elevated = false, bool native = false)
+            public static bool ImportFile(string path, bool elevated = false, bool native = false)
 #else
         public static bool ImportFile(string path, bool elevated = false, bool native = true)
 #endif
@@ -1010,7 +996,7 @@ namespace SilDev
         ///     true to import with the system native architecture; otherwise, false.
         /// </param>
 #if any || x86
-        public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
+            public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
 #else
         public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
 #endif
@@ -1071,11 +1057,11 @@ namespace SilDev
         ///     true to import with the system native architecture; otherwise, false.
         /// </param>
 #if any || x86
-        public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
+            public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
 #else
         public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
 #endif
-            ImportFile(PathEx.Combine("%TEMP%", $"{PathEx.GetTempDirName()}.reg"), content, elevated, native);
+                ImportFile(PathEx.Combine("%TEMP%", $"{PathEx.GetTempDirName()}.reg"), content, elevated, native);
 
         /// <summary>
         ///     Exports the full content of the specified registry paths into an REG file.

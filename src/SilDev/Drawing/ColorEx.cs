@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2018-06-19 14:33
+// Version:  2019-10-15 10:47
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -246,7 +246,7 @@ namespace SilDev.Drawing
         /// <param name="defColor">
         ///     The color that is set if no HTML color was found.
         /// </param>
-        public static Color FromHtml(string htmlColor, Color defColor = default(Color))
+        public static Color FromHtml(string htmlColor, Color defColor = default)
         {
             try
             {
@@ -300,7 +300,7 @@ namespace SilDev.Drawing
         public static Color FromHtml(string htmlColor, Color defColor, byte alpha)
         {
             var color = FromHtml(htmlColor, defColor);
-            return color == default(Color) ? color : Color.FromArgb(alpha, color);
+            return color == default ? color : Color.FromArgb(alpha, color);
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace SilDev.Drawing
         ///     The alpha component. Valid values are 0 through 255.
         /// </param>
         public static Color FromHtml(string htmlColor, byte alpha) =>
-            FromHtml(htmlColor, default(Color), alpha);
+            FromHtml(htmlColor, default, alpha);
 
         /// <summary>
         ///     Translates the specified 32-bit (A)RGB value to an HTML string color
@@ -352,7 +352,7 @@ namespace SilDev.Drawing
         ///     true to translate also the alpha value; otherwise, false.
         /// </param>
         public static string ToHtml(Color color, bool alpha = false) =>
-            color == default(Color) ? null : ToHtml(alpha ? color.ToArgb() : color.ToRgb(), alpha);
+            color == default ? null : ToHtml(alpha ? color.ToArgb() : color.ToRgb(), alpha);
 
         /// <summary>
         ///     Translates the specified <see cref="Color"/> structure to an HTML string color
@@ -365,7 +365,7 @@ namespace SilDev.Drawing
         ///     The alpha component. Valid values are 0 through 255.
         /// </param>
         public static string ToHtml(Color color, byte? alpha) =>
-            color == default(Color) ? null : alpha.HasValue ? ToHtml(Color.FromArgb((int)alpha, color)) : ToHtml(color);
+            color == default ? null : alpha.HasValue ? ToHtml(Color.FromArgb((int)alpha, color)) : ToHtml(color);
 
         /// <summary>
         ///     Creates a <see cref="Color"/> structure from a 32-bit RGB value.
@@ -427,7 +427,7 @@ namespace SilDev.Drawing
         /// </param>
         public static Color ToGrayScale(this Color color)
         {
-            if (color == default(Color))
+            if (color == default)
                 return color;
             var c = color;
             var scale = (byte)(c.R * .3f + c.G * .59f + c.B * .11f);

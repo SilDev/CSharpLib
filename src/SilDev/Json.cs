@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2018-06-12 23:23
+// Version:  2019-10-15 11:25
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -104,7 +104,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult Deserialize<TResult>(string source, TResult defValue = default(TResult))
+        public static TResult Deserialize<TResult>(string source, TResult defValue = default)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult DeserializeFile<TResult>(string path, TResult defValue = default(TResult))
+        public static TResult DeserializeFile<TResult>(string path, TResult defValue = default)
         {
             try
             {

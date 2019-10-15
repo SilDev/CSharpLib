@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2019-07-27 08:23
+// Version:  2019-10-15 11:19
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -28,7 +28,7 @@ namespace SilDev
     using QuickWmi;
 
     /// <summary>
-    ///     Provides static methods based on the <see cref="Environment"/> class to provide informations
+    ///     Provides static methods based on the <see cref="Environment"/> class to provide information
     ///     about the current environment.
     /// </summary>
     public static class EnvironmentEx
@@ -215,7 +215,7 @@ namespace SilDev
         {
             get
             {
-                if (_version != default(Version))
+                if (_version != default)
                     return _version;
                 try
                 {
@@ -383,7 +383,7 @@ namespace SilDev
         ///     false.
         /// </param>
         public static string CommandLine(bool sort, bool quotes) =>
-            CommandLine(true, 1, quotes);
+            CommandLine(sort, 1, quotes);
 
         /// <summary>
         ///     Provides filtering and sorting options, and returns a string containing the
@@ -442,7 +442,7 @@ namespace SilDev
         /// <summary>
         ///     Retrieves the value of an environment variable from the current process.
         ///     <para>
-        ///         Hint: Allows <see cref="Environment.SpecialFolder"/> names inlcuding a keyword
+        ///         Hint: Allows <see cref="Environment.SpecialFolder"/> names including a keyword
         ///         "CurDir" to get the current code base location based on
         ///         <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         ///     </para>

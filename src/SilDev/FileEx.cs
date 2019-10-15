@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-07-27 07:04
+// Version:  2019-10-15 11:20
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -89,7 +89,7 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult Deserialize<TResult>(string path, bool decompress = false, TResult defValue = default(TResult))
+        public static TResult Deserialize<TResult>(string path, bool decompress = false, TResult defValue = default)
         {
             try
             {
@@ -399,7 +399,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Replaces all occurrences of a specifed sequence of bytes in the specified file
+        ///     Replaces all occurrences of a specified sequence of bytes in the specified file
         ///     with another sequence of bytes.
         /// </summary>
         /// <param name="file">
@@ -554,7 +554,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Replaces all occurrences of a specifed sequence of bytes in the specified file
+        ///     Replaces all occurrences of a specified sequence of bytes in the specified file
         ///     with another sequence of bytes.
         /// </summary>
         /// <param name="file">
@@ -927,7 +927,7 @@ namespace SilDev
         ///     true to skip existing shortcuts, even if the target path of
         ///     the same; otherwise, false.
         /// </param>
-        public static bool CreateShellLink(string targetPath, string linkPath, string startArgs = null, (string, int) iconLocation = default((string, int)), bool skipExists = false)
+        public static bool CreateShellLink(string targetPath, string linkPath, string startArgs = null, (string, int) iconLocation = default, bool skipExists = false)
         {
             if (PathEx.IsDir(targetPath))
                 return false;

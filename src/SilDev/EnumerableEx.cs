@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2018-06-04 09:57
+// Version:  2019-10-15 11:17
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -227,13 +227,13 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     No element satisfies the condition in predicate. -or- The source sequence is empty.
         /// </exception>
-        public static TSource Just<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>), int indicator = 0)
+        public static TSource Just<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default, int indicator = 0)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (indicator < 0)
                 throw new ArgumentOutOfRangeException(nameof(indicator));
-            if (predicate != default(Func<TSource, bool>))
+            if (predicate != default)
             {
                 var flag = false;
                 var count = 0;
@@ -298,7 +298,7 @@ namespace SilDev
         ///     The source sequence is empty.
         /// </exception>
         public static TSource Just<TSource>(this IEnumerable<TSource> source, int indicator) =>
-            source.Just(default(Func<TSource, bool>), indicator);
+            source.Just(default, indicator);
 
         /// <summary>
         ///     Returns a element in a sequence that satisfies a specified condition or a default
@@ -322,7 +322,7 @@ namespace SilDev
         /// <exception cref="ArgumentOutOfRangeException">
         ///     The indicator value is negative.
         /// </exception>
-        public static TSource JustOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>), int indicator = 0)
+        public static TSource JustOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default, int indicator = 0)
         {
             try
             {
@@ -330,7 +330,7 @@ namespace SilDev
             }
             catch (InvalidOperationException)
             {
-                return default(TSource);
+                return default;
             }
         }
 
@@ -354,7 +354,7 @@ namespace SilDev
         ///     The indicator value is negative.
         /// </exception>
         public static TSource JustOrDefault<TSource>(this IEnumerable<TSource> source, int indicator) =>
-            source.JustOrDefault(default(Func<TSource, bool>), indicator);
+            source.JustOrDefault(default, indicator);
 
         /// <summary>
         ///     Returns the second element in a sequence that satisfies a specified condition.
@@ -374,7 +374,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Second<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Second<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 1);
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource SecondOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource SecondOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 1);
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Third<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Third<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 2);
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource ThirdOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource ThirdOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 2);
 
         /// <summary>
@@ -454,7 +454,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Fourth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Fourth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 3);
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource FourthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource FourthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 3);
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Fifth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Fifth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 4);
 
         /// <summary>
@@ -513,7 +513,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource FifthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource FifthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 4);
 
         /// <summary>
@@ -534,7 +534,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Sixth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Sixth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 5);
 
         /// <summary>
@@ -553,7 +553,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource SixthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource SixthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 5);
 
         /// <summary>
@@ -574,7 +574,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Seventh<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Seventh<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 6);
 
         /// <summary>
@@ -593,7 +593,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource SeventhOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource SeventhOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 6);
 
         /// <summary>
@@ -614,7 +614,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Eighth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Eighth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 7);
 
         /// <summary>
@@ -633,7 +633,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource EighthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource EighthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 7);
 
         /// <summary>
@@ -654,7 +654,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Ninth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Ninth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 8);
 
         /// <summary>
@@ -673,7 +673,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource NinthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource NinthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 8);
 
         /// <summary>
@@ -694,7 +694,7 @@ namespace SilDev
         /// <exception cref="InvalidOperationException">
         ///     The source sequence is empty.
         /// </exception>
-        public static TSource Tenth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource Tenth<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.Just(predicate, 9);
 
         /// <summary>
@@ -713,7 +713,7 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source is null.
         /// </exception>
-        public static TSource TenthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default(Func<TSource, bool>)) =>
+        public static TSource TenthOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default) =>
             source.JustOrDefault(predicate, 9);
 
         /// <summary>

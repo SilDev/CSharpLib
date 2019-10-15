@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2019-07-27 08:23
+// Version:  2019-10-15 11:14
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -30,7 +30,7 @@ namespace SilDev
     public static class Compaction
     {
         /// <summary>
-        ///     Compresses the specifed sequence of bytes.
+        ///     Compresses the specified sequence of bytes.
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to compress.
@@ -85,7 +85,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Compresses the specifed <see cref="string"/> value.
+        ///     Compresses the specified <see cref="string"/> value.
         /// </summary>
         /// <param name="text">
         ///     The string to compress.
@@ -222,6 +222,7 @@ namespace SilDev
             /// <summary>
             ///     Specifies how to compress.
             /// </summary>
+            [SuppressMessage("ReSharper", "CommentTypo")]
             public enum CompressMode
             {
                 /// <summary>
@@ -244,7 +245,7 @@ namespace SilDev
             {
                 get
                 {
-                    if (_location != default(string))
+                    if (_location != default)
                         return _location;
                     var dirs = new[]
                     {
@@ -272,7 +273,7 @@ namespace SilDev
                     if (SetPathsIfValid(value?.RemoveText("7zG.exe", "7z.exe")))
                         return;
                     _location = string.Empty;
-                    _filePath = default(string);
+                    _filePath = default;
                 }
             }
 
@@ -283,15 +284,15 @@ namespace SilDev
             {
                 get
                 {
-                    if (_filePath != default(string) && Directory.Exists(Location))
+                    if (_filePath != default && Directory.Exists(Location))
                         return _filePath;
-                    return default(string);
+                    return default;
                 }
             }
 
             private static bool SetPathsIfValid(string dir)
             {
-                if (dir == default(string))
+                if (dir == default)
                     return false;
                 var fileDir = dir;
                 if (!Directory.Exists(fileDir))

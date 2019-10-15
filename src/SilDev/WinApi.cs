@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-07-26 05:04
+// Version:  2019-10-15 11:55
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -32,6 +32,7 @@ namespace SilDev
     ///     An overkill class that provides a lot of Windows API (Application Programming Interface)
     ///     functions.
     /// </summary>
+    [SuppressMessage("ReSharper", "CommentTypo")]
     public static class WinApi
     {
         /// <summary>
@@ -3041,7 +3042,7 @@ namespace SilDev
                     return;
                 var width = rect.Width - rect.X;
                 var height = rect.Height - rect.Y;
-                if (hPar == default(IntPtr))
+                if (hPar == default)
                 {
                     var cursorPos = GetCursorPos();
                     var screen = Screen.PrimaryScreen;
@@ -3060,11 +3061,11 @@ namespace SilDev
                     rect = new Rectangle();
                     if (!NativeMethods.GetWindowRect(hPar, ref rect) || rect.Width < 1 || rect.Height < 1)
                         return;
-                    rect.X = rect.X + (rect.Width - rect.X) / 2;
-                    rect.Y = rect.Y + (rect.Height - rect.Y) / 2;
+                    rect.X += (rect.Width - rect.X) / 2;
+                    rect.Y += (rect.Height - rect.Y) / 2;
                 }
-                rect.X = rect.X - width / 2;
-                rect.Y = rect.Y - height / 2;
+                rect.X -= width / 2;
+                rect.Y -= height / 2;
                 if (alwaysVisible)
                 {
                     var range = new Rectangle
@@ -3094,7 +3095,7 @@ namespace SilDev
             ///     true to force the window to remain in screen area; otherwise, false.
             /// </param>
             public static void CenterWindow(IntPtr hWnd, bool alwaysVisible = true) =>
-                CenterWindow(hWnd, default(IntPtr), alwaysVisible);
+                CenterWindow(hWnd, default, alwaysVisible);
 
             /// <summary>
             ///     The ClientToScreen function converts the client-area coordinates of a specified point to screen
@@ -3654,7 +3655,7 @@ namespace SilDev
             /// </param>
             public static ProcessBasicInformation GetProcessBasicInformation(IntPtr hWnd)
             {
-                var status = NativeMethods.NtQueryInformationProcess(hWnd, ProcessInfoFlags.ProcessBasicInformation, out var pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out IntPtr _);
+                var status = NativeMethods.NtQueryInformationProcess(hWnd, ProcessInfoFlags.ProcessBasicInformation, out var pbi, (uint)Marshal.SizeOf(typeof(ProcessBasicInformation)), out var _);
                 try
                 {
                     if (status >= 0xc0000000)
@@ -4039,11 +4040,11 @@ namespace SilDev
                 Marshal.StructureToPtr(lpLuid, ptr, true);
                 try
                 {
-                    var len = 0;
-                    if (!NativeMethods.LookupPrivilegeName(null, ptr, null, ref len))
+                    cchName = 0;
+                    if (!NativeMethods.LookupPrivilegeName(lpSystemName, ptr, lpName, ref cchName))
                         return false;
-                    lpName.EnsureCapacity(++len);
-                    return NativeMethods.LookupPrivilegeName(null, ptr, lpName, ref len);
+                    lpName.EnsureCapacity(++cchName);
+                    return NativeMethods.LookupPrivilegeName(lpSystemName, ptr, lpName, ref cchName);
                 }
                 finally
                 {
@@ -5371,8 +5372,8 @@ namespace SilDev
                 vRect = new Rectangle();
                 if (!NativeMethods.GetWindowRect(hWnd, ref vRect) || vRect.Width < 1 || vRect.Height < 1)
                     return false;
-                vRect.Width = vRect.Width - vRect.X;
-                vRect.Height = vRect.Height - vRect.Y;
+                vRect.Width -= vRect.X;
+                vRect.Height -= vRect.Y;
                 var cRect = vRect;
                 var range = new Rectangle
                 {
@@ -5422,7 +5423,7 @@ namespace SilDev
             ///     A handle to the window.
             /// </param>
             public static bool WindowIsOutOfVisibleScreenArea(IntPtr hWnd) =>
-                WindowIsOutOfScreenArea(hWnd, out Rectangle _);
+                WindowIsOutOfScreenArea(hWnd, out var _);
 
             /// <summary>
             ///     Writes data to an area of memory in a specified process. The entire area to be written to must be
@@ -8687,7 +8688,7 @@ namespace SilDev
             ///     page to see if you need to provide an hWind value.
             /// </summary>
 #pragma warning disable IDE1006
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
+                [SuppressMessage("ReSharper", "InconsistentNaming")]
             public IntPtr hWnd { get; internal set; }
 #pragma warning restore IDE1006
             /// <summary>
@@ -8772,7 +8773,7 @@ namespace SilDev
             ///     the message value.
             /// </summary>
 #pragma warning disable IDE1006
-            public IntPtr lResult { get; internal set; }
+                public IntPtr lResult { get; internal set; }
 
             /// <summary>
             ///     Additional information about the message. The exact meaning depends on the message
@@ -8795,7 +8796,7 @@ namespace SilDev
             ///     A handle to the window that processed the message specified by the message value.
             /// </summary>
 #pragma warning disable IDE1006
-            public IntPtr hwnd { get; internal set; }
+                public IntPtr hwnd { get; internal set; }
 #pragma warning restore IDE1006
         }
 
@@ -8811,7 +8812,7 @@ namespace SilDev
             ///     The data to be passed to the receiving application.
             /// </summary>
 #pragma warning disable IDE1006
-            public IntPtr dwData { get; internal set; }
+                public IntPtr dwData { get; internal set; }
 #pragma warning restore IDE1006
             /// <summary>
             ///     The size, in bytes, of the data pointed to by the lpData member.
@@ -8822,7 +8823,7 @@ namespace SilDev
             ///     The data to be passed to the receiving application. This member can be NULL.
             /// </summary>
 #pragma warning disable IDE1006
-            public IntPtr lpData { get; internal set; }
+                public IntPtr lpData { get; internal set; }
 #pragma warning restore IDE1006
             /// <summary>
             ///     Releases all resources used by this <see cref="CopyData"/>.

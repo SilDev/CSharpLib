@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-05-21 11:21
+// Version:  2019-10-15 11:35
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -336,7 +336,7 @@ namespace SilDev
         /// <summary>
         ///     Combines an array of strings, based on <see cref="Combine(string[])"/>, into a path.
         ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -384,7 +384,7 @@ namespace SilDev
         /// <summary>
         ///     Filters a string, based on <see cref="Combine(string[])"/>, into a valid path.
         ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -399,7 +399,7 @@ namespace SilDev
         /// <summary>
         ///     Combines an array of strings, based on <see cref="Combine(string[])"/>, into a path.
         ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
         ///     </para>
         /// </summary>
         /// <param name="paths">
@@ -411,7 +411,7 @@ namespace SilDev
         /// <summary>
         ///     Filters a string, based on <see cref="Combine(string[])"/>, into a valid path.
         ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to seperate path levels.
+        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
         ///     </para>
         /// </summary>
         /// <param name="path">

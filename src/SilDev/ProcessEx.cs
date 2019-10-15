@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-07-27 08:24
+// Version:  2019-10-15 11:40
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -45,7 +45,7 @@ namespace SilDev
         {
             get
             {
-                if (_currentHandle != default(IntPtr))
+                if (_currentHandle != default)
                     return _currentHandle;
                 using (var p = Process.GetCurrentProcess())
                     _currentHandle = p.Handle;
@@ -75,7 +75,7 @@ namespace SilDev
         {
             get
             {
-                if (_currentName != default(string))
+                if (_currentName != default)
                     return _currentName;
                 using (var p = Process.GetCurrentProcess())
                     _currentName = p.ProcessName;
@@ -114,19 +114,18 @@ namespace SilDev
                 for (var i = 0; i < processes.Length; i++)
                 {
                     parentName = i == 0 ? childName : $"{childName}#{i}";
-                    var tmpId = new PerformanceCounter("Process", "ID Process", parentName);
-                    if ((int)tmpId.NextValue() == childId)
-                        break;
+                    using (var tmpId = new PerformanceCounter("Process", "ID Process", parentName))
+                        if ((int)tmpId.NextValue() == childId)
+                            break;
                 }
-                var parentId = new PerformanceCounter("Process", "Creating Process ID", parentName);
-                var parentProcess = Process.GetProcessById((int)parentId.NextValue());
-                return parentProcess;
+                using (var parentId = new PerformanceCounter("Process", "Creating Process ID", parentName))
+                    return Process.GetProcessById((int)parentId.NextValue());
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
-                return null;
             }
+            return null;
         }
 
         /// <summary>
@@ -222,7 +221,7 @@ namespace SilDev
             InstancesCount(nameOrPath, doubleTap) > 0;
 
         /// <summary>
-        ///     Determines whether this <see cref="Process"/> is running in a sandboxed
+        ///     Determines whether this <see cref="Process"/> is running in a sandbox
         ///     environment.
         ///     <para>
         ///         Hint: This function supports only the program Sandboxie.

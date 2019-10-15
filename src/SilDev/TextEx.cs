@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2018-06-17 16:09
+// Version:  2019-10-15 11:48
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -36,7 +36,7 @@ namespace SilDev
         {
             get
             {
-                if (_defaultEncoding != default(object))
+                if (_defaultEncoding != default)
                     return (Encoding)_defaultEncoding;
                 if (!int.TryParse(Win32_OperatingSystem.CodeSet, out var codePage))
                     codePage = 1252;
@@ -110,7 +110,7 @@ namespace SilDev
         ///     <see cref="Encoding"/> format.
         /// </param>
         [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
-        public static Encoding GetEncoding(string file, Encoding defEncoding = default(Encoding))
+        public static Encoding GetEncoding(string file, Encoding defEncoding = default)
         {
             var path = PathEx.Combine(file);
             var encoding = defEncoding ?? DefaultEncoding;
@@ -135,7 +135,7 @@ namespace SilDev
         ///     The new character encoding. If the value is NULL it uses the Windows-1252
         ///     <see cref="Encoding"/> format.
         /// </param>
-        public static bool ChangeEncoding(string file, Encoding encoding = default(Encoding))
+        public static bool ChangeEncoding(string file, Encoding encoding = default)
         {
             if (string.IsNullOrEmpty(file))
                 return false;

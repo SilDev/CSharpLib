@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PictureBoxEx.cs
-// Version:  2018-03-08 01:18
+// Version:  2019-10-15 11:05
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -25,7 +25,7 @@ namespace SilDev.Forms
     public static class PictureBoxEx
     {
         /// <summary>
-        ///     Represents a Windows non-clickable picture box control for displaying an image.
+        ///     Represents a Windows non-click-able picture box control for displaying an image.
         /// </summary>
         public class NonClickable : PictureBox
         {
@@ -36,7 +36,7 @@ namespace SilDev.Forms
             ///     Initializes a new instance of the <see cref="NonClickable"/> picture box class.
             /// </summary>
             /// <param name="clickable">
-            ///     true to determine that the picture box is clickable; otherwise, false.
+            ///     true to determine that the picture box is click-able; otherwise, false.
             /// </param>
             [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
             public NonClickable(bool clickable = false)

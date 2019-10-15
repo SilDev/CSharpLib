@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2018-03-08 01:18
+// Version:  2019-10-15 11:07
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -35,7 +35,7 @@ namespace SilDev.Forms
         ///     The text to mark.
         /// </param>
         /// <param name="foreColor">
-        ///     The new forground color.
+        ///     The new foreground color.
         /// </param>
         /// <param name="backColor">
         ///     The new background color.
@@ -81,7 +81,7 @@ namespace SilDev.Forms
         ///     The end keyword for the text to mark.
         /// </param>
         /// <param name="foreColor">
-        ///     The new forground color.
+        ///     The new foreground color.
         /// </param>
         /// <param name="backColor">
         ///     The new background color.
@@ -130,7 +130,7 @@ namespace SilDev.Forms
         ///     The number of keywords to be marked.
         /// </param>
         /// <param name="foreColor">
-        ///     The new forground color.
+        ///     The new foreground color.
         /// </param>
         /// <param name="backColor">
         ///     The new background color.

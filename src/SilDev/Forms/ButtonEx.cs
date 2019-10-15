@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2019-10-15 11:00
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -75,10 +75,10 @@ namespace SilDev.Forms
         ///     specified <see cref="ContextMenuStrip"/> control, is clicked.
         /// </summary>
         /// <param name="button">
-        ///     The button that contains a splitted area, which is created by <see cref="Split(Button, Color?)"/>.
+        ///     The button that contains a split area, which is created by <see cref="Split(Button, Color?)"/>.
         /// </param>
         /// <param name="contextMenuStrip">
-        ///     The drop down menu that opens for the splitted area.
+        ///     The drop down menu that opens for the split area.
         /// </param>
         public static bool SplitClickHandler(this Button button, ContextMenuStrip contextMenuStrip)
         {
