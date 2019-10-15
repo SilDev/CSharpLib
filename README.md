@@ -8,7 +8,7 @@ I was tired of repeating the same steps over and over again when I started devel
 
 ### Requirements:
 - Microsoft Windows 7 or higher (64-bit)
-- [Microsoft Visual Studio 2017 + .NET Framework 4.7 SDK](https://www.visualstudio.com/downloads/)
+- [Microsoft Visual Studio 2019 + .NET Framework 4.7 SDK](https://www.visualstudio.com/downloads/)
 
 ***
 
