@@ -5836,7 +5836,7 @@
         </member>
         <member name="T:SilDev.Elevation">
             <summary>
-                Provides funcionality for the user authorization on Windows.
+                Provides functionality for the user authorization on Windows.
             </summary>
         </member>
         <member name="P:SilDev.Elevation.CurrentPrincipal">
