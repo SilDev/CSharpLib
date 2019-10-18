@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Elevation.cs
-// Version:  2018-03-24 17:19
+// Version:  2019-10-18 12:56
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -23,7 +23,7 @@ namespace SilDev
     using System.Security.Principal;
 
     /// <summary>
-    ///     Provides funcionality for the user authorization on Windows.
+    ///     Provides functionality for the user authorization on Windows.
     /// </summary>
     public static class Elevation
     {
@@ -101,9 +101,11 @@ namespace SilDev
                     args = $"/{Log.DebugKey} {Log.DebugMode} ";
                 args += EnvironmentEx.CommandLine(false);
             }
-            ProcessEx.Start(PathEx.LocalPath, PathEx.LocalDir, args, true);
-            Environment.ExitCode = 0;
-            Environment.Exit(Environment.ExitCode);
+            using (ProcessEx.Start(PathEx.LocalPath, PathEx.LocalDir, args, true))
+            {
+                Environment.ExitCode = 0;
+                Environment.Exit(Environment.ExitCode);
+            }
         }
 
         /// <summary>
@@ -132,9 +134,11 @@ namespace SilDev
                 FileName = PathEx.LocalPath,
                 Verb = "RunNotAs"
             };
-            ProcessEx.Start(psi);
-            Environment.ExitCode = 0;
-            Environment.Exit(Environment.ExitCode);
+            using (ProcessEx.Start(psi))
+            {
+                Environment.ExitCode = 0;
+                Environment.Exit(Environment.ExitCode);
+            }
         }
     }
 }

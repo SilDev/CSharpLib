@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-10-15 11:44
+// Version:  2019-10-18 12:56
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -418,9 +418,9 @@ namespace SilDev
                 {
                     do
                     {
-                        var queue = copyQueue.Dequeue();
-                        srcItem = queue.Item1;
-                        destItem = queue.Item2;
+                        var (item1, item2) = copyQueue.Dequeue();
+                        srcItem = item1;
+                        destItem = item2;
                         foreach (var entry in srcItem.GetValueNames())
                         {
                             var value = srcItem.GetValue(entry);
