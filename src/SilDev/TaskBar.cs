@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2019-10-15 11:48
+// Version:  2019-10-18 15:49
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -280,7 +280,8 @@ namespace SilDev
             try
             {
                 if (isPresentWindows)
-                    ProcessEx.CurrentPrincipal.ChangeName("explorer.exe");
+                    //ProcessEx.CurrentPrincipal.ChangeName("explorer.exe");
+                    throw new NotSupportedException();
 
                 dynamic shell = Activator.CreateInstance(Type.GetTypeFromProgID("Shell.Application"));
                 var dir = shell.NameSpace(Path.GetDirectoryName(path));
@@ -293,21 +294,23 @@ namespace SilDev
                 WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
                 var verb = sb.ToString();
 
+                /*
                 if (!isPresentWindows)
                 {
-                    var applied = false;
-                    for (var i = 0; i < verbs.Count(); i++)
-                    {
-                        var e = verbs.Item(i);
-                        if ((pin || !e.Name.ContainsEx(verb)) && (!pin || !e.Name.EqualsEx(verb)))
-                            continue;
-                        e.DoIt();
-                        applied = true;
-                        break;
-                    }
-                    if (applied)
-                        goto Done;
+                */
+                var applied = false;
+                for (var i = 0; i < verbs.Count(); i++)
+                {
+                    var e = verbs.Item(i);
+                    if ((pin || !e.Name.ContainsEx(verb)) && (!pin || !e.Name.EqualsEx(verb)))
+                        continue;
+                    e.DoIt();
+                    applied = true;
+                    break;
                 }
+                if (applied)
+                    goto Done;
+                //}
 
                 if (string.IsNullOrWhiteSpace(verb))
                     verb = "Toggle Taskbar Pin";
@@ -340,8 +343,10 @@ namespace SilDev
             }
             finally
             {
+                /*
                 if (isPresentWindows)
                     ProcessEx.CurrentPrincipal.RestoreName();
+                */
                 if (!string.IsNullOrEmpty(shellKeyPath))
                     Reg.RemoveSubKey(Registry.CurrentUser, shellKeyPath);
             }
