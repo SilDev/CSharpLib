@@ -31,7 +31,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("901502cc-aa7d-444e-944a-7fc063c34917")]
 
-[assembly: AssemblyVersion("19.10.18.0")]
+[assembly: AssemblyVersion("19.10.22.0")]
 
-[assembly: NeutralResourcesLanguage("")]
-
+[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]

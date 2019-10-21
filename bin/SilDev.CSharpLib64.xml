@@ -45,126 +45,368 @@
               Looks up a localized string similar to %TEMP%\tmp-{0}.
             </summary>
         </member>
-        <member name="T:SilDev.AppCompatColorModes">
+        <member name="T:SilDev.Properties.ExceptionMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.AssemblyNotFound">
+            <summary>
+              Looks up a localized string similar to The required assembly could not be found..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.AsyncDownloadIsBusy">
+            <summary>
+              Looks up a localized string similar to Async file download is already busy, multiple calls are not allowed..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.BadCharsInPath">
+            <summary>
+              Looks up a localized string similar to The path contains invalid characters..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.CharsInStreamAreInvalid">
+            <summary>
+              Looks up a localized string similar to The input stream contains invalid characters..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ConsecutiveSeparatorsInPath">
+            <summary>
+              Looks up a localized string similar to The path cannot contain several consecutive separators. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.DestPathNotValid">
+            <summary>
+              Looks up a localized string similar to The destination path is invalid..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.DirLengthIsTooLong">
+            <summary>
+              Looks up a localized string similar to The directory name is longer than 248 characters. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.FollowingCharCodeIsInvalid">
+            <summary>
+              Looks up a localized string similar to The following character code is invalid: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.InvalidDriveInPath">
+            <summary>
+              Looks up a localized string similar to The path does not contain a valid drive. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.LastBlockIsSingleByte">
+            <summary>
+              Looks up a localized string similar to The last block cannot be a single byte..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.MultipleCalls">
+            <summary>
+              Looks up a localized string similar to Multiple calls are not supported..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.NetworkInterfacesNotFound">
+            <summary>
+              Looks up a localized string similar to No network interfaces available..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.NewPrincipalNameTooLong">
+            <summary>
+              Looks up a localized string similar to The new principal name cannot be longer than the original one..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.NoDriveInPath">
+            <summary>
+              Looks up a localized string similar to The path does not contain any drive. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathHasInvalidPrefix">
+            <summary>
+              Looks up a localized string similar to The &quot;\\?\&quot; prefix is not supported. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathHasInvalidSeparators">
+            <summary>
+              Looks up a localized string similar to The path does not contain a valid separator. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathHasNoSeparators">
+            <summary>
+              Looks up a localized string similar to The path does not contain any separator. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathLengthIsTooLong">
+            <summary>
+              Looks up a localized string similar to The specified path is longer than 260 characters. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathLengthIsTooLow">
+            <summary>
+              Looks up a localized string similar to The path length is lower than 3 characters. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathSegmentLengthIsTooLong">
+            <summary>
+              Looks up a localized string similar to A segment of the path is longer than 255 characters. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.SCManagerConnectionCanceled">
+            <summary>
+              Looks up a localized string similar to Could not connect to service control manager..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.SequenceIsEmpty">
+            <summary>
+              Looks up a localized string similar to Sequence contains no elements..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ServiceAccessFailed">
+            <summary>
+              Looks up a localized string similar to Service could not be accessed..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ServiceInstallationCanceled">
+            <summary>
+              Looks up a localized string similar to Failed to install service..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ServiceNotFound">
+            <summary>
+              Looks up a localized string similar to Service not installed..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ServiceStartCanceled">
+            <summary>
+              Looks up a localized string similar to Service could not be started..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ServiceStatusQueryFailed">
+            <summary>
+              Looks up a localized string similar to Service status could not be queried..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ServiceUninstallCanceled">
+            <summary>
+              Looks up a localized string similar to Service could not be deleted. - Error: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.SystemRestoringIsDisabled">
+            <summary>
+              Looks up a localized string similar to System restoring is disabled..
+            </summary>
+        </member>
+        <member name="T:SilDev.Properties.UIStrings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.Copy">
+            <summary>
+              Looks up a localized string similar to Copy.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.Cut">
+            <summary>
+              Looks up a localized string similar to Cut.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.FileSuccessfullyLoaded">
+            <summary>
+              Looks up a localized string similar to File successfully loaded!.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.FileSuccessfullySaved">
+            <summary>
+              Looks up a localized string similar to File successfully saved!.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.LoadFile">
+            <summary>
+              Looks up a localized string similar to Load File.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.OperationCanceled">
+            <summary>
+              Looks up a localized string similar to Operation canceled!.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.Paste">
+            <summary>
+              Looks up a localized string similar to Paste.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.ResourceBrowser">
+            <summary>
+              Looks up a localized string similar to Icon Resource Browser.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.SaveAll">
+            <summary>
+              Looks up a localized string similar to Save All.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.SelectAll">
+            <summary>
+              Looks up a localized string similar to Select All.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.TextCanNotBeEmpty">
+            <summary>
+              Looks up a localized string similar to The text can not be empty!.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.TextFiles">
+            <summary>
+              Looks up a localized string similar to Text Files.
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.UIStrings.Undo">
+            <summary>
+              Looks up a localized string similar to Undo.
+            </summary>
+        </member>
+        <member name="T:SilDev.AppCompatColorMode">
             <summary>
                 Provides color mode options. For more information, see
                 <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatColorModes.Default">
+        <member name="F:SilDev.AppCompatColorMode.Default">
             <summary>
                 System default.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatColorModes._256Color">
+        <member name="F:SilDev.AppCompatColorMode._256Color">
             <summary>
                 Reduce color mode to 8-bit (256).
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatColorModes._16BitColor">
+        <member name="F:SilDev.AppCompatColorMode._16BitColor">
             <summary>
                 Reduce color mode to 16-bit (65536).
             </summary>
         </member>
-        <member name="T:SilDev.AppCompatDpiScalingBehaviors">
+        <member name="T:SilDev.AppCompatDpiScalingBehavior">
             <summary>
                 Provides DPI scaling behavior options. For more information, see
                 <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatDpiScalingBehaviors.Default">
+        <member name="F:SilDev.AppCompatDpiScalingBehavior.Default">
             <summary>
                 System default.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatDpiScalingBehaviors.HighDpiWare">
+        <member name="F:SilDev.AppCompatDpiScalingBehavior.HighDpiWare">
             <summary>
                 DPI scaling performed by application.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatDpiScalingBehaviors.DpiUnaware">
+        <member name="F:SilDev.AppCompatDpiScalingBehavior.DpiUnaware">
             <summary>
                 DPI scaling performed by system.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatDpiScalingBehaviors.GdiDpiScaling_DpiUnaware">
+        <member name="F:SilDev.AppCompatDpiScalingBehavior.GdiDpiScaling_DpiUnaware">
             <summary>
                 DPI scaling performed by system (enhanced).
             </summary>
         </member>
-        <member name="T:SilDev.AppCompatDpiScalingSystems">
+        <member name="T:SilDev.AppCompatDpiScalingSystem">
             <summary>
                 Provides DPI scaling system options. For more information, see
                 <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatDpiScalingSystems.Default">
+        <member name="F:SilDev.AppCompatDpiScalingSystem.Default">
             <summary>
                 System default.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatDpiScalingSystems.PerProcessSystemDpiForceOff">
+        <member name="F:SilDev.AppCompatDpiScalingSystem.PerProcessSystemDpiForceOff">
             <summary>
                 Windows logon.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatDpiScalingSystems.PerProcessSystemDpiForceOn">
+        <member name="F:SilDev.AppCompatDpiScalingSystem.PerProcessSystemDpiForceOn">
             <summary>
                 Application start.
             </summary>
         </member>
-        <member name="T:SilDev.AppCompatSystemVersions">
+        <member name="T:SilDev.AppCompatSystemVersion">
             <summary>
                 Provides OS version options. For more information, see
                 <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.Default">
+        <member name="F:SilDev.AppCompatSystemVersion.Default">
             <summary>
                 System default.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.Win95">
+        <member name="F:SilDev.AppCompatSystemVersion.Win95">
             <summary>
                 Windows 95.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.Win98">
+        <member name="F:SilDev.AppCompatSystemVersion.Win98">
             <summary>
                 Windows 98 / Windows ME.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.WinXPSP2">
+        <member name="F:SilDev.AppCompatSystemVersion.WinXPSP2">
             <summary>
                 Windows XP (Service Pack 2).
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.WinXPSP3">
+        <member name="F:SilDev.AppCompatSystemVersion.WinXPSP3">
             <summary>
                 Windows XP (Service Pack 3).
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.VistaRTM">
+        <member name="F:SilDev.AppCompatSystemVersion.VistaRTM">
             <summary>
                 Windows Vista.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.VistaSP1">
+        <member name="F:SilDev.AppCompatSystemVersion.VistaSP1">
             <summary>
                 Windows Vista (Service Pack 1).
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.VistaSP2">
+        <member name="F:SilDev.AppCompatSystemVersion.VistaSP2">
             <summary>
                 Windows Vista (Service Pack 2).
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.Win7RTM">
+        <member name="F:SilDev.AppCompatSystemVersion.Win7RTM">
             <summary>
                 Windows 7.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatSystemVersions.Win8RTM">
+        <member name="F:SilDev.AppCompatSystemVersion.Win8RTM">
             <summary>
                 Windows 8.
             </summary>
@@ -175,40 +417,83 @@
                 <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatLayers.ColorMode">
+        <member name="P:SilDev.AppCompatLayers.ColorMode">
             <summary>
                 The color mode.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatLayers.DpiScalingBehavior">
+        <member name="P:SilDev.AppCompatLayers.DpiScalingBehavior">
             <summary>
                 The DPI scaling behavior.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatLayers.DpiScalingSystem">
+        <member name="P:SilDev.AppCompatLayers.DpiScalingSystem">
             <summary>
                 The DPI scaling system.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatLayers.OperatingSystem">
+        <member name="P:SilDev.AppCompatLayers.OperatingSystem">
             <summary>
                 The operating system.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatLayers.DisableFullscreenOptimizations">
+        <member name="P:SilDev.AppCompatLayers.DisableFullscreenOptimizations">
             <summary>
                 true to disable the Windows 10 fullscreen optimizations; otherwise, false.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatLayers.RunIn640x480ScreenResolution">
+        <member name="P:SilDev.AppCompatLayers.RunIn640x480ScreenResolution">
             <summary>
                 true to run the program in 640x480 screen resolution; otherwise, false.
             </summary>
         </member>
-        <member name="F:SilDev.AppCompatLayers.RunAsAdministrator">
+        <member name="P:SilDev.AppCompatLayers.RunAsAdministrator">
             <summary>
                 true to run the program as administrator; otherwise, false.
             </summary>
+        </member>
+        <member name="M:SilDev.AppCompatLayers.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+        </member>
+        <member name="M:SilDev.AppCompatLayers.Equals(SilDev.AppCompatLayers)">
+            <summary>
+                Determines whether this instance have same values as the specified <see cref="T:SilDev.AppCompatLayers"/> instance.
+            </summary>
+            <param name="other">
+                The <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.AppCompatLayers.Equals(System.Object)">
+            <summary>
+                Determines whether this instance have same values as the specified <see cref="T:System.Object"/>.
+            </summary>
+            <param name="obj">
+                The  <see cref="T:System.Object"/> to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.AppCompatLayers.op_Equality(SilDev.AppCompatLayers,SilDev.AppCompatLayers)">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.AppCompatLayers"/> instances have same values.
+            </summary>
+            <param name="a">
+                The first <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
+            </param>
+            <param name="b">
+                The second <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.AppCompatLayers.op_Inequality(SilDev.AppCompatLayers,SilDev.AppCompatLayers)">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.AppCompatLayers"/> instances have different values.
+            </summary>
+            <param name="a">
+                The first <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
+            </param>
+            <param name="b">
+                The second <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
+            </param>
         </member>
         <member name="T:SilDev.AppCompat">
             <summary>
@@ -217,7 +502,7 @@
         </member>
         <member name="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)">
             <summary>
-                Enables the specified application compatibility layers for the specified executable file.
+                Sets the specified application compatibility layers for the specified executable file.
             </summary>
             <param name="path">
                 The path to the file to be configured.
@@ -226,7 +511,7 @@
                 The compatibility layers.
             </param>
             <exception cref="T:System.ArgumentNullException">
-                path is null or empty.
+                path is null, empty or consists only of white-space characters.
             </exception>
             <exception cref="T:SilDev.ArgumentInvalidException">
                 path is not a valid executable file.
@@ -1073,12 +1358,6 @@
                 info is null.
             </exception>
         </member>
-        <member name="P:SilDev.Drawing.ImageEx.ImagePair.Disposed">
-            <summary>
-                Determines that the current image pair has been disposed by
-                <see cref="M:SilDev.Drawing.ImageEx.ImagePair.Dispose(System.Boolean)"/>.
-            </summary>
-        </member>
         <member name="P:SilDev.Drawing.ImageEx.ImagePair.Image1">
             <summary>
                 Gets the first <see cref="T:System.Drawing.Image"/> of current image pair.
@@ -1206,12 +1485,6 @@
             <exception cref="T:System.ArgumentNullException">
                 info is null.
             </exception>
-        </member>
-        <member name="P:SilDev.Drawing.ImageEx.Frame.Disposed">
-            <summary>
-                Determines that the current image pair has been disposed by
-                <see cref="M:SilDev.Drawing.ImageEx.Frame.Dispose(System.Boolean)"/>.
-            </summary>
         </member>
         <member name="P:SilDev.Drawing.ImageEx.Frame.Image">
             <summary>
@@ -1378,42 +1651,42 @@
                 The new title of the window.
             </param>
         </member>
-        <member name="T:SilDev.Forms.ContextMenuStripExAnimations">
+        <member name="T:SilDev.Forms.ContextMenuStripExAnimation">
             <summary>
                 Provides enumerated values of <see cref="T:System.Windows.Forms.ContextMenuStrip"/> animations.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.Default">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimation.Default">
             <summary>
                 Smooth fade in animation.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.Blend">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimation.Blend">
             <summary>
                 Fade in animation.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.Center">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimation.Center">
             <summary>
                 Makes the <see cref="T:System.Windows.Forms.ContextMenuStrip"/> appear to collapse inward.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideHorPositive">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimation.SlideHorPositive">
             <summary>
                 Slide animation from left to right.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideHorNegative">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimation.SlideHorNegative">
             <summary>
                 Slide animation from right to left.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideVerPositive">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimation.SlideVerPositive">
             <summary>
                 Slide animation from top to bottom.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.ContextMenuStripExAnimations.SlideVerNegative">
+        <member name="F:SilDev.Forms.ContextMenuStripExAnimation.SlideVerNegative">
             <summary>
                 Slide animation from bottom to top.
             </summary>
@@ -1434,7 +1707,7 @@
                 The toleration in pixel.
             </param>
         </member>
-        <member name="M:SilDev.Forms.ContextMenuStripEx.EnableAnimation(System.Windows.Forms.ContextMenuStrip,SilDev.Forms.ContextMenuStripExAnimations,System.Int32)">
+        <member name="M:SilDev.Forms.ContextMenuStripEx.EnableAnimation(System.Windows.Forms.ContextMenuStrip,SilDev.Forms.ContextMenuStripExAnimation,System.Int32)">
             <summary>
                 Enables you to produce special effects when showing this <see cref="T:System.Windows.Forms.ContextMenuStrip"/>.
             </summary>
@@ -1448,7 +1721,7 @@
                 The time it takes to play the animation, in milliseconds.
                 <para>
                     Please note that this parameter is ignored if the animation is set to
-                    <see cref="F:SilDev.Forms.ContextMenuStripExAnimations.Default"/>.
+                    <see cref="F:SilDev.Forms.ContextMenuStripExAnimation.Default"/>.
                 </para>
             </param>
         </member>
@@ -1625,6 +1898,9 @@
             <param name="form">
                 The form window to be dock-able.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                form is null.
+            </exception>
         </member>
         <member name="M:SilDev.Forms.FormEx.Plus(System.Windows.Forms.Form,SilDev.Forms.FormExPlusSettings)">
             <summary>
@@ -1639,6 +1915,9 @@
             <param name="settings">
                 The settings to be applied.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                form is null.
+            </exception>
         </member>
         <member name="T:SilDev.Forms.FormEx.BorderlessResizable">
             <summary>
@@ -1813,18 +2092,18 @@
                 The Windows <see cref="T:System.Windows.Forms.Message"/> to process.
             </param>
         </member>
-        <member name="T:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessages">
+        <member name="T:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessage">
             <summary>
                 Provides enumerated Windows <see cref="T:System.Windows.Forms.Message"/>'s, used within a <see cref="M:SilDev.Forms.FormEx.BorderlessResizable.WndProc(System.Windows.Forms.Message@)"/>
                 override.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessages.MouseFirst">
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessage.MouseFirst">
             <summary>
                 Specify the first mouse message.
             </summary>
         </member>
-        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessages.NcHitTest">
+        <member name="F:SilDev.Forms.FormEx.BorderlessResizable.WindowsMessage.NcHitTest">
             <summary>
                 Sent to a window in order to determine what part of the window corresponds to a
                 particular screen coordinate. This can happen, for example, when the cursor moves,
@@ -1852,6 +2131,9 @@
             <param name="uri">
                 The link to associate.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                any parameter is null.
+            </exception>
         </member>
         <member name="M:SilDev.Forms.LinkLabelEx.LinkText(System.Windows.Forms.LinkLabel,System.String,System.String)">
             <summary>
@@ -3709,112 +3991,112 @@
                 The second object to compare.
             </param>
         </member>
-        <member name="T:SilDev.SymmetricKeyAlgorithms">
+        <member name="T:SilDev.SymmetricKeyAlgorithm">
             <summary>
                 Specifies enumerated constants used to encrypt and decrypt data.
             </summary>
         </member>
-        <member name="F:SilDev.SymmetricKeyAlgorithms.Aes128">
+        <member name="F:SilDev.SymmetricKeyAlgorithm.Aes128">
             <summary>
                 Advanced Encryption Standard (AES-128).
             </summary>
         </member>
-        <member name="F:SilDev.SymmetricKeyAlgorithms.Aes192">
+        <member name="F:SilDev.SymmetricKeyAlgorithm.Aes192">
             <summary>
                 Advanced Encryption Standard (AES-192).
             </summary>
         </member>
-        <member name="F:SilDev.SymmetricKeyAlgorithms.Aes256">
+        <member name="F:SilDev.SymmetricKeyAlgorithm.Aes256">
             <summary>
                 Advanced Encryption Standard (AES-256).
             </summary>
         </member>
-        <member name="T:SilDev.BinaryToTextEncodings">
+        <member name="T:SilDev.BinaryToTextEncoding">
             <summary>
                 Specifies enumerated constants used to encode and decode data.
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base2">
+        <member name="F:SilDev.BinaryToTextEncoding.Base2">
             <summary>
                 Binary.
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base8">
+        <member name="F:SilDev.BinaryToTextEncoding.Base8">
             <summary>
                 Octal.
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base10">
+        <member name="F:SilDev.BinaryToTextEncoding.Base10">
             <summary>
                 Decimal.
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base16">
+        <member name="F:SilDev.BinaryToTextEncoding.Base16">
             <summary>
                 Hexadecimal.
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base32">
+        <member name="F:SilDev.BinaryToTextEncoding.Base32">
             <summary>
                 Base32.
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base64">
+        <member name="F:SilDev.BinaryToTextEncoding.Base64">
             <summary>
                 Base64.
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base85">
+        <member name="F:SilDev.BinaryToTextEncoding.Base85">
             <summary>
                 Base85 (Ascii85).
             </summary>
         </member>
-        <member name="F:SilDev.BinaryToTextEncodings.Base91">
+        <member name="F:SilDev.BinaryToTextEncoding.Base91">
             <summary>
                 Base91 (basE91).
             </summary>
         </member>
-        <member name="T:SilDev.ChecksumAlgorithms">
+        <member name="T:SilDev.ChecksumAlgorithm">
             <summary>
                 Specifies enumerated constants used to encrypt data.
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Adler32">
+        <member name="F:SilDev.ChecksumAlgorithm.Adler32">
             <summary>
                 Adler-32.
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Crc16">
+        <member name="F:SilDev.ChecksumAlgorithm.Crc16">
             <summary>
                 Cyclic Redundancy Check (CRC-16).
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Crc32">
+        <member name="F:SilDev.ChecksumAlgorithm.Crc32">
             <summary>
                 Cyclic Redundancy Check (CRC-32).
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Md5">
+        <member name="F:SilDev.ChecksumAlgorithm.Md5">
             <summary>
                 Message-Digest 5.
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Sha1">
+        <member name="F:SilDev.ChecksumAlgorithm.Sha1">
             <summary>
                 Secure Hash Algorithm 1.
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Sha256">
+        <member name="F:SilDev.ChecksumAlgorithm.Sha256">
             <summary>
                 Secure Hash Algorithm 2 (SHA-256).
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Sha384">
+        <member name="F:SilDev.ChecksumAlgorithm.Sha384">
             <summary>
                 Secure Hash Algorithm 2 (SHA-384).
             </summary>
         </member>
-        <member name="F:SilDev.ChecksumAlgorithms.Sha512">
+        <member name="F:SilDev.ChecksumAlgorithm.Sha512">
             <summary>
                 Secure Hash Algorithm 2 (SHA-512).
             </summary>
@@ -3824,9 +4106,9 @@
                 Provides functionality for data encryption and decryption.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.GetGuid(System.Byte[],System.Boolean,SilDev.ChecksumAlgorithms,SilDev.ChecksumAlgorithms)">
+        <member name="M:SilDev.Crypto.GetGuid(System.Byte[],System.Boolean,SilDev.ChecksumAlgorithm,SilDev.ChecksumAlgorithm)">
             <summary>
-                Encrypts this sequence of bytes with the specified <see cref="T:SilDev.ChecksumAlgorithms"/>
+                Encrypts this sequence of bytes with the specified <see cref="T:SilDev.ChecksumAlgorithm"/>
                 and combines both hashes into a unique GUID.
             </summary>
             <param name="bytes">
@@ -3842,9 +4124,9 @@
                 The second algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.GetGuid(System.String,System.Boolean,SilDev.ChecksumAlgorithms,SilDev.ChecksumAlgorithms)">
+        <member name="M:SilDev.Crypto.GetGuid(System.String,System.Boolean,SilDev.ChecksumAlgorithm,SilDev.ChecksumAlgorithm)">
             <summary>
-                Encrypts this string with the specified <see cref="T:SilDev.ChecksumAlgorithms"/> and
+                Encrypts this string with the specified <see cref="T:SilDev.ChecksumAlgorithm"/> and
                 combines both hashes into a unique GUID.
             </summary>
             <param name="text">
@@ -3860,7 +4142,7 @@
                 The second algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Encrypts this sequence of bytes with the specified algorithm.
             </summary>
@@ -3877,7 +4159,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],System.String,System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Encrypts this sequence of bytes with the specified algorithm.
             </summary>
@@ -3894,7 +4176,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Encrypts this string with the specified algorithm.
             </summary>
@@ -3911,7 +4193,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Encrypts this string with the specified algorithm.
             </summary>
@@ -3928,7 +4210,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Encrypts this file with the specified algorithm.
             </summary>
@@ -3945,7 +4227,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Encrypts this file with the specified algorithm.
             </summary>
@@ -3962,7 +4244,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Decrypts this sequence of bytes with the specified algorithm.
             </summary>
@@ -3979,7 +4261,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.Decrypt(System.Byte[],System.String,System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Decrypts this sequence of bytes with the specified algorithm.
             </summary>
@@ -3996,7 +4278,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.Byte[],System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Decrypts this sequence of bytes with the specified algorithm.
             </summary>
@@ -4013,7 +4295,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithms)">
+        <member name="M:SilDev.Crypto.DecryptFile(System.String,System.String,System.Byte[],SilDev.SymmetricKeyAlgorithm)">
             <summary>
                 Decrypts this sequence of bytes with the specified algorithm.
             </summary>
@@ -4030,7 +4312,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encode(System.Byte[],SilDev.BinaryToTextEncodings)">
+        <member name="M:SilDev.Crypto.Encode(System.Byte[],SilDev.BinaryToTextEncoding)">
             <summary>
                 Encodes this sequence of bytes with the specified algorithm.
             </summary>
@@ -4041,7 +4323,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encode(System.String,SilDev.BinaryToTextEncodings)">
+        <member name="M:SilDev.Crypto.Encode(System.String,SilDev.BinaryToTextEncoding)">
             <summary>
                 Encodes this string with the specified algorithm.
             </summary>
@@ -4052,7 +4334,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncodeFile(System.String,SilDev.BinaryToTextEncodings)">
+        <member name="M:SilDev.Crypto.EncodeFile(System.String,SilDev.BinaryToTextEncoding)">
             <summary>
                 Encodes this file into a sequence of bytes with the specified algorithm.
             </summary>
@@ -4063,7 +4345,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Decode(System.String,SilDev.BinaryToTextEncodings)">
+        <member name="M:SilDev.Crypto.Decode(System.String,SilDev.BinaryToTextEncoding)">
             <summary>
                 Decodes this string into a sequence of bytes with the specified algorithm.
             </summary>
@@ -4074,7 +4356,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeString(System.String,SilDev.BinaryToTextEncodings)">
+        <member name="M:SilDev.Crypto.DecodeString(System.String,SilDev.BinaryToTextEncoding)">
             <summary>
                 Decodes this string into a sequence of bytes with the specified algorithm.
             </summary>
@@ -4085,7 +4367,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.DecodeFile(System.String,SilDev.BinaryToTextEncodings)">
+        <member name="M:SilDev.Crypto.DecodeFile(System.String,SilDev.BinaryToTextEncoding)">
             <summary>
                 Decodes this file into a sequence of bytes with the specified algorithm.
             </summary>
@@ -4096,7 +4378,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.IO.Stream,SilDev.ChecksumAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.IO.Stream,SilDev.ChecksumAlgorithm)">
             <summary>
                 Encrypts this stream with the specified algorithm.
             </summary>
@@ -4107,7 +4389,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],SilDev.ChecksumAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.Byte[],SilDev.ChecksumAlgorithm)">
             <summary>
                 Encrypts this sequence of bytes with the specified algorithm.
             </summary>
@@ -4118,7 +4400,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.Encrypt(System.String,SilDev.ChecksumAlgorithms)">
+        <member name="M:SilDev.Crypto.Encrypt(System.String,SilDev.ChecksumAlgorithm)">
             <summary>
                 Encrypts this string with the specified algorithm.
             </summary>
@@ -4129,7 +4411,7 @@
                 The algorithm to use.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.EncryptFile(System.String,SilDev.ChecksumAlgorithms)">
+        <member name="M:SilDev.Crypto.EncryptFile(System.String,SilDev.ChecksumAlgorithm)">
             <summary>
                 Encrypts this file with the specified algorithm.
             </summary>
@@ -4293,18 +4575,18 @@
                 The size of the secret key.
             </param>
         </member>
-        <member name="T:SilDev.Crypto.BinaryToTextEncoding">
+        <member name="T:SilDev.Crypto.BinaryToText">
             <summary>
                 Represents the base class from which all implementations of binary-to-text encoding
                 algorithms must derive.
             </summary>
         </member>
-        <member name="F:SilDev.Crypto.BinaryToTextEncoding.Separator">
+        <member name="F:SilDev.Crypto.BinaryToText.Separator">
             <summary>
                 Gets the separator.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
+        <member name="M:SilDev.Crypto.BinaryToText.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)">
             <summary>
                 Encodes the specified input stream into the specified output stream.
             </summary>
@@ -4325,7 +4607,7 @@
                 The current method has no functionality.
             </exception>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+        <member name="M:SilDev.Crypto.BinaryToText.EncodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
                 Encodes the specified input stream into the specified output stream.
             </summary>
@@ -4340,10 +4622,10 @@
                 otherwise, false.
             </param>
             <exception cref="T:System.NotSupportedException">
-                <see cref="M:SilDev.Crypto.BinaryToTextEncoding.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)"/> method has no functionality.
+                <see cref="M:SilDev.Crypto.BinaryToText.EncodeStream(System.IO.Stream,System.IO.Stream,System.Int32,System.Boolean)"/> method has no functionality.
             </exception>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeBytes(System.Byte[],System.Int32)">
+        <member name="M:SilDev.Crypto.BinaryToText.EncodeBytes(System.Byte[],System.Int32)">
             <summary>
                 Encodes the specified sequence of bytes.
             </summary>
@@ -4354,7 +4636,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeString(System.String,System.Int32)">
+        <member name="M:SilDev.Crypto.BinaryToText.EncodeString(System.String,System.Int32)">
             <summary>
                 Encodes the specified string.
             </summary>
@@ -4365,7 +4647,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeFile(System.String,System.String,System.Int32,System.Boolean)">
+        <member name="M:SilDev.Crypto.BinaryToText.EncodeFile(System.String,System.String,System.Int32,System.Boolean)">
             <summary>
                 Encodes the specified source file to the specified destination file.
             </summary>
@@ -4382,7 +4664,7 @@
                 true to allow an existing file to be overwritten; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.EncodeFile(System.String,System.Int32)">
+        <member name="M:SilDev.Crypto.BinaryToText.EncodeFile(System.String,System.Int32)">
             <summary>
                 Encodes the specified file.
             </summary>
@@ -4393,7 +4675,7 @@
                 The length of lines.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
+        <member name="M:SilDev.Crypto.BinaryToText.DecodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
                 Decodes the specified input stream into the specified output stream.
             </summary>
@@ -4411,7 +4693,7 @@
                 The current method has no functionality.
             </exception>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeBytes(System.String)">
+        <member name="M:SilDev.Crypto.BinaryToText.DecodeBytes(System.String)">
             <summary>
                 Decodes the specified string into a sequence of bytes.
             </summary>
@@ -4419,7 +4701,7 @@
                 The string to decode.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeString(System.String)">
+        <member name="M:SilDev.Crypto.BinaryToText.DecodeString(System.String)">
             <summary>
                 Decodes the specified string into a string.
             </summary>
@@ -4427,7 +4709,7 @@
                 The string to decode.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeFile(System.String,System.String,System.Boolean)">
+        <member name="M:SilDev.Crypto.BinaryToText.DecodeFile(System.String,System.String,System.Boolean)">
             <summary>
                 Decodes the specified source file to the specified destination file.
             </summary>
@@ -4441,21 +4723,15 @@
                 true to allow an existing file to be overwritten; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.DecodeFile(System.String,System.String,System.String)">
+        <member name="M:SilDev.Crypto.BinaryToText.DecodeFile(System.String)">
             <summary>
                 Decodes the specified string into a sequence of bytes containing a small file.
             </summary>
             <param name="code">
                 The string to decode.
             </param>
-            <param name="prefixMark">
-                The prefix mark.
-            </param>
-            <param name="suffixMark">
-                The suffix mark.
-            </param>
         </member>
-        <member name="M:SilDev.Crypto.BinaryToTextEncoding.WriteLine(System.IO.Stream,System.Byte,System.Int32,System.Int32@)">
+        <member name="M:SilDev.Crypto.BinaryToText.WriteLine(System.IO.Stream,System.Byte,System.Int32,System.Int32@)">
             <summary>
                 Write the specified byte into the stream and add a line separator depending
                 on the specified line length.
@@ -4463,7 +4739,7 @@
             <param name="stream">
                 The stream in which to write the single byte.
             </param>
-            <param name="single">
+            <param name="singleByte">
                 The single byte.
             </param>
             <param name="lineLength">
@@ -5048,13 +5324,13 @@
                 Methods were called after the inputStream or outputStream was closed.
             </exception>
         </member>
-        <member name="T:SilDev.Crypto.ChecksumAlgorithm">
+        <member name="T:SilDev.Crypto.Checksum">
             <summary>
                 Represents the base class from which all implementations of checksum encryption
                 algorithms must derive.
             </summary>
         </member>
-        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptStream``1(System.IO.Stream,``0)">
+        <member name="M:SilDev.Crypto.Checksum.EncryptStream``1(System.IO.Stream,``0)">
             <summary>
                 Encrypts the specified stream with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
             </summary>
@@ -5068,7 +5344,7 @@
                 The algorithm to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptStream(System.IO.Stream)">
+        <member name="M:SilDev.Crypto.Checksum.EncryptStream(System.IO.Stream)">
             <summary>
                 Encrypts the specified stream.
             </summary>
@@ -5079,7 +5355,7 @@
                 The current method has no functionality.
             </exception>
         </member>
-        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptBytes(System.Byte[])">
+        <member name="M:SilDev.Crypto.Checksum.EncryptBytes(System.Byte[])">
             <summary>
                 Encrypts the specified sequence of bytes.
             </summary>
@@ -5087,7 +5363,7 @@
                 The sequence of bytes to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptString``1(System.String,``0)">
+        <member name="M:SilDev.Crypto.Checksum.EncryptString``1(System.String,``0)">
             <summary>
                 Encrypts the specified string with the specified <see cref="T:System.Security.Cryptography.HashAlgorithm"/>.
             </summary>
@@ -5101,7 +5377,7 @@
                 The algorithm to encrypt.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptString(System.String)">
+        <member name="M:SilDev.Crypto.Checksum.EncryptString(System.String)">
             <summary>
                 Encrypts the specified string.
             </summary>
@@ -5112,7 +5388,7 @@
                 The current method has no functionality.
             </exception>
         </member>
-        <member name="M:SilDev.Crypto.ChecksumAlgorithm.EncryptFile(System.String)">
+        <member name="M:SilDev.Crypto.Checksum.EncryptFile(System.String)">
             <summary>
                 Encrypts the specified file.
             </summary>
@@ -5908,7 +6184,7 @@
                 source or action is null.
             </exception>
         </member>
-        <member name="M:SilDev.EnumerableEx.ForEachAsync``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+        <member name="M:SilDev.EnumerableEx.ForEachAsync``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0},System.Boolean)">
             <summary>
                 Performs the specified <see cref="T:System.Action`1"/> asynchronously on each element of the
                 <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection.
@@ -5922,6 +6198,10 @@
             <param name="action">
                 The <see cref="T:System.Action`1"/> delegate to perform on each element of the
                 <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection.
+            </param>
+            <param name="continueOnCapturedContext">
+                true to attempt to marshal the continuation back to the original context captured;
+                otherwise, false.
             </param>
             <exception cref="T:System.ArgumentNullException">
                 source or action is null.
@@ -5949,7 +6229,7 @@
                 source or action is null.
             </exception>
         </member>
-        <member name="M:SilDev.EnumerableEx.ForEachAsync``2(System.Collections.Generic.IDictionary{``0,``1},System.Action{``0,``1})">
+        <member name="M:SilDev.EnumerableEx.ForEachAsync``2(System.Collections.Generic.IDictionary{``0,``1},System.Action{``0,``1},System.Boolean)">
             <summary>
                 Performs the specified <see cref="T:System.Action`2"/> asynchronously on each element of the
                 <see cref="T:System.Collections.Generic.IDictionary`2"/>.
@@ -5966,6 +6246,10 @@
             <param name="action">
                 The <see cref="T:System.Action`2"/> delegate to perform on each element of the
                 <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            </param>
+            <param name="continueOnCapturedContext">
+                true to attempt to marshal the continuation back to the original context captured;
+                otherwise, false.
             </param>
             <exception cref="T:System.ArgumentNullException">
                 source or action is null.
@@ -8042,974 +8326,974 @@
                 An array of keys to navigate to the exact position of the value.
             </param>
         </member>
-        <member name="T:SilDev.VirtualKeys">
+        <member name="T:SilDev.VirtualKey">
             <summary>
                 Provides enumerated values of Virtual-Key codes.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LButton">
+        <member name="F:SilDev.VirtualKey.LButton">
             <summary>
                 The left mouse button.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.RButton">
+        <member name="F:SilDev.VirtualKey.RButton">
             <summary>
                 The right mouse button.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Cancel">
+        <member name="F:SilDev.VirtualKey.Cancel">
             <summary>
                 The CANCEL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.MButton">
+        <member name="F:SilDev.VirtualKey.MButton">
             <summary>
                 The middle mouse button (three-button mouse).
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.XButton1">
+        <member name="F:SilDev.VirtualKey.XButton1">
             <summary>
                 The first x mouse button (five-button mouse).
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.XButton2">
+        <member name="F:SilDev.VirtualKey.XButton2">
             <summary>
                 The second x mouse button (five-button mouse).
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Back">
+        <member name="F:SilDev.VirtualKey.Back">
             <summary>
                 The BACKSPACE key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Tab">
+        <member name="F:SilDev.VirtualKey.Tab">
             <summary>
                 The TAB key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LineFeed">
+        <member name="F:SilDev.VirtualKey.LineFeed">
             <summary>
                 The LINEFEED key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Clear">
+        <member name="F:SilDev.VirtualKey.Clear">
             <summary>
                 The CLEAR key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Return">
+        <member name="F:SilDev.VirtualKey.Return">
             <summary>
                 The RETURN key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Enter">
+        <member name="F:SilDev.VirtualKey.Enter">
             <summary>
                 The ENTER key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Shift">
+        <member name="F:SilDev.VirtualKey.Shift">
             <summary>
                 The SHIFT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Control">
+        <member name="F:SilDev.VirtualKey.Control">
             <summary>
                 The CTRL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Alt">
+        <member name="F:SilDev.VirtualKey.Alt">
             <summary>
                 The ALT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Menu">
+        <member name="F:SilDev.VirtualKey.Menu">
             <summary>
                 The ALT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Pause">
+        <member name="F:SilDev.VirtualKey.Pause">
             <summary>
                 The PAUSE key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.CapsLock">
+        <member name="F:SilDev.VirtualKey.CapsLock">
             <summary>
                 The CAPS LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Capital">
+        <member name="F:SilDev.VirtualKey.Capital">
             <summary>
                 The CAPS LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.KanaMode">
+        <member name="F:SilDev.VirtualKey.KanaMode">
             <summary>
                 The IME Kana mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.HangulMode">
+        <member name="F:SilDev.VirtualKey.HangulMode">
             <summary>
                 The IME Hangul mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.JunjaMode">
+        <member name="F:SilDev.VirtualKey.JunjaMode">
             <summary>
                 The IME Junja mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.FinalMode">
+        <member name="F:SilDev.VirtualKey.FinalMode">
             <summary>
                 The IME final mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.HanjaMode">
+        <member name="F:SilDev.VirtualKey.HanjaMode">
             <summary>
                 The IME Hanja mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.KanjiMode">
+        <member name="F:SilDev.VirtualKey.KanjiMode">
             <summary>
                 The IME Kanji mode key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Escape">
+        <member name="F:SilDev.VirtualKey.Escape">
             <summary>
                 The ESC key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ImeConvert">
+        <member name="F:SilDev.VirtualKey.ImeConvert">
             <summary>
                 The IME convert key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ImeNonconvert">
+        <member name="F:SilDev.VirtualKey.ImeNonconvert">
             <summary>
                 The IME non-convert key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ImeAccept">
+        <member name="F:SilDev.VirtualKey.ImeAccept">
             <summary>
                 The IME accept key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.ImeModeChange">
+        <member name="F:SilDev.VirtualKey.ImeModeChange">
             <summary>
                 The IME mode change key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Space">
+        <member name="F:SilDev.VirtualKey.Space">
             <summary>
                 The SPACEBAR key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.PageUp">
+        <member name="F:SilDev.VirtualKey.PageUp">
             <summary>
                 The PAGE UP key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Prior">
+        <member name="F:SilDev.VirtualKey.Prior">
             <summary>
                 The PAGE UP key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.PageDown">
+        <member name="F:SilDev.VirtualKey.PageDown">
             <summary>
                 The PAGE DOWN key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Next">
+        <member name="F:SilDev.VirtualKey.Next">
             <summary>
                 The PAGE DOWN key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.End">
+        <member name="F:SilDev.VirtualKey.End">
             <summary>
                 The END key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Home">
+        <member name="F:SilDev.VirtualKey.Home">
             <summary>
                 The HOME key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Left">
+        <member name="F:SilDev.VirtualKey.Left">
             <summary>
                 The LEFT ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Up">
+        <member name="F:SilDev.VirtualKey.Up">
             <summary>
                 The UP ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Right">
+        <member name="F:SilDev.VirtualKey.Right">
             <summary>
                 The RIGHT ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Down">
+        <member name="F:SilDev.VirtualKey.Down">
             <summary>
                 The DOWN ARROW key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Select">
+        <member name="F:SilDev.VirtualKey.Select">
             <summary>
                 The SELECT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Print">
+        <member name="F:SilDev.VirtualKey.Print">
             <summary>
                 The PRINT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Execute">
+        <member name="F:SilDev.VirtualKey.Execute">
             <summary>
                 The EXECUTE key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.PrintScreen">
+        <member name="F:SilDev.VirtualKey.PrintScreen">
             <summary>
                 The PRINT SCREEN key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Snapshot">
+        <member name="F:SilDev.VirtualKey.Snapshot">
             <summary>
                 The PRINT SCREEN key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Insert">
+        <member name="F:SilDev.VirtualKey.Insert">
             <summary>
                 The INS key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Delete">
+        <member name="F:SilDev.VirtualKey.Delete">
             <summary>
                 The DEL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Help">
+        <member name="F:SilDev.VirtualKey.Help">
             <summary>
                 The HELP key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D0">
+        <member name="F:SilDev.VirtualKey.D0">
             <summary>
                 The 0 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D1">
+        <member name="F:SilDev.VirtualKey.D1">
             <summary>
                 The 1 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D2">
+        <member name="F:SilDev.VirtualKey.D2">
             <summary>
                 The 2 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D3">
+        <member name="F:SilDev.VirtualKey.D3">
             <summary>
                 The 3 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D4">
+        <member name="F:SilDev.VirtualKey.D4">
             <summary>
                 The 4 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D5">
+        <member name="F:SilDev.VirtualKey.D5">
             <summary>
                 The 5 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D6">
+        <member name="F:SilDev.VirtualKey.D6">
             <summary>
                 The 6 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D7">
+        <member name="F:SilDev.VirtualKey.D7">
             <summary>
                 The 7 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D8">
+        <member name="F:SilDev.VirtualKey.D8">
             <summary>
                 The 8 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D9">
+        <member name="F:SilDev.VirtualKey.D9">
             <summary>
                 The 9 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.A">
+        <member name="F:SilDev.VirtualKey.A">
             <summary>
                 The A key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.B">
+        <member name="F:SilDev.VirtualKey.B">
             <summary>
                 The B key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.C">
+        <member name="F:SilDev.VirtualKey.C">
             <summary>
                 The C key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.D">
+        <member name="F:SilDev.VirtualKey.D">
             <summary>
                 The D key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.E">
+        <member name="F:SilDev.VirtualKey.E">
             <summary>
                 The E key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F">
+        <member name="F:SilDev.VirtualKey.F">
             <summary>
                 The F key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.G">
+        <member name="F:SilDev.VirtualKey.G">
             <summary>
                 The G key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.H">
+        <member name="F:SilDev.VirtualKey.H">
             <summary>
                 The H key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.I">
+        <member name="F:SilDev.VirtualKey.I">
             <summary>
                 The I key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.J">
+        <member name="F:SilDev.VirtualKey.J">
             <summary>
                 The J key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.K">
+        <member name="F:SilDev.VirtualKey.K">
             <summary>
                 The K key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.L">
+        <member name="F:SilDev.VirtualKey.L">
             <summary>
                 The L key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.M">
+        <member name="F:SilDev.VirtualKey.M">
             <summary>
                 The M key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.N">
+        <member name="F:SilDev.VirtualKey.N">
             <summary>
                 The N key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.O">
+        <member name="F:SilDev.VirtualKey.O">
             <summary>
                 The O key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.P">
+        <member name="F:SilDev.VirtualKey.P">
             <summary>
                 The P key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Q">
+        <member name="F:SilDev.VirtualKey.Q">
             <summary>
                 The Q key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.R">
+        <member name="F:SilDev.VirtualKey.R">
             <summary>
                 The R key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.S">
+        <member name="F:SilDev.VirtualKey.S">
             <summary>
                 The S key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.T">
+        <member name="F:SilDev.VirtualKey.T">
             <summary>
                 The T key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.U">
+        <member name="F:SilDev.VirtualKey.U">
             <summary>
                 The U key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.V">
+        <member name="F:SilDev.VirtualKey.V">
             <summary>
                 The V key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.W">
+        <member name="F:SilDev.VirtualKey.W">
             <summary>
                 The W key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.X">
+        <member name="F:SilDev.VirtualKey.X">
             <summary>
                 The X key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Y">
+        <member name="F:SilDev.VirtualKey.Y">
             <summary>
                 The Y key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Z">
+        <member name="F:SilDev.VirtualKey.Z">
             <summary>
                 The Z key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LWin">
+        <member name="F:SilDev.VirtualKey.LWin">
             <summary>
                 The left Windows logo key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.RWin">
+        <member name="F:SilDev.VirtualKey.RWin">
             <summary>
                 The right Windows logo key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Apps">
+        <member name="F:SilDev.VirtualKey.Apps">
             <summary>
                 The application key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Sleep">
+        <member name="F:SilDev.VirtualKey.Sleep">
             <summary>
                 The computer sleep key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad0">
+        <member name="F:SilDev.VirtualKey.NumPad0">
             <summary>
                 The 0 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad1">
+        <member name="F:SilDev.VirtualKey.NumPad1">
             <summary>
                 The 1 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad2">
+        <member name="F:SilDev.VirtualKey.NumPad2">
             <summary>
                 The 2 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad3">
+        <member name="F:SilDev.VirtualKey.NumPad3">
             <summary>
                 The 3 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad4">
+        <member name="F:SilDev.VirtualKey.NumPad4">
             <summary>
                 The 4 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad5">
+        <member name="F:SilDev.VirtualKey.NumPad5">
             <summary>
                 The 5 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad6">
+        <member name="F:SilDev.VirtualKey.NumPad6">
             <summary>
                 The 6 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad7">
+        <member name="F:SilDev.VirtualKey.NumPad7">
             <summary>
                 The 7 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad8">
+        <member name="F:SilDev.VirtualKey.NumPad8">
             <summary>
                 The 8 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumPad9">
+        <member name="F:SilDev.VirtualKey.NumPad9">
             <summary>
                 The 9 key on the numeric keypad.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Multiply">
+        <member name="F:SilDev.VirtualKey.Multiply">
             <summary>
                 The multiply key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Add">
+        <member name="F:SilDev.VirtualKey.Add">
             <summary>
                 The add key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Separator">
+        <member name="F:SilDev.VirtualKey.Separator">
             <summary>
                 The separator key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Subtract">
+        <member name="F:SilDev.VirtualKey.Subtract">
             <summary>
                 The subtract key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Decimal">
+        <member name="F:SilDev.VirtualKey.Decimal">
             <summary>
                 The decimal key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Divide">
+        <member name="F:SilDev.VirtualKey.Divide">
             <summary>
                 The divide key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F1">
+        <member name="F:SilDev.VirtualKey.F1">
             <summary>
                 The F1 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F2">
+        <member name="F:SilDev.VirtualKey.F2">
             <summary>
                 The F2 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F3">
+        <member name="F:SilDev.VirtualKey.F3">
             <summary>
                 The F3 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F4">
+        <member name="F:SilDev.VirtualKey.F4">
             <summary>
                 The F4 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F5">
+        <member name="F:SilDev.VirtualKey.F5">
             <summary>
                 The F5 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F6">
+        <member name="F:SilDev.VirtualKey.F6">
             <summary>
                 The F6 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F7">
+        <member name="F:SilDev.VirtualKey.F7">
             <summary>
                 The F7 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F8">
+        <member name="F:SilDev.VirtualKey.F8">
             <summary>
                 The F8 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F9">
+        <member name="F:SilDev.VirtualKey.F9">
             <summary>
                 The F9 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F10">
+        <member name="F:SilDev.VirtualKey.F10">
             <summary>
                 The F10 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F11">
+        <member name="F:SilDev.VirtualKey.F11">
             <summary>
                 The F11 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F12">
+        <member name="F:SilDev.VirtualKey.F12">
             <summary>
                 The F12 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F13">
+        <member name="F:SilDev.VirtualKey.F13">
             <summary>
                 The F13 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F14">
+        <member name="F:SilDev.VirtualKey.F14">
             <summary>
                 The F14 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F15">
+        <member name="F:SilDev.VirtualKey.F15">
             <summary>
                 The F15 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F16">
+        <member name="F:SilDev.VirtualKey.F16">
             <summary>
                 The F16 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F17">
+        <member name="F:SilDev.VirtualKey.F17">
             <summary>
                 The F17 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F18">
+        <member name="F:SilDev.VirtualKey.F18">
             <summary>
                 The F18 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F19">
+        <member name="F:SilDev.VirtualKey.F19">
             <summary>
                 The F19 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F20">
+        <member name="F:SilDev.VirtualKey.F20">
             <summary>
                 The F20 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F21">
+        <member name="F:SilDev.VirtualKey.F21">
             <summary>
                 The F21 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F22">
+        <member name="F:SilDev.VirtualKey.F22">
             <summary>
                 The F22 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F23">
+        <member name="F:SilDev.VirtualKey.F23">
             <summary>
                 The F23 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.F24">
+        <member name="F:SilDev.VirtualKey.F24">
             <summary>
                 The F24 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.NumLock">
+        <member name="F:SilDev.VirtualKey.NumLock">
             <summary>
                 The NUM LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Scroll">
+        <member name="F:SilDev.VirtualKey.Scroll">
             <summary>
                 The SCROLL LOCK key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LShift">
+        <member name="F:SilDev.VirtualKey.LShift">
             <summary>
                 The left SHIFT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.RShift">
+        <member name="F:SilDev.VirtualKey.RShift">
             <summary>
                 The right SHIFT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LControl">
+        <member name="F:SilDev.VirtualKey.LControl">
             <summary>
                 The left CTRL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.RControl">
+        <member name="F:SilDev.VirtualKey.RControl">
             <summary>
                 The right CTRL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LAlt">
+        <member name="F:SilDev.VirtualKey.LAlt">
             <summary>
                 The left ALT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LMenu">
+        <member name="F:SilDev.VirtualKey.LMenu">
             <summary>
                 The left ALT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.RAlt">
+        <member name="F:SilDev.VirtualKey.RAlt">
             <summary>
                 The right ALT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.RMenu">
+        <member name="F:SilDev.VirtualKey.RMenu">
             <summary>
                 The right ALT key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.BrowserBack">
+        <member name="F:SilDev.VirtualKey.BrowserBack">
             <summary>
                 The browser back key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.BrowserForward">
+        <member name="F:SilDev.VirtualKey.BrowserForward">
             <summary>
                 The browser forward key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.BrowserRefresh">
+        <member name="F:SilDev.VirtualKey.BrowserRefresh">
             <summary>
                 The browser refresh key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.BrowserStop">
+        <member name="F:SilDev.VirtualKey.BrowserStop">
             <summary>
                 The browser stop key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.BrowserSearch">
+        <member name="F:SilDev.VirtualKey.BrowserSearch">
             <summary>
                 The browser search key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.BrowserFavorites">
+        <member name="F:SilDev.VirtualKey.BrowserFavorites">
             <summary>
                 The browser favorites key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.BrowserHome">
+        <member name="F:SilDev.VirtualKey.BrowserHome">
             <summary>
                 The browser home key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.VolumeMute">
+        <member name="F:SilDev.VirtualKey.VolumeMute">
             <summary>
                 The volume mute key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.VolumeDown">
+        <member name="F:SilDev.VirtualKey.VolumeDown">
             <summary>
                 The volume down key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.VolumeUp">
+        <member name="F:SilDev.VirtualKey.VolumeUp">
             <summary>
                 The volume up key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.MediaNextTrack">
+        <member name="F:SilDev.VirtualKey.MediaNextTrack">
             <summary>
                 The media next track key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.MediaPreviousTrack">
+        <member name="F:SilDev.VirtualKey.MediaPreviousTrack">
             <summary>
                 The media previous track key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.MediaStop">
+        <member name="F:SilDev.VirtualKey.MediaStop">
             <summary>
                 The media Stop key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.MediaPlayPause">
+        <member name="F:SilDev.VirtualKey.MediaPlayPause">
             <summary>
                 The media play pause key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LaunchMail">
+        <member name="F:SilDev.VirtualKey.LaunchMail">
             <summary>
                 The launch mail key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.SelectMedia">
+        <member name="F:SilDev.VirtualKey.SelectMedia">
             <summary>
                 The select media key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LaunchApplication1">
+        <member name="F:SilDev.VirtualKey.LaunchApplication1">
             <summary>
                 The start application one key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.LaunchApplication2">
+        <member name="F:SilDev.VirtualKey.LaunchApplication2">
             <summary>
                 The start application two key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemSemicolon">
+        <member name="F:SilDev.VirtualKey.OemSemicolon">
             <summary>
                 The OEM Semicolon key on a US standard keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem1">
+        <member name="F:SilDev.VirtualKey.Oem1">
             <summary>
                 The OEM 1 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oemplus">
+        <member name="F:SilDev.VirtualKey.Oemplus">
             <summary>
                 The OEM plus key on any country/region keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oemcomma">
+        <member name="F:SilDev.VirtualKey.Oemcomma">
             <summary>
                 The OEM comma key on any country/region keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemMinus">
+        <member name="F:SilDev.VirtualKey.OemMinus">
             <summary>
                 The OEM minus key on any country/region keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemPeriod">
+        <member name="F:SilDev.VirtualKey.OemPeriod">
             <summary>
                 The OEM period key on any country/region keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemQuestion">
+        <member name="F:SilDev.VirtualKey.OemQuestion">
             <summary>
                 The OEM question mark key on a US standard keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem2">
+        <member name="F:SilDev.VirtualKey.Oem2">
             <summary>
                 The OEM 2 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oemtilde">
+        <member name="F:SilDev.VirtualKey.Oemtilde">
             <summary>
                 The OEM tilde key on a US standard keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem3">
+        <member name="F:SilDev.VirtualKey.Oem3">
             <summary>
                 The OEM 3 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemOpenBrackets">
+        <member name="F:SilDev.VirtualKey.OemOpenBrackets">
             <summary>
                 The OEM open bracket key on a US standard keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem4">
+        <member name="F:SilDev.VirtualKey.Oem4">
             <summary>
                 The OEM 4 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemPipe">
+        <member name="F:SilDev.VirtualKey.OemPipe">
             <summary>
                 The OEM pipe key on a US standard keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem5">
+        <member name="F:SilDev.VirtualKey.Oem5">
             <summary>
                 The OEM 5 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemCloseBrackets">
+        <member name="F:SilDev.VirtualKey.OemCloseBrackets">
             <summary>
                 The OEM close bracket key on a US standard keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem6">
+        <member name="F:SilDev.VirtualKey.Oem6">
             <summary>
                 The OEM 6 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemQuotes">
+        <member name="F:SilDev.VirtualKey.OemQuotes">
             <summary>
                 The OEM singled/double quote key on a US standard keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem7">
+        <member name="F:SilDev.VirtualKey.Oem7">
             <summary>
                 The OEM 7 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem8">
+        <member name="F:SilDev.VirtualKey.Oem8">
             <summary>
                 The OEM 8 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemBackslash">
+        <member name="F:SilDev.VirtualKey.OemBackslash">
             <summary>
                 The OEM angle bracket or backslash key on the RT 102 key keyboard.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Oem102">
+        <member name="F:SilDev.VirtualKey.Oem102">
             <summary>
                 The OEM 102 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Process">
+        <member name="F:SilDev.VirtualKey.Process">
             <summary>
                 The PROCESS KEY key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Packet">
+        <member name="F:SilDev.VirtualKey.Packet">
             <summary>
                 Used to pass Unicode characters as if they were keystrokes. The Packet key value
                 is the low word of a 32-bit virtual-key value used for non-keyboard input methods.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Attn">
+        <member name="F:SilDev.VirtualKey.Attn">
             <summary>
                 The ATTN key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Crsel">
+        <member name="F:SilDev.VirtualKey.Crsel">
             <summary>
                 The CRSEL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Exsel">
+        <member name="F:SilDev.VirtualKey.Exsel">
             <summary>
                 The EXSEL key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.EraseEof">
+        <member name="F:SilDev.VirtualKey.EraseEof">
             <summary>
                 The ERASE EOF key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Play">
+        <member name="F:SilDev.VirtualKey.Play">
             <summary>
                 The PLAY key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Zoom">
+        <member name="F:SilDev.VirtualKey.Zoom">
             <summary>
                 The ZOOM key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.Pa1">
+        <member name="F:SilDev.VirtualKey.Pa1">
             <summary>
                 The PA1 key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeys.OemClear">
+        <member name="F:SilDev.VirtualKey.OemClear">
             <summary>
                 The CLEAR key.
             </summary>
         </member>
-        <member name="T:SilDev.VirtualKeyStates">
+        <member name="T:SilDev.VirtualKeyState">
             <summary>
                 Provides enumerated values of Virtual-Key code states.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeyStates.KeyDown">
+        <member name="F:SilDev.VirtualKeyState.KeyDown">
             <summary>
                 Posted to the window with the keyboard focus when a non-system key is pressed.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeyStates.KeyUp">
+        <member name="F:SilDev.VirtualKeyState.KeyUp">
             <summary>
                 Posted to the window with the keyboard focus when a non-system key is released.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeyStates.SysKeyDown">
+        <member name="F:SilDev.VirtualKeyState.SysKeyDown">
             <summary>
                 Posted to the window with the keyboard focus when the user presses the F10 key (which
                 activates the menu bar) or holds down the ALT key and then presses another key.
             </summary>
         </member>
-        <member name="F:SilDev.VirtualKeyStates.SysKeyUp">
+        <member name="F:SilDev.VirtualKeyState.SysKeyUp">
             <summary>
                 Posted to the window with the keyboard focus when the user releases a key that was
                 pressed while the ALT key was held down.
@@ -9022,28 +9306,28 @@
         </member>
         <member name="M:SilDev.InputDevice.GetKey(System.UInt16)">
             <summary>
-                Returns the <see cref="T:SilDev.VirtualKeys"/> of the <see cref="T:System.UInt16"/> representation of a
+                Returns the <see cref="T:SilDev.VirtualKey"/> of the <see cref="T:System.UInt16"/> representation of a
                 Virtual-Key code.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.VirtualKeys"/> value.
+                The <see cref="T:SilDev.VirtualKey"/> value.
             </param>
         </member>
         <member name="M:SilDev.InputDevice.GetKey(System.String)">
             <summary>
-                Returns the <see cref="T:SilDev.VirtualKeys"/> of the <see cref="T:System.String"/> representation of a
+                Returns the <see cref="T:SilDev.VirtualKey"/> of the <see cref="T:System.String"/> representation of a
                 Virtual-Key code.
             </summary>
             <param name="key">
                 The <see cref="T:System.String"/> representation of a Virtual-Key code.
             </param>
         </member>
-        <member name="M:SilDev.InputDevice.GetKeyCode(SilDev.VirtualKeys)">
+        <member name="M:SilDev.InputDevice.GetKeyCode(SilDev.VirtualKey)">
             <summary>
-                Returns the <see cref="T:System.UInt16"/> representation of the <see cref="T:SilDev.VirtualKeys"/> value.
+                Returns the <see cref="T:System.UInt16"/> representation of the <see cref="T:SilDev.VirtualKey"/> value.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.VirtualKeys"/> value.
+                The <see cref="T:SilDev.VirtualKey"/> value.
             </param>
         </member>
         <member name="M:SilDev.InputDevice.GetKeyCode(System.String)">
@@ -9055,12 +9339,12 @@
                 The <see cref="T:System.String"/> representation of a Virtual-Key code.
             </param>
         </member>
-        <member name="M:SilDev.InputDevice.GetKeyName(SilDev.VirtualKeys)">
+        <member name="M:SilDev.InputDevice.GetKeyName(SilDev.VirtualKey)">
             <summary>
-                Returns the <see cref="T:System.String"/> representation of the <see cref="T:SilDev.VirtualKeys"/> value.
+                Returns the <see cref="T:System.String"/> representation of the <see cref="T:SilDev.VirtualKey"/> value.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.VirtualKeys"/> value.
+                The <see cref="T:SilDev.VirtualKey"/> value.
             </param>
         </member>
         <member name="M:SilDev.InputDevice.GetKeyName(System.UInt16)">
@@ -9072,12 +9356,12 @@
                 The <see cref="T:System.UInt16"/> representation of a Virtual-Key code.
             </param>
         </member>
-        <member name="M:SilDev.InputDevice.GetScanCode(SilDev.VirtualKeys,System.Boolean)">
+        <member name="M:SilDev.InputDevice.GetScanCode(SilDev.VirtualKey,System.Boolean)">
             <summary>
                 Returns the Virtual-Key scan code.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.VirtualKeys"/> value.
+                The <see cref="T:SilDev.VirtualKey"/> value.
             </param>
         </member>
         <member name="M:SilDev.InputDevice.GetScanCode(System.UInt16,System.Boolean)">
@@ -9088,13 +9372,13 @@
                 The <see cref="T:System.UInt16"/> representation of a Virtual-Key code.
             </param>
         </member>
-        <member name="M:SilDev.InputDevice.GetKeyState(SilDev.VirtualKeys)">
+        <member name="M:SilDev.InputDevice.GetKeyState(SilDev.VirtualKey)">
             <summary>
                 Determines whether a key is up or down at the time the function is called, and whether the
-                key was pressed after a previous call to <see cref="M:SilDev.InputDevice.GetKeyState(SilDev.VirtualKeys)"/>.
+                key was pressed after a previous call to <see cref="M:SilDev.InputDevice.GetKeyState(SilDev.VirtualKey)"/>.
             </summary>
             <param name="key">
-                The <see cref="T:SilDev.VirtualKeys"/> value to check.
+                The <see cref="T:SilDev.VirtualKey"/> value to check.
             </param>
         </member>
         <member name="M:SilDev.InputDevice.GetKeyState(System.UInt16)">
@@ -9121,7 +9405,7 @@
                 were pressed.
             </summary>
         </member>
-        <member name="M:SilDev.InputDevice.PostKeyState(System.IntPtr,SilDev.VirtualKeys,SilDev.VirtualKeyStates,System.Boolean)">
+        <member name="M:SilDev.InputDevice.PostKeyState(System.IntPtr,SilDev.VirtualKey,SilDev.VirtualKeyState,System.Boolean)">
             <summary>
                 Places (posts) the specified key in the message queue associated with the thread that created
                 the specified window and returns without waiting for the thread to process the message.
@@ -9139,7 +9423,7 @@
                 true to post the scan code of the specified key; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.InputDevice.SendKeyState(System.IntPtr,SilDev.VirtualKeys,SilDev.VirtualKeyStates,System.Boolean)">
+        <member name="M:SilDev.InputDevice.SendKeyState(System.IntPtr,SilDev.VirtualKey,SilDev.VirtualKeyState,System.Boolean)">
             <summary>
                 Sends the specified key to a window. This function calls the window procedure for the
                 specified window and does not return until the window procedure has processed the message.
@@ -9276,11 +9560,27 @@
                 Provides functionality for playing WAV files and controlling the volume of applications.
             </summary>
         </member>
+        <member name="M:SilDev.Media.PlayWave(System.String)">
+            <summary>
+                Plays audio data from the specified path.
+            </summary>
+            <param name="path">
+                The sound data to play.
+            </param>
+        </member>
         <member name="M:SilDev.Media.PlayWave(System.IO.Stream)">
             <summary>
                 Plays audio data from the specified stream.
             </summary>
             <param name="stream">
+                The sound data to play.
+            </param>
+        </member>
+        <member name="M:SilDev.Media.PlayWaveAsync(System.String)">
+            <summary>
+                Plays audio data from the specified path.
+            </summary>
+            <param name="path">
                 The sound data to play.
             </param>
         </member>
@@ -9599,16 +9899,29 @@
         </member>
         <member name="M:SilDev.MemoryException.#ctor">
             <summary>
-                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class.
+                Initializes a new instance of the <see cref="T:SilDev.MemoryException"/> class.
             </summary>
         </member>
         <member name="M:SilDev.MemoryException.#ctor(System.String)">
             <summary>
-                Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
+                Initializes a new instance of the <see cref="T:SilDev.MemoryException"/> class
                 with a specified error message.
             </summary>
             <param name="message">
                 The message that describes the error.
+            </param>
+        </member>
+        <member name="M:SilDev.MemoryException.#ctor(System.String,System.Exception)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.MemoryException"/> class
+                with a specified error message and the exception that is the cause of
+                this exception.
+            </summary>
+            <param name="message">
+                The message that describes the error.
+            </param>
+            <param name="innerException">
+                The exception that is the cause of the current exception, or a null reference.
             </param>
         </member>
         <member name="M:SilDev.MemoryException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
@@ -9639,12 +9952,12 @@
                 Provides functionality for the access of internet resources.
             </summary>
         </member>
-        <member name="T:SilDev.NetEx.DnsOptions">
+        <member name="T:SilDev.NetEx.DnsOption">
             <summary>
                 Provides options for specifying a Domain Name System provider.
             </summary>
         </member>
-        <member name="F:SilDev.NetEx.DnsOptions.Cloudflare">
+        <member name="F:SilDev.NetEx.DnsOption.Cloudflare">
             <summary>
                 Partnership between Cloudflare and APNIC. Cloudflare runs one of the world’s largest,
                 fastest networks. APNIC is a non-profit organization managing IP address allocation
@@ -9652,14 +9965,14 @@
                 IP address (1.1.1.1). Both were motivated by a mission to help build a better Internet.
             </summary>
         </member>
-        <member name="F:SilDev.NetEx.DnsOptions.Google">
+        <member name="F:SilDev.NetEx.DnsOption.Google">
             <summary>
                 A free, global DNS resolution service that you can use as an alternative to your current
                 DNS provider. In addition to traditional DNS over UDP or TCP, Google also provide
                 DNS-over-HTTPS API.
             </summary>
         </member>
-        <member name="P:SilDev.NetEx.InternalDownloadMirrors">
+        <member name="F:SilDev.NetEx.InternalDownloadMirrors">
             <summary>
                 Gets internal download mirrors.
             </summary>
@@ -9679,7 +9992,7 @@
                 Gets the last result defined in the previous call to the <see cref="M:SilDev.NetEx.Ping(System.Uri,System.Int32)"/> function.
             </summary>
         </member>
-        <member name="M:SilDev.NetEx.GetDnsAddresses(SilDev.NetEx.DnsOptions)">
+        <member name="M:SilDev.NetEx.GetDnsAddresses(SilDev.NetEx.DnsOption)">
             <summary>
                 Returns the specified Domain Name System server addresses.
             </summary>
@@ -9719,7 +10032,7 @@
                 The URL string.
             </param>
         </member>
-        <member name="M:SilDev.NetEx.InternetIsAvailable(System.Boolean,SilDev.NetEx.DnsOptions,System.Int32)">
+        <member name="M:SilDev.NetEx.InternetIsAvailable(System.Boolean,SilDev.NetEx.DnsOption,System.Int32)">
             <summary>
                 Checks the current network connection.
             </summary>
@@ -11967,6 +12280,11 @@
                 Gets whether a transfer is in progress.
             </summary>
         </member>
+        <member name="M:SilDev.NetEx.AsyncTransfer.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.NetEx.AsyncTransfer"/>.
+            </summary>
+        </member>
         <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
             <summary>
                 Downloads the specified internet resource to a local file.
@@ -13130,132 +13448,132 @@
                 The contextual information about the source or destination.
             </param>
         </member>
-        <member name="T:SilDev.MachineTypes">
+        <member name="T:SilDev.MachineType">
             <summary>
                 Provides enumerated values of the machine field values that specifies its CPU type.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.Unknown">
+        <member name="F:SilDev.MachineType.Unknown">
             <summary>
                 The contents of this field are assumed to be applicable to any machine type.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.AM33">
+        <member name="F:SilDev.MachineType.AM33">
             <summary>
                 Matsushita AM33.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.AMD64">
+        <member name="F:SilDev.MachineType.AMD64">
             <summary>
                 AMD64 (x64).
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.ARM">
+        <member name="F:SilDev.MachineType.ARM">
             <summary>
                 ARM little endian.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.ARM64">
+        <member name="F:SilDev.MachineType.ARM64">
             <summary>
                 ARM64 little endian.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.ARMNT">
+        <member name="F:SilDev.MachineType.ARMNT">
             <summary>
                 ARM Thumb-2 little endian.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.EBC">
+        <member name="F:SilDev.MachineType.EBC">
             <summary>
                 EFI byte code.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.I386">
+        <member name="F:SilDev.MachineType.I386">
             <summary>
                 Intel 386 or later processors and compatible processors.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.IA64">
+        <member name="F:SilDev.MachineType.IA64">
             <summary>
                 Intel Itanium processor family.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.M32R">
+        <member name="F:SilDev.MachineType.M32R">
             <summary>
                 Mitsubishi M32R little endian.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.MIPS16">
+        <member name="F:SilDev.MachineType.MIPS16">
             <summary>
                 MIPS16.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.MIPSFPU">
+        <member name="F:SilDev.MachineType.MIPSFPU">
             <summary>
                 MIPS with FPU.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.MIPSFPU16">
+        <member name="F:SilDev.MachineType.MIPSFPU16">
             <summary>
                 MIPS16 with FPU.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.POWERPC">
+        <member name="F:SilDev.MachineType.POWERPC">
             <summary>
                 Power PC little endian.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.POWERPCFP">
+        <member name="F:SilDev.MachineType.POWERPCFP">
             <summary>
                 Power PC with floating point support.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.R4000">
+        <member name="F:SilDev.MachineType.R4000">
             <summary>
                 MIPS little endian.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.RISCV32">
+        <member name="F:SilDev.MachineType.RISCV32">
             <summary>
                 RISC-V 32-bit address space.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.RISCV64">
+        <member name="F:SilDev.MachineType.RISCV64">
             <summary>
                 RISC-V 64-bit address space.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.RISCV128">
+        <member name="F:SilDev.MachineType.RISCV128">
             <summary>
                 RISC-V 128-bit address space.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.SH3">
+        <member name="F:SilDev.MachineType.SH3">
             <summary>
                 Hitachi SH3.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.SH3DSP">
+        <member name="F:SilDev.MachineType.SH3DSP">
             <summary>
                 Hitachi SH3 DSP.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.SH4">
+        <member name="F:SilDev.MachineType.SH4">
             <summary>
                 Hitachi SH4.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.SH5">
+        <member name="F:SilDev.MachineType.SH5">
             <summary>
                 Hitachi SH5.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.THUMB">
+        <member name="F:SilDev.MachineType.THUMB">
             <summary>
                 ARM Thumb.
             </summary>
         </member>
-        <member name="F:SilDev.MachineTypes.WCEMIPSV2">
+        <member name="F:SilDev.MachineType.WCEMIPSV2">
             <summary>
                 MIPS little-endian WCE v2.
             </summary>
@@ -14604,62 +14922,62 @@
                 The full paths of the keys to export.
             </param>
         </member>
-        <member name="T:SilDev.SizeOptions">
+        <member name="T:SilDev.SizeOption">
             <summary>
                 Provides size format options.
             </summary>
         </member>
-        <member name="F:SilDev.SizeOptions.None">
+        <member name="F:SilDev.SizeOption.None">
             <summary>
                 Determines that the format is not changed.
             </summary>
         </member>
-        <member name="F:SilDev.SizeOptions.Trim">
+        <member name="F:SilDev.SizeOption.Trim">
             <summary>
                 Determines that all zeros are removed after the comma.
             </summary>
         </member>
-        <member name="F:SilDev.SizeOptions.Round">
+        <member name="F:SilDev.SizeOption.Round">
             <summary>
                 Determines that the value is rounded to the nearest integral value.
             </summary>
         </member>
-        <member name="T:SilDev.SizeUnits">
+        <member name="T:SilDev.SizeUnit">
             <summary>
                 Provides labels for size units.
             </summary>
         </member>
-        <member name="F:SilDev.SizeUnits.Byte">
+        <member name="F:SilDev.SizeUnit.Byte">
             <summary>
                 Stands for byte.
             </summary>
         </member>
-        <member name="F:SilDev.SizeUnits.KB">
+        <member name="F:SilDev.SizeUnit.KB">
             <summary>
                 Stands for kilobyte or kibibyte.
             </summary>
         </member>
-        <member name="F:SilDev.SizeUnits.MB">
+        <member name="F:SilDev.SizeUnit.MB">
             <summary>
                 Stands for megabyte or mebibyte.
             </summary>
         </member>
-        <member name="F:SilDev.SizeUnits.GB">
+        <member name="F:SilDev.SizeUnit.GB">
             <summary>
                 Stands for gigabyte or gibibyte.
             </summary>
         </member>
-        <member name="F:SilDev.SizeUnits.TB">
+        <member name="F:SilDev.SizeUnit.TB">
             <summary>
                 Stands for terabyte or tebibyte.
             </summary>
         </member>
-        <member name="F:SilDev.SizeUnits.PB">
+        <member name="F:SilDev.SizeUnit.PB">
             <summary>
                 Stands for petabyte or pebibyte.
             </summary>
         </member>
-        <member name="F:SilDev.SizeUnits.EB">
+        <member name="F:SilDev.SizeUnit.EB">
             <summary>
                 Stands for exabyte or exbibyte.
             </summary>
@@ -14689,6 +15007,9 @@
             <param name="args">
                 An array of objects to format.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder, format or args is null.
+            </exception>
         </member>
         <member name="M:SilDev.Reorganize.AppendFormatLine(System.Text.StringBuilder,System.String,System.Object[])">
             <summary>
@@ -14706,11 +15027,14 @@
             <param name="args">
                 An array of objects to format.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder, format or args is null.
+            </exception>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnits,System.Boolean,System.Boolean,SilDev.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnit,System.Boolean,System.Boolean,SilDev.SizeOption)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.SizeUnits"/>.
+                value in the specified <see cref="T:SilDev.SizeUnit"/>.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -14727,10 +15051,10 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnits,System.Boolean,SilDev.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnit,System.Boolean,SilDev.SizeOption)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.SizeUnits"/>.
+                value in the specified <see cref="T:SilDev.SizeUnit"/>.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -14744,10 +15068,10 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnits,SilDev.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnit,SilDev.SizeOption)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
-                value in the specified <see cref="T:SilDev.SizeUnits"/>.
+                value in the specified <see cref="T:SilDev.SizeUnit"/>.
             </summary>
             <param name="value">
                 The value to be converted.
@@ -14758,7 +15082,7 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,System.Boolean,SilDev.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,System.Boolean,SilDev.SizeOption)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
@@ -14776,7 +15100,7 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,SilDev.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,SilDev.SizeOption)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
@@ -14791,7 +15115,7 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeOptions)">
+        <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeOption)">
             <summary>
                 Converts this numeric value into a string that represents the number expressed as a size
                 value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
@@ -14879,7 +15203,7 @@
             <summary>
                 Increments the length of a platform-specific type number with the specified value.
             </summary>
-            <param name="ptr">
+            <param name="intPointer">
                 The platform-specific type to change.
             </param>
             <param name="value">
@@ -15491,40 +15815,83 @@
                 Specifies a set of values that are used when you create a shell link.
             </summary>
         </member>
-        <member name="F:SilDev.ShellLinkInfo.Description">
+        <member name="P:SilDev.ShellLinkInfo.Description">
             <summary>
                 The description for the link.
             </summary>
         </member>
-        <member name="F:SilDev.ShellLinkInfo.Arguments">
+        <member name="P:SilDev.ShellLinkInfo.Arguments">
             <summary>
                 The arguments which applies when the link is started.
             </summary>
         </member>
-        <member name="F:SilDev.ShellLinkInfo.TargetPath">
+        <member name="P:SilDev.ShellLinkInfo.TargetPath">
             <summary>
                 The file or directory to be linked.
             </summary>
         </member>
-        <member name="F:SilDev.ShellLinkInfo.WorkingDirectory">
+        <member name="P:SilDev.ShellLinkInfo.WorkingDirectory">
             <summary>
                 The working directory for the link to be started.
             </summary>
         </member>
-        <member name="F:SilDev.ShellLinkInfo.IconLocation">
+        <member name="P:SilDev.ShellLinkInfo.IconLocation">
             <summary>
                 The icon resource path and resource identifier.
             </summary>
         </member>
-        <member name="F:SilDev.ShellLinkInfo.ShowState">
+        <member name="P:SilDev.ShellLinkInfo.ShowState">
             <summary>
                 The show state of the window.
             </summary>
         </member>
-        <member name="F:SilDev.ShellLinkInfo.LinkPath">
+        <member name="P:SilDev.ShellLinkInfo.LinkPath">
             <summary>
                 The fully qualified name of the link.
             </summary>
+        </member>
+        <member name="M:SilDev.ShellLinkInfo.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+        </member>
+        <member name="M:SilDev.ShellLinkInfo.Equals(SilDev.ShellLinkInfo)">
+            <summary>
+                Determines whether this instance have same values as the specified <see cref="T:SilDev.ShellLinkInfo"/> instance.
+            </summary>
+            <param name="other">
+                The <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.ShellLinkInfo.Equals(System.Object)">
+            <summary>
+                Determines whether this instance have same values as the specified <see cref="T:System.Object"/>.
+            </summary>
+            <param name="obj">
+                The  <see cref="T:System.Object"/> to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.ShellLinkInfo.op_Equality(SilDev.ShellLinkInfo,SilDev.ShellLinkInfo)">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.ShellLinkInfo"/> instances have same values.
+            </summary>
+            <param name="a">
+                The first <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
+            </param>
+            <param name="b">
+                The second <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.ShellLinkInfo.op_Inequality(SilDev.ShellLinkInfo,SilDev.ShellLinkInfo)">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.ShellLinkInfo"/> instances have different values.
+            </summary>
+            <param name="a">
+                The first <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
+            </param>
+            <param name="b">
+                The second <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
+            </param>
         </member>
         <member name="T:SilDev.ShellLink">
             <summary>
@@ -15632,20 +15999,20 @@
                 The taskbar is on the right side.
             </summary>
         </member>
-        <member name="T:SilDev.TaskBarProgressFlags">
+        <member name="T:SilDev.TaskBarProgressState">
             <summary>
                 Provides enumerated options that control the current state of the progress
                 button.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBarProgressFlags.NoProgress">
+        <member name="F:SilDev.TaskBarProgressState.NoProgress">
             <summary>
                 Stops displaying progress and returns the button to its normal state. Call this
                 method with this flag to dismiss the progress bar when the operation is complete
                 or canceled.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBarProgressFlags.Indeterminate">
+        <member name="F:SilDev.TaskBarProgressState.Indeterminate">
             <summary>
                 The progress indicator does not grow in size, but cycles repeatedly along the
                 length of the taskbar button. This indicates activity without specifying what
@@ -15653,14 +16020,14 @@
                 no prediction as to how long the operation will take.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBarProgressFlags.Normal">
+        <member name="F:SilDev.TaskBarProgressState.Normal">
             <summary>
                 The progress indicator grows in size from left to right in proportion to the
                 estimated amount of the operation completed. This is a determinate progress
                 indicator; a prediction is being made as to the duration of the operation.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBarProgressFlags.Error">
+        <member name="F:SilDev.TaskBarProgressState.Error">
             <summary>
                 The progress indicator turns red to show that an error has occurred in one of
                 the windows that is broadcasting progress. This is a determinate state. If the
@@ -15668,7 +16035,7 @@
                 determinate display of a generic percentage not indicative of actual progress.
             </summary>
         </member>
-        <member name="F:SilDev.TaskBarProgressFlags.Paused">
+        <member name="F:SilDev.TaskBarProgressState.Paused">
             <summary>
                 The progress indicator turns yellow to show that progress is currently stopped
                 in one of the windows but can be resumed by the user. No error condition exists
@@ -15784,14 +16151,14 @@
                 Provides static methods to manage a progress bar hosted in a taskbar button.
             </summary>
         </member>
-        <member name="M:SilDev.TaskBarProgress.SetState(System.IntPtr,SilDev.TaskBarProgressFlags)">
+        <member name="M:SilDev.TaskBarProgress.SetState(System.IntPtr,SilDev.TaskBarProgressState)">
             <summary>
                 Sets the type and state of the progress indicator displayed on a taskbar button.
             </summary>
             <param name="hWnd">
                 The handle of the window in which the progress of an operation is being shown.
             </param>
-            <param name="flags">
+            <param name="state">
                 The flag that control the current state of the progress button.
             </param>
         </member>
@@ -16189,38 +16556,38 @@
                 <see cref="F:SilDev.WinApi.AnimateWindowFlags.Blend"/>.
             </summary>
         </member>
-        <member name="T:SilDev.WinApi.AppBarMessageOptions">
+        <member name="T:SilDev.WinApi.AppBarMessageOption">
             <summary>
                 Provides enumerated values of appbar messages.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.New">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.New">
             <summary>
                 Registers a new appbar and specifies the message identifier that the system
                 should use to send notification messages to the appbar
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.Remove">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.Remove">
             <summary>
                 Unregisters an appbar, removing the bar from the system's internal list.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.QueryPos">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.QueryPos">
             <summary>
                 Requests a size and screen position for an appbar.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.SetPos">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.SetPos">
             <summary>
                 Sets the size and screen position of an appbar.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.GetState">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.GetState">
             <summary>
                 Retrieves the autohide and always-on-top states of the Windows taskbar.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.GetTaskBarPos">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.GetTaskBarPos">
             <summary>
                 Retrieves the bounding rectangle of the Windows taskbar. Note that this applies only
                 to the system taskbar. Other objects, particularly toolbars supplied with third-party
@@ -16230,56 +16597,56 @@
                 application-, use the GetMonitorInfo function.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.Activate">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.Activate">
             <summary>
                 Notifies the system to activate or deactivate an appbar. The lParam member of the
                 <see cref="T:SilDev.WinApi.AppBarData"/> pointed to by pData is set to TRUE to activate or FALSE to
                 deactivate.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.GetAutoHideBar">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.GetAutoHideBar">
             <summary>
                 Retrieves the handle to the autohide appbar associated with a particular edge of the
                 screen.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBar">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBar">
             <summary>
                 Registers or unregisters an autohide appbar for an edge of the screen.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.WindowPosChanged">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.WindowPosChanged">
             <summary>
                 Notifies the system when an appbar's position has changed.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.SetState">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.SetState">
             <summary>
                 Sets the state of the appbar's autohide and always-on-top attributes.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.GetAutoHideBarEx">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.GetAutoHideBarEx">
             <summary>
                 Retrieves the handle to the autohide appbar associated with a particular edge of a
                 particular monitor.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBarEx">
+        <member name="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBarEx">
             <summary>
                 Registers or unregisters an autohide appbar for an edge of a particular monitor.
             </summary>
         </member>
-        <member name="T:SilDev.WinApi.DuplicateOptions">
+        <member name="T:SilDev.WinApi.DuplicateOption">
             <summary>
                 Provides enumerated options of handle duplication.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.DuplicateOptions.CloseSource">
+        <member name="F:SilDev.WinApi.DuplicateOption.CloseSource">
             <summary>
                 Closes the source handle. This occurs regardless of any error status returned.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.DuplicateOptions.SameAccess">
+        <member name="F:SilDev.WinApi.DuplicateOption.SameAccess">
             <summary>
                 Ignores the dwDesiredAccess parameter. The duplicate handle has the same access as the
                 source handle.
@@ -16389,18 +16756,18 @@
                 Allocates memory using large page support.
             </summary>
         </member>
-        <member name="T:SilDev.WinApi.MemFreeTypes">
+        <member name="T:SilDev.WinApi.MemFreeType">
             <summary>
                 Provides enumerated free type values of memory allocation.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.MemFreeTypes.Decommit">
+        <member name="F:SilDev.WinApi.MemFreeType.Decommit">
             <summary>
                 Decommits the specified region of committed pages. After the operation, the
                 pages are in the reserved state.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.MemFreeTypes.Release">
+        <member name="F:SilDev.WinApi.MemFreeType.Release">
             <summary>
                 Releases the specified region of pages. After the operation, the pages are in
                 the free state.
@@ -16782,29 +17149,29 @@
                 Excludes child windows, if any, from the repainting operation.
             </summary>
         </member>
-        <member name="T:SilDev.WinApi.ServiceErrors">
+        <member name="T:SilDev.WinApi.ServiceError">
             <summary>
                 Provides enumerated values of service errors.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ServiceErrors.Critical">
+        <member name="F:SilDev.WinApi.ServiceError.Critical">
             <summary>
                 The startup program logs the error in the event log, if possible. If the last-known-good
                 configuration is being started, the startup operation fails. Otherwise, the system is
                 restarted with the last-known good configuration.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ServiceErrors.Ignore">
+        <member name="F:SilDev.WinApi.ServiceError.Ignore">
             <summary>
                 The startup program ignores the error and continues the startup operation.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ServiceErrors.Normal">
+        <member name="F:SilDev.WinApi.ServiceError.Normal">
             <summary>
                 The startup program logs the error in the event log but continues the startup operation.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ServiceErrors.Severe">
+        <member name="F:SilDev.WinApi.ServiceError.Severe">
             <summary>
                 The startup program logs the error in the event log. If the last-known-good configuration is
                 being started, the startup operation continues. Otherwise, the system is restarted with the
@@ -16903,27 +17270,27 @@
                 Displays the window.
             </summary>
         </member>
-        <member name="T:SilDev.WinApi.ShowScrollBarOptions">
+        <member name="T:SilDev.WinApi.ShowScrollBarOption">
             <summary>
                 Provides enumerated values of scroll bar show statements.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Horizontal">
+        <member name="F:SilDev.WinApi.ShowScrollBarOption.Horizontal">
             <summary>
                 Shows or hides a window's standard horizontal scroll bars.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Vertical">
+        <member name="F:SilDev.WinApi.ShowScrollBarOption.Vertical">
             <summary>
                 Shows or hides a window's standard vertical scroll bar.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Control">
+        <member name="F:SilDev.WinApi.ShowScrollBarOption.Control">
             <summary>
                 Shows or hides a scroll bar control. The hwnd parameter must be the handle to the scroll bar control.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.ShowScrollBarOptions.Both">
+        <member name="F:SilDev.WinApi.ShowScrollBarOption.Both">
             <summary>
                 Shows or hides a window's standard horizontal and vertical scroll bars.
             </summary>
@@ -18992,7 +19359,7 @@
                 object type, see the following Remarks section.
                 <para>
                     This parameter is ignored if the dwOptions parameter specifies the
-                    <see cref="F:SilDev.WinApi.DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
+                    <see cref="F:SilDev.WinApi.DuplicateOption.SameAccess"/> flag. Otherwise, the flags that
                     can be specified depend on the type of object whose handle is to be duplicated.
                 </para>
             </param>
@@ -19003,7 +19370,7 @@
             </param>
             <param name="dwOptions">
                 Optional actions. This parameter can be zero, or any combination of
-                <see cref="T:SilDev.WinApi.DuplicateOptions"/>.
+                <see cref="T:SilDev.WinApi.DuplicateOption"/>.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.DwmExtendFrameIntoClientArea(System.IntPtr,SilDev.WinApi.ThemeMargins@)">
@@ -19681,6 +20048,9 @@
                 terminating null character. If the buffer pointed to by the lpName parameter is too small, this
                 variable contains the required size.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                lpSystemName or lpName is null.
+            </exception>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.LookupPrivilegeValue(System.String,System.String,SilDev.WinApi.LuId@)">
             <summary>
@@ -20638,7 +21008,7 @@
                 A pointer that specifies attributes to set.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeHelper.SHAppBarMessage(SilDev.WinApi.AppBarMessageOptions,SilDev.WinApi.AppBarData@)">
+        <member name="M:SilDev.WinApi.NativeHelper.SHAppBarMessage(SilDev.WinApi.AppBarMessageOption,SilDev.WinApi.AppBarData@)">
             <summary>
                 Sends an appbar message to the system.
             </summary>
@@ -20685,7 +21055,7 @@
                 decide how to handle it.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeHelper.ShowScrollBar(System.IntPtr,SilDev.WinApi.ShowScrollBarOptions,System.Boolean)">
+        <member name="M:SilDev.WinApi.NativeHelper.ShowScrollBar(System.IntPtr,SilDev.WinApi.ShowScrollBarOption,System.Boolean)">
             <summary>
                 The ShowScrollBar function shows or hides the specified scroll bar.
             </summary>
@@ -20798,7 +21168,7 @@
                 The memory protection for the region of pages to be allocated.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeHelper.VirtualFreeEx(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.MemFreeTypes)">
+        <member name="M:SilDev.WinApi.NativeHelper.VirtualFreeEx(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.MemFreeType)">
             <summary>
                 Releases, decommits, or releases and decommits a region of memory within the virtual address
                 space of a specified process.
@@ -21116,7 +21486,7 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.CreateService(System.IntPtr,System.String,System.String,SilDev.WinApi.ServiceAccessRights,SilDev.WinApi.ServiceTypes,SilDev.WinApi.ServiceBootFlags,SilDev.WinApi.ServiceErrors,System.String,System.String,System.IntPtr,System.String,System.String,System.String)">
+        <member name="M:SilDev.WinApi.NativeMethods.CreateService(System.IntPtr,System.String,System.String,SilDev.WinApi.ServiceAccessRights,SilDev.WinApi.ServiceTypes,SilDev.WinApi.ServiceBootFlags,SilDev.WinApi.ServiceError,System.String,System.String,System.IntPtr,System.String,System.String,System.String)">
             <summary>
                 Creates a service object and adds it to the specified service control manager database.
             </summary>
@@ -21343,7 +21713,7 @@
                 object type, see the following Remarks section.
                 <para>
                     This parameter is ignored if the dwOptions parameter specifies the
-                    <see cref="F:SilDev.WinApi.DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
+                    <see cref="F:SilDev.WinApi.DuplicateOption.SameAccess"/> flag. Otherwise, the flags that
                     can be specified depend on the type of object whose handle is to be duplicated.
                 </para>
             </param>
@@ -21354,7 +21724,7 @@
             </param>
             <param name="dwOptions">
                 Optional actions. This parameter can be zero, or any combination of
-                <see cref="T:SilDev.WinApi.DuplicateOptions"/>.
+                <see cref="T:SilDev.WinApi.DuplicateOption"/>.
             </param>
             <returns>
                 If the function succeeds, the return value is nonzero.
@@ -23305,7 +23675,7 @@
                 Specifies the size, in bytes, of the data pointed to by pvAttribute.
             </param>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.SHAppBarMessage(SilDev.WinApi.AppBarMessageOptions,SilDev.WinApi.AppBarData@)">
+        <member name="M:SilDev.WinApi.NativeMethods.SHAppBarMessage(SilDev.WinApi.AppBarMessageOption,SilDev.WinApi.AppBarData@)">
             <summary>
                 Sends an appbar message to the system.
             </summary>
@@ -23403,7 +23773,7 @@
             <returns>
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.ShowScrollBar(System.IntPtr,SilDev.WinApi.ShowScrollBarOptions,System.Boolean)">
+        <member name="M:SilDev.WinApi.NativeMethods.ShowScrollBar(System.IntPtr,SilDev.WinApi.ShowScrollBarOption,System.Boolean)">
             <summary>
                 The ShowScrollBar function shows or hides the specified scroll bar.
             </summary>
@@ -23581,7 +23951,7 @@
                 of pages.
             </returns>
         </member>
-        <member name="M:SilDev.WinApi.NativeMethods.VirtualFreeEx(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.MemFreeTypes)">
+        <member name="M:SilDev.WinApi.NativeMethods.VirtualFreeEx(System.IntPtr,System.IntPtr,System.IntPtr,SilDev.WinApi.MemFreeType)">
             <summary>
                 Releases, decommits, or releases and decommits a region of memory within the virtual address
                 space of a specified process.
@@ -23969,7 +24339,7 @@
                 page to see if you need to provide an hWind value.
             </summary>
         </member>
-        <member name="F:SilDev.WinApi.AppBarData.uCallbackMessage">
+        <member name="F:SilDev.WinApi.AppBarData.uCallbackMessag">
             <summary>
                 An application-defined message identifier. The application uses the specified identifier for
                 notification messages that it sends to the appbar identified by the hWnd member.
@@ -23980,12 +24350,12 @@
                 A value that specifies an edge of the screen.
                 <para>
                     This member is used when sending one of these messages:
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.GetAutoHideBar"/>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBar"/>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.GetAutoHideBarEx"/>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBarEx"/>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.QueryPos"/>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetPos"/>.
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.GetAutoHideBar"/>
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBar"/>
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.GetAutoHideBarEx"/>
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBarEx"/>
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.QueryPos"/>
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetPos"/>.
                 </para>
             </summary>
         </member>
@@ -23993,15 +24363,15 @@
             <summary>
                 A <see cref="T:System.Drawing.Rectangle"/> structure whose use varies depending on the message:
                 <para>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.GetTaskBarPos"/>,
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.QueryPos"/>,
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetPos"/>: The bounding rectangle, in screen
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.GetTaskBarPos"/>,
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.QueryPos"/>,
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetPos"/>: The bounding rectangle, in screen
                     coordinates, of an appbar or the Windows taskbar.
                 </para>
                 <para>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.GetAutoHideBarEx"/>,
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBarEx"/>,
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetPos"/>: The monitor on which the operation
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.GetAutoHideBarEx"/>,
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBarEx"/>,
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetPos"/>: The monitor on which the operation
                     is being performed.
                 </para>
             </summary>
@@ -24010,18 +24380,18 @@
             <summary>
                 A message-dependent value. This member is used with these messages:
                 <para>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBar"/>: Registers or unregisters an
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBar"/>: Registers or unregisters an
                     autohide appbar for a given edge of the screen. If the system has multiple monitors,
                     the monitor that contains the primary taskbar is used.
                 </para>
                 <para>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBarEx"/>: Registers or unregisters an
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBarEx"/>: Registers or unregisters an
                     autohide appbar for a given edge of the screen. This message extends
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetAutoHideBar"/> by enabling you to specify a
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetAutoHideBar"/> by enabling you to specify a
                     particular monitor, for use in multiple monitor situations.
                 </para>
                 <para>
-                    <see cref="F:SilDev.WinApi.AppBarMessageOptions.SetState"/>: Sets the autohide and always-on-top
+                    <see cref="F:SilDev.WinApi.AppBarMessageOption.SetState"/>: Sets the autohide and always-on-top
                     states of the Windows taskbar.
                 </para>
             </summary>
