@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2019-10-15 11:45
+// Version:  2019-10-21 15:09
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,6 +20,7 @@ namespace SilDev
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -29,7 +30,7 @@ namespace SilDev
     /// <summary>
     ///     Provides size format options.
     /// </summary>
-    public enum SizeOptions
+    public enum SizeOption
     {
         /// <summary>
         ///     Determines that the format is not changed.
@@ -51,8 +52,7 @@ namespace SilDev
     ///     Provides labels for size units.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    [SuppressMessage("ReSharper", "CommentTypo")]
-    public enum SizeUnits
+    public enum SizeUnit
     {
         /// <summary>
         ///     Stands for byte.
@@ -114,8 +114,17 @@ namespace SilDev
         /// <param name="args">
         ///     An array of objects to format.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stringBuilder, format or args is null.
+        /// </exception>
         public static StringBuilder AppendFormatLine(this StringBuilder stringBuilder, IFormatProvider provider, string format, params object[] args)
         {
+            if (stringBuilder == null)
+                throw new ArgumentNullException(nameof(stringBuilder));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
             var sb = stringBuilder;
             sb.AppendFormat(provider, format, args);
             sb.AppendLine();
@@ -137,17 +146,26 @@ namespace SilDev
         /// <param name="args">
         ///     An array of objects to format.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stringBuilder, format or args is null.
+        /// </exception>
         public static StringBuilder AppendFormatLine(this StringBuilder stringBuilder, string format, params object[] args)
         {
+            if (stringBuilder == null)
+                throw new ArgumentNullException(nameof(stringBuilder));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
             var sb = stringBuilder;
-            sb.AppendFormat(format, args);
+            sb.AppendFormat(CultureInfo.InvariantCulture, format, args);
             sb.AppendLine();
             return sb;
         }
 
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnits"/>.
+        ///     value in the specified <see cref="SizeUnit"/>.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -163,17 +181,17 @@ namespace SilDev
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
-        public static string FormatSize(this long value, SizeUnits unit, bool binary = true, bool suffix = true, SizeOptions sizeOptions = SizeOptions.None)
+        public static string FormatSize(this long value, SizeUnit unit, bool binary = true, bool suffix = true, SizeOption sizeOptions = SizeOption.None)
         {
             if (value < 0)
                 return $"-{Math.Abs(value).FormatSize(unit, binary, suffix, sizeOptions)}";
-            var f = sizeOptions != SizeOptions.None ? "0.##" : "0.00";
+            var f = sizeOptions != SizeOption.None ? "0.##" : "0.00";
             if (value == 0)
-                return $"{value.ToString(f)} bytes";
+                return $"{value.ToString(f, CultureInfo.InvariantCulture)} bytes";
             var d = value / Math.Pow(binary ? 1024 : 1000, (int)unit);
-            if (sizeOptions == SizeOptions.Round)
+            if (sizeOptions == SizeOption.Round)
                 d = Math.Round(d);
-            var s = d.ToString(f);
+            var s = d.ToString(f, CultureInfo.InvariantCulture);
             if (!suffix)
                 return s;
             s = $"{s} {unit}";
@@ -184,7 +202,7 @@ namespace SilDev
 
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnits"/>.
+        ///     value in the specified <see cref="SizeUnit"/>.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -197,12 +215,12 @@ namespace SilDev
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
-        public static string FormatSize(this long value, SizeUnits unit, bool binary, SizeOptions sizeOptions) =>
+        public static string FormatSize(this long value, SizeUnit unit, bool binary, SizeOption sizeOptions) =>
             value.FormatSize(unit, binary, true, sizeOptions);
 
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnits"/>.
+        ///     value in the specified <see cref="SizeUnit"/>.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -212,7 +230,7 @@ namespace SilDev
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
-        public static string FormatSize(this long value, SizeUnits unit, SizeOptions sizeOptions) =>
+        public static string FormatSize(this long value, SizeUnit unit, SizeOption sizeOptions) =>
             value.FormatSize(unit, true, true, sizeOptions);
 
         /// <summary>
@@ -231,13 +249,12 @@ namespace SilDev
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
-        public static string FormatSize(this long value, bool binary = true, bool suffix = true, SizeOptions sizeOptions = SizeOptions.None)
+        public static string FormatSize(this long value, bool binary = true, bool suffix = true, SizeOption sizeOptions = SizeOption.None)
         {
             if (value == 0)
-                return value.FormatSize(SizeUnits.Byte, binary, suffix, sizeOptions);
+                return value.FormatSize(SizeUnit.Byte, binary, suffix, sizeOptions);
             var i = (int)Math.Floor(Math.Log(Math.Abs(value), binary ? 1024 : 1000));
-            var s = value.FormatSize((SizeUnits)i, binary, suffix, sizeOptions);
-            return s;
+            return value.FormatSize((SizeUnit)i, binary, suffix, sizeOptions);
         }
 
         /// <summary>
@@ -253,8 +270,8 @@ namespace SilDev
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
-        public static string FormatSize(this long value, bool binary, SizeOptions sizeOptions) =>
-            value.FormatSize(SizeUnits.Byte, binary, true, sizeOptions);
+        public static string FormatSize(this long value, bool binary, SizeOption sizeOptions) =>
+            value.FormatSize(SizeUnit.Byte, binary, true, sizeOptions);
 
         /// <summary>
         ///     Converts this numeric value into a string that represents the number expressed as a size
@@ -266,7 +283,7 @@ namespace SilDev
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
-        public static string FormatSize(this long value, SizeOptions sizeOptions) =>
+        public static string FormatSize(this long value, SizeOption sizeOptions) =>
             value.FormatSize(true, true, sizeOptions);
 
         /// <summary>
@@ -379,6 +396,8 @@ namespace SilDev
         {
             try
             {
+                if (bytes == null)
+                    throw new ArgumentNullException(nameof(bytes));
                 object obj;
                 using (var ms = new MemoryStream())
                 {
@@ -399,17 +418,17 @@ namespace SilDev
         /// <summary>
         ///     Increments the length of a platform-specific type number with the specified value.
         /// </summary>
-        /// <param name="ptr">
+        /// <param name="intPointer">
         ///     The platform-specific type to change.
         /// </param>
         /// <param name="value">
         ///     The number to be incremented.
         /// </param>
-        public static IntPtr Increment(this IntPtr ptr, IntPtr value)
+        public static IntPtr Increment(this IntPtr intPointer, IntPtr value)
         {
             try
             {
-                return new IntPtr(IntPtr.Size == sizeof(int) ? ptr.ToInt32() + (int)value : ptr.ToInt64() + (long)value);
+                return new IntPtr(IntPtr.Size == sizeof(int) ? intPointer.ToInt32() + (int)value : intPointer.ToInt64() + (long)value);
             }
             catch (Exception ex)
             {
@@ -436,14 +455,30 @@ namespace SilDev
         /// </param>
         public static string Replace(this string str, string oldValue, string newValue, StringComparison comparisonType)
         {
-            var s = str;
-            Replace:
-            var i = s.IndexOf(oldValue, comparisonType);
-            if (i < 0)
-                return s;
-            s = s.Remove(i, oldValue.Length);
-            s = s.Insert(i, newValue);
-            goto Replace;
+            if (str == null)
+                return null;
+            if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(oldValue))
+                return str;
+            if (newValue == null)
+                newValue = string.Empty;
+            string s;
+            var q = new Queue<string>();
+            q.Enqueue(str);
+            do
+            {
+                s = q.Dequeue();
+                var i = s.IndexOf(oldValue, comparisonType);
+                if (i < 0)
+                {
+                    q.Clear();
+                    break;
+                }
+                s = s.Remove(i, oldValue.Length);
+                s = s.Insert(i, newValue);
+                q.Enqueue(s);
+            }
+            while (q.Any());
+            return s;
         }
 
         /// <summary>
@@ -456,9 +491,9 @@ namespace SilDev
         {
             if (string.IsNullOrWhiteSpace(str))
                 return str?.Trim();
+            var sb = new StringBuilder();
             var isWhiteSpace = false;
             var startFound = false;
-            var builder = new StringBuilder();
             foreach (var c in str)
             {
                 if (char.IsWhiteSpace(c))
@@ -474,11 +509,11 @@ namespace SilDev
                 }
                 if (!startFound)
                     continue;
-                builder.Append(c);
+                sb.Append(c);
             }
             if (isWhiteSpace)
-                builder.Length--;
-            return builder.ToString();
+                sb.Length--;
+            return sb.ToString();
         }
 
         /// <summary>
@@ -493,8 +528,7 @@ namespace SilDev
                 return str;
             var ca = str.ToCharArray();
             Array.Reverse(ca);
-            var s = new string(ca);
-            return s;
+            return new string(ca);
         }
 
         /// <summary>
@@ -511,10 +545,11 @@ namespace SilDev
         /// </param>
         public static string Trim(this string str, Font font, int width)
         {
-            var s = str;
+            var s = default(string);
             try
             {
                 const string suffix = "...";
+                s = str ?? throw new ArgumentNullException(nameof(str));
                 using (var g = Graphics.FromHwnd(IntPtr.Zero))
                 {
                     var x = Math.Floor(g.MeasureString(suffix, font).Width);
@@ -584,13 +619,8 @@ namespace SilDev
         /// <param name="splitOptions">
         ///     The split options.
         /// </param>
-        public static string[] Split(this string str, string separator = TextEx.NewLineFormats.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None)
-        {
-            if (string.IsNullOrEmpty(str))
-                return null;
-            var sa = str.Split(new[] { separator }, splitOptions);
-            return sa;
-        }
+        public static string[] Split(this string str, string separator = TextEx.NewLineFormats.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None) =>
+            string.IsNullOrEmpty(str) ? null : str.Split(new[] { separator }, splitOptions);
 
         /// <summary>
         ///     Splits a string into substrings based on <see cref="Environment.NewLine"/>.
@@ -648,8 +678,12 @@ namespace SilDev
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(str))
+                if (str == null)
                     throw new ArgumentNullException(nameof(str));
+                if (string.IsNullOrEmpty(str))
+                    throw new ArgumentInvalidException(nameof(str));
+                if (encoding == null)
+                    throw new ArgumentNullException(nameof(encoding));
                 return encoding.GetBytes(str);
             }
             catch (Exception ex)
@@ -701,6 +735,8 @@ namespace SilDev
             {
                 if (bytes == null)
                     throw new ArgumentNullException(nameof(bytes));
+                if (encoding == null)
+                    throw new ArgumentNullException(nameof(encoding));
                 return encoding.GetString(bytes);
             }
             catch (Exception ex)
@@ -720,6 +756,20 @@ namespace SilDev
         public static string ToStringDefault(this byte[] bytes) =>
             bytes.ToString(TextEx.DefaultEncoding);
 
+        private static object ConvertToSpecifiedType<TConverter>(string source) where TConverter : TypeConverter
+        {
+            var item = source ?? throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrWhiteSpace(source))
+                throw new ArgumentInvalidException(nameof(source));
+            if (item.StartsWith("{", StringComparison.Ordinal) && item.EndsWith("}", StringComparison.Ordinal))
+                item = new string(item.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
+            var instance = (TConverter)Activator.CreateInstance(typeof(TConverter));
+            var result = instance.ConvertFrom(item);
+            if (result == null)
+                throw new ArgumentNullException(nameof(result));
+            return result;
+        }
+
         /// <summary>
         ///     Converts the specified string, which stores a set of four integers that represent the
         ///     location and size of a rectangle, to <see cref="Rectangle"/>.
@@ -731,17 +781,10 @@ namespace SilDev
         {
             try
             {
+                var item = str ?? throw new ArgumentNullException(nameof(str));
                 if (string.IsNullOrWhiteSpace(str))
-                    throw new ArgumentNullException(nameof(str));
-                var s = str;
-                if (s.StartsWith("{") && s.EndsWith("}"))
-                    s = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
-                var rc = new RectangleConverter();
-                var obj = rc.ConvertFrom(s);
-                if (obj == null)
-                    throw new ArgumentNullException(nameof(s));
-                var rect = (Rectangle)obj;
-                return rect;
+                    throw new ArgumentInvalidException(nameof(str));
+                return (Rectangle)ConvertToSpecifiedType<RectangleConverter>(item);
             }
             catch (Exception ex)
             {
@@ -761,17 +804,10 @@ namespace SilDev
         {
             try
             {
+                var item = str ?? throw new ArgumentNullException(nameof(str));
                 if (string.IsNullOrWhiteSpace(str))
-                    throw new ArgumentNullException(nameof(str));
-                var s = str;
-                if (s.StartsWith("{") && s.EndsWith("}"))
-                    s = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
-                var pc = new PointConverter();
-                var obj = pc.ConvertFrom(s);
-                if (obj == null)
-                    throw new ArgumentNullException(nameof(obj));
-                var point = (Point)obj;
-                return point;
+                    throw new ArgumentInvalidException(nameof(str));
+                return (Point)ConvertToSpecifiedType<PointConverter>(item);
             }
             catch (Exception ex)
             {
@@ -790,17 +826,10 @@ namespace SilDev
         {
             try
             {
+                var item = str ?? throw new ArgumentNullException(nameof(str));
                 if (string.IsNullOrWhiteSpace(str))
-                    throw new ArgumentNullException(nameof(str));
-                var s = str;
-                if (s.StartsWith("{") && s.EndsWith("}"))
-                    s = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
-                var sc = new SizeConverter();
-                var obj = sc.ConvertFrom(s);
-                if (obj == null)
-                    throw new ArgumentNullException(nameof(obj));
-                var size = (Size)obj;
-                return size;
+                    throw new ArgumentInvalidException(nameof(str));
+                return (Size)ConvertToSpecifiedType<SizeConverter>(item);
             }
             catch (Exception ex)
             {
@@ -820,8 +849,7 @@ namespace SilDev
         {
             try
             {
-                var b = bool.Parse(str);
-                return b;
+                return bool.Parse(str);
             }
             catch
             {
@@ -842,8 +870,7 @@ namespace SilDev
         {
             if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
                 return str;
-            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToLower(), RegexOptions.IgnoreCase));
-            return s;
+            return strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToLowerInvariant(), RegexOptions.IgnoreCase));
         }
 
         /// <summary>
@@ -859,8 +886,7 @@ namespace SilDev
         {
             if (string.IsNullOrWhiteSpace(str) || strs == null || strs.All(string.IsNullOrWhiteSpace))
                 return str;
-            var s = strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToUpper(), RegexOptions.IgnoreCase));
-            return s;
+            return strs.Aggregate(str, (c, x) => Regex.Replace(c, x, x.ToUpperInvariant(), RegexOptions.IgnoreCase));
         }
 
         /// <summary>
@@ -876,8 +902,7 @@ namespace SilDev
         {
             if (array == null || chrs == null)
                 return array;
-            var ca = array.Where(c => !chrs.Contains(c)).ToArray();
-            return ca;
+            return array.Where(c => !chrs.Contains(c)).ToArray();
         }
 
         /// <summary>
@@ -893,8 +918,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(str) || chrs == null)
                 return str;
-            var s = new string(str.Where(c => !chrs.Contains(c)).ToArray());
-            return s;
+            return new string(str.Where(c => !chrs.Contains(c)).ToArray());
         }
 
         /// <summary>
@@ -910,8 +934,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(str) || strs == null || strs.All(string.IsNullOrEmpty))
                 return str;
-            var s = strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
-            return s;
+            return strs.Aggregate(str, (c, x) => c.Replace(x, string.Empty));
         }
 
         /// <summary>
@@ -928,8 +951,7 @@ namespace SilDev
             if (string.IsNullOrEmpty(str) || patterns == null || patterns.All(string.IsNullOrEmpty))
                 return str;
             var p = patterns.Distinct().Join('|');
-            var s = new Regex(p, RegexOptions.IgnoreCase).Replace(str, string.Empty);
-            return s;
+            return new Regex(p, RegexOptions.IgnoreCase).Replace(str, string.Empty);
         }
 
         /// <summary>

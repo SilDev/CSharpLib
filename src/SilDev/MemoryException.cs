@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MemoryException.cs
-// Version:  2019-01-30 10:22
+// Version:  2019-10-20 18:26
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -26,18 +26,31 @@ namespace SilDev
     public class MemoryException : Exception
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ArgumentInvalidException"/> class.
+        ///     Initializes a new instance of the <see cref="MemoryException"/> class.
         /// </summary>
         public MemoryException() { }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ArgumentInvalidException"/> class
+        ///     Initializes a new instance of the <see cref="MemoryException"/> class
         ///     with a specified error message.
         /// </summary>
         /// <param name="message">
         ///     The message that describes the error.
         /// </param>
         public MemoryException(string message) : base(message) { }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MemoryException"/> class
+        ///     with a specified error message and the exception that is the cause of
+        ///     this exception.
+        /// </summary>
+        /// <param name="message">
+        ///     The message that describes the error.
+        /// </param>
+        /// <param name="innerException">
+        ///     The exception that is the cause of the current exception, or a null reference.
+        /// </param>
+        public MemoryException(string message, Exception innerException) : base(message, innerException) { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ArgumentInvalidException"/> class

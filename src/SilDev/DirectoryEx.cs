@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2019-10-15 11:15
+// Version:  2019-10-21 01:08
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -56,6 +56,8 @@ namespace SilDev
         {
             try
             {
+                if (dirInfo == null)
+                    throw new ArgumentNullException(nameof(dirInfo));
                 if (!dirInfo.Exists)
                     return false;
                 var da = dirInfo.Attributes;
@@ -563,6 +565,8 @@ namespace SilDev
         {
             try
             {
+                if (dirInfo == null)
+                    throw new ArgumentNullException(nameof(dirInfo));
                 var sb = new StringBuilder();
                 var len = 0L;
                 foreach (var fi in dirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
@@ -618,8 +622,10 @@ namespace SilDev
         {
             try
             {
-                var root = Path.GetPathRoot(dirInfo.FullName).ToUpper();
-                var drive = DriveInfo.GetDrives().FirstOrDefault(x => root.Equals(x.Name));
+                if (dirInfo == null)
+                    throw new ArgumentNullException(nameof(dirInfo));
+                var root = Path.GetPathRoot(dirInfo.FullName).ToUpperInvariant();
+                var drive = DriveInfo.GetDrives().FirstOrDefault(x => root.Equals(x.Name, StringComparison.Ordinal));
                 if (drive == default(DriveInfo))
                     throw new ArgumentNullException(nameof(drive));
                 return drive.TotalFreeSpace;
@@ -851,6 +857,8 @@ namespace SilDev
             var locks = default(IEnumerable<Process>);
             try
             {
+                if (dirInfo == null)
+                    throw new ArgumentNullException(nameof(dirInfo));
                 var files = Directory.EnumerateFiles(dirInfo.FullName, "*", SearchOption.AllDirectories);
                 locks = PathEx.GetLocks(files);
             }

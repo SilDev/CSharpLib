@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: LinkLabelEx.cs
-// Version:  2017-06-23 12:07
+// Version:  2019-10-20 16:35
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -35,23 +35,25 @@ namespace SilDev.Forms
         /// <param name="uri">
         ///     The link to associate.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     any parameter is null.
+        /// </exception>
         public static void LinkText(this LinkLabel linkLabel, string text, Uri uri)
         {
-            try
+            if (linkLabel == null)
+                throw new ArgumentNullException(nameof(linkLabel));
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (string.IsNullOrWhiteSpace(linkLabel.Text) || string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(uri.OriginalString))
+                return;
+            var start = 0;
+            int index;
+            while ((index = linkLabel.Text.IndexOf(text, start, StringComparison.Ordinal)) > -1)
             {
-                if (string.IsNullOrWhiteSpace(text))
-                    throw new ArgumentNullException(nameof(text));
-                var start = 0;
-                int index;
-                while ((index = linkLabel.Text.IndexOf(text, start, StringComparison.Ordinal)) > -1)
-                {
-                    linkLabel.Links.Add(index, text.Length, uri);
-                    start = index + text.Length;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex);
+                linkLabel.Links.Add(index, text.Length, uri);
+                start = index + text.Length;
             }
         }
 

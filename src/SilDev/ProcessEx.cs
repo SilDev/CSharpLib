@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-10-15 11:40
+// Version:  2019-10-21 12:01
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Management;
@@ -27,6 +28,7 @@ namespace SilDev
     using System.Threading;
     using Intern;
     using Microsoft.Win32.SafeHandles;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Process"/> class to enable you to start
@@ -107,6 +109,8 @@ namespace SilDev
         {
             try
             {
+                if (process == null)
+                    throw new ArgumentNullException(nameof(process));
                 var childId = process.Id;
                 var childName = Process.GetProcessById(childId).ProcessName;
                 var processes = Process.GetProcessesByName(childName);
@@ -234,6 +238,8 @@ namespace SilDev
         {
             try
             {
+                if (process == null)
+                    throw new ArgumentNullException(nameof(process));
                 var modules = process.Modules.Cast<ProcessModule>().ToList();
                 var path = modules.First(m => Path.GetFileName(m.FileName).EqualsEx("SbieDll.dll"))?.FileName;
                 if (string.IsNullOrEmpty(path) || !File.Exists(path))
@@ -259,6 +265,8 @@ namespace SilDev
         {
             try
             {
+                if (process == null)
+                    throw new ArgumentNullException(nameof(process));
                 var list = new List<string>();
                 var query = $"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {process.Id}";
                 using (var objs = new ManagementObjectSearcher(query))
@@ -301,6 +309,8 @@ namespace SilDev
         {
             try
             {
+                if (process == null)
+                    throw new ArgumentNullException(nameof(process));
                 process.StartInfo.FileName = PathEx.Combine(process.StartInfo.FileName);
                 if (string.IsNullOrEmpty(process.StartInfo.FileName))
                     throw new ArgumentNullException(nameof(process.StartInfo.FileName));
@@ -576,6 +586,8 @@ namespace SilDev
         /// </param>
         public static IEnumerable<IntPtr> ThreadHandles(this Process process)
         {
+            if (process == null)
+                return default;
             var handles = new List<IntPtr>();
             var threads = new WinApi.EnumThreadWndProc((hWnd, lParam) =>
             {
@@ -598,6 +610,8 @@ namespace SilDev
         /// </param>
         public static bool Close(IEnumerable<Process> processes, bool waitOnHandle = true)
         {
+            if (processes == null)
+                return false;
             var count = 0;
             foreach (var p in processes)
                 try
@@ -609,11 +623,8 @@ namespace SilDev
                             WinApi.NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
                             if (!waitOnHandle)
                                 continue;
-                            var wh = new ManualResetEvent(false)
-                            {
-                                SafeWaitHandle = new SafeWaitHandle(h, false)
-                            };
-                            wh.WaitOne(100);
+                            using (var wh = new ManualResetEvent(false) { SafeWaitHandle = new SafeWaitHandle(h, false) })
+                                wh.WaitOne(100);
                         }
                         if (p?.HasExited == true)
                             count++;
@@ -647,6 +658,8 @@ namespace SilDev
         /// </param>
         public static bool Terminate(IEnumerable<Process> processes)
         {
+            if (processes == null)
+                return false;
             var count = 0;
             var list = new List<string>();
             foreach (var p in processes)
@@ -721,7 +734,7 @@ namespace SilDev
         {
             try
             {
-                var cmd = command.Trim();
+                var cmd = command?.Trim() ?? throw new ArgumentNullException(nameof(command));
                 if (cmd.StartsWithEx("/K "))
                     cmd = cmd.Substring(3).TrimStart();
                 if (!cmd.StartsWithEx("/C "))
@@ -744,7 +757,7 @@ namespace SilDev
                     if (content.EndsWithEx("EXIT"))
                         content = content.Substring(0, content.Length - 4).TrimEnd('\r', '\n', '&');
                     sb.AppendLine(content);
-                    sb.AppendFormat("DEL /F /Q \"{0}\"", file);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "DEL /F /Q \"{0}\"", file);
                     sb.AppendLine("EXIT");
 
                     File.WriteAllText(file, sb.ToString());
@@ -824,6 +837,8 @@ namespace SilDev
         {
             try
             {
+                if (commands == null)
+                    throw new ArgumentNullException(nameof(commands));
 #if any || x86
                 var path = ComSpec.SysNativePath;
 #else
@@ -925,7 +940,7 @@ namespace SilDev
                         throw new PathNotFoundException(principalDir);
                     var newPrincipalName = Path.Combine(principalDir, newName);
                     if (newPrincipalName.Length > Name.Length)
-                        throw new ArgumentException("The new principal name cannot be longer than the original one.");
+                        throw new ArgumentException(ExceptionMessages.NewPrincipalNameTooLong);
                     var ptr = buffer;
                     foreach (var c in newPrincipalName)
                     {
@@ -1026,7 +1041,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return true;
                 int exitCode;
-                using (var p = Send(string.Format(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src), runAsAdmin, false))
+                using (var p = Send(string.Format(CultureInfo.InvariantCulture, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src), runAsAdmin, false))
                 {
                     if (!wait)
                         return true;
@@ -1101,7 +1116,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return null;
                 var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                var command = string.Format(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                var command = string.Format(CultureInfo.InvariantCulture, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
                 return WaitThenCmd(command, time, runAsAdmin, dispose);
             }
 
@@ -1210,7 +1225,7 @@ namespace SilDev
                 var src = PathEx.Combine(path);
                 if (!PathEx.DirOrFileExists(src))
                     return null;
-                var command = string.Format(PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                var command = string.Format(CultureInfo.InvariantCulture, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
                 return WaitForExitThenCmd(command, processName, extension, runAsAdmin, dispose);
             }
 

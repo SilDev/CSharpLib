@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2019-10-15 11:19
+// Version:  2019-10-21 15:03
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,11 +20,13 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Management;
     using System.Reflection;
     using Microsoft.Win32;
+    using Properties;
     using QuickWmi;
 
     /// <summary>
@@ -38,87 +40,88 @@ namespace SilDev
         ///     see <see cref="Redist.IsInstalled(RedistFlags[])"/>.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [Flags]
         public enum RedistFlags
         {
             /// <summary>
             ///     Microsoft Visual C++ 2005 Redistributable Package (x86).
             /// </summary>
-            VC2005X86,
+            VC2005X86 = 0x1,
 
             /// <summary>
             ///     Microsoft Visual C++ 2005 Redistributable Package (x64).
             /// </summary>
-            VC2005X64,
+            VC2005X64 = 0x2,
 
             /// <summary>
             ///     Microsoft Visual C++ 2008 Redistributable Package (x86).
             /// </summary>
-            VC2008X86,
+            VC2008X86 = 0x4,
 
             /// <summary>
             ///     Microsoft Visual C++ 2008 Redistributable Package (x64).
             /// </summary>
-            VC2008X64,
+            VC2008X64 = 0x8,
 
             /// <summary>
             ///     Microsoft Visual C++ 2010 Redistributable Package (x86).
             /// </summary>
-            VC2010X86,
+            VC2010X86 = 0x10,
 
             /// <summary>
             ///     Microsoft Visual C++ 2010 Redistributable Package (x64).
             /// </summary>
-            VC2010X64,
+            VC2010X64 = 0x20,
 
             /// <summary>
             ///     Microsoft Visual C++ 2012 Redistributable Package (x86).
             /// </summary>
-            VC2012X86,
+            VC2012X86 = 0x40,
 
             /// <summary>
             ///     Microsoft Visual C++ 2012 Redistributable Package (x64).
             /// </summary>
-            VC2012X64,
+            VC2012X64 = 0x80,
 
             /// <summary>
             ///     Microsoft Visual C++ 2013 Redistributable Package (x86).
             /// </summary>
-            VC2013X86,
+            VC2013X86 = 0x100,
 
             /// <summary>
             ///     Microsoft Visual C++ 2013 Redistributable Package (x64).
             /// </summary>
-            VC2013X64,
+            VC2013X64 = 0x200,
 
             /// <summary>
             ///     Microsoft Visual C++ 2015 Redistributable Package (x86).
             /// </summary>
-            VC2015X86,
+            VC2015X86 = 0x400,
 
             /// <summary>
             ///     Microsoft Visual C++ 2015 Redistributable Package (x64).
             /// </summary>
-            VC2015X64,
+            VC2015X64 = 0x800,
 
             /// <summary>
             ///     Microsoft Visual C++ 2017 Redistributable Package (x86).
             /// </summary>
-            VC2017X86,
+            VC2017X86 = 0x1000,
 
             /// <summary>
             ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
             /// </summary>
-            VC2017X64,
+            VC2017X64 = 0x2000,
 
             /// <summary>
             ///     Microsoft Visual C++ 2019 Redistributable Package (x86).
             /// </summary>
-            VC2019X86,
+            VC2019X86 = 0x4000,
 
             /// <summary>
             ///     Microsoft Visual C++ 2019 Redistributable Package (x64).
             /// </summary>
-            VC2019X64
+            VC2019X64 = 0x8000
         }
 
         /// <summary>
@@ -411,14 +414,14 @@ namespace SilDev
         {
             key = null;
             num = 1;
-            if (!variable.Contains(':') || variable.ContainsEx(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar))
+            if (variable == null || !variable.Contains(':') || variable.ContainsEx(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar))
                 return;
             var sa = variable.Split(':');
             var s = sa.FirstOrDefault();
             if (string.IsNullOrEmpty(s))
                 return;
             variable = s;
-            if (s.StartsWith("%"))
+            if (s.StartsWith("%", StringComparison.Ordinal))
                 variable = $"{variable}%";
             s = sa.LastOrDefault()?.Trim('%');
             if (string.IsNullOrEmpty(s))
@@ -478,12 +481,12 @@ namespace SilDev
                                             .First(x => variable.EqualsEx(x.Key.ToString())).Value.ToString();
                     }
                 if (lower)
-                    output = output?.ToLower();
+                    output = output?.ToLowerInvariant();
                 if (!string.IsNullOrEmpty(output) && (!string.IsNullOrEmpty(key) || num > 1))
                     if (string.IsNullOrEmpty(key))
-                        output = output.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
+                        output = output.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
-                        output = output.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
+                        output = output.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.AltDirectorySeparatorChar, num));
             }
             catch (InvalidOperationException ex)
             {
@@ -652,6 +655,8 @@ namespace SilDev
             {
                 try
                 {
+                    keys = Enum.GetValues(typeof(RedistFlags)).Cast<RedistFlags>().SelectMany(item => keys, (item, key) => new { item, key })
+                               .Where(type => (type.item & type.key) != 0).Select(type => type.item).ToArray();
                     var result = false;
                     var names = GetDisplayNames();
                     foreach (var key in keys.Select(x => x.ToString()))
@@ -719,7 +724,7 @@ namespace SilDev
                 try
                 {
                     if (!IsEnabled)
-                        throw new WarningException("System restoring is disabled.");
+                        throw new WarningException(ExceptionMessages.SystemRestoringIsDisabled);
                     var mScope = new ManagementScope("\\\\localhost\\root\\default");
                     var mPath = new ManagementPath("SystemRestore");
                     var options = new ObjectGetOptions();

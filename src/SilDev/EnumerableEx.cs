@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2019-10-15 11:17
+// Version:  2019-10-21 14:36
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,8 +18,10 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Enumerable"/> class.
@@ -67,17 +69,21 @@ namespace SilDev
         ///     The <see cref="Action{T}"/> delegate to perform on each element of the
         ///     <see cref="IEnumerable{T}"/> collection.
         /// </param>
+        /// <param name="continueOnCapturedContext">
+        ///     true to attempt to marshal the continuation back to the original context captured;
+        ///     otherwise, false.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     source or action is null.
         /// </exception>
-        public static async void ForEachAsync<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
+        public static async void ForEachAsync<TSource>(this IEnumerable<TSource> source, Action<TSource> action, bool continueOnCapturedContext = false)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
             foreach (var item in source)
-                await Task.Run(() => action(item));
+                await Task.Run(() => action(item)).ConfigureAwait(continueOnCapturedContext);
         }
 
         /// <summary>
@@ -127,17 +133,21 @@ namespace SilDev
         ///     The <see cref="Action{T1, T2}"/> delegate to perform on each element of the
         ///     <see cref="IDictionary{TKey, TValue}"/>.
         /// </param>
+        /// <param name="continueOnCapturedContext">
+        ///     true to attempt to marshal the continuation back to the original context captured;
+        ///     otherwise, false.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     source or action is null.
         /// </exception>
-        public static async void ForEachAsync<TKey, TValue>(this IDictionary<TKey, TValue> source, Action<TKey, TValue> action)
+        public static async void ForEachAsync<TKey, TValue>(this IDictionary<TKey, TValue> source, Action<TKey, TValue> action, bool continueOnCapturedContext = false)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
             foreach (var item in source)
-                await Task.Run(() => action(item.Key, item.Value));
+                await Task.Run(() => action(item.Key, item.Value)).ConfigureAwait(continueOnCapturedContext);
         }
 
         /// <summary>
@@ -238,16 +248,14 @@ namespace SilDev
                 var flag = false;
                 var count = 0;
                 var result = default(TSource);
-                foreach (var item in source)
+                foreach (var item in source.Where(item => predicate(item) && (flag = count++ >= indicator)))
                 {
-                    if (!predicate(item) || !(flag = count++ >= indicator))
-                        continue;
                     result = item;
                     break;
                 }
                 if (flag)
                     return result;
-                throw new InvalidOperationException("Sequence contains no elements.");
+                throw new InvalidOperationException(ExceptionMessages.SequenceIsEmpty);
             }
             switch (source)
             {
@@ -273,7 +281,7 @@ namespace SilDev
                         }
                     }
             }
-            throw new InvalidOperationException("Sequence contains no matching element.");
+            throw new InvalidOperationException(ExceptionMessages.SequenceIsEmpty);
         }
 
         /// <summary>
@@ -922,7 +930,7 @@ namespace SilDev
         ///     The character to use as a separator.
         /// </param>
         public static string Join(this IEnumerable<string> values, char separator) =>
-            values.Join(separator.ToString());
+            values.Join(separator.ToString(CultureInfo.InvariantCulture));
 
         /// <summary>
         ///     Returns a specified number of contiguous elements from the end of a sequence.

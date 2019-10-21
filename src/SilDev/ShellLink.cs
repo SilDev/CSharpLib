@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2019-04-02 21:46
+// Version:  2019-10-21 15:36
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Runtime.InteropServices.ComTypes;
     using Intern;
 
@@ -45,42 +46,97 @@ namespace SilDev
     /// <summary>
     ///     Specifies a set of values that are used when you create a shell link.
     /// </summary>
-    public struct ShellLinkInfo
+    public struct ShellLinkInfo : IEquatable<ShellLinkInfo>
     {
         /// <summary>
         ///     The description for the link.
         /// </summary>
-        public string Description;
+        public string Description { get; set; }
 
         /// <summary>
         ///     The arguments which applies when the link is started.
         /// </summary>
-        public string Arguments;
+        public string Arguments { get; set; }
 
         /// <summary>
         ///     The file or directory to be linked.
         /// </summary>
-        public string TargetPath;
+        public string TargetPath { get; set; }
 
         /// <summary>
         ///     The working directory for the link to be started.
         /// </summary>
-        public string WorkingDirectory;
+        public string WorkingDirectory { get; set; }
 
         /// <summary>
         ///     The icon resource path and resource identifier.
         /// </summary>
-        public (string, int) IconLocation;
+        public (string, int) IconLocation { get; set; }
 
         /// <summary>
         ///     The show state of the window.
         /// </summary>
-        public ShellLinkShowState ShowState;
+        public ShellLinkShowState ShowState { get; set; }
 
         /// <summary>
         ///     The fully qualified name of the link.
         /// </summary>
-        public string LinkPath;
+        public string LinkPath { get; set; }
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            var current = this;
+            return GetType().GetProperties().Aggregate(0, (i, pi) => i ^ pi.GetValue(current).GetHashCode());
+        }
+
+        /// <summary>
+        ///     Determines whether this instance have same values as the specified <see cref="ShellLinkInfo"/> instance.
+        /// </summary>
+        /// <param name="other">
+        ///     The <see cref="ShellLinkInfo"/> instance to compare.
+        /// </param>
+        public bool Equals(ShellLinkInfo other) =>
+            GetHashCode().Equals(other.GetHashCode());
+
+        /// <summary>
+        ///     Determines whether this instance have same values as the specified <see cref="object"/>.
+        /// </summary>
+        /// <param name="obj">
+        ///     The  <see cref="object"/> to compare.
+        /// </param>
+        public override bool Equals(object obj)
+        {
+            if (obj is ShellLinkInfo sli)
+                return Equals(sli);
+            return false;
+        }
+
+        /// <summary>
+        ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have same values.
+        /// </summary>
+        /// <param name="a">
+        ///     The first <see cref="ShellLinkInfo"/> instance to compare.
+        /// </param>
+        /// <param name="b">
+        ///     The second <see cref="ShellLinkInfo"/> instance to compare.
+        /// </param>
+        public static bool operator ==(ShellLinkInfo a, ShellLinkInfo b) =>
+            a.Equals(b);
+
+        /// <summary>
+        ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have different values.
+        /// </summary>
+        /// <param name="a">
+        ///     The first <see cref="ShellLinkInfo"/> instance to compare.
+        /// </param>
+        /// <param name="b">
+        ///     The second <see cref="ShellLinkInfo"/> instance to compare.
+        /// </param>
+        public static bool operator !=(ShellLinkInfo a, ShellLinkInfo b) =>
+            !a.Equals(b);
     }
 
     /// <summary>
@@ -212,30 +268,40 @@ namespace SilDev
                     throw new PathNotFoundException(file);
                 if (!Path.GetExtension(file).EqualsEx(".lnk"))
                     throw new ArgumentException();
-                string targetPath;
-                using (var fs = File.Open(file, FileMode.Open, FileAccess.Read))
+                string s;
+                var fs = default(FileStream);
+                try
                 {
-                    var br = new BinaryReader(fs);
-                    fs.Seek(0x14, SeekOrigin.Begin);
-                    var flags = br.ReadUInt32();
-                    if ((flags & 1) == 1)
+                    fs = File.Open(file, FileMode.Open, FileAccess.Read);
+                    using (var br = new BinaryReader(fs))
                     {
-                        fs.Seek(0x4c, SeekOrigin.Begin);
-                        fs.Seek(br.ReadUInt16(), SeekOrigin.Current);
+                        var i = fs;
+                        fs = null;
+                        i.Seek(0x14, SeekOrigin.Begin);
+                        var flags = br.ReadUInt32();
+                        if ((flags & 1) == 1)
+                        {
+                            i.Seek(0x4c, SeekOrigin.Begin);
+                            i.Seek(br.ReadUInt16(), SeekOrigin.Current);
+                        }
+                        var start = i.Position;
+                        var length = br.ReadUInt32();
+                        i.Seek(0xc, SeekOrigin.Current);
+                        i.Seek(start + br.ReadUInt32(), SeekOrigin.Begin);
+                        s = new string(br.ReadChars((int)(start + length - i.Position - 2)));
                     }
-                    var start = fs.Position;
-                    var length = br.ReadUInt32();
-                    fs.Seek(0xc, SeekOrigin.Current);
-                    fs.Seek(start + br.ReadUInt32(), SeekOrigin.Begin);
-                    targetPath = new string(br.ReadChars((int)(start + length - fs.Position - 2)));
-                    var begin = targetPath.IndexOf("\0\0", StringComparison.Ordinal);
+                    var begin = s.IndexOf("\0\0", StringComparison.Ordinal);
                     if (begin <= -1)
-                        return targetPath;
-                    var end = targetPath.IndexOf(new string(Path.DirectorySeparatorChar, 2), begin + 2, StringComparison.Ordinal) + 2;
-                    end = targetPath.IndexOf('\0', end) + 1;
-                    targetPath = Path.Combine(targetPath.Substring(0, begin), targetPath.Substring(end));
+                        return s;
+                    var end = s.IndexOf(new string(Path.DirectorySeparatorChar, 2), begin + 2, StringComparison.Ordinal) + 2;
+                    end = s.IndexOf('\0', end) + 1;
+                    s = Path.Combine(s.Substring(0, begin), s.Substring(end));
                 }
-                return targetPath;
+                finally
+                {
+                    fs?.Dispose();
+                }
+                return s;
             }
             catch (Exception ex)
             {

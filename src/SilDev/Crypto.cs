@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2019-05-26 15:54
+// Version:  2019-10-21 14:34
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,15 +17,17 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using Properties;
 
     /// <summary>
     ///     Specifies enumerated constants used to encrypt and decrypt data.
     /// </summary>
-    public enum SymmetricKeyAlgorithms
+    public enum SymmetricKeyAlgorithm
     {
         /// <summary>
         ///     Advanced Encryption Standard (AES-128).
@@ -46,7 +48,7 @@ namespace SilDev
     /// <summary>
     ///     Specifies enumerated constants used to encode and decode data.
     /// </summary>
-    public enum BinaryToTextEncodings
+    public enum BinaryToTextEncoding
     {
         /// <summary>
         ///     Binary.
@@ -92,7 +94,7 @@ namespace SilDev
     /// <summary>
     ///     Specifies enumerated constants used to encrypt data.
     /// </summary>
-    public enum ChecksumAlgorithms
+    public enum ChecksumAlgorithm
     {
         /// <summary>
         ///     Adler-32.
@@ -165,7 +167,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Encrypts this sequence of bytes with the specified <see cref="ChecksumAlgorithms"/>
+        ///     Encrypts this sequence of bytes with the specified <see cref="ChecksumAlgorithm"/>
         ///     and combines both hashes into a unique GUID.
         /// </summary>
         /// <param name="bytes">
@@ -180,7 +182,7 @@ namespace SilDev
         /// <param name="algorithm2">
         ///     The second algorithm to use.
         /// </param>
-        public static string GetGuid(this byte[] bytes, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
+        public static string GetGuid(this byte[] bytes, bool braces = false, ChecksumAlgorithm algorithm1 = ChecksumAlgorithm.Crc32, ChecksumAlgorithm algorithm2 = ChecksumAlgorithm.Sha1)
         {
             var guid = new StringBuilder(braces ? 38 : 36);
             CombineHashes(guid, bytes?.Encrypt(algorithm1), bytes?.Encrypt(algorithm2), braces);
@@ -188,7 +190,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Encrypts this string with the specified <see cref="ChecksumAlgorithms"/> and
+        ///     Encrypts this string with the specified <see cref="ChecksumAlgorithm"/> and
         ///     combines both hashes into a unique GUID.
         /// </summary>
         /// <param name="text">
@@ -203,7 +205,7 @@ namespace SilDev
         /// <param name="algorithm2">
         ///     The second algorithm to use.
         /// </param>
-        public static string GetGuid(this string text, bool braces = false, ChecksumAlgorithms algorithm1 = ChecksumAlgorithms.Crc32, ChecksumAlgorithms algorithm2 = ChecksumAlgorithms.Sha1)
+        public static string GetGuid(this string text, bool braces = false, ChecksumAlgorithm algorithm1 = ChecksumAlgorithm.Crc32, ChecksumAlgorithm algorithm2 = ChecksumAlgorithm.Sha1)
         {
             var guid = new StringBuilder(braces ? 38 : 36);
             CombineHashes(guid, text?.Encrypt(algorithm1), text?.Encrypt(algorithm2), braces);
@@ -225,13 +227,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] Encrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.EncryptBytes(bytes, password, salt);
@@ -253,13 +255,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] Encrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.EncryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.EncryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.EncryptBytes(bytes, password.ToBytes(), salt);
@@ -281,13 +283,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this string text, byte[] password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] Encrypt(this string text, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.EncryptBytes(text.ToBytes(), password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.EncryptBytes(text.ToBytes(), password, salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.EncryptBytes(text.ToBytes(), password, salt);
@@ -309,13 +311,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this string text, string password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] Encrypt(this string text, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt);
@@ -337,13 +339,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] EncryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] EncryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.EncryptFile(path, password, salt);
@@ -365,13 +367,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] EncryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] EncryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.EncryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.EncryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.EncryptFile(path, password.ToBytes(), salt);
@@ -393,13 +395,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Decrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] Decrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.DecryptBytes(bytes, password, salt);
@@ -421,13 +423,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Decrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] Decrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.DecryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.DecryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.DecryptBytes(bytes, password.ToBytes(), salt);
@@ -449,13 +451,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] DecryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] DecryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.DecryptFile(path, password, salt);
@@ -477,13 +479,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] DecryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithms algorithm = SymmetricKeyAlgorithms.Aes256)
+        public static byte[] DecryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
         {
             switch (algorithm)
             {
-                case SymmetricKeyAlgorithms.Aes128:
+                case SymmetricKeyAlgorithm.Aes128:
                     return Aes.DecryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithms.Aes192:
+                case SymmetricKeyAlgorithm.Aes192:
                     return Aes.DecryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes192);
                 default:
                     return Aes.DecryptFile(path, password.ToBytes(), salt);
@@ -499,23 +501,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encode(this byte[] bytes, BinaryToTextEncodings algorithm = BinaryToTextEncodings.Base64)
+        public static string Encode(this byte[] bytes, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
         {
             switch (algorithm)
             {
-                case BinaryToTextEncodings.Base2:
+                case BinaryToTextEncoding.Base2:
                     return new Base2().EncodeBytes(bytes);
-                case BinaryToTextEncodings.Base8:
+                case BinaryToTextEncoding.Base8:
                     return new Base8().EncodeBytes(bytes);
-                case BinaryToTextEncodings.Base10:
+                case BinaryToTextEncoding.Base10:
                     return new Base10().EncodeBytes(bytes);
-                case BinaryToTextEncodings.Base16:
+                case BinaryToTextEncoding.Base16:
                     return new Base16().EncodeBytes(bytes);
-                case BinaryToTextEncodings.Base32:
+                case BinaryToTextEncoding.Base32:
                     return new Base32().EncodeBytes(bytes);
-                case BinaryToTextEncodings.Base85:
+                case BinaryToTextEncoding.Base85:
                     return new Base85().EncodeBytes(bytes);
-                case BinaryToTextEncodings.Base91:
+                case BinaryToTextEncoding.Base91:
                     return new Base91().EncodeBytes(bytes);
                 default:
                     return new Base64().EncodeBytes(bytes);
@@ -531,23 +533,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encode(this string text, BinaryToTextEncodings algorithm = BinaryToTextEncodings.Base64)
+        public static string Encode(this string text, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
         {
             switch (algorithm)
             {
-                case BinaryToTextEncodings.Base2:
+                case BinaryToTextEncoding.Base2:
                     return new Base2().EncodeString(text);
-                case BinaryToTextEncodings.Base8:
+                case BinaryToTextEncoding.Base8:
                     return new Base8().EncodeString(text);
-                case BinaryToTextEncodings.Base10:
+                case BinaryToTextEncoding.Base10:
                     return new Base10().EncodeString(text);
-                case BinaryToTextEncodings.Base16:
+                case BinaryToTextEncoding.Base16:
                     return new Base16().EncodeString(text);
-                case BinaryToTextEncodings.Base32:
+                case BinaryToTextEncoding.Base32:
                     return new Base32().EncodeString(text);
-                case BinaryToTextEncodings.Base85:
+                case BinaryToTextEncoding.Base85:
                     return new Base85().EncodeString(text);
-                case BinaryToTextEncodings.Base91:
+                case BinaryToTextEncoding.Base91:
                     return new Base91().EncodeString(text);
                 default:
                     return new Base64().EncodeString(text);
@@ -563,23 +565,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string EncodeFile(this string path, BinaryToTextEncodings algorithm = BinaryToTextEncodings.Base64)
+        public static string EncodeFile(this string path, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
         {
             switch (algorithm)
             {
-                case BinaryToTextEncodings.Base2:
+                case BinaryToTextEncoding.Base2:
                     return new Base2().EncodeFile(path);
-                case BinaryToTextEncodings.Base8:
+                case BinaryToTextEncoding.Base8:
                     return new Base8().EncodeFile(path);
-                case BinaryToTextEncodings.Base10:
+                case BinaryToTextEncoding.Base10:
                     return new Base10().EncodeFile(path);
-                case BinaryToTextEncodings.Base16:
+                case BinaryToTextEncoding.Base16:
                     return new Base16().EncodeFile(path);
-                case BinaryToTextEncodings.Base32:
+                case BinaryToTextEncoding.Base32:
                     return new Base32().EncodeFile(path);
-                case BinaryToTextEncodings.Base85:
+                case BinaryToTextEncoding.Base85:
                     return new Base85().EncodeFile(path);
-                case BinaryToTextEncodings.Base91:
+                case BinaryToTextEncoding.Base91:
                     return new Base91().EncodeFile(path);
                 default:
                     return new Base64().EncodeFile(path);
@@ -595,23 +597,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Decode(this string code, BinaryToTextEncodings algorithm = BinaryToTextEncodings.Base64)
+        public static byte[] Decode(this string code, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
         {
             switch (algorithm)
             {
-                case BinaryToTextEncodings.Base2:
+                case BinaryToTextEncoding.Base2:
                     return new Base2().DecodeBytes(code);
-                case BinaryToTextEncodings.Base8:
+                case BinaryToTextEncoding.Base8:
                     return new Base8().DecodeBytes(code);
-                case BinaryToTextEncodings.Base10:
+                case BinaryToTextEncoding.Base10:
                     return new Base10().DecodeBytes(code);
-                case BinaryToTextEncodings.Base16:
+                case BinaryToTextEncoding.Base16:
                     return new Base85().DecodeBytes(code);
-                case BinaryToTextEncodings.Base32:
+                case BinaryToTextEncoding.Base32:
                     return new Base32().DecodeBytes(code);
-                case BinaryToTextEncodings.Base85:
+                case BinaryToTextEncoding.Base85:
                     return new Base85().DecodeBytes(code);
-                case BinaryToTextEncodings.Base91:
+                case BinaryToTextEncoding.Base91:
                     return new Base91().DecodeBytes(code);
                 default:
                     return new Base64().DecodeBytes(code);
@@ -627,23 +629,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string DecodeString(this string code, BinaryToTextEncodings algorithm = BinaryToTextEncodings.Base64)
+        public static string DecodeString(this string code, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
         {
             switch (algorithm)
             {
-                case BinaryToTextEncodings.Base2:
+                case BinaryToTextEncoding.Base2:
                     return new Base2().DecodeString(code);
-                case BinaryToTextEncodings.Base8:
+                case BinaryToTextEncoding.Base8:
                     return new Base8().DecodeString(code);
-                case BinaryToTextEncodings.Base10:
+                case BinaryToTextEncoding.Base10:
                     return new Base10().DecodeString(code);
-                case BinaryToTextEncodings.Base16:
+                case BinaryToTextEncoding.Base16:
                     return new Base16().DecodeString(code);
-                case BinaryToTextEncodings.Base32:
+                case BinaryToTextEncoding.Base32:
                     return new Base32().DecodeString(code);
-                case BinaryToTextEncodings.Base85:
+                case BinaryToTextEncoding.Base85:
                     return new Base85().DecodeString(code);
-                case BinaryToTextEncodings.Base91:
+                case BinaryToTextEncoding.Base91:
                     return new Base91().DecodeString(code);
                 default:
                     return new Base64().DecodeString(code);
@@ -659,23 +661,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] DecodeFile(this string path, BinaryToTextEncodings algorithm = BinaryToTextEncodings.Base64)
+        public static byte[] DecodeFile(this string path, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
         {
             switch (algorithm)
             {
-                case BinaryToTextEncodings.Base2:
+                case BinaryToTextEncoding.Base2:
                     return new Base2().DecodeFile(path);
-                case BinaryToTextEncodings.Base8:
+                case BinaryToTextEncoding.Base8:
                     return new Base8().DecodeFile(path);
-                case BinaryToTextEncodings.Base10:
+                case BinaryToTextEncoding.Base10:
                     return new Base10().DecodeFile(path);
-                case BinaryToTextEncodings.Base16:
+                case BinaryToTextEncoding.Base16:
                     return new Base16().DecodeFile(path);
-                case BinaryToTextEncodings.Base32:
+                case BinaryToTextEncoding.Base32:
                     return new Base32().DecodeFile(path);
-                case BinaryToTextEncodings.Base85:
+                case BinaryToTextEncoding.Base85:
                     return new Base85().DecodeFile(path);
-                case BinaryToTextEncodings.Base91:
+                case BinaryToTextEncoding.Base91:
                     return new Base91().DecodeFile(path);
                 default:
                     return new Base64().DecodeFile(path);
@@ -691,23 +693,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encrypt(this Stream stream, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        public static string Encrypt(this Stream stream, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
         {
             switch (algorithm)
             {
-                case ChecksumAlgorithms.Adler32:
+                case ChecksumAlgorithm.Adler32:
                     return new Adler32().EncryptStream(stream);
-                case ChecksumAlgorithms.Crc16:
+                case ChecksumAlgorithm.Crc16:
                     return new Crc16().EncryptStream(stream);
-                case ChecksumAlgorithms.Crc32:
+                case ChecksumAlgorithm.Crc32:
                     return new Crc32().EncryptStream(stream);
-                case ChecksumAlgorithms.Sha1:
+                case ChecksumAlgorithm.Sha1:
                     return new Sha1().EncryptStream(stream);
-                case ChecksumAlgorithms.Sha256:
+                case ChecksumAlgorithm.Sha256:
                     return new Sha256().EncryptStream(stream);
-                case ChecksumAlgorithms.Sha384:
+                case ChecksumAlgorithm.Sha384:
                     return new Sha384().EncryptStream(stream);
-                case ChecksumAlgorithms.Sha512:
+                case ChecksumAlgorithm.Sha512:
                     return new Sha512().EncryptStream(stream);
                 default:
                     return new Md5().EncryptStream(stream);
@@ -723,23 +725,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encrypt(this byte[] bytes, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        public static string Encrypt(this byte[] bytes, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
         {
             switch (algorithm)
             {
-                case ChecksumAlgorithms.Adler32:
+                case ChecksumAlgorithm.Adler32:
                     return new Adler32().EncryptBytes(bytes);
-                case ChecksumAlgorithms.Crc16:
+                case ChecksumAlgorithm.Crc16:
                     return new Crc16().EncryptBytes(bytes);
-                case ChecksumAlgorithms.Crc32:
+                case ChecksumAlgorithm.Crc32:
                     return new Crc32().EncryptBytes(bytes);
-                case ChecksumAlgorithms.Sha1:
+                case ChecksumAlgorithm.Sha1:
                     return new Sha1().EncryptBytes(bytes);
-                case ChecksumAlgorithms.Sha256:
+                case ChecksumAlgorithm.Sha256:
                     return new Sha256().EncryptBytes(bytes);
-                case ChecksumAlgorithms.Sha384:
+                case ChecksumAlgorithm.Sha384:
                     return new Sha384().EncryptBytes(bytes);
-                case ChecksumAlgorithms.Sha512:
+                case ChecksumAlgorithm.Sha512:
                     return new Sha512().EncryptBytes(bytes);
                 default:
                     return new Md5().EncryptBytes(bytes);
@@ -755,23 +757,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encrypt(this string text, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        public static string Encrypt(this string text, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
         {
             switch (algorithm)
             {
-                case ChecksumAlgorithms.Adler32:
+                case ChecksumAlgorithm.Adler32:
                     return new Adler32().EncryptString(text);
-                case ChecksumAlgorithms.Crc16:
+                case ChecksumAlgorithm.Crc16:
                     return new Crc16().EncryptString(text);
-                case ChecksumAlgorithms.Crc32:
+                case ChecksumAlgorithm.Crc32:
                     return new Crc32().EncryptString(text);
-                case ChecksumAlgorithms.Sha1:
+                case ChecksumAlgorithm.Sha1:
                     return new Sha1().EncryptString(text);
-                case ChecksumAlgorithms.Sha256:
+                case ChecksumAlgorithm.Sha256:
                     return new Sha256().EncryptString(text);
-                case ChecksumAlgorithms.Sha384:
+                case ChecksumAlgorithm.Sha384:
                     return new Sha384().EncryptString(text);
-                case ChecksumAlgorithms.Sha512:
+                case ChecksumAlgorithm.Sha512:
                     return new Sha512().EncryptString(text);
                 default:
                     return new Md5().EncryptString(text);
@@ -787,23 +789,23 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string EncryptFile(this string path, ChecksumAlgorithms algorithm = ChecksumAlgorithms.Md5)
+        public static string EncryptFile(this string path, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
         {
             switch (algorithm)
             {
-                case ChecksumAlgorithms.Adler32:
+                case ChecksumAlgorithm.Adler32:
                     return new Adler32().EncryptFile(path);
-                case ChecksumAlgorithms.Crc16:
+                case ChecksumAlgorithm.Crc16:
                     return new Crc16().EncryptFile(path);
-                case ChecksumAlgorithms.Crc32:
+                case ChecksumAlgorithm.Crc32:
                     return new Crc32().EncryptFile(path);
-                case ChecksumAlgorithms.Sha1:
+                case ChecksumAlgorithm.Sha1:
                     return new Sha1().EncryptFile(path);
-                case ChecksumAlgorithms.Sha256:
+                case ChecksumAlgorithm.Sha256:
                     return new Sha256().EncryptFile(path);
-                case ChecksumAlgorithms.Sha384:
+                case ChecksumAlgorithm.Sha384:
                     return new Sha384().EncryptFile(path);
-                case ChecksumAlgorithms.Sha512:
+                case ChecksumAlgorithm.Sha512:
                     return new Sha512().EncryptFile(path);
                 default:
                     return new Md5().EncryptFile(path);
@@ -987,7 +989,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithms.Sha512).ToBytes(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytes(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1063,7 +1065,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithms.Sha512).ToBytes(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytes(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1124,7 +1126,7 @@ namespace SilDev
         ///     Represents the base class from which all implementations of binary-to-text encoding
         ///     algorithms must derive.
         /// </summary>
-        public class BinaryToTextEncoding
+        public class BinaryToText
         {
             /// <summary>
             ///     Gets the separator.
@@ -1251,7 +1253,7 @@ namespace SilDev
                         throw new PathNotFoundException(srcPath);
                     var dest = PathEx.Combine(destPath);
                     if (!PathEx.IsValidPath(dest))
-                        throw new ArgumentException("The destination path is invalid.");
+                        throw new ArgumentException(ExceptionMessages.DestPathNotValid);
                     using (var fsi = new FileStream(src, FileMode.Open, FileAccess.Read))
                         using (var fso = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
                             EncodeStream(fsi, fso, lineLength);
@@ -1385,7 +1387,7 @@ namespace SilDev
                         throw new PathNotFoundException(srcPath);
                     var dest = PathEx.Combine(destPath);
                     if (!PathEx.IsValidPath(dest))
-                        throw new ArgumentException("The destination path is invalid.");
+                        throw new ArgumentException(ExceptionMessages.DestPathNotValid);
                     using (var fsi = new FileStream(src, FileMode.Open, FileAccess.Read))
                         using (var fso = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
                             DecodeStream(fsi, fso);
@@ -1404,13 +1406,7 @@ namespace SilDev
             /// <param name="code">
             ///     The string to decode.
             /// </param>
-            /// <param name="prefixMark">
-            ///     The prefix mark.
-            /// </param>
-            /// <param name="suffixMark">
-            ///     The suffix mark.
-            /// </param>
-            public byte[] DecodeFile(string code, string prefixMark = null, string suffixMark = null) =>
+            public byte[] DecodeFile(string code) =>
                 DecodeBytes(code);
 
             /// <summary>
@@ -1420,7 +1416,7 @@ namespace SilDev
             /// <param name="stream">
             ///     The stream in which to write the single byte.
             /// </param>
-            /// <param name="single">
+            /// <param name="singleByte">
             ///     The single byte.
             /// </param>
             /// <param name="lineLength">
@@ -1429,9 +1425,11 @@ namespace SilDev
             /// <param name="linePos">
             ///     The position in the line.
             /// </param>
-            protected void WriteLine(Stream stream, byte single, int lineLength, ref int linePos)
+            protected static void WriteLine(Stream stream, byte singleByte, int lineLength, ref int linePos)
             {
-                stream.WriteByte(single);
+                if (stream == null)
+                    throw new ArgumentNullException(nameof(stream));
+                stream.WriteByte(singleByte);
                 if (lineLength < 1 || lineLength > ++linePos)
                     return;
                 linePos = 0;
@@ -1442,7 +1440,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base2"/> class.
         /// </summary>
-        public class Base2 : BinaryToTextEncoding
+        public class Base2 : BinaryToText
         {
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
@@ -1549,7 +1547,7 @@ namespace SilDev
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
                         if (i != 0x30 && i != 0x31)
-                            throw new DecoderFallbackException("The input stream contains invalid characters.");
+                            throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 8 != 0)
                             continue;
@@ -1571,7 +1569,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base8"/> class.
         /// </summary>
-        public class Base8 : BinaryToTextEncoding
+        public class Base8 : BinaryToText
         {
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
@@ -1678,7 +1676,7 @@ namespace SilDev
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39))
-                            throw new DecoderFallbackException("The input stream contains invalid characters.");
+                            throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 3 != 0)
                             continue;
@@ -1700,7 +1698,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base10"/> class.
         /// </summary>
-        public class Base10 : BinaryToTextEncoding
+        public class Base10 : BinaryToText
         {
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
@@ -1807,7 +1805,7 @@ namespace SilDev
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39))
-                            throw new DecoderFallbackException("The input stream contains invalid characters.");
+                            throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 3 != 0)
                             continue;
@@ -1829,7 +1827,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base16"/> class.
         /// </summary>
-        public class Base16 : BinaryToTextEncoding
+        public class Base16 : BinaryToText
         {
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
@@ -1875,7 +1873,7 @@ namespace SilDev
                     int i;
                     var p = 0;
                     while ((i = si.ReadByte()) != -1)
-                        foreach (var b in i.ToString("x2").PadLeft(2, '0').ToBytes())
+                        foreach (var b in i.ToString("x2", CultureInfo.InvariantCulture).PadLeft(2, '0').ToBytes())
                             WriteLine(so, b, lineLength, ref p);
                 }
                 finally
@@ -1936,7 +1934,7 @@ namespace SilDev
                         if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39) && !i.IsBetween(0x41, 0x46) && !i.IsBetween(0x61, 0x66))
-                            throw new DecoderFallbackException("The input stream contains invalid characters.");
+                            throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 2 != 0)
                             continue;
@@ -1958,7 +1956,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base32"/> class.
         /// </summary>
-        public class Base32 : BinaryToTextEncoding
+        public class Base32 : BinaryToText
         {
             private static readonly byte[] CharacterTable32 =
             {
@@ -2092,7 +2090,7 @@ namespace SilDev
                     {
                         var ba2 = ba1.Where(b => b > 0 && !Separator.Contains(b)).ToArray();
                         if (ba2.Any(x => !CharacterTable32.Contains(x)))
-                            throw new DecoderFallbackException("The input stream contains invalid characters.");
+                            throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         var len = ba2.Length * 5;
                         for (var i = 0; i < len; i += 8)
                         {
@@ -2129,7 +2127,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base64"/> class.
         /// </summary>
-        public class Base64 : BinaryToTextEncoding
+        public class Base64 : BinaryToText
         {
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
@@ -2257,7 +2255,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base85"/> class.
         /// </summary>
-        public class Base85 : BinaryToTextEncoding
+        public class Base85 : BinaryToText
         {
             private static readonly byte[] EncodeBlock = new byte[5],
                                            DecodeBlock = new byte[4];
@@ -2406,7 +2404,7 @@ namespace SilDev
                         if (b == 0x7a)
                         {
                             if (n != 0)
-                                throw new DecoderFallbackException("The character number '122' is invalid.");
+                                throw new DecoderFallbackException(ExceptionMessages.FollowingCharCodeIsInvalid + 0x7a);
                             for (var i = 0; i < 4; i++)
                                 DecodeBlock[i] = 0;
                             so.Write(DecodeBlock, 0, DecodeBlock.Length);
@@ -2423,7 +2421,7 @@ namespace SilDev
                                 continue;
                         }
                         if (b < 0x21 || b > 0x75)
-                            throw new DecoderFallbackException($"The character number '{b}' is invalid.");
+                            throw new DecoderFallbackException(ExceptionMessages.FollowingCharCodeIsInvalid + b);
                         t += (uint)((b - 33) * Pow85[n]);
                         n++;
                         if (n != EncodeBlock.Length)
@@ -2439,7 +2437,7 @@ namespace SilDev
                         case 0:
                             return;
                         case 1:
-                            throw new DecoderFallbackException("The last block cannot be a single byte.");
+                            throw new DecoderFallbackException(ExceptionMessages.LastBlockIsSingleByte);
                     }
                     n--;
                     t += Pow85[n];
@@ -2462,7 +2460,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base91"/> class.
         /// </summary>
-        public class Base91 : BinaryToTextEncoding
+        public class Base91 : BinaryToText
         {
             /// <summary>
             ///     The default character table for translation.
@@ -2482,10 +2480,21 @@ namespace SilDev
                 0x22
             };
 
+            private byte[] _characterTable91;
+
             /// <summary>
             ///     The character table for translation.
             /// </summary>
-            protected virtual byte[] CharacterTable91 => DefaultCharacterTable91;
+            protected virtual byte[] CharacterTable91
+            {
+                get => _characterTable91 ?? (_characterTable91 = DefaultCharacterTable91);
+                set
+                {
+                    if (value == default || value.Distinct().Count() != DefaultCharacterTable91.Length)
+                        return;
+                    _characterTable91 = value;
+                }
+            }
 
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
@@ -2666,7 +2675,7 @@ namespace SilDev
         ///     Represents the base class from which all implementations of checksum encryption
         ///     algorithms must derive.
         /// </summary>
-        public class ChecksumAlgorithm
+        public class Checksum
         {
             /// <summary>
             ///     Encrypts the specified stream with the specified <see cref="HashAlgorithm"/>.
@@ -2684,10 +2693,14 @@ namespace SilDev
             {
                 byte[] ba;
                 using (var csp = algorithm)
+                {
+                    if (csp == null)
+                        throw new ArgumentNullException(nameof(csp));
                     ba = csp.ComputeHash(stream);
+                }
                 var sb = new StringBuilder(ba.Length * 2);
                 foreach (var b in ba)
-                    sb.Append(b.ToString("x2"));
+                    sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
                 return sb.ToString();
             }
 
@@ -2737,9 +2750,13 @@ namespace SilDev
                     return string.Empty;
                 var ba = text.ToBytes();
                 using (var csp = algorithm)
+                {
+                    if (csp == null)
+                        throw new ArgumentNullException(nameof(csp));
                     ba = csp.ComputeHash(ba);
+                }
                 var s = BitConverter.ToString(ba);
-                return s.RemoveChar('-').ToLower();
+                return s.RemoveChar('-').ToLowerInvariant();
             }
 
             /// <summary>
@@ -2780,7 +2797,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Adler32"/> class.
         /// </summary>
-        public class Adler32 : ChecksumAlgorithm
+        public class Adler32 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2795,6 +2812,8 @@ namespace SilDev
             /// </param>
             public override string EncryptStream(Stream stream)
             {
+                if (stream == null)
+                    throw new ArgumentNullException(nameof(stream));
                 int i;
                 var uia = new[]
                 {
@@ -2807,7 +2826,7 @@ namespace SilDev
                     uia[1] = (uia[1] + uia[0]) % 65521;
                 }
                 var ui = (uia[1] << 16) | uia[0];
-                return ui.ToString("x2").PadLeft(8, '0');
+                return ui.ToString("x2", CultureInfo.InvariantCulture).PadLeft(8, '0');
             }
 
             /// <summary>
@@ -2823,7 +2842,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Crc16"/> class.
         /// </summary>
-        public class Crc16 : ChecksumAlgorithm
+        public class Crc16 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2838,6 +2857,8 @@ namespace SilDev
             /// </param>
             public override string EncryptStream(Stream stream)
             {
+                if (stream == null)
+                    throw new ArgumentNullException(nameof(stream));
                 int i, x = 0xffff;
                 while ((i = stream.ReadByte()) != -1)
                     for (var j = 0; j < 8; j++)
@@ -2858,7 +2879,7 @@ namespace SilDev
                 };
                 var sb = new StringBuilder(ba.Length * 2);
                 foreach (var b in ba)
-                    sb.Append(b.ToString("x2"));
+                    sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
                 return sb.ToString();
             }
 
@@ -2875,7 +2896,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Crc32"/> class.
         /// </summary>
-        public class Crc32 : ChecksumAlgorithm
+        public class Crc32 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2890,15 +2911,17 @@ namespace SilDev
             /// </param>
             public override string EncryptStream(Stream stream)
             {
+                if (stream == null)
+                    throw new ArgumentNullException(nameof(stream));
                 int i;
                 var ui = 0xffffffffu;
                 while ((i = stream.ReadByte()) != -1)
                 {
-                    ui = ui ^ (uint)i;
+                    ui ^= (uint)i;
                     for (var j = 0; j < 8; j++)
                         ui = (uint)((ui >> 1) ^ (0xedb88320u & -(ui & 1)));
                 }
-                return (~ui).ToString("x2").PadLeft(8, '0');
+                return (~ui).ToString("x2", CultureInfo.InvariantCulture).PadLeft(8, '0');
             }
 
             /// <summary>
@@ -2914,7 +2937,7 @@ namespace SilDev
         /// <summary>
         ///     Initializes a new instance of the <see cref="Md5"/> class.
         /// </summary>
-        public class Md5 : ChecksumAlgorithm
+        public class Md5 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2936,14 +2959,25 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptString(text, MD5.Create());
+            public override string EncryptString(string text)
+            {
+                var algo = default(MD5);
+                try
+                {
+                    algo = MD5.Create();
+                    return EncryptString(text, algo);
+                }
+                finally
+                {
+                    algo?.Dispose();
+                }
+            }
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha1"/> class.
         /// </summary>
-        public class Sha1 : ChecksumAlgorithm
+        public class Sha1 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2965,14 +2999,25 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptString(text, SHA1.Create());
+            public override string EncryptString(string text)
+            {
+                var algo = default(SHA1);
+                try
+                {
+                    algo = SHA1.Create();
+                    return EncryptString(text, algo);
+                }
+                finally
+                {
+                    algo?.Dispose();
+                }
+            }
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha256"/> class.
         /// </summary>
-        public class Sha256 : ChecksumAlgorithm
+        public class Sha256 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2994,14 +3039,25 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptString(text, SHA256.Create());
+            public override string EncryptString(string text)
+            {
+                var algo = default(SHA256);
+                try
+                {
+                    algo = SHA256.Create();
+                    return EncryptString(text, algo);
+                }
+                finally
+                {
+                    algo?.Dispose();
+                }
+            }
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha384"/> class.
         /// </summary>
-        public class Sha384 : ChecksumAlgorithm
+        public class Sha384 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -3023,14 +3079,25 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptString(text, SHA384.Create());
+            public override string EncryptString(string text)
+            {
+                var algo = default(SHA384);
+                try
+                {
+                    algo = SHA384.Create();
+                    return EncryptString(text, algo);
+                }
+                finally
+                {
+                    algo?.Dispose();
+                }
+            }
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Sha512"/> class.
         /// </summary>
-        public class Sha512 : ChecksumAlgorithm
+        public class Sha512 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -3052,8 +3119,19 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptString(text, SHA512.Create());
+            public override string EncryptString(string text)
+            {
+                var algo = default(SHA512);
+                try
+                {
+                    algo = SHA512.Create();
+                    return EncryptString(text, algo);
+                }
+                finally
+                {
+                    algo?.Dispose();
+                }
+            }
         }
 
         #endregion

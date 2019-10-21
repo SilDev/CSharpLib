@@ -43,8 +43,8 @@ namespace SilDev
             };
             foreach (var cName in cNames)
                 WinApi.NativeHelper.FindNestedWindow(ref hWnd, cName);
-            InputDevice.SendKeyState(hWnd, VirtualKeys.F5, VirtualKeyStates.KeyDown);
-            InputDevice.SendKeyState(hWnd, VirtualKeys.F5, VirtualKeyStates.KeyUp);
+            InputDevice.SendKeyState(hWnd, VirtualKey.F5, VirtualKeyState.KeyDown);
+            InputDevice.SendKeyState(hWnd, VirtualKey.F5, VirtualKeyState.KeyUp);
             if (explorer)
                 RefreshExplorer(extended);
         }

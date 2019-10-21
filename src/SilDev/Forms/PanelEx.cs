@@ -30,7 +30,6 @@ namespace SilDev.Forms
         /// </summary>
         public static class FakeProgressBar
         {
-#pragma warning disable 1591
             public static Color ForeColor { get; set; } = default;
 
             public static Color Update(Panel panel, int value, int maxValue = 100)
@@ -40,7 +39,7 @@ namespace SilDev.Forms
                 var hWnd = panel.GetAncestor()?.Handle ?? IntPtr.Zero;
                 if (hWnd != IntPtr.Zero)
                     if (value == 0)
-                        TaskBarProgress.SetState(hWnd, TaskBarProgressFlags.Indeterminate);
+                        TaskBarProgress.SetState(hWnd, TaskBarProgressState.Indeterminate);
                     else
                         TaskBarProgress.SetValue(hWnd, value, maxValue);
                 var color = ForeColor;
@@ -54,7 +53,6 @@ namespace SilDev.Forms
                 }
                 return color;
             }
-#pragma warning restore 1591
         }
     }
 }

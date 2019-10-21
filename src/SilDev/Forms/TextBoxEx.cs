@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2018-05-01 15:02
+// Version:  2019-10-20 17:14
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -93,12 +93,14 @@ namespace SilDev.Forms
         /// </param>
         public static void AutoVerticalScrollBar(this TextBox textBox)
         {
-            textBox.SizeChanged -= SetVerticalScrollBars;
-            textBox.SizeChanged += SetVerticalScrollBars;
-            textBox.TextChanged -= SetVerticalScrollBars;
-            textBox.TextChanged += SetVerticalScrollBars;
-            if (!textBox.Parent.LayoutIsSuspended())
-                SetVerticalScrollBars(textBox, EventArgs.Empty);
+            if (!(textBox is TextBox tb))
+                return;
+            tb.SizeChanged -= SetVerticalScrollBars;
+            tb.SizeChanged += SetVerticalScrollBars;
+            tb.TextChanged -= SetVerticalScrollBars;
+            tb.TextChanged += SetVerticalScrollBars;
+            if (!tb.Parent.LayoutIsSuspended())
+                SetVerticalScrollBars(tb, EventArgs.Empty);
         }
 
         private static void SetVerticalScrollBars(object sender, EventArgs e)

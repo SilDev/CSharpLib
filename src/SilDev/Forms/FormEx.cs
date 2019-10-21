@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2019-10-15 11:03
+// Version:  2019-10-21 13:53
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -46,8 +46,13 @@ namespace SilDev.Forms
         /// <param name="form">
         ///     The form window to be dock-able.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     form is null.
+        /// </exception>
         public static void Dockable(Form form)
         {
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
             form.ResizeEnd += (sender, e) =>
             {
                 if (!(sender is Form f))
@@ -69,8 +74,13 @@ namespace SilDev.Forms
         /// <param name="settings">
         ///     The settings to be applied.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     form is null.
+        /// </exception>
         public static Form Plus(this Form form, FormExPlusSettings settings = FormExPlusSettings.LogLoadingTime)
         {
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
             if (Log.DebugMode <= 0 || !settings.HasFlag(FormExPlusSettings.LogLoadingTime))
                 return form;
             try
@@ -341,7 +351,7 @@ namespace SilDev.Forms
             /// </param>
             protected override void WndProc(ref Message m)
             {
-                if (m.Msg == (int)WindowsMessages.MouseFirst || m.Msg == (int)WindowsMessages.NcHitTest)
+                if (m.Msg == (int)WindowsMessage.MouseFirst || m.Msg == (int)WindowsMessage.NcHitTest)
                 {
                     var result = GetActiveResizingBorderMessage(ResizingBorders, m.LParam);
                     if (result != IntPtr.Zero)
@@ -357,7 +367,7 @@ namespace SilDev.Forms
             ///     Provides enumerated Windows <see cref="Message"/>'s, used within a <see cref="WndProc"/>
             ///     override.
             /// </summary>
-            protected enum WindowsMessages
+            protected enum WindowsMessage
             {
                 /// <summary>
                 ///     Specify the first mouse message.

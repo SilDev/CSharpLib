@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-10-15 11:20
+// Version:  2019-10-21 15:05
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,12 +19,14 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using Intern;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="File"/> class to perform file
@@ -158,6 +160,8 @@ namespace SilDev
         {
             try
             {
+                if (fileInfo == null)
+                    throw new ArgumentNullException(nameof(fileInfo));
                 var fa = fileInfo.Attributes;
                 return (fa & attr) != 0;
             }
@@ -421,6 +425,21 @@ namespace SilDev
         {
             offsets = new List<long[]>();
 
+            try
+            {
+                if (file == null)
+                    throw new ArgumentNullException(nameof(file));
+                if (oldValue == null)
+                    throw new ArgumentNullException(nameof(oldValue));
+                if (newValue == null)
+                    throw new ArgumentNullException(nameof(newValue));
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+                return false;
+            }
+
             var targetPath = PathEx.Combine(file);
             try
             {
@@ -461,7 +480,9 @@ namespace SilDev
                 int index = 0, position;
                 var offset = -1L;
                 while ((position = sourceStream.ReadByte()) != -1)
+                {
                     if (oldValue[index] == position)
+                    {
                         if (index == oldValue.Length - 1)
                         {
                             var offsetStart = targetStream.Length;
@@ -474,25 +495,23 @@ namespace SilDev
                             targetStream.Write(newValue, 0, newValue.Length);
                             offset = -1;
                             index = 0;
+                            continue;
                         }
-                        else
-                        {
-                            if (index == 0)
-                                offset = sourceStream.Position - 1;
-                            ++index;
-                        }
-                    else
-                    {
                         if (index == 0)
-                            targetStream.WriteByte((byte)position);
-                        else
-                        {
-                            targetStream.WriteByte(oldValue[0]);
-                            sourceStream.Position = offset + 1;
-                            offset = -1;
-                            index = 0;
-                        }
+                            offset = sourceStream.Position - 1;
+                        ++index;
+                        continue;
                     }
+                    if (index == 0)
+                    {
+                        targetStream.WriteByte((byte)position);
+                        continue;
+                    }
+                    targetStream.WriteByte(oldValue[0]);
+                    sourceStream.Position = offset + 1;
+                    offset = -1;
+                    index = 0;
+                }
                 result = true;
             }
             catch (Exception ex)
@@ -531,7 +550,7 @@ namespace SilDev
                     {
                         var backupHash = new Crypto.Md5().EncryptFile(backupPath);
                         var targetHash = new Crypto.Md5().EncryptFile(targetPath);
-                        if (backupHash.Equals(targetHash))
+                        if (backupHash.Equals(targetHash, StringComparison.Ordinal))
                             File.Delete(backupPath);
                     }
                 }
@@ -541,6 +560,7 @@ namespace SilDev
                 }
                 return true;
             }
+
             try
             {
                 if (File.Exists(backupPath))
@@ -1061,7 +1081,7 @@ namespace SilDev
             }
             finally
             {
-                WinApi.NativeMethods.RmEndSession(handle);
+                _ = WinApi.NativeMethods.RmEndSession(handle);
             }
             foreach (var id in procIds)
             {
@@ -1138,7 +1158,7 @@ namespace SilDev
             try
             {
                 if (PowerShellReference.Assembly == null)
-                    throw new NotSupportedException("The required assembly could not be found.");
+                    throw new NotSupportedException(ExceptionMessages.AssemblyNotFound);
 
                 const string rcClass = "System.Management.Automation.Runspaces.RunspaceConfiguration";
                 const string rcFunc = "Create";
@@ -1157,7 +1177,7 @@ namespace SilDev
                     using (var p = rf.CreatePipeline())
                     {
                         const string command = "Get-AuthenticodeSignature \"{0}\"";
-                        p.Commands.AddScript(string.Format(command, path));
+                        p.Commands.AddScript(string.Format(CultureInfo.InvariantCulture, command, path));
                         var s = p.Invoke()[0];
                         rf.Close();
                         return s.Status.ToString();
@@ -1179,7 +1199,7 @@ namespace SilDev
         ///     The file instance member to check.
         /// </param>
         public static Version GetVersion(this FileInfo fileInfo) =>
-            GetVersion(fileInfo.FullName);
+            GetVersion(fileInfo?.FullName);
 
         /// <summary>
         ///     Returns the highest version information associated with the specified file.
@@ -1212,7 +1232,7 @@ namespace SilDev
         ///     The file instance member to check.
         /// </param>
         public static Version GetFileVersion(this FileInfo fileInfo) =>
-            GetFileVersion(fileInfo.FullName);
+            GetFileVersion(fileInfo?.FullName);
 
         /// <summary>
         ///     Returns the file version information associated with the specified file.
@@ -1247,7 +1267,7 @@ namespace SilDev
         ///     The file instance member to check.
         /// </param>
         public static Version GetProductVersion(this FileInfo fileInfo) =>
-            GetProductVersion(fileInfo.FullName);
+            GetProductVersion(fileInfo?.FullName);
 
         /// <summary>
         ///     Returns the product version information associated with the specified file.
@@ -1277,7 +1297,7 @@ namespace SilDev
         private static string VersionFilter(this string str)
         {
             var s = str;
-            if (!s.Any(x => char.IsDigit(x) || x == '.') && s.Count(x => x == '.') > 0)
+            if (!s.Any(x => char.IsDigit(x) || x == '.') && s.Any(x => x == '.'))
                 return s;
             var sa = s.Split('.').ToList();
             for (var i = 0; i < sa.Count; i++)

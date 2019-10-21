@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2019-10-15 11:14
+// Version:  2019-10-21 01:04
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -158,7 +159,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.IndexOf(s.ToString(), 0, comparisonType) != -1);
+            return targets.Any(s => source.IndexOf(s.ToString(CultureInfo.InvariantCulture), 0, comparisonType) != -1);
         }
 
         /// <summary>
@@ -241,7 +242,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.StartsWith(s.ToString(), comparisonType));
+            return targets.Any(s => source.StartsWith(s.ToString(CultureInfo.InvariantCulture), comparisonType));
         }
 
         /// <summary>
@@ -338,7 +339,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.EndsWith(s.ToString(), comparisonType));
+            return targets.Any(s => source.EndsWith(s.ToString(CultureInfo.InvariantCulture), comparisonType));
         }
 
         /// <summary>
@@ -385,7 +386,7 @@ namespace SilDev
         /// </param>
         public static bool EqualsEx(this string source, StringComparison comparisonType, params string[] targets)
         {
-            if (source == null && (targets == null || targets.All(s => s == null)) || source == string.Empty && targets.All(s => s == string.Empty))
+            if (source == null && (targets == null || targets.All(s => s == null)) || string.IsNullOrEmpty(source) && targets.All(string.IsNullOrEmpty))
                 return true;
             if (string.IsNullOrEmpty(source) || targets == null || targets.All(string.IsNullOrEmpty))
                 return false;
@@ -491,8 +492,8 @@ namespace SilDev
                         int r;
                         if (char.IsDigit(ca1[0]) && char.IsDigit(ca2[0]))
                         {
-                            var ch1 = int.Parse(str1);
-                            var ch2 = int.Parse(str2);
+                            var ch1 = int.Parse(str1, CultureInfo.InvariantCulture);
+                            var ch2 = int.Parse(str2, CultureInfo.InvariantCulture);
                             r = ch1.CompareTo(ch2);
                         }
                         else

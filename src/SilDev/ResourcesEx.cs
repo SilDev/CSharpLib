@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2019-10-15 11:47
+// Version:  2019-10-21 21:01
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,14 +16,17 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using Drawing;
     using Forms;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods for the usage of data resources.
@@ -34,9 +37,8 @@ namespace SilDev
         ///     Provides enumerated symbol index values of the Windows Image Resource dynamic
         ///     link library ('imageres.dll').
         /// </summary>
-        public enum IconIndex : uint
+        public enum IconIndex
         {
-#pragma warning disable CS1591
             Asterisk = 0x4c,
             Barrier = 0x51,
             BmpFile = 0x42,
@@ -105,7 +107,6 @@ namespace SilDev
             UserDir = 0x75,
             Warning = 0x4f,
             ZipFile = 0xa5
-#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace SilDev
                 var file = PathEx.Combine(path);
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);
-                WinApi.NativeMethods.ExtractIconEx(file, index, large ? ptrs : new IntPtr[1], !large ? ptrs : new IntPtr[1], 1);
+                _ = WinApi.NativeMethods.ExtractIconEx(file, index, large ? ptrs : new IntPtr[1], !large ? ptrs : new IntPtr[1], 1);
                 var ptr = ptrs[0];
                 if (ptr == IntPtr.Zero)
                     throw new ArgumentNullException(nameof(ptr));
@@ -287,8 +288,11 @@ namespace SilDev
             private readonly Button _button;
             private readonly Panel _buttonPanel;
             private readonly IContainer _components;
+            private readonly List<IconBox> _iconBoxes;
+            private readonly TableLayoutPanel _innerTableLayoutPanel;
             private readonly Panel _panel;
             private readonly ProgressCircle _progressCircle;
+            private readonly TableLayoutPanel _tableLayoutPanel;
             private readonly TextBox _textBox;
             private readonly Timer _timer;
             private int _count;
@@ -339,8 +343,8 @@ namespace SilDev
                 Size = MinimumSize;
                 SizeGripStyle = SizeGripStyle.Hide;
                 StartPosition = FormStartPosition.CenterScreen;
-                Text = @"Icon Resource Browser";
-                var tableLayoutPanel = new TableLayoutPanel
+                Text = UIStrings.ResourceBrowser;
+                _tableLayoutPanel = new TableLayoutPanel
                 {
                     BackColor = Color.Transparent,
                     CellBorderStyle = TableLayoutPanelCellBorderStyle.None,
@@ -348,9 +352,9 @@ namespace SilDev
                     Name = "tableLayoutPanel",
                     RowCount = 2
                 };
-                tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-                tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
-                Controls.Add(tableLayoutPanel);
+                _tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+                _tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+                Controls.Add(_tableLayoutPanel);
                 _panel = new Panel
                 {
                     AutoScroll = true,
@@ -363,8 +367,8 @@ namespace SilDev
                     TabIndex = 0
                 };
                 _panel.Scroll += (s, e) => (s as Panel)?.Update();
-                tableLayoutPanel.Controls.Add(_panel, 0, 0);
-                var innerTableLayoutPanel = new TableLayoutPanel
+                _tableLayoutPanel.Controls.Add(_panel, 0, 0);
+                _innerTableLayoutPanel = new TableLayoutPanel
                 {
                     BackColor = Color.Transparent,
                     ColumnCount = 2,
@@ -372,9 +376,9 @@ namespace SilDev
                     Dock = DockStyle.Fill,
                     Name = "innerTableLayoutPanel"
                 };
-                innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-                innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 24));
-                tableLayoutPanel.Controls.Add(innerTableLayoutPanel, 0, 1);
+                _innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                _innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 24));
+                _tableLayoutPanel.Controls.Add(_innerTableLayoutPanel, 0, 1);
                 _textBox = new TextBox
                 {
                     BorderStyle = BorderStyle.FixedSingle,
@@ -384,7 +388,7 @@ namespace SilDev
                     TabIndex = 1
                 };
                 _textBox.TextChanged += TextBox_TextChanged;
-                innerTableLayoutPanel.Controls.Add(_textBox, 0, 0);
+                _innerTableLayoutPanel.Controls.Add(_textBox, 0, 0);
                 _buttonPanel = new Panel
                 {
                     Anchor = AnchorStyles.Top | AnchorStyles.Right,
@@ -393,7 +397,7 @@ namespace SilDev
                     Name = "buttonPanel",
                     Size = new Size(20, 20)
                 };
-                innerTableLayoutPanel.Controls.Add(_buttonPanel, 1, 0);
+                _innerTableLayoutPanel.Controls.Add(_buttonPanel, 1, 0);
                 _button = new Button
                 {
                     BackColor = buttonFace ?? SystemColors.ButtonFace,
@@ -427,7 +431,8 @@ namespace SilDev
                     Interval = 1
                 };
                 _timer.Tick += Timer_Tick;
-                Shown += (sender, args) => TaskBarProgress.SetState(Handle, TaskBarProgressFlags.Indeterminate);
+                _iconBoxes = new List<IconBox>();
+                Shown += (sender, args) => TaskBarProgress.SetState(Handle, TaskBarProgressState.Indeterminate);
                 ResumeLayout(false);
                 PerformLayout();
                 var curPath = PathEx.Combine(path);
@@ -455,6 +460,24 @@ namespace SilDev
             {
                 if (disposing)
                     _components.Dispose();
+                _iconBoxes?.ForEach(iconBox => iconBox?.Dispose());
+                _iconBoxes?.Clear();
+                if (_timer != null)
+                {
+                    _timer.Enabled = false;
+                    _timer.Dispose();
+                }
+                if (_progressCircle != null)
+                {
+                    _progressCircle.Enabled = false;
+                    _progressCircle.Dispose();
+                }
+                _button?.Dispose();
+                _buttonPanel?.Dispose();
+                _textBox?.Dispose();
+                _innerTableLayoutPanel?.Dispose();
+                _panel?.Dispose();
+                _tableLayoutPanel?.Dispose();
                 base.Dispose(disposing);
             }
 
@@ -465,7 +488,7 @@ namespace SilDev
                 var path = PathEx.Combine(textBox.Text);
                 if (string.IsNullOrWhiteSpace(path) || _path == path || !File.Exists(path) || GetIconFromFile(path, 0, true) == null)
                     return;
-                TaskBarProgress.SetState(Handle, TaskBarProgressFlags.Indeterminate);
+                TaskBarProgress.SetState(Handle, TaskBarProgressState.Indeterminate);
                 _path = path;
                 _panel.Enabled = false;
                 _textBox.Enabled = false;
@@ -487,11 +510,8 @@ namespace SilDev
                     RestoreDirectory = false
                 })
                 {
-                    dialog.ShowDialog(new Form
-                    {
-                        ShowIcon = false,
-                        TopMost = true
-                    });
+                    using (var owner = new Form { ShowIcon = false, TopMost = true })
+                        dialog.ShowDialog(owner);
                     if (File.Exists(dialog.FileName))
                         _textBox.Text = dialog.FileName;
                 }
@@ -512,7 +532,11 @@ namespace SilDev
                         {
                             var box = new IconBox(_path, _count++, _button.BackColor, _button.ForeColor, _button.FlatAppearance.MouseOverBackColor);
                             if (_panel.Controls.Contains(box))
+                            {
+                                box.Dispose();
                                 continue;
+                            }
+                            _iconBoxes.Add(box);
                             _panel.Controls.Add(box);
                         }
                         catch
@@ -546,7 +570,7 @@ namespace SilDev
                     _buttonPanel.Controls.Add(_button);
                     _buttonPanel.BorderStyle = BorderStyle.FixedSingle;
                     _buttonPanel.ResumeLayout(false);
-                    TaskBarProgress.SetState(Handle, TaskBarProgressFlags.NoProgress);
+                    TaskBarProgress.SetState(Handle, TaskBarProgressState.NoProgress);
                     if (!_panel.Focus())
                         _panel.Select();
                 }
@@ -591,13 +615,14 @@ namespace SilDev
                     _file = path;
                     var icon = GetIcons(index);
                     _button.Image = new Bitmap(icon.ToBitmap(), icon.Width, icon.Height);
-                    _button.Text = index.ToString();
+                    _button.Text = index.ToString(CultureInfo.InvariantCulture);
                 }
 
                 protected override void Dispose(bool disposing)
                 {
                     if (disposing)
                         _components?.Dispose();
+                    _button?.Dispose();
                     base.Dispose(disposing);
                 }
 
@@ -606,7 +631,7 @@ namespace SilDev
                     if (_icons != null)
                         return index > _icons.Length - 1 ? null : Icon.FromHandle(_icons[index]);
                     _icons = new IntPtr[short.MaxValue];
-                    WinApi.NativeMethods.ExtractIconEx(_file, 0, _icons, new IntPtr[short.MaxValue], short.MaxValue);
+                    _ = WinApi.NativeMethods.ExtractIconEx(_file, 0, _icons, new IntPtr[short.MaxValue], short.MaxValue);
                     return index > _icons.Length - 1 ? null : Icon.FromHandle(_icons[index]);
                 }
 

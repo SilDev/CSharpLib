@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2019-10-15 10:47
+// Version:  2019-10-20 15:12
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -250,7 +250,7 @@ namespace SilDev.Drawing
         {
             try
             {
-                var code = htmlColor?.TrimStart('#').ToUpper();
+                var code = htmlColor?.TrimStart('#').ToUpperInvariant();
                 if (string.IsNullOrEmpty(code))
                     throw new ArgumentNullException(nameof(htmlColor));
                 if (!code.Length.IsBetween(1, 8) || code.Any(x => !"0123456789ABCDEF".Contains(x)))
@@ -260,9 +260,9 @@ namespace SilDev.Drawing
                 switch (code.Length)
                 {
                     case 8:
-                        return Color.FromArgb(int.Parse(code, NumberStyles.HexNumber));
+                        return Color.FromArgb(int.Parse(code, NumberStyles.HexNumber, CultureInfo.InvariantCulture));
                     case 6:
-                        return FromRgb(int.Parse(code, NumberStyles.HexNumber));
+                        return FromRgb(int.Parse(code, NumberStyles.HexNumber, CultureInfo.InvariantCulture));
                     case 3:
                         foreach (var c in code)
                         {
@@ -326,7 +326,7 @@ namespace SilDev.Drawing
         ///     true to translate also the alpha value; otherwise, false.
         /// </param>
         public static string ToHtml(uint argb, bool alpha = false) =>
-            $"#{new string(argb.ToString("X").TakeLast(alpha ? 8 : 6).ToArray()).PadLeft(alpha ? 8 : 6, '0')}";
+            $"#{new string(argb.ToString("X", CultureInfo.InvariantCulture).TakeLast(alpha ? 8 : 6).ToArray()).PadLeft(alpha ? 8 : 6, '0')}";
 
         /// <summary>
         ///     Translates the specified 32-bit (A)RGB value to an HTML string color

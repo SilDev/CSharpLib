@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Xml.cs
-// Version:  2019-10-15 11:49
+// Version:  2019-10-21 21:14
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.IO;
+    using System.Xml;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -43,8 +44,7 @@ namespace SilDev
                 string result;
                 using (var sw = new StringWriter())
                 {
-                    var xs = new XmlSerializer(typeof(TSource));
-                    xs.Serialize(sw, source);
+                    new XmlSerializer(typeof(TSource)).Serialize(sw, source);
                     result = sw.ToString();
                 }
                 return result;
@@ -80,10 +80,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(source));
                 var dest = PathEx.Combine(path);
                 using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                {
-                    var xs = new XmlSerializer(typeof(TSource));
-                    xs.Serialize(fs, source);
-                }
+                    new XmlSerializer(typeof(TSource)).Serialize(fs, source);
                 return true;
             }
             catch (Exception ex)
@@ -112,11 +109,13 @@ namespace SilDev
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
                 TResult result;
+#if unsafeAllowed
                 using (var sr = new StringReader(source))
-                {
-                    var xs = new XmlSerializer(typeof(TResult));
-                    result = (TResult)xs.Deserialize(sr);
-                }
+                    result = (TResult)new XmlSerializer(typeof(TResult)).Deserialize(sr);
+#else
+                using (var xr = XmlReader.Create(source, new XmlReaderSettings { Async = false }))
+                    result = (TResult)new XmlSerializer(typeof(TResult)).Deserialize(xr);
+#endif
                 return result;
             }
             catch (Exception ex)
@@ -146,11 +145,28 @@ namespace SilDev
                 if (!File.Exists(src))
                     return defValue;
                 TResult result;
+#if unsafeAllowed
                 using (var fs = new FileStream(src, FileMode.Open, FileAccess.Read))
                 {
-                    var xs = new XmlSerializer(typeof(TResult));
-                    result = (TResult)xs.Deserialize(fs);
+                    fs = null;
+                    result = (TResult)new XmlSerializer(typeof(TResult)).Deserialize(fs);
                 }
+#else
+                var fs = default(FileStream);
+                try
+                {
+                    fs = new FileStream(src, FileMode.Open, FileAccess.Read);
+                    using (var xr = XmlReader.Create(fs, new XmlReaderSettings { Async = false }))
+                    {
+                        fs = null;
+                        result = (TResult)new XmlSerializer(typeof(TResult)).Deserialize(xr);
+                    }
+                }
+                finally
+                {
+                    fs?.Dispose();
+                }
+#endif
                 return result;
             }
             catch (Exception ex)

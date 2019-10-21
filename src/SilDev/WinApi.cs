@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-10-15 11:55
+// Version:  2019-10-22 00:13
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -276,7 +276,7 @@ namespace SilDev
         /// <summary>
         ///     Provides enumerated values of appbar messages.
         /// </summary>
-        public enum AppBarMessageOptions
+        public enum AppBarMessageOption
         {
             /// <summary>
             ///     Registers a new appbar and specifies the message identifier that the system
@@ -357,7 +357,7 @@ namespace SilDev
         /// <summary>
         ///     Provides enumerated options of handle duplication.
         /// </summary>
-        public enum DuplicateOptions : uint
+        public enum DuplicateOption : uint
         {
             /// <summary>
             ///     Closes the source handle. This occurs regardless of any error status returned.
@@ -483,7 +483,7 @@ namespace SilDev
         /// <summary>
         ///     Provides enumerated free type values of memory allocation.
         /// </summary>
-        public enum MemFreeTypes : uint
+        public enum MemFreeType : uint
         {
             /// <summary>
             ///     Decommits the specified region of committed pages. After the operation, the
@@ -887,7 +887,7 @@ namespace SilDev
         /// <summary>
         ///     Provides enumerated values of service errors.
         /// </summary>
-        public enum ServiceErrors
+        public enum ServiceError
         {
             /// <summary>
             ///     The startup program logs the error in the event log, if possible. If the last-known-good
@@ -1012,7 +1012,7 @@ namespace SilDev
         /// <summary>
         ///     Provides enumerated values of scroll bar show statements.
         /// </summary>
-        public enum ShowScrollBarOptions
+        public enum ShowScrollBarOption
         {
             /// <summary>
             ///     Shows or hides a window's standard horizontal scroll bars.
@@ -3046,10 +3046,8 @@ namespace SilDev
                 {
                     var cursorPos = GetCursorPos();
                     var screen = Screen.PrimaryScreen;
-                    foreach (var scr in Screen.AllScreens)
+                    foreach (var scr in Screen.AllScreens.Where(scr => scr.Bounds.Contains(cursorPos)))
                     {
-                        if (!scr.Bounds.Contains(cursorPos))
-                            continue;
                         screen = scr;
                         break;
                     }
@@ -3082,7 +3080,7 @@ namespace SilDev
                 }
                 rect.Width = width;
                 rect.Height = height;
-                NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
+                _ = NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
             }
 
             /// <summary>
@@ -3223,7 +3221,7 @@ namespace SilDev
             ///     object type, see the following Remarks section.
             ///     <para>
             ///         This parameter is ignored if the dwOptions parameter specifies the
-            ///         <see cref="DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
+            ///         <see cref="DuplicateOption.SameAccess"/> flag. Otherwise, the flags that
             ///         can be specified depend on the type of object whose handle is to be duplicated.
             ///     </para>
             /// </param>
@@ -3234,7 +3232,7 @@ namespace SilDev
             /// </param>
             /// <param name="dwOptions">
             ///     Optional actions. This parameter can be zero, or any combination of
-            ///     <see cref="DuplicateOptions"/>.
+            ///     <see cref="DuplicateOption"/>.
             /// </param>
             public static bool DuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle, uint dwDesiredAccess, bool bInheritHandle, uint dwOptions) =>
                 NativeMethods.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, out lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
@@ -3414,7 +3412,7 @@ namespace SilDev
                     var buffer = new byte[256];
                     using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                         fs.Read(buffer, 0, fs.Length >= buffer.Length ? buffer.Length : (int)fs.Length);
-                    NativeMethods.FindMimeFromData(IntPtr.Zero, null, buffer, 256, null, dwMimeFlags, out var mimetype, 0);
+                    _ = NativeMethods.FindMimeFromData(IntPtr.Zero, null, buffer, 256, null, dwMimeFlags, out var mimetype, 0);
                     var mime = Marshal.PtrToStringUni(mimetype);
                     Marshal.FreeCoTaskMem(mimetype);
                     return mime;
@@ -3743,7 +3741,7 @@ namespace SilDev
                 try
                 {
                     NativeMethods.DwmGetColorizationParameters(out var parameters);
-                    var color = Color.FromArgb(int.Parse(parameters.clrColor.ToString("X"), NumberStyles.HexNumber));
+                    var color = Color.FromArgb(int.Parse(parameters.clrColor.ToString("X", CultureInfo.InvariantCulture), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
                     if (!alpha)
                         color = Color.FromArgb(color.R, color.G, color.B);
                     return color;
@@ -4034,8 +4032,15 @@ namespace SilDev
             ///     terminating null character. If the buffer pointed to by the lpName parameter is too small, this
             ///     variable contains the required size.
             /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     lpSystemName or lpName is null.
+            /// </exception>
             public static bool LookupPrivilegeName(string lpSystemName, LuId lpLuid, StringBuilder lpName, ref int cchName)
             {
+                if (lpSystemName == null)
+                    throw new ArgumentNullException(nameof(lpSystemName));
+                if (lpName == null)
+                    throw new ArgumentNullException(nameof(lpName));
                 var ptr = Marshal.AllocHGlobal(Marshal.SizeOf(lpLuid));
                 Marshal.StructureToPtr(lpLuid, ptr, true);
                 try
@@ -4104,7 +4109,7 @@ namespace SilDev
                     return;
                 if (nRect.Width <= 0 || nRect.Height <= 0)
                     nRect.Size = cRect.Size;
-                NativeMethods.MoveWindow(hWnd, nRect.X, nRect.Y, nRect.Width, nRect.Height, cRect.Size != nRect.Size);
+                _ = NativeMethods.MoveWindow(hWnd, nRect.X, nRect.Y, nRect.Width, nRect.Height, cRect.Size != nRect.Size);
             }
 
             /// <summary>
@@ -4189,7 +4194,7 @@ namespace SilDev
             {
                 if (!WindowIsOutOfScreenArea(hWnd, out var rect))
                     return;
-                NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
+                _ = NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, false);
             }
 
             /// <summary>
@@ -4436,9 +4441,8 @@ namespace SilDev
                     (int)WindowStyleFlags.MaximizeBox,
                     (int)WindowStyleFlags.ThickFrame
                 };
-                foreach (var flag in flags)
-                    if ((style & flag) == flag)
-                        style &= ~flag;
+                foreach (var flag in flags.Where(flag => (style & flag) == flag))
+                    style &= ~flag;
                 SetWindowLong(hWnd, WindowLongFlags.GwlStyle, (IntPtr)style);
                 if (!extended)
                     return;
@@ -4486,6 +4490,8 @@ namespace SilDev
                 var cds = new CopyData();
                 try
                 {
+                    if (args == null)
+                        throw new ArgumentNullException(nameof(args));
                     cds.cbData = (args.Length + 1) * 2;
                     cds.lpData = NativeMethods.LocalAlloc(LocalAllocFlags.LMemZeroInit, (UIntPtr)cds.cbData);
                     Marshal.Copy(args.ToCharArray(), 0, cds.lpData, args.Length);
@@ -4925,7 +4931,7 @@ namespace SilDev
             ///     A handle to the window.
             /// </param>
             public static void SetWindowFullscreen(IntPtr hWnd) =>
-                NativeMethods.MoveWindow(hWnd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, true);
+                _ = NativeMethods.MoveWindow(hWnd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, true);
 
             /// <summary>
             ///     Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the
@@ -4975,7 +4981,7 @@ namespace SilDev
             {
                 var rect = new Rectangle();
                 NativeMethods.GetWindowRect(hWnd, ref rect);
-                NativeMethods.MoveWindow(hWnd, point.X, point.Y, rect.Width, rect.Height, false);
+                _ = NativeMethods.MoveWindow(hWnd, point.X, point.Y, rect.Width, rect.Height, false);
             }
 
             /// <summary>
@@ -5080,7 +5086,7 @@ namespace SilDev
                 var rect = new Rectangle();
                 NativeMethods.GetWindowRect(hWnd, ref rect);
                 if (rect.Size != size)
-                    NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, size.Width, size.Height, true);
+                    _ = NativeMethods.MoveWindow(hWnd, rect.X, rect.Y, size.Width, size.Height, true);
             }
 
             /// <summary>
@@ -5153,7 +5159,7 @@ namespace SilDev
             ///     depends on the value set in the dwMessage parameter. See the individual message pages for specifics.
             /// </param>
             [SuppressMessage("ReSharper", "InconsistentNaming")]
-            public static UIntPtr SHAppBarMessage(AppBarMessageOptions dwMessage, ref AppBarData pData) =>
+            public static UIntPtr SHAppBarMessage(AppBarMessageOption dwMessage, ref AppBarData pData) =>
                 NativeMethods.SHAppBarMessage(dwMessage, ref pData);
 
             /// <summary>
@@ -5206,7 +5212,7 @@ namespace SilDev
             ///     Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown;
             ///     otherwise, it is hidden.
             /// </param>
-            public static bool ShowScrollBar(IntPtr hWnd, ShowScrollBarOptions wBar, bool bShow) =>
+            public static bool ShowScrollBar(IntPtr hWnd, ShowScrollBarOption wBar, bool bShow) =>
                 NativeMethods.ShowScrollBar(hWnd, wBar, bShow);
 
             /// <summary>
@@ -5354,7 +5360,7 @@ namespace SilDev
             /// <param name="dwFreeType">
             ///     The type of free operation.
             /// </param>
-            public static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, MemFreeTypes dwFreeType) =>
+            public static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, MemFreeType dwFreeType) =>
                 NativeMethods.VirtualFreeEx(hProcess, lpAddress, dwSize, dwFreeType);
 
             /// <summary>
@@ -5394,12 +5400,8 @@ namespace SilDev
                             Width = vRect.Width / 2,
                             Height = vRect.Height / 2
                         };
-                        foreach (var scr in Screen.AllScreens)
-                        {
-                            if (!scr.Bounds.Contains(range))
-                                continue;
+                        foreach (var scr in Screen.AllScreens.Where(scr => scr.Bounds.Contains(range)))
                             screen = scr;
-                        }
                         range = new Rectangle
                         {
                             X = screen.WorkingArea.X,
@@ -5827,7 +5829,7 @@ namespace SilDev
             ///     If the function succeeds, the return value is a handle to the service.
             /// </returns>
             [DllImport(DllNames.Advapi32, EntryPoint = "CreateServiceA", BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
-            internal static extern IntPtr CreateService(IntPtr hScManager, [MarshalAs(UnmanagedType.LPStr)] string lpServiceName, [MarshalAs(UnmanagedType.LPStr)] string lpDisplayName, ServiceAccessRights dwDesiredAccess, ServiceTypes dwServiceType, ServiceBootFlags dwStartType, ServiceErrors dwErrorControl, [MarshalAs(UnmanagedType.LPStr)] string lpBinaryPathName, [MarshalAs(UnmanagedType.LPStr)] string lpLoadOrderGroup, IntPtr lpdwTagId, [MarshalAs(UnmanagedType.LPStr)] string lpDependencies, [MarshalAs(UnmanagedType.LPStr)] string lpServiceStartName, [MarshalAs(UnmanagedType.LPStr)] string lpPassword);
+            internal static extern IntPtr CreateService(IntPtr hScManager, [MarshalAs(UnmanagedType.LPStr)] string lpServiceName, [MarshalAs(UnmanagedType.LPStr)] string lpDisplayName, ServiceAccessRights dwDesiredAccess, ServiceTypes dwServiceType, ServiceBootFlags dwStartType, ServiceError dwErrorControl, [MarshalAs(UnmanagedType.LPStr)] string lpBinaryPathName, [MarshalAs(UnmanagedType.LPStr)] string lpLoadOrderGroup, IntPtr lpdwTagId, [MarshalAs(UnmanagedType.LPStr)] string lpDependencies, [MarshalAs(UnmanagedType.LPStr)] string lpServiceStartName, [MarshalAs(UnmanagedType.LPStr)] string lpPassword);
 
             /// <summary>
             ///     Deletes an item from the specified menu. If the menu item opens a menu or submenu, this function
@@ -5926,7 +5928,7 @@ namespace SilDev
             ///     object type, see the following Remarks section.
             ///     <para>
             ///         This parameter is ignored if the dwOptions parameter specifies the
-            ///         <see cref="DuplicateOptions.SameAccess"/> flag. Otherwise, the flags that
+            ///         <see cref="DuplicateOption.SameAccess"/> flag. Otherwise, the flags that
             ///         can be specified depend on the type of object whose handle is to be duplicated.
             ///     </para>
             /// </param>
@@ -5937,7 +5939,7 @@ namespace SilDev
             /// </param>
             /// <param name="dwOptions">
             ///     Optional actions. This parameter can be zero, or any combination of
-            ///     <see cref="DuplicateOptions"/>.
+            ///     <see cref="DuplicateOption"/>.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -8010,7 +8012,7 @@ namespace SilDev
             ///     for the specific appbar message sent. Links to those documents are given in the See Also section.
             /// </returns>
             [DllImport(DllNames.Shell32, SetLastError = true, CharSet = CharSet.Unicode)]
-            internal static extern UIntPtr SHAppBarMessage(AppBarMessageOptions dwMessage, ref AppBarData pData);
+            internal static extern UIntPtr SHAppBarMessage(AppBarMessageOption dwMessage, ref AppBarData pData);
 
             /// <summary>
             ///     Performs an operation on a specified file.
@@ -8115,7 +8117,7 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool ShowScrollBar(IntPtr hWnd, ShowScrollBarOptions wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
+            internal static extern bool ShowScrollBar(IntPtr hWnd, ShowScrollBarOption wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
 
             /// <summary>
             ///     Sets the specified window's show state.
@@ -8328,7 +8330,7 @@ namespace SilDev
             ///     If the function succeeds, the return value is a nonzero value.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
-            internal static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, MemFreeTypes dwFreeType);
+            internal static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, MemFreeType dwFreeType);
 
             /// <summary>
             ///     The waveOutGetVolume function retrieves the current volume level of the specified waveform-audio
@@ -8676,6 +8678,7 @@ namespace SilDev
         ///     Contains information about a system appbar message.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public struct AppBarData : IDisposable
         {
             /// <summary>
@@ -8687,26 +8690,24 @@ namespace SilDev
             ///     The handle to the appbar window. Not all messages use this member. See the individual message
             ///     page to see if you need to provide an hWind value.
             /// </summary>
-#pragma warning disable IDE1006
-                [SuppressMessage("ReSharper", "InconsistentNaming")]
             public IntPtr hWnd { get; internal set; }
-#pragma warning restore IDE1006
+
             /// <summary>
             ///     An application-defined message identifier. The application uses the specified identifier for
             ///     notification messages that it sends to the appbar identified by the hWnd member.
             /// </summary>
-            public uint uCallbackMessage;
+            public uint uCallbackMessag;
 
             /// <summary>
             ///     A value that specifies an edge of the screen.
             ///     <para>
             ///         This member is used when sending one of these messages:
-            ///         <see cref="AppBarMessageOptions.GetAutoHideBar"/>
-            ///         <see cref="AppBarMessageOptions.SetAutoHideBar"/>
-            ///         <see cref="AppBarMessageOptions.GetAutoHideBarEx"/>
-            ///         <see cref="AppBarMessageOptions.SetAutoHideBarEx"/>
-            ///         <see cref="AppBarMessageOptions.QueryPos"/>
-            ///         <see cref="AppBarMessageOptions.SetPos"/>.
+            ///         <see cref="AppBarMessageOption.GetAutoHideBar"/>
+            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>
+            ///         <see cref="AppBarMessageOption.GetAutoHideBarEx"/>
+            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>
+            ///         <see cref="AppBarMessageOption.QueryPos"/>
+            ///         <see cref="AppBarMessageOption.SetPos"/>.
             ///     </para>
             /// </summary>
             public uint uEdge;
@@ -8714,15 +8715,15 @@ namespace SilDev
             /// <summary>
             ///     A <see cref="Rectangle"/> structure whose use varies depending on the message:
             ///     <para>
-            ///         <see cref="AppBarMessageOptions.GetTaskBarPos"/>,
-            ///         <see cref="AppBarMessageOptions.QueryPos"/>,
-            ///         <see cref="AppBarMessageOptions.SetPos"/>: The bounding rectangle, in screen
+            ///         <see cref="AppBarMessageOption.GetTaskBarPos"/>,
+            ///         <see cref="AppBarMessageOption.QueryPos"/>,
+            ///         <see cref="AppBarMessageOption.SetPos"/>: The bounding rectangle, in screen
             ///         coordinates, of an appbar or the Windows taskbar.
             ///     </para>
             ///     <para>
-            ///         <see cref="AppBarMessageOptions.GetAutoHideBarEx"/>,
-            ///         <see cref="AppBarMessageOptions.SetAutoHideBarEx"/>,
-            ///         <see cref="AppBarMessageOptions.SetPos"/>: The monitor on which the operation
+            ///         <see cref="AppBarMessageOption.GetAutoHideBarEx"/>,
+            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>,
+            ///         <see cref="AppBarMessageOption.SetPos"/>: The monitor on which the operation
             ///         is being performed.
             ///     </para>
             /// </summary>
@@ -8731,18 +8732,18 @@ namespace SilDev
             /// <summary>
             ///     A message-dependent value. This member is used with these messages:
             ///     <para>
-            ///         <see cref="AppBarMessageOptions.SetAutoHideBar"/>: Registers or unregisters an
+            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>: Registers or unregisters an
             ///         autohide appbar for a given edge of the screen. If the system has multiple monitors,
             ///         the monitor that contains the primary taskbar is used.
             ///     </para>
             ///     <para>
-            ///         <see cref="AppBarMessageOptions.SetAutoHideBarEx"/>: Registers or unregisters an
+            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>: Registers or unregisters an
             ///         autohide appbar for a given edge of the screen. This message extends
-            ///         <see cref="AppBarMessageOptions.SetAutoHideBar"/> by enabling you to specify a
+            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/> by enabling you to specify a
             ///         particular monitor, for use in multiple monitor situations.
             ///     </para>
             ///     <para>
-            ///         <see cref="AppBarMessageOptions.SetState"/>: Sets the autohide and always-on-top
+            ///         <see cref="AppBarMessageOption.SetState"/>: Sets the autohide and always-on-top
             ///         states of the Windows taskbar.
             ///     </para>
             /// </summary>
@@ -8772,8 +8773,7 @@ namespace SilDev
             ///     The return value of the window procedure that processed the message specified by
             ///     the message value.
             /// </summary>
-#pragma warning disable IDE1006
-                public IntPtr lResult { get; internal set; }
+            public IntPtr lResult { get; internal set; }
 
             /// <summary>
             ///     Additional information about the message. The exact meaning depends on the message
@@ -8786,7 +8786,7 @@ namespace SilDev
             ///     value.
             /// </summary>
             public IntPtr wParam { get; internal set; }
-#pragma warning restore IDE1006
+
             /// <summary>
             ///     The message.
             /// </summary>
@@ -8795,14 +8795,12 @@ namespace SilDev
             /// <summary>
             ///     A handle to the window that processed the message specified by the message value.
             /// </summary>
-#pragma warning disable IDE1006
-                public IntPtr hwnd { get; internal set; }
-#pragma warning restore IDE1006
+            public IntPtr hwnd { get; internal set; }
         }
 
         /// <summary>
         ///     Contains data to be passed to another application by the
-        ///     <see cref="F:SilDev.WinApi.WindowMenuFlags.WmCopyData"/> message.
+        ///     <see cref="WindowMenuFlags.WmCopyData"/> message.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [StructLayout(LayoutKind.Sequential)]
@@ -8811,9 +8809,8 @@ namespace SilDev
             /// <summary>
             ///     The data to be passed to the receiving application.
             /// </summary>
-#pragma warning disable IDE1006
-                public IntPtr dwData { get; internal set; }
-#pragma warning restore IDE1006
+            public IntPtr dwData { get; internal set; }
+
             /// <summary>
             ///     The size, in bytes, of the data pointed to by the lpData member.
             /// </summary>
@@ -8822,9 +8819,8 @@ namespace SilDev
             /// <summary>
             ///     The data to be passed to the receiving application. This member can be NULL.
             /// </summary>
-#pragma warning disable IDE1006
-                public IntPtr lpData { get; internal set; }
-#pragma warning restore IDE1006
+            public IntPtr lpData { get; internal set; }
+
             /// <summary>
             ///     Releases all resources used by this <see cref="CopyData"/>.
             /// </summary>
@@ -8876,13 +8872,11 @@ namespace SilDev
             internal const string Urlmon = "urlmon.dll";
             internal const string Uxtheme = "uxtheme.dll";
             internal const string Winmm = "winmm.dll";
-#pragma warning disable CS1591
             public const string Kernel32 = "kernel32.dll";
             public const string Ntdll = "ntdll.dll";
             public const string Psapi = "psapi.dll";
             public const string Shell32 = "shell32.dll";
             public const string User32 = "user32.dll";
-#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -8973,7 +8967,6 @@ namespace SilDev
         [StructLayout(LayoutKind.Explicit)]
         public struct MouseKeyboardHardwareInput
         {
-#pragma warning disable CS1591
             [FieldOffset(0)]
             public MouseInput Mouse;
 
@@ -8983,7 +8976,6 @@ namespace SilDev
             [FieldOffset(2)]
             public HardwareInput Hardware;
             */
-#pragma warning restore CS1591
         }
 
         /// <summary>
@@ -8992,7 +8984,6 @@ namespace SilDev
         [StructLayout(LayoutKind.Sequential)]
         public struct ProcessBasicInformation
         {
-#pragma warning disable CS1591
             public IntPtr ExitStatus { get; internal set; }
 
             public IntPtr PebBaseAddress { get; internal set; }
@@ -9004,7 +8995,6 @@ namespace SilDev
             public UIntPtr UniqueProcessId { get; internal set; }
 
             public IntPtr InheritedFromUniqueProcessId { get; internal set; }
-#pragma warning restore CS1591
         }
 
         /// <summary>

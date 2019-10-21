@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2019-10-18 15:49
+// Version:  2019-10-21 15:11
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -59,7 +59,7 @@ namespace SilDev
     ///     Provides enumerated options that control the current state of the progress
     ///     button.
     /// </summary>
-    public enum TaskBarProgressFlags
+    public enum TaskBarProgressState
     {
         /// <summary>
         ///     Stops displaying progress and returns the button to its normal state. Call this
@@ -139,7 +139,7 @@ namespace SilDev
             {
                 data.cbSize = (uint)Marshal.SizeOf(data);
                 data.hWnd = WinApi.NativeMethods.FindWindow("System_TrayWnd", null);
-                return (TaskBarState)WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOptions.GetState, ref data);
+                return (TaskBarState)WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOption.GetState, ref data);
             }
             finally
             {
@@ -161,7 +161,7 @@ namespace SilDev
                 data.cbSize = (uint)Marshal.SizeOf(data);
                 data.hWnd = WinApi.NativeMethods.FindWindow("System_TrayWnd", null);
                 data.lParam = (int)state;
-                WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOptions.SetState, ref data);
+                WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOption.SetState, ref data);
             }
             finally
             {
@@ -244,7 +244,7 @@ namespace SilDev
                 var target = ShellLink.GetTarget(link);
                 if (string.IsNullOrEmpty(target))
                     continue;
-                if (target.StartsWith("%"))
+                if (target.StartsWith("%", StringComparison.Ordinal))
                     target = PathEx.Combine(target);
                 if (!File.Exists(target))
                     continue;
@@ -291,7 +291,7 @@ namespace SilDev
 
                 var sb = new StringBuilder(byte.MaxValue);
                 var lib = WinApi.NativeMethods.LoadLibrary(WinApi.DllNames.Shell32);
-                WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
+                _ = WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
                 var verb = sb.ToString();
 
                 /*
@@ -383,11 +383,11 @@ namespace SilDev
         /// <param name="hWnd">
         ///     The handle of the window in which the progress of an operation is being shown.
         /// </param>
-        /// <param name="flags">
+        /// <param name="state">
         ///     The flag that control the current state of the progress button.
         /// </param>
-        public static void SetState(IntPtr hWnd, TaskBarProgressFlags flags) =>
-            (TaskBar.TaskBarInstance as ComImports.ITaskBarList3)?.SetProgressState(hWnd, flags);
+        public static void SetState(IntPtr hWnd, TaskBarProgressState state) =>
+            (TaskBar.TaskBarInstance as ComImports.ITaskBarList3)?.SetProgressState(hWnd, state);
 
         /// <summary>
         ///     Displays or updates a progress bar hosted in a taskbar button to show the specific

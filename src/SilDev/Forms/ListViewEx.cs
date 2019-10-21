@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2018-03-08 01:18
+// Version:  2019-10-20 16:44
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -36,7 +36,7 @@ namespace SilDev.Forms
         {
             if (!(listView is ListView lv))
                 return null;
-            var pos = listView.PointToClient(Cursor.Position);
+            var pos = lv.PointToClient(Cursor.Position);
             return lv.GetItemAt(pos.X, pos.Y);
         }
 
@@ -50,8 +50,14 @@ namespace SilDev.Forms
         /// <param name="cursor">
         ///     The <see cref="Cursor"/> to set.
         /// </param>
-        public static void SetMouseOverCursor(this ListView listView, Cursor cursor = default) =>
-            WinApi.NativeHelper.SendMessage(listView.Handle, LvmSetHotCursor, IntPtr.Zero, (cursor ?? Cursors.Arrow).Handle);
+        public static void SetMouseOverCursor(this ListView listView, Cursor cursor = default)
+        {
+            if (!(listView is ListView lv))
+                return;
+            if (cursor == default)
+                cursor = Cursors.Arrow;
+            WinApi.NativeHelper.SendMessage(lv.Handle, LvmSetHotCursor, IntPtr.Zero, cursor.Handle);
+        }
 
         /// <summary>
         ///     Represents a Windows list view control, which displays a collection of items that

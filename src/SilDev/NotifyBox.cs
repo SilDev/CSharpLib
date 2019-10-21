@@ -29,13 +29,11 @@ namespace SilDev
     /// </summary>
     public enum NotifyBoxSound
     {
-#pragma warning disable CS1591
         None = 0,
         Asterisk = 1,
         Warning = 2,
         Notify = 3,
         Question = 4,
-#pragma warning restore CS1591
     }
 
     /// <summary>
@@ -43,7 +41,6 @@ namespace SilDev
     /// </summary>
     public enum NotifyBoxStartPosition
     {
-#pragma warning disable CS1591
         Center = 0,
         CenterLeft = 1,
         CenterRight = 2,
@@ -51,7 +48,6 @@ namespace SilDev
         BottomRight = 4,
         TopLeft = 5,
         TopRight = 6
-#pragma warning restore CS1591
     }
 
     /// <summary>
@@ -202,9 +198,9 @@ namespace SilDev
                         SystemSounds.Question.Play();
                         break;
                     case NotifyBoxSound.Notify:
-                        var wavPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media\\Windows Notify System Generic.wav");
+                        var wavPath = PathEx.Combine(Environment.SpecialFolder.Windows, "Media\\Windows Notify System Generic.wav");
                         if (File.Exists(wavPath))
-                            new SoundPlayer(wavPath).Play();
+                            Media.PlayWave(wavPath);
                         break;
                 }
             }
@@ -418,13 +414,27 @@ namespace SilDev
             {
                 if (disposing)
                     _components.Dispose();
+                if (_bgWorker?.IsBusy == true)
+                    _bgWorker.CancelAsync();
+                _bgWorker?.Dispose();
+                _textLabel?.Dispose();
+                if (_timer != null)
+                {
+                    _timer.Enabled = false;
+                    _timer?.Dispose();
+                }
+                if (_timer2 != null)
+                {
+                    _timer2.Enabled = false;
+                    _timer2?.Dispose();
+                }
                 base.Dispose(disposing);
             }
 
             private void NotifyForm_Shown(object sender, EventArgs e)
             {
                 _timer.Enabled = true;
-                if (_textLabel.Text.EndsWith(" . . ."))
+                if (_textLabel.Text.EndsWith(" . . .", StringComparison.Ordinal))
                     _timer2.Enabled = true;
                 if (_duration > 0)
                     _bgWorker.RunWorkerAsync();
@@ -463,16 +473,16 @@ namespace SilDev
                 if (!(sender is Timer timer))
                     return;
                 var s = _textLabel.Text;
-                if (!s.EndsWith(" ."))
+                if (!s.EndsWith(" .", StringComparison.Ordinal))
                 {
                     timer.Enabled = false;
                     return;
                 }
-                if (s.EndsWith(" . . ."))
-                    while (s.EndsWith(" . ."))
+                if (s.EndsWith(" . . .", StringComparison.Ordinal))
+                    while (s.EndsWith(" . .", StringComparison.Ordinal))
                         s = s.Replace(" . .", " .");
                 else
-                    s = s.EndsWith(" . .") ? s.Replace(" . .", " . . .") : s.Replace(" .", " . .");
+                    s = s.EndsWith(" . .", StringComparison.Ordinal) ? s.Replace(" . .", " . . .") : s.Replace(" .", " . .");
                 _textLabel.Text = s;
             }
         }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2019-10-15 11:28
+// Version:  2019-10-20 18:17
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
 
@@ -25,7 +26,6 @@ namespace SilDev
     /// </summary>
     public class MemoryPinner : IDisposable
     {
-        private bool _disposed;
         private GCHandle _handle;
 
         /// <summary>
@@ -49,27 +49,23 @@ namespace SilDev
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
         /// </summary>
-        public void Dispose() =>
+        public void Dispose()
+        {
             Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
         /// </summary>
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-                return;
-            _handle.Free();
-            Pointer = IntPtr.Zero;
-            _disposed = true;
             if (!disposing)
                 return;
-            GC.SuppressFinalize(this);
+            if (_handle.IsAllocated)
+                _handle.Free();
+            Pointer = IntPtr.Zero;
         }
-#pragma warning disable 1591
-        ~MemoryPinner() =>
-            Dispose(false);
-#pragma warning restore 1591
     }
 
     /// <summary>
@@ -79,7 +75,6 @@ namespace SilDev
     {
         private readonly ArrayList _allocations = new ArrayList();
         private readonly IntPtr _hProcess;
-        private bool _disposed;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ProcessMemory"/> class with
@@ -90,35 +85,34 @@ namespace SilDev
         /// </param>
         public ProcessMemory(IntPtr hWnd)
         {
-            WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out var ownerProcessId);
+            _ = WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out var ownerProcessId);
             _hProcess = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessVmOperation | WinApi.AccessRights.ProcessVmRead | WinApi.AccessRights.ProcessVmWrite | WinApi.AccessRights.ProcessQueryInformation, false, ownerProcessId);
         }
 
         /// <summary>
         ///     Releases all resources used by this <see cref="ProcessMemory"/>.
         /// </summary>
-        public void Dispose() =>
+        public void Dispose()
+        {
             Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         /// <summary>
         ///     Releases all resources used by this <see cref="ProcessMemory"/>.
         /// </summary>
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed || _hProcess == IntPtr.Zero)
+            if (!disposing || _hProcess == IntPtr.Zero)
                 return;
-            foreach (IntPtr ptr in _allocations)
-                WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeTypes.Release);
+            foreach (var ptr in _allocations.Cast<IntPtr>())
+                _ = WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeType.Release);
             WinApi.NativeMethods.CloseHandle(_hProcess);
-            _disposed = true;
-            if (!disposing)
-                return;
-            GC.SuppressFinalize(this);
         }
-#pragma warning disable 1591
+
         ~ProcessMemory() =>
             Dispose(false);
-#pragma warning restore 1591
+
         /// <summary>
         ///     Gets the file name of the process image.
         /// </summary>

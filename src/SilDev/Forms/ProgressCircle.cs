@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2019-10-15 11:06
+// Version:  2019-10-20 19:03
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -25,7 +25,7 @@ namespace SilDev.Forms
     /// </summary>
     public class ProgressCircle : Control
     {
-        private readonly Timer _timer = new Timer();
+        private readonly Timer _timer;
         private double[] _angles;
         private PointF _centerPoint;
         private Color[] _colors;
@@ -48,7 +48,9 @@ namespace SilDev.Forms
             GetSpokesAngles();
             GetControlCenterPoint();
 
+            _timer = new Timer();
             _timer.Tick += Timer_Tick;
+            Disposed += OnDisposed;
             ActiveTimer();
 
             Resize += ProgressCircle_Resize;
@@ -213,6 +215,12 @@ namespace SilDev.Forms
             Invalidate();
         }
 
+        private void OnDisposed(object s, EventArgs e)
+        {
+            if (Disposing)
+                _timer?.Dispose();
+        }
+
         /// <summary>
         ///     Raises the <see cref="Control"/>.Paint event.
         /// </summary>
@@ -224,14 +232,23 @@ namespace SilDev.Forms
                 var pos = _progressValue;
                 for (var i = 0; i < _spokes; i++)
                 {
-                    pos %= _spokes;
-                    using (var pen = new Pen(new SolidBrush(_colors[i]), _thickness))
+                    var brush = default(SolidBrush);
+                    try
                     {
-                        pen.StartCap = LineCap.Round;
-                        pen.EndCap = LineCap.Round;
-                        e.Graphics.DrawLine(pen, GetCoordinate(_centerPoint, _innerRadius, _angles[pos]), GetCoordinate(_centerPoint, _outerRadius, _angles[pos]));
+                        brush = new SolidBrush(_colors[i]);
+                        pos %= _spokes;
+                        using (var pen = new Pen(brush, _thickness))
+                        {
+                            pen.StartCap = LineCap.Round;
+                            pen.EndCap = LineCap.Round;
+                            e.Graphics.DrawLine(pen, GetCoordinate(_centerPoint, _innerRadius, _angles[pos]), GetCoordinate(_centerPoint, _outerRadius, _angles[pos]));
+                        }
+                        pos++;
                     }
-                    pos++;
+                    finally
+                    {
+                        brush?.Dispose();
+                    }
                 }
             }
             base.OnPaint(e);

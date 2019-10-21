@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProgressBarEx.cs
-// Version:  2018-03-08 01:19
+// Version:  2019-10-20 17:09
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -37,7 +37,7 @@ namespace SilDev.Forms
             pb.Value = pb.Maximum;
             pb.Value--;
             pb.Maximum = max;
-            pb.Value = progressBar.Maximum;
+            pb.Value = pb.Maximum;
         }
     }
 }

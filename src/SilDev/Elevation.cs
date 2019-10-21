@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Elevation.cs
-// Version:  2019-10-18 12:56
+// Version:  2019-10-19 16:03
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -59,10 +59,10 @@ namespace SilDev
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(path);
                 var acl = Directory.GetAccessControl(dir);
-                foreach (var rule in acl.GetAccessRules(true, true, typeof(NTAccount)).Cast<FileSystemAccessRule>())
+                foreach (var rule in acl.GetAccessRules(true, true, typeof(NTAccount)).Cast<FileSystemAccessRule>()
+                                        .Where(rule => (rule.FileSystemRights & FileSystemRights.Write) != 0 &&
+                                                       CurrentPrincipal.IsInRole(rule.IdentityReference.Value)))
                 {
-                    if ((rule.FileSystemRights & FileSystemRights.Write) == 0 || !CurrentPrincipal.IsInRole(rule.IdentityReference.Value))
-                        continue;
                     result = rule.AccessControlType == AccessControlType.Allow;
                     break;
                 }

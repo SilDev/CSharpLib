@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2018-06-07 09:32
+// Version:  2019-10-21 13:55
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,6 +20,7 @@ namespace SilDev.Forms
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Windows.Forms;
+    using Properties;
 
     /// <summary>
     ///     Displays a message window, also known as a dialog box, based on <see cref="MessageBox"/>,
@@ -51,15 +52,9 @@ namespace SilDev.Forms
         private static int _nButton;
 
         private static IWin32Window _owner;
-        private static readonly WinApi.EnumChildProc EnumProc;
-        private static readonly WinApi.HookProc HookProc;
-
-        static MessageBoxEx()
-        {
-            HookProc = MessageBoxHookProc;
-            EnumProc = MessageBoxEnumProc;
-            _hHook = IntPtr.Zero;
-        }
+        private static readonly WinApi.EnumChildProc EnumProc = MessageBoxEnumProc;
+        private static readonly WinApi.HookProc HookProc = MessageBoxHookProc;
+        static MessageBoxEx() => _hHook = IntPtr.Zero;
 
         /// <summary>
         ///     Displays a message box with the specified text, caption, buttons, icon,
@@ -656,7 +651,7 @@ namespace SilDev.Forms
             try
             {
                 if (_hHook != IntPtr.Zero)
-                    throw new NotSupportedException("Multiple calls are not supported.");
+                    throw new NotSupportedException(ExceptionMessages.MultipleCalls);
                 if (owner != null)
                 {
                     _owner = owner;
@@ -691,7 +686,7 @@ namespace SilDev.Forms
                 try
                 {
                     var className = new StringBuilder(10);
-                    WinApi.NativeMethods.GetClassName(msg.hwnd, className, className.Capacity);
+                    _ = WinApi.NativeMethods.GetClassName(msg.hwnd, className, className.Capacity);
                     if (className.ToString() == "#32770")
                     {
                         _nButton = 0;
@@ -734,7 +729,7 @@ namespace SilDev.Forms
 
         private static IntPtr MessageBoxUnhookProc()
         {
-            WinApi.NativeMethods.UnhookWindowsHookEx(_hHook);
+            _ = WinApi.NativeMethods.UnhookWindowsHookEx(_hHook);
             _hHook = IntPtr.Zero;
             _owner = null;
             if (ButtonText.OverrideEnabled)
@@ -745,7 +740,7 @@ namespace SilDev.Forms
         private static bool MessageBoxEnumProc(IntPtr hWnd, IntPtr lParam)
         {
             var className = new StringBuilder(10);
-            WinApi.NativeMethods.GetClassName(hWnd, className, className.Capacity);
+            _ = WinApi.NativeMethods.GetClassName(hWnd, className, className.Capacity);
             if (!className.ToString().EqualsEx("Button"))
                 return true;
             switch (WinApi.NativeMethods.GetDlgCtrlID(hWnd))

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Compaction.cs
-// Version:  2019-10-15 11:14
+// Version:  2019-10-21 00:56
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.IO.Compression;
     using System.Linq;
@@ -162,7 +163,7 @@ namespace SilDev
                             try
                             {
                                 var entPath = ent.FullName;
-                                var entIsDir = entPath.EndsWithEx(Path.AltDirectorySeparatorChar.ToString(), Path.DirectorySeparatorChar.ToString());
+                                var entIsDir = entPath.EndsWithEx(Path.AltDirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture));
                                 entPath = PathEx.Combine(dest, entPath);
                                 if (!PathEx.IsValidPath(entPath))
                                     throw new NotSupportedException();

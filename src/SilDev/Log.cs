@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-15 11:25
+// Version:  2019-10-20 17:50
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -279,7 +279,7 @@ namespace SilDev
                 {
                     Builder.Append(ProcessEx.CurrentId);
                     Builder.Append(" ");
-                    Builder.Append(DateTime.Now.ToString(DateTimeFormat));
+                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureInfo.InvariantCulture));
                     Builder.Append(" | ");
                 }
                 else
@@ -288,7 +288,7 @@ namespace SilDev
                     var separator = new string('=', 65);
 
                     Builder.Append("New Process ");
-                    Builder.Append(DateTime.Now.ToString(DateTimeFormat));
+                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureInfo.InvariantCulture));
                     Builder.Append(" ");
 
                     var front = Builder.ToString();
@@ -351,13 +351,13 @@ namespace SilDev
                 {
                     _conIsOpen = true;
 
-                    WinApi.NativeMethods.AllocConsole();
+                    _ = WinApi.NativeMethods.AllocConsole();
                     var hWnd = WinApi.NativeMethods.GetConsoleWindow();
                     if (hWnd != IntPtr.Zero)
                     {
                         var hMenu = WinApi.NativeMethods.GetSystemMenu(hWnd, false);
                         if (hMenu != IntPtr.Zero)
-                            WinApi.NativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
+                            _ = WinApi.NativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
                     }
 
                     _stdHandle = WinApi.NativeMethods.GetStdHandle(-0xb);
@@ -441,13 +441,9 @@ namespace SilDev
             if (DebugMode < 1 || !Directory.Exists(FileDir))
                 return;
             AppendToFile();
-            foreach (var file in Directory.EnumerateFiles(FileDir, AssemblyName + "*.log", SearchOption.TopDirectoryOnly))
-            {
-                if (FilePath.EqualsEx(file))
-                    continue;
-                if ((DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
-                    File.Delete(file);
-            }
+            Directory.EnumerateFiles(FileDir, $"{AssemblyName}*.log", SearchOption.TopDirectoryOnly)
+                     .Where(file => !FilePath.EqualsEx(file) && (DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
+                     .ForEach(File.Delete);
         }
     }
 }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AppCompat.cs
-// Version:  2019-10-15 11:12
+// Version:  2019-10-21 13:50
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using Microsoft.Win32;
 
@@ -26,7 +27,7 @@ namespace SilDev
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum AppCompatColorModes
+    public enum AppCompatColorMode
     {
         /// <summary>
         ///     System default.
@@ -48,7 +49,7 @@ namespace SilDev
     ///     Provides DPI scaling behavior options. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
-    public enum AppCompatDpiScalingBehaviors
+    public enum AppCompatDpiScalingBehavior
     {
         /// <summary>
         ///     System default.
@@ -76,7 +77,7 @@ namespace SilDev
     ///     Provides DPI scaling system options. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
-    public enum AppCompatDpiScalingSystems
+    public enum AppCompatDpiScalingSystem
     {
         /// <summary>
         ///     System default.
@@ -99,7 +100,7 @@ namespace SilDev
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum AppCompatSystemVersions
+    public enum AppCompatSystemVersion
     {
         /// <summary>
         ///     System default.
@@ -156,43 +157,98 @@ namespace SilDev
     ///     Application compatibility layers struct. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
-    public struct AppCompatLayers
+    public struct AppCompatLayers : IEquatable<AppCompatLayers>
     {
         /// <summary>
         ///     The color mode.
         /// </summary>
-        public AppCompatColorModes ColorMode;
+        public AppCompatColorMode ColorMode { get; set; }
 
         /// <summary>
         ///     The DPI scaling behavior.
         /// </summary>
-        public AppCompatDpiScalingBehaviors DpiScalingBehavior;
+        public AppCompatDpiScalingBehavior DpiScalingBehavior { get; set; }
 
         /// <summary>
         ///     The DPI scaling system.
         /// </summary>
-        public AppCompatDpiScalingSystems DpiScalingSystem;
+        public AppCompatDpiScalingSystem DpiScalingSystem { get; set; }
 
         /// <summary>
         ///     The operating system.
         /// </summary>
-        public AppCompatSystemVersions OperatingSystem;
+        public AppCompatSystemVersion OperatingSystem { get; set; }
 
         /// <summary>
         ///     true to disable the Windows 10 fullscreen optimizations; otherwise, false.
         /// </summary>
-        public bool DisableFullscreenOptimizations;
+        public bool DisableFullscreenOptimizations { get; set; }
 
         /// <summary>
         ///     true to run the program in 640x480 screen resolution; otherwise, false.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public bool RunIn640x480ScreenResolution;
+        public bool RunIn640x480ScreenResolution { get; set; }
 
         /// <summary>
         ///     true to run the program as administrator; otherwise, false.
         /// </summary>
-        public bool RunAsAdministrator;
+        public bool RunAsAdministrator { get; set; }
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            var current = this;
+            return GetType().GetProperties().Aggregate(0, (i, pi) => i ^ pi.GetValue(current).GetHashCode());
+        }
+
+        /// <summary>
+        ///     Determines whether this instance have same values as the specified <see cref="AppCompatLayers"/> instance.
+        /// </summary>
+        /// <param name="other">
+        ///     The <see cref="AppCompatLayers"/> instance to compare.
+        /// </param>
+        public bool Equals(AppCompatLayers other) => 
+            GetHashCode().Equals(other.GetHashCode());
+
+        /// <summary>
+        ///     Determines whether this instance have same values as the specified <see cref="object"/>.
+        /// </summary>
+        /// <param name="obj">
+        ///     The  <see cref="object"/> to compare.
+        /// </param>
+        public override bool Equals(object obj)
+        {
+            if (obj is AppCompatLayers acl)
+                return Equals(acl);
+            return false;
+        }
+
+        /// <summary>
+        ///     Determines whether two specified <see cref="AppCompatLayers"/> instances have same values.
+        /// </summary>
+        /// <param name="a">
+        ///     The first <see cref="AppCompatLayers"/> instance to compare.
+        /// </param>
+        /// <param name="b">
+        ///     The second <see cref="AppCompatLayers"/> instance to compare.
+        /// </param>
+        public static bool operator ==(AppCompatLayers a, AppCompatLayers b) =>
+            a.Equals(b);
+
+        /// <summary>
+        ///     Determines whether two specified <see cref="AppCompatLayers"/> instances have different values.
+        /// </summary>
+        /// <param name="a">
+        ///     The first <see cref="AppCompatLayers"/> instance to compare.
+        /// </param>
+        /// <param name="b">
+        ///     The second <see cref="AppCompatLayers"/> instance to compare.
+        /// </param>
+        public static bool operator !=(AppCompatLayers a, AppCompatLayers b) =>
+            !a.Equals(b);
     }
 
     /// <summary>
@@ -201,7 +257,7 @@ namespace SilDev
     public static class AppCompat
     {
         /// <summary>
-        ///     Enables the specified application compatibility layers for the specified executable file.
+        ///     Sets the specified application compatibility layers for the specified executable file.
         /// </summary>
         /// <param name="path">
         ///     The path to the file to be configured.
@@ -210,7 +266,7 @@ namespace SilDev
         ///     The compatibility layers.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     path is null or empty.
+        ///     path is null, empty or consists only of white-space characters.
         /// </exception>
         /// <exception cref="ArgumentInvalidException">
         ///     path is not a valid executable file.
@@ -221,14 +277,14 @@ namespace SilDev
         public static void SetLayers(string path, AppCompatLayers compatLayers)
         {
             if (string.IsNullOrWhiteSpace(path))
-                throw new ArgumentNullException(nameof(path));
+                throw new ArgumentInvalidException(nameof(path));
 
             var file = PathEx.Combine(path);
             if (!File.Exists(file))
                 throw new PathNotFoundException(file);
 
             var type = PortableExecutable.GetMachineTypes(file);
-            if (type != MachineTypes.AMD64 && type != MachineTypes.I386)
+            if (type != MachineType.AMD64 && type != MachineType.I386)
                 throw new ArgumentInvalidException(nameof(path));
 
             const string keyPath = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers";
@@ -240,27 +296,27 @@ namespace SilDev
                 builder.AppendLine("RUNASADMIN");
             if (compatLayers.RunIn640x480ScreenResolution)
                 builder.AppendLine("640x480");
-            if (osVer.Major >= 10 && compatLayers.DpiScalingSystem != AppCompatDpiScalingSystems.Default)
-                builder.AppendLine(Enum.GetName(typeof(AppCompatDpiScalingSystems), compatLayers.DpiScalingSystem)?.ToUpper());
-            if (osVer.Major >= 10 && compatLayers.DpiScalingBehavior != AppCompatDpiScalingBehaviors.Default)
-                builder.AppendLine(Enum.GetName(typeof(AppCompatDpiScalingBehaviors), compatLayers.DpiScalingBehavior)?.ToUpper());
-            if (compatLayers.ColorMode != AppCompatColorModes.Default)
-                builder.AppendLine(Enum.GetName(typeof(AppCompatColorModes), compatLayers.ColorMode)?.ToUpper().TrimStart('_'));
-            if (compatLayers.OperatingSystem != AppCompatSystemVersions.Default)
+            if (osVer.Major >= 10 && compatLayers.DpiScalingSystem != AppCompatDpiScalingSystem.Default)
+                builder.AppendLine(Enum.GetName(typeof(AppCompatDpiScalingSystem), compatLayers.DpiScalingSystem)?.ToUpperInvariant());
+            if (osVer.Major >= 10 && compatLayers.DpiScalingBehavior != AppCompatDpiScalingBehavior.Default)
+                builder.AppendLine(Enum.GetName(typeof(AppCompatDpiScalingBehavior), compatLayers.DpiScalingBehavior)?.ToUpperInvariant());
+            if (compatLayers.ColorMode != AppCompatColorMode.Default)
+                builder.AppendLine(Enum.GetName(typeof(AppCompatColorMode), compatLayers.ColorMode)?.ToUpperInvariant().TrimStart('_'));
+            if (compatLayers.OperatingSystem != AppCompatSystemVersion.Default)
             {
                 var os = compatLayers.OperatingSystem;
                 if (osVer.Major == 6)
                     if (osVer.Minor > 1)
                     {
-                        if (os > AppCompatSystemVersions.Win7RTM)
-                            os = AppCompatSystemVersions.VistaSP2;
+                        if (os > AppCompatSystemVersion.Win7RTM)
+                            os = AppCompatSystemVersion.VistaSP2;
                     }
                     else
                     {
-                        if (os > AppCompatSystemVersions.VistaSP2)
-                            os = AppCompatSystemVersions.VistaSP2;
+                        if (os > AppCompatSystemVersion.VistaSP2)
+                            os = AppCompatSystemVersion.VistaSP2;
                     }
-                builder.AppendLine(Enum.GetName(typeof(AppCompatSystemVersions), os)?.ToUpper());
+                builder.AppendLine(Enum.GetName(typeof(AppCompatSystemVersion), os)?.ToUpperInvariant());
             }
 
             var compatFlags = builder.ToString().Replace(Environment.NewLine, " ").Replace("_", " ").Trim();

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PortableExecutable.cs
-// Version:  2019-10-15 11:36
+// Version:  2019-10-21 15:08
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,8 +23,7 @@ namespace SilDev
     ///     Provides enumerated values of the machine field values that specifies its CPU type.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    [SuppressMessage("ReSharper", "CommentTypo")]
-    public enum MachineTypes : ushort
+    public enum MachineType
     {
         /// <summary>
         ///     The contents of this field are assumed to be applicable to any machine type.
@@ -163,9 +162,9 @@ namespace SilDev
         /// <param name="path">
         ///     The file to check.
         /// </param>
-        public static MachineTypes GetMachineTypes(string path)
+        public static MachineType GetMachineTypes(string path)
         {
-            var pe = MachineTypes.Unknown;
+            var pe = MachineType.Unknown;
             try
             {
                 var file = PathEx.Combine(path);
@@ -173,13 +172,23 @@ namespace SilDev
                     throw new ArgumentException();
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);
-                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                var fs = default(FileStream);
+                try
                 {
-                    var br = new BinaryReader(fs);
-                    fs.Seek(0x3c, SeekOrigin.Begin);
-                    fs.Seek(br.ReadInt32(), SeekOrigin.Begin);
-                    br.ReadUInt32();
-                    pe = (MachineTypes)br.ReadUInt16();
+                    fs = new FileStream(file, FileMode.Open, FileAccess.Read);
+                    using (var br = new BinaryReader(fs))
+                    {
+                        var i = fs;
+                        fs = null;
+                        i.Seek(0x3c, SeekOrigin.Begin);
+                        i.Seek(br.ReadInt32(), SeekOrigin.Begin);
+                        br.ReadUInt32();
+                        pe = (MachineType)br.ReadUInt16();
+                    }
+                }
+                finally
+                {
+                    fs?.Dispose();
                 }
             }
             catch (Exception ex)
@@ -198,7 +207,7 @@ namespace SilDev
         public static bool Is64Bit(string path)
         {
             var pe = GetMachineTypes(path);
-            return pe == MachineTypes.AMD64 || pe == MachineTypes.IA64;
+            return pe == MachineType.AMD64 || pe == MachineType.IA64;
         }
     }
 }

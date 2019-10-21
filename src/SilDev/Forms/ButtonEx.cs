@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2019-10-15 11:00
+// Version:  2019-10-20 16:26
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -54,14 +54,22 @@ namespace SilDev.Forms
             }
             b.Image = new Bitmap(12, b.Height);
             b.ImageAlign = ContentAlignment.MiddleRight;
-            using (var g = Graphics.FromImage(b.Image))
+            var g = default(Graphics);
+            var p = default(Pen);
+            try
             {
-                var p = new Pen(buttonText ?? SystemColors.ControlText, 1);
-                g.DrawLine(p, 0, 0, 0, b.Image.Height - 3);
                 var s = new Size(b.Image.Width - 6, b.Image.Height - 12);
+                g = Graphics.FromImage(b.Image);
+                p = new Pen(buttonText ?? SystemColors.ControlText, 1);
+                g.DrawLine(p, 0, 0, 0, b.Image.Height - 3);
                 g.DrawLine(p, s.Width, s.Height, s.Width + 5, s.Height);
                 g.DrawLine(p, s.Width + 1, s.Height + 1, s.Width + 4, s.Height + 1);
                 g.DrawLine(p, s.Width + 2, s.Height + 2, s.Width + 3, s.Height + 2);
+            }
+            finally
+            {
+                g?.Dispose();
+                p?.Dispose();
             }
             b.MouseMove += Split_MouseMove;
             b.MouseLeave += Split_MouseLeave;

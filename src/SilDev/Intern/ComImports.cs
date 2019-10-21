@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ComImports.cs
-// Version:  2018-07-04 11:54
+// Version:  2019-10-20 19:45
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -26,17 +26,17 @@ namespace SilDev.Intern
         internal static ISimpleAudioVolume GetVolumeObject(string name)
         {
             var deviceEnumerator = (IMMDeviceEnumerator)new MMDeviceEnumerator();
-            deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out var speakers);
+            _ = deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out var speakers);
             var iidIAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
-            speakers.Activate(ref iidIAudioSessionManager2, 0, IntPtr.Zero, out var o);
+            _ = speakers.Activate(ref iidIAudioSessionManager2, 0, IntPtr.Zero, out var o);
             var mgr = (IAudioSessionManager2)o;
-            mgr.GetSessionEnumerator(out var sessionEnumerator);
-            sessionEnumerator.GetCount(out var count);
+            _ = mgr.GetSessionEnumerator(out var sessionEnumerator);
+            _ = sessionEnumerator.GetCount(out var count);
             ISimpleAudioVolume volumeControl = null;
             for (var i = 0; i < count; i++)
             {
-                sessionEnumerator.GetSession(i, out var ctl);
-                ctl.GetDisplayName(out var dn);
+                _ = sessionEnumerator.GetSession(i, out var ctl);
+                _ = ctl.GetDisplayName(out var dn);
                 if (name.EqualsEx(dn))
                 {
                     volumeControl = ctl as ISimpleAudioVolume;
@@ -200,7 +200,7 @@ namespace SilDev.Intern
             void SetProgressValue(IntPtr hwnd, ulong ullCompleted, ulong ullTotal);
 
             [PreserveSig]
-            void SetProgressState(IntPtr hwnd, TaskBarProgressFlags tbpFlags);
+            void SetProgressState(IntPtr hwnd, TaskBarProgressState tbpFlags);
         }
 
         [ComImport]

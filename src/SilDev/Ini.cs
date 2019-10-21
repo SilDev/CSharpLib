@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2019-10-15 11:23
+// Version:  2019-10-20 17:48
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -186,7 +186,7 @@ namespace SilDev
         private static Dictionary<string, Dictionary<string, List<string>>> SortHelper(this Dictionary<string, Dictionary<string, List<string>>> source)
         {
             var comparer = new Comparison.AlphanumericComparer();
-            var sorted = source.OrderBy(x => !x.Key.Equals(NonSectionId))
+            var sorted = source.OrderBy(x => !x.Key.Equals(NonSectionId, StringComparison.Ordinal))
                                .ThenBy(x => !SortBySections.ContainsEx(x.Key))
                                .ThenBy(x => x.Key, comparer).ToDictionary(x => x.Key, x => x.Value.SortHelper());
             return sorted;
@@ -247,7 +247,7 @@ namespace SilDev
             var path = PathEx.Combine(source);
             if (!File.Exists(path))
                 path = TmpFileGuid;
-            var code = path?.ToLower().GetHashCode() ?? -1;
+            var code = path?.ToUpperInvariant().GetHashCode() ?? -1;
             return code;
         }
 
@@ -474,7 +474,7 @@ namespace SilDev
                     source = File.ReadAllText(path);
                 else
                     path = TmpFileGuid;
-                var code = path?.ToLower().GetHashCode() ?? -1;
+                var code = path?.ToUpperInvariant().GetHashCode() ?? -1;
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
 
@@ -510,7 +510,7 @@ namespace SilDev
                     InitializeCache(code);
                     if (CachedFiles.Count > 0 && CachedFiles.Count >= MaxCacheSize)
                     {
-                        var defCode = FilePath?.ToLower().GetHashCode() ?? -1;
+                        var defCode = FilePath?.ToUpperInvariant().GetHashCode() ?? -1;
                         var delCode = CachedFiles.Keys.FirstOrDefault(x => x != defCode);
                         if (CodeExists(delCode))
                             CachedFiles.Remove(delCode);
@@ -530,7 +530,7 @@ namespace SilDev
             var s = str;
             if (string.IsNullOrWhiteSpace(s) || s.Length < 3)
                 return false;
-            if (s.StartsWith("[") && s.EndsWith("]") && s.Count(x => x == '[') == 1 && s.Count(x => x == ']') == 1 && s.Any(char.IsLetterOrDigit))
+            if (s.StartsWith("[", StringComparison.Ordinal) && s.EndsWith("]", StringComparison.Ordinal) && s.Count(x => x == '[') == 1 && s.Count(x => x == ']') == 1 && s.Any(char.IsLetterOrDigit))
                 return true;
             var c = s.First();
             if (!char.IsLetterOrDigit(c) && !c.IsBetween('$', '/') && !c.IsBetween('<', '@') && !c.IsBetween('{', '~') && c != '!' && c != '"' && c != ':' && c != '^' && c != '_')
@@ -545,7 +545,7 @@ namespace SilDev
             foreach (var text in str.TrimStart().Split(TextEx.NewLineFormats.All))
             {
                 var line = text.Trim();
-                if (line.StartsWith("[") && !line.EndsWith("]") && line.Contains(']') && line.IndexOf(']') > 1)
+                if (line.StartsWith("[", StringComparison.Ordinal) && !line.EndsWith("]", StringComparison.Ordinal) && line.Contains(']') && line.IndexOf(']') > 1)
                     line = line.Substring(0, line.IndexOf(']') + 1);
                 if (LineIsValid(line))
                     builder.AppendLine(line);
@@ -691,11 +691,11 @@ namespace SilDev
                     }
                     newValue = (object)defValue ?? string.Empty;
                 }
-                else if (strValue.StartsWith(ObjectPrefix) && strValue.EndsWith(ObjectSuffix))
+                else if (strValue.StartsWith(ObjectPrefix, StringComparison.Ordinal) && strValue.EndsWith(ObjectSuffix, StringComparison.Ordinal))
                 {
                     var startIndex = ObjectPrefix.Length;
                     var length = strValue.Length - ObjectPrefix.Length - ObjectSuffix.Length;
-                    var bytes = strValue.Substring(startIndex, length).Decode(BinaryToTextEncodings.Base85);
+                    var bytes = strValue.Substring(startIndex, length).Decode(BinaryToTextEncoding.Base85);
                     var unzipped = bytes?.Unzip();
                     if (unzipped != null)
                         bytes = unzipped;
@@ -822,7 +822,7 @@ namespace SilDev
                 if (string.IsNullOrEmpty(path))
                     throw new ArgumentNullException(nameof(path));
 
-                var code = path.ToLower().GetHashCode();
+                var code = path.ToUpperInvariant().GetHashCode();
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
 
@@ -837,7 +837,7 @@ namespace SilDev
                     source = source.SortHelper();
 
                 if (!File.Exists(path) && !PathEx.IsValidPath(path))
-                    throw new ArgumentException(nameof(path));
+                    throw new ArgumentInvalidException(nameof(path));
 
                 var hash = File.Exists(path) ? new Crypto.Md5().EncryptFile(path) : null;
                 var temp = Path.GetRandomFileName();
@@ -846,7 +846,7 @@ namespace SilDev
                     {
                         if (string.IsNullOrWhiteSpace(dict.Key) || dict.Value.Count == 0)
                             continue;
-                        if (!dict.Key.Equals(NonSectionId))
+                        if (!dict.Key.Equals(NonSectionId, StringComparison.Ordinal))
                         {
                             sw.Write('[');
                             sw.Write(dict.Key.Trim());
@@ -869,7 +869,7 @@ namespace SilDev
                         }
                         sw.WriteLine();
                     }
-                if (hash?.Equals(new Crypto.Md5().EncryptFile(temp)) == true)
+                if (hash?.Equals(new Crypto.Md5().EncryptFile(temp), StringComparison.Ordinal) == true)
                 {
                     File.Delete(temp);
                     return true;
@@ -981,7 +981,7 @@ namespace SilDev
                         var zipped = bytes?.Zip();
                         if (zipped?.Length < bytes?.Length)
                             bytes = zipped;
-                        val = string.Concat(ObjectPrefix, bytes.Encode(BinaryToTextEncodings.Base85), ObjectSuffix);
+                        val = string.Concat(ObjectPrefix, bytes.Encode(BinaryToTextEncoding.Base85), ObjectSuffix);
                     }
                     else
                         val = str;
@@ -1133,7 +1133,7 @@ namespace SilDev
                 if (!forceOverwrite || skipExistValue)
                 {
                     var curValue = ReadDirect(section, key, path);
-                    if (!forceOverwrite && curValue.Equals(strValue) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
+                    if (!forceOverwrite && curValue.Equals(strValue, StringComparison.Ordinal) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
                         return false;
                 }
                 if (string.Concat(section, key, value).All(TextEx.IsAscii))

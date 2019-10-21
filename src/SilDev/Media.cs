@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2019-10-15 11:27
+// Version:  2019-10-21 11:54
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -24,12 +24,34 @@ namespace SilDev
     using System.Threading;
     using Intern;
     using Intern.IrrKlangEngine;
+    using Properties;
 
     /// <summary>
     ///     Provides functionality for playing WAV files and controlling the volume of applications.
     /// </summary>
     public static class Media
     {
+        /// <summary>
+        ///     Plays audio data from the specified path.
+        /// </summary>
+        /// <param name="path">
+        ///     The sound data to play.
+        /// </param>
+        public static void PlayWave(string path)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new ArgumentNullException(nameof(path));
+                using (var player = new SoundPlayer(path))
+                    player.Play();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+        }
+
         /// <summary>
         ///     Plays audio data from the specified stream.
         /// </summary>
@@ -38,13 +60,38 @@ namespace SilDev
         /// </param>
         public static void PlayWave(Stream stream)
         {
+            var audio = default(Stream);
             try
             {
-                using (var audio = stream)
+                audio = stream;
+                using (var player = new SoundPlayer(audio))
                 {
-                    var player = new SoundPlayer(audio);
+                    audio = null;
                     player.Play();
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
+            }
+            finally
+            {
+                audio?.Dispose();
+            }
+        }
+
+        /// <summary>
+        ///     Plays audio data from the specified path.
+        /// </summary>
+        /// <param name="path">
+        ///     The sound data to play.
+        /// </param>
+        public static void PlayWaveAsync(string path)
+        {
+            try
+            {
+                var thread = new Thread(() => PlayWave(path));
+                thread.Start();
             }
             catch (Exception ex)
             {
@@ -87,7 +134,7 @@ namespace SilDev
                 var volume = ComImports.GetVolumeObject(name);
                 if (volume == null)
                     return null;
-                volume.GetMasterVolume(out var level);
+                _ = volume.GetMasterVolume(out var level);
                 return level * 0x64;
             }
 
@@ -102,7 +149,7 @@ namespace SilDev
                 var volume = ComImports.GetVolumeObject(name);
                 if (volume == null)
                     return null;
-                volume.GetMute(out var mute);
+                _ = volume.GetMute(out var mute);
                 return mute;
             }
 
@@ -121,7 +168,7 @@ namespace SilDev
                 if (volume == null)
                     return;
                 var guid = Guid.Empty;
-                volume.SetMasterVolume(level / 0x64, ref guid);
+                _ = volume.SetMasterVolume(level / 0x64, ref guid);
             }
 
             /// <summary>
@@ -139,7 +186,7 @@ namespace SilDev
                 if (volume == null)
                     return;
                 var guid = Guid.Empty;
-                volume.SetMute(mute, ref guid);
+                _ = volume.SetMute(mute, ref guid);
             }
         }
 
@@ -176,7 +223,7 @@ namespace SilDev
             /// </summary>
             public static int GetSoundVolume()
             {
-                WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out var currVol);
+                _ = WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out var currVol);
                 var calcVol = (ushort)(currVol & 0xffff);
                 return calcVol / (ushort.MaxValue / 0xa) * 0xa;
             }
@@ -191,13 +238,13 @@ namespace SilDev
             {
                 var newVolume = ushort.MaxValue / 0xa * (value.IsBetween(0x0, 0x64) ? value / 0xa : 0x64);
                 var newVolumeAllChannels = ((uint)newVolume & 0xffff) | ((uint)newVolume << 16);
-                WinApi.NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
+                _ = WinApi.NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
             }
 
             private static string SndStatus()
             {
                 var sb = new StringBuilder(128);
-                WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
+                _ = WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
                 return sb.ToString();
             }
 
@@ -206,19 +253,19 @@ namespace SilDev
                 if (!string.IsNullOrEmpty(SndStatus()))
                     SndClose();
                 var arg = $"open \"{path}\" alias {Alias}";
-                WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
+                _ = WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             private static void SndClose()
             {
                 var arg = $"close {Alias}";
-                WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
+                _ = WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             private static void SndPlay(bool loop = false)
             {
                 var arg = $"play {Alias}{(loop ? " repeat" : string.Empty)}";
-                WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
+                _ = WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
             }
 
             /// <summary>
@@ -278,7 +325,7 @@ namespace SilDev
                 try
                 {
                     if (IrrKlangReference.Assembly == null)
-                        throw new NotSupportedException("The required assembly could not be found.");
+                        throw new NotSupportedException(ExceptionMessages.AssemblyNotFound);
                     switch (source)
                     {
                         case null:
@@ -393,7 +440,7 @@ namespace SilDev
                 try
                 {
                     if (IrrKlangReference.Assembly == null)
-                        throw new NotSupportedException("The required assembly could not be found.");
+                        throw new NotSupportedException(ExceptionMessages.AssemblyNotFound);
                     Player.Stop();
                 }
                 catch (Exception ex)

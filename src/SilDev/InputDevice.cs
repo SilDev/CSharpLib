@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: InputDevice.cs
-// Version:  2019-10-15 11:25
+// Version:  2019-10-21 15:06
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -25,7 +25,7 @@ namespace SilDev
     ///     Provides enumerated values of Virtual-Key codes.
     /// </summary>
     [SuppressMessage("ReSharper", "CommentTypo")]
-    public enum VirtualKeys : ushort
+    public enum VirtualKey
     {
         /// <summary>
         ///     The left mouse button.
@@ -972,7 +972,7 @@ namespace SilDev
     /// <summary>
     ///     Provides enumerated values of Virtual-Key code states.
     /// </summary>
-    public enum VirtualKeyStates
+    public enum VirtualKeyState
     {
         /// <summary>
         ///     Posted to the window with the keyboard focus when a non-system key is pressed.
@@ -1003,32 +1003,32 @@ namespace SilDev
     public static class InputDevice
     {
         /// <summary>
-        ///     Returns the <see cref="VirtualKeys"/> of the <see cref="ushort"/> representation of a
+        ///     Returns the <see cref="VirtualKey"/> of the <see cref="ushort"/> representation of a
         ///     Virtual-Key code.
         /// </summary>
         /// <param name="key">
-        ///     The <see cref="VirtualKeys"/> value.
+        ///     The <see cref="VirtualKey"/> value.
         /// </param>
-        public static VirtualKeys GetKey(ushort key) =>
-            (VirtualKeys)key;
+        public static VirtualKey GetKey(ushort key) =>
+            (VirtualKey)key;
 
         /// <summary>
-        ///     Returns the <see cref="VirtualKeys"/> of the <see cref="string"/> representation of a
+        ///     Returns the <see cref="VirtualKey"/> of the <see cref="string"/> representation of a
         ///     Virtual-Key code.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="string"/> representation of a Virtual-Key code.
         /// </param>
-        public static VirtualKeys GetKey(string key) =>
-            (VirtualKeys)GetKeyCode(key);
+        public static VirtualKey GetKey(string key) =>
+            (VirtualKey)GetKeyCode(key);
 
         /// <summary>
-        ///     Returns the <see cref="ushort"/> representation of the <see cref="VirtualKeys"/> value.
+        ///     Returns the <see cref="ushort"/> representation of the <see cref="VirtualKey"/> value.
         /// </summary>
         /// <param name="key">
-        ///     The <see cref="VirtualKeys"/> value.
+        ///     The <see cref="VirtualKey"/> value.
         /// </param>
-        public static ushort GetKeyCode(VirtualKeys key) =>
+        public static ushort GetKeyCode(VirtualKey key) =>
             (ushort)key;
 
         /// <summary>
@@ -1040,19 +1040,19 @@ namespace SilDev
         /// </param>
         public static ushort GetKeyCode(string key)
         {
-            if (Enum.TryParse(key, out VirtualKeys vkey))
+            if (Enum.TryParse(key, out VirtualKey vkey))
                 return (ushort)vkey;
             return 0;
         }
 
         /// <summary>
-        ///     Returns the <see cref="string"/> representation of the <see cref="VirtualKeys"/> value.
+        ///     Returns the <see cref="string"/> representation of the <see cref="VirtualKey"/> value.
         /// </summary>
         /// <param name="key">
-        ///     The <see cref="VirtualKeys"/> value.
+        ///     The <see cref="VirtualKey"/> value.
         /// </param>
-        public static string GetKeyName(VirtualKeys key) =>
-            Enum.GetName(typeof(VirtualKeys), key);
+        public static string GetKeyName(VirtualKey key) =>
+            Enum.GetName(typeof(VirtualKey), key);
 
         /// <summary>
         ///     Returns the <see cref="string"/> representation of the <see cref="ushort"/> representation
@@ -1068,9 +1068,9 @@ namespace SilDev
         ///     Returns the Virtual-Key scan code.
         /// </summary>
         /// <param name="key">
-        ///     The <see cref="VirtualKeys"/> value.
+        ///     The <see cref="VirtualKey"/> value.
         /// </param>
-        public static uint GetScanCode(VirtualKeys key, bool extended = false)
+        public static uint GetScanCode(VirtualKey key, bool extended = false)
         {
             var code = 1u | (WinApi.NativeMethods.MapVirtualKey((uint)key, 0u) << 16);
             if (extended)
@@ -1089,12 +1089,12 @@ namespace SilDev
 
         /// <summary>
         ///     Determines whether a key is up or down at the time the function is called, and whether the
-        ///     key was pressed after a previous call to <see cref="GetKeyState(VirtualKeys)"/>.
+        ///     key was pressed after a previous call to <see cref="GetKeyState(VirtualKey)"/>.
         /// </summary>
         /// <param name="key">
-        ///     The <see cref="VirtualKeys"/> value to check.
+        ///     The <see cref="VirtualKey"/> value to check.
         /// </param>
-        public static bool GetKeyState(VirtualKeys key) =>
+        public static bool GetKeyState(VirtualKey key) =>
             WinApi.NativeMethods.GetAsyncKeyState((int)key) < 0;
 
         /// <summary>
@@ -1121,15 +1121,11 @@ namespace SilDev
         ///     Determines which keys were up or down at the time the function is called, and which keys
         ///     were pressed.
         /// </summary>
-        public static IEnumerable<VirtualKeys> GetKeyStates()
+        public static IEnumerable<VirtualKey> GetKeyStates()
         {
-            var keys = Enum.GetValues(typeof(VirtualKeys)).Cast<VirtualKeys>();
-            foreach (var key in keys)
-            {
-                if (!GetKeyState(key))
-                    continue;
+            var keys = Enum.GetValues(typeof(VirtualKey)).Cast<VirtualKey>();
+            foreach (var key in keys.Where(GetKeyState))
                 yield return key;
-            }
         }
 
         /// <summary>
@@ -1148,7 +1144,7 @@ namespace SilDev
         /// <param name="scanCode">
         ///     true to post the scan code of the specified key; otherwise, false.
         /// </param>
-        public static bool PostKeyState(IntPtr hWnd, VirtualKeys key, VirtualKeyStates keyState, bool scanCode = false)
+        public static bool PostKeyState(IntPtr hWnd, VirtualKey key, VirtualKeyState keyState, bool scanCode = false)
         {
             var wParam = scanCode ? 0u : GetKeyCode(key);
             var lParam = !scanCode ? 0u : GetScanCode(key);
@@ -1171,7 +1167,7 @@ namespace SilDev
         /// <param name="scanCode">
         ///     true to send the scan code of the specified key; otherwise, false.
         /// </param>
-        public static IntPtr SendKeyState(IntPtr hWnd, VirtualKeys key, VirtualKeyStates keyState, bool scanCode = false)
+        public static IntPtr SendKeyState(IntPtr hWnd, VirtualKey key, VirtualKeyState keyState, bool scanCode = false)
         {
             var wParam = scanCode ? 0u : GetKeyCode(key);
             var lParam = !scanCode ? 0u : GetScanCode(key);
@@ -1188,8 +1184,8 @@ namespace SilDev
             if (!directInput)
             {
                 var hWnd = WinApi.NativeMethods.GetForegroundWindow();
-                SendKeyState(hWnd, VirtualKeys.LButton, VirtualKeyStates.KeyDown, true);
-                SendKeyState(hWnd, VirtualKeys.LButton, VirtualKeyStates.KeyUp, true);
+                SendKeyState(hWnd, VirtualKey.LButton, VirtualKeyState.KeyDown, true);
+                SendKeyState(hWnd, VirtualKey.LButton, VirtualKeyState.KeyUp, true);
                 return;
             }
 
@@ -1207,7 +1203,7 @@ namespace SilDev
                 mouseUp
             };
 
-            WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
+            _ = WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
         }
     }
 }

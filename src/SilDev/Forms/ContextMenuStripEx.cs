@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2019-07-28 07:52
+// Version:  2019-10-21 13:52
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -24,7 +24,7 @@ namespace SilDev.Forms
     /// <summary>
     ///     Provides enumerated values of <see cref="ContextMenuStrip"/> animations.
     /// </summary>
-    public enum ContextMenuStripExAnimations : uint
+    public enum ContextMenuStripExAnimation : uint
     {
         /// <summary>
         ///     Smooth fade in animation.
@@ -117,10 +117,10 @@ namespace SilDev.Forms
         ///     The time it takes to play the animation, in milliseconds.
         ///     <para>
         ///         Please note that this parameter is ignored if the animation is set to
-        ///         <see cref="ContextMenuStripExAnimations.Default"/>.
+        ///         <see cref="ContextMenuStripExAnimation.Default"/>.
         ///     </para>
         /// </param>
-        public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, ContextMenuStripExAnimations animation = ContextMenuStripExAnimations.Default, int time = 200)
+        public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, ContextMenuStripExAnimation animation = ContextMenuStripExAnimation.Default, int time = 200)
         {
             if (!(contextMenuStrip is ContextMenuStrip cms))
                 return;
@@ -134,7 +134,7 @@ namespace SilDev.Forms
             var loaded = false;
             cms.Opening += (sender, args) =>
             {
-                if (animation != ContextMenuStripExAnimations.Default)
+                if (animation != ContextMenuStripExAnimation.Default)
                 {
                     WinApi.NativeMethods.AnimateWindow(cms.Handle, EnabledAnimation[cms].Key, EnabledAnimation[cms].Value);
                     if (loaded)

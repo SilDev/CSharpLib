@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-10-15 11:35
+// Version:  2019-10-21 16:05
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,11 +19,13 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Properties;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Path"/> class to perform operations on
@@ -109,33 +111,33 @@ namespace SilDev
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(path));
                 if (path.Length < 3)
-                    throw new ArgumentException($"The path length is lower than 3 characters. - PATH: \'{path}\'");
+                    throw new ArgumentException(ExceptionMessages.PathLengthIsTooLow + path);
                 if (!path.Contains(Path.DirectorySeparatorChar))
                 {
                     if (!path.Contains(Path.AltDirectorySeparatorChar))
-                        throw new ArgumentException($"The path does not contain any separator. - PATH: \'{path}\'");
-                    throw new ArgumentException($"The path does not contain a valid separator. - PATH: \'{path}\'");
+                        throw new ArgumentException(ExceptionMessages.PathHasNoSeparators + path);
+                    throw new ArgumentException(ExceptionMessages.PathHasInvalidSeparators + path);
                 }
-                if (path.StartsWith("\\\\?\\"))
-                    throw new NotSupportedException($"The \"\\\\?\\\" prefix is not supported. - PATH: \'{path}\'");
+                if (path.StartsWith("\\\\?\\", StringComparison.Ordinal))
+                    throw new NotSupportedException(ExceptionMessages.PathHasInvalidPrefix + path);
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
-                    throw new ArgumentException($"The path cannot contain several consecutive separators. - PATH: \'{path}\'");
+                    throw new ArgumentException(ExceptionMessages.ConsecutiveSeparatorsInPath + path);
                 var drive = path.Substring(0, 3);
                 if (!Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
-                    throw new DriveNotFoundException($"The path does not contain any drive. - PATH: \'{path}\'");
+                    throw new DriveNotFoundException(ExceptionMessages.NoDriveInPath + path);
                 if (path.Length >= 260)
-                    throw new PathTooLongException($"The specified path is longer than 260 characters. - PATH: \'{path}\'");
+                    throw new PathTooLongException(ExceptionMessages.PathLengthIsTooLong + path);
                 var levels = path.Split(Path.DirectorySeparatorChar);
                 if (levels.Any(s => s.Length >= 255))
-                    throw new PathTooLongException($"A segment of the path is longer than 255 characters. - PATH: \'{path}\'");
+                    throw new PathTooLongException(ExceptionMessages.PathSegmentLengthIsTooLong + path);
                 var dirLength = Path.HasExtension(path) ? levels.Take(levels.Length - 1).Join(Path.DirectorySeparatorChar).Length : path.Length;
                 if (dirLength >= 248)
-                    throw new PathTooLongException($"The directory name is longer than 248 characters. - PATH: \'{path}\'");
+                    throw new PathTooLongException(ExceptionMessages.DirLengthIsTooLong + path);
                 if (!DriveInfo.GetDrives().Select(di => di.Name).Contains(drive))
-                    throw new DriveNotFoundException($"The path does not contain a valid drive. - PATH: \'{path}\'");
+                    throw new DriveNotFoundException(ExceptionMessages.InvalidDriveInPath + path);
                 var subPath = path.Substring(3);
                 if (subPath.Any(c => c != Path.DirectorySeparatorChar && Path.GetInvalidFileNameChars().Contains(c)))
-                    throw new ArgumentException("The path contains invalid characters.");
+                    throw new ArgumentException(ExceptionMessages.BadCharsInPath);
                 return true;
             }
             catch (Exception ex)
@@ -217,7 +219,7 @@ namespace SilDev
 
                 string key = null;
                 byte num = 0;
-                if (path.StartsWith("%") && (path.Contains($"%{Path.DirectorySeparatorChar}") || path.EndsWith("%")))
+                if (path.StartsWith("%", StringComparison.Ordinal) && (path.Contains($"%{Path.DirectorySeparatorChar}") || path.EndsWith("%", StringComparison.Ordinal)))
                 {
                     var regex = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase);
                     if (regex.Groups.Count > 1)
@@ -236,14 +238,14 @@ namespace SilDev
 
                 if (path.Contains($"{Path.DirectorySeparatorChar}.."))
                     path = Path.GetFullPath(path);
-                if (path.EndsWith("."))
+                if (path.EndsWith(".", StringComparison.Ordinal))
                     path = path.TrimEnd('.');
 
                 if (!string.IsNullOrEmpty(key) || num > 1)
                     if (string.IsNullOrEmpty(key))
-                        path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.DirectorySeparatorChar, num));
+                        path = path.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
-                        path = path.Replace(Path.DirectorySeparatorChar.ToString(), new string(Path.AltDirectorySeparatorChar, num));
+                        path = path.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.AltDirectorySeparatorChar, num));
             }
             catch (ArgumentException ex)
             {
@@ -431,6 +433,10 @@ namespace SilDev
         /// </param>
         public static string GetDirectoryName(string path, bool convertEnvVars = false)
         {
+            if (path == null)
+                return null;
+            if (string.IsNullOrWhiteSpace(path))
+                return string.Empty;
             var str = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             var index = str.LastIndexOf(Path.DirectorySeparatorChar);
             var alt = false;
@@ -464,9 +470,9 @@ namespace SilDev
         /// </param>
         public static string GetTempDirName(string prefix = "tmp", int len = 4)
         {
-            var s = prefix;
+            var s = prefix?.ToLowerInvariant() ?? string.Empty;
             var g = new string(Guid.NewGuid().ToString().Where(char.IsLetterOrDigit).ToArray());
-            s = $"{s.ToLower()}{g.Substring(0, len.IsBetween(4, 24) ? len : 4).ToUpper()}";
+            s = $"{s}{g.Substring(0, len.IsBetween(4, 24) ? len : 4).ToUpperInvariant()}";
             return s;
         }
 

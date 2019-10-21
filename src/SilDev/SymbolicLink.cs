@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: SymbolicLink.cs
-// Version:  2018-07-04 12:09
+// Version:  2019-10-21 15:38
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using Properties;
@@ -161,8 +162,8 @@ namespace SilDev
             if (backup && PathEx.DirOrFileExists(link))
                 if (!DirectoryEx.IsLink(link))
                 {
-                    var prior = string.Format(Resources.BackupFormat, link, EnvironmentEx.MachineId);
-                    sb.AppendFormat("MOVE /Y \"{0}\" \"{1}\"", link, prior);
+                    var prior = string.Format(CultureInfo.InvariantCulture, Resources.BackupFormat, link, EnvironmentEx.MachineId);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "MOVE /Y \"{0}\" \"{1}\"", link, prior);
                 }
                 else
                     Destroy(link, true, true, elevated);
@@ -171,7 +172,7 @@ namespace SilDev
             {
                 if (sb.Length > 0)
                     sb.Append(" & ");
-                sb.AppendFormat(destIsDir ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", link);
+                sb.AppendFormat(CultureInfo.InvariantCulture, destIsDir ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", link);
             }
 
             if (PathEx.DirOrFileExists(dest))
@@ -181,7 +182,7 @@ namespace SilDev
                 sb.Append("MKLINK");
                 if (destIsDir)
                     sb.Append(" /J");
-                sb.AppendFormat(" \"{0}\" \"{1}\" && ATTRIB +H \"{0}\" /L", link, dest);
+                sb.AppendFormat(CultureInfo.InvariantCulture, " \"{0}\" \"{1}\" && ATTRIB +H \"{0}\" /L", link, dest);
             }
 
             if (sb.Length <= 0)
@@ -219,11 +220,11 @@ namespace SilDev
             var isLink = PathEx.DirOrFileIsLink(link);
 
             var sb = new StringBuilder();
-            sb.AppendFormat(pathIsDir ? "RMDIR /Q \"{0}\"" : isLink ? "DEL /F /Q /A:L \"{0}\"" : "DEL /F /Q \"{0}\"", link);
+            sb.AppendFormat(CultureInfo.InvariantCulture, pathIsDir ? "RMDIR /Q \"{0}\"" : isLink ? "DEL /F /Q /A:L \"{0}\"" : "DEL /F /Q \"{0}\"", link);
 
-            var prior = string.Format(Resources.BackupFormat, link, EnvironmentEx.MachineId);
+            var prior = string.Format(CultureInfo.InvariantCulture, Resources.BackupFormat, link, EnvironmentEx.MachineId);
             if (backup && PathEx.DirOrFileExists(prior))
-                sb.AppendFormat(" && MOVE /Y \"{0}\" \"{1}\"", prior, link);
+                sb.AppendFormat(CultureInfo.InvariantCulture, " && MOVE /Y \"{0}\" \"{1}\"", prior, link);
 
             if (sb.Length <= 0)
                 return false;

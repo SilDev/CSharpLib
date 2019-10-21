@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IrrKlangReference.cs
-// Version:  2019-07-27 09:30
+// Version:  2019-10-20 19:47
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev.Intern
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -69,7 +70,7 @@ namespace SilDev.Intern
                         "%MyDocuments%\\Visual Studio 2017\\References\\dotNet4\\irrKlang",
                         "%MyDocuments%\\Visual Studio 2019\\References",
                         "%MyDocuments%\\Visual Studio 2019\\References\\dotNet4\\irrKlang",
-                        string.Format(Resources.TempDirFormat, Math.Abs(PathEx.LocalPath.GetHashCode()))
+                        string.Format(CultureInfo.InvariantCulture, Resources.TempDirFormat, Math.Abs(PathEx.LocalPath.GetHashCode()))
                     };
 
                     var isValid = false;
@@ -108,9 +109,9 @@ namespace SilDev.Intern
 
                             isValid = fileMap.Select(x => Tuple.Create(Path.Combine(dir, x.Key), x.Value.Item1, x.Value.Item2, x.Value.Item3))
                                              .All(x => !File.Exists(x.Item1) ||
-                                                       x.Item1.EncryptFile(ChecksumAlgorithms.Adler32).Equals(x.Item2) &&
-                                                       x.Item1.EncryptFile(ChecksumAlgorithms.Crc32).Equals(x.Item3) &&
-                                                       x.Item1.EncryptFile(ChecksumAlgorithms.Sha256).Equals(x.Item4));
+                                                       x.Item1.EncryptFile(ChecksumAlgorithm.Adler32).Equals(x.Item2, StringComparison.Ordinal) &&
+                                                       x.Item1.EncryptFile(ChecksumAlgorithm.Crc32).Equals(x.Item3, StringComparison.Ordinal) &&
+                                                       x.Item1.EncryptFile(ChecksumAlgorithm.Sha256).Equals(x.Item4, StringComparison.Ordinal));
 
                             if (!isValid)
                                 continue;

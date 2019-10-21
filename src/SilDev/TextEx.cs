@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2019-10-15 11:48
+// Version:  2019-10-21 02:11
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -164,7 +164,7 @@ namespace SilDev
                 }
                 var srcHash = new Crypto.Md5().EncryptFile(srcFile);
                 var newHash = new Crypto.Md5().EncryptFile(newFile);
-                if (srcHash.Equals(newHash))
+                if (srcHash.Equals(newHash, StringComparison.Ordinal))
                 {
                     File.Delete(newFile);
                     return true;

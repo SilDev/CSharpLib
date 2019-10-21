@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2019-10-15 11:07
+// Version:  2019-10-21 14:09
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev.Forms
     using System.Drawing;
     using System.IO;
     using System.Windows.Forms;
+    using Properties;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="RichTextBox"/> class.
@@ -99,13 +100,13 @@ namespace SilDev.Forms
             {
                 var line = lines[i];
                 var length = line.Length;
-                if (length < 1 || !line.StartsWith(startKeyword))
+                if (length < 1 || !line.StartsWith(startKeyword, StringComparison.Ordinal))
                     continue;
                 var start = rtb.GetFirstCharIndexFromLine(i);
                 if (start < 0)
                     continue;
                 rtb.Select(start, length);
-                rtb.SelectionColor = string.IsNullOrEmpty(endKeyword) || line.EndsWith(endKeyword) ? foreColor : Color.Red;
+                rtb.SelectionColor = string.IsNullOrEmpty(endKeyword) || line.EndsWith(endKeyword, StringComparison.Ordinal) ? foreColor : Color.Red;
                 if (backColor != null)
                     rtb.SelectionBackColor = (Color)backColor;
                 if (font != null)
@@ -162,7 +163,7 @@ namespace SilDev.Forms
                     if (index < 0 || length < keyword.Length)
                         continue;
                     rtb.Select(index, keyword.Length);
-                    rtb.SelectionColor = !line.StartsWith(keyword) ? foreColor : Color.Red;
+                    rtb.SelectionColor = !line.StartsWith(keyword, StringComparison.Ordinal) ? foreColor : Color.Red;
                     if (backColor != null)
                         rtb.SelectionBackColor = (Color)backColor;
                     if (font != null)
@@ -197,15 +198,15 @@ namespace SilDev.Forms
                 RenderMode = ToolStripRenderMode.System,
                 ShowImageMargin = false
             };
-            cms.AddToolStripItem(new ToolStripMenuItem("Cut"), rtb.Cut);
-            cms.AddToolStripItem(new ToolStripMenuItem("Copy"), rtb.Copy);
-            cms.AddToolStripItem(new ToolStripMenuItem("Paste"), rtb.Paste);
-            cms.AddToolStripItem(new ToolStripMenuItem("Select All"), rtb.SelectAll);
+            cms.AddToolStripItem(new ToolStripMenuItem(UIStrings.Cut), rtb.Cut);
+            cms.AddToolStripItem(new ToolStripMenuItem(UIStrings.Copy), rtb.Copy);
+            cms.AddToolStripItem(new ToolStripMenuItem(UIStrings.Paste), rtb.Paste);
+            cms.AddToolStripItem(new ToolStripMenuItem(UIStrings.SelectAll), rtb.SelectAll);
             cms.Items.Add(new ToolStripSeparator());
-            cms.AddToolStripItem(new ToolStripMenuItem("Load File"), LoadTextFile, rtb, owner);
-            cms.AddToolStripItem(new ToolStripMenuItem("Save All"), SaveTextFile, rtb, owner);
+            cms.AddToolStripItem(new ToolStripMenuItem(UIStrings.LoadFile), LoadTextFile, rtb, owner);
+            cms.AddToolStripItem(new ToolStripMenuItem(UIStrings.SaveAll), SaveTextFile, rtb, owner);
             cms.Items.Add(new ToolStripSeparator());
-            cms.AddToolStripItem(new ToolStripMenuItem("Undo"), rtb.Undo);
+            cms.AddToolStripItem(new ToolStripMenuItem(UIStrings.Undo), rtb.Undo);
             rtb.ContextMenuStrip = cms;
         }
 
@@ -236,7 +237,7 @@ namespace SilDev.Forms
                     try
                     {
                         c.Text = File.ReadAllText(dialog.FileName);
-                        MessageBoxEx.Show(owner, "File successfully loaded!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        MessageBoxEx.Show(owner, UIStrings.FileSuccessfullyLoaded, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
                     catch (Exception ex)
                     {
@@ -244,7 +245,7 @@ namespace SilDev.Forms
                     }
                     return;
                 }
-                MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBoxEx.Show(owner, UIStrings.OperationCanceled, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
         }
 
@@ -254,19 +255,19 @@ namespace SilDev.Forms
                 return;
             if (string.IsNullOrEmpty(c.Text))
             {
-                MessageBoxEx.Show(owner, "The text can not be empty!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxEx.Show(owner, UIStrings.TextCanNotBeEmpty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             using (var dialog = new SaveFileDialog())
             {
-                dialog.Filter = @"Text Files|*.txt";
+                dialog.Filter = $@"{UIStrings.TextFiles}|*.txt";
                 dialog.FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt";
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
                         File.WriteAllText(dialog.FileName, TextEx.FormatNewLine(c.Text));
-                        MessageBoxEx.Show(owner, "File successfully saved!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        MessageBoxEx.Show(owner, UIStrings.FileSuccessfullySaved, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
                     catch (Exception ex)
                     {
@@ -274,7 +275,7 @@ namespace SilDev.Forms
                     }
                     return;
                 }
-                MessageBoxEx.Show(owner, "Canceled!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBoxEx.Show(owner, UIStrings.OperationCanceled, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
         }
 

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-10-15 10:58
+// Version:  2019-10-20 16:23
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -371,7 +371,7 @@ namespace SilDev.Drawing
                     return default;
                 if (_switcherCache == null)
                     _switcherCache = new Dictionary<int, ImagePair>();
-                var code = key.GetHashCode();
+                var code = (key ?? '\0').GetHashCode();
                 if (!_switcherCache.ContainsKey(code))
                 {
                     var imgPair = new ImagePair(img, img.ToGrayScale());
@@ -589,15 +589,11 @@ namespace SilDev.Drawing
             {
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
+                if ((context.State & StreamingContextStates.CrossMachine) != 0)
+                    throw new SerializationException();
                 Image1 = (Image)info.GetValue(nameof(Image1), typeof(Image));
                 Image2 = (Image)info.GetValue(nameof(Image2), typeof(Image));
             }
-
-            /// <summary>
-            ///     Determines that the current image pair has been disposed by
-            ///     <see cref="Dispose(bool)"/>.
-            /// </summary>
-            protected bool Disposed { get; private set; }
 
             /// <summary>
             ///     Gets the first <see cref="Image"/> of current image pair.
@@ -650,11 +646,8 @@ namespace SilDev.Drawing
             /// </param>
             protected virtual void Dispose(bool disposing)
             {
-                if (Disposed)
-                    return;
                 Image1?.Dispose();
                 Image2?.Dispose();
-                Disposed = true;
             }
 
             /// <summary>
@@ -672,7 +665,7 @@ namespace SilDev.Drawing
             ///     The image pair to compare with the current image pair.
             /// </param>
             public virtual bool Equals(ImagePair imagePair) =>
-                Equals(GetHashCode(), imagePair.GetHashCode());
+                Equals(GetHashCode(), imagePair?.GetHashCode());
 
             /// <summary>
             ///     Determines whether the specified object is equal to the current object.
@@ -765,15 +758,11 @@ namespace SilDev.Drawing
             {
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
+                if ((context.State & StreamingContextStates.CrossMachine) != 0)
+                    throw new SerializationException();
                 Image = (Image)info.GetValue(nameof(Image), typeof(Image));
                 Duration = info.GetInt32(nameof(Duration));
             }
-
-            /// <summary>
-            ///     Determines that the current image pair has been disposed by
-            ///     <see cref="Dispose(bool)"/>.
-            /// </summary>
-            protected bool Disposed { get; private set; }
 
             /// <summary>
             ///     Gets the image of this <see cref="Frame"/>.
@@ -824,13 +813,8 @@ namespace SilDev.Drawing
             ///         <see cref="Frame"/> class.
             ///     </para>
             /// </param>
-            protected virtual void Dispose(bool disposing)
-            {
-                if (Disposed)
-                    return;
+            protected virtual void Dispose(bool disposing) =>
                 Image?.Dispose();
-                Disposed = true;
-            }
 
             /// <summary>
             ///     Allows an object to try to free resources and perform other cleanup
@@ -846,7 +830,7 @@ namespace SilDev.Drawing
             ///     The frame to compare with the current frame.
             /// </param>
             public virtual bool Equals(Frame frame) =>
-                Equals(GetHashCode(), frame.GetHashCode());
+                Equals(GetHashCode(), frame?.GetHashCode());
 
             /// <summary>
             ///     Determines whether the specified object is equal to the current object.

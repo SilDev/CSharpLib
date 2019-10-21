@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconEx.cs
-// Version:  2019-04-29 16:04
+// Version:  2019-10-20 15:34
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev.Drawing
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
@@ -38,24 +39,31 @@ namespace SilDev.Drawing
         /// </param>
         public static Icon ToIcon(this Image image, int size = 32)
         {
+            var img = default(Image);
             var ico = default(Icon);
             try
             {
-                using (var img = (Image)image.Clone())
-                    using (var ms = new MemoryStream())
+                if (image == null)
+                    throw new ArgumentNullException(nameof(image));
+                img = (Image)image.Clone();
+                using (var ms = new MemoryStream())
+                {
+                    var images = new[]
                     {
-                        var images = new[]
-                        {
-                            img.Width != size || img.Height != size ? img.Redraw(size, size) : img
-                        };
-                        Factory.Save(images, ms);
-                        ms.Position = 0;
-                        ico = new Icon(ms);
-                    }
+                        img.Width != size || img.Height != size ? img.Redraw(size, size) : img
+                    };
+                    Factory.Save(images, ms);
+                    ms.Position = 0;
+                    ico = new Icon(ms);
+                }
             }
             catch (Exception ex)
             {
                 Log.Write(ex);
+            }
+            finally
+            {
+                img?.Dispose();
             }
             return ico;
         }
@@ -242,13 +250,24 @@ namespace SilDev.Drawing
                             }
                         var formatSize = BitConverter.ToInt32(buffer, SizeIconDir + SizeIconDirEntry * i + 8);
                         var offset = BitConverter.ToInt32(buffer, SizeIconDir + SizeIconDirEntry * i + 12);
-                        using (var ms = new MemoryStream())
+                        var ms = default(MemoryStream);
+                        try
                         {
-                            var bw = new BinaryWriter(ms);
-                            bw.Write(buffer, offset, formatSize);
-                            ms.Seek(0, SeekOrigin.Begin);
-                            var bmp = new Bitmap(ms);
-                            bmp.Save(imagePath);
+                            ms = new MemoryStream();
+                            using (var bw = new BinaryWriter(ms))
+                            {
+                                bw.Write(buffer, offset, formatSize);
+                                ms.Seek(0, SeekOrigin.Begin);
+                                using (var bmp = new Bitmap(ms))
+                                {
+                                    ms = null;
+                                    bmp.Save(imagePath);
+                                }
+                            }
+                        }
+                        finally
+                        {
+                            ms?.Dispose();
                         }
                     }
                 }
@@ -344,15 +363,25 @@ namespace SilDev.Drawing
             /// <exception cref="ArgumentNullException">
             ///     image or stream is null.
             /// </exception>
+            [SuppressMessage("ReSharper", "AccessToDisposedClosure")]
             public static void Save(Image image, Stream stream, SizeOption option = SizeOption.Application, bool dispose = false)
             {
                 if (image == null)
                     throw new ArgumentNullException(nameof(image));
                 if (stream == null)
                     throw new ArgumentNullException(nameof(stream));
-                var img = ImageCorrection(image);
-                var imgs = ImageCorrection(GetSizes(option).Where(x => img.Width >= x).Select(x => img.Redraw(x, x)));
-                Save(imgs, stream, dispose);
+                var img = default(Image);
+                try
+                {
+                    img = ImageCorrection(image);
+                    var imgs = ImageCorrection(GetSizes(option).Where(x => img.Width >= x).Select(x => img.Redraw(x, x)));
+                    Save(imgs, stream, dispose);
+                }
+                finally
+                {
+                    if (dispose)
+                        img?.Dispose();
+                }
             }
 
             /// <summary>

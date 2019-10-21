@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2019-10-15 11:32
+// Version:  2019-10-21 15:08
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,6 +23,7 @@ namespace SilDev
     using System.Linq;
     using System.Net;
     using System.Net.NetworkInformation;
+    using Properties;
 
     /// <summary>
     ///     Provides functionality for the access of internet resources.
@@ -33,7 +34,7 @@ namespace SilDev
         ///     Provides options for specifying a Domain Name System provider.
         /// </summary>
         [SuppressMessage("ReSharper", "CommentTypo")]
-        public enum DnsOptions
+        public enum DnsOption
         {
             /// <summary>
             ///     Partnership between Cloudflare and APNIC. Cloudflare runs one of the world’s largest,
@@ -51,33 +52,23 @@ namespace SilDev
             Google
         }
 
-        private static bool _defSecurityProtocolIsEnabled;
-        private static string[] _internalDownloadMirrors;
-        private static bool? _ipv4IsAvalaible, _ipv6IsAvalaible;
-
         /// <summary>
         ///     Gets internal download mirrors.
         /// </summary>
-        public static string[] InternalDownloadMirrors
+        public static string[] InternalDownloadMirrors =
         {
-            get
-            {
-                if (_internalDownloadMirrors?.Any() == true)
-                    return _internalDownloadMirrors;
-                _internalDownloadMirrors = new[]
-                {
-                    "https://dl.si13n7.com",
-                    "https://dl.si13n7.de",
-                    "http://dl-0.de",
-                    "http://dl-1.de",
-                    "http://dl-2.de",
-                    "http://dl-3.de",
-                    "http://dl-4.de",
-                    "http://dl-5.de"
-                };
-                return _internalDownloadMirrors;
-            }
-        }
+            "https://dl.si13n7.com",
+            "https://dl.si13n7.de",
+            "http://dl-0.de",
+            "http://dl-1.de",
+            "http://dl-2.de",
+            "http://dl-3.de",
+            "http://dl-4.de",
+            "http://dl-5.de"
+        };
+
+        private static bool _defSecurityProtocolIsEnabled;
+        private static bool? _ipv4IsAvalaible, _ipv6IsAvalaible;
 
         /// <summary>
         ///     Determines whether the current IPv4 connection is available.
@@ -117,12 +108,8 @@ namespace SilDev
             if (_defSecurityProtocolIsEnabled)
                 return;
             _defSecurityProtocolIsEnabled = true;
-            foreach (var type in Enum.GetValues(typeof(SecurityProtocolType)).Cast<SecurityProtocolType>())
-            {
-                if (type == SecurityProtocolType.SystemDefault)
-                    continue;
+            foreach (var type in Enum.GetValues(typeof(SecurityProtocolType)).Cast<SecurityProtocolType>().Where(type => type != SecurityProtocolType.SystemDefault))
                 ServicePointManager.SecurityProtocol |= type;
-            }
         }
 
         /// <summary>
@@ -131,29 +118,33 @@ namespace SilDev
         /// <param name="dnsOptions">
         ///     The Domain Name System provider to get the addresses.
         /// </param>
-        public static string[,] GetDnsAddresses(DnsOptions dnsOptions)
+        public static string[][] GetDnsAddresses(DnsOption dnsOptions)
         {
             switch (dnsOptions)
             {
-                case DnsOptions.Google:
-                    return new[,]
+                case DnsOption.Google:
+                    return new[]
                     {
+                        new[]
                         {
                             "8.8.8.8",
                             "8.8.4.4"
                         },
+                        new[]
                         {
                             "[2001:4860:4860::8888]",
                             "[2001:4860:4860::8844]"
                         }
                     };
                 default:
-                    return new[,]
+                    return new[]
                     {
+                        new[]
                         {
                             "1.1.1.1",
                             "1.0.0.1"
                         },
+                        new[]
                         {
                             "[2606:4700:4700::1111]",
                             "[2606:4700:4700::1001]"
@@ -172,7 +163,7 @@ namespace SilDev
         {
             try
             {
-                return uri.Host.ToLower();
+                return uri.Host.ToLowerInvariant();
             }
             catch (Exception ex)
             {
@@ -192,7 +183,7 @@ namespace SilDev
             try
             {
                 var uri = new Uri(url);
-                return uri.Host.ToLower();
+                return uri.Host.ToLowerInvariant();
             }
             catch (Exception ex)
             {
@@ -249,7 +240,7 @@ namespace SilDev
         /// <exception cref="ArgumentOutOfRangeException">
         ///     maxRoundtripTime is zero -or- negative.
         /// </exception>
-        public static bool InternetIsAvailable(bool iPv6 = false, DnsOptions dnsOptions = DnsOptions.Cloudflare, int maxRoundtripTime = 3000)
+        public static bool InternetIsAvailable(bool iPv6 = false, DnsOption dnsOptions = DnsOption.Cloudflare, int maxRoundtripTime = 3000)
         {
             if (maxRoundtripTime <= 0)
                 throw new ArgumentOutOfRangeException(nameof(maxRoundtripTime));
@@ -260,7 +251,7 @@ namespace SilDev
                 if (!interfaces.Any())
                     throw new ArgumentNullException(nameof(interfaces));
                 if (interfaces.All(x => x.OperationalStatus != OperationalStatus.Up))
-                    throw new ArgumentException("No available network interface found.");
+                    throw new ArgumentException(ExceptionMessages.NetworkInterfacesNotFound);
             }
             catch (Exception ex)
             {
@@ -268,15 +259,8 @@ namespace SilDev
                 return false;
             }
             var addresses = GetDnsAddresses(dnsOptions);
-            var dimension = Convert.ToInt32(iPv6);
-            for (var i = 0; i < addresses.GetLength(dimension); i++)
-            {
-                var server = addresses[dimension, i];
-                var isAvailable = Ping(server, maxRoundtripTime) < maxRoundtripTime;
-                if (!iPv6 && (_ipv4IsAvalaible = isAvailable) == true || iPv6 && (_ipv6IsAvalaible = isAvailable) == true)
-                    return true;
-            }
-            return false;
+            var protocol = Convert.ToInt32(iPv6);
+            return addresses[protocol].Select(address => Ping(address, maxRoundtripTime) < maxRoundtripTime).Any(isAvailable => !iPv6 && (_ipv4IsAvalaible = isAvailable) == true || iPv6 && (_ipv6IsAvalaible = isAvailable) == true);
         }
 
         /// <summary>
@@ -1626,6 +1610,8 @@ namespace SilDev
             {
                 try
                 {
+                    if (srcUri == null)
+                        throw new ArgumentNullException(nameof(srcUri));
                     var path = PathEx.Combine(destPath);
                     if (File.Exists(path))
                         File.Delete(path);
@@ -2763,7 +2749,7 @@ namespace SilDev
         /// <summary>
         ///     Provides asynchronous downloading of internet resources.
         /// </summary>
-        public sealed class AsyncTransfer
+        public sealed class AsyncTransfer : IDisposable
         {
             private readonly Stopwatch _stopwatch = new Stopwatch();
             private WebClient _webClient;
@@ -2807,8 +2793,8 @@ namespace SilDev
             {
                 get
                 {
-                    var current = BytesReceived.FormatSize(SizeUnits.MB);
-                    var total = TotalBytesToReceive.FormatSize(SizeUnits.MB);
+                    var current = BytesReceived.FormatSize(SizeUnit.MB);
+                    var total = TotalBytesToReceive.FormatSize(SizeUnit.MB);
                     return $"{current} / {total}";
                 }
             }
@@ -2857,6 +2843,15 @@ namespace SilDev
             }
 
             /// <summary>
+            ///     Releases all resources used by this <see cref="AsyncTransfer"/>.
+            /// </summary>
+            public void Dispose()
+            {
+                CancelAsync();
+                _webClient?.Dispose();
+            }
+
+            /// <summary>
             ///     Downloads the specified internet resource to a local file.
             /// </summary>
             /// <param name="srcUri">
@@ -2891,13 +2886,16 @@ namespace SilDev
             {
                 try
                 {
+                    if (srcUri == null)
+                        throw new ArgumentNullException(nameof(srcUri));
                     if (IsBusy)
-                        throw new NotSupportedException("Async file download is already busy, multiple calls are not allowed.");
+                        throw new NotSupportedException(ExceptionMessages.AsyncDownloadIsBusy);
                     var path = PathEx.Combine(destPath);
                     if (File.Exists(path))
                         File.Delete(path);
-                    using (_webClient = new WebClientEx(allowAutoRedirect, cookieContainer, timeout))
+                    try
                     {
+                        _webClient = new WebClientEx(allowAutoRedirect, cookieContainer, timeout);
                         if (!string.IsNullOrEmpty(userAgent))
                             _webClient.Headers.Add("User-Agent", userAgent);
                         _webClient.DownloadFileCompleted += DownloadFile_Completed;
@@ -2911,6 +2909,10 @@ namespace SilDev
                             _webClient.Credentials = new NetworkCredential(userName, password);
                         _webClient.DownloadFileAsync(Address, FilePath);
                         _stopwatch.Start();
+                    }
+                    finally
+                    {
+                        _webClient?.Dispose();
                     }
                 }
                 catch (Exception ex)
@@ -3315,7 +3317,7 @@ namespace SilDev
                         return;
                     TransferSpeed = TransferSpeed / 1000 / TimeElapsed.TotalSeconds;
                     var speed = (long)(e.BytesReceived / TimeElapsed.TotalSeconds);
-                    var speedAd = speed.FormatSize(false).ToLower();
+                    var speedAd = speed.FormatSize(false).ToLowerInvariant();
                     if (speedAd.Contains("byte"))
                         speedAd = speedAd.TrimEnd('s').Replace("byte", "b");
                     TransferSpeedAd = $"{speedAd}it/s";
@@ -3335,7 +3337,7 @@ namespace SilDev
                 if (e.Cancelled)
                 {
                     HasCanceled = true;
-                    _webClient.Dispose();
+                    _webClient?.Dispose();
                     try
                     {
                         if (File.Exists(FilePath))
@@ -3360,7 +3362,7 @@ namespace SilDev
             public void CancelAsync()
             {
                 if (IsBusy)
-                    _webClient.CancelAsync();
+                    _webClient?.CancelAsync();
             }
         }
 

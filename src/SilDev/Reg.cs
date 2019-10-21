@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-10-18 12:56
+// Version:  2019-10-20 19:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -37,7 +37,7 @@ namespace SilDev
 
         private static RegistryKey AsRegistryKey(this string key, bool nullable = false)
         {
-            switch (key?.ToUpper())
+            switch (key?.ToUpperInvariant())
             {
                 case "HKEY_CLASSES_ROOT":
                 case "HKCR":
@@ -133,7 +133,9 @@ namespace SilDev
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(subKey))
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (subKey == null)
                     throw new ArgumentNullException(nameof(subKey));
                 bool exists;
                 using (var rKey = key.OpenSubKey(subKey.KeyFilter()))
@@ -182,9 +184,13 @@ namespace SilDev
         /// </param>
         public static bool CreateNewSubKey(RegistryKey key, string subKey, bool overwrite = false)
         {
-            RegistryKey rKey = null;
+            var rKey = default(RegistryKey);
             try
             {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (subKey == null)
+                    throw new ArgumentNullException(nameof(subKey));
                 var path = string.Concat(key, Path.DirectorySeparatorChar, subKey);
                 if (path.Length > MaxPathLength)
                     throw new ArgumentOutOfRangeException(nameof(path));
@@ -243,6 +249,10 @@ namespace SilDev
         {
             try
             {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (subKey == null)
+                    throw new ArgumentNullException(nameof(subKey));
                 if (SubKeyExists(key, subKey))
                     key.DeleteSubKeyTree(subKey.KeyFilter());
             }
@@ -400,6 +410,14 @@ namespace SilDev
         {
             try
             {
+                if (srcKey == null)
+                    throw new ArgumentNullException(nameof(srcKey));
+                if (srcSubKey == null)
+                    throw new ArgumentNullException(nameof(srcSubKey));
+                if (destKey == null)
+                    throw new ArgumentNullException(nameof(destKey));
+                if (destSubKey == null)
+                    throw new ArgumentNullException(nameof(destSubKey));
                 if (!SubKeyExists(srcKey, srcSubKey))
                     throw new PathNotFoundException(string.Concat(srcKey, Path.DirectorySeparatorChar, srcSubKey));
                 var destPath = string.Concat(destKey, Path.DirectorySeparatorChar, destSubKey);
@@ -633,6 +651,10 @@ namespace SilDev
             var value = defValue;
             try
             {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (subKey == null)
+                    throw new ArgumentNullException(nameof(subKey));
                 if (SubKeyExists(key, subKey))
                 {
                     object objValue;
@@ -729,7 +751,7 @@ namespace SilDev
                 if (objValue is string[] strs)
                     value = strs.Join(Environment.NewLine);
                 else if (objValue is byte[] bytes)
-                    value = bytes.Encode(BinaryToTextEncodings.Base16);
+                    value = bytes.Encode(BinaryToTextEncoding.Base16);
                 else
                     value = objValue.ToString();
             }
@@ -804,6 +826,10 @@ namespace SilDev
         {
             try
             {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (subKey == null)
+                    throw new ArgumentNullException(nameof(subKey));
                 if (!SubKeyExists(key, subKey) && !CreateNewSubKey(key, subKey))
                     throw new PathNotFoundException(string.Concat(key, Path.DirectorySeparatorChar, subKey));
                 using (var rKey = key.OpenSubKey(subKey.KeyFilter(), true))
@@ -902,6 +928,10 @@ namespace SilDev
         {
             try
             {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (subKey == null)
+                    throw new ArgumentNullException(nameof(subKey));
                 if (SubKeyExists(key, subKey))
                     using (var rKey = key.OpenSubKey(subKey.KeyFilter(), true))
                         rKey?.DeleteValue(entry);
@@ -1003,9 +1033,11 @@ namespace SilDev
         {
             try
             {
+                if (path == null)
+                    throw new ArgumentNullException(nameof(path));
                 var filePath = PathEx.Combine(path);
                 if (string.IsNullOrEmpty(filePath))
-                    throw new ArgumentNullException(nameof(path));
+                    throw new ArgumentNullException(nameof(filePath));
                 if (content == null)
                     throw new ArgumentNullException(nameof(content));
                 if (content.Length == 0)
@@ -1024,7 +1056,7 @@ namespace SilDev
                             if (!line.StartsWithEx("REGEDIT4", header))
                                 sw.WriteLine(header);
                         }
-                        if (line.StartsWith("["))
+                        if (line.StartsWith("[", StringComparison.Ordinal))
                             sw.WriteLine();
                         sw.WriteLine(line);
                     }
@@ -1082,9 +1114,15 @@ namespace SilDev
         {
             try
             {
+                if (destPath == null)
+                    throw new ArgumentNullException(nameof(destPath));
+                if (keyPaths == null)
+                    throw new ArgumentNullException(nameof(keyPaths));
+                if (keyPaths.Length == 0)
+                    throw new ArgumentOutOfRangeException(nameof(keyPaths));
                 var filePath = PathEx.Combine(destPath);
                 if (string.IsNullOrEmpty(filePath))
-                    throw new ArgumentNullException(nameof(destPath));
+                    throw new ArgumentInvalidException(nameof(destPath));
                 var destDir = Path.GetDirectoryName(filePath);
                 if (string.IsNullOrEmpty(destDir))
                     throw new ArgumentNullException(nameof(destDir));
