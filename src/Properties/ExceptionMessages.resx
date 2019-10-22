@@ -126,6 +126,14 @@
   <data name="BadCharsInPath" xml:space="preserve">
     <value>The path contains invalid characters.</value>
   </data>
+  <data name="BytesReadFailed" xml:space="preserve">
+    <value>Reading has been failed. - Bytes Read: </value>
+    <comment>+</comment>
+  </data>
+  <data name="BytesWriteFailed" xml:space="preserve">
+    <value>Writing has been failed. - Bytes Written: </value>
+    <comment>+</comment>
+  </data>
   <data name="CharsInStreamAreInvalid" xml:space="preserve">
     <value>The input stream contains invalid characters.</value>
   </data>

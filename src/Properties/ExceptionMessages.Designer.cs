@@ -88,6 +88,24 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading has been failed. - Bytes Read: .
+        /// </summary>
+        internal static string BytesReadFailed {
+            get {
+                return ResourceManager.GetString("BytesReadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writing has been failed. - Bytes Written: .
+        /// </summary>
+        internal static string BytesWriteFailed {
+            get {
+                return ResourceManager.GetString("BytesWriteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream contains invalid characters..
         /// </summary>
         internal static string CharsInStreamAreInvalid {
