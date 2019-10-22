@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-22 16:18
+// Version:  2019-10-22 17:10
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -276,7 +276,12 @@ namespace SilDev
         /// </param>
         public static bool IsCaught(this Exception exception, params Type[] exTypes)
         {
-            if (DebugMode < 3 || exception == null || exTypes == null)
+            if (DebugMode > 2)
+            {
+                Write($"Thrown {exception}");
+                return false;
+            }
+            if (exception == null || exTypes == null)
                 return true;
             var current = exception.GetType();
             return exTypes.Any(type => type == current);
