@@ -76,6 +76,16 @@
               Looks up a localized string similar to The path contains invalid characters..
             </summary>
         </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.BytesReadFailed">
+            <summary>
+              Looks up a localized string similar to Reading has been failed. - Bytes Read: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.BytesWriteFailed">
+            <summary>
+              Looks up a localized string similar to Writing has been failed. - Bytes Written: .
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.ExceptionMessages.CharsInStreamAreInvalid">
             <summary>
               Looks up a localized string similar to The input stream contains invalid characters..
@@ -9500,18 +9510,23 @@
                 parameter in combination with <see cref="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)"/>. The
                 following <see cref="P:SilDev.Log.DebugMode"/> options are available.
                 <para>
-                    0: Logging is disabled. If <see cref="P:SilDev.Log.CatchUnhandledExceptions"/> is enabled, unhandled
-                    <see cref="T:System.Exception"/>'s are discarded as well. This can be useful for public releases
-                    to prevent any kind of <see cref="T:System.Exception"/> notifications to the client. Please note
-                    that these functions may have dangerous consequences if used incorrectly.
+                    0: Logging is disabled. <see cref="T:System.Exception"/>'s are caught, and if
+                    <see cref="P:SilDev.Log.CatchUnhandledExceptions"/> is enabled, unhandled <see cref="T:System.Exception"/>'s
+                    are also discarded. This can be useful for public releases to prevent any kind of
+                    <see cref="T:System.Exception"/> notifications to the client. Please note that these functions
+                    may have dangerous consequences if used incorrectly.
                 </para>
                 <para>
-                    1: Logging is enabled and all <see cref="T:System.Exception"/>'s are logged.
+                    1: Logging is enabled, <see cref="T:System.Exception"/>'s are caught, and all
+                    <see cref="T:System.Exception"/>'s are logged.
                 </para>
                 <para>
-                    2: Logging is enabled, all <see cref="T:System.Exception"/>'s are logged, and a new
-                    <see cref="T:System.Console"/> window is allocated for the current process to display the current
-                    log in real time.
+                    2: Logging is enabled, <see cref="T:System.Exception"/>'s are caught, all <see cref="T:System.Exception"/>'s
+                    are logged, and a new <see cref="T:System.Console"/> window is allocated for the current process
+                    to display the current log in real time.
+                </para>
+                <para>
+                    3: Logging is enabled, but <see cref="T:System.Exception"/>'s are thrown.
                 </para>
             </summary>
         </member>
@@ -9528,6 +9543,18 @@
             </param>
             <param name="regex">
                 The regular expression to match.
+            </param>
+        </member>
+        <member name="M:SilDev.Log.IsCaught(System.Exception,System.Type[])">
+            <summary>
+                Determines whether this <see cref="T:System.Exception"/> should be caught or thrown. For more
+                information see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
+            </summary>
+            <param name="exception">
+                The <see cref="T:System.Exception"/> to be checked.
+            </param>
+            <param name="exTypes">
+                A sequence of <see cref="T:System.Exception"/> types to catch.
             </param>
         </member>
         <member name="M:SilDev.Log.Write(System.String,System.Boolean)">
