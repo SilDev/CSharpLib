@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2019-10-15 11:33
+// Version:  2019-10-22 16:05
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -33,7 +33,7 @@ namespace SilDev
         Asterisk = 1,
         Warning = 2,
         Notify = 3,
-        Question = 4,
+        Question = 4
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ namespace SilDev
                 {
                     return NotifyThread.IsAlive;
                 }
-                catch
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     return false;
                 }
@@ -204,7 +204,7 @@ namespace SilDev
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -270,7 +270,7 @@ namespace SilDev
             {
                 NotifyWindow?.Close();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -287,7 +287,7 @@ namespace SilDev
                 if (IsAlive)
                     NotifyThread?.Abort();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2019-10-21 11:54
+// Version:  2019-10-22 15:51
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -46,7 +46,7 @@ namespace SilDev
                 using (var player = new SoundPlayer(path))
                     player.Play();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -70,7 +70,7 @@ namespace SilDev
                     player.Play();
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -93,7 +93,7 @@ namespace SilDev
                 var thread = new Thread(() => PlayWave(path));
                 thread.Start();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -112,7 +112,7 @@ namespace SilDev
                 var thread = new Thread(() => PlayWave(stream));
                 thread.Start();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -345,7 +345,7 @@ namespace SilDev
                     _assemblyFinalizer = true;
                     Directory.SetCurrentDirectory(curDir);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -443,7 +443,7 @@ namespace SilDev
                         throw new NotSupportedException(ExceptionMessages.AssemblyNotFound);
                     Player.Stop();
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2019-10-15 11:25
+// Version:  2019-10-22 16:27
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -47,7 +47,7 @@ namespace SilDev
                 js.Serialize(source, sb);
                 return sb.ToString();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -85,7 +85,7 @@ namespace SilDev
                 File.WriteAllText(dest, output);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -113,7 +113,7 @@ namespace SilDev
                 var js = new JavaScriptSerializer();
                 return js.Deserialize<TResult>(source);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return defValue;
@@ -144,7 +144,7 @@ namespace SilDev
                 var input = File.ReadAllText(src);
                 return Deserialize<TResult>(input);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return defValue;
@@ -177,7 +177,7 @@ namespace SilDev
                 keys.ForEach(k => json = json[k]);
                 return json;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return string.Empty;

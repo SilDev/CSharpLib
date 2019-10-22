@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-10-21 15:05
+// Version:  2019-10-22 16:23
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -69,7 +69,7 @@ namespace SilDev
                     }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -113,7 +113,7 @@ namespace SilDev
                     }
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return defValue;
@@ -165,7 +165,7 @@ namespace SilDev
                 var fa = fileInfo.Attributes;
                 return (fa & attr) != 0;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -189,7 +189,7 @@ namespace SilDev
                 var fa = File.GetAttributes(src);
                 return (fa & attr) != 0;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -254,7 +254,7 @@ namespace SilDev
                 else
                     fi.Attributes = attr;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -274,7 +274,7 @@ namespace SilDev
             {
                 return File.ReadAllBytes(file);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -298,7 +298,7 @@ namespace SilDev
             {
                 return encoding != null ? File.ReadAllLines(file, encoding) : File.ReadAllLines(file);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -322,7 +322,7 @@ namespace SilDev
             {
                 return encoding != null ? File.ReadAllText(file, encoding) : File.ReadAllText(file);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -358,7 +358,7 @@ namespace SilDev
                 else
                     File.AppendAllLines(file, contents);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -394,7 +394,7 @@ namespace SilDev
                 else
                     File.AppendAllText(file, contents);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -434,7 +434,7 @@ namespace SilDev
                 if (newValue == null)
                     throw new ArgumentNullException(nameof(newValue));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -446,7 +446,7 @@ namespace SilDev
                 if (!File.Exists(targetPath))
                     throw new PathNotFoundException(targetPath);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -465,7 +465,7 @@ namespace SilDev
             {
                 File.Move(targetPath, backupPath);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -514,7 +514,7 @@ namespace SilDev
                 }
                 result = true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -535,7 +535,7 @@ namespace SilDev
                         File.Move(backupPath, targetPath);
                     }
                 }
-                catch (Exception exc)
+                catch (Exception exc) when (exc.IsCaught())
                 {
                     Log.Write(exc);
                 }
@@ -554,7 +554,7 @@ namespace SilDev
                             File.Delete(backupPath);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -566,7 +566,7 @@ namespace SilDev
                 if (File.Exists(backupPath))
                     File.Delete(backupPath);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -619,7 +619,7 @@ namespace SilDev
                     Directory.CreateDirectory(dir);
                 File.WriteAllBytes(file, bytes.ToArray());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -657,7 +657,7 @@ namespace SilDev
                     Directory.CreateDirectory(dir);
                 File.WriteAllLines(file, contents, encoding);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -692,7 +692,7 @@ namespace SilDev
                     Directory.CreateDirectory(dir);
                 File.WriteAllLines(file, contents);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -730,7 +730,7 @@ namespace SilDev
                     Directory.CreateDirectory(dir);
                 File.WriteAllText(file, contents, encoding);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -765,7 +765,7 @@ namespace SilDev
                     Directory.CreateDirectory(dir);
                 File.WriteAllText(file, contents);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -801,7 +801,7 @@ namespace SilDev
                     throw new PathNotFoundException(file);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -845,7 +845,7 @@ namespace SilDev
                 fi.CopyTo(dest);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -878,7 +878,7 @@ namespace SilDev
                 File.Delete(src);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -922,8 +922,10 @@ namespace SilDev
             {
                 return Delete(path);
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
                 return false;
             }
         }
@@ -1090,8 +1092,10 @@ namespace SilDev
                 {
                     proc = Process.GetProcessById(id);
                 }
-                catch
+                catch (Exception ex) when (ex.IsCaught())
                 {
+                    if (Log.DebugMode > 1)
+                        Log.Write(ex);
                     continue;
                 }
                 yield return proc;
@@ -1134,8 +1138,10 @@ namespace SilDev
                     using (var cert2 = new X509Certificate2(cert1))
                         return cert2.SubjectName.Format(multiLine);
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
                 return null;
             }
         }
@@ -1184,7 +1190,7 @@ namespace SilDev
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -1216,7 +1222,7 @@ namespace SilDev
                 var v2 = GetProductVersion(path);
                 v = v1 > v2 ? v1 : v2;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 v = Version.Parse("0.0.0.0");
@@ -1251,7 +1257,7 @@ namespace SilDev
                 var fvi = FileVersionInfo.GetVersionInfo(s);
                 v = Version.Parse(fvi.FileVersion.VersionFilter());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 v = Version.Parse("0.0.0.0");
@@ -1286,7 +1292,7 @@ namespace SilDev
                 var fvi = FileVersionInfo.GetVersionInfo(s);
                 v = Version.Parse(fvi.ProductVersion.VersionFilter());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 v = Version.Parse("0.0.0.0");

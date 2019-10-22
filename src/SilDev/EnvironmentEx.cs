@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2019-10-21 15:03
+// Version:  2019-10-22 15:50
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -240,9 +240,10 @@ namespace SilDev
                     if (_version > Environment.Version)
                         return _version;
                 }
-                catch
+                catch (Exception ex) when (ex.IsCaught())
                 {
-                    // ignored
+                    if (Log.DebugMode > 1)
+                        Log.Write(ex);
                 }
                 const string keyPath = "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full";
                 var version = Reg.Read(Registry.LocalMachine, keyPath, "Version", string.Empty);
@@ -253,9 +254,10 @@ namespace SilDev
                         if (_version > Environment.Version)
                             return _version;
                     }
-                    catch
+                    catch (Exception ex) when (ex.IsCaught())
                     {
-                        // ignored
+                        if (Log.DebugMode > 1)
+                            Log.Write(ex);
                     }
                 var release = Reg.Read(Registry.LocalMachine, keyPath, "Release", 0);
                 if (release >= 461308)
@@ -475,8 +477,10 @@ namespace SilDev
                             throw new ArgumentException();
                         output = Environment.GetFolderPath(specialFolder);
                     }
-                    catch
+                    catch (Exception ex) when (ex.IsCaught())
                     {
+                        if (Log.DebugMode > 1)
+                            Log.Write(ex);
                         output = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
                                             .First(x => variable.EqualsEx(x.Key.ToString())).Value.ToString();
                     }
@@ -493,7 +497,7 @@ namespace SilDev
                 if (Log.DebugMode > 1)
                     Log.Write(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -534,8 +538,10 @@ namespace SilDev
                             output = Enum.GetValues(typeof(Environment.SpecialFolder)).Cast<Environment.SpecialFolder>()
                                          .First(s => current.EqualsEx(Environment.GetFolderPath(s))).ToString();
                         }
-                        catch
+                        catch (Exception ex) when (ex.IsCaught())
                         {
+                            if (Log.DebugMode > 1)
+                                Log.Write(ex);
                             output = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
                                                 .First(x => current.EqualsEx(x.Value.ToString())).Key.ToString();
                         }
@@ -551,7 +557,7 @@ namespace SilDev
                 if (Log.DebugMode > 1)
                     Log.Write(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -595,7 +601,7 @@ namespace SilDev
                 output = output.Trim(Path.DirectorySeparatorChar);
                 output = Path.Combine(output, sub);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -638,7 +644,7 @@ namespace SilDev
                     _displayNames = names.ToArray();
                     return _displayNames;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return null;
@@ -688,7 +694,7 @@ namespace SilDev
                     }
                     return result;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return false;
@@ -737,7 +743,7 @@ namespace SilDev
                             mClass.InvokeMethod("CreateRestorePoint", parameters, null);
                         }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }

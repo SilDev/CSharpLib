@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2019-10-20 17:48
+// Version:  2019-10-22 16:26
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -78,7 +78,7 @@ namespace SilDev
                         Directory.CreateDirectory(fileDir);
                     File.Create(_filePath).Close();
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -145,7 +145,7 @@ namespace SilDev
                     bytes = bytes.Zip();
                 File.WriteAllBytes(path, bytes);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -177,7 +177,7 @@ namespace SilDev
                 InitializeCache(code);
                 CachedFiles[code] = cache ?? throw new ArgumentNullException(nameof(cache));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -268,7 +268,7 @@ namespace SilDev
                     CachedFiles.Remove(code);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -306,7 +306,7 @@ namespace SilDev
                     return output;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -351,7 +351,7 @@ namespace SilDev
                     ReadAll(fileOrContent);
                 return RemoveSection(code, section);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -393,7 +393,7 @@ namespace SilDev
                     return output;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -445,7 +445,7 @@ namespace SilDev
                     ReadAll(fileOrContent);
                 return RemoveKey(code, section, key);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -518,7 +518,7 @@ namespace SilDev
                     CachedFiles[code] = output;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -618,7 +618,7 @@ namespace SilDev
                     return CachedFiles[code][section][key]?.FirstOrDefault() ?? string.Empty;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -719,11 +719,12 @@ namespace SilDev
                 }
                 return (TValue)newValue;
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
-                // ignored
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -784,7 +785,7 @@ namespace SilDev
                 if (WinApi.NativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
                     output = sb.ToString();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -881,7 +882,7 @@ namespace SilDev
                     Detach(path);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -1027,7 +1028,7 @@ namespace SilDev
                 CachedFiles?[code][section][key].Add(val);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -1144,7 +1145,7 @@ namespace SilDev
                 Write:
                 return WinApi.NativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;

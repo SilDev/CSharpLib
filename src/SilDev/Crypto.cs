@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2019-10-21 14:34
+// Version:  2019-10-22 15:35
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -866,7 +866,7 @@ namespace SilDev
                     var cypher = csp.Encrypt(bytes, true);
                     text = Convert.ToBase64String(cypher);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -910,7 +910,7 @@ namespace SilDev
                     var cypher = Convert.FromBase64String(code);
                     data = csp.Decrypt(cypher, true);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -1002,7 +1002,7 @@ namespace SilDev
                     }
                     return ba;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return null;
@@ -1034,7 +1034,7 @@ namespace SilDev
                     var ba = File.ReadAllBytes(s);
                     return EncryptBytes(ba, password, salt, keySize);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return null;
@@ -1078,7 +1078,7 @@ namespace SilDev
                     }
                     return ba;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return null;
@@ -1110,7 +1110,7 @@ namespace SilDev
                     var ba = File.ReadAllBytes(s);
                     return DecryptBytes(ba, password, salt, keySize);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return null;
@@ -1206,7 +1206,7 @@ namespace SilDev
                     }
                     return s;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -1259,7 +1259,7 @@ namespace SilDev
                             EncodeStream(fsi, fso, lineLength);
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -1297,7 +1297,7 @@ namespace SilDev
                     }
                     return s;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -1346,7 +1346,7 @@ namespace SilDev
                         return ba;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -1393,7 +1393,7 @@ namespace SilDev
                             DecodeStream(fsi, fso);
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -2786,7 +2786,7 @@ namespace SilDev
                         s = EncryptStream(fs);
                     return s;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return string.Empty;

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PortableExecutable.cs
-// Version:  2019-10-21 15:08
+// Version:  2019-10-22 16:06
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -191,7 +191,7 @@ namespace SilDev
                     fs?.Dispose();
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }

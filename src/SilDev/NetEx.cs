@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2019-10-21 15:08
+// Version:  2019-10-22 16:04
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -165,7 +165,7 @@ namespace SilDev
             {
                 return uri.Host.ToLowerInvariant();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -185,7 +185,7 @@ namespace SilDev
                 var uri = new Uri(url);
                 return uri.Host.ToLowerInvariant();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -253,7 +253,7 @@ namespace SilDev
                 if (interfaces.All(x => x.OperationalStatus != OperationalStatus.Up))
                     throw new ArgumentException(ExceptionMessages.NetworkInterfacesNotFound);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -290,7 +290,7 @@ namespace SilDev
                         roundtripTime = LastPingReply.RoundtripTime;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -325,7 +325,7 @@ namespace SilDev
                 var u = new Uri(str);
                 return u;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return null;
             }
@@ -349,7 +349,7 @@ namespace SilDev
                 u = s.ToUri();
                 return u;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 try
                 {
@@ -359,7 +359,7 @@ namespace SilDev
                     var u = s.ToUri();
                     return u;
                 }
-                catch (Exception ex)
+                catch (Exception exc) when (exc.IsCaught())
                 {
                     Log.Write(ex);
                     return null;
@@ -406,7 +406,7 @@ namespace SilDev
                 if (statusCode >= 500 && statusCode <= 510)
                     throw new HttpListenerException();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -509,7 +509,7 @@ namespace SilDev
                 using (var response = (HttpWebResponse)request.GetResponse())
                     contentLength = response.ContentLength;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -876,7 +876,7 @@ namespace SilDev
                 using (var response = (HttpWebResponse)request.GetResponse())
                     lastModified = response.LastModified;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -1247,7 +1247,7 @@ namespace SilDev
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -1627,7 +1627,7 @@ namespace SilDev
                     }
                     return File.Exists(path);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return false;
@@ -2057,7 +2057,7 @@ namespace SilDev
                         throw new ArgumentNullException(nameof(ba));
                     return ba;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return null;
@@ -2422,7 +2422,7 @@ namespace SilDev
                         throw new ArgumentNullException(nameof(s));
                     return s;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return string.Empty;
@@ -2835,7 +2835,7 @@ namespace SilDev
                     {
                         return _webClient.IsBusy;
                     }
-                    catch
+                    catch (Exception ex) when (ex.IsCaught())
                     {
                         return false;
                     }
@@ -2915,7 +2915,7 @@ namespace SilDev
                         _webClient?.Dispose();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     HasCanceled = true;
@@ -3322,7 +3322,7 @@ namespace SilDev
                         speedAd = speedAd.TrimEnd('s').Replace("byte", "b");
                     TransferSpeedAd = $"{speedAd}it/s";
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     TimeElapsed = _stopwatch.Elapsed;
@@ -3343,7 +3343,7 @@ namespace SilDev
                         if (File.Exists(FilePath))
                             File.Delete(FilePath);
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (ex.IsCaught())
                     {
                         Log.Write(ex);
                     }

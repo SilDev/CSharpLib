@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Xml.cs
-// Version:  2019-10-21 21:14
+// Version:  2019-10-22 16:28
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -49,7 +49,7 @@ namespace SilDev
                 }
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -83,7 +83,7 @@ namespace SilDev
                     new XmlSerializer(typeof(TSource)).Serialize(fs, source);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -118,7 +118,7 @@ namespace SilDev
 #endif
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return defValue;
@@ -169,7 +169,7 @@ namespace SilDev
 #endif
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return defValue;

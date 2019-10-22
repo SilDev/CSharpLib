@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2019-10-21 15:09
+// Version:  2019-10-22 16:12
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -373,7 +373,7 @@ namespace SilDev
                 }
                 return ba;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -408,7 +408,7 @@ namespace SilDev
                 }
                 return (TResult)obj;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return defValue;
@@ -430,7 +430,7 @@ namespace SilDev
             {
                 return new IntPtr(IntPtr.Size == sizeof(int) ? intPointer.ToInt32() + (int)value : intPointer.ToInt64() + (long)value);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return new IntPtr(IntPtr.Size == sizeof(int) ? int.MaxValue : long.MaxValue);
@@ -563,11 +563,12 @@ namespace SilDev
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException ex)
             {
-                // ignored
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -686,7 +687,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(encoding));
                 return encoding.GetBytes(str);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -739,7 +740,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(encoding));
                 return encoding.GetString(bytes);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return string.Empty;
@@ -786,7 +787,7 @@ namespace SilDev
                     throw new ArgumentInvalidException(nameof(str));
                 return (Rectangle)ConvertToSpecifiedType<RectangleConverter>(item);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Rectangle.Empty;
@@ -809,7 +810,7 @@ namespace SilDev
                     throw new ArgumentInvalidException(nameof(str));
                 return (Point)ConvertToSpecifiedType<PointConverter>(item);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return new Point(int.MinValue, int.MinValue);
@@ -831,7 +832,7 @@ namespace SilDev
                     throw new ArgumentInvalidException(nameof(str));
                 return (Size)ConvertToSpecifiedType<SizeConverter>(item);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Size.Empty;
@@ -851,7 +852,7 @@ namespace SilDev
             {
                 return bool.Parse(str);
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return false;
             }
@@ -993,7 +994,7 @@ namespace SilDev
                 }
                 return ba;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return bytes;
@@ -1042,7 +1043,7 @@ namespace SilDev
                 result = (TResult)converter.ConvertFrom(value);
                 return true;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 result = defValue;
                 return false;

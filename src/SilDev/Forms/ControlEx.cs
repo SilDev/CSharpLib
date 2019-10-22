@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2019-10-15 11:01
+// Version:  2019-10-22 15:29
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -82,7 +82,7 @@ namespace SilDev.Forms
                 var b = (byte?)fi?.GetValue(c) ?? 0;
                 return b > 0;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -139,7 +139,7 @@ namespace SilDev.Forms
                 var pi = typeof(Control).GetProperty("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance);
                 pi?.SetValue(c, enable, null);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -183,7 +183,7 @@ namespace SilDev.Forms
                 var mi = typeof(Control).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
                 mi?.Invoke(c, new object[] { controlStyles, enable });
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -216,7 +216,7 @@ namespace SilDev.Forms
                 {
                     ((dynamic)obj).BorderStyle = borderStyle;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     if (Log.DebugMode > 1)
                         Log.Write(ex);

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Win32_OperatingSystem.cs
-// Version:  2019-10-20 20:02
+// Version:  2019-10-22 15:34
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -491,7 +491,7 @@ namespace SilDev.QuickWmi
                 }
                 return d;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -510,7 +510,7 @@ namespace SilDev.QuickWmi
                     d = obj[name];
                 return d;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;

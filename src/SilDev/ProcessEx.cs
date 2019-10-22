@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-10-21 12:01
+// Version:  2019-10-22 16:08
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -125,7 +125,7 @@ namespace SilDev
                 using (var parentId = new PerformanceCounter("Process", "Creating Process ID", parentName))
                     return Process.GetProcessById((int)parentId.NextValue());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -161,7 +161,7 @@ namespace SilDev
                     }
                     instances = Process.GetProcesses().Where(p => p.ProcessName.EqualsEx(name) && (p.MainModule ?? throw new ArgumentException()).FileName.EqualsEx(path));
                 }
-                catch
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     if (!doubleTap)
                         return null;
@@ -169,7 +169,7 @@ namespace SilDev
                 }
                 return instances;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -201,7 +201,7 @@ namespace SilDev
                     p?.Dispose();
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -247,7 +247,7 @@ namespace SilDev
                 var info = FileVersionInfo.GetVersionInfo(path);
                 return info.FileDescription.EqualsEx("Sandboxie User Mode DLL");
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -273,7 +273,7 @@ namespace SilDev
                     list.AddRange(objs.Get().Cast<ManagementBaseObject>().Select(obj => obj["CommandLine"].ToString()));
                 return list.ToArray();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -392,7 +392,7 @@ namespace SilDev
                             }
                             processStarted = true;
                         }
-                        catch (Exception ex)
+                        catch (Exception ex) when (ex.IsCaught())
                         {
                             Log.Write(ex);
                         }
@@ -404,7 +404,7 @@ namespace SilDev
                 }
                 return process;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -630,7 +630,7 @@ namespace SilDev
                             count++;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -679,7 +679,7 @@ namespace SilDev
                             continue;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -776,7 +776,7 @@ namespace SilDev
                     Log.Write($"COMMAND EXECUTED: {cmd.Substring(3)}");
                 return p;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -866,7 +866,7 @@ namespace SilDev
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -911,7 +911,7 @@ namespace SilDev
                     if (string.IsNullOrEmpty(Name))
                         Name = Marshal.PtrToStringUni(buffer, len / 2);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -950,7 +950,7 @@ namespace SilDev
                     Marshal.WriteInt16(ptr, 0);
                     Marshal.WriteInt16(offset, (short)(newPrincipalName.Length * 2));
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -974,7 +974,7 @@ namespace SilDev
                     Marshal.WriteInt16(buffer, 0);
                     Marshal.WriteInt16(offset, (short)(Name.Length * 2));
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }

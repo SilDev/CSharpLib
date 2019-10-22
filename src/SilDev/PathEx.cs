@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-10-21 16:05
+// Version:  2019-10-22 16:06
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -140,7 +140,7 @@ namespace SilDev
                     throw new ArgumentException(ExceptionMessages.BadCharsInPath);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 if (Log.DebugMode > 1)
                     Log.Write(ex);
@@ -252,7 +252,7 @@ namespace SilDev
                 if (Log.DebugMode > 1)
                     Log.Write(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -376,7 +376,7 @@ namespace SilDev
                 if (Log.DebugMode > 1)
                     Log.Write(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -573,7 +573,7 @@ namespace SilDev
                     locks = fi.GetLocks();
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -657,7 +657,7 @@ namespace SilDev
                     {
                         File.Delete(target);
                     }
-                    catch
+                    catch (Exception ex) when (ex.IsCaught())
                     {
                         if (locked)
                             ProcessEx.SendHelper.WaitForExitThenDelete(target, curName, true);
@@ -667,7 +667,7 @@ namespace SilDev
                                     p.WaitForExit(timelimit);
                     }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }

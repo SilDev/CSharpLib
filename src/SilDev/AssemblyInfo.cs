@@ -77,7 +77,7 @@ namespace SilDev
                 var assembly = Attribute.GetCustomAttribute(Assembly.GetEntryAssembly(), typeof(TSource));
                 return (TSource)assembly;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return default;
             }

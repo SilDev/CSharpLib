@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PowerShellReference.cs
-// Version:  2018-06-23 22:46
+// Version:  2019-10-22 15:33
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -48,7 +48,7 @@ namespace SilDev.Intern
                         _assembly = Assembly.LoadFrom(path);
                         Location = dir;
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (ex.IsCaught())
                     {
                         Log.Write(ex);
                         _assembly = null;

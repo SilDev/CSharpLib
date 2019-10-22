@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-10-20 19:44
+// Version:  2019-10-22 16:09
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -100,7 +100,7 @@ namespace SilDev
                 CachedKeyFilters[hashCode] = newSubKey;
                 return newSubKey;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return null;
             }
@@ -142,7 +142,7 @@ namespace SilDev
                     exists = rKey != null;
                 return exists;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -198,7 +198,7 @@ namespace SilDev
                     RemoveSubKey(key, subKey);
                 rKey = key.CreateSubKey(subKey.KeyFilter());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -256,7 +256,7 @@ namespace SilDev
                 if (SubKeyExists(key, subKey))
                     key.DeleteSubKeyTree(subKey.KeyFilter());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -313,7 +313,7 @@ namespace SilDev
                     return sKeys?.Select(e => string.Concat(sKey, Path.DirectorySeparatorChar, e));
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -467,7 +467,7 @@ namespace SilDev
                 }
                 return SubKeyExists(destKey, destSubKey);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -540,7 +540,7 @@ namespace SilDev
                     return false;
                 return !SubKeyExists(oldKey, oldSubKey) && SubKeyExists(newKey, newSubKey);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -675,7 +675,7 @@ namespace SilDev
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -755,7 +755,7 @@ namespace SilDev
                 else
                     value = objValue.ToString();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -854,13 +854,13 @@ namespace SilDev
                         rKey?.SetValue(entry, newValue, type);
                         return true;
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (ex.IsCaught())
                     {
                         Log.Write(ex);
                         return false;
                     }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -936,7 +936,7 @@ namespace SilDev
                     using (var rKey = key.OpenSubKey(subKey.KeyFilter(), true))
                         rKey?.DeleteValue(entry);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -1002,7 +1002,7 @@ namespace SilDev
                         p.WaitForExit(3000);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -1068,7 +1068,7 @@ namespace SilDev
                     File.Delete(filePath);
                 return imported;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -1147,7 +1147,7 @@ namespace SilDev
                 }
                 return count == keyPaths.Length;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;

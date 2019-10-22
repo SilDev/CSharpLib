@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Service.cs
-// Version:  2019-10-21 16:25
+// Version:  2019-10-22 16:14
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -85,7 +85,7 @@ namespace SilDev
                 if (scman == IntPtr.Zero)
                     throw new OperationCanceledException(ExceptionMessages.SCManagerConnectionCanceled);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -122,7 +122,7 @@ namespace SilDev
                 if (service == IntPtr.Zero)
                     throw new OperationCanceledException(ExceptionMessages.ServiceInstallationCanceled);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -172,7 +172,7 @@ namespace SilDev
                     _ = WinApi.NativeMethods.CloseServiceHandle(service);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -228,7 +228,7 @@ namespace SilDev
                     _ = WinApi.NativeMethods.CloseServiceHandle(hService);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -261,7 +261,7 @@ namespace SilDev
                     _ = WinApi.NativeMethods.CloseServiceHandle(hService);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -307,7 +307,7 @@ namespace SilDev
                     _ = WinApi.NativeMethods.CloseServiceHandle(scman);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -326,7 +326,7 @@ namespace SilDev
                 if (WinApi.NativeMethods.QueryServiceStatus(hService, ssStatus) == 0)
                     throw new OperationCanceledException(ExceptionMessages.ServiceStatusQueryFailed);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -362,7 +362,7 @@ namespace SilDev
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }

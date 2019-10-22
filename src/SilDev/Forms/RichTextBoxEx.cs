@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2019-10-21 14:09
+// Version:  2019-10-22 15:32
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -239,7 +239,7 @@ namespace SilDev.Forms
                         c.Text = File.ReadAllText(dialog.FileName);
                         MessageBoxEx.Show(owner, UIStrings.FileSuccessfullyLoaded, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (ex.IsCaught())
                     {
                         MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -269,7 +269,7 @@ namespace SilDev.Forms
                         File.WriteAllText(dialog.FileName, TextEx.FormatNewLine(c.Text));
                         MessageBoxEx.Show(owner, UIStrings.FileSuccessfullySaved, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (ex.IsCaught())
                     {
                         MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }

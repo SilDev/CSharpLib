@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2019-10-21 15:36
+// Version:  2019-10-22 16:15
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -220,7 +220,7 @@ namespace SilDev
                 ((IPersistFile)shell).Save(linkPath, false);
                 return File.Exists(linkPath);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -244,7 +244,7 @@ namespace SilDev
                 File.Delete(link);
                 return File.Exists(link);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -303,7 +303,7 @@ namespace SilDev
                 }
                 return s;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 if (Log.DebugMode > 1)
                     Log.Write(ex);

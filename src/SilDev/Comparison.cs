@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2019-10-21 01:04
+// Version:  2019-10-22 15:34
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -54,7 +54,7 @@ namespace SilDev
                 }
                 return r;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -102,7 +102,7 @@ namespace SilDev
                 var b = c.Compare(source, end);
                 return a >= 0 && b <= 0;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return false;
             }
@@ -503,7 +503,7 @@ namespace SilDev
                     }
                     return s1.Length - s2.Length;
                 }
-                catch
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     return string.Compare(s1, s2, StringComparison.InvariantCulture);
                 }

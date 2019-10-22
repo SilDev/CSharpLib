@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2019-10-21 01:08
+// Version:  2019-10-22 15:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -63,7 +63,7 @@ namespace SilDev
                 var da = dirInfo.Attributes;
                 return (da & attr) != 0;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -87,7 +87,7 @@ namespace SilDev
                 var di = new DirectoryInfo(src);
                 return di.MatchAttributes(attr);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -135,7 +135,7 @@ namespace SilDev
                 var di = new DirectoryInfo(src);
                 return di.IsLink();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -164,7 +164,7 @@ namespace SilDev
                 else
                     di.Attributes = attr;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -199,7 +199,7 @@ namespace SilDev
                     throw new PathNotFoundException(dir);
                 dirs = Directory.EnumerateDirectories(path, searchPattern, searchOption);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -251,7 +251,7 @@ namespace SilDev
                     throw new PathNotFoundException(dir);
                 dirs = Directory.GetDirectories(path, searchPattern, searchOption);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -303,7 +303,7 @@ namespace SilDev
                     throw new PathNotFoundException(dir);
                 files = Directory.EnumerateFiles(path, searchPattern, searchOption);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -355,7 +355,7 @@ namespace SilDev
                     throw new PathNotFoundException(dir);
                 files = Directory.GetFiles(path, searchPattern, searchOption);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -399,7 +399,7 @@ namespace SilDev
                 var di = Directory.CreateDirectory(dir);
                 return di.Exists;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -449,7 +449,7 @@ namespace SilDev
                     throw new OperationCanceledException();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -502,7 +502,7 @@ namespace SilDev
                 Directory.Delete(src, true);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;
@@ -546,7 +546,7 @@ namespace SilDev
             {
                 return Delete(path);
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return false;
             }
@@ -578,7 +578,7 @@ namespace SilDev
                 var s = size ? len + sb.ToString() : sb.ToString();
                 return s.GetHashCode();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return -1;
@@ -604,7 +604,7 @@ namespace SilDev
                 var di = new DirectoryInfo(dir);
                 return di.GetFullHashCode(size);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return -1;
@@ -630,7 +630,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(drive));
                 return drive.TotalFreeSpace;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return 0L;
             }
@@ -679,11 +679,11 @@ namespace SilDev
                     Parallel.ForEach(dirs, di => Interlocked.Add(ref len, di.GetSize()));
                 return len;
             }
-            catch (OverflowException)
+            catch (OverflowException ex) when (ex.IsCaught())
             {
                 return long.MaxValue;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return 0L;
             }
@@ -862,7 +862,7 @@ namespace SilDev
                 var files = Directory.EnumerateFiles(dirInfo.FullName, "*", SearchOption.AllDirectories);
                 locks = PathEx.GetLocks(files);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }

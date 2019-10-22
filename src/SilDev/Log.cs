@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-20 17:50
+// Version:  2019-10-22 16:18
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -122,18 +122,23 @@ namespace SilDev
         ///     parameter in combination with <see cref="AllowLogging(string, string, Regex)"/>. The
         ///     following <see cref="DebugMode"/> options are available.
         ///     <para>
-        ///         0: Logging is disabled. If <see cref="CatchUnhandledExceptions"/> is enabled, unhandled
-        ///         <see cref="Exception"/>'s are discarded as well. This can be useful for public releases
-        ///         to prevent any kind of <see cref="Exception"/> notifications to the client. Please note
-        ///         that these functions may have dangerous consequences if used incorrectly.
+        ///         0: Logging is disabled. <see cref="Exception"/>'s are caught, and if
+        ///         <see cref="CatchUnhandledExceptions"/> is enabled, unhandled <see cref="Exception"/>'s
+        ///         are also discarded. This can be useful for public releases to prevent any kind of
+        ///         <see cref="Exception"/> notifications to the client. Please note that these functions
+        ///         may have dangerous consequences if used incorrectly.
         ///     </para>
         ///     <para>
-        ///         1: Logging is enabled and all <see cref="Exception"/>'s are logged.
+        ///         1: Logging is enabled, <see cref="Exception"/>'s are caught, and all
+        ///         <see cref="Exception"/>'s are logged.
         ///     </para>
         ///     <para>
-        ///         2: Logging is enabled, all <see cref="Exception"/>'s are logged, and a new
-        ///         <see cref="Console"/> window is allocated for the current process to display the current
-        ///         log in real time.
+        ///         2: Logging is enabled, <see cref="Exception"/>'s are caught, all <see cref="Exception"/>'s
+        ///         are logged, and a new <see cref="Console"/> window is allocated for the current process
+        ///         to display the current log in real time.
+        ///     </para>
+        ///     <para>
+        ///         3: Logging is enabled, but <see cref="Exception"/>'s are thrown.
         ///     </para>
         /// </summary>
         public static void ActivateLogging(int mode = 1)
@@ -200,8 +205,9 @@ namespace SilDev
                     }
                     option = args.Skip(1).FirstOrDefault();
                 }
-                catch
+                catch (Exception ex) when (ex.IsCaught())
                 {
+                    Debug.WriteLine(ex);
                     goto Finalize;
                 }
                 if (!int.TryParse(option, out var i))
@@ -226,7 +232,7 @@ namespace SilDev
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Debug.WriteLine(ex);
                 goto Finalize;
@@ -256,6 +262,24 @@ namespace SilDev
             }
             Finalize:
             ActivateLogging(mode);
+        }
+
+        /// <summary>
+        ///     Determines whether this <see cref="Exception"/> should be caught or thrown. For more
+        ///     information see <see cref="ActivateLogging(int)"/>.
+        /// </summary>
+        /// <param name="exception">
+        ///     The <see cref="Exception"/> to be checked.
+        /// </param>
+        /// <param name="exTypes">
+        ///     A sequence of <see cref="Exception"/> types to catch.
+        /// </param>
+        public static bool IsCaught(this Exception exception, params Type[] exTypes)
+        {
+            if (DebugMode < 3 || exception == null || exTypes == null)
+                return true;
+            var current = exception.GetType();
+            return exTypes.Any(type => type == current);
         }
 
         /// <summary>

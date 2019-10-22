@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2019-10-20 18:17
+// Version:  2019-10-22 16:00
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,6 +20,7 @@ namespace SilDev
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Text;
+    using Properties;
 
     /// <summary>
     ///     Provides a way to pin a managed object from unmanaged memory.
@@ -156,10 +157,10 @@ namespace SilDev
                     var size = new IntPtr(Marshal.SizeOf(value));
                     if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, pin.Pointer, size, ref bytesRead))
                         return;
-                    throw new MemoryException($"Read failed (bytesRead={bytesRead}).");
+                    throw new MemoryException(ExceptionMessages.BytesReadFailed + bytesRead);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -182,9 +183,9 @@ namespace SilDev
                 var bytesRead = IntPtr.Zero;
                 if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, sb, new IntPtr(size), ref bytesRead))
                     return sb.ToString();
-                throw new MemoryException($"Read failed (bytesRead={bytesRead}).");
+                throw new MemoryException(ExceptionMessages.BytesReadFailed + bytesRead);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return null;
@@ -212,10 +213,10 @@ namespace SilDev
                 {
                     if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out var bytesWritten))
                         return;
-                    throw new MemoryException($"Write failed (bytesWritten={bytesWritten}).");
+                    throw new MemoryException(ExceptionMessages.BytesWriteFailed + bytesWritten);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }

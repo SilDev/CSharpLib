@@ -79,7 +79,7 @@ namespace SilDev
                     File.Delete(dest);
                 ZipFile.CreateFromDirectory(src, dest);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -121,7 +121,7 @@ namespace SilDev
                 }
                 return ba;
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
                 return null;
             }
@@ -185,16 +185,16 @@ namespace SilDev
                                 }
                                 ent.ExtractToFile(entPath, true);
                             }
-                            catch (Exception ex)
+                            catch (Exception ex) when (ex.IsCaught())
                             {
                                 Log.Write(ex);
                             }
                     }
                 if (delSrcPath)
-                    File.Delete(src);
+                    FileEx.TryDelete(src);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return false;

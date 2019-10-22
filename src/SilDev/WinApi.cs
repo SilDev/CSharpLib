@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-10-22 00:13
+// Version:  2019-10-22 16:17
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -3417,7 +3417,7 @@ namespace SilDev
                     Marshal.FreeCoTaskMem(mimetype);
                     return mime;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return "unknown/unknown";
@@ -3442,7 +3442,7 @@ namespace SilDev
                     if (hWndParent == IntPtr.Zero)
                         throw new ArgumentException("Failed to locate window (class: '" + className + "').");
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -3659,7 +3659,7 @@ namespace SilDev
                     if (status >= 0xc0000000)
                         throw new ArgumentOutOfRangeException(nameof(status));
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -3746,7 +3746,7 @@ namespace SilDev
                         color = Color.FromArgb(color.R, color.G, color.B);
                     return color;
                 }
-                catch
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     return SystemColors.Highlight;
                 }
@@ -4499,7 +4499,7 @@ namespace SilDev
                     SendMessage(hWnd, WindowMenuFlags.WmCopyData, IntPtr.Zero, ref cds);
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                     return false;

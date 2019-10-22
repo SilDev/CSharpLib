@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2019-10-21 21:01
+// Version:  2019-10-22 16:13
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -147,7 +147,7 @@ namespace SilDev
                 if (Log.DebugMode > 1)
                     Log.Write(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -186,9 +186,10 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            catch
+            catch (Exception ex) when (ex.IsCaught())
             {
-                // ignored
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
             }
             return null;
         }
@@ -232,7 +233,7 @@ namespace SilDev
                 WinApi.NativeMethods.DestroyIcon(shfi.hIcon);
                 return ico;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -273,7 +274,7 @@ namespace SilDev
                         fs.Write(data, 0, data.Length);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -539,7 +540,7 @@ namespace SilDev
                             _iconBoxes.Add(box);
                             _panel.Controls.Add(box);
                         }
-                        catch
+                        catch (Exception ex) when (ex.IsCaught())
                         {
                             timer.Enabled = false;
                             if (_count > 0)

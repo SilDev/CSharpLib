@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2019-10-21 13:55
+// Version:  2019-10-22 15:31
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -97,7 +97,7 @@ namespace SilDev.Forms
                 Initialize(owner);
                 return MessageBox.Show(owner, text, caption, buttons, icon, defButton, options);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Show(text, caption, buttons, icon, defButton, options);
@@ -140,7 +140,7 @@ namespace SilDev.Forms
                 Initialize(owner);
                 return MessageBox.Show(owner, text, caption, buttons, icon, defButton);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Show(text, caption, buttons, icon, defButton);
@@ -179,7 +179,7 @@ namespace SilDev.Forms
                 Initialize(owner);
                 return MessageBox.Show(owner, text, caption, buttons, icon);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Show(text, caption, buttons, icon);
@@ -214,7 +214,7 @@ namespace SilDev.Forms
                 Initialize(owner);
                 return MessageBox.Show(owner, text, caption, buttons);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Show(text, caption, buttons);
@@ -245,7 +245,7 @@ namespace SilDev.Forms
                 Initialize(owner);
                 return MessageBox.Show(owner, text, caption);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Show(text, caption);
@@ -382,7 +382,7 @@ namespace SilDev.Forms
                 Initialize(owner);
                 return MessageBox.Show(owner, text);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return Show(text);
@@ -666,7 +666,7 @@ namespace SilDev.Forms
                 if (_owner != null || ButtonText.OverrideEnabled)
                     _hHook = WinApi.NativeMethods.SetWindowsHookEx(WinApi.Win32HookFlags.WhCallWndProcRet, HookProc, IntPtr.Zero, (int)WinApi.NativeMethods.GetCurrentThreadId());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
@@ -699,7 +699,7 @@ namespace SilDev.Forms
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
                 }
@@ -720,7 +720,7 @@ namespace SilDev.Forms
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
