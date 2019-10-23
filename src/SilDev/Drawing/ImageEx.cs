@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-10-22 15:28
+// Version:  2019-10-23 07:24
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -589,8 +589,8 @@ namespace SilDev.Drawing
             {
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
-                if ((context.State & StreamingContextStates.CrossMachine) != 0)
-                    throw new SerializationException();
+                if (Log.DebugMode > 1)
+                    Log.Write($"{nameof(ImagePair)} - {nameof(StreamingContext)} : {Json.Serialize(context)}");
                 Image1 = (Image)info.GetValue(nameof(Image1), typeof(Image));
                 Image2 = (Image)info.GetValue(nameof(Image2), typeof(Image));
             }
@@ -758,8 +758,8 @@ namespace SilDev.Drawing
             {
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
-                if ((context.State & StreamingContextStates.CrossMachine) != 0)
-                    throw new SerializationException();
+                if (Log.DebugMode > 1)
+                    Log.Write($"{nameof(Frame)} - {nameof(StreamingContext)} : {Json.Serialize(context)}");
                 Image = (Image)info.GetValue(nameof(Image), typeof(Image));
                 Duration = info.GetInt32(nameof(Duration));
             }
