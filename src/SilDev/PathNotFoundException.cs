@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathNotFoundException.cs
-// Version:  2019-01-30 10:22
+// Version:  2019-10-23 17:48
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -58,6 +58,12 @@ namespace SilDev
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class
         ///     with serialized data.
         /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
         protected PathNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>

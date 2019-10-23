@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-10-23 07:24
+// Version:  2019-10-23 17:54
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -580,7 +580,7 @@ namespace SilDev.Drawing
             ///     The object that holds the serialized object data.
             /// </param>
             /// <param name="context">
-            ///     An object that describes the source or destination of the serialized data.
+            ///     The contextual information about the source or destination.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     info is null.
@@ -590,7 +590,7 @@ namespace SilDev.Drawing
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
                 if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(ImagePair)} - {nameof(StreamingContext)} : {Json.Serialize(context)}");
+                    Log.Write($"{nameof(ImagePair)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
                 Image1 = (Image)info.GetValue(nameof(Image1), typeof(Image));
                 Image2 = (Image)info.GetValue(nameof(Image2), typeof(Image));
             }
@@ -619,16 +619,21 @@ namespace SilDev.Drawing
             ///     the target object.
             /// </summary>
             /// <param name="info">
-            ///     The <see cref="SerializationInfo"/> to populate with data.
+            ///     The object that holds the serialized object data.
             /// </param>
             /// <param name="context">
-            ///     The destination (see <see cref="StreamingContext"/>) for this serialization.
+            ///     The contextual information about the source or destination.
             /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     info is null.
+            /// </exception>
             [SecurityCritical]
             public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
+                if (Log.DebugMode > 1)
+                    Log.Write($"{nameof(ImagePair)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
                 info.AddValue(nameof(Image1), Image1);
                 info.AddValue(nameof(Image2), Image2);
             }
@@ -749,7 +754,7 @@ namespace SilDev.Drawing
             ///     The object that holds the serialized object data.
             /// </param>
             /// <param name="context">
-            ///     An object that describes the source or destination of the serialized data.
+            ///     The contextual information about the source or destination.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     info is null.
@@ -759,7 +764,7 @@ namespace SilDev.Drawing
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
                 if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(Frame)} - {nameof(StreamingContext)} : {Json.Serialize(context)}");
+                    Log.Write($"{nameof(Frame)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
                 Image = (Image)info.GetValue(nameof(Image), typeof(Image));
                 Duration = info.GetInt32(nameof(Duration));
             }
@@ -788,16 +793,21 @@ namespace SilDev.Drawing
             ///     the target object.
             /// </summary>
             /// <param name="info">
-            ///     The <see cref="SerializationInfo"/> to populate with data.
+            ///     The object that holds the serialized object data.
             /// </param>
             /// <param name="context">
-            ///     The destination (see <see cref="StreamingContext"/>) for this serialization.
+            ///     The contextual information about the source or destination.
             /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     info is null.
+            /// </exception>
             [SecurityCritical]
             public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
+                if (Log.DebugMode > 1)
+                    Log.Write($"{nameof(Frame)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
                 info.AddValue(nameof(Image), Image);
                 info.AddValue(nameof(Duration), Duration);
             }

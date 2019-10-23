@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2019-10-22 16:12
+// Version:  2019-10-23 17:53
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -23,6 +23,7 @@ namespace SilDev
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -360,14 +361,17 @@ namespace SilDev
         /// <param name="src">
         ///     The object graph to convert.
         /// </param>
-        public static byte[] SerializeObject<TSource>(this TSource src)
+        /// <param name="state">
+        ///     Specifies the destination context for the stream during serialization.
+        /// </param>
+        public static byte[] SerializeObject<TSource>(this TSource src, StreamingContextStates state = StreamingContextStates.All)
         {
             try
             {
                 byte[] ba;
                 using (var ms = new MemoryStream())
                 {
-                    var bf = new BinaryFormatter();
+                    var bf = new BinaryFormatter(null, new StreamingContext(state));
                     bf.Serialize(ms, src);
                     ba = ms.ToArray();
                 }
@@ -392,7 +396,10 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult DeserializeObject<TResult>(this byte[] bytes, TResult defValue = default)
+        /// <param name="state">
+        ///     Specifies the source context for the stream during serialization.
+        /// </param>
+        public static TResult DeserializeObject<TResult>(this byte[] bytes, TResult defValue = default, StreamingContextStates state = StreamingContextStates.All)
         {
             try
             {
@@ -401,7 +408,7 @@ namespace SilDev
                 object obj;
                 using (var ms = new MemoryStream())
                 {
-                    var bf = new BinaryFormatter();
+                    var bf = new BinaryFormatter(null, new StreamingContext(state));
                     ms.Write(bytes, 0, bytes.Length);
                     ms.Seek(0, SeekOrigin.Begin);
                     obj = bf.Deserialize(ms);
