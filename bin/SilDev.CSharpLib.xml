@@ -567,6 +567,12 @@
                 Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
                 with serialized data.
             </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
         </member>
         <member name="P:SilDev.ArgumentInvalidException.Message">
             <summary>
@@ -1362,7 +1368,7 @@
                 The object that holds the serialized object data.
             </param>
             <param name="context">
-                An object that describes the source or destination of the serialized data.
+                The contextual information about the source or destination.
             </param>
             <exception cref="T:System.ArgumentNullException">
                 info is null.
@@ -1389,11 +1395,14 @@
                 the target object.
             </summary>
             <param name="info">
-                The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.
+                The object that holds the serialized object data.
             </param>
             <param name="context">
-                The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.
+                The contextual information about the source or destination.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                info is null.
+            </exception>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.ImagePair.Dispose(System.Boolean)">
             <summary>
@@ -1490,7 +1499,7 @@
                 The object that holds the serialized object data.
             </param>
             <param name="context">
-                An object that describes the source or destination of the serialized data.
+                The contextual information about the source or destination.
             </param>
             <exception cref="T:System.ArgumentNullException">
                 info is null.
@@ -1517,11 +1526,14 @@
                 the target object.
             </summary>
             <param name="info">
-                The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.
+                The object that holds the serialized object data.
             </param>
             <param name="context">
-                The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.
+                The contextual information about the source or destination.
             </param>
+            <exception cref="T:System.ArgumentNullException">
+                info is null.
+            </exception>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.Frame.Dispose(System.Boolean)">
             <summary>
@@ -9956,6 +9968,12 @@
                 Initializes a new instance of the <see cref="T:SilDev.ArgumentInvalidException"/> class
                 with serialized data.
             </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
         </member>
         <member name="P:SilDev.MemoryException.Message">
             <summary>
@@ -13457,6 +13475,12 @@
                 Initializes a new instance of the <see cref="T:SilDev.PathNotFoundException"/> class
                 with serialized data.
             </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
         </member>
         <member name="P:SilDev.PathNotFoundException.Message">
             <summary>
@@ -15201,7 +15225,7 @@
                 stream was closed while the bytes were being written.
             </exception>
         </member>
-        <member name="M:SilDev.Reorganize.SerializeObject``1(``0)">
+        <member name="M:SilDev.Reorganize.SerializeObject``1(``0,System.Runtime.Serialization.StreamingContextStates)">
             <summary>
                 Serializes this object graph into a sequence of bytes.
             </summary>
@@ -15211,8 +15235,11 @@
             <param name="src">
                 The object graph to convert.
             </param>
+            <param name="state">
+                Specifies the destination context for the stream during serialization.
+            </param>
         </member>
-        <member name="M:SilDev.Reorganize.DeserializeObject``1(System.Byte[],``0)">
+        <member name="M:SilDev.Reorganize.DeserializeObject``1(System.Byte[],``0,System.Runtime.Serialization.StreamingContextStates)">
             <summary>
                 Deserializes this sequence of bytes into an object graph.
             </summary>
@@ -15224,6 +15251,9 @@
             </param>
             <param name="defValue">
                 The default value.
+            </param>
+            <param name="state">
+                Specifies the source context for the stream during serialization.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Increment(System.IntPtr,System.IntPtr)">
