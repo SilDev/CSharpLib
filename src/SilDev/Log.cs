@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-22 17:10
+// Version:  2019-10-23 06:14
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -281,7 +281,7 @@ namespace SilDev
                 Write($"Thrown {exception}");
                 return false;
             }
-            if (exception == null || exTypes == null)
+            if (exception == null || exTypes == null || !exTypes.Any())
                 return true;
             var current = exception.GetType();
             return exTypes.Any(type => type == current);
