@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Xml.cs
-// Version:  2019-10-22 16:28
+// Version:  2019-10-23 18:12
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -109,13 +109,8 @@ namespace SilDev
                 if (string.IsNullOrEmpty(source))
                     throw new ArgumentNullException(nameof(source));
                 TResult result;
-#if unsafeAllowed
-                using (var sr = new StringReader(source))
-                    result = (TResult)new XmlSerializer(typeof(TResult)).Deserialize(sr);
-#else
                 using (var xr = XmlReader.Create(source, new XmlReaderSettings { Async = false }))
                     result = (TResult)new XmlSerializer(typeof(TResult)).Deserialize(xr);
-#endif
                 return result;
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -145,13 +140,6 @@ namespace SilDev
                 if (!File.Exists(src))
                     return defValue;
                 TResult result;
-#if unsafeAllowed
-                using (var fs = new FileStream(src, FileMode.Open, FileAccess.Read))
-                {
-                    fs = null;
-                    result = (TResult)new XmlSerializer(typeof(TResult)).Deserialize(fs);
-                }
-#else
                 var fs = default(FileStream);
                 try
                 {
@@ -166,7 +154,6 @@ namespace SilDev
                 {
                     fs?.Dispose();
                 }
-#endif
                 return result;
             }
             catch (Exception ex) when (ex.IsCaught())
