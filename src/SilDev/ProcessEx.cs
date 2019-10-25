@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-10-22 16:08
+// Version:  2019-10-25 18:02
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -749,7 +749,7 @@ namespace SilDev
                 if ((path + cmd).Length > 8192)
                 {
                     var sb = new StringBuilder();
-                    var file = PathEx.Combine(Path.GetTempPath(), PathEx.GetTempFileName("tmp", ".cmd"));
+                    var file = FileEx.GetUniqueTempPath("tmp", ".cmd");
                     var content = cmd.Substring(3).Replace("FOR /L %", "FOR /L %%").RemoveText("EXIT /B").TrimEnd(null);
 
                     if (!content.StartsWithEx("@ECHO OFF", "@ECHO ON"))

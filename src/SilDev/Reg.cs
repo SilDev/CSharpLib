@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-10-22 16:09
+// Version:  2019-10-25 18:02
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -22,8 +22,10 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Intern;
     using Microsoft.Win32;
+#if !x64
+    using Intern;
+#endif
 
     /// <summary>
     ///     Provides functionality for the Windows registry database.
@@ -985,7 +987,7 @@ namespace SilDev
 #if any || x86
             public static bool ImportFile(string path, bool elevated = false, bool native = false)
 #else
-        public static bool ImportFile(string path, bool elevated = false, bool native = true)
+            public static bool ImportFile(string path, bool elevated = false, bool native = true)
 #endif
         {
             try
@@ -1028,7 +1030,7 @@ namespace SilDev
 #if any || x86
             public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
 #else
-        public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
+            public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
 #endif
         {
             try
@@ -1091,9 +1093,9 @@ namespace SilDev
 #if any || x86
             public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
 #else
-        public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
+            public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
 #endif
-                ImportFile(PathEx.Combine("%TEMP%", $"{PathEx.GetTempDirName()}.reg"), content, elevated, native);
+                ImportFile(FileEx.GetUniqueTempPath("tmp", ".reg"), content, elevated, native);
 
         /// <summary>
         ///     Exports the full content of the specified registry paths into an REG file.
@@ -1134,7 +1136,7 @@ namespace SilDev
                 var count = 0;
                 foreach (var key in keyPaths)
                 {
-                    var path = Path.Combine(Path.GetTempPath(), PathEx.GetTempFileName("reg", 8));
+                    var path = FileEx.GetUniqueTempPath("reg", null, 8);
                     if (Log.DebugMode > 1)
                         Log.Write($"EXPORT: \"{key}\" TO \"{path}\"");
                     using (var p = ProcessEx.Start(native ? RegNatEnvPath : RegLowEnvPath, $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
