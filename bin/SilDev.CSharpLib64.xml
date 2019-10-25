@@ -6011,6 +6011,74 @@
                 only the current directory or all subdirectories.
             </param>
         </member>
+        <member name="M:SilDev.DirectoryEx.GetUniqueName(System.String,System.Int32)">
+            <summary>
+                Returns a unique name starting with a given prefix, followed by a hash of the specified
+                length.
+            </summary>
+            <param name="prefix">
+                This text is at the beginning of the name.
+                <para>
+                    Uppercase letters are converted to lowercase letters. Supported characters are only
+                    from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+                </para>
+            </param>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                prefix contains invalid characters.
+            </exception>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetUniqueName(System.Int32)">
+            <summary>
+                Returns a unique name starting with 'tmp' prefix, followed by a hash of the specified
+                length.
+            </summary>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetUniqueTempPath(System.String,System.Int32)">
+            <summary>
+                Returns the current user's temporary path in combination with unique name starting with
+                a given prefix, followed by a hash of the specified length.
+            </summary>
+            <param name="prefix">
+                This text is at the beginning of the name.
+                <para>
+                    Uppercase letters are converted to lowercase letters. Supported characters are only
+                    from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+                </para>
+            </param>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                prefix contains invalid characters.
+            </exception>
+        </member>
+        <member name="M:SilDev.DirectoryEx.GetUniqueTempPath(System.Int32)">
+            <summary>
+                Returns the current user's temporary path in combination with unique name starting with
+                'tmp' prefix, followed by a hash of the specified length.
+            </summary>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+        </member>
         <member name="M:SilDev.DirectoryEx.CreateShellLink(System.String,System.String,System.String,System.ValueTuple{System.String,System.Int32},System.Boolean)">
             <summary>
                 Creates a link to the specified directory.
@@ -7637,6 +7705,90 @@
             <param name="path">
                 The path of the file to be deleted.
             </param>
+        </member>
+        <member name="M:SilDev.FileEx.GetUniqueName(System.String,System.String,System.Int32)">
+            <summary>
+                Returns a unique name starting with a given prefix, followed by a hash of the specified
+                length and a specified suffix.
+            </summary>
+            <param name="prefix">
+                This text is at the beginning of the name.
+                <para>
+                    Uppercase letters are converted to lowercase letters. Supported characters are only
+                    from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+                </para>
+            </param>
+            <param name="suffix">
+                This text is at the end of the name.
+                <para>
+                    If it does not begin with a dot, it will be added. Uppercase letters are converted
+                    to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+                    'z' but can be completely empty to omit the suffix.
+                </para>
+            </param>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                prefix or suffix contains invalid characters.
+            </exception>
+        </member>
+        <member name="M:SilDev.FileEx.GetUniqueName(System.Int32)">
+            <summary>
+                Returns a unique name starting with 'tmp' prefix, followed by a hash of the specified
+                length and '.tmp' suffix.
+            </summary>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+        </member>
+        <member name="M:SilDev.FileEx.GetUniqueTempPath(System.String,System.String,System.Int32)">
+            <summary>
+                Returns the current user's temporary path in combination with unique name starting with
+                a given prefix, followed by a hash of the specified length and a specified suffix.
+            </summary>
+            <param name="prefix">
+                This text is at the beginning of the name.
+                <para>
+                    Uppercase letters are converted to lowercase letters. Supported characters are only
+                    from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+                </para>
+            </param>
+            <param name="suffix">
+                This text is at the end of the name.
+                <para>
+                    If it does not begin with a dot, it will be added. Uppercase letters are converted
+                    to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+                    'z' but can be completely empty to omit the suffix.
+                </para>
+            </param>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                prefix or suffix contains invalid characters.
+            </exception>
+        </member>
+        <member name="M:SilDev.FileEx.GetUniqueTempPath(System.Int32)">
+            <summary>
+                Returns the current user's temporary path in combination with unique name starting with
+                'tmp' prefix, followed by a hash of the specified length and '.tmp' suffix.
+            </summary>
+            <param name="hashLen">
+                The length of the hash. Valid values are 4 through 24.
+            </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
         </member>
         <member name="M:SilDev.FileEx.CreateShellLink(System.String,System.String,System.String,System.ValueTuple{System.String,System.Int32},System.Boolean)">
             <summary>
@@ -13348,57 +13500,74 @@
                 true to convert environment variables; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.PathEx.GetTempDirName(System.String,System.Int32)">
+        <member name="M:SilDev.PathEx.GetUniqueName(System.String,System.String,System.Int32)">
             <summary>
-                Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
+                Returns a unique name starting with a given prefix, followed by a hash of the specified
+                length and a specified suffix.
             </summary>
             <param name="prefix">
                 This text is at the beginning of the name.
-            </param>
-            <param name="len">
-                The length of the hash. Valid values are 4 through 24.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.GetTempDirName(System.Int32)">
-            <summary>
-                Returns a uniquely directory name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
-            </summary>
-            <param name="len">
-                The length of the hash. Valid values are 4 through 24.
-            </param>
-        </member>
-        <member name="M:SilDev.PathEx.GetTempFileName(System.String,System.String,System.Int32)">
-            <summary>
-                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
-            </summary>
-            <param name="prefix">
-                This text is at the beginning of the name.
+                <para>
+                    Uppercase letters are converted to lowercase letters. Supported characters are only
+                    from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+                </para>
             </param>
             <param name="suffix">
                 This text is at the end of the name.
+                <para>
+                    If it does not begin with a dot, it will be added. Uppercase letters are converted
+                    to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+                    'z' but can be completely empty to omit the suffix.
+                </para>
             </param>
-            <param name="len">
+            <param name="hashLen">
                 The length of the hash. Valid values are 4 through 24.
             </param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                prefix or suffix contains invalid characters.
+            </exception>
         </member>
-        <member name="M:SilDev.PathEx.GetTempFileName(System.String,System.Int32)">
+        <member name="M:SilDev.PathEx.GetUniquePath(System.String,System.String,System.String,System.Int32)">
             <summary>
-                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
+                Returns a fully qualified path with unique name starting with a given prefix, followed by
+                a hash of the specified length and a specified suffix.
             </summary>
-            <param name="prefix">
+            <param name="baseDir">
+                This home directory for the uniquely named file or directory.
+            </param>
+            <param name="namePrefix">
                 This text is at the beginning of the name.
+                <para>
+                    Uppercase letters are converted to lowercase letters. Supported characters are only
+                    from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+                </para>
             </param>
-            <param name="len">
+            <param name="nameSuffix">
+                This text is at the end of the name.
+                <para>
+                    If it does not begin with a dot, it will be added. Uppercase letters are converted
+                    to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+                    'z' but can be completely empty to omit the suffix.
+                </para>
+            </param>
+            <param name="hashLen">
                 The length of the hash. Valid values are 4 through 24.
             </param>
-        </member>
-        <member name="M:SilDev.PathEx.GetTempFileName(System.Int32)">
-            <summary>
-                Returns a uniquely file name with a similar format as <see cref="M:System.IO.Path.GetTempFileName"/>.
-            </summary>
-            <param name="len">
-                The length of the hash. Valid values are 4 through 24.
-            </param>
+            <exception cref="T:System.ArgumentNullException">
+                baseDir is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                hashLen is not between 4 and 24.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                baseDir is not a valid path.
+            </exception>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                namePrefix or nameSuffix contains invalid characters.
+            </exception>
         </member>
         <member name="M:SilDev.PathEx.GetLocks(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
