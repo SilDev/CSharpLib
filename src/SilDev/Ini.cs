@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2019-10-22 16:26
+// Version:  2019-10-25 18:05
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -840,8 +840,8 @@ namespace SilDev
                 if (!File.Exists(path) && !PathEx.IsValidPath(path))
                     throw new ArgumentInvalidException(nameof(path));
 
-                var hash = File.Exists(path) ? new Crypto.Md5().EncryptFile(path) : null;
-                var temp = Path.GetRandomFileName();
+                var hash = File.Exists(path) ? path.EncryptFile(ChecksumAlgorithm.Crc32) : null;
+                var temp = FileEx.GetUniqueTempPath("tmp", ".ini");
                 using (var sw = new StreamWriter(temp, true))
                     foreach (var dict in source)
                     {
@@ -870,7 +870,7 @@ namespace SilDev
                         }
                         sw.WriteLine();
                     }
-                if (hash?.Equals(new Crypto.Md5().EncryptFile(temp), StringComparison.Ordinal) == true)
+                if (hash?.Equals(temp.EncryptFile(ChecksumAlgorithm.Crc32), StringComparison.Ordinal) == true)
                 {
                     File.Delete(temp);
                     return true;
