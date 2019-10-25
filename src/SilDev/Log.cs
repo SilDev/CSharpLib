@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-23 06:14
+// Version:  2019-10-25 18:05
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -88,14 +88,14 @@ namespace SilDev
             get
             {
                 if (_fileDir == default)
-                    FileDir = Path.GetTempPath();
+                    FileDir = Environment.GetEnvironmentVariable("TEMP");
                 return _fileDir;
             }
             set
             {
                 var dir = PathEx.Combine(value);
                 if (!PathEx.IsValidPath(dir) || !DirectoryEx.Create(dir))
-                    dir = Path.GetTempPath();
+                    dir = Environment.GetEnvironmentVariable("TEMP");
                 _fileDir = dir;
                 _fileIsValid = false;
             }
