@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-10-22 16:23
+// Version:  2019-10-25 18:02
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -929,6 +929,94 @@ namespace SilDev
                 return false;
             }
         }
+
+        /// <summary>
+        ///     Returns a unique name starting with a given prefix, followed by a hash of the specified
+        ///     length and a specified suffix.
+        /// </summary>
+        /// <param name="prefix">
+        ///     This text is at the beginning of the name.
+        ///     <para>
+        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
+        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///     </para>
+        /// </param>
+        /// <param name="suffix">
+        ///     This text is at the end of the name.
+        ///     <para>
+        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
+        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+        ///         'z' but can be completely empty to omit the suffix.
+        ///     </para>
+        /// </param>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        /// <exception cref="ArgumentInvalidException">
+        ///     prefix or suffix contains invalid characters.
+        /// </exception>
+        public static string GetUniqueName(string prefix = "tmp", string suffix = ".tmp", int hashLen = 4) =>
+            PathEx.GetUniqueName(prefix, suffix, hashLen);
+
+        /// <summary>
+        ///     Returns a unique name starting with 'tmp' prefix, followed by a hash of the specified
+        ///     length and '.tmp' suffix.
+        /// </summary>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        public static string GetUniqueName(int hashLen) =>
+            PathEx.GetUniqueName("tmp", ".tmp", hashLen);
+
+        /// <summary>
+        ///     Returns the current user's temporary path in combination with unique name starting with
+        ///     a given prefix, followed by a hash of the specified length and a specified suffix.
+        /// </summary>
+        /// <param name="prefix">
+        ///     This text is at the beginning of the name.
+        ///     <para>
+        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
+        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///     </para>
+        /// </param>
+        /// <param name="suffix">
+        ///     This text is at the end of the name.
+        ///     <para>
+        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
+        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+        ///         'z' but can be completely empty to omit the suffix.
+        ///     </para>
+        /// </param>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        /// <exception cref="ArgumentInvalidException">
+        ///     prefix or suffix contains invalid characters.
+        /// </exception>
+        public static string GetUniqueTempPath(string prefix = "tmp", string suffix = ".tmp", int hashLen = 4) =>
+            PathEx.GetUniquePath("%TEMP%", prefix, suffix, hashLen);
+
+        /// <summary>
+        ///     Returns the current user's temporary path in combination with unique name starting with
+        ///     'tmp' prefix, followed by a hash of the specified length and '.tmp' suffix.
+        /// </summary>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        public static string GetUniqueTempPath(int hashLen) =>
+            PathEx.GetUniquePath("%TEMP%", "tmp", ".tmp", hashLen);
 
         /// <summary>
         ///     Creates a link to the specified file.

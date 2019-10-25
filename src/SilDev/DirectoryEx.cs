@@ -709,6 +709,78 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Returns a unique name starting with a given prefix, followed by a hash of the specified
+        ///     length.
+        /// </summary>
+        /// <param name="prefix">
+        ///     This text is at the beginning of the name.
+        ///     <para>
+        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
+        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///     </para>
+        /// </param>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        /// <exception cref="ArgumentInvalidException">
+        ///     prefix contains invalid characters.
+        /// </exception>
+        public static string GetUniqueName(string prefix = "tmp", int hashLen = 4) =>
+            PathEx.GetUniqueName(prefix, null, hashLen);
+
+        /// <summary>
+        ///     Returns a unique name starting with 'tmp' prefix, followed by a hash of the specified
+        ///     length.
+        /// </summary>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        public static string GetUniqueName(int hashLen) =>
+            PathEx.GetUniqueName("tmp", null, hashLen);
+
+        /// <summary>
+        ///     Returns the current user's temporary path in combination with unique name starting with
+        ///     a given prefix, followed by a hash of the specified length.
+        /// </summary>
+        /// <param name="prefix">
+        ///     This text is at the beginning of the name.
+        ///     <para>
+        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
+        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///     </para>
+        /// </param>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        /// <exception cref="ArgumentInvalidException">
+        ///     prefix contains invalid characters.
+        /// </exception>
+        public static string GetUniqueTempPath(string prefix = "tmp", int hashLen = 4) =>
+            PathEx.GetUniquePath("%TEMP%", prefix, null, hashLen);
+
+        /// <summary>
+        ///     Returns the current user's temporary path in combination with unique name starting with
+        ///     'tmp' prefix, followed by a hash of the specified length.
+        /// </summary>
+        /// <param name="hashLen">
+        ///     The length of the hash. Valid values are 4 through 24.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        public static string GetUniqueTempPath(int hashLen) =>
+            PathEx.GetUniquePath("%TEMP%", "tmp", null, hashLen);
+
+        /// <summary>
         ///     Creates a link to the specified directory.
         /// </summary>
         /// <param name="targetPath">

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-10-22 16:06
+// Version:  2019-10-25 18:01
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -460,66 +460,114 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()"/>.
+        ///     Returns a unique name starting with a given prefix, followed by a hash of the specified
+        ///     length and a specified suffix.
         /// </summary>
         /// <param name="prefix">
         ///     This text is at the beginning of the name.
-        /// </param>
-        /// <param name="len">
-        ///     The length of the hash. Valid values are 4 through 24.
-        /// </param>
-        public static string GetTempDirName(string prefix = "tmp", int len = 4)
-        {
-            var s = prefix?.ToLowerInvariant() ?? string.Empty;
-            var g = new string(Guid.NewGuid().ToString().Where(char.IsLetterOrDigit).ToArray());
-            s = $"{s}{g.Substring(0, len.IsBetween(4, 24) ? len : 4).ToUpperInvariant()}";
-            return s;
-        }
-
-        /// <summary>
-        ///     Returns a uniquely directory name with a similar format as <see cref="Path.GetTempFileName()"/>.
-        /// </summary>
-        /// <param name="len">
-        ///     The length of the hash. Valid values are 4 through 24.
-        /// </param>
-        public static string GetTempDirName(int len) =>
-            GetTempDirName("tmp", len);
-
-        /// <summary>
-        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
-        /// </summary>
-        /// <param name="prefix">
-        ///     This text is at the beginning of the name.
+        ///     <para>
+        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
+        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///     </para>
         /// </param>
         /// <param name="suffix">
         ///     This text is at the end of the name.
+        ///     <para>
+        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
+        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+        ///         'z' but can be completely empty to omit the suffix.
+        ///     </para>
         /// </param>
-        /// <param name="len">
+        /// <param name="hashLen">
         ///     The length of the hash. Valid values are 4 through 24.
         /// </param>
-        public static string GetTempFileName(string prefix, string suffix = ".tmp", int len = 4) =>
-            GetTempDirName(prefix, len) + suffix;
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        /// <exception cref="ArgumentInvalidException">
+        ///     prefix or suffix contains invalid characters.
+        /// </exception>
+        public static string GetUniqueName(string prefix = "tmp", string suffix = default, int hashLen = 4)
+        {
+            if (!hashLen.IsBetween(4, 24))
+                throw new ArgumentOutOfRangeException(nameof(hashLen));
+            var sa = new[]
+            {
+                prefix?.ToLowerInvariant() ?? string.Empty,
+                suffix?.ToLowerInvariant() ?? string.Empty
+            };
+            for (var i = 0; i < sa.Length; i++)
+            {
+                var s = sa[i];
+                if (string.IsNullOrEmpty(s))
+                    continue;
+                if (i > 0 && s.StartsWith(".", StringComparison.Ordinal))
+                    s = s.Substring(1);
+                if (!s.All(c => c.IsBetween('0', '9') || c.IsBetween('a', 'z')))
+                    throw new ArgumentInvalidException(i == 0 ? nameof(prefix) : nameof(suffix));
+            }
+            var ran = new Random();
+            var sb = new StringBuilder(hashLen);
+            for (var i = 0; i < hashLen; i++)
+            {
+                if (ran.Next(sbyte.MinValue, sbyte.MaxValue) < 0)
+                {
+                    sb.Append((char)ran.Next('0', '9'));
+                    continue;
+                }
+                sb.Append((char)ran.Next('A', 'F'));
+            }
+            return $"{sa.First()}{sb}{sa.Last()}";
+        }
 
         /// <summary>
-        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
+        ///     Returns a fully qualified path with unique name starting with a given prefix, followed by
+        ///     a hash of the specified length and a specified suffix.
         /// </summary>
-        /// <param name="prefix">
+        /// <param name="baseDir">
+        ///     This home directory for the uniquely named file or directory.
+        /// </param>
+        /// <param name="namePrefix">
         ///     This text is at the beginning of the name.
+        ///     <para>
+        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
+        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///     </para>
         /// </param>
-        /// <param name="len">
+        /// <param name="nameSuffix">
+        ///     This text is at the end of the name.
+        ///     <para>
+        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
+        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
+        ///         'z' but can be completely empty to omit the suffix.
+        ///     </para>
+        /// </param>
+        /// <param name="hashLen">
         ///     The length of the hash. Valid values are 4 through 24.
         /// </param>
-        public static string GetTempFileName(string prefix = "tmp", int len = 4) =>
-            GetTempFileName(prefix, ".tmp", len);
-
-        /// <summary>
-        ///     Returns a uniquely file name with a similar format as <see cref="Path.GetTempFileName()"/>.
-        /// </summary>
-        /// <param name="len">
-        ///     The length of the hash. Valid values are 4 through 24.
-        /// </param>
-        public static string GetTempFileName(int len) =>
-            GetTempFileName("tmp", len);
+        /// <exception cref="ArgumentNullException">
+        ///     baseDir is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     hashLen is not between 4 and 24.
+        /// </exception>
+        /// <exception cref="ArgumentInvalidException">
+        ///     baseDir is not a valid path.
+        /// </exception>
+        /// <exception cref="ArgumentInvalidException">
+        ///     namePrefix or nameSuffix contains invalid characters.
+        /// </exception>
+        public static string GetUniquePath(string baseDir = "%TEMP%", string namePrefix = "tmp", string nameSuffix = default, int hashLen = 4)
+        {
+            if (baseDir == null)
+                throw new ArgumentNullException(nameof(baseDir));
+            var dir = baseDir;
+            if (dir.StartsWith("%", StringComparison.Ordinal) && (dir.Contains($"%{Path.DirectorySeparatorChar}") || dir.EndsWith("%", StringComparison.Ordinal)))
+                dir = Combine(dir);
+            if (!IsValidPath(dir))
+                throw new ArgumentInvalidException(nameof(baseDir));
+            return Path.Combine(dir, GetUniqueName(namePrefix, nameSuffix, hashLen));
+        }
 
         /// <summary>
         ///     Returns processes that have locked the specified paths.
@@ -628,11 +676,11 @@ namespace SilDev
                 var curName = $"{ProcessEx.CurrentName}.exe";
                 if (IsDir(target))
                 {
-                    var tmpDir = Combine(Path.GetTempPath(), GetTempDirName());
+                    var tmpDir = DirectoryEx.GetUniqueTempPath();
                     if (!Directory.Exists(tmpDir))
                         Directory.CreateDirectory(tmpDir);
 
-                    var helper = Combine(Path.GetTempPath(), GetTempFileName("tmp", ".cmd"));
+                    var helper = FileEx.GetUniqueTempPath("tmp", ".cmd");
                     sb.AppendLine("@ECHO OFF");
                     sb.AppendFormatLine("ROBOCOPY \"{0}\" \"{1}\" /MIR", tmpDir, target);
                     sb.AppendFormatLine("RMDIR /S /Q \"{0}\"", tmpDir);
