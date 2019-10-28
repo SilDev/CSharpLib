@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ComSpec.cs
-// Version:  2019-10-15 11:09
+// Version:  2019-10-28 03:06
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -37,15 +37,9 @@ namespace SilDev.Intern
         private static string _sysNativeEnvDir;
 
         internal static string SysNativeEnvDir =>
-            _sysNativeEnvDir ?? (_sysNativeEnvDir = Environment.Is64BitOperatingSystem ? "%SystemRoot%\\Sysnative" : "%SystemRoot%\\System32");
+            _sysNativeEnvDir ?? (_sysNativeEnvDir = Environment.Is64BitOperatingSystem && !Environment.Is64BitProcess ? "%SystemRoot%\\Sysnative" : "%SystemRoot%\\System32");
 #endif
-
-        private static string _defaultEnvPath,
-                              _defaultPath,
-                              _lowestEnvPath,
-                              _lowestPath,
-                              _sysNativeEnvPath,
-                              _sysNativePath;
+        private static string _defaultEnvPath, _defaultPath, _lowestEnvPath, _lowestPath, _sysNativeEnvPath, _sysNativePath;
 
         internal static string DefaultEnvPath =>
             _defaultEnvPath ?? (_defaultEnvPath = Path.Combine(DefaultEnvDir, "cmd.exe"));
