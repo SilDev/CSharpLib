@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-25 18:05
+// Version:  2019-10-28 04:27
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -35,42 +34,161 @@ namespace SilDev
     /// </summary>
     public static class Log
     {
-        internal static string DebugKey = @"Debug";
         private const string DateTimeFormat = @"yyyy-MM-dd HH:mm:ss,fff zzz";
-        private static bool _conIsOpen, _fileIsValid, _firstCall, _firstEntry = true;
-        private static string _fileDir, _filePath;
-        private static FileStream _fs;
-        private static SafeFileHandle _sfh;
-        private static IntPtr _stdHandle = IntPtr.Zero;
-        private static StreamWriter _sw;
+        private static volatile AssemblyName _assemblyEntryName;
+        private static volatile StringBuilder _builder;
+        private static volatile bool _catchUnhandledExceptions = true, _conIsOpen, _firstCall, _firstEntry = true;
+        private static volatile CultureInfo _currentCulture;
+        private static volatile string _debugKey;
+        private static volatile int _debugMode;
+        private static volatile string _fileDir, _fileName, _filePath;
+        private static volatile FileStream _fs;
+        private static volatile SafeFileHandle _sfh;
+        private static volatile IntPtr _stdHandle = IntPtr.Zero;
+        private static volatile StreamWriter _sw;
+        private static volatile object _syncObject;
 
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly().GetName();
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
+            }
+        }
 
-        private static readonly string AssemblyName = AssemblyEntryName.Name;
-        private static readonly Version AssemblyVersion = AssemblyEntryName.Version;
-        private static readonly StringBuilder Builder = new StringBuilder();
+        internal static string DebugKey
+        {
+            get
+            {
+                if (_debugKey != null)
+                    return _debugKey;
+                lock (SyncObject)
+                {
+                    _debugKey = @"Debug";
+                    return _debugKey;
+                }
+            }
+            set
+            {
+                lock (SyncObject)
+                    _debugKey = value;
+            }
+        }
+
+        private static AssemblyName AssemblyEntryName
+        {
+            get
+            {
+                if (_assemblyEntryName != null)
+                    return _assemblyEntryName;
+                lock (SyncObject)
+                {
+                    _assemblyEntryName = Assembly.GetEntryAssembly()?.GetName();
+                    return _assemblyEntryName;
+                }
+            }
+        }
+
+        private static string AssemblyName => AssemblyEntryName.Name;
+
+        private static Version AssemblyVersion => AssemblyEntryName.Version;
+
+        private static StringBuilder Builder
+        {
+            get
+            {
+                if (_builder != null)
+                    return _builder;
+                lock (SyncObject)
+                {
+                    _builder = new StringBuilder();
+                    return _builder;
+                }
+            }
+        }
+
+        private static bool ConIsOpen
+        {
+            get => _conIsOpen;
+            set
+            {
+                lock (SyncObject)
+                    _conIsOpen = value;
+            }
+        }
+
+        private static bool FirstCall
+        {
+            get => _firstCall;
+            set
+            {
+                lock (SyncObject)
+                    _firstCall = value;
+            }
+        }
+
+        private static bool FirstEntry
+        {
+            get => _firstEntry;
+            set
+            {
+                lock (SyncObject)
+                    _firstEntry = value;
+            }
+        }
 
         /// <summary>
         ///     true to enable the catching of unhandled <see cref="Exception"/>'s; otherwise, false.
         /// </summary>
-        public static bool CatchUnhandledExceptions { get; set; } = true;
+        public static bool CatchUnhandledExceptions
+        {
+            get => _catchUnhandledExceptions;
+            set
+            {
+                lock (SyncObject)
+                    _catchUnhandledExceptions = value;
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the culture for the current thread.
         /// </summary>
-        public static CultureInfo CurrentCulture { get; set; } = CultureInfo.InvariantCulture;
+        public static CultureInfo CurrentCulture
+        {
+            get
+            {
+                if (_currentCulture != null)
+                    return _currentCulture;
+                lock (SyncObject)
+                {
+                    _currentCulture = CultureInfo.InvariantCulture;
+                    return _currentCulture;
+                }
+            }
+            set
+            {
+                lock (SyncObject)
+                    _currentCulture = value;
+            }
+        }
 
         /// <summary>
         ///     Gets the current <see cref="DebugMode"/> value that determines how <see cref="Exception"/>'s
         ///     are handled. For more information see <see cref="ActivateLogging(int)"/>.
         /// </summary>
-        public static int DebugMode { get; private set; }
-
-        /// <summary>
-        ///     Gets the name of the current LOG file.
-        /// </summary>
-        public static string FileName { get; } = $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
+        public static int DebugMode
+        {
+            get => _debugMode;
+            set
+            {
+                lock (SyncObject)
+                    _debugMode = value;
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the location of the current LOG file.
@@ -87,17 +205,38 @@ namespace SilDev
         {
             get
             {
-                if (_fileDir == default)
-                    FileDir = Environment.GetEnvironmentVariable("TEMP");
-                return _fileDir;
+                if (_fileDir != null)
+                    return _fileDir;
+                lock (SyncObject)
+                {
+                    _fileDir = Environment.GetEnvironmentVariable("TEMP");
+                    return _fileDir;
+                }
             }
             set
             {
-                var dir = PathEx.Combine(value);
-                if (!PathEx.IsValidPath(dir) || !DirectoryEx.Create(dir))
-                    dir = Environment.GetEnvironmentVariable("TEMP");
-                _fileDir = dir;
-                _fileIsValid = false;
+                lock (SyncObject)
+                {
+                    _fileDir = value;
+                    _filePath = null;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Gets the name of the current LOG file.
+        /// </summary>
+        public static string FileName
+        {
+            get
+            {
+                if (_fileName != null)
+                    return _fileName;
+                lock (SyncObject)
+                {
+                    _fileName = $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
+                    return _fileName;
+                }
             }
         }
 
@@ -108,11 +247,13 @@ namespace SilDev
         {
             get
             {
-                if (_fileIsValid)
+                if (_filePath != null)
                     return _filePath;
-                _filePath = Path.Combine(FileDir, FileName);
-                _fileIsValid = true;
-                return _filePath;
+                lock (SyncObject)
+                {
+                    _filePath = Path.Combine(FileDir, FileName);
+                    return _filePath;
+                }
             }
         }
 
@@ -144,9 +285,9 @@ namespace SilDev
         public static void ActivateLogging(int mode = 1)
         {
             DebugMode = mode;
-            if (_firstCall)
+            if (FirstCall)
                 return;
-            _firstCall = true;
+            FirstCall = true;
             if (CatchUnhandledExceptions)
             {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
@@ -187,81 +328,84 @@ namespace SilDev
         /// </param>
         public static void AllowLogging(string configPath = null, string key = "Debug", Regex regex = null)
         {
-            var args = Environment.GetCommandLineArgs();
-            if (!DebugKey.EqualsEx(key))
-                DebugKey = key;
-            var arg = string.Concat('/', key);
-            var mode = 0;
-            if (args.ContainsEx(arg))
+            lock (SyncObject)
             {
-                string option;
-                try
+                var args = Environment.GetCommandLineArgs();
+                if (!DebugKey.EqualsEx(key))
+                    DebugKey = key;
+                var arg = string.Concat('/', key);
+                var mode = 0;
+                if (args.ContainsEx(arg))
                 {
-                    args = args.SkipWhile(x => !x.EqualsEx(arg)).ToArray();
-                    if (args.Length <= 1)
+                    string option;
+                    try
                     {
-                        mode = 1;
+                        args = args.SkipWhile(x => !x.EqualsEx(arg)).ToArray();
+                        if (args.Length <= 1)
+                        {
+                            mode = 1;
+                            goto Finalize;
+                        }
+                        option = args.Skip(1).FirstOrDefault();
+                    }
+                    catch (Exception ex) when (ex.IsCaught())
+                    {
+                        Debug.WriteLine(ex);
                         goto Finalize;
                     }
-                    option = args.Skip(1).FirstOrDefault();
+                    if (!int.TryParse(option, out var i))
+                        mode = 1;
+                    if (i > mode)
+                        mode = i;
+                    if (mode > 0)
+                        goto Finalize;
+                }
+                if (string.IsNullOrEmpty(configPath) || regex == null)
+                    goto Finalize;
+                var path = PathEx.Combine(configPath);
+                if (!File.Exists(path))
+                    goto Finalize;
+                var groupNames = regex.GetGroupNames();
+                if (!groupNames.Contains("Key") || !groupNames.Contains("Value"))
+                    goto Finalize;
+                string source;
+                try
+                {
+                    source = File.ReadAllText(path);
+                    if (string.IsNullOrEmpty(source))
+                        throw new ArgumentNullException(nameof(source));
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
                     Debug.WriteLine(ex);
                     goto Finalize;
                 }
-                if (!int.TryParse(option, out var i))
-                    mode = 1;
-                if (i > mode)
-                    mode = i;
-                if (mode > 0)
-                    goto Finalize;
-            }
-            if (string.IsNullOrEmpty(configPath) || regex == null)
-                goto Finalize;
-            var path = PathEx.Combine(configPath);
-            if (!File.Exists(path))
-                goto Finalize;
-            var groupNames = regex.GetGroupNames();
-            if (!groupNames.Contains("Key") || !groupNames.Contains("Value"))
-                goto Finalize;
-            string source;
-            try
-            {
-                source = File.ReadAllText(path);
-                if (string.IsNullOrEmpty(source))
-                    throw new ArgumentNullException(nameof(source));
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Debug.WriteLine(ex);
-                goto Finalize;
-            }
-            foreach (var match in regex.Matches(source).Cast<Match>())
-            {
-                var keys = match.Groups["Key"].Captures.Cast<Capture>().GetEnumerator();
-                var vals = match.Groups["Value"].Captures.Cast<Capture>().GetEnumerator();
-                try
+                foreach (var match in regex.Matches(source).Cast<Match>())
                 {
-                    while (keys.MoveNext() && vals.MoveNext())
+                    var keys = match.Groups["Key"].Captures.Cast<Capture>().GetEnumerator();
+                    var vals = match.Groups["Value"].Captures.Cast<Capture>().GetEnumerator();
+                    try
                     {
-                        var keyName = keys.Current?.Value.Trim();
-                        if (!keyName.EqualsEx(key))
-                            continue;
-                        var strValue = vals.Current?.Value.Trim();
-                        if (int.TryParse(strValue, out var value))
-                            mode = value;
-                        goto Finalize;
+                        while (keys.MoveNext() && vals.MoveNext())
+                        {
+                            var keyName = keys.Current?.Value.Trim();
+                            if (!keyName.EqualsEx(key))
+                                continue;
+                            var strValue = vals.Current?.Value.Trim();
+                            if (int.TryParse(strValue, out var value))
+                                mode = value;
+                            goto Finalize;
+                        }
+                    }
+                    finally
+                    {
+                        keys.Dispose();
+                        vals.Dispose();
                     }
                 }
-                finally
-                {
-                    keys.Dispose();
-                    vals.Dispose();
-                }
+                Finalize:
+                ActivateLogging(mode);
             }
-            Finalize:
-            ActivateLogging(mode);
         }
 
         /// <summary>
@@ -298,13 +442,12 @@ namespace SilDev
         /// </param>
         public static void Write(string logMessage, bool exitProcess = false)
         {
-            lock (Builder)
+            if (!FirstCall || DebugMode < 1 || !FirstEntry && string.IsNullOrEmpty(logMessage))
+                return;
+            lock (SyncObject)
             {
-                if (!_firstCall || DebugMode < 1 || !_firstEntry && string.IsNullOrEmpty(logMessage))
-                    return;
-
                 Build:
-                if (!_firstEntry)
+                if (!FirstEntry)
                 {
                     Builder.Append(ProcessEx.CurrentId);
                     Builder.Append(" ");
@@ -313,7 +456,7 @@ namespace SilDev
                 }
                 else
                 {
-                    _firstEntry = false;
+                    FirstEntry = false;
                     var separator = new string('=', 65);
 
                     Builder.Append("New Process ");
@@ -376,9 +519,9 @@ namespace SilDev
                     Environment.Exit(Environment.ExitCode);
                 }
 
-                if (!_conIsOpen)
+                if (!ConIsOpen)
                 {
-                    _conIsOpen = true;
+                    ConIsOpen = true;
 
                     _ = WinApi.NativeMethods.AllocConsole();
                     var hWnd = WinApi.NativeMethods.GetConsoleWindow();
@@ -453,26 +596,26 @@ namespace SilDev
 
         private static string AppendToFile()
         {
-            lock (Builder)
-            {
-                var content = Builder.Length > 0 ? Builder.ToString() : string.Empty;
-                if (Directory.Exists(FileDir))
-                    File.AppendAllText(FilePath, content);
-                Builder.Clear();
-                return content;
-            }
+            var content = Builder.Length > 0 ? Builder.ToString() : string.Empty;
+            if (Directory.Exists(FileDir))
+                File.AppendAllText(FilePath, content);
+            Builder.Clear();
+            return content;
         }
 
         private static void Close()
         {
-            if (_sfh?.IsClosed == false)
-                _sfh.Close();
-            if (DebugMode < 1 || !Directory.Exists(FileDir))
-                return;
-            AppendToFile();
-            Directory.EnumerateFiles(FileDir, $"{AssemblyName}*.log", SearchOption.TopDirectoryOnly)
-                     .Where(file => !FilePath.EqualsEx(file) && (DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
-                     .ForEach(File.Delete);
+            lock (SyncObject)
+            {
+                if (_sfh?.IsClosed == false)
+                    _sfh.Close();
+                if (DebugMode < 1 || !Directory.Exists(FileDir))
+                    return;
+                AppendToFile();
+                Directory.EnumerateFiles(FileDir, $"{AssemblyName}*.log", SearchOption.TopDirectoryOnly)
+                         .Where(file => !FilePath.EqualsEx(file) && (DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
+                         .ForEach(File.Delete);
+            }
         }
     }
 }
