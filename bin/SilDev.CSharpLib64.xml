@@ -9644,11 +9644,6 @@
                 are handled. For more information see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
             </summary>
         </member>
-        <member name="P:SilDev.Log.FileName">
-            <summary>
-                Gets the name of the current LOG file.
-            </summary>
-        </member>
         <member name="P:SilDev.Log.FileDir">
             <summary>
                 Gets or sets the location of the current LOG file.
@@ -9660,6 +9655,11 @@
                     to write to this location, the location is changed to the Windows specified folder for
                     temporary files.
                 </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.Log.FileName">
+            <summary>
+                Gets the name of the current LOG file.
             </summary>
         </member>
         <member name="P:SilDev.Log.FilePath">
