@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-10-25 18:01
+// Version:  2019-10-28 03:08
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -205,14 +205,13 @@ namespace SilDev
             {
                 if (specialFolder != null)
                     path = Environment.GetFolderPath((Environment.SpecialFolder)specialFolder);
-                if (paths?.Any() != true)
-                    throw new ArgumentNullException(nameof(paths));
                 var separators = new[]
                 {
                     Path.DirectorySeparatorChar,
                     Path.AltDirectorySeparatorChar
                 };
-                var plains = paths.SelectMany(x => x.Split(separators, StringSplitOptions.RemoveEmptyEntries));
+                if (!(paths?.Join(Path.DirectorySeparatorChar).Split(separators, StringSplitOptions.RemoveEmptyEntries) is IEnumerable<string> plains))
+                    throw new ArgumentNullException(nameof(paths));
                 if (invalidPathChars?.Any() == true)
                     plains = plains.Select(x => x.RemoveChar(invalidPathChars));
                 path = !string.IsNullOrEmpty(path) ? Path.Combine(path, plains.Join(Path.DirectorySeparatorChar)) : plains.Join(Path.DirectorySeparatorChar);
