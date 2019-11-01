@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-28 04:27
+// Version:  2019-10-31 21:59
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -38,7 +38,6 @@ namespace SilDev
         private static volatile AssemblyName _assemblyEntryName;
         private static volatile StringBuilder _builder;
         private static volatile bool _catchUnhandledExceptions = true, _conIsOpen, _firstCall, _firstEntry = true;
-        private static volatile CultureInfo _currentCulture;
         private static volatile string _debugKey;
         private static volatile int _debugMode;
         private static volatile string _fileDir, _fileName, _filePath;
@@ -157,24 +156,7 @@ namespace SilDev
         /// <summary>
         ///     Gets or sets the culture for the current thread.
         /// </summary>
-        public static CultureInfo CurrentCulture
-        {
-            get
-            {
-                if (_currentCulture != null)
-                    return _currentCulture;
-                lock (SyncObject)
-                {
-                    _currentCulture = CultureInfo.InvariantCulture;
-                    return _currentCulture;
-                }
-            }
-            set
-            {
-                lock (SyncObject)
-                    _currentCulture = value;
-            }
-        }
+        public static CultureInfo CurrentCulture => CultureConfig.GlobalCultureInfo;
 
         /// <summary>
         ///     Gets the current <see cref="DebugMode"/> value that determines how <see cref="Exception"/>'s
@@ -451,7 +433,7 @@ namespace SilDev
                 {
                     Builder.Append(ProcessEx.CurrentId);
                     Builder.Append(" ");
-                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureInfo.InvariantCulture));
+                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureConfig.GlobalCultureInfo));
                     Builder.Append(" | ");
                 }
                 else
@@ -460,7 +442,7 @@ namespace SilDev
                     var separator = new string('=', 65);
 
                     Builder.Append("New Process ");
-                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureInfo.InvariantCulture));
+                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureConfig.GlobalCultureInfo));
                     Builder.Append(" ");
 
                     var front = Builder.ToString();
@@ -607,7 +589,7 @@ namespace SilDev
         {
             lock (SyncObject)
             {
-                if (_sfh?.IsClosed == false)
+                if (_sfh?.IsClosed ?? false)
                     _sfh.Close();
                 if (DebugMode < 1 || !Directory.Exists(FileDir))
                     return;

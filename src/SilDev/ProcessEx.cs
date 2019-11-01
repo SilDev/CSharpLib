@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-10-25 18:02
+// Version:  2019-10-31 22:00
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,7 +19,6 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Management;
@@ -626,7 +625,7 @@ namespace SilDev
                             using (var wh = new ManualResetEvent(false) { SafeWaitHandle = new SafeWaitHandle(h, false) })
                                 wh.WaitOne(100);
                         }
-                        if (p?.HasExited == true)
+                        if (p?.HasExited ?? false)
                             count++;
                     }
                 }
@@ -690,7 +689,7 @@ namespace SilDev
             if (list.Count == 0)
                 return count > 0;
             using (var p = SendHelper.KillAllTasks(list, true, false))
-                if (p?.HasExited == false)
+                if (p?.HasExited ?? false)
                     p.WaitForExit();
             Tray.RefreshAsync(16);
             return count > 0;
@@ -757,7 +756,7 @@ namespace SilDev
                     if (content.EndsWithEx("EXIT"))
                         content = content.Substring(0, content.Length - 4).TrimEnd('\r', '\n', '&');
                     sb.AppendLine(content);
-                    sb.AppendFormat(CultureInfo.InvariantCulture, "DEL /F /Q \"{0}\"", file);
+                    sb.AppendFormat(CultureConfig.GlobalCultureInfo, "DEL /F /Q \"{0}\"", file);
                     sb.AppendLine("EXIT");
 
                     File.WriteAllText(file, sb.ToString());
@@ -1014,7 +1013,7 @@ namespace SilDev
                 {
                     if (!wait)
                         return true;
-                    if (p?.HasExited == false)
+                    if (p?.HasExited ?? false)
                         p.WaitForExit();
                     exitCode = p?.ExitCode ?? 1;
                 }
@@ -1041,11 +1040,11 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return true;
                 int exitCode;
-                using (var p = Send(string.Format(CultureInfo.InvariantCulture, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src), runAsAdmin, false))
+                using (var p = Send(string.Format(CultureConfig.GlobalCultureInfo, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src), runAsAdmin, false))
                 {
                     if (!wait)
                         return true;
-                    if (p?.HasExited == false)
+                    if (p?.HasExited ?? false)
                         p.WaitForExit();
                     exitCode = p?.ExitCode ?? 1;
                 }
@@ -1116,7 +1115,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return null;
                 var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                var command = string.Format(CultureInfo.InvariantCulture, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                var command = string.Format(CultureConfig.GlobalCultureInfo, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
                 return WaitThenCmd(command, time, runAsAdmin, dispose);
             }
 
@@ -1225,7 +1224,7 @@ namespace SilDev
                 var src = PathEx.Combine(path);
                 if (!PathEx.DirOrFileExists(src))
                     return null;
-                var command = string.Format(CultureInfo.InvariantCulture, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                var command = string.Format(CultureConfig.GlobalCultureInfo, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
                 return WaitForExitThenCmd(command, processName, extension, runAsAdmin, dispose);
             }
 

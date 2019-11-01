@@ -143,6 +143,7 @@
     <Compile Include="SilDev\AppCompat.cs" />
     <Compile Include="SilDev\ArgumentInvalidException.cs" />
     <Compile Include="SilDev\AssemblyInfo.cs" />
+    <Compile Include="SilDev\CultureConfig.cs" />
     <Compile Include="SilDev\Drawing\ColorEx.cs" />
     <Compile Include="SilDev\Drawing\IconEx.cs" />
     <Compile Include="SilDev\Drawing\ImageEx.cs" />

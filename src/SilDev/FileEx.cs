@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-10-25 18:02
+// Version:  2019-10-31 21:58
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,7 +19,6 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -203,7 +202,7 @@ namespace SilDev
         ///     The file instance member that contains the file to check.
         /// </param>
         public static bool IsHidden(this FileInfo fileInfo) =>
-            fileInfo?.MatchAttributes(FileAttributes.Hidden) == true;
+            fileInfo?.MatchAttributes(FileAttributes.Hidden) ?? false;
 
         /// <summary>
         ///     Determines whether the specified file is hidden.
@@ -221,7 +220,7 @@ namespace SilDev
         ///     The file instance member that contains the file to check.
         /// </param>
         public static bool IsLink(this FileInfo fileInfo) =>
-            fileInfo?.MatchAttributes(FileAttributes.ReparsePoint) == true;
+            fileInfo?.MatchAttributes(FileAttributes.ReparsePoint) ?? false;
 
         /// <summary>
         ///     Determines whether the specified file is specified as reparse point.
@@ -839,7 +838,7 @@ namespace SilDev
                 }
                 else
                 {
-                    if (!fi.Directory?.Exists == false)
+                    if (!fi.Directory?.Exists ?? false)
                         fi.Directory.Create();
                 }
                 fi.CopyTo(dest);
@@ -1153,7 +1152,7 @@ namespace SilDev
         public static IEnumerable<Process> GetLocks(IEnumerable<string> files)
         {
             var paths = files?.Select(PathEx.Combine).Where(PathEx.IsFile).ToArray();
-            if (paths?.Any() != true)
+            if (paths?.Any() ?? true)
                 yield break;
             WinApi.ThrowError(WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString()));
             IEnumerable<int> procIds;
@@ -1271,7 +1270,7 @@ namespace SilDev
                     using (var p = rf.CreatePipeline())
                     {
                         const string command = "Get-AuthenticodeSignature \"{0}\"";
-                        p.Commands.AddScript(string.Format(CultureInfo.InvariantCulture, command, path));
+                        p.Commands.AddScript(string.Format(CultureConfig.GlobalCultureInfo, command, path));
                         var s = p.Invoke()[0];
                         rf.Close();
                         return s.Status.ToString();

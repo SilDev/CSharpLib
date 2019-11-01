@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-10-28 03:08
+// Version:  2019-10-31 22:00
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -212,7 +212,7 @@ namespace SilDev
                 };
                 if (!(paths?.Join(Path.DirectorySeparatorChar).Split(separators, StringSplitOptions.RemoveEmptyEntries) is IEnumerable<string> plains))
                     throw new ArgumentNullException(nameof(paths));
-                if (invalidPathChars?.Any() == true)
+                if (invalidPathChars?.Any() ?? false)
                     plains = plains.Select(x => x.RemoveChar(invalidPathChars));
                 path = !string.IsNullOrEmpty(path) ? Path.Combine(path, plains.Join(Path.DirectorySeparatorChar)) : plains.Join(Path.DirectorySeparatorChar);
 
@@ -586,7 +586,7 @@ namespace SilDev
                 if (IsDir(path))
                 {
                     var innerFiles = DirectoryEx.GetFiles(path, SearchOption.AllDirectories);
-                    if (innerFiles?.Any() == true)
+                    if (innerFiles?.Any() ?? false)
                         files.AddRange(innerFiles);
                     continue;
                 }
@@ -692,7 +692,7 @@ namespace SilDev
                         ProcessEx.SendHelper.WaitForExitThenCmd(call, curName, elevated);
                     else
                         using (var p = ProcessEx.Send(call, elevated, false))
-                            if (p?.HasExited == false)
+                            if (p?.HasExited ?? false)
                                 p.WaitForExit(timelimit);
 
                     DirectoryEx.Delete(tmpDir);
@@ -710,7 +710,7 @@ namespace SilDev
                             ProcessEx.SendHelper.WaitForExitThenDelete(target, curName, true);
                         else
                             using (var p = ProcessEx.Send(sb.ToString(), elevated, false))
-                                if (p?.HasExited == false)
+                                if (p?.HasExited ?? false)
                                     p.WaitForExit(timelimit);
                     }
             }

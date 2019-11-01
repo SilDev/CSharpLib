@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-10-22 16:17
+// Version:  2019-10-31 22:02
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -2031,7 +2031,7 @@ namespace SilDev
         /// </exception>
         public static int ThrowError(int error, params int[] handledErrors)
         {
-            if (handledErrors?.Any(i => i == error) == true)
+            if (handledErrors?.Any(i => i == error) ?? false)
                 return error;
             throw new Win32Exception(error);
         }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2019-10-25 18:05
+// Version:  2019-10-31 22:27
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Properties;
 
     /// <summary>
     ///     Provides the functionality to handle the INI format.
@@ -121,7 +122,7 @@ namespace SilDev
         {
             try
             {
-                if (CachedFiles?.Any() != true)
+                if (!CachedFiles?.Any() ?? true)
                     throw new ArgumentOutOfRangeException(nameof(CachedFiles));
                 var path = PathEx.Combine(cacheFilePath ?? GetFile());
                 if (string.IsNullOrEmpty(path))
@@ -237,7 +238,7 @@ namespace SilDev
             File.Exists(FilePath = PathEx.Combine(paths));
 
         private static bool CodeExists(int code) =>
-            code != -1 && CachedFiles?.ContainsKey(code) == true && CachedFiles[code]?.Any() == true;
+            code != -1 && (CachedFiles?.ContainsKey(code) ?? false) && (CachedFiles[code]?.Any() ?? false);
 
         private static int GetCode(string fileOrContent)
         {
@@ -264,7 +265,7 @@ namespace SilDev
                 var code = GetCode(fileOrContent);
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
-                if (CachedFiles?.ContainsKey(code) == true)
+                if (CachedFiles?.ContainsKey(code) ?? false)
                     CachedFiles.Remove(code);
                 return true;
             }
@@ -276,7 +277,7 @@ namespace SilDev
         }
 
         private static bool SectionExists(int code, string section) =>
-            !string.IsNullOrEmpty(section) && CodeExists(code) && CachedFiles[code]?.ContainsKey(section) == true && CachedFiles[code][section]?.Any() == true;
+            !string.IsNullOrEmpty(section) && CodeExists(code) && (CachedFiles[code]?.ContainsKey(section) ?? false) && (CachedFiles[code][section]?.Any() ?? false);
 
         /// <summary>
         ///     Retrieves all section names of an INI file or an INI file formatted string value.
@@ -359,7 +360,7 @@ namespace SilDev
         }
 
         private static bool KeyExists(int code, string section, string key) =>
-            !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && CachedFiles[code][section][key]?.Any() == true;
+            !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && (CachedFiles[code][section][key]?.Any() ?? false);
 
         /// <summary>
         ///     Retrieves all key names of an INI file or an INI file formatted string value.
@@ -441,7 +442,7 @@ namespace SilDev
                 var code = GetCode(fileOrContent);
                 if (code == -1)
                     throw new ArgumentOutOfRangeException(nameof(code));
-                if (CachedFiles?.ContainsKey(code) != true)
+                if (!CachedFiles?.ContainsKey(code) ?? true)
                     ReadAll(fileOrContent);
                 return RemoveKey(code, section, key);
             }
@@ -681,14 +682,7 @@ namespace SilDev
                 if (string.IsNullOrEmpty(strValue))
                 {
                     if (Log.DebugMode > 1)
-                    {
-                        var msg = new StringBuilder();
-                        msg.AppendLine("The value is not defined.");
-                        msg.AppendLine($"   Section: '{section}'");
-                        msg.AppendLine($"   Key: '{key}'");
-                        msg.Append($"   FileOrContent: '{(fileOrContent?.Any(TextEx.IsLineSeparator) == true ? fileOrContent.Encrypt() : GetFile()) ?? "NULL"}'");
-                        throw new WarningException(msg.ToString());
-                    }
+                        throw new WarningException(string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.IniValueNotFound, section, key, (fileOrContent?.Any(TextEx.IsLineSeparator) ?? false ? fileOrContent.Encrypt() : GetFile()) ?? "(NULL)"));
                     newValue = (object)defValue ?? string.Empty;
                 }
                 else if (strValue.StartsWith(ObjectPrefix, StringComparison.Ordinal) && strValue.EndsWith(ObjectSuffix, StringComparison.Ordinal))
@@ -870,7 +864,7 @@ namespace SilDev
                         }
                         sw.WriteLine();
                     }
-                if (hash?.Equals(temp.EncryptFile(ChecksumAlgorithm.Crc32), StringComparison.Ordinal) == true)
+                if (hash?.Equals(temp.EncryptFile(ChecksumAlgorithm.Crc32), StringComparison.Ordinal) ?? false)
                 {
                     File.Delete(temp);
                     return true;
@@ -1006,9 +1000,9 @@ namespace SilDev
                     {
                         if (CachedFiles?[code][section][key].Count > i && i >= 0)
                             CachedFiles[code][section][key].RemoveAt(i);
-                        if (CachedFiles?[code][section][key].Any() != true || i < 0)
+                        if ((CachedFiles?[code][section][key].Any() ?? false) || i < 0)
                             RemoveKey(code, section, key);
-                        if (CachedFiles?[code][section].Any() != true)
+                        if (CachedFiles?[code][section].Any() ?? false)
                             RemoveSection(code, section);
                     }
                     return true;

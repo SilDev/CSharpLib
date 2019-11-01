@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2019-10-22 16:05
+// Version:  2019-10-31 22:00
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -268,7 +268,7 @@ namespace SilDev
         {
             try
             {
-                NotifyWindow?.Close();
+                NotifyWindow?.BeginInvoke(new MethodInvoker(NotifyWindow.Close));
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -339,7 +339,10 @@ namespace SilDev
                             Location = new Point(0, 0),
                             Size = new Size(1, 1)
                         });
-                _bgWorker = new BackgroundWorker();
+                _bgWorker = new BackgroundWorker
+                {
+                    WorkerSupportsCancellation = true
+                };
                 if (_duration > 0)
                 {
                     _bgWorker.DoWork += (sender, args) => Thread.Sleep(_duration - 20);
@@ -414,7 +417,7 @@ namespace SilDev
             {
                 if (disposing)
                     _components.Dispose();
-                if (_bgWorker?.IsBusy == true)
+                if (_bgWorker?.IsBusy ?? false)
                     _bgWorker.CancelAsync();
                 _bgWorker?.Dispose();
                 _textLabel?.Dispose();

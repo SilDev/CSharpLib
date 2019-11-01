@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2019-10-22 16:15
+// Version:  2019-10-31 22:02
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -326,7 +326,7 @@ namespace SilDev
 
                 Done:
                 if (!pin)
-                    return IsPinned(file) == false;
+                    return !IsPinned(file);
                 var curLink = GetPinLink(path);
                 if (!File.Exists(curLink))
                     return false;

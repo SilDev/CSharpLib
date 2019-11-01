@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2019-10-22 15:44
+// Version:  2019-10-31 21:57
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -101,7 +101,7 @@ namespace SilDev
         ///     The directory instance member that contains the directory to check.
         /// </param>
         public static bool IsHidden(this DirectoryInfo dirInfo) =>
-            dirInfo?.MatchAttributes(FileAttributes.Hidden) == true;
+            dirInfo?.MatchAttributes(FileAttributes.Hidden) ?? false;
 
         /// <summary>
         ///     Determines whether the specified directory is hidden.
@@ -119,7 +119,7 @@ namespace SilDev
         ///     The directory instance member that contains the directory to check.
         /// </param>
         public static bool IsLink(this DirectoryInfo dirInfo) =>
-            dirInfo?.MatchAttributes(FileAttributes.ReparsePoint) == true;
+            dirInfo?.MatchAttributes(FileAttributes.ReparsePoint) ?? false;
 
         /// <summary>
         ///     Determines whether the specified directory is specified as reparse point.
@@ -915,7 +915,7 @@ namespace SilDev
         public static IEnumerable<Process> GetLocks(IEnumerable<string> dirs)
         {
             var paths = dirs?.ToArray();
-            return paths?.Any() == true ? FileEx.GetLocks(paths.Select(PathEx.Combine).Where(PathEx.IsDir).SelectMany(s => GetFiles(s, SearchOption.AllDirectories))) : null;
+            return paths?.Any() ?? false ? FileEx.GetLocks(paths.Select(PathEx.Combine).Where(PathEx.IsDir).SelectMany(s => GetFiles(s, SearchOption.AllDirectories))) : null;
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2019-10-22 15:32
+// Version:  2019-10-31 21:55
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -50,7 +50,7 @@ namespace SilDev.Forms
                 return;
             var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
             int start, startIndex = 0, end = rtb.Text.Length - 1, length = text.Length;
-            while ((start = rtb.Text.IndexOf(text, startIndex, StringComparison.Ordinal)).IsBetween(0, end))
+            while ((start = rtb.Text.IndexOf(text, startIndex, CultureConfig.GlobalStringComparison)).IsBetween(0, end))
             {
                 rtb.Select(start, length);
                 rtb.SelectionColor = foreColor;
@@ -100,13 +100,13 @@ namespace SilDev.Forms
             {
                 var line = lines[i];
                 var length = line.Length;
-                if (length < 1 || !line.StartsWith(startKeyword, StringComparison.Ordinal))
+                if (length < 1 || !line.StartsWith(startKeyword, CultureConfig.GlobalStringComparison))
                     continue;
                 var start = rtb.GetFirstCharIndexFromLine(i);
                 if (start < 0)
                     continue;
                 rtb.Select(start, length);
-                rtb.SelectionColor = string.IsNullOrEmpty(endKeyword) || line.EndsWith(endKeyword, StringComparison.Ordinal) ? foreColor : Color.Red;
+                rtb.SelectionColor = string.IsNullOrEmpty(endKeyword) || line.EndsWith(endKeyword, CultureConfig.GlobalStringComparison) ? foreColor : Color.Red;
                 if (backColor != null)
                     rtb.SelectionBackColor = (Color)backColor;
                 if (font != null)
@@ -157,13 +157,13 @@ namespace SilDev.Forms
                 var num = count < 1 ? 1 : count;
                 int start;
                 var startIndex = 0;
-                while (num > 0 && (start = line.IndexOf(keyword, startIndex, StringComparison.Ordinal)) > -1)
+                while (num > 0 && (start = line.IndexOf(keyword, startIndex, CultureConfig.GlobalStringComparison)) > -1)
                 {
                     index = rtb.GetFirstCharIndexFromLine(i) + start;
                     if (index < 0 || length < keyword.Length)
                         continue;
                     rtb.Select(index, keyword.Length);
-                    rtb.SelectionColor = !line.StartsWith(keyword, StringComparison.Ordinal) ? foreColor : Color.Red;
+                    rtb.SelectionColor = !line.StartsWith(keyword, CultureConfig.GlobalStringComparison) ? foreColor : Color.Red;
                     if (backColor != null)
                         rtb.SelectionBackColor = (Color)backColor;
                     if (font != null)

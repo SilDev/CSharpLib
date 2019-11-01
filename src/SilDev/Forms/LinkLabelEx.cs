@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: LinkLabelEx.cs
-// Version:  2019-10-20 16:35
+// Version:  2019-10-31 21:55
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -50,7 +50,7 @@ namespace SilDev.Forms
                 return;
             var start = 0;
             int index;
-            while ((index = linkLabel.Text.IndexOf(text, start, StringComparison.Ordinal)) > -1)
+            while ((index = linkLabel.Text.IndexOf(text, start, CultureConfig.GlobalStringComparison)) > -1)
             {
                 linkLabel.Links.Add(index, text.Length, uri);
                 start = index + text.Length;

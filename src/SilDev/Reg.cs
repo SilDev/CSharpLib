@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-10-25 18:02
+// Version:  2019-10-31 22:30
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -25,6 +25,7 @@ namespace SilDev
     using Microsoft.Win32;
 #if !x64
     using Intern;
+
 #endif
 
     /// <summary>
@@ -67,7 +68,7 @@ namespace SilDev
         private static RegistryKey GetKey(this string path)
         {
             var key = path.KeyFilter();
-            if (key?.ContainsEx(Path.DirectorySeparatorChar) == true)
+            if (key?.ContainsEx(Path.DirectorySeparatorChar) ?? false)
                 key = key.Split(Path.DirectorySeparatorChar).First();
             return key.AsRegistryKey();
         }
@@ -75,8 +76,8 @@ namespace SilDev
         private static string GetSubKeyName(this string path)
         {
             var subKey = path.KeyFilter();
-            if (subKey?.ContainsEx(Path.DirectorySeparatorChar) != true)
-                return subKey.AsRegistryKey(true) == null ? subKey : null;
+            if (!subKey?.ContainsEx(Path.DirectorySeparatorChar) ?? true)
+                return subKey?.AsRegistryKey(true) == null ? subKey : null;
             var parts = subKey.Split(Path.DirectorySeparatorChar);
             var first = parts.FirstOrDefault().AsRegistryKey(true);
             if (first != null)
@@ -89,7 +90,7 @@ namespace SilDev
             try
             {
                 var hashCode = subKey.GetHashCode();
-                if (CachedKeyFilters?.ContainsKey(hashCode) == true)
+                if (CachedKeyFilters?.ContainsKey(hashCode) ?? false)
                     return CachedKeyFilters[hashCode];
                 var newSubKey = subKey;
                 if (newSubKey.Contains(Path.DirectorySeparatorChar))
@@ -1000,7 +1001,7 @@ namespace SilDev
                 if (Log.DebugMode > 1)
                     Log.Write($"IMPORT: \"{filePath}\"");
                 using (var p = ProcessEx.Start(native ? RegNatEnvPath : RegLowEnvPath, $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false))
-                    if (p?.HasExited == false)
+                    if (p?.HasExited ?? false)
                         p.WaitForExit(3000);
                 return true;
             }
@@ -1140,7 +1141,7 @@ namespace SilDev
                     if (Log.DebugMode > 1)
                         Log.Write($"EXPORT: \"{key}\" TO \"{path}\"");
                     using (var p = ProcessEx.Start(native ? RegNatEnvPath : RegLowEnvPath, $"EXPORT \"{key}\" \"{path}\" /y", elevated, ProcessWindowStyle.Hidden, false))
-                        if (p?.HasExited == false)
+                        if (p?.HasExited ?? false)
                             p.WaitForExit(5000);
                     var lines = File.ReadAllLines(path).Skip(1);
                     File.AppendAllText(filePath, lines.Join(Environment.NewLine), encoding);

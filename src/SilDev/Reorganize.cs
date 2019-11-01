@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2019-10-23 17:53
+// Version:  2019-10-31 22:01
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,7 +20,6 @@ namespace SilDev
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -159,7 +158,7 @@ namespace SilDev
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
             var sb = stringBuilder;
-            sb.AppendFormat(CultureInfo.InvariantCulture, format, args);
+            sb.AppendFormat(CultureConfig.GlobalCultureInfo, format, args);
             sb.AppendLine();
             return sb;
         }
@@ -188,11 +187,11 @@ namespace SilDev
                 return $"-{Math.Abs(value).FormatSize(unit, binary, suffix, sizeOptions)}";
             var f = sizeOptions != SizeOption.None ? "0.##" : "0.00";
             if (value == 0)
-                return $"{value.ToString(f, CultureInfo.InvariantCulture)} bytes";
+                return $"{value.ToString(f, CultureConfig.GlobalCultureInfo)} bytes";
             var d = value / Math.Pow(binary ? 1024 : 1000, (int)unit);
             if (sizeOptions == SizeOption.Round)
                 d = Math.Round(d);
-            var s = d.ToString(f, CultureInfo.InvariantCulture);
+            var s = d.ToString(f, CultureConfig.GlobalCultureInfo);
             if (!suffix)
                 return s;
             s = $"{s} {unit}";
@@ -847,11 +846,11 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified string to an equivalent Boolean value, which returns always false
-        ///     for unsupported string values.
+        ///     Converts the specified <see cref="string"/> to an equivalent <see cref="bool"/>
+        ///     value, which returns always false for unsupported <see cref="string"/> values.
         /// </summary>
         /// <param name="str">
-        ///     The string to convert.
+        ///     The <see cref="string"/> to convert.
         /// </param>
         public static bool ToBoolean(this string str)
         {
@@ -862,6 +861,59 @@ namespace SilDev
             catch (Exception ex) when (ex.IsCaught())
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        ///     Converts the specified value to an equivalent <see cref="bool"/> value.
+        /// </summary>
+        /// <param name="src">
+        ///     The value to convert.
+        /// </param>
+        public static bool ToBoolean<TSource>(this TSource src) where TSource : struct, IComparable<TSource>
+        {
+            switch (src)
+            {
+                case bool b:
+                    return b;
+                default:
+                    try
+                    {
+                        var c = Comparer<TSource>.Default;
+                        return c.Compare(src, (TSource)(object)default(int)) > 0;
+                    }
+                    catch (Exception ex) when (ex.IsCaught())
+                    {
+                        return false;
+                    }
+            }
+        }
+
+        /// <summary>
+        ///     Converts the specified <see cref="Nullable"/> value to an equivalent
+        ///     <see cref="bool"/> value, which returns always false for null.
+        /// </summary>
+        /// <param name="src">
+        ///     The <see cref="Nullable"/> value to convert.
+        /// </param>
+        public static bool ToBoolean<TSource>(this TSource? src) where TSource : struct, IComparable<TSource>
+        {
+            switch (src)
+            {
+                case null:
+                    return false;
+                case bool b:
+                    return b;
+                default:
+                    try
+                    {
+                        var c = Comparer<TSource>.Default;
+                        return c.Compare((TSource)src, (TSource)(object)0) > 0;
+                    }
+                    catch (Exception ex) when (ex.IsCaught())
+                    {
+                        return false;
+                    }
             }
         }
 

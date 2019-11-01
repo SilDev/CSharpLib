@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2019-10-22 15:45
+// Version:  2019-10-31 21:58
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using Properties;
@@ -185,7 +184,7 @@ namespace SilDev
                 stopwatch.Start();
                 while (true)
                 {
-                    if (stopwatch.ElapsedMilliseconds < timelimit && enumerator?.MoveNext() == true)
+                    if (stopwatch.ElapsedMilliseconds < timelimit && (enumerator?.MoveNext() ?? false))
                     {
                         var element = enumerator.Current;
                         yield return element;
@@ -802,7 +801,7 @@ namespace SilDev
 
         /// <summary>
         ///     Determines whether a specified string occurs within this sequence of strings. The
-        ///     <see cref="StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+        ///     <see cref="CultureConfig.GlobalStringComparisonIgnoreCase"/> parameter is used for this
         ///     comparison.
         /// </summary>
         /// <param name="source">
@@ -812,7 +811,7 @@ namespace SilDev
         ///     The sequence of strings to seek.
         /// </param>
         public static bool ContainsEx(this IEnumerable<string> source, params string[] targets) =>
-            source.ContainsEx(StringComparison.OrdinalIgnoreCase, targets);
+            source.ContainsEx(CultureConfig.GlobalStringComparisonIgnoreCase, targets);
 
         /// <summary>
         ///     Determines whether the beginning of this sequence of bytes matches the specified
@@ -930,7 +929,7 @@ namespace SilDev
         ///     The character to use as a separator.
         /// </param>
         public static string Join(this IEnumerable<string> values, char separator) =>
-            values.Join(separator.ToString(CultureInfo.InvariantCulture));
+            values.Join(separator.ToString(CultureConfig.GlobalCultureInfo));
 
         /// <summary>
         ///     Returns a specified number of contiguous elements from the end of a sequence.

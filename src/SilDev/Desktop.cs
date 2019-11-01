@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2019-06-16 11:03
+// Version:  2019-10-31 22:26
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -64,7 +64,7 @@ namespace SilDev
                 foreach (InternetExplorer window in shellWindows)
                 {
                     var name = Path.GetFileName(window?.FullName);
-                    if (name?.EqualsEx("explorer.exe") != true)
+                    if (!name?.EqualsEx("explorer.exe") ?? true)
                         continue;
                     window.Refresh();
                     hasUpdated = true;

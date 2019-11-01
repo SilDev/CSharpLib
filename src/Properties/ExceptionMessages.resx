@@ -152,6 +152,13 @@
     <value>The following character code is invalid: </value>
     <comment>+</comment>
   </data>
+  <data name="IniValueNotFound" xml:space="preserve">
+    <value>The value is not defined.
+   Section: '{1}'
+   Key: '{0}'
+   FileOrContent: '{2}'</value>
+    <comment>string.format(this, section, key, content)</comment>
+  </data>
   <data name="InvalidDriveInPath" xml:space="preserve">
     <value>The path does not contain a valid drive. - Path: </value>
     <comment>+</comment>

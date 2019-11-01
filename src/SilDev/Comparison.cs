@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2019-10-22 15:34
+// Version:  2019-10-31 21:57
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,7 +17,6 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -159,7 +158,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.IndexOf(s.ToString(CultureInfo.InvariantCulture), 0, comparisonType) != -1);
+            return targets.Any(s => source.IndexOf(s.ToString(CultureConfig.GlobalCultureInfo), 0, comparisonType) != -1);
         }
 
         /// <summary>
@@ -242,7 +241,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.StartsWith(s.ToString(CultureInfo.InvariantCulture), comparisonType));
+            return targets.Any(s => source.StartsWith(s.ToString(CultureConfig.GlobalCultureInfo), comparisonType));
         }
 
         /// <summary>
@@ -339,7 +338,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.EndsWith(s.ToString(CultureInfo.InvariantCulture), comparisonType));
+            return targets.Any(s => source.EndsWith(s.ToString(CultureConfig.GlobalCultureInfo), comparisonType));
         }
 
         /// <summary>
@@ -492,8 +491,8 @@ namespace SilDev
                         int r;
                         if (char.IsDigit(ca1[0]) && char.IsDigit(ca2[0]))
                         {
-                            var ch1 = int.Parse(str1, CultureInfo.InvariantCulture);
-                            var ch2 = int.Parse(str2, CultureInfo.InvariantCulture);
+                            var ch1 = int.Parse(str1, CultureConfig.GlobalCultureInfo);
+                            var ch2 = int.Parse(str2, CultureConfig.GlobalCultureInfo);
                             r = ch1.CompareTo(ch2);
                         }
                         else

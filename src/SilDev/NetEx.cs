@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2019-10-22 16:04
+// Version:  2019-10-31 21:59
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -260,7 +260,7 @@ namespace SilDev
             }
             var addresses = GetDnsAddresses(dnsOptions);
             var protocol = Convert.ToInt32(iPv6);
-            return addresses[protocol].Select(address => Ping(address, maxRoundtripTime) < maxRoundtripTime).Any(isAvailable => !iPv6 && (_ipv4IsAvalaible = isAvailable) == true || iPv6 && (_ipv6IsAvalaible = isAvailable) == true);
+            return addresses[protocol].Select(address => Ping(address, maxRoundtripTime) < maxRoundtripTime).Any(isAvailable => !iPv6 && (_ipv4IsAvalaible = isAvailable).ToBoolean() || iPv6 && (_ipv6IsAvalaible = isAvailable).ToBoolean());
         }
 
         /// <summary>

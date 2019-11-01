@@ -151,6 +151,18 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The value is not defined.
+        ///   Section: &apos;{1}&apos;
+        ///   Key: &apos;{0}&apos;
+        ///   FileOrContent: &apos;{2}&apos;.
+        /// </summary>
+        internal static string IniValueNotFound {
+            get {
+                return ResourceManager.GetString("IniValueNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The path does not contain a valid drive. - Path: .
         /// </summary>
         internal static string InvalidDriveInPath {

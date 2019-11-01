@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2019-10-22 16:13
+// Version:  2019-10-31 22:01
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -611,7 +611,7 @@ namespace SilDev
                     _button.Click += Button_Click;
                     Controls.Add(_button);
                     ResumeLayout(false);
-                    if (_file?.EqualsEx(path) == false)
+                    if (_file?.EqualsEx(path) ?? false)
                         _icons = null;
                     _file = path;
                     var icon = GetIcons(index);
