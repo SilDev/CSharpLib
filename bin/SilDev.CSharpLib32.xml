@@ -111,6 +111,14 @@
               Looks up a localized string similar to The following character code is invalid: .
             </summary>
         </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.IniValueNotFound">
+            <summary>
+              Looks up a localized string similar to The value is not defined.
+              Section: &apos;{1}&apos;
+              Key: &apos;{0}&apos;
+              FileOrContent: &apos;{2}&apos;.
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.ExceptionMessages.InvalidDriveInPath">
             <summary>
               Looks up a localized string similar to The path does not contain a valid drive. - Path: .
@@ -639,6 +647,38 @@
         <member name="P:SilDev.AssemblyInfo.Version">
             <summary>
                 Gets version information.
+            </summary>
+        </member>
+        <member name="T:SilDev.CultureConfig">
+            <summary>
+                Provides information about a specific culture (called a locale for unmanaged
+                code development) that is used in all related library functions.
+            </summary>
+        </member>
+        <member name="P:SilDev.CultureConfig.GlobalCultureInfo">
+            <summary>
+                Gets or sets the default <see cref="T:System.Globalization.CultureInfo"/> object value.
+                <para>
+                    Default: <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/>
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.CultureConfig.GlobalStringComparison">
+            <summary>
+                Gets or sets the default <see cref="T:System.StringComparison"/> value. (Please note
+                that the "Ignore case" statement will be removed.)
+                <para>
+                    Default: <see cref="F:System.StringComparison.Ordinal"/>
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.CultureConfig.GlobalStringComparisonIgnoreCase">
+            <summary>
+                Gets or sets the default <see cref="T:System.StringComparison"/> value. (Please note that
+                the "ignore case" statement is always used.)
+                <para>
+                    Default: <see cref="F:System.StringComparison.OrdinalIgnoreCase"/>
+                </para>
             </summary>
         </member>
         <member name="T:SilDev.Drawing.ColorEx">
@@ -6855,7 +6895,7 @@
         <member name="M:SilDev.EnumerableEx.ContainsEx(System.Collections.Generic.IEnumerable{System.String},System.String[])">
             <summary>
                 Determines whether a specified string occurs within this sequence of strings. The
-                <see cref="F:System.StringComparison.OrdinalIgnoreCase"/> parameter is used for this
+                <see cref="P:SilDev.CultureConfig.GlobalStringComparisonIgnoreCase"/> parameter is used for this
                 comparison.
             </summary>
             <param name="source">
@@ -15630,11 +15670,28 @@
         </member>
         <member name="M:SilDev.Reorganize.ToBoolean(System.String)">
             <summary>
-                Converts the specified string to an equivalent Boolean value, which returns always false
-                for unsupported string values.
+                Converts the specified <see cref="T:System.String"/> to an equivalent <see cref="T:System.Boolean"/>
+                value, which returns always false for unsupported <see cref="T:System.String"/> values.
             </summary>
             <param name="str">
-                The string to convert.
+                The <see cref="T:System.String"/> to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToBoolean``1(``0)">
+            <summary>
+                Converts the specified value to an equivalent <see cref="T:System.Boolean"/> value.
+            </summary>
+            <param name="src">
+                The value to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToBoolean``1(System.Nullable{``0})">
+            <summary>
+                Converts the specified <see cref="T:System.Nullable"/> value to an equivalent
+                <see cref="T:System.Boolean"/> value, which returns always false for null.
+            </summary>
+            <param name="src">
+                The <see cref="T:System.Nullable"/> value to convert.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.LowerText(System.String,System.String[])">
