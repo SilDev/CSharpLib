@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-10-31 22:00
+// Version:  2019-12-08 15:15
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -216,8 +216,8 @@ namespace SilDev
                     plains = plains.Select(x => x.RemoveChar(invalidPathChars));
                 path = !string.IsNullOrEmpty(path) ? Path.Combine(path, plains.Join(Path.DirectorySeparatorChar)) : plains.Join(Path.DirectorySeparatorChar);
 
-                string key = null;
-                byte num = 0;
+                var key = default(string);
+                var num = default(byte);
                 if (path.StartsWith("%", StringComparison.Ordinal) && (path.Contains($"%{Path.DirectorySeparatorChar}") || path.EndsWith("%", StringComparison.Ordinal)))
                 {
                     var regex = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase);
@@ -262,8 +262,7 @@ namespace SilDev
         ///     Combines an array of strings into a valid path.
         ///     <para>
         ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
-        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -279,8 +278,7 @@ namespace SilDev
         ///     Filters a string into a valid path.
         ///     <para>
         ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
-        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -310,8 +308,7 @@ namespace SilDev
         ///     Combines an array of strings into a valid path.
         ///     <para>
         ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
-        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="paths">
@@ -324,8 +321,7 @@ namespace SilDev
         ///     Filters a string into a valid path.
         ///     <para>
         ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>;
-        ///         for example, write <code>"%Desktop%"</code>, cases are ignored.
+        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="path">
