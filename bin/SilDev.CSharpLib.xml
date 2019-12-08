@@ -13413,8 +13413,7 @@
                 Combines an array of strings into a valid path.
                 <para>
                     Hint: Allows superordinate directory navigation and environment variables
-                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
-                    for example, write <code>"%Desktop%"</code>, cases are ignored.
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>.
                 </para>
             </summary>
             <param name="invalidPathChars">
@@ -13429,8 +13428,7 @@
                 Filters a string into a valid path.
                 <para>
                     Hint: Allows superordinate directory navigation and environment variables
-                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
-                    for example, write <code>"%Desktop%"</code>, cases are ignored.
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>.
                 </para>
             </summary>
             <param name="invalidPathChars">
@@ -13458,8 +13456,7 @@
                 Combines an array of strings into a valid path.
                 <para>
                     Hint: Allows superordinate directory navigation and environment variables
-                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
-                    for example, write <code>"%Desktop%"</code>, cases are ignored.
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>.
                 </para>
             </summary>
             <param name="paths">
@@ -13471,8 +13468,7 @@
                 Filters a string into a valid path.
                 <para>
                     Hint: Allows superordinate directory navigation and environment variables
-                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>;
-                    for example, write <code>"%Desktop%"</code>, cases are ignored.
+                    based on <see cref="M:SilDev.EnvironmentEx.GetVariableValue(System.String,System.Boolean)"/>.
                 </para>
             </summary>
             <param name="path">
@@ -19943,6 +19939,12 @@
                 Retrieves the position of the mouse cursor, in screen coordinates.
             </summary>
         </member>
+        <member name="M:SilDev.WinApi.NativeHelper.GetDesktopWindow">
+            <summary>
+                Retrieves a handle to the desktop window. The desktop window covers the entire screen.
+                The desktop window is the area on top of which other windows are painted.
+            </summary>
+        </member>
         <member name="M:SilDev.WinApi.NativeHelper.GetDlgCtrlId(System.IntPtr)">
             <summary>
                 Retrieves the identifier of the specified control.
@@ -22434,6 +22436,15 @@
             </summary>
             <returns>
                 Returns nonzero if successful or zero otherwise.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.GetDesktopWindow">
+            <summary>
+                Retrieves a handle to the desktop window. The desktop window covers the entire screen.
+                The desktop window is the area on top of which other windows are painted.
+            </summary>
+            <returns>
+                The return value is a handle to the desktop window.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.GetDlgCtrlID(System.IntPtr)">
