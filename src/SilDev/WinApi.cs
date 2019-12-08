@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-12-08 15:25
+// Version:  2019-12-08 16:26
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -4845,6 +4845,16 @@ namespace SilDev
                 NativeMethods.SetParent(hWndChild, hWndNewParent);
 
             /// <summary>
+            ///     Sets the process-default DPI awareness to system-DPI awareness.
+            /// </summary>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            public static bool SetProcessDPIAware() =>
+                NativeMethods.SetProcessDPIAware();
+
+            /// <summary>
             ///     Sets the minimum and maximum working set sizes for the specified process.
             /// </summary>
             /// <param name="hProcess">
@@ -7747,6 +7757,15 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
+            /// <summary>
+            ///     Sets the process-default DPI awareness to system-DPI awareness.
+            /// </summary>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = false)]
+            internal static extern bool SetProcessDPIAware();
 
             /// <summary>
             ///     Sets the minimum and maximum working set sizes for the specified process.
