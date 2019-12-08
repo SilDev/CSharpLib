@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-10-31 22:02
+// Version:  2019-12-08 15:25
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -3582,6 +3582,13 @@ namespace SilDev
             }
 
             /// <summary>
+            ///     Retrieves a handle to the desktop window. The desktop window covers the entire screen.
+            ///     The desktop window is the area on top of which other windows are painted.
+            /// </summary>
+            public static IntPtr GetDesktopWindow() =>
+                NativeMethods.GetDesktopWindow();
+
+            /// <summary>
             ///     Retrieves the identifier of the specified control.
             /// </summary>
             /// <param name="hWndCtl">
@@ -6391,6 +6398,16 @@ namespace SilDev
             [DllImport(DllNames.User32, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             internal static extern bool GetCursorPos(out Point lpPoint);
+
+            /// <summary>
+            ///     Retrieves a handle to the desktop window. The desktop window covers the entire screen.
+            ///     The desktop window is the area on top of which other windows are painted.
+            /// </summary>
+            /// <returns>
+            ///     The return value is a handle to the desktop window.
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = false)]
+            internal static extern IntPtr GetDesktopWindow();
 
             /// <summary>
             ///     Retrieves the identifier of the specified control.
