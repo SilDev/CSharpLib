@@ -84,35 +84,41 @@ namespace SilDev
         public string LinkPath { get; set; }
 
         /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        public override int GetHashCode()
-        {
-            var current = this;
-            return GetType().GetProperties().Aggregate(0, (i, pi) => i ^ pi.GetValue(current).GetHashCode());
-        }
-
-        /// <summary>
         ///     Determines whether this instance have same values as the specified <see cref="ShellLinkInfo"/> instance.
         /// </summary>
         /// <param name="other">
         ///     The <see cref="ShellLinkInfo"/> instance to compare.
         /// </param>
         public bool Equals(ShellLinkInfo other) =>
-            GetHashCode().Equals(other.GetHashCode());
+            GetHashCode(true) == other.GetHashCode(true);
 
         /// <summary>
         ///     Determines whether this instance have same values as the specified <see cref="object"/>.
         /// </summary>
-        /// <param name="obj">
+        /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            if (obj is ShellLinkInfo sli)
+            if (other is ShellLinkInfo sli)
                 return Equals(sli);
             return false;
         }
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        /// <param name="nonReadOnly">
+        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        /// </param>
+        public int GetHashCode(bool nonReadOnly) =>
+            Crypto.GetStructHashCode(this, nonReadOnly);
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        public override int GetHashCode() =>
+            Crypto.GetStructHashCode(this);
 
         /// <summary>
         ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have same values.

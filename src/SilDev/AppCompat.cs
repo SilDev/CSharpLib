@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AppCompat.cs
-// Version:  2019-10-21 13:50
+// Version:  2019-12-11 12:53
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Linq;
     using System.Text;
     using Microsoft.Win32;
 
@@ -196,35 +195,41 @@ namespace SilDev
         public bool RunAsAdministrator { get; set; }
 
         /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        public override int GetHashCode()
-        {
-            var current = this;
-            return GetType().GetProperties().Aggregate(0, (i, pi) => i ^ pi.GetValue(current).GetHashCode());
-        }
-
-        /// <summary>
         ///     Determines whether this instance have same values as the specified <see cref="AppCompatLayers"/> instance.
         /// </summary>
         /// <param name="other">
         ///     The <see cref="AppCompatLayers"/> instance to compare.
         /// </param>
-        public bool Equals(AppCompatLayers other) => 
-            GetHashCode().Equals(other.GetHashCode());
+        public bool Equals(AppCompatLayers other) =>
+            GetHashCode(true) == other.GetHashCode(true);
 
         /// <summary>
         ///     Determines whether this instance have same values as the specified <see cref="object"/>.
         /// </summary>
-        /// <param name="obj">
+        /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            if (obj is AppCompatLayers acl)
+            if (other is AppCompatLayers acl)
                 return Equals(acl);
             return false;
         }
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        /// <param name="nonReadOnly">
+        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        /// </param>
+        public int GetHashCode(bool nonReadOnly) =>
+            Crypto.GetStructHashCode(this, nonReadOnly);
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        public override int GetHashCode() =>
+            Crypto.GetStructHashCode(this);
 
         /// <summary>
         ///     Determines whether two specified <see cref="AppCompatLayers"/> instances have same values.

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-10-23 17:54
+// Version:  2019-12-11 12:53
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -553,7 +553,7 @@ namespace SilDev.Drawing
         ///     class.
         /// </summary>
         [Serializable]
-        public class ImagePair : IDisposable, ISerializable
+        public class ImagePair : IDisposable, ISerializable, IEquatable<ImagePair>
         {
             /// <summary>
             ///     Initializes a new instance of the <see cref="ImagePair"/> class.
@@ -615,6 +615,20 @@ namespace SilDev.Drawing
             }
 
             /// <summary>
+            ///     Determines whether the specified image pair is equal to the current
+            ///     image pair.
+            /// </summary>
+            /// <param name="other">
+            ///     The image pair to compare with the current image pair.
+            /// </param>
+            public virtual bool Equals(ImagePair other)
+            {
+                if (other == null)
+                    return false;
+                return GetHashCode() == other.GetHashCode();
+            }
+
+            /// <summary>
             ///     Populates a <see cref="SerializationInfo"/> with the data needed to serialize
             ///     the target object.
             /// </summary>
@@ -663,33 +677,19 @@ namespace SilDev.Drawing
                 Dispose(false);
 
             /// <summary>
-            ///     Determines whether the specified image pair is equal to the current
-            ///     image pair.
-            /// </summary>
-            /// <param name="imagePair">
-            ///     The image pair to compare with the current image pair.
-            /// </param>
-            public virtual bool Equals(ImagePair imagePair) =>
-                Equals(GetHashCode(), imagePair?.GetHashCode());
-
-            /// <summary>
             ///     Determines whether the specified object is equal to the current object.
             /// </summary>
-            /// <param name="obj">
+            /// <param name="other">
             ///     The object to compare with the current object.
             /// </param>
-            public override bool Equals(object obj)
-            {
-                if (obj is ImagePair imagePair)
-                    return Equals(imagePair);
-                return false;
-            }
+            public override bool Equals(object other) =>
+                Equals(other as ImagePair);
 
             /// <summary>
             ///     Returns the hash code for the current image pair.
             /// </summary>
             public override int GetHashCode() =>
-                unchecked((Image1.GetHashCode() * 0x18d) ^ Image2.GetHashCode());
+                Crypto.GetClassHashCode(this);
 
             /// <summary>
             ///     Determines whether two specified image pairs have the same value.
@@ -721,7 +721,7 @@ namespace SilDev.Drawing
         ///     duration of a single frame.
         /// </summary>
         [Serializable]
-        public class Frame : IDisposable, ISerializable
+        public class Frame : IDisposable, ISerializable, IEquatable<Frame>
         {
             /// <summary>
             ///     Initializes a new instance of the <see cref="Frame"/> class from the
@@ -789,6 +789,19 @@ namespace SilDev.Drawing
             }
 
             /// <summary>
+            ///     Determines whether the specified frame is equal to the current frame.
+            /// </summary>
+            /// <param name="other">
+            ///     The frame to compare with the current frame.
+            /// </param>
+            public virtual bool Equals(Frame other)
+            {
+                if (other == null)
+                    return false;
+                return GetHashCode() == other.GetHashCode();
+            }
+
+            /// <summary>
             ///     Populates a <see cref="SerializationInfo"/> with the data needed to serialize
             ///     the target object.
             /// </summary>
@@ -834,32 +847,19 @@ namespace SilDev.Drawing
                 Dispose(false);
 
             /// <summary>
-            ///     Determines whether the specified frame is equal to the current frame.
-            /// </summary>
-            /// <param name="frame">
-            ///     The frame to compare with the current frame.
-            /// </param>
-            public virtual bool Equals(Frame frame) =>
-                Equals(GetHashCode(), frame?.GetHashCode());
-
-            /// <summary>
             ///     Determines whether the specified object is equal to the current object.
             /// </summary>
-            /// <param name="obj">
+            /// <param name="other">
             ///     The object to compare with the current object.
             /// </param>
-            public override bool Equals(object obj)
-            {
-                if (obj is Frame frame)
-                    return Equals(frame);
-                return false;
-            }
+            public override bool Equals(object other) =>
+                Equals(other as Frame);
 
             /// <summary>
             ///     Returns the hash code for the current image pair.
             /// </summary>
             public override int GetHashCode() =>
-                unchecked((Image.GetHashCode() * 0x18d) ^ Duration.GetHashCode());
+                Crypto.GetClassHashCode(this);
 
             /// <summary>
             ///     Determines whether two specified frames have the same value.

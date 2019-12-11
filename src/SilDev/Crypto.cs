@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2019-10-22 15:35
+// Version:  2019-12-11 12:52
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -165,6 +165,62 @@ namespace SilDev
             if (braces)
                 builder.Append('}');
         }
+
+        private static int GetHashCode<TSource>(TSource source, bool nonReadOnly)
+        {
+            try
+            {
+                var current = source;
+                var properties = current.GetType().GetProperties();
+                var hashCode = 17011;
+                foreach (var pi in properties)
+                {
+                    hashCode *= 23011;
+                    if (!nonReadOnly && pi.GetSetMethod() != null)
+                        continue;
+                    var value = pi.GetValue(current);
+                    if (value == null)
+                        continue;
+                    hashCode += value.GetHashCode();
+                }
+                return hashCode;
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        ///     Creates a unique hash code for the specified instance.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The instance value.
+        /// </param>
+        /// <param name="nonReadOnly">
+        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        /// </param>
+        public static int GetClassHashCode<TSource>(TSource source, bool nonReadOnly = false) where TSource : class =>
+            source == null ? 0 : GetHashCode(source, nonReadOnly);
+
+        /// <summary>
+        ///     Creates a unique hash code for the specified instance.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The instance value.
+        /// </param>
+        /// <param name="nonReadOnly">
+        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        /// </param>
+        public static int GetStructHashCode<TSource>(TSource source, bool nonReadOnly = false) where TSource : struct =>
+            GetHashCode(source, nonReadOnly);
 
         /// <summary>
         ///     Encrypts this sequence of bytes with the specified <see cref="ChecksumAlgorithm"/>
