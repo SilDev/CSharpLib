@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2019-12-12 22:07
+// Version:  2019-12-12 22:25
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -216,8 +216,10 @@ namespace SilDev.Investment
                 _items.Clear();
                 return;
             }
+            if (!_items.Any())
+                return;
             var keys = Enum.GetNames(typeof(TKey));
-            if (_items.Count > 0 || _items.Keys.All(x => keys.Any(y => y == x)))
+            if (_items.Keys.All(x => keys.Any(y => y == x)))
                 return;
             var items = _items;
             _items.Clear();
