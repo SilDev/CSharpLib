@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2019-12-12 21:54
+// Version:  2019-12-12 22:07
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -84,7 +84,7 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Deserializes the specified file into this object graph.
+        ///     Deserializes the specified file into this instance graph.
         /// </summary>
         /// <param name="path">
         ///     The file to deserialize.
