@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2019-12-12 21:54
+// Version:  2019-12-12 22:11
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -106,10 +106,8 @@ namespace SilDev.Investment
                 Log.Write($"{nameof(ValueItem<TValue>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
             _minMaxValidation = info.GetBoolean(nameof(_minMaxValidation));
-
             MinValue = (TValue)info.GetValue(nameof(MinValue), typeof(TValue));
             MaxValue = (TValue)info.GetValue(nameof(MaxValue), typeof(TValue));
-
             DefValue = (TValue)info.GetValue(nameof(DefValue), typeof(TValue));
             Value = (TValue)info.GetValue(nameof(Value), typeof(TValue));
         }
