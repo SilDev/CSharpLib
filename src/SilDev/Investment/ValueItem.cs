@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2019-12-12 18:27
+// Version:  2019-12-12 21:54
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -152,7 +152,7 @@ namespace SilDev.Investment
         ///     The contextual information about the source or destination.
         /// </param>
         [SecurityCritical]
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
