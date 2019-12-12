@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-12-12 16:29
+// Version:  2019-12-12 18:26
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -590,7 +590,7 @@ namespace SilDev.Drawing
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
                 if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(ImagePair)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
+                    Log.Write($"{nameof(ImagePair)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
                 Image1 = (Image)info.GetValue(nameof(Image1), typeof(Image));
                 Image2 = (Image)info.GetValue(nameof(Image2), typeof(Image));
             }
@@ -647,7 +647,7 @@ namespace SilDev.Drawing
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
                 if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(ImagePair)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
+                    Log.Write($"{nameof(ImagePair)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
                 info.AddValue(nameof(Image1), Image1);
                 info.AddValue(nameof(Image2), Image2);
             }
@@ -770,7 +770,7 @@ namespace SilDev.Drawing
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
                 if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(Frame)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
+                    Log.Write($"{nameof(Frame)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
                 Image = (Image)info.GetValue(nameof(Image), typeof(Image));
                 Duration = info.GetInt32(nameof(Duration));
             }
@@ -826,7 +826,7 @@ namespace SilDev.Drawing
                 if (info == null)
                     throw new ArgumentNullException(nameof(info));
                 if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(Frame)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
+                    Log.Write($"{nameof(Frame)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
                 info.AddValue(nameof(Image), Image);
                 info.AddValue(nameof(Duration), Duration);
             }

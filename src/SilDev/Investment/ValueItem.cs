@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2019-12-12 16:32
+// Version:  2019-12-12 18:27
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -103,7 +103,7 @@ namespace SilDev.Investment
                 throw new ArgumentNullException(nameof(info));
 
             if (Log.DebugMode > 1)
-                Log.Write($"{nameof(ValueItem<TValue>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
+                Log.Write($"{nameof(ValueItem<TValue>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
             _minMaxValidation = info.GetBoolean(nameof(_minMaxValidation));
 
@@ -158,7 +158,7 @@ namespace SilDev.Investment
                 throw new ArgumentNullException(nameof(info));
 
             if (Log.DebugMode > 1)
-                Log.Write($"{nameof(ValueItem<TValue>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(context)}, context: {Json.Serialize(context)}");
+                Log.Write($"{nameof(ValueItem<TValue>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
             info.AddValue(nameof(_minMaxValidation), _minMaxValidation);
             info.AddValue(nameof(MinValue), MinValue);
