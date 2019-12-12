@@ -470,11 +470,6 @@
                 true to run the program as administrator; otherwise, false.
             </summary>
         </member>
-        <member name="M:SilDev.AppCompatLayers.GetHashCode">
-            <summary>
-                Returns the hash code for this instance.
-            </summary>
-        </member>
         <member name="M:SilDev.AppCompatLayers.Equals(SilDev.AppCompatLayers)">
             <summary>
                 Determines whether this instance have same values as the specified <see cref="T:SilDev.AppCompatLayers"/> instance.
@@ -487,18 +482,31 @@
             <summary>
                 Determines whether this instance have same values as the specified <see cref="T:System.Object"/>.
             </summary>
-            <param name="obj">
+            <param name="other">
                 The  <see cref="T:System.Object"/> to compare.
             </param>
+        </member>
+        <member name="M:SilDev.AppCompatLayers.GetHashCode(System.Boolean)">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+            <param name="nonReadOnly">
+                true to include the hashes of non-readonly properties; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.AppCompatLayers.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
         </member>
         <member name="M:SilDev.AppCompatLayers.op_Equality(SilDev.AppCompatLayers,SilDev.AppCompatLayers)">
             <summary>
                 Determines whether two specified <see cref="T:SilDev.AppCompatLayers"/> instances have same values.
             </summary>
-            <param name="a">
+            <param name="left">
                 The first <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
             </param>
-            <param name="b">
+            <param name="right">
                 The second <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
             </param>
         </member>
@@ -506,10 +514,10 @@
             <summary>
                 Determines whether two specified <see cref="T:SilDev.AppCompatLayers"/> instances have different values.
             </summary>
-            <param name="a">
+            <param name="left">
                 The first <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
             </param>
-            <param name="b">
+            <param name="right">
                 The second <see cref="T:SilDev.AppCompatLayers"/> instance to compare.
             </param>
         </member>
@@ -648,6 +656,489 @@
             <summary>
                 Gets version information.
             </summary>
+        </member>
+        <member name="T:SilDev.Investment.ValueItemHost`1">
+            <summary>
+                Defines a collection type for <see cref="T:SilDev.Investment.ValueItem`1"/> instances.
+            </summary>
+            <typeparam name="TKey">
+                The enumeration type of the key.
+                <para>
+                    Please note that only the name of each key is stored. This means that each key
+                    should have a different value to prevent an item from being misallocated.
+                    Therefore, it is recommended that you do not add any value to the keys, because
+                    the compiler does this automatically.
+                </para>
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.ValueItemHost`1"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.ValueItemHost`1"/> class with
+                serialized data.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object for this instance.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.Load(System.String,SilDev.Investment.ValueItemHost{`0})">
+            <summary>
+                Deserializes the specified file into this object graph.
+            </summary>
+            <param name="path">
+                The file to deserialize.
+            </param>
+            <param name="defValue">
+                The default value.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.Save(System.String,System.Boolean)">
+            <summary>
+                Creates a new file, writes this instance graph into to the file, and then
+                closes the file.
+            </summary>
+            <param name="path">
+                The file to create.
+            </param>
+            <param name="overwrite">
+                true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.AddItem``1(`0,SilDev.Investment.ValueItem{``0})">
+            <summary>
+                Adds the specified item to this instance that is addressed to the
+                specified key.
+            </summary>
+            <typeparam name="TValue">
+                The type of values stored in the item.
+            </typeparam>
+            <param name="key">
+                The key of the element to add.
+            </param>
+            <param name="item">
+                The element to add.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.AddItem``1(`0,``0,``0)">
+            <summary>
+                Adds to this instance a newly created item from the specified values that
+                is addressed to the specified key.
+            </summary>
+            <typeparam name="TValue">
+                The type of values stored in the item.
+            </typeparam>
+            <param name="key">
+                The key of the element to add.
+            </param>
+            <param name="value">
+                The value to be set.
+            </param>
+            <param name="defValue">
+                The value used as default.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.AddItem``1(`0,``0,``0,``0,``0)">
+            <summary>
+                Adds to this instance a newly created item from the specified values that
+                is addressed to the specified key.
+            </summary>
+            <typeparam name="TValue">
+                The type of values stored in the item.
+            </typeparam>
+            <param name="key">
+                The key of the element to add.
+            </param>
+            <param name="value">
+                The value to be set.
+            </param>
+            <param name="defValue">
+                The value used as default.
+            </param>
+            <param name="minValue">
+                The minimum value. Must be smaller than the maximum value.
+            </param>
+            <param name="maxValue">
+                The maximum value. Must be larger than the minimum value.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.Clear(System.Boolean)">
+            <summary>
+                Removes all keys and values from this instance.
+            </summary>
+            <param name="removeOnlyInvalidElements">
+                true to remove only invalid elements; otherwise, false.
+                <para>
+                    Please note that elements can become invalid if the associated key
+                    has been deleted.
+                </para>
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetKeyName(`0)">
+            <summary>
+                Retrieves the name associated with the specified key.
+            </summary>
+            <param name="key">
+                The key associated with the name.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetKeyNames">
+            <summary>
+                Retrieves all valid key names.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetKeys">
+            <summary>
+                Retrieves all valid keys.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetItems">
+            <summary>
+                Retrieves the internal collection of keys and values.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetItem``1(`0)">
+            <summary>
+                Gets the element associated with the specified key.
+            </summary>
+            <typeparam name="TValue">
+                The type of values stored in the element.
+            </typeparam>
+            <param name="key">
+                The key of the element to be retrieved.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.RemoveItem(`0)">
+            <summary>
+                Removes the element associated with the specified key from this instance.
+            </summary>
+            <param name="key">
+                The key of the element to be deleted.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetValue``1(`0)">
+            <summary>
+                Gets the value of the element associated with the specified key.
+            </summary>
+            <typeparam name="TValue">
+                The type of values stored in the element.
+            </typeparam>
+            <param name="key">
+                The key of the element to retrieve its value.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.SetValue``1(`0,``0)">
+            <summary>
+                Sets the value of the element associated with the specified key.
+            </summary>
+            <typeparam name="TValue">
+                The type of values stored in the element.
+            </typeparam>
+            <param name="key">
+                The key of the element whose value should be set.
+            </param>
+            <param name="value">
+                The value to be set.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.Equals(SilDev.Investment.ValueItemHost{`0})">
+            <summary>
+                Determines whether this instance has the same values as another.
+            </summary>
+            <param name="other">
+                The other <see cref="T:SilDev.Investment.ValueItemHost`1"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.Equals(System.Object)">
+            <summary>
+                Determines whether this instance has the same values as another.
+            </summary>
+            <param name="other">
+                The other <see cref="T:SilDev.Investment.ValueItemHost`1"/> instance object to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetHashCode(System.Boolean)">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+            <param name="nonReadOnly">
+                true to include the hashes of non-readonly properties; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.ToString">
+            <summary>
+                Returns the string representation of this instance.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.op_Equality(SilDev.Investment.ValueItemHost{`0},SilDev.Investment.ValueItemHost{`0})">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.Investment.ValueItemHost`1"/> instances
+                have same values.
+            </summary>
+            <param name="left">
+                The first <see cref="T:SilDev.Investment.ValueItemHost`1"/> instance to compare.
+            </param>
+            <param name="right">
+                The second <see cref="T:SilDev.Investment.ValueItemHost`1"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.op_Inequality(SilDev.Investment.ValueItemHost{`0},SilDev.Investment.ValueItemHost{`0})">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.Investment.ValueItemHost`1"/> instances
+                have different values.
+            </summary>
+            <param name="left">
+                The first <see cref="T:SilDev.Investment.ValueItemHost`1"/> instance to compare.
+            </param>
+            <param name="right">
+                The second <see cref="T:SilDev.Investment.ValueItemHost`1"/> instance to compare.
+            </param>
+        </member>
+        <member name="T:SilDev.Investment.ValueItem`1">
+            <summary>
+                Defines a value type that can store and retrieve data.
+            </summary>
+            <typeparam name="TValue">
+                The type of the value.
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.#ctor(`0,`0,`0,`0)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.ValueItem`1"/> with the specified
+                value, default value, minimum value and maximum value.
+            </summary>
+            <param name="value">
+                The value to be set.
+            </param>
+            <param name="defValue">
+                The value used as default.
+            </param>
+            <param name="minValue">
+                The minimum value. Must be smaller than the maximum value.
+            </param>
+            <param name="maxValue">
+                The maximum value. Must be larger than the minimum value.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.#ctor(`0,`0)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.ValueItem`1"/> with the specified
+                value and default value.
+            </summary>
+            <param name="value">
+                The value to be set.
+            </param>
+            <param name="defValue">
+                The value used as default.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.ValueItem`1"/> class with
+                serialized data.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.Value">
+            <summary>
+                Gets or sets the value.
+                <para>
+                    Please note that the setter automatically calibrates the value to be set.
+                    See <see cref="M:SilDev.Investment.ValueItem`1.ValidateValue(`0)"/> for more information.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.DefValue">
+            <summary>
+                Gets the default value.
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.MinValue">
+            <summary>
+                Gets the minimum value, if available; otherwise, the default value is returned.
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.MaxValue">
+            <summary>
+                Gets the maximum value, if available; otherwise, the default value is returned.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object for this instance.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.ValidateValue(`0)">
+            <summary>
+                Ensures that the specified value is valid. If <see cref="P:SilDev.Investment.ValueItem`1.MinValue"/> and
+                <see cref="P:SilDev.Investment.ValueItem`1.MaxValue"/> have been set and are valid, the specified value
+                is calibrated if it is not between <see cref="P:SilDev.Investment.ValueItem`1.MinValue"/> and
+                <see cref="P:SilDev.Investment.ValueItem`1.MaxValue"/>. If the value is default, it also ensures that
+                <see cref="P:SilDev.Investment.ValueItem`1.DefValue"/> is returned instead.
+                <para>
+                    Please note that this method is automatically used for the
+                    <see cref="P:SilDev.Investment.ValueItem`1.Value"/> setter and overwriting can lead to an unexpected
+                    result when setting values.
+                </para>
+            </summary>
+            <param name="value">
+                The value to validate.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.Equals(SilDev.Investment.ValueItem{`0})">
+            <summary>
+                Determines whether this instance has the same values as another.
+            </summary>
+            <param name="other">
+                The other <see cref="T:SilDev.Investment.ValueItem`1"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.Equals(System.Object)">
+            <summary>
+                Determines whether this instance has the same values as another.
+            </summary>
+            <param name="other">
+                The other <see cref="T:SilDev.Investment.ValueItem`1"/> instance object to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.GetHashCode(System.Boolean)">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+            <param name="nonReadOnly">
+                true to include the hashes of non-readonly properties; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.ToString">
+            <summary>
+                Returns the string representation of this instance.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.op_Equality(SilDev.Investment.ValueItem{`0},SilDev.Investment.ValueItem{`0})">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.Investment.ValueItem`1"/> instances
+                have same values.
+            </summary>
+            <param name="left">
+                The first <see cref="T:SilDev.Investment.ValueItem`1"/> instance to compare.
+            </param>
+            <param name="right">
+                The second <see cref="T:SilDev.Investment.ValueItem`1"/> instance to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.op_Inequality(SilDev.Investment.ValueItem{`0},SilDev.Investment.ValueItem{`0})">
+            <summary>
+                Determines whether two specified <see cref="T:SilDev.Investment.ValueItem`1"/> instances
+                have different values.
+            </summary>
+            <param name="left">
+                The first <see cref="T:SilDev.Investment.ValueItem`1"/> instance to compare.
+            </param>
+            <param name="right">
+                The second <see cref="T:SilDev.Investment.ValueItem`1"/> instance to compare.
+            </param>
+        </member>
+        <member name="T:SilDev.Investment.CounterInvestor`1">
+            <summary>
+                A base class that provides numerical values that are used as counters.
+            </summary>
+            <typeparam name="TCounter">
+                The type of the counters.
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.CounterInvestor`1"/> class.
+                <para>
+                    Allowed types: <see cref="T:System.Char"/>, <see cref="T:System.SByte"/>, <see cref="T:System.Byte"/>,
+                    <see cref="T:System.Int16"/>, <see cref="T:System.UInt16"/>, <see cref="T:System.Int32"/>, <see cref="T:System.UInt32"/>,
+                    <see cref="T:System.Int64"/>, <see cref="T:System.UInt64"/>, and <see cref="T:System.Decimal"/>.
+                </para>
+            </summary>
+            <exception cref="T:System.NotSupportedException">
+                The generic type is not char, sbyte, byte, short, ushort, int, uint, long, ulong,
+                or decimal.
+            </exception>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.Increase(System.Int32)">
+            <summary>
+                Increases the value of the counter associated with the specified index.
+            </summary>
+            <param name="index">
+                The index of the counter.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.Reset(System.Int32)">
+            <summary>
+                Resets the value of the counter associated with the specified index.
+            </summary>
+            <param name="index">
+                The index of the counter.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CounterInvestor`1.GetValue(System.Int32)">
+            <summary>
+                Gets the value of the counter associated with the specified index.
+            </summary>
+            <param name="index">
+                The index of the counter.
+            </param>
+        </member>
+        <member name="T:SilDev.Investment.RandomInvestor">
+            <summary>
+                A base class that provides multiple <see cref="T:System.Random"/> instances.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.RandomInvestor.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Investment.RandomInvestor"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.RandomInvestor.GetGenerator(System.Int32)">
+            <summary>
+                Gets the <see cref="T:System.Random"/> instance associated with the specified seed.
+            </summary>
+            <param name="seed">
+                A number used to calculate a starting value for the pseudo-random number sequence.
+            </param>
         </member>
         <member name="T:SilDev.CultureConfig">
             <summary>
@@ -1429,6 +1920,15 @@
                 Releases all resources used by this <see cref="T:SilDev.Drawing.ImageEx.ImagePair"/>.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.ImagePair.Equals(SilDev.Drawing.ImageEx.ImagePair)">
+            <summary>
+                Determines whether the specified image pair is equal to the current
+                image pair.
+            </summary>
+            <param name="other">
+                The image pair to compare with the current image pair.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.ImagePair.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
                 Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize
@@ -1463,20 +1963,11 @@
                 operations before it is reclaimed by garbage collection.
             </summary>
         </member>
-        <member name="M:SilDev.Drawing.ImageEx.ImagePair.Equals(SilDev.Drawing.ImageEx.ImagePair)">
-            <summary>
-                Determines whether the specified image pair is equal to the current
-                image pair.
-            </summary>
-            <param name="imagePair">
-                The image pair to compare with the current image pair.
-            </param>
-        </member>
         <member name="M:SilDev.Drawing.ImageEx.ImagePair.Equals(System.Object)">
             <summary>
                 Determines whether the specified object is equal to the current object.
             </summary>
-            <param name="obj">
+            <param name="other">
                 The object to compare with the current object.
             </param>
         </member>
@@ -1560,6 +2051,14 @@
                 Releases all resources used by this <see cref="T:SilDev.Drawing.ImageEx.Frame"/>.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.Frame.Equals(SilDev.Drawing.ImageEx.Frame)">
+            <summary>
+                Determines whether the specified frame is equal to the current frame.
+            </summary>
+            <param name="other">
+                The frame to compare with the current frame.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.Frame.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
                 Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize
@@ -1594,19 +2093,11 @@
                 operations before it is reclaimed by garbage collection.
             </summary>
         </member>
-        <member name="M:SilDev.Drawing.ImageEx.Frame.Equals(SilDev.Drawing.ImageEx.Frame)">
-            <summary>
-                Determines whether the specified frame is equal to the current frame.
-            </summary>
-            <param name="frame">
-                The frame to compare with the current frame.
-            </param>
-        </member>
         <member name="M:SilDev.Drawing.ImageEx.Frame.Equals(System.Object)">
             <summary>
                 Determines whether the specified object is equal to the current object.
             </summary>
-            <param name="obj">
+            <param name="other">
                 The object to compare with the current object.
             </param>
         </member>
@@ -1635,6 +2126,87 @@
             </param>
             <param name="right">
                 The second frame to compare, or null.
+            </param>
+        </member>
+        <member name="T:SilDev.Drawing.SizeEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Drawing.Size"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.Drawing.SizeEx.ScaleDimension(System.Int32,System.Single,System.Single)">
+            <summary>
+                Scales the specified width or height dimension based on the specified DPI values.
+            </summary>
+            <param name="value">
+                The width or height dimension.
+            </param>
+            <param name="oldDpi">
+                The old resolution.
+            </param>
+            <param name="newDpi">
+                The new resolution.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.SizeEx.ScaleDimensions(System.Int32,System.Int32,System.Single,System.Single)">
+            <summary>
+                Scales the specified width and height dimensions based on the specified DPI values.
+            </summary>
+            <param name="width">
+                The width dimension.
+            </param>
+            <param name="height">
+                The height dimension.
+            </param>
+            <param name="oldDpi">
+                The old resolution.
+            </param>
+            <param name="newDpi">
+                The new resolution.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.SizeEx.ScaleDimensions(System.Int32,System.Int32,System.IntPtr)">
+            <summary>
+                Scales the specified width and height dimensions based on the specified handle to a window.
+            </summary>
+            <param name="width">
+                The width dimension.
+            </param>
+            <param name="height">
+                The height dimension.
+            </param>
+            <param name="hWnd">
+                Handle to a window.
+                <para>
+                    If this value is set to default, the handle of the current desktop will be used.
+                </para>
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.SizeEx.ScaleDimensions(System.Drawing.Size,System.Single,System.Single)">
+            <summary>
+                Scales the width and height dimensions of this <see cref="T:System.Drawing.Size"/> object based on the specified DPI values.
+            </summary>
+            <param name="size">
+                This <see cref="T:System.Drawing.Size"/> object.
+            </param>
+            <param name="oldDpi">
+                The old resolution.
+            </param>
+            <param name="newDpi">
+                The new resolution.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.SizeEx.ScaleDimensions(System.Drawing.Size,System.IntPtr)">
+            <summary>
+                Scales the width and height dimensions of this <see cref="T:System.Drawing.Size"/> object based on the specified handle to a window.
+            </summary>
+            <param name="size">
+                This <see cref="T:System.Drawing.Size"/> object.
+            </param>
+            <param name="hWnd">
+                Handle to a window.
+                <para>
+                    If this value is set to default, the handle of the current desktop will be used.
+                </para>
             </param>
         </member>
         <member name="T:SilDev.Forms.ButtonEx">
@@ -3055,70 +3627,6 @@
                 The <see cref="T:System.Windows.Forms.TextBox"/> control to change.
             </param>
         </member>
-        <member name="T:SilDev.Investment.CounterInvestor`1">
-            <summary>
-                A base class that provides numerical values that are used as counters.
-            </summary>
-            <typeparam name="TCounter">
-                The type of the counters.
-            </typeparam>
-        </member>
-        <member name="M:SilDev.Investment.CounterInvestor`1.#ctor">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Investment.CounterInvestor`1"/> class.
-                <para>
-                    Allowed types: <see cref="T:System.SByte"/>, <see cref="T:System.Byte"/>, <see cref="T:System.Char"/>,
-                    <see cref="T:System.Int16"/>, <see cref="T:System.UInt16"/>, <see cref="T:System.Int32"/>, <see cref="T:System.UInt32"/>,
-                    <see cref="T:System.Int64"/>, <see cref="T:System.UInt64"/>, and <see cref="T:System.Decimal"/>.
-                </para>
-            </summary>
-            <exception cref="T:System.NotSupportedException">
-                The generic type is not sbyte, byte, char, short, ushort, int, uint, long, ulong,
-                or decimal.
-            </exception>
-        </member>
-        <member name="M:SilDev.Investment.CounterInvestor`1.Increase(System.Int32)">
-            <summary>
-                Increases the value of the counter associated with the specified index.
-            </summary>
-            <param name="index">
-                The index of the counter.
-            </param>
-        </member>
-        <member name="M:SilDev.Investment.CounterInvestor`1.Reset(System.Int32)">
-            <summary>
-                Resets the value of the counter associated with the specified index.
-            </summary>
-            <param name="index">
-                The index of the counter.
-            </param>
-        </member>
-        <member name="M:SilDev.Investment.CounterInvestor`1.GetValue(System.Int32)">
-            <summary>
-                Gets the value of the counter associated with the specified index.
-            </summary>
-            <param name="index">
-                The index of the counter.
-            </param>
-        </member>
-        <member name="T:SilDev.Investment.RandomInvestor">
-            <summary>
-                A base class that provides multiple <see cref="T:System.Random"/> instances.
-            </summary>
-        </member>
-        <member name="M:SilDev.Investment.RandomInvestor.#ctor">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.Investment.RandomInvestor"/> class.
-            </summary>
-        </member>
-        <member name="M:SilDev.Investment.RandomInvestor.GetGenerator(System.Int32)">
-            <summary>
-                Gets the <see cref="T:System.Random"/> instance associated with the specified seed.
-            </summary>
-            <param name="seed">
-                A number used to calculate a starting value for the pseudo-random number sequence.
-            </param>
-        </member>
         <member name="T:SilDev.QuickWmi.Win32_OperatingSystem">
             <summary>
                 Provides quick access to <see cref="T:SilDev.QuickWmi.Win32_OperatingSystem"/> WMI class properties.
@@ -4167,6 +4675,34 @@
             <summary>
                 Provides functionality for data encryption and decryption.
             </summary>
+        </member>
+        <member name="M:SilDev.Crypto.GetClassHashCode``1(``0,System.Boolean)">
+            <summary>
+                Creates a unique hash code for the specified instance.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source.
+            </typeparam>
+            <param name="source">
+                The instance value.
+            </param>
+            <param name="nonReadOnly">
+                true to include the hashes of non-readonly properties; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.Crypto.GetStructHashCode``1(``0,System.Boolean)">
+            <summary>
+                Creates a unique hash code for the specified instance.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source.
+            </typeparam>
+            <param name="source">
+                The instance value.
+            </param>
+            <param name="nonReadOnly">
+                true to include the hashes of non-readonly properties; otherwise, false.
+            </param>
         </member>
         <member name="M:SilDev.Crypto.GetGuid(System.Byte[],System.Boolean,SilDev.ChecksumAlgorithm,SilDev.ChecksumAlgorithm)">
             <summary>
@@ -16129,11 +16665,6 @@
                 The fully qualified name of the link.
             </summary>
         </member>
-        <member name="M:SilDev.ShellLinkInfo.GetHashCode">
-            <summary>
-                Returns the hash code for this instance.
-            </summary>
-        </member>
         <member name="M:SilDev.ShellLinkInfo.Equals(SilDev.ShellLinkInfo)">
             <summary>
                 Determines whether this instance have same values as the specified <see cref="T:SilDev.ShellLinkInfo"/> instance.
@@ -16146,18 +16677,31 @@
             <summary>
                 Determines whether this instance have same values as the specified <see cref="T:System.Object"/>.
             </summary>
-            <param name="obj">
+            <param name="other">
                 The  <see cref="T:System.Object"/> to compare.
             </param>
+        </member>
+        <member name="M:SilDev.ShellLinkInfo.GetHashCode(System.Boolean)">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+            <param name="nonReadOnly">
+                true to include the hashes of non-readonly properties; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ShellLinkInfo.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
         </member>
         <member name="M:SilDev.ShellLinkInfo.op_Equality(SilDev.ShellLinkInfo,SilDev.ShellLinkInfo)">
             <summary>
                 Determines whether two specified <see cref="T:SilDev.ShellLinkInfo"/> instances have same values.
             </summary>
-            <param name="a">
+            <param name="left">
                 The first <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
             </param>
-            <param name="b">
+            <param name="right">
                 The second <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
             </param>
         </member>
@@ -16165,10 +16709,10 @@
             <summary>
                 Determines whether two specified <see cref="T:SilDev.ShellLinkInfo"/> instances have different values.
             </summary>
-            <param name="a">
+            <param name="left">
                 The first <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
             </param>
-            <param name="b">
+            <param name="right">
                 The second <see cref="T:SilDev.ShellLinkInfo"/> instance to compare.
             </param>
         </member>
