@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: CounterInvestor.cs
-// Version:  2019-10-15 11:10
+// Version:  2019-12-12 16:31
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -31,28 +31,19 @@ namespace SilDev.Investment
         /// <summary>
         ///     Initializes a new instance of the <see cref="CounterInvestor{TNumber}"/> class.
         ///     <para>
-        ///         Allowed types: <see cref="sbyte"/>, <see cref="byte"/>, <see cref="char"/>,
+        ///         Allowed types: <see cref="char"/>, <see cref="sbyte"/>, <see cref="byte"/>,
         ///         <see cref="short"/>, <see cref="ushort"/>, <see cref="int"/>, <see cref="uint"/>,
         ///         <see cref="long"/>, <see cref="ulong"/>, and <see cref="decimal"/>.
         ///     </para>
         /// </summary>
         /// <exception cref="NotSupportedException">
-        ///     The generic type is not sbyte, byte, char, short, ushort, int, uint, long, ulong,
+        ///     The generic type is not char, sbyte, byte, short, ushort, int, uint, long, ulong,
         ///     or decimal.
         /// </exception>
         public CounterInvestor()
         {
             var type = typeof(TCounter);
-            if (type != typeof(sbyte) &&
-                type != typeof(byte) &&
-                type != typeof(char) &&
-                type != typeof(short) &&
-                type != typeof(ushort) &&
-                type != typeof(int) &&
-                type != typeof(uint) &&
-                type != typeof(long) &&
-                type != typeof(ulong) &&
-                type != typeof(decimal))
+            if (!IsValid(type))
                 throw new NotSupportedException($"The type '{type}' is not supported.");
             _counter = new Dictionary<int, TCounter>();
         }
@@ -101,46 +92,31 @@ namespace SilDev.Investment
             return _counter[index];
         }
 
+        private static bool IsValid(Type type)
+        {
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Char:
+                case TypeCode.SByte:
+                case TypeCode.Byte:
+                case TypeCode.Int16:
+                case TypeCode.UInt16:
+                case TypeCode.Int32:
+                case TypeCode.UInt32:
+                case TypeCode.Int64:
+                case TypeCode.UInt64:
+                case TypeCode.Decimal:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         private static bool IsAddable(TCounter source)
         {
-            object maxValue;
-            switch (Type.GetTypeCode(typeof(TCounter)))
-            {
-                case TypeCode.SByte:
-                    maxValue = sbyte.MaxValue;
-                    break;
-                case TypeCode.Byte:
-                    maxValue = byte.MaxValue;
-                    break;
-                case TypeCode.Char:
-                    maxValue = char.MaxValue;
-                    break;
-                case TypeCode.Int16:
-                    maxValue = short.MaxValue;
-                    break;
-                case TypeCode.UInt16:
-                    maxValue = ushort.MaxValue;
-                    break;
-                case TypeCode.Int32:
-                    maxValue = int.MaxValue;
-                    break;
-                case TypeCode.UInt32:
-                    maxValue = uint.MaxValue;
-                    break;
-                case TypeCode.Int64:
-                    maxValue = long.MaxValue;
-                    break;
-                case TypeCode.UInt64:
-                    maxValue = ulong.MaxValue;
-                    break;
-                case TypeCode.Decimal:
-                    maxValue = decimal.MaxValue;
-                    break;
-                default:
-                    maxValue = default(TCounter);
-                    break;
-            }
-            return (dynamic)source < (TCounter)maxValue;
+            var type = typeof(TCounter);
+            var maxValue = IsValid(type) ? (TCounter)type.GetField(nameof(int.MaxValue)).GetRawConstantValue() : default;
+            return (dynamic)source < maxValue;
         }
     }
 }
