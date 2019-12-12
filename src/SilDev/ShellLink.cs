@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2019-10-22 16:15
+// Version:  2019-12-12 16:28
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Linq;
     using System.Runtime.InteropServices.ComTypes;
     using Intern;
 
@@ -123,26 +122,26 @@ namespace SilDev
         /// <summary>
         ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have same values.
         /// </summary>
-        /// <param name="a">
+        /// <param name="left">
         ///     The first <see cref="ShellLinkInfo"/> instance to compare.
         /// </param>
-        /// <param name="b">
+        /// <param name="right">
         ///     The second <see cref="ShellLinkInfo"/> instance to compare.
         /// </param>
-        public static bool operator ==(ShellLinkInfo a, ShellLinkInfo b) =>
-            a.Equals(b);
+        public static bool operator ==(ShellLinkInfo left, ShellLinkInfo right) =>
+            left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have different values.
         /// </summary>
-        /// <param name="a">
+        /// <param name="left">
         ///     The first <see cref="ShellLinkInfo"/> instance to compare.
         /// </param>
-        /// <param name="b">
+        /// <param name="right">
         ///     The second <see cref="ShellLinkInfo"/> instance to compare.
         /// </param>
-        public static bool operator !=(ShellLinkInfo a, ShellLinkInfo b) =>
-            !a.Equals(b);
+        public static bool operator !=(ShellLinkInfo left, ShellLinkInfo right) =>
+            !(left == right);
     }
 
     /// <summary>

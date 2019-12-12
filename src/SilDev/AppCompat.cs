@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AppCompat.cs
-// Version:  2019-12-11 12:53
+// Version:  2019-12-12 16:28
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -234,26 +234,26 @@ namespace SilDev
         /// <summary>
         ///     Determines whether two specified <see cref="AppCompatLayers"/> instances have same values.
         /// </summary>
-        /// <param name="a">
+        /// <param name="left">
         ///     The first <see cref="AppCompatLayers"/> instance to compare.
         /// </param>
-        /// <param name="b">
+        /// <param name="right">
         ///     The second <see cref="AppCompatLayers"/> instance to compare.
         /// </param>
-        public static bool operator ==(AppCompatLayers a, AppCompatLayers b) =>
-            a.Equals(b);
+        public static bool operator ==(AppCompatLayers left, AppCompatLayers right) =>
+            left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified <see cref="AppCompatLayers"/> instances have different values.
         /// </summary>
-        /// <param name="a">
+        /// <param name="left">
         ///     The first <see cref="AppCompatLayers"/> instance to compare.
         /// </param>
-        /// <param name="b">
+        /// <param name="right">
         ///     The second <see cref="AppCompatLayers"/> instance to compare.
         /// </param>
-        public static bool operator !=(AppCompatLayers a, AppCompatLayers b) =>
-            !a.Equals(b);
+        public static bool operator !=(AppCompatLayers left, AppCompatLayers right) =>
+            !(left == right);
     }
 
     /// <summary>

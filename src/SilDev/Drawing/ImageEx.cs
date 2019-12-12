@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-12-11 12:53
+// Version:  2019-12-12 16:29
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -700,8 +700,14 @@ namespace SilDev.Drawing
             /// <param name="right">
             ///     The second image pair to compare, or null.
             /// </param>
-            public static bool operator ==(ImagePair left, ImagePair right) =>
-                Equals(left, right);
+            public static bool operator ==(ImagePair left, ImagePair right)
+            {
+                var obj = (object)left;
+                if (obj != null)
+                    return left.Equals(right);
+                obj = right;
+                return obj == null;
+            }
 
             /// <summary>
             ///     Determines whether two specified image pairs have different values.
@@ -713,7 +719,7 @@ namespace SilDev.Drawing
             ///     The second image pair to compare, or null.
             /// </param>
             public static bool operator !=(ImagePair left, ImagePair right) =>
-                !Equals(left, right);
+                !(left == right);
         }
 
         /// <summary>
@@ -870,8 +876,14 @@ namespace SilDev.Drawing
             /// <param name="right">
             ///     The second frame to compare, or null.
             /// </param>
-            public static bool operator ==(Frame left, Frame right) =>
-                Equals(left, right);
+            public static bool operator ==(Frame left, Frame right)
+            {
+                var obj = (object)left;
+                if (obj != null)
+                    return left.Equals(right);
+                obj = right;
+                return obj == null;
+            }
 
             /// <summary>
             ///     Determines whether two specified frames have different values.
@@ -883,7 +895,7 @@ namespace SilDev.Drawing
             ///     The second frame to compare, or null.
             /// </param>
             public static bool operator !=(Frame left, Frame right) =>
-                !Equals(left, right);
+                !(left == right);
         }
     }
 }
