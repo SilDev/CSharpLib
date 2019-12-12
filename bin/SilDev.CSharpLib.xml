@@ -701,7 +701,7 @@
         </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.Load(System.String,SilDev.Investment.ValueItemHost{`0})">
             <summary>
-                Deserializes the specified file into this object graph.
+                Deserializes the specified file into this instance graph.
             </summary>
             <param name="path">
                 The file to deserialize.
