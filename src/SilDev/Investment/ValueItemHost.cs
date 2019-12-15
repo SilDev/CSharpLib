@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2019-12-12 22:25
+// Version:  2019-12-15 14:58
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -65,6 +65,12 @@ namespace SilDev.Investment
         }
 
         /// <summary>
+        ///     Gets or sets the default file path used for saving and loading if no other
+        ///     path is specified.
+        /// </summary>
+        public string FilePath { get; set; }
+
+        /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object for this instance.
         /// </summary>
         /// <param name="info">
@@ -112,6 +118,15 @@ namespace SilDev.Investment
         }
 
         /// <summary>
+        ///     Deserializes the specified file into this instance graph.
+        /// </summary>
+        /// <param name="defValue">
+        ///     The default value.
+        /// </param>
+        public void Load(ValueItemHost<TKey> defValue = default) =>
+            Load(FilePath, defValue);
+
+        /// <summary>
         ///     Creates a new file, writes this instance graph into to the file, and then
         ///     closes the file.
         /// </summary>
@@ -123,6 +138,16 @@ namespace SilDev.Investment
         /// </param>
         public void Save(string path, bool overwrite = true) =>
             FileEx.Serialize(path, this, true, overwrite);
+
+        /// <summary>
+        ///     Creates a new file, writes this instance graph into to the file, and then
+        ///     closes the file.
+        /// </summary>
+        /// <param name="overwrite">
+        ///     true to allow an existing file to be overwritten; otherwise, false.
+        /// </param>
+        public void Save(bool overwrite = true) =>
+            FileEx.Serialize(FilePath, this, true, overwrite);
 
         /// <summary>
         ///     Adds the specified item to this instance that is addressed to the
