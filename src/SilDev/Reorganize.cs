@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2019-10-31 22:01
+// Version:  2019-12-16 16:41
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -161,6 +161,57 @@ namespace SilDev
             sb.AppendFormat(CultureConfig.GlobalCultureInfo, format, args);
             sb.AppendLine();
             return sb;
+        }
+
+        /// <summary>
+        ///     Converts the value of this <see cref="StringBuilder"/> instance to <see cref="string"/>
+        ///     and removes all characters before <see cref="string"/> is returned.
+        /// </summary>
+        /// <param name="stringBuilder">
+        ///     The <see cref="StringBuilder"/> instance to convert.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stringBuilder is null.
+        /// </exception>
+        public static string ToStringThenClear(this StringBuilder stringBuilder)
+        {
+            if (stringBuilder == null)
+                throw new ArgumentNullException(nameof(stringBuilder));
+            var sb = stringBuilder;
+            var str = sb.ToString();
+            sb.Clear();
+            return str;
+        }
+
+        /// <summary>
+        ///     Converts the value of a substring of this <see cref="StringBuilder"/> instance to
+        ///     <see cref="string"/> and removes all characters before <see cref="string"/> is
+        ///     returned.
+        /// </summary>
+        /// <param name="stringBuilder">
+        ///     The <see cref="StringBuilder"/> instance to convert.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stringBuilder is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     startIndex or length is less than zero. -or- The sum of startIndex and length is
+        ///     greater than the length of the current instance.
+        /// </exception>
+        public static string ToStringThenClear(this StringBuilder stringBuilder, int startIndex, int length)
+        {
+            if (stringBuilder == null)
+                throw new ArgumentNullException(nameof(stringBuilder));
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            var sb = stringBuilder;
+            if (startIndex + length > sb.Length)
+                throw new ArgumentOutOfRangeException();
+            var str = sb.ToString(startIndex, length);
+            sb.Clear();
+            return str;
         }
 
         /// <summary>
@@ -519,7 +570,7 @@ namespace SilDev
             }
             if (isWhiteSpace)
                 sb.Length--;
-            return sb.ToString();
+            return sb.ToStringThenClear();
         }
 
         /// <summary>

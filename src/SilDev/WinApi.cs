@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-12-08 16:26
+// Version:  2019-12-16 16:45
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -3531,7 +3531,7 @@ namespace SilDev
             {
                 var hWnd = NativeMethods.GetForegroundWindow();
                 var sb = new StringBuilder(256);
-                return NativeMethods.GetWindowText(hWnd, sb, 256) > 0 ? sb.ToString() : string.Empty;
+                return NativeMethods.GetWindowText(hWnd, sb, 256) > 0 ? sb.ToStringThenClear() : string.Empty;
             }
 
             /// <summary>

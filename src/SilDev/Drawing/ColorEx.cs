@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2019-10-22 15:28
+// Version:  2019-12-16 16:42
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -269,12 +269,12 @@ namespace SilDev.Drawing
                             sb.Append(c);
                             sb.Append(c);
                         }
-                        code = sb.ToString();
+                        code = sb.ToStringThenClear();
                         goto Switch;
                     default:
                         while (sb.Length < 6)
                             sb.Append(code);
-                        code = sb.ToString(0, 6);
+                        code = sb.ToStringThenClear(0, 6);
                         goto Switch;
                 }
             }

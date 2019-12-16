@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: SymbolicLink.cs
-// Version:  2019-10-31 22:01
+// Version:  2019-12-16 16:45
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -188,7 +188,7 @@ namespace SilDev
                 return false;
 
             int? exitCode;
-            using (var p = ProcessEx.Send(sb.ToString(), elevated, false))
+            using (var p = ProcessEx.Send(sb.ToStringThenClear(), elevated, false))
             {
                 if (p?.HasExited ?? false)
                     p.WaitForExit();
@@ -229,7 +229,7 @@ namespace SilDev
                 return false;
 
             int? exitCode;
-            using (var p = ProcessEx.Send(sb.ToString(), elevated, false))
+            using (var p = ProcessEx.Send(sb.ToStringThenClear(), elevated, false))
             {
                 if (p?.HasExited ?? false)
                     p.WaitForExit();

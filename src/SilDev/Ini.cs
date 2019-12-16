@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2019-10-31 22:27
+// Version:  2019-12-16 16:43
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -560,7 +560,7 @@ namespace SilDev
             builder.Insert(0, ']');
             builder.Insert(0, NonSectionId);
             builder.Insert(0, '[');
-            return builder.ToString();
+            return builder.ToStringThenClear();
         }
 
         /// <summary>
@@ -777,7 +777,7 @@ namespace SilDev
                     throw new PathNotFoundException(path);
                 var sb = new StringBuilder(short.MaxValue);
                 if (WinApi.NativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
-                    output = sb.ToString();
+                    output = sb.ToStringThenClear();
             }
             catch (Exception ex) when (ex.IsCaught())
             {

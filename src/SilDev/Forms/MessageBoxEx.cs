@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2019-10-22 15:31
+// Version:  2019-12-16 16:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -687,7 +687,7 @@ namespace SilDev.Forms
                 {
                     var className = new StringBuilder(10);
                     _ = WinApi.NativeMethods.GetClassName(msg.hwnd, className, className.Capacity);
-                    if (className.ToString() == "#32770")
+                    if (className.ToStringThenClear() == "#32770")
                     {
                         _nButton = 0;
                         WinApi.NativeMethods.EnumChildWindows(msg.hwnd, EnumProc, IntPtr.Zero);
@@ -741,7 +741,7 @@ namespace SilDev.Forms
         {
             var className = new StringBuilder(10);
             _ = WinApi.NativeMethods.GetClassName(hWnd, className, className.Capacity);
-            if (!className.ToString().EqualsEx("Button"))
+            if (!className.ToStringThenClear().EqualsEx("Button"))
                 return true;
             switch (WinApi.NativeMethods.GetDlgCtrlID(hWnd))
             {

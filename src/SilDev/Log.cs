@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-10-31 21:59
+// Version:  2019-12-16 16:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -282,7 +282,7 @@ namespace SilDev
                     builder.Append("'; Exception object: '");
                     builder.Append(e.ExceptionObject);
                     builder.Append(';');
-                    WriteUnhandled(new ApplicationException(builder.ToString()));
+                    WriteUnhandled(new ApplicationException(builder.ToStringThenClear()));
                 };
                 AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
             }
@@ -578,10 +578,11 @@ namespace SilDev
 
         private static string AppendToFile()
         {
-            var content = Builder.Length > 0 ? Builder.ToString() : string.Empty;
+            if (Builder.Length <= 0) 
+                return string.Empty;
+            var content = Builder.ToStringThenClear();
             if (Directory.Exists(FileDir))
                 File.AppendAllText(FilePath, content);
-            Builder.Clear();
             return content;
         }
 

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Media.cs
-// Version:  2019-10-22 15:51
+// Version:  2019-12-16 16:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -245,7 +245,7 @@ namespace SilDev
             {
                 var sb = new StringBuilder(128);
                 _ = WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
-                return sb.ToString();
+                return sb.ToStringThenClear();
             }
 
             private static void SndOpen(string path)

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-12-08 15:15
+// Version:  2019-12-16 16:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -512,7 +512,7 @@ namespace SilDev
                 }
                 sb.Append((char)ran.Next('A', 'F'));
             }
-            return $"{sa.First()}{sb}{sa.Last()}";
+            return $"{sa.First()}{sb.ToStringThenClear()}{sa.Last()}";
         }
 
         /// <summary>
@@ -681,7 +681,7 @@ namespace SilDev
                     sb.AppendFormatLine("RMDIR /S /Q \"{0}\"", tmpDir);
                     sb.AppendFormatLine("RMDIR /S /Q \"{0}\"", target);
                     sb.AppendLine("EXIT");
-                    File.WriteAllText(helper, sb.ToString());
+                    File.WriteAllText(helper, sb.ToStringThenClear());
 
                     var call = $"CALL \"{helper}\"";
                     if (locked)
@@ -705,7 +705,7 @@ namespace SilDev
                         if (locked)
                             ProcessEx.SendHelper.WaitForExitThenDelete(target, curName, true);
                         else
-                            using (var p = ProcessEx.Send(sb.ToString(), elevated, false))
+                            using (var p = ProcessEx.Send(sb.ToStringThenClear(), elevated, false))
                                 if (p?.HasExited ?? false)
                                     p.WaitForExit(timelimit);
                     }

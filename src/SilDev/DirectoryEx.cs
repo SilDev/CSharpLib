@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2019-10-31 21:57
+// Version:  2019-12-16 16:43
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -575,7 +575,7 @@ namespace SilDev
                     if (size)
                         len += fi.Length;
                 }
-                var s = size ? len + sb.ToString() : sb.ToString();
+                var s = size ? len + sb.ToStringThenClear() : sb.ToStringThenClear();
                 return s.GetHashCode();
             }
             catch (Exception ex) when (ex.IsCaught())

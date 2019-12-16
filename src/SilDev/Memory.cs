@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2019-10-22 16:00
+// Version:  2019-12-16 16:44
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -120,7 +120,7 @@ namespace SilDev
         public string GetImageFileName()
         {
             var sb = new StringBuilder(short.MaxValue);
-            return !WinApi.NativeMethods.GetProcessImageFileName(_hProcess, sb, sb.Capacity - 1) ? null : sb.ToString();
+            return !WinApi.NativeMethods.GetProcessImageFileName(_hProcess, sb, sb.Capacity - 1) ? null : sb.ToStringThenClear();
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace SilDev
                 var sb = new StringBuilder(short.MaxValue);
                 var bytesRead = IntPtr.Zero;
                 if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, sb, new IntPtr(size), ref bytesRead))
-                    return sb.ToString();
+                    return sb.ToStringThenClear();
                 throw new MemoryException(ExceptionMessages.BytesReadFailed + bytesRead);
             }
             catch (Exception ex) when (ex.IsCaught())

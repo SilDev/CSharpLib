@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2019-12-11 12:52
+// Version:  2019-12-16 16:42
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -242,7 +242,7 @@ namespace SilDev
         {
             var guid = new StringBuilder(braces ? 38 : 36);
             CombineHashes(guid, bytes?.Encrypt(algorithm1), bytes?.Encrypt(algorithm2), braces);
-            return guid.ToString();
+            return guid.ToStringThenClear();
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace SilDev
         {
             var guid = new StringBuilder(braces ? 38 : 36);
             CombineHashes(guid, text?.Encrypt(algorithm1), text?.Encrypt(algorithm2), braces);
-            return guid.ToString();
+            return guid.ToStringThenClear();
         }
 
         /// <summary>
@@ -2757,7 +2757,7 @@ namespace SilDev
                 var sb = new StringBuilder(ba.Length * 2);
                 foreach (var b in ba)
                     sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
-                return sb.ToString();
+                return sb.ToStringThenClear();
             }
 
             /// <summary>
@@ -2936,7 +2936,7 @@ namespace SilDev
                 var sb = new StringBuilder(ba.Length * 2);
                 foreach (var b in ba)
                     sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
-                return sb.ToString();
+                return sb.ToStringThenClear();
             }
 
             /// <summary>

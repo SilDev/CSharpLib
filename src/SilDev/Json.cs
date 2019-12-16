@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2019-10-22 16:27
+// Version:  2019-12-16 16:43
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -45,7 +45,7 @@ namespace SilDev
                 var js = new JavaScriptSerializer();
                 var sb = new StringBuilder();
                 js.Serialize(source, sb);
-                return sb.ToString();
+                return sb.ToStringThenClear();
             }
             catch (Exception ex) when (ex.IsCaught())
             {

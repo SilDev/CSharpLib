@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-10-31 22:00
+// Version:  2019-12-16 16:45
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -759,7 +759,7 @@ namespace SilDev
                     sb.AppendFormat(CultureConfig.GlobalCultureInfo, "DEL /F /Q \"{0}\"", file);
                     sb.AppendLine("EXIT");
 
-                    File.WriteAllText(file, sb.ToString());
+                    File.WriteAllText(file, sb.ToStringThenClear());
                     cmd = $"/C CALL \"{file}\"";
                 }
                 var psi = new ProcessStartInfo

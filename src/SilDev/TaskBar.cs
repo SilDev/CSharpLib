@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2019-10-31 22:02
+// Version:  2019-12-16 16:45
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -292,7 +292,7 @@ namespace SilDev
                 var sb = new StringBuilder(byte.MaxValue);
                 var lib = WinApi.NativeMethods.LoadLibrary(WinApi.DllNames.Shell32);
                 _ = WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
-                var verb = sb.ToString();
+                var verb = sb.ToStringThenClear();
 
                 /*
                 if (!isPresentWindows)
