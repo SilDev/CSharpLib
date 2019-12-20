@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2019-12-16 16:43
+// Version:  2019-12-20 22:16
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -26,8 +26,189 @@ namespace SilDev
     /// </summary>
     public static class Json
     {
+        private static JavaScriptSerializer _jsonSerializer;
+        private static int _maxLength, _recursionLimit;
+
+        private static JavaScriptSerializer JsonSerializer
+        {
+            get
+            {
+                if (_jsonSerializer != default)
+                    return _jsonSerializer;
+                _jsonSerializer = new JavaScriptSerializer
+                {
+                    MaxJsonLength = MaxLength,
+                    RecursionLimit = RecursionLimit
+                };
+                return _jsonSerializer;
+            }
+        }
+
         /// <summary>
-        ///     Serializes the specified object graph into a string representation of an JSON
+        ///     Gets or sets the maximum length of JSON strings that are accepted by the
+        ///     <see cref="JavaScriptSerializer"/> object.
+        /// </summary>
+        public static int MaxLength
+        {
+            get
+            {
+                if (_maxLength > 0)
+                    return _maxLength;
+                _maxLength = 0x4000000;
+                return _maxLength;
+            }
+            set
+            {
+                _maxLength = value == 0 ? int.MaxValue : value;
+                _maxLength = default;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the limit for constraining the number of object levels to process.
+        /// </summary>
+        public static int RecursionLimit
+        {
+            get
+            {
+                if (_recursionLimit > 0)
+                    return _recursionLimit;
+                _recursionLimit = 0x4000;
+                return _recursionLimit;
+            }
+            set
+            {
+                _recursionLimit = value == 0 ? int.MaxValue : value;
+                _jsonSerializer = default;
+            }
+        }
+
+        private static void WriteByte(this Stream stream, char value)
+        {
+            if (value <= byte.MaxValue)
+            {
+                stream?.WriteByte((byte)value);
+                return;
+            }
+            var str = value.ToString(CultureConfig.GlobalCultureInfo);
+            stream?.WriteBytes(str.ToBytes());
+        }
+
+        private static void WriteByte(this Stream stream, char value, int count)
+        {
+            if (stream == null || count < 1)
+                return;
+            for (var i = 0; i < count; i++)
+                stream.WriteByte(value);
+        }
+
+        private static void FormatToStream(string inputString, Stream outputStream)
+        {
+            if (inputString == null)
+                throw new ArgumentNullException(nameof(inputString));
+            if (outputStream == null)
+                throw new ArgumentNullException(nameof(outputStream));
+
+            const int width = 3;
+            var depth = 0;
+            var isEscape = false;
+            var isValue = false;
+            var newLine = Environment.NewLine.ToBytes();
+
+            var input = inputString.ToCharArray();
+            var output = outputStream;
+            foreach (var c in input)
+            {
+                if (isEscape)
+                {
+                    isEscape = false;
+                    output.WriteByte(c);
+                    continue;
+                }
+                switch (c)
+                {
+                    case '\\':
+                        isEscape = true;
+                        output.WriteByte(c);
+                        continue;
+                    case '"':
+                        isValue = !isValue;
+                        output.WriteByte(c);
+                        continue;
+                    default:
+                        if (isValue)
+                        {
+                            output.WriteByte(c);
+                            continue;
+                        }
+                        break;
+                }
+                switch (c)
+                {
+                    case ',':
+                        output.WriteByte(c);
+                        output.WriteBytes(newLine);
+                        if (depth > 0)
+                            output.WriteByte(' ', depth * width);
+                        break;
+                    case '[':
+                    case '{':
+                        output.WriteByte(c);
+                        output.WriteBytes(newLine);
+                        if (++depth > 0)
+                            output.WriteByte(' ', depth * width);
+                        break;
+                    case ']':
+                    case '}':
+                        output.WriteBytes(newLine);
+                        if (--depth > 0)
+                            output.WriteByte(' ', depth * width);
+                        output.WriteByte(c);
+                        break;
+                    case ':':
+                        output.WriteByte(c);
+                        output.WriteByte(' ');
+                        break;
+                    default:
+                        if (!char.IsWhiteSpace(c))
+                            output.WriteByte(c);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Formats the specified string representation of a JSON document.
+        /// </summary>
+        /// <param name="source">
+        ///     The string representation of an JSON document to format.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source is null.
+        /// </exception>
+        public static string Format(string source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            var ms = new MemoryStream();
+            try
+            {
+                FormatToStream(source, ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(ms, TextEx.DefaultEncoding))
+                {
+                    ms = null;
+                    return sr.ReadToEnd();
+                }
+            }
+            finally
+            {
+                ms?.Dispose();
+            }
+        }
+
+        /// <summary>
+        ///     Serializes the specified object graph into a string representation of a JSON
         ///     document.
         /// </summary>
         /// <typeparam name="TSource">
@@ -36,16 +217,19 @@ namespace SilDev
         /// <param name="source">
         ///     The object graph to serialize.
         /// </param>
-        public static string Serialize<TSource>(TSource source)
+        /// <param name="format">
+        ///     true to format the string representation of the JSON document; otherwise, false.
+        /// </param>
+        public static string Serialize<TSource>(TSource source, bool format = false)
         {
             try
             {
                 if (source == null)
                     throw new ArgumentNullException(nameof(source));
-                var js = new JavaScriptSerializer();
                 var sb = new StringBuilder();
-                js.Serialize(source, sb);
-                return sb.ToStringThenClear();
+                JsonSerializer.Serialize(source, sb);
+                var s = sb.ToStringThenClear();
+                return format ? Format(s) : s;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -80,9 +264,8 @@ namespace SilDev
                 if (output == null)
                     throw new ArgumentNullException(nameof(output));
                 var dest = PathEx.Combine(path);
-                if (!overwrite && File.Exists(dest))
-                    return false;
-                File.WriteAllText(dest, output);
+                using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
+                    FormatToStream(output, fs);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -93,7 +276,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Deserializes a string representation of an JSON document into an object graph.
+        ///     Deserializes a string representation of a JSON document into an object graph.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
@@ -110,8 +293,7 @@ namespace SilDev
             {
                 if (source == null)
                     throw new ArgumentNullException(nameof(source));
-                var js = new JavaScriptSerializer();
-                return js.Deserialize<TResult>(source);
+                return JsonSerializer.Deserialize<TResult>(source);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
