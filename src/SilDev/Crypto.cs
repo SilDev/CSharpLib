@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2019-12-16 16:42
+// Version:  2019-12-20 18:43
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -1182,7 +1182,7 @@ namespace SilDev
         ///     Represents the base class from which all implementations of binary-to-text encoding
         ///     algorithms must derive.
         /// </summary>
-        public class BinaryToText
+        public abstract class BinaryToText
         {
             /// <summary>
             ///     Gets the separator.
@@ -1209,11 +1209,7 @@ namespace SilDev
             ///     true to release all resources used by the input and output <see cref="Stream"/>;
             ///     otherwise, false.
             /// </param>
-            /// <exception cref="NotSupportedException">
-            ///     The current method has no functionality.
-            /// </exception>
-            public virtual void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false) =>
-                throw new NotSupportedException();
+            public abstract void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false);
 
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
@@ -1373,11 +1369,7 @@ namespace SilDev
             ///     true to release all resources used by the input and output <see cref="Stream"/>;
             ///     otherwise, false.
             /// </param>
-            /// <exception cref="NotSupportedException">
-            ///     The current method has no functionality.
-            /// </exception>
-            public virtual void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false) =>
-                throw new NotSupportedException();
+            public abstract void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false);
 
             /// <summary>
             ///     Decodes the specified string into a sequence of bytes.
@@ -2731,7 +2723,7 @@ namespace SilDev
         ///     Represents the base class from which all implementations of checksum encryption
         ///     algorithms must derive.
         /// </summary>
-        public class Checksum
+        public abstract class Checksum
         {
             /// <summary>
             ///     Encrypts the specified stream with the specified <see cref="HashAlgorithm"/>.
@@ -2766,11 +2758,7 @@ namespace SilDev
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            /// <exception cref="NotSupportedException">
-            ///     The current method has no functionality.
-            /// </exception>
-            public virtual string EncryptStream(Stream stream) =>
-                throw new NotSupportedException();
+            public abstract string EncryptStream(Stream stream);
 
             /// <summary>
             ///     Encrypts the specified sequence of bytes.
@@ -2821,11 +2809,7 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            /// <exception cref="NotSupportedException">
-            ///     The current method has no functionality.
-            /// </exception>
-            public virtual string EncryptString(string text) =>
-                throw new NotSupportedException();
+            public abstract string EncryptString(string text);
 
             /// <summary>
             ///     Encrypts the specified file.
