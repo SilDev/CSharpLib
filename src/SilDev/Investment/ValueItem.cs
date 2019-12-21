@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2019-12-21 20:00
+// Version:  2019-12-21 22:49
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -29,8 +29,6 @@ namespace SilDev.Investment
     [Serializable]
     public class ValueItem<TValue> : ISerializable where TValue : IEquatable<TValue>
     {
-        private readonly bool _minMaxValidation;
-
         [NonSerialized]
         private TValue _value;
 
@@ -68,17 +66,18 @@ namespace SilDev.Investment
             ValueSetValidationFunc = setValidationFunc;
             if (IsMinMaxValidationType(typeof(TValue)))
             {
-                var obj = (object)minValue;
-                if (obj == null)
-                    minValue = GetMinValue(typeof(TValue));
-                obj = maxValue;
-                if (obj == null)
-                    maxValue = GetMaxValue(typeof(TValue));
-                if ((dynamic)minValue < maxValue)
+                var minVal = (dynamic)minValue;
+                var maxVal = (dynamic)maxValue;
+                if (minVal == maxVal)
                 {
-                    _minMaxValidation = true;
-                    MinValue = minValue;
-                    MaxValue = maxValue;
+                    MinValue = GetMinValue(typeof(TValue));
+                    MaxValue = GetMaxValue(typeof(TValue));
+                }
+                else
+                {
+                    MinMaxValidation = true;
+                    MinValue = minVal < maxVal ? minVal : maxVal;
+                    MaxValue = minVal > maxVal ? minVal : maxVal;
                 }
             }
             DefValue = defValue;
@@ -127,7 +126,7 @@ namespace SilDev.Investment
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(ValueItem<TValue>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
-            _minMaxValidation = info.GetBoolean(nameof(_minMaxValidation));
+            MinMaxValidation = info.GetBoolean(nameof(MinMaxValidation));
             MinValue = (TValue)info.GetValue(nameof(MinValue), typeof(TValue));
             MaxValue = (TValue)info.GetValue(nameof(MaxValue), typeof(TValue));
             DefValue = (TValue)info.GetValue(nameof(DefValue), typeof(TValue));
@@ -135,22 +134,10 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Gets or sets the value.
-        ///     <para>
-        ///         Please note that the setter automatically calibrates the value to be set.
-        ///         See <see cref="ValidateSetValue(TValue)"/> for more information.
-        ///     </para>
+        ///     Gets the value that determines whether <see cref="Value"/> is validated by
+        ///     <see cref="MinValue"/> and <see cref="MaxValue"/>.
         /// </summary>
-        public TValue Value
-        {
-            get => ValidateGetValue(_value);
-            set => _value = ValidateSetValue(value);
-        }
-
-        /// <summary>
-        ///     Gets the default value.
-        /// </summary>
-        public TValue DefValue { get; }
+        protected bool MinMaxValidation { get; }
 
         /// <summary>
         ///     Gets the minimum value, if available; otherwise, the default value is returned.
@@ -161,6 +148,20 @@ namespace SilDev.Investment
         ///     Gets the maximum value, if available; otherwise, the default value is returned.
         /// </summary>
         public TValue MaxValue { get; }
+
+        /// <summary>
+        ///     Gets the default value.
+        /// </summary>
+        public TValue DefValue { get; }
+
+        /// <summary>
+        ///     Gets or sets the value.
+        /// </summary>
+        public TValue Value
+        {
+            get => ValidateGetValue(_value);
+            set => _value = ValidateSetValue(value);
+        }
 
         /// <summary>
         ///     Gets the method that is called when <see cref="Value"/> is get, if available;
@@ -198,7 +199,7 @@ namespace SilDev.Investment
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(ValueItem<TValue>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
-            info.AddValue(nameof(_minMaxValidation), _minMaxValidation);
+            info.AddValue(nameof(MinMaxValidation), MinMaxValidation);
             info.AddValue(nameof(MinValue), MinValue);
             info.AddValue(nameof(MaxValue), MaxValue);
             info.AddValue(nameof(DefValue), DefValue);
@@ -269,7 +270,7 @@ namespace SilDev.Investment
         protected virtual TValue ValidateSetValue(TValue value)
         {
             var newValue = value;
-            if (_minMaxValidation)
+            if (MinMaxValidation)
             {
                 if ((dynamic)newValue < MinValue)
                     newValue = MinValue;
@@ -334,7 +335,7 @@ namespace SilDev.Investment
             foreach (var pi in properties)
             {
                 var name = pi.Name;
-                if (!_minMaxValidation && (name == nameof(MinValue) || name == nameof(MaxValue)))
+                if (!MinMaxValidation && (name == nameof(MinValue) || name == nameof(MaxValue)))
                     continue;
                 var value = pi.GetValue(current);
                 if (value == null)

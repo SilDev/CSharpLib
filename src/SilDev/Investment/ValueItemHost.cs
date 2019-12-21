@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2019-12-21 20:00
+// Version:  2019-12-21 22:49
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev.Investment
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -28,22 +29,21 @@ namespace SilDev.Investment
     /// <typeparam name="TKey">
     ///     The enumeration type of the key.
     ///     <para>
-    ///         Please note that only the name of each key is stored. This means that each key
-    ///         should have a different value to prevent an item from being misallocated.
-    ///         Therefore, it is recommended that you do not add any value to the keys, because
-    ///         the compiler does this automatically.
+    ///         It is strongly recommended to avoid using multiple keys with the same values.
     ///     </para>
     /// </typeparam>
     [Serializable]
     public class ValueItemHost<TKey> : ISerializable where TKey : struct, Enum
     {
-        private readonly Dictionary<string, object> _items;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValueItemHost{TKey}"/>.
         /// </summary>
-        public ValueItemHost() =>
-            _items = new Dictionary<string, object>();
+        public ValueItemHost()
+        {
+            Comparer = StringComparer.InvariantCulture;
+            SortComparer = new Comparison.AlphanumericComparer();
+            ItemDictionary = new Dictionary<string, object>(Comparer);
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValueItemHost{TKey}"/> class with
@@ -59,23 +59,30 @@ namespace SilDev.Investment
         {
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
+
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(ValueItemHost<TKey>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-            var items = (Dictionary<string, object>)info.GetValue(nameof(_items), typeof(Dictionary<string, object>));
-            if (items.Count < 2)
-            {
-                _items = items;
-                return;
-            }
-            var comparer = new Comparison.AlphanumericComparer();
-            _items = items.OrderBy(x => x.Key, comparer).ToDictionary(x => x.Key, x => x.Value);
+
+            Comparer = (IEqualityComparer<string>)info.GetValue(nameof(ItemDictionary), typeof(IEqualityComparer<string>));
+            SortComparer = (IComparer<string>)info.GetValue(nameof(ItemDictionary), typeof(IComparer<string>));
+            ItemDictionary = (Dictionary<string, object>)info.GetValue(nameof(ItemDictionary), typeof(Dictionary<string, object>));
         }
 
         /// <summary>
-        ///     Gets or sets the default file path used for saving and loading if no other
-        ///     path is specified.
+        ///     Gets the <see cref="IEqualityComparer"/> that is used to determine equality
+        ///     of keys for the dictionary.
         /// </summary>
-        public string FilePath { get; set; }
+        protected IEqualityComparer<string> Comparer { get; private set; }
+
+        /// <summary>
+        ///     Gets the <see cref="IComparer"/> to compare keys.
+        /// </summary>
+        protected IComparer<string> SortComparer { get; private set; }
+
+        /// <summary>
+        ///     Gets the collection of keys and values.
+        /// </summary>
+        protected Dictionary<string, object> ItemDictionary { get; private set; }
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object for this instance.
@@ -91,9 +98,13 @@ namespace SilDev.Investment
         {
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
+
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(ValueItemHost<TKey>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-            info.AddValue(nameof(_items), _items);
+
+            info.AddValue(nameof(Comparer), Comparer);
+            info.AddValue(nameof(SortComparer), SortComparer);
+            info.AddValue(nameof(ItemDictionary), ItemDictionary);
         }
 
         /// <summary>
@@ -111,44 +122,34 @@ namespace SilDev.Investment
         public void Load(string path, ValueItemHost<TKey> defValue = default, bool merge = true)
         {
             if (!merge)
-                _items.Clear();
+                ItemDictionary.Clear();
             var host = FileEx.Deserialize(path, true, defValue);
             if (host == null)
                 return;
-            var items = host.GetItems();
-            if (!items.Any())
+            Comparer = host.Comparer;
+            SortComparer = host.SortComparer;
+            var hostItemDict = host.ItemDictionary;
+            if (!hostItemDict.Any())
                 return;
-            var keys = Enum.GetNames(typeof(TKey));
-            foreach (var pair in items)
+            var keys = GetKeyNames(true);
+            foreach (var key in keys)
             {
-                var key = pair.Key;
-                if (keys.All(x => x != key))
+                if (!hostItemDict.ContainsKey(key))
                     continue;
-                if (!merge || !_items.ContainsKey(key))
+                var value = hostItemDict[key];
+                if (!merge || !ItemDictionary.ContainsKey(key))
                 {
-                    _items.Add(key, pair.Value);
+                    ItemDictionary.Add(key, value);
                     continue;
                 }
-                var item = (dynamic)_items[key];
-                _items[key] = pair.Value;
+                var item = (dynamic)ItemDictionary[key];
+                ItemDictionary[key] = value;
                 if (item.ValueGetValidationFunc != null)
-                    ((dynamic)_items[key]).ValueGetValidationFunc = item.ValueGetValidationFunc;
+                    ((dynamic)ItemDictionary[key]).ValueGetValidationFunc = item.ValueGetValidationFunc;
                 if (item.ValueSetValidationFunc != null)
-                    ((dynamic)_items[key]).ValueSetValidationFunc = item.ValueSetValidationFunc;
+                    ((dynamic)ItemDictionary[key]).ValueSetValidationFunc = item.ValueSetValidationFunc;
             }
         }
-
-        /// <summary>
-        ///     Deserializes the specified file into this instance graph.
-        /// </summary>
-        /// <param name="defValue">
-        ///     The default value.
-        /// </param>
-        /// <param name="merge">
-        ///     true to merge the current elements with the new ones; otherwise, false.
-        /// </param>
-        public void Load(ValueItemHost<TKey> defValue = default, bool merge = true) =>
-            Load(FilePath, defValue, merge);
 
         /// <summary>
         ///     Creates a new file, writes this instance graph into to the file, and then
@@ -162,16 +163,6 @@ namespace SilDev.Investment
         /// </param>
         public void Save(string path, bool overwrite = true) =>
             FileEx.Serialize(path, this, true, overwrite);
-
-        /// <summary>
-        ///     Creates a new file, writes this instance graph into to the file, and then
-        ///     closes the file.
-        /// </summary>
-        /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
-        /// </param>
-        public void Save(bool overwrite = true) =>
-            FileEx.Serialize(FilePath, this, true, overwrite);
 
         /// <summary>
         ///     Adds the specified item to this instance that is addressed to the
@@ -189,9 +180,9 @@ namespace SilDev.Investment
         public void AddItem<TValue>(TKey key, ValueItem<TValue> item) where TValue : IEquatable<TValue>
         {
             var name = GetKeyName(key);
-            if (string.IsNullOrEmpty(name) || _items.ContainsKey(name))
+            if (string.IsNullOrEmpty(name) || ItemDictionary.ContainsKey(name))
                 return;
-            _items.Add(name, item);
+            ItemDictionary.Add(name, item);
         }
 
         /// <summary>
@@ -231,9 +222,9 @@ namespace SilDev.Investment
         public void AddItem<TValue>(TKey key, TValue value, TValue defValue, TValue minValue, TValue maxValue, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default) where TValue : IEquatable<TValue>
         {
             var name = GetKeyName(key);
-            if (string.IsNullOrEmpty(name) || _items.ContainsKey(name))
+            if (string.IsNullOrEmpty(name) || ItemDictionary.ContainsKey(name))
                 return;
-            _items.Add(name, new ValueItem<TValue>(value, defValue, minValue, maxValue, getValidationFunc, setValidationFunc));
+            ItemDictionary.Add(name, new ValueItem<TValue>(value, defValue, minValue, maxValue, getValidationFunc, setValidationFunc));
         }
 
         /// <summary>
@@ -281,22 +272,22 @@ namespace SilDev.Investment
         {
             if (!removeOnlyInvalidElements)
             {
-                _items.Clear();
+                ItemDictionary.Clear();
                 return;
             }
-            if (!_items.Any())
+            if (!ItemDictionary.Any())
                 return;
-            var keys = Enum.GetNames(typeof(TKey));
-            if (_items.Keys.All(x => keys.Any(y => y == x)))
+            var keys = GetKeyNames(true);
+            if (ItemDictionary.Keys.All(x => keys.Any(y => y == x)))
                 return;
-            var items = _items;
-            _items.Clear();
-            foreach (var pair in items)
+            var itemDict = ItemDictionary;
+            ItemDictionary.Clear();
+            foreach (var key in keys)
             {
-                var key = pair.Key;
-                if (keys.All(x => x != key))
+                if (!itemDict.ContainsKey(key))
                     continue;
-                _items.Add(key, pair.Value);
+                var value = itemDict[key];
+                ItemDictionary.Add(key, value);
             }
         }
 
@@ -312,8 +303,13 @@ namespace SilDev.Investment
         /// <summary>
         ///     Retrieves all valid key names.
         /// </summary>
-        public IEnumerable<string> GetKeyNames() =>
-            Enum.GetNames(typeof(TKey));
+        public IEnumerable<string> GetKeyNames(bool sorted = false)
+        {
+            var names = Enum.GetNames(typeof(TKey)).AsEnumerable();
+            if (sorted)
+                names = names.OrderBy(x => x, SortComparer);
+            return names;
+        }
 
         /// <summary>
         ///     Retrieves all valid keys.
@@ -329,12 +325,6 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Retrieves the internal collection of keys and values.
-        /// </summary>
-        protected Dictionary<string, object> GetItems() =>
-            _items;
-
-        /// <summary>
         ///     Gets the element associated with the specified key.
         /// </summary>
         /// <typeparam name="TValue">
@@ -346,7 +336,7 @@ namespace SilDev.Investment
         public ValueItem<TValue> GetItem<TValue>(TKey key) where TValue : IEquatable<TValue>
         {
             var name = GetKeyName(key);
-            if (string.IsNullOrEmpty(name) || !_items.TryGetValue(name, out var obj) || !(obj is ValueItem<TValue> item))
+            if (string.IsNullOrEmpty(name) || !ItemDictionary.TryGetValue(name, out var obj) || !(obj is ValueItem<TValue> item))
                 return new ValueItem<TValue>(default);
             return item;
         }
@@ -360,9 +350,9 @@ namespace SilDev.Investment
         public void RemoveItem(TKey key)
         {
             var name = GetKeyName(key);
-            if (string.IsNullOrEmpty(name) || !_items.ContainsKey(name))
+            if (string.IsNullOrEmpty(name) || !ItemDictionary.ContainsKey(name))
                 return;
-            _items.Remove(name);
+            ItemDictionary.Remove(name);
         }
 
         /// <summary>
@@ -394,12 +384,23 @@ namespace SilDev.Investment
             var name = GetKeyName(key);
             var item = GetItem<TValue>(key);
             item.Value = value;
-            if (_items.ContainsKey(name))
+            if (ItemDictionary.ContainsKey(name))
             {
-                _items[name] = item;
+                ItemDictionary[name] = item;
                 return;
             }
-            _items.Add(name, item);
+            ItemDictionary.Add(name, item);
+        }
+
+        /// <summary>
+        ///     Sorts the elements in the entire <see cref="ItemDictionary"/> using the default
+        ///     <see cref="SortComparer"/>.
+        /// </summary>
+        public void Sort()
+        {
+            var itemDict = ItemDictionary;
+            if (itemDict.Count > 1)
+                ItemDictionary = itemDict.OrderBy(x => x.Key, SortComparer).ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <summary>
@@ -448,7 +449,7 @@ namespace SilDev.Investment
             var builder = new StringBuilder();
             builder.Append("{");
             var first = false;
-            foreach (var pair in _items)
+            foreach (var pair in ItemDictionary)
             {
                 var key = pair.Key;
                 if (!Enum.TryParse(key, out TKey _))
