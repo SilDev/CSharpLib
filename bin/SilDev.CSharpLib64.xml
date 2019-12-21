@@ -664,10 +664,7 @@
             <typeparam name="TKey">
                 The enumeration type of the key.
                 <para>
-                    Please note that only the name of each key is stored. This means that each key
-                    should have a different value to prevent an item from being misallocated.
-                    Therefore, it is recommended that you do not add any value to the keys, because
-                    the compiler does this automatically.
+                    It is strongly recommended to avoid using multiple keys with the same values.
                 </para>
             </typeparam>
         </member>
@@ -688,6 +685,22 @@
                 The contextual information about the source or destination.
             </param>
         </member>
+        <member name="P:SilDev.Investment.ValueItemHost`1.Comparer">
+            <summary>
+                Gets the <see cref="T:System.Collections.IEqualityComparer"/> that is used to determine equality
+                of keys for the dictionary.
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItemHost`1.SortComparer">
+            <summary>
+                Gets the <see cref="T:System.Collections.IComparer"/> to compare keys.
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItemHost`1.ItemDictionary">
+            <summary>
+                Gets the collection of keys and values.
+            </summary>
+        </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
                 Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object for this instance.
@@ -699,7 +712,7 @@
                 The contextual information about the source or destination.
             </param>
         </member>
-        <member name="M:SilDev.Investment.ValueItemHost`1.Load(System.String,SilDev.Investment.ValueItemHost{`0})">
+        <member name="M:SilDev.Investment.ValueItemHost`1.Load(System.String,SilDev.Investment.ValueItemHost{`0},System.Boolean)">
             <summary>
                 Deserializes the specified file into this instance graph.
             </summary>
@@ -708,6 +721,9 @@
             </param>
             <param name="defValue">
                 The default value.
+            </param>
+            <param name="merge">
+                true to merge the current elements with the new ones; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.Save(System.String,System.Boolean)">
@@ -737,25 +753,7 @@
                 The element to add.
             </param>
         </member>
-        <member name="M:SilDev.Investment.ValueItemHost`1.AddItem``1(`0,``0,``0)">
-            <summary>
-                Adds to this instance a newly created item from the specified values that
-                is addressed to the specified key.
-            </summary>
-            <typeparam name="TValue">
-                The type of values stored in the item.
-            </typeparam>
-            <param name="key">
-                The key of the element to add.
-            </param>
-            <param name="value">
-                The value to be set.
-            </param>
-            <param name="defValue">
-                The value used as default.
-            </param>
-        </member>
-        <member name="M:SilDev.Investment.ValueItemHost`1.AddItem``1(`0,``0,``0,``0,``0)">
+        <member name="M:SilDev.Investment.ValueItemHost`1.AddItem``1(`0,``0,``0,``0,``0,System.Func{``0,``0},System.Func{``0,``0})">
             <summary>
                 Adds to this instance a newly created item from the specified values that
                 is addressed to the specified key.
@@ -778,6 +776,48 @@
             <param name="maxValue">
                 The maximum value. Must be larger than the minimum value.
             </param>
+            <param name="getValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is get.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </param>
+            <param name="setValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is set.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.AddItem``1(`0,``0,``0,System.Func{``0,``0},System.Func{``0,``0})">
+            <summary>
+                Adds to this instance a newly created item from the specified values that
+                is addressed to the specified key.
+            </summary>
+            <typeparam name="TValue">
+                The type of values stored in the item.
+            </typeparam>
+            <param name="key">
+                The key of the element to add.
+            </param>
+            <param name="value">
+                The value to be set.
+            </param>
+            <param name="defValue">
+                The value used as default.
+            </param>
+            <param name="getValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is get.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </param>
+            <param name="setValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is set.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </param>
         </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.Clear(System.Boolean)">
             <summary>
@@ -799,7 +839,7 @@
                 The key associated with the name.
             </param>
         </member>
-        <member name="M:SilDev.Investment.ValueItemHost`1.GetKeyNames">
+        <member name="M:SilDev.Investment.ValueItemHost`1.GetKeyNames(System.Boolean)">
             <summary>
                 Retrieves all valid key names.
             </summary>
@@ -807,11 +847,6 @@
         <member name="M:SilDev.Investment.ValueItemHost`1.GetKeys">
             <summary>
                 Retrieves all valid keys.
-            </summary>
-        </member>
-        <member name="M:SilDev.Investment.ValueItemHost`1.GetItems">
-            <summary>
-                Retrieves the internal collection of keys and values.
             </summary>
         </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.GetItem``1(`0)">
@@ -857,6 +892,12 @@
             <param name="value">
                 The value to be set.
             </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItemHost`1.Sort">
+            <summary>
+                Sorts the elements in the entire <see cref="P:SilDev.Investment.ValueItemHost`1.ItemDictionary"/> using the default
+                <see cref="P:SilDev.Investment.ValueItemHost`1.SortComparer"/>.
+            </summary>
         </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.Equals(SilDev.Investment.ValueItemHost{`0})">
             <summary>
@@ -924,7 +965,7 @@
                 The type of the value.
             </typeparam>
         </member>
-        <member name="M:SilDev.Investment.ValueItem`1.#ctor(`0,`0,`0,`0)">
+        <member name="M:SilDev.Investment.ValueItem`1.#ctor(`0,`0,`0,`0,System.Func{`0,`0},System.Func{`0,`0})">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Investment.ValueItem`1"/> with the specified
                 value, default value, minimum value and maximum value.
@@ -941,8 +982,20 @@
             <param name="maxValue">
                 The maximum value. Must be larger than the minimum value.
             </param>
+            <param name="getValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is get.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </param>
+            <param name="setValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is set.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </param>
         </member>
-        <member name="M:SilDev.Investment.ValueItem`1.#ctor(`0,`0)">
+        <member name="M:SilDev.Investment.ValueItem`1.#ctor(`0,`0,System.Func{`0,`0},System.Func{`0,`0})">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Investment.ValueItem`1"/> with the specified
                 value and default value.
@@ -952,6 +1005,18 @@
             </param>
             <param name="defValue">
                 The value used as default.
+            </param>
+            <param name="getValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is get.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </param>
+            <param name="setValidationFunc">
+                The method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is set.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
             </param>
         </member>
         <member name="M:SilDev.Investment.ValueItem`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
@@ -966,18 +1031,10 @@
                 The contextual information about the source or destination.
             </param>
         </member>
-        <member name="P:SilDev.Investment.ValueItem`1.Value">
+        <member name="P:SilDev.Investment.ValueItem`1.MinMaxValidation">
             <summary>
-                Gets or sets the value.
-                <para>
-                    Please note that the setter automatically calibrates the value to be set.
-                    See <see cref="M:SilDev.Investment.ValueItem`1.ValidateValue(`0)"/> for more information.
-                </para>
-            </summary>
-        </member>
-        <member name="P:SilDev.Investment.ValueItem`1.DefValue">
-            <summary>
-                Gets the default value.
+                Gets the value that determines whether <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is validated by
+                <see cref="P:SilDev.Investment.ValueItem`1.MinValue"/> and <see cref="P:SilDev.Investment.ValueItem`1.MaxValue"/>.
             </summary>
         </member>
         <member name="P:SilDev.Investment.ValueItem`1.MinValue">
@@ -988,6 +1045,34 @@
         <member name="P:SilDev.Investment.ValueItem`1.MaxValue">
             <summary>
                 Gets the maximum value, if available; otherwise, the default value is returned.
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.DefValue">
+            <summary>
+                Gets the default value.
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.Value">
+            <summary>
+                Gets or sets the value.
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.ValueGetValidationFunc">
+            <summary>
+                Gets the method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is get, if available;
+                otherwise, the default value is returned.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.Investment.ValueItem`1.ValueSetValidationFunc">
+            <summary>
+                Gets the method that is called when <see cref="P:SilDev.Investment.ValueItem`1.Value"/> is set, if available;
+                otherwise, the default value is returned.
+                <para>
+                    Please note that <see cref="T:System.Func`2"/> methods cannot be serialized.
+                </para>
             </summary>
         </member>
         <member name="M:SilDev.Investment.ValueItem`1.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
@@ -1001,7 +1086,24 @@
                 The contextual information about the source or destination.
             </param>
         </member>
-        <member name="M:SilDev.Investment.ValueItem`1.ValidateValue(`0)">
+        <member name="M:SilDev.Investment.ValueItem`1.ValidateGetValue(`0)">
+            <summary>
+                Ensures that the specified value is valid. If <see cref="P:SilDev.Investment.ValueItem`1.MinValue"/> and
+                <see cref="P:SilDev.Investment.ValueItem`1.MaxValue"/> have been set and are valid, the specified value
+                is calibrated if it is not between <see cref="P:SilDev.Investment.ValueItem`1.MinValue"/> and
+                <see cref="P:SilDev.Investment.ValueItem`1.MaxValue"/>. If the value is default, it also ensures that
+                <see cref="P:SilDev.Investment.ValueItem`1.DefValue"/> is returned instead.
+                <para>
+                    Please note that this method is automatically used for the
+                    <see cref="P:SilDev.Investment.ValueItem`1.Value"/> setter and overwriting can lead to an unexpected
+                    result when setting values.
+                </para>
+            </summary>
+            <param name="value">
+                The value to validate.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.ValueItem`1.ValidateSetValue(`0)">
             <summary>
                 Ensures that the specified value is valid. If <see cref="P:SilDev.Investment.ValueItem`1.MinValue"/> and
                 <see cref="P:SilDev.Investment.ValueItem`1.MaxValue"/> have been set and are valid, the specified value
@@ -5201,9 +5303,6 @@
                 true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
                 otherwise, false.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The current method has no functionality.
-            </exception>
         </member>
         <member name="M:SilDev.Crypto.BinaryToText.EncodeStream(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
@@ -5287,9 +5386,6 @@
                 true to release all resources used by the input and output <see cref="T:System.IO.Stream"/>;
                 otherwise, false.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The current method has no functionality.
-            </exception>
         </member>
         <member name="M:SilDev.Crypto.BinaryToText.DecodeBytes(System.String)">
             <summary>
@@ -5949,9 +6045,6 @@
             <param name="stream">
                 The stream to encrypt.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The current method has no functionality.
-            </exception>
         </member>
         <member name="M:SilDev.Crypto.Checksum.EncryptBytes(System.Byte[])">
             <summary>
@@ -5982,9 +6075,6 @@
             <param name="text">
                 The string to encrypt.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The current method has no functionality.
-            </exception>
         </member>
         <member name="M:SilDev.Crypto.Checksum.EncryptFile(System.String)">
             <summary>
@@ -8999,9 +9089,31 @@
                 Provides basic functionality for the JSON format.
             </summary>
         </member>
-        <member name="M:SilDev.Json.Serialize``1(``0)">
+        <member name="P:SilDev.Json.MaxLength">
             <summary>
-                Serializes the specified object graph into a string representation of an JSON
+                Gets or sets the maximum length of JSON strings that are accepted by the
+                <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> object.
+            </summary>
+        </member>
+        <member name="P:SilDev.Json.RecursionLimit">
+            <summary>
+                Gets or sets the limit for constraining the number of object levels to process.
+            </summary>
+        </member>
+        <member name="M:SilDev.Json.Format(System.String)">
+            <summary>
+                Formats the specified string representation of a JSON document.
+            </summary>
+            <param name="source">
+                The string representation of an JSON document to format.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.Json.Serialize``1(``0,System.Boolean)">
+            <summary>
+                Serializes the specified object graph into a string representation of a JSON
                 document.
             </summary>
             <typeparam name="TSource">
@@ -9009,6 +9121,9 @@
             </typeparam>
             <param name="source">
                 The object graph to serialize.
+            </param>
+            <param name="format">
+                true to format the string representation of the JSON document; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Json.SerializeToFile``1(System.String,``0,System.Boolean)">
@@ -9031,7 +9146,7 @@
         </member>
         <member name="M:SilDev.Json.Deserialize``1(System.String,``0)">
             <summary>
-                Deserializes a string representation of an JSON document into an object graph.
+                Deserializes a string representation of a JSON document into an object graph.
             </summary>
             <typeparam name="TResult">
                 The type of the result.
@@ -15821,6 +15936,35 @@
             </param>
             <exception cref="T:System.ArgumentNullException">
                 stringBuilder, format or args is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringThenClear(System.Text.StringBuilder)">
+            <summary>
+                Converts the value of this <see cref="T:System.Text.StringBuilder"/> instance to <see cref="T:System.String"/>
+                and removes all characters before <see cref="T:System.String"/> is returned.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to convert.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringThenClear(System.Text.StringBuilder,System.Int32,System.Int32)">
+            <summary>
+                Converts the value of a substring of this <see cref="T:System.Text.StringBuilder"/> instance to
+                <see cref="T:System.String"/> and removes all characters before <see cref="T:System.String"/> is
+                returned.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to convert.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                startIndex or length is less than zero. -or- The sum of startIndex and length is
+                greater than the length of the current instance.
             </exception>
         </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnit,System.Boolean,System.Boolean,SilDev.SizeOption)">
