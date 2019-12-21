@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2019-12-12 22:11
+// Version:  2019-12-21 20:00
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -50,8 +50,22 @@ namespace SilDev.Investment
         /// <param name="maxValue">
         ///     The maximum value. Must be larger than the minimum value.
         /// </param>
-        public ValueItem(TValue value, TValue defValue, TValue minValue, TValue maxValue)
+        /// <param name="getValidationFunc">
+        ///     The method that is called when <see cref="Value"/> is get.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </param>
+        /// <param name="setValidationFunc">
+        ///     The method that is called when <see cref="Value"/> is set.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </param>
+        public ValueItem(TValue value, TValue defValue, TValue minValue, TValue maxValue, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default)
         {
+            ValueGetValidationFunc = getValidationFunc;
+            ValueSetValidationFunc = setValidationFunc;
             if (IsMinMaxValidationType(typeof(TValue)))
             {
                 var obj = (object)minValue;
@@ -81,11 +95,19 @@ namespace SilDev.Investment
         /// <param name="defValue">
         ///     The value used as default.
         /// </param>
-        public ValueItem(TValue value, TValue defValue = default)
-        {
-            DefValue = defValue;
-            Value = value;
-        }
+        /// <param name="getValidationFunc">
+        ///     The method that is called when <see cref="Value"/> is get.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </param>
+        /// <param name="setValidationFunc">
+        ///     The method that is called when <see cref="Value"/> is set.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </param>
+        public ValueItem(TValue value, TValue defValue = default, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default) : this(value, defValue, default, default, getValidationFunc, setValidationFunc) { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> class with
@@ -116,13 +138,13 @@ namespace SilDev.Investment
         ///     Gets or sets the value.
         ///     <para>
         ///         Please note that the setter automatically calibrates the value to be set.
-        ///         See <see cref="ValidateValue(TValue)"/> for more information.
+        ///         See <see cref="ValidateSetValue(TValue)"/> for more information.
         ///     </para>
         /// </summary>
         public TValue Value
         {
-            get => _value;
-            set => _value = ValidateValue(value);
+            get => ValidateGetValue(_value);
+            set => _value = ValidateSetValue(value);
         }
 
         /// <summary>
@@ -139,6 +161,24 @@ namespace SilDev.Investment
         ///     Gets the maximum value, if available; otherwise, the default value is returned.
         /// </summary>
         public TValue MaxValue { get; }
+
+        /// <summary>
+        ///     Gets the method that is called when <see cref="Value"/> is get, if available;
+        ///     otherwise, the default value is returned.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </summary>
+        public Func<TValue, TValue> ValueGetValidationFunc { get; set; }
+
+        /// <summary>
+        ///     Gets the method that is called when <see cref="Value"/> is set, if available;
+        ///     otherwise, the default value is returned.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </summary>
+        public Func<TValue, TValue> ValueSetValidationFunc { get; set; }
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object for this instance.
@@ -201,7 +241,32 @@ namespace SilDev.Investment
         /// <param name="value">
         ///     The value to validate.
         /// </param>
-        protected virtual TValue ValidateValue(TValue value)
+        protected virtual TValue ValidateGetValue(TValue value)
+        {
+            var newValue = value;
+            if (ValueGetValidationFunc != default)
+                newValue = ValueGetValidationFunc(newValue);
+            if ((dynamic)newValue == default(TValue))
+                newValue = DefValue;
+            return newValue;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/> have been set and are valid, the specified value
+        ///     is calibrated if it is not between <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/>. If the value is default, it also ensures that
+        ///     <see cref="DefValue"/> is returned instead.
+        ///     <para>
+        ///         Please note that this method is automatically used for the
+        ///         <see cref="Value"/> setter and overwriting can lead to an unexpected
+        ///         result when setting values.
+        ///     </para>
+        /// </summary>
+        /// <param name="value">
+        ///     The value to validate.
+        /// </param>
+        protected virtual TValue ValidateSetValue(TValue value)
         {
             var newValue = value;
             if (_minMaxValidation)
@@ -211,6 +276,8 @@ namespace SilDev.Investment
                 if ((dynamic)newValue > MaxValue)
                     newValue = MaxValue;
             }
+            if (ValueSetValidationFunc != default)
+                newValue = ValueSetValidationFunc(newValue);
             if ((dynamic)newValue == default(TValue))
                 newValue = DefValue;
             return newValue;
@@ -279,7 +346,7 @@ namespace SilDev.Investment
                 builder.AppendFormat(CultureConfig.GlobalCultureInfo, "{0}={1}", name, value);
             }
             builder.Append("}");
-            return builder.ToString();
+            return builder.ToStringThenClear();
         }
 
         /// <summary>

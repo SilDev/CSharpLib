@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2019-12-15 14:58
+// Version:  2019-12-21 20:00
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -61,7 +61,14 @@ namespace SilDev.Investment
                 throw new ArgumentNullException(nameof(info));
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(ValueItemHost<TKey>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-            _items = (Dictionary<string, object>)info.GetValue(nameof(_items), typeof(Dictionary<string, object>));
+            var items = (Dictionary<string, object>)info.GetValue(nameof(_items), typeof(Dictionary<string, object>));
+            if (items.Count < 2)
+            {
+                _items = items;
+                return;
+            }
+            var comparer = new Comparison.AlphanumericComparer();
+            _items = items.OrderBy(x => x.Key, comparer).ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <summary>
@@ -98,9 +105,13 @@ namespace SilDev.Investment
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public void Load(string path, ValueItemHost<TKey> defValue = default)
+        /// <param name="merge">
+        ///     true to merge the current elements with the new ones; otherwise, false.
+        /// </param>
+        public void Load(string path, ValueItemHost<TKey> defValue = default, bool merge = true)
         {
-            _items.Clear();
+            if (!merge)
+                _items.Clear();
             var host = FileEx.Deserialize(path, true, defValue);
             if (host == null)
                 return;
@@ -113,7 +124,17 @@ namespace SilDev.Investment
                 var key = pair.Key;
                 if (keys.All(x => x != key))
                     continue;
-                _items.Add(key, pair.Value);
+                if (!merge || !_items.ContainsKey(key))
+                {
+                    _items.Add(key, pair.Value);
+                    continue;
+                }
+                var item = (dynamic)_items[key];
+                _items[key] = pair.Value;
+                if (item.ValueGetValidationFunc != null)
+                    ((dynamic)_items[key]).ValueGetValidationFunc = item.ValueGetValidationFunc;
+                if (item.ValueSetValidationFunc != null)
+                    ((dynamic)_items[key]).ValueSetValidationFunc = item.ValueSetValidationFunc;
             }
         }
 
@@ -123,8 +144,11 @@ namespace SilDev.Investment
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public void Load(ValueItemHost<TKey> defValue = default) =>
-            Load(FilePath, defValue);
+        /// <param name="merge">
+        ///     true to merge the current elements with the new ones; otherwise, false.
+        /// </param>
+        public void Load(ValueItemHost<TKey> defValue = default, bool merge = true) =>
+            Load(FilePath, defValue, merge);
 
         /// <summary>
         ///     Creates a new file, writes this instance graph into to the file, and then
@@ -186,12 +210,30 @@ namespace SilDev.Investment
         /// <param name="defValue">
         ///     The value used as default.
         /// </param>
-        public void AddItem<TValue>(TKey key, TValue value, TValue defValue = default) where TValue : IEquatable<TValue>
+        /// <param name="minValue">
+        ///     The minimum value. Must be smaller than the maximum value.
+        /// </param>
+        /// <param name="maxValue">
+        ///     The maximum value. Must be larger than the minimum value.
+        /// </param>
+        /// <param name="getValidationFunc">
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is get.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </param>
+        /// <param name="setValidationFunc">
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is set.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
+        /// </param>
+        public void AddItem<TValue>(TKey key, TValue value, TValue defValue, TValue minValue, TValue maxValue, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default) where TValue : IEquatable<TValue>
         {
             var name = GetKeyName(key);
             if (string.IsNullOrEmpty(name) || _items.ContainsKey(name))
                 return;
-            _items.Add(name, new ValueItem<TValue>(value, defValue));
+            _items.Add(name, new ValueItem<TValue>(value, defValue, minValue, maxValue, getValidationFunc, setValidationFunc));
         }
 
         /// <summary>
@@ -210,19 +252,20 @@ namespace SilDev.Investment
         /// <param name="defValue">
         ///     The value used as default.
         /// </param>
-        /// <param name="minValue">
-        ///     The minimum value. Must be smaller than the maximum value.
+        /// <param name="getValidationFunc">
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is get.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
         /// </param>
-        /// <param name="maxValue">
-        ///     The maximum value. Must be larger than the minimum value.
+        /// <param name="setValidationFunc">
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is set.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///     </para>
         /// </param>
-        public void AddItem<TValue>(TKey key, TValue value, TValue defValue, TValue minValue, TValue maxValue) where TValue : IEquatable<TValue>
-        {
-            var name = GetKeyName(key);
-            if (string.IsNullOrEmpty(name) || _items.ContainsKey(name))
-                return;
-            _items.Add(name, new ValueItem<TValue>(value, defValue, minValue, maxValue));
-        }
+        public void AddItem<TValue>(TKey key, TValue value, TValue defValue = default, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default) where TValue : IEquatable<TValue> =>
+            AddItem(key, value, defValue, default, default, getValidationFunc, setValidationFunc);
 
         /// <summary>
         ///     Removes all keys and values from this instance.
@@ -418,7 +461,7 @@ namespace SilDev.Investment
                 builder.AppendFormat(CultureConfig.GlobalCultureInfo, "Key={0},Item={1}", key, item);
             }
             builder.Append("}");
-            return builder.ToString();
+            return builder.ToStringThenClear();
         }
 
         /// <summary>
