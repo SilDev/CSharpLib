@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2019-10-31 21:57
+// Version:  2019-12-21 23:14
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,7 +19,9 @@ namespace SilDev
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Security;
 
     /// <summary>
     ///     Provides static methods and base classes used for the comparison of two or
@@ -424,10 +426,9 @@ namespace SilDev
         /// <summary>
         ///     Provides a base class for comparison.
         /// </summary>
+        [Serializable]
         public class AlphanumericComparer : IComparer<object>
         {
-            private readonly bool _d;
-
             /// <summary>
             ///     Initializes a new instance of the <see cref="AlphanumericComparer"/>
             ///     class. A parameter specifies whether the order is descended.
@@ -436,7 +437,33 @@ namespace SilDev
             ///     true to enable the descending order; otherwise, false.
             /// </param>
             public AlphanumericComparer(bool descendant = false) =>
-                _d = descendant;
+                Descendant = descendant;
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="AlphanumericComparer"/> class with
+            ///     serialized data.
+            /// </summary>
+            /// <param name="info">
+            ///     The object that holds the serialized object data.
+            /// </param>
+            /// <param name="context">
+            ///     The contextual information about the source or destination.
+            /// </param>
+            protected AlphanumericComparer(SerializationInfo info, StreamingContext context)
+            {
+                if (info == null)
+                    throw new ArgumentNullException(nameof(info));
+
+                if (Log.DebugMode > 1)
+                    Log.Write($"{nameof(AlphanumericComparer)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+
+                Descendant = info.GetBoolean(nameof(Descendant));
+            }
+
+            /// <summary>
+            ///     Gets the value that determines whether the order is descended.
+            /// </summary>
+            protected bool Descendant { get; }
 
             /// <summary>
             ///     Compare two specified objects and returns an integer that indicates their
@@ -450,10 +477,10 @@ namespace SilDev
             /// </param>
             public int Compare(object a, object b)
             {
-                var s1 = !_d ? a as string : b as string;
+                var s1 = !Descendant ? a as string : b as string;
                 if (s1 == null)
                     return 0;
-                var s2 = !_d ? b as string : a as string;
+                var s2 = !Descendant ? b as string : a as string;
                 if (s2 == null)
                     return 0;
                 try
@@ -506,6 +533,27 @@ namespace SilDev
                 {
                     return string.Compare(s1, s2, StringComparison.InvariantCulture);
                 }
+            }
+
+            /// <summary>
+            ///     Sets the <see cref="SerializationInfo"/> object for this instance.
+            /// </summary>
+            /// <param name="info">
+            ///     The object that holds the serialized object data.
+            /// </param>
+            /// <param name="context">
+            ///     The contextual information about the source or destination.
+            /// </param>
+            [SecurityCritical]
+            public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                if (info == null)
+                    throw new ArgumentNullException(nameof(info));
+
+                if (Log.DebugMode > 1)
+                    Log.Write($"{nameof(AlphanumericComparer)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+
+                info.AddValue(nameof(Descendant), Descendant);
             }
         }
     }
