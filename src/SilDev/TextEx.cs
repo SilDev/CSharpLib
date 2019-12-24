@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2019-10-22 16:16
+// Version:  2019-12-24 09:13
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -151,7 +151,6 @@ namespace SilDev
                 var srcDir = Path.GetDirectoryName(srcFile);
                 var newFile = PathEx.Combine(srcDir, Path.GetRandomFileName());
                 File.Create(newFile).Close();
-                FileEx.SetAttributes(newFile, FileAttributes.Hidden);
                 using (var sr = new StreamReader(srcFile))
                 {
                     var ca = new char[4096];
@@ -162,17 +161,10 @@ namespace SilDev
                             sw.Write(ca, 0, i);
                     }
                 }
-                var srcHash = new Crypto.Md5().EncryptFile(srcFile);
-                var newHash = new Crypto.Md5().EncryptFile(newFile);
-                if (srcHash.Equals(newHash, StringComparison.Ordinal))
-                {
-                    File.Delete(newFile);
-                    return true;
-                }
-                File.Delete(srcFile);
-                File.Move(newFile, srcFile);
-                FileEx.SetAttributes(srcFile, FileAttributes.Normal);
-                return true;
+                if (!FileEx.ContentIsEqual(srcFile, newFile))
+                    return FileEx.Move(newFile, srcFile, true);
+                FileEx.TryDelete(newFile);
+                return false;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
