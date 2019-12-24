@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2019-12-21 22:49
+// Version:  2019-12-24 09:14
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev.Investment
     using System.Runtime.Serialization;
     using System.Security;
     using System.Text;
+    using System.Web.Script.Serialization;
 
     /// <summary>
     ///     Defines a value type that can store and retrieve data.
@@ -137,7 +138,7 @@ namespace SilDev.Investment
         ///     Gets the value that determines whether <see cref="Value"/> is validated by
         ///     <see cref="MinValue"/> and <see cref="MaxValue"/>.
         /// </summary>
-        protected bool MinMaxValidation { get; }
+        public bool MinMaxValidation { get; }
 
         /// <summary>
         ///     Gets the minimum value, if available; otherwise, the default value is returned.
@@ -170,6 +171,7 @@ namespace SilDev.Investment
         ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
         ///     </para>
         /// </summary>
+        [ScriptIgnore]
         public Func<TValue, TValue> ValueGetValidationFunc { get; set; }
 
         /// <summary>
@@ -179,6 +181,7 @@ namespace SilDev.Investment
         ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
         ///     </para>
         /// </summary>
+        [ScriptIgnore]
         public Func<TValue, TValue> ValueSetValidationFunc { get; set; }
 
         /// <summary>

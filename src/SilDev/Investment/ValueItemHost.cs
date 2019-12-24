@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2019-12-21 22:49
+// Version:  2019-12-24 09:14
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -16,7 +16,6 @@
 namespace SilDev.Investment
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -35,15 +34,14 @@ namespace SilDev.Investment
     [Serializable]
     public class ValueItemHost<TKey> : ISerializable where TKey : struct, Enum
     {
+        [NonSerialized]
+        private IDictionary<string, object> _itemDictionary;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValueItemHost{TKey}"/>.
         /// </summary>
-        public ValueItemHost()
-        {
-            Comparer = StringComparer.InvariantCulture;
-            SortComparer = new Comparison.AlphanumericComparer();
-            ItemDictionary = new Dictionary<string, object>(Comparer);
-        }
+        public ValueItemHost() =>
+            ItemDictionary = new Dictionary<string, object>(StringComparer.InvariantCulture);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValueItemHost{TKey}"/> class with
@@ -63,26 +61,22 @@ namespace SilDev.Investment
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(ValueItemHost<TKey>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
-            Comparer = (IEqualityComparer<string>)info.GetValue(nameof(ItemDictionary), typeof(IEqualityComparer<string>));
-            SortComparer = (IComparer<string>)info.GetValue(nameof(ItemDictionary), typeof(IComparer<string>));
             ItemDictionary = (Dictionary<string, object>)info.GetValue(nameof(ItemDictionary), typeof(Dictionary<string, object>));
         }
 
         /// <summary>
-        ///     Gets the <see cref="IEqualityComparer"/> that is used to determine equality
-        ///     of keys for the dictionary.
-        /// </summary>
-        protected IEqualityComparer<string> Comparer { get; private set; }
-
-        /// <summary>
-        ///     Gets the <see cref="IComparer"/> to compare keys.
-        /// </summary>
-        protected IComparer<string> SortComparer { get; private set; }
-
-        /// <summary>
         ///     Gets the collection of keys and values.
         /// </summary>
-        protected Dictionary<string, object> ItemDictionary { get; private set; }
+        public IReadOnlyDictionary<string, object> ItemDictionary
+        {
+            get
+            {
+                if (_itemDictionary == default)
+                    _itemDictionary = new Dictionary<string, object>(StringComparer.InvariantCulture);
+                return (IReadOnlyDictionary<string, object>)_itemDictionary;
+            }
+            private set => _itemDictionary = value as Dictionary<string, object>;
+        }
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object for this instance.
@@ -102,8 +96,6 @@ namespace SilDev.Investment
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(ValueItemHost<TKey>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
-            info.AddValue(nameof(Comparer), Comparer);
-            info.AddValue(nameof(SortComparer), SortComparer);
             info.AddValue(nameof(ItemDictionary), ItemDictionary);
         }
 
@@ -121,13 +113,11 @@ namespace SilDev.Investment
         /// </param>
         public void Load(string path, ValueItemHost<TKey> defValue = default, bool merge = true)
         {
-            if (!merge)
-                ItemDictionary.Clear();
-            var host = FileEx.Deserialize(path, true, defValue);
-            if (host == null)
+            if (!merge && ItemDictionary.Any())
+                _itemDictionary.Clear();
+            var host = FileEx.Deserialize(path, defValue);
+            if (host == default)
                 return;
-            Comparer = host.Comparer;
-            SortComparer = host.SortComparer;
             var hostItemDict = host.ItemDictionary;
             if (!hostItemDict.Any())
                 return;
@@ -139,15 +129,15 @@ namespace SilDev.Investment
                 var value = hostItemDict[key];
                 if (!merge || !ItemDictionary.ContainsKey(key))
                 {
-                    ItemDictionary.Add(key, value);
+                    _itemDictionary.Add(key, value);
                     continue;
                 }
-                var item = (dynamic)ItemDictionary[key];
-                ItemDictionary[key] = value;
+                var item = (dynamic)_itemDictionary[key];
+                _itemDictionary[key] = value;
                 if (item.ValueGetValidationFunc != null)
-                    ((dynamic)ItemDictionary[key]).ValueGetValidationFunc = item.ValueGetValidationFunc;
+                    ((dynamic)_itemDictionary[key]).ValueGetValidationFunc = item.ValueGetValidationFunc;
                 if (item.ValueSetValidationFunc != null)
-                    ((dynamic)ItemDictionary[key]).ValueSetValidationFunc = item.ValueSetValidationFunc;
+                    ((dynamic)_itemDictionary[key]).ValueSetValidationFunc = item.ValueSetValidationFunc;
             }
         }
 
@@ -182,7 +172,7 @@ namespace SilDev.Investment
             var name = GetKeyName(key);
             if (string.IsNullOrEmpty(name) || ItemDictionary.ContainsKey(name))
                 return;
-            ItemDictionary.Add(name, item);
+            _itemDictionary.Add(name, item);
         }
 
         /// <summary>
@@ -224,7 +214,7 @@ namespace SilDev.Investment
             var name = GetKeyName(key);
             if (string.IsNullOrEmpty(name) || ItemDictionary.ContainsKey(name))
                 return;
-            ItemDictionary.Add(name, new ValueItem<TValue>(value, defValue, minValue, maxValue, getValidationFunc, setValidationFunc));
+            _itemDictionary.Add(name, new ValueItem<TValue>(value, defValue, minValue, maxValue, getValidationFunc, setValidationFunc));
         }
 
         /// <summary>
@@ -272,7 +262,8 @@ namespace SilDev.Investment
         {
             if (!removeOnlyInvalidElements)
             {
-                ItemDictionary.Clear();
+                if (ItemDictionary.Any())
+                    _itemDictionary.Clear();
                 return;
             }
             if (!ItemDictionary.Any())
@@ -281,13 +272,13 @@ namespace SilDev.Investment
             if (ItemDictionary.Keys.All(x => keys.Any(y => y == x)))
                 return;
             var itemDict = ItemDictionary;
-            ItemDictionary.Clear();
+            _itemDictionary.Clear();
             foreach (var key in keys)
             {
                 if (!itemDict.ContainsKey(key))
                     continue;
                 var value = itemDict[key];
-                ItemDictionary.Add(key, value);
+                _itemDictionary.Add(key, value);
             }
         }
 
@@ -307,7 +298,7 @@ namespace SilDev.Investment
         {
             var names = Enum.GetNames(typeof(TKey)).AsEnumerable();
             if (sorted)
-                names = names.OrderBy(x => x, SortComparer);
+                names = names.OrderBy(x => x, new Comparison.AlphanumericComparer());
             return names;
         }
 
@@ -352,7 +343,7 @@ namespace SilDev.Investment
             var name = GetKeyName(key);
             if (string.IsNullOrEmpty(name) || !ItemDictionary.ContainsKey(name))
                 return;
-            ItemDictionary.Remove(name);
+            _itemDictionary.Remove(name);
         }
 
         /// <summary>
@@ -386,21 +377,21 @@ namespace SilDev.Investment
             item.Value = value;
             if (ItemDictionary.ContainsKey(name))
             {
-                ItemDictionary[name] = item;
+                _itemDictionary[name] = item;
                 return;
             }
-            ItemDictionary.Add(name, item);
+            _itemDictionary.Add(name, item);
         }
 
         /// <summary>
-        ///     Sorts the elements in the entire <see cref="ItemDictionary"/> using the default
-        ///     <see cref="SortComparer"/>.
+        ///     Sorts the elements in the entire <see cref="ItemDictionary"/> using the
+        ///     <see cref="Comparison.AlphanumericComparer"/> comparer.
         /// </summary>
         public void Sort()
         {
             var itemDict = ItemDictionary;
             if (itemDict.Count > 1)
-                ItemDictionary = itemDict.OrderBy(x => x.Key, SortComparer).ToDictionary(x => x.Key, x => x.Value);
+                ItemDictionary = itemDict.OrderBy(x => x.Key, new Comparison.AlphanumericComparer()).ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <summary>
