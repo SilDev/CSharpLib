@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2019-12-24 09:09
+// Version:  2019-12-24 19:35
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -339,7 +339,10 @@ namespace SilDev
         /// <param name="overwrite">
         ///     true to allow an existing file to be overwritten; otherwise, false.
         /// </param>
-        public static bool SerializeToFile<TSource>(string path, TSource source, bool overwrite = true)
+        /// <param name="formatted">
+        ///     true to save the JSON document formatted; otherwise, false.
+        /// </param>
+        public static bool SerializeToFile<TSource>(string path, TSource source, bool overwrite = true, bool formatted = true)
         {
             try
             {
@@ -350,7 +353,10 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(output));
                 var dest = PathEx.Combine(path);
                 using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                    Format(fs, output);
+                    if (!formatted)
+                        fs.WriteBytes(output);
+                    else
+                        Format(fs, output);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())
