@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2019-12-20 22:16
+// Version:  2019-12-24 09:09
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,7 +17,9 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Web.Script.Serialization;
 
@@ -102,43 +104,58 @@ namespace SilDev
                 stream.WriteByte(value);
         }
 
-        private static void FormatToStream(string inputString, Stream outputStream)
+        private static void WriteBytes(this Stream stream, string values)
         {
-            if (inputString == null)
-                throw new ArgumentNullException(nameof(inputString));
-            if (outputStream == null)
-                throw new ArgumentNullException(nameof(outputStream));
+            if (string.IsNullOrEmpty(values))
+                return;
+            foreach (var c in values.ToCharArray())
+                stream?.WriteByte(c);
+        }
 
-            const int width = 3;
-            var depth = 0;
-            var isEscape = false;
-            var isValue = false;
-            var newLine = Environment.NewLine.ToBytes();
-
-            var input = inputString.ToCharArray();
-            var output = outputStream;
-            foreach (var c in input)
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        private static void Format(Stream stream, char[] buffer, int count, char spacer, ref int depth, ref bool isEscape, ref bool isValue)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (count < 0)
+                throw new ArgumentException();
+            if (count > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            int width;
+            switch (spacer)
             {
+                case '\t':
+                    width = 1;
+                    break;
+                case ' ':
+                    width = 3;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(spacer));
+            }
+            for (var i = 0; i < count; i++)
+            {
+                var c = buffer[i];
                 if (isEscape)
                 {
                     isEscape = false;
-                    output.WriteByte(c);
+                    stream.WriteByte(c);
                     continue;
                 }
                 switch (c)
                 {
                     case '\\':
                         isEscape = true;
-                        output.WriteByte(c);
+                        stream.WriteByte(c);
                         continue;
                     case '"':
                         isValue = !isValue;
-                        output.WriteByte(c);
+                        stream.WriteByte(c);
                         continue;
                     default:
                         if (isValue)
                         {
-                            output.WriteByte(c);
+                            stream.WriteByte(c);
                             continue;
                         }
                         break;
@@ -146,35 +163,66 @@ namespace SilDev
                 switch (c)
                 {
                     case ',':
-                        output.WriteByte(c);
-                        output.WriteBytes(newLine);
+                        stream.WriteByte(c);
+                        stream.WriteBytes(Environment.NewLine);
                         if (depth > 0)
-                            output.WriteByte(' ', depth * width);
+                            stream.WriteByte(spacer, depth * width);
                         break;
                     case '[':
                     case '{':
-                        output.WriteByte(c);
-                        output.WriteBytes(newLine);
-                        if (++depth > 0)
-                            output.WriteByte(' ', depth * width);
+                    {
+                        stream.WriteByte(c);
+                        var ni = i + 1;
+                        var hasValue = ni >= count;
+                        if (!hasValue)
+                        {
+                            var nc = buffer[ni];
+                            hasValue = nc != ']' && nc != '}';
+                        }
+                        if (hasValue)
+                            stream.WriteBytes(Environment.NewLine);
+                        if (++depth > 0 && hasValue)
+                            stream.WriteByte(spacer, depth * width);
                         break;
+                    }
                     case ']':
                     case '}':
-                        output.WriteBytes(newLine);
-                        if (--depth > 0)
-                            output.WriteByte(' ', depth * width);
-                        output.WriteByte(c);
+                    {
+                        var pi = i - 1;
+                        var hasValue = pi < 0;
+                        if (!hasValue)
+                        {
+                            var pc = buffer[pi];
+                            hasValue = pc != '[' && pc != '{';
+                        }
+                        if (hasValue)
+                            stream.WriteBytes(Environment.NewLine);
+                        if (--depth > 0 && hasValue)
+                            stream.WriteByte(spacer, depth * width);
+                        stream.WriteByte(c);
                         break;
+                    }
                     case ':':
-                        output.WriteByte(c);
-                        output.WriteByte(' ');
+                        stream.WriteByte(c);
+                        stream.WriteByte(' ');
                         break;
                     default:
                         if (!char.IsWhiteSpace(c))
-                            output.WriteByte(c);
+                            stream.WriteByte(c);
                         break;
                 }
             }
+        }
+
+        private static void Format(Stream stream, IEnumerable<char> source)
+        {
+            if (stream == null || source == null)
+                return;
+            var depth = 0;
+            var isEscape = false;
+            var isValue = false;
+            var buffer = source.ToArray();
+            Format(stream, buffer, buffer.Length, ' ', ref depth, ref isEscape, ref isValue);
         }
 
         /// <summary>
@@ -193,7 +241,7 @@ namespace SilDev
             var ms = new MemoryStream();
             try
             {
-                FormatToStream(source, ms);
+                Format(ms, source);
                 ms.Seek(0, SeekOrigin.Begin);
                 using (var sr = new StreamReader(ms, TextEx.DefaultEncoding))
                 {
@@ -205,6 +253,43 @@ namespace SilDev
             {
                 ms?.Dispose();
             }
+        }
+
+        /// <summary>
+        ///     Formats the specified JSON file and overwrites it if necessary.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     path is null.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     path is invalid.
+        /// </exception>
+        public static bool FormatFile(string path)
+        {
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+            var srcFile = PathEx.Combine(path);
+            if (!PathEx.IsValidPath(srcFile))
+                throw new IOException();
+            var srcDir = Path.GetDirectoryName(srcFile);
+            var newFile = PathEx.GetUniquePath(srcDir, "tmp", ".json");
+            using (var sr = new StreamReader(srcFile))
+            {
+                using (var fs = new FileStream(newFile, FileMode.Create))
+                {
+                    int count;
+                    var ca = new char[4096];
+                    var depth = 0;
+                    var isEscape = false;
+                    var isValue = false;
+                    while ((count = sr.Read(ca, 0, ca.Length)) > 0)
+                        Format(fs, ca, count, ' ', ref depth, ref isEscape, ref isValue);
+                }
+            }
+            if (!FileEx.ContentIsEqual(srcFile, newFile))
+                return FileEx.Move(newFile, srcFile, true);
+            FileEx.TryDelete(newFile);
+            return false;
         }
 
         /// <summary>
@@ -265,7 +350,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(output));
                 var dest = PathEx.Combine(path);
                 using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                    FormatToStream(output, fs);
+                    Format(fs, output);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())
