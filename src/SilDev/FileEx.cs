@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-10-31 21:58
+// Version:  2019-12-24 06:28
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -33,6 +34,55 @@ namespace SilDev
     /// </summary>
     public static class FileEx
     {
+        private const int CsDatHeaderSize = 16;
+
+        private static byte[] DefCsDatHeader =>
+            new byte[]
+            {
+                // type version
+                1, 0, 0, 0,
+
+                // type identifier 1-5 ("CSDAT", "C# Data")
+                (byte)'C',
+                (byte)'S',
+                (byte)'D',
+                (byte)'A',
+                (byte)'T',
+
+                // compression mode
+                0,
+
+                // reserved for upcoming features
+                0, 0, 0,
+                0, 0, 0
+            };
+
+        private static bool CsDatHeaderIsValid(IReadOnlyList<byte> header)
+        {
+            if (header.Count != CsDatHeaderSize)
+                return false;
+            var defHeader = DefCsDatHeader;
+            for (var i = 0; i < CsDatHeaderSize; i++)
+                switch ((CsDatHeaderKey)i)
+                {
+                    case CsDatHeaderKey.CompressionMode:
+                    {
+                        var value = header[i];
+                        if (!value.IsBetween((byte)0, (byte)1))
+                            return false;
+                        break;
+                    }
+                    default:
+                    {
+                        var value = header[i];
+                        if (value != defHeader[i])
+                            return false;
+                        break;
+                    }
+                }
+            return true;
+        }
+
         /// <summary>
         ///     Creates a new file, writes the specified object graph into to the file, and then
         ///     closes the file.
@@ -58,14 +108,19 @@ namespace SilDev
             {
                 var dest = PathEx.Combine(path);
                 using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
+                {
+                    var header = DefCsDatHeader;
+                    header[(int)CsDatHeaderKey.CompressionMode] = Convert.ToByte(compress);
+                    fs.WriteBytes(header);
                     if (compress)
+                    {
                         using (var ms = new MemoryStream(source.SerializeObject().Zip()))
                             ms.WriteTo(fs);
-                    else
-                    {
-                        var bf = new BinaryFormatter();
-                        bf.Serialize(fs, source);
+                        return true;
                     }
+                    var bf = new BinaryFormatter();
+                    bf.Serialize(fs, source);
+                }
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -84,13 +139,10 @@ namespace SilDev
         /// <param name="path">
         ///     The file to deserialize.
         /// </param>
-        /// <param name="decompress">
-        ///     true to decompress the file before deserialization; otherwise, false.
-        /// </param>
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static TResult Deserialize<TResult>(string path, bool decompress = false, TResult defValue = default)
+        public static TResult Deserialize<TResult>(string path, TResult defValue = default)
         {
             try
             {
@@ -99,6 +151,20 @@ namespace SilDev
                     return defValue;
                 TResult result;
                 using (var fs = new FileStream(src, FileMode.Open, FileAccess.Read))
+                {
+                    bool decompress;
+                    var header = new byte[CsDatHeaderSize];
+                    fs.Read(header, 0, header.Length);
+                    if (CsDatHeaderIsValid(header))
+                        decompress = header[(int)CsDatHeaderKey.CompressionMode] > 0;
+                    else
+                    {
+                        decompress = header[0] == 0x1f &&
+                                     header[1] == 0x8b &&
+                                     header[2] == 0x08 &&
+                                     header[3] == 0x00;
+                        fs.Position = 0;
+                    }
                     if (decompress)
                         using (var ms = new MemoryStream())
                         {
@@ -110,6 +176,7 @@ namespace SilDev
                         var bf = new BinaryFormatter();
                         result = (TResult)bf.Deserialize(fs);
                     }
+                }
                 return result;
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -118,21 +185,6 @@ namespace SilDev
                 return defValue;
             }
         }
-
-        /// <summary>
-        ///     Deserializes the specified file into an object graph.
-        /// </summary>
-        /// <typeparam name="TResult">
-        ///     The type of the result.
-        /// </typeparam>
-        /// <param name="path">
-        ///     The file to deserialize.
-        /// </param>
-        /// <param name="defValue">
-        ///     The default value.
-        /// </param>
-        public static TResult Deserialize<TResult>(string path, TResult defValue) =>
-            Deserialize(path, false, defValue);
 
         /// <summary>
         ///     Determines whether the specified file exists.
@@ -1401,6 +1453,27 @@ namespace SilDev
                 sa = sa.Take(4).ToList();
             s = sa.Join(".");
             return s;
+        }
+
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        private enum CsDatHeaderKey
+        {
+            VersionNumber1,
+            VersionNumber2,
+            VersionNumber3,
+            VersionNumber4,
+            IdentifierChar1,
+            IdentifierChar2,
+            IdentifierChar3,
+            IdentifierChar4,
+            IdentifierChar5,
+            CompressionMode,
+            Reserved1,
+            Reserved2,
+            Reserved3,
+            Reserved4,
+            Reserved5,
+            Reserved6
         }
     }
 }
