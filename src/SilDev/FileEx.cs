@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-12-24 08:37
+// Version:  2019-12-24 09:06
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -997,7 +997,7 @@ namespace SilDev
             var dest = PathEx.Combine(destFile);
             try
             {
-                if (!overwrite || new FileInfo(src).GetHashCode() != new FileInfo(dest).GetHashCode())
+                if (!overwrite && !ContentIsEqual(src, dest))
                     throw new AggregateException();
                 File.Delete(src);
                 return true;
