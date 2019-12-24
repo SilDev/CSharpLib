@@ -685,17 +685,6 @@
                 The contextual information about the source or destination.
             </param>
         </member>
-        <member name="P:SilDev.Investment.ValueItemHost`1.Comparer">
-            <summary>
-                Gets the <see cref="T:System.Collections.IEqualityComparer"/> that is used to determine equality
-                of keys for the dictionary.
-            </summary>
-        </member>
-        <member name="P:SilDev.Investment.ValueItemHost`1.SortComparer">
-            <summary>
-                Gets the <see cref="T:System.Collections.IComparer"/> to compare keys.
-            </summary>
-        </member>
         <member name="P:SilDev.Investment.ValueItemHost`1.ItemDictionary">
             <summary>
                 Gets the collection of keys and values.
@@ -895,8 +884,8 @@
         </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.Sort">
             <summary>
-                Sorts the elements in the entire <see cref="P:SilDev.Investment.ValueItemHost`1.ItemDictionary"/> using the default
-                <see cref="P:SilDev.Investment.ValueItemHost`1.SortComparer"/>.
+                Sorts the elements in the entire <see cref="P:SilDev.Investment.ValueItemHost`1.ItemDictionary"/> using the
+                <see cref="T:SilDev.Comparison.AlphanumericComparer"/> comparer.
             </summary>
         </member>
         <member name="M:SilDev.Investment.ValueItemHost`1.Equals(SilDev.Investment.ValueItemHost{`0})">
@@ -4651,6 +4640,23 @@
                 true to enable the descending order; otherwise, false.
             </param>
         </member>
+        <member name="M:SilDev.Comparison.AlphanumericComparer.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.Comparison.AlphanumericComparer"/> class with
+                serialized data.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="P:SilDev.Comparison.AlphanumericComparer.Descendant">
+            <summary>
+                Gets the value that determines whether the order is descended.
+            </summary>
+        </member>
         <member name="M:SilDev.Comparison.AlphanumericComparer.Compare(System.Object,System.Object)">
             <summary>
                 Compare two specified objects and returns an integer that indicates their
@@ -4661,6 +4667,17 @@
             </param>
             <param name="b">
                 The second object to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.AlphanumericComparer.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object for this instance.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
             </param>
         </member>
         <member name="T:SilDev.SymmetricKeyAlgorithm">
@@ -8022,23 +8039,6 @@
                 true to allow an existing file to be overwritten; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.FileEx.Deserialize``1(System.String,System.Boolean,``0)">
-            <summary>
-                Deserializes the specified file into an object graph.
-            </summary>
-            <typeparam name="TResult">
-                The type of the result.
-            </typeparam>
-            <param name="path">
-                The file to deserialize.
-            </param>
-            <param name="decompress">
-                true to decompress the file before deserialization; otherwise, false.
-            </param>
-            <param name="defValue">
-                The default value.
-            </param>
-        </member>
         <member name="M:SilDev.FileEx.Deserialize``1(System.String,``0)">
             <summary>
                 Deserializes the specified file into an object graph.
@@ -8124,6 +8124,30 @@
             </param>
             <param name="attr">
                 The attributes to set.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.ContentIsEqual(System.IO.FileInfo,System.IO.FileInfo)">
+            <summary>
+                Opens two files, reads the contents of the files in a byte array buffer to
+                compare whether the specified files are equal.
+            </summary>
+            <param name="fileInfo">
+                The first file to compare.
+            </param>
+            <param name="otherFileInfo">
+                The second file to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.ContentIsEqual(System.String,System.String)">
+            <summary>
+                Opens two files, reads the contents of the files in a byte array buffer to
+                compare whether the specified files are equal.
+            </summary>
+            <param name="firstFile">
+                The first file to compare.
+            </param>
+            <param name="secondFile">
+                The second file to compare.
             </param>
         </member>
         <member name="M:SilDev.FileEx.ReadAllBytes(System.String)">
@@ -9109,6 +9133,17 @@
             </param>
             <exception cref="T:System.ArgumentNullException">
                 source is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.Json.FormatFile(System.String)">
+            <summary>
+                Formats the specified JSON file and overwrites it if necessary.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">
+                path is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                path is invalid.
             </exception>
         </member>
         <member name="M:SilDev.Json.Serialize``1(``0,System.Boolean)">
