@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-12-24 06:28
+// Version:  2019-12-24 08:37
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -309,6 +309,79 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Opens two files, reads the contents of the files in a byte array buffer to
+        ///     compare whether the specified files are equal.
+        /// </summary>
+        /// <param name="fileInfo">
+        ///     The first file to compare.
+        /// </param>
+        /// <param name="otherFileInfo">
+        ///     The second file to compare.
+        /// </param>
+        public static bool ContentIsEqual(this FileInfo fileInfo, FileInfo otherFileInfo)
+        {
+            if (fileInfo == null)
+                return otherFileInfo == null;
+            if (otherFileInfo == null)
+                return false;
+            if (!fileInfo.Exists)
+                return !fileInfo.Exists;
+            if (fileInfo.Length != otherFileInfo.Length)
+                return false;
+            int count;
+            if (fileInfo.Length < 8)
+                count = (int)fileInfo.Length;
+            else
+            {
+                var len = (double)fileInfo.Length;
+                var log = Math.Log(len);
+                if (fileInfo.Length < 1024)
+                    count = (int)Math.Floor(len / log);
+                else if (fileInfo.Length < uint.MaxValue)
+                {
+                    var sqrt = Math.Sqrt(len);
+                    count = (int)Math.Floor(sqrt / log);
+                }
+                else
+                    count = 4096;
+            }
+            var buffer1 = new byte[count];
+            var buffer2 = new byte[count];
+            using (var fs1 = fileInfo.OpenRead())
+            {
+                using (var fs2 = otherFileInfo.OpenRead())
+                {
+                    int len1, len2;
+                    while ((len1 = fs1.Read(buffer1, 0, count)) > 0 && (len2 = fs2.Read(buffer2, 0, count)) > 0)
+                        if (len1 != len2 || len1 < count && !buffer1.Take(len1).SequenceEqual(buffer2.Take(len2)) || !buffer1.SequenceEqual(buffer2))
+                            return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        ///     Opens two files, reads the contents of the files in a byte array buffer to
+        ///     compare whether the specified files are equal.
+        /// </summary>
+        /// <param name="firstFile">
+        ///     The first file to compare.
+        /// </param>
+        /// <param name="secondFile">
+        ///     The second file to compare.
+        /// </param>
+        public static bool ContentIsEqual(string firstFile, string secondFile)
+        {
+            var first = PathEx.Combine(firstFile);
+            var second = PathEx.Combine(secondFile);
+            if (!PathEx.IsValidPath(first))
+                return PathEx.IsValidPath(second);
+            var fs1 = new FileInfo(first);
+            var fs2 = new FileInfo(second);
+            return fs1.ContentIsEqual(fs2);
         }
 
         /// <summary>
