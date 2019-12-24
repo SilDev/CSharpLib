@@ -9161,7 +9161,7 @@
                 true to format the string representation of the JSON document; otherwise, false.
             </param>
         </member>
-        <member name="M:SilDev.Json.SerializeToFile``1(System.String,``0,System.Boolean)">
+        <member name="M:SilDev.Json.SerializeToFile``1(System.String,``0,System.Boolean,System.Boolean)">
             <summary>
                 Creates a new JSON file, writes the specified object graph into to the JSON file,
                 and then closes the file.
@@ -9177,6 +9177,9 @@
             </param>
             <param name="overwrite">
                 true to allow an existing file to be overwritten; otherwise, false.
+            </param>
+            <param name="formatted">
+                true to save the JSON document formatted; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.Json.Deserialize``1(System.String,``0)">
