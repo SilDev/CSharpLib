@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-12-16 16:45
+// Version:  2019-12-29 23:54
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -17,13 +17,13 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Management;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using Intern;
     using Microsoft.Win32.SafeHandles;
@@ -301,8 +301,8 @@ namespace SilDev
         ///     The <see cref="Process"/> component to start.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process has
-        ///     been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(Process process, bool dispose = true)
         {
@@ -426,8 +426,8 @@ namespace SilDev
         ///     The <see cref="ProcessStartInfo"/> component to initialize a new <see cref="Process"/>.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process has
-        ///     been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(ProcessStartInfo processStartInfo, bool dispose = true)
         {
@@ -455,8 +455,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process
-        ///     has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string workingDirectory, string arguments, bool verbRunAs = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true)
         {
@@ -491,8 +491,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process
-        ///     has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string workingDirectory, string arguments, bool verbRunAs, bool dispose) =>
             Start(fileName, workingDirectory, arguments, verbRunAs, ProcessWindowStyle.Normal, dispose);
@@ -514,8 +514,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/> if the process
-        ///     has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string arguments = null, bool verbRunAs = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true) =>
             Start(fileName, null, arguments, verbRunAs, processWindowStyle, dispose);
@@ -534,8 +534,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process
-        ///     has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, string arguments, bool verbRunAs, bool dispose) =>
             Start(fileName, null, arguments, verbRunAs, ProcessWindowStyle.Normal, dispose);
@@ -554,8 +554,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process
-        ///     has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, bool verbRunAs, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true) =>
             Start(fileName, null, null, verbRunAs, processWindowStyle, dispose);
@@ -571,8 +571,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process
-        ///     has been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Start(string fileName, bool verbRunAs, bool dispose) =>
             Start(fileName, null, null, verbRunAs, dispose);
@@ -726,17 +726,21 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process has
-        ///     been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Send(string command, bool runAsAdmin = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Hidden, bool dispose = true)
         {
             try
             {
-                var cmd = command?.Trim() ?? throw new ArgumentNullException(nameof(command));
-                if (cmd.StartsWithEx("/K "))
+                var trimChars = new[]
+                {
+                    '\t', '\n', '\r', ' ', '&', '|'
+                };
+                var cmd = command?.Trim(trimChars) ?? throw new ArgumentNullException(nameof(command));
+                if (processWindowStyle == ProcessWindowStyle.Hidden && cmd.StartsWithEx("/K "))
                     cmd = cmd.Substring(3).TrimStart();
-                if (!cmd.StartsWithEx("/C "))
+                if (!cmd.StartsWithEx("/C ", "/K "))
                     cmd = $"/C {cmd}";
                 if (cmd.Length < 16)
                     throw new ArgumentNullException(nameof(cmd));
@@ -745,22 +749,41 @@ namespace SilDev
 #else
                 var path = ComSpec.DefaultPath;
 #endif
-                if ((path + cmd).Length > 8192)
+                var anyLineSeparator = cmd.Any(TextEx.IsLineSeparator);
+                if (anyLineSeparator || (path + cmd).Length + 4 > 8192)
                 {
                     var sb = new StringBuilder();
                     var file = FileEx.GetUniqueTempPath("tmp", ".cmd");
-                    var content = cmd.Substring(3).Replace("FOR /L %", "FOR /L %%").RemoveText("EXIT /B").TrimEnd(null);
-
-                    if (!content.StartsWithEx("@ECHO OFF", "@ECHO ON"))
-                        sb.AppendLine("@ECHO OFF");
-                    if (content.EndsWithEx("EXIT"))
-                        content = content.Substring(0, content.Length - 4).TrimEnd('\r', '\n', '&');
+                    var content = cmd.Substring(2).TrimStart(trimChars);
+                    if (content.StartsWithEx("@ECHO ON", "@ECHO OFF"))
+                    {
+                        var start = content.StartsWithEx("@ECHO ON") ? 8 : 9;
+                        content = content.Substring(start).TrimStart(trimChars);
+                        sb.AppendLine(processWindowStyle == ProcessWindowStyle.Hidden || start == 9 ? "@ECHO OFF" : "@ECHO ON");
+                    }
+                    var loopVars = Regex.Matches(content, @"((\s|\""|\'|\=)(?<var>(%[A-Za-z]{1,32}))(\s|\""|\'|\)))").Cast<Match>().ToArray();
+                    if (loopVars.Any())
+                    {
+                        var indicator = 0;
+                        content = loopVars.Select(m => m.Groups["var"].Index + ++indicator)
+                                          .Aggregate(content, (s, i) => $"{s.Substring(0, i)}%{s.Substring(i)}");
+                    }
+                    var exit = content.EndsWithEx("EXIT /B %ERRORLEVEL%",
+                                                  "EXIT /B !ERRORLEVEL!",
+                                                  "EXIT /B",
+                                                  "EXIT %ERRORLEVEL%",
+                                                  "EXIT !ERRORLEVEL!",
+                                                  "EXIT");
+                    if (exit)
+                    {
+                        if (content.EndsWithEx("%ERRORLEVEL%", "!ERRORLEVEL!"))
+                            content = content.Substring(0, content.Length - 12).TrimEnd(trimChars);
+                        content = content.Substring(0, content.Length - (content.EndsWithEx("EXIT") ? 4 : 7)).TrimEnd(trimChars);
+                    }
                     sb.AppendLine(content);
                     sb.AppendFormat(CultureConfig.GlobalCultureInfo, "DEL /F /Q \"{0}\"", file);
-                    sb.AppendLine("EXIT");
-
                     File.WriteAllText(file, sb.ToStringThenClear());
-                    cmd = $"/C CALL \"{file}\"";
+                    cmd = $"/C CALL \"{file}\" & EXIT";
                 }
                 var psi = new ProcessStartInfo
                 {
@@ -797,8 +820,8 @@ namespace SilDev
         ///     true to start the application with administrator privileges; otherwise, false.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process has
-        ///     been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Send(string command, bool runAsAdmin, bool dispose) =>
             Send(command, runAsAdmin, ProcessWindowStyle.Hidden, dispose);
@@ -818,8 +841,8 @@ namespace SilDev
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Component"/>, if the process has
-        ///     been started; otherwise, false.
+        ///     true to release all resources used by the <see cref="Process"/> component, if the
+        ///     process has been started; otherwise, false.
         /// </param>
         public static Process Send(string command, ProcessWindowStyle processWindowStyle, bool dispose = true) =>
             Send(command, false, processWindowStyle, dispose);
@@ -897,7 +920,7 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Changes the name of the current principal.
+            ///     Retrieves the original name of the current principal.
             /// </summary>
             public static string GetOriginalName()
             {
@@ -1064,8 +1087,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process WaitThenCmd(string command, int seconds = 5, bool runAsAdmin = false, bool dispose = true)
             {
@@ -1085,8 +1108,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process WaitThenCmd(string command, bool runAsAdmin, bool dispose = true) =>
                 WaitThenCmd(command, 5, runAsAdmin, dispose);
@@ -1104,8 +1127,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process WaitThenDelete(string path, int seconds = 5, bool runAsAdmin = false, bool dispose = true)
             {
@@ -1129,8 +1152,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process WaitThenDelete(string path, bool runAsAdmin, bool dispose = true) =>
                 WaitThenDelete(path, 5, runAsAdmin, dispose);
@@ -1152,22 +1175,79 @@ namespace SilDev
             /// <param name="extension">
             ///     The file extension of the specified process.
             /// </param>
+            /// <param name="seconds">
+            ///     The amount of time, in seconds, to wait for the associated process to exit.
+            /// </param>
             /// <param name="runAsAdmin">
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
-            public static Process WaitForExitThenCmd(string command, string processName, string extension, bool runAsAdmin = false, bool dispose = true)
+            public static Process WaitForExitThenCmd(string command, string processName, string extension, int seconds = 0, bool runAsAdmin = false, bool dispose = true)
             {
                 if (string.IsNullOrWhiteSpace(command) || string.IsNullOrWhiteSpace(processName))
                     return null;
                 var name = processName;
                 if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
                     name += extension;
-                return Send($"FOR /L %X in (1,0,2) DO (TASKLIST | FIND /I \"{name}\" & IF ERRORLEVEL 1 ({command} && EXIT))", runAsAdmin, dispose);
+                return Send($"(FOR /L %X in (1,{(seconds < 1 ? "0,2" : $"1,{seconds}")}) DO (PING -n 2 LOCALHOST >NUL & TASKLIST | FIND /I \"{name}\" || ({command} & EXIT /B))) & EXIT /B", runAsAdmin, dispose);
             }
+
+            /// <summary>
+            ///     Executes the specified command if there is no process running that is matched with the
+            ///     specified process name.
+            ///     <para>
+            ///         If a matched process is still running, the task will wait until all matched
+            ///         processes has been closed.
+            ///     </para>
+            /// </summary>
+            /// <param name="command">
+            ///     The command to execute.
+            /// </param>
+            /// <param name="processName">
+            ///     The name of the process to be waited.
+            /// </param>
+            /// <param name="seconds">
+            ///     The amount of time, in seconds, to wait for the associated process to exit.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
+            /// </param>
+            public static Process WaitForExitThenCmd(string command, string processName, int seconds = 0, bool runAsAdmin = false, bool dispose = true) =>
+                WaitForExitThenCmd(command, processName, ".exe", seconds, runAsAdmin, dispose);
+
+            /// <summary>
+            ///     Executes the specified command if there is no process running that is matched with the
+            ///     specified process name.
+            ///     <para>
+            ///         If a matched process is still running, the task will wait until all matched
+            ///         processes has been closed.
+            ///     </para>
+            /// </summary>
+            /// <param name="command">
+            ///     The command to execute.
+            /// </param>
+            /// <param name="processName">
+            ///     The name of the process to be waited.
+            /// </param>
+            /// <param name="extension">
+            ///     The file extension of the specified process.
+            /// </param>
+            /// <param name="runAsAdmin">
+            ///     true to run this task with administrator privileges; otherwise, false.
+            /// </param>
+            /// <param name="dispose">
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
+            /// </param>
+            public static Process WaitForExitThenCmd(string command, string processName, string extension, bool runAsAdmin, bool dispose = true) =>
+                WaitForExitThenCmd(command, processName, extension, 0, runAsAdmin, dispose);
 
             /// <summary>
             ///     Executes the specified command if there is no process running that is matched with the
@@ -1187,11 +1267,11 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
-            public static Process WaitForExitThenCmd(string command, string processName, bool runAsAdmin = false, bool dispose = true) =>
-                WaitForExitThenCmd(command, processName, ".exe", runAsAdmin, dispose);
+            public static Process WaitForExitThenCmd(string command, string processName, bool runAsAdmin, bool dispose = true) =>
+                WaitForExitThenCmd(command, processName, ".exe", 0, runAsAdmin, dispose);
 
             /// <summary>
             ///     Deletes the target at the specified path if there is no process running that is
@@ -1214,8 +1294,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process WaitForExitThenDelete(string path, string processName, string extension, bool runAsAdmin = false, bool dispose = true)
             {
@@ -1225,7 +1305,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return null;
                 var command = string.Format(CultureConfig.GlobalCultureInfo, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
-                return WaitForExitThenCmd(command, processName, extension, runAsAdmin, dispose);
+                return WaitForExitThenCmd(command, processName, extension, 0, runAsAdmin, dispose);
             }
 
             /// <summary>
@@ -1246,8 +1326,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process WaitForExitThenDelete(string path, string processName, bool runAsAdmin = false, bool dispose = true) =>
                 WaitForExitThenDelete(path, processName, ".exe", runAsAdmin, dispose);
@@ -1265,8 +1345,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process KillTask(string processName, string extension, bool runAsAdmin = false, bool dispose = true)
             {
@@ -1288,8 +1368,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process KillTask(string processName, bool runAsAdmin = false, bool dispose = true) =>
                 KillTask(processName, ".exe", runAsAdmin, dispose);
@@ -1307,8 +1387,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process KillAllTasks(IEnumerable<string> processNames, string extension, bool runAsAdmin = false, bool dispose = true)
             {
@@ -1331,8 +1411,8 @@ namespace SilDev
             ///     true to run this task with administrator privileges; otherwise, false.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Component"/>, if this task has
-            ///     been started; otherwise, false.
+            ///     true to release all resources used by the <see cref="Process"/> component, if this
+            ///     task has been started; otherwise, false.
             /// </param>
             public static Process KillAllTasks(IEnumerable<string> processNames, bool runAsAdmin = false, bool dispose = true) =>
                 KillAllTasks(processNames, ".exe", runAsAdmin, dispose);
