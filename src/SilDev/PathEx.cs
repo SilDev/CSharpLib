@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-12-16 16:44
+// Version:  2019-12-29 23:17
 // 
 // Copyright (c) 2019, Si13n7 Developments (r)
 // All rights reserved.
@@ -234,6 +234,10 @@ namespace SilDev
                         }
                     }
                 }
+                else if (path.StartsWith($".{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+                    path = Path.Combine(LocalDir, path.Substring(2));
+                else if (path.Equals(".", StringComparison.Ordinal))
+                    path = LocalDir;
 
                 if (path.Contains($"{Path.DirectorySeparatorChar}.."))
                     path = Path.GetFullPath(path);
