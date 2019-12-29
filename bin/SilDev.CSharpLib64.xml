@@ -14667,8 +14667,8 @@
                 The <see cref="T:System.Diagnostics.Process"/> component to start.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.Diagnostics.ProcessStartInfo,System.Boolean)">
@@ -14683,8 +14683,8 @@
                 The <see cref="T:System.Diagnostics.ProcessStartInfo"/> component to initialize a new <see cref="T:System.Diagnostics.Process"/>.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -14708,8 +14708,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.String,System.Boolean,System.Boolean)">
@@ -14730,8 +14730,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -14752,8 +14752,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/> if the process
-                has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.String,System.Boolean,System.Boolean)">
@@ -14771,8 +14771,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -14790,8 +14790,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Start(System.String,System.Boolean,System.Boolean)">
@@ -14806,8 +14806,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process
-                has been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.ThreadHandles(System.Diagnostics.Process)">
@@ -14880,8 +14880,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Boolean,System.Boolean)">
@@ -14900,8 +14900,8 @@
                 true to start the application with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.Send(System.String,System.Diagnostics.ProcessWindowStyle,System.Boolean)">
@@ -14920,8 +14920,8 @@
                 The window state to use when the process is started.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if the process has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if the
+                process has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendEx(System.String[])">
@@ -14950,7 +14950,7 @@
         </member>
         <member name="M:SilDev.ProcessEx.CurrentPrincipal.GetOriginalName">
             <summary>
-                Changes the name of the current principal.
+                Retrieves the original name of the current principal.
             </summary>
         </member>
         <member name="M:SilDev.ProcessEx.CurrentPrincipal.ChangeName(System.String)">
@@ -15017,8 +15017,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitThenCmd(System.String,System.Boolean,System.Boolean)">
@@ -15032,8 +15032,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitThenDelete(System.String,System.Int32,System.Boolean,System.Boolean)">
@@ -15050,8 +15050,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitThenDelete(System.String,System.Boolean,System.Boolean)">
@@ -15065,8 +15065,63 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenCmd(System.String,System.String,System.String,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+                Executes the specified command if there is no process running that is matched with the
+                specified process name.
+                <para>
+                    If a matched process is still running, the task will wait until all matched
+                    processes has been closed.
+                </para>
+            </summary>
+            <param name="command">
+                The command to execute.
+            </param>
+            <param name="processName">
+                The name of the process to be waited.
+            </param>
+            <param name="extension">
+                The file extension of the specified process.
+            </param>
+            <param name="seconds">
+                The amount of time, in seconds, to wait for the associated process to exit.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenCmd(System.String,System.String,System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+                Executes the specified command if there is no process running that is matched with the
+                specified process name.
+                <para>
+                    If a matched process is still running, the task will wait until all matched
+                    processes has been closed.
+                </para>
+            </summary>
+            <param name="command">
+                The command to execute.
+            </param>
+            <param name="processName">
+                The name of the process to be waited.
+            </param>
+            <param name="seconds">
+                The amount of time, in seconds, to wait for the associated process to exit.
+            </param>
+            <param name="runAsAdmin">
+                true to run this task with administrator privileges; otherwise, false.
+            </param>
+            <param name="dispose">
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenCmd(System.String,System.String,System.String,System.Boolean,System.Boolean)">
@@ -15091,8 +15146,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenCmd(System.String,System.String,System.Boolean,System.Boolean)">
@@ -15114,8 +15169,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenDelete(System.String,System.String,System.String,System.Boolean,System.Boolean)">
@@ -15140,8 +15195,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.WaitForExitThenDelete(System.String,System.String,System.Boolean,System.Boolean)">
@@ -15163,8 +15218,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.KillTask(System.String,System.String,System.Boolean,System.Boolean)">
@@ -15181,8 +15236,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.KillTask(System.String,System.Boolean,System.Boolean)">
@@ -15196,8 +15251,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.KillAllTasks(System.Collections.Generic.IEnumerable{System.String},System.String,System.Boolean,System.Boolean)">
@@ -15214,8 +15269,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="M:SilDev.ProcessEx.SendHelper.KillAllTasks(System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Boolean)">
@@ -15229,8 +15284,8 @@
                 true to run this task with administrator privileges; otherwise, false.
             </param>
             <param name="dispose">
-                true to release all resources used by the <see cref="T:System.ComponentModel.Component"/>, if this task has
-                been started; otherwise, false.
+                true to release all resources used by the <see cref="T:System.Diagnostics.Process"/> component, if this
+                task has been started; otherwise, false.
             </param>
         </member>
         <member name="T:SilDev.Reg">
