@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2019-12-12 18:26
+// Version:  2020-01-03 12:36
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -21,8 +21,7 @@ namespace SilDev.Drawing
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Security;
+    using System.Threading;
     using Properties;
 
     /// <summary>
@@ -30,8 +29,29 @@ namespace SilDev.Drawing
     /// </summary>
     public static class ImageEx
     {
-        private static Dictionary<int, ImagePair> _switcherCache;
-        private static readonly object SwitcherLocker = new object();
+        private static volatile Dictionary<int, Tuple<Image, Image>> _imagePairCache;
+        private static volatile object _syncObject;
+
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
+            }
+        }
+
+        private static Dictionary<int, Tuple<Image, Image>> ImagePairCache
+        {
+            get
+            {
+                lock (SyncObject)
+                    return _imagePairCache ?? (_imagePairCache = new Dictionary<int, Tuple<Image, Image>>());
+            }
+        }
 
         /// <summary>
         ///     Gets an <see cref="Image"/> object which consists of a semi-transparent black color.
@@ -361,32 +381,31 @@ namespace SilDev.Drawing
         ///     The key for the cache.
         /// </param>
         /// <param name="dispose">
-        ///     true to dispose the cached <see cref="ImagePair"/>; otherwise, false.
+        ///     true to dispose the cached images; otherwise, false.
         /// </param>
         public static Image SwitchGrayScale(this Image image, object key, bool dispose = false)
         {
-            lock (SwitcherLocker)
+            lock (SyncObject)
             {
                 if (!(image is Image img))
                     return default;
-                if (_switcherCache == null)
-                    _switcherCache = new Dictionary<int, ImagePair>();
                 var code = (key ?? '\0').GetHashCode();
-                if (!_switcherCache.ContainsKey(code))
+                if (!ImagePairCache.ContainsKey(code))
                 {
-                    var imgPair = new ImagePair(img, img.ToGrayScale());
-                    _switcherCache.Add(code, imgPair);
-                    img = imgPair.Image2;
+                    var imgPair = Tuple.Create(img, img.ToGrayScale());
+                    ImagePairCache.Add(code, imgPair);
+                    img = imgPair.Item2;
                 }
                 else
                 {
                     if (!dispose)
-                        img = img == _switcherCache[code].Image1 ? _switcherCache[code].Image2 : _switcherCache[code].Image1;
+                        img = img == ImagePairCache[code].Item1 ? ImagePairCache[code].Item2 : ImagePairCache[code].Item1;
                     else
                     {
-                        img = new Bitmap(_switcherCache[code].Image1);
-                        _switcherCache[code].Dispose();
-                        _switcherCache.Remove(code);
+                        img = new Bitmap(ImagePairCache[code].Item1);
+                        ImagePairCache[code].Item1.Dispose();
+                        ImagePairCache[code].Item2.Dispose();
+                        ImagePairCache.Remove(code);
                     }
                 }
                 return img;
@@ -450,7 +469,7 @@ namespace SilDev.Drawing
         /// <exception cref="ArgumentNullException">
         ///     image is null.
         /// </exception>
-        public static IEnumerable<Frame> GetFrames(this Image image, bool disposeImage = true)
+        public static IEnumerable<ImageFrame> GetFrames(this Image image, bool disposeImage = true)
         {
             if (!(image is Image img))
                 throw new ArgumentNullException(nameof(image));
@@ -459,8 +478,7 @@ namespace SilDev.Drawing
                 var count = img.GetFrameCount(FrameDimension.Time);
                 if (count <= 1)
                 {
-                    var bmp = new Bitmap(img);
-                    var frame = new Frame(bmp, 0);
+                    var frame = new ImageFrame(img, 0);
                     yield return frame;
                 }
                 else
@@ -468,9 +486,8 @@ namespace SilDev.Drawing
                     var times = img.GetPropertyItem(0x5100).Value;
                     for (var i = 0; i < count; i++)
                     {
-                        var bmp = new Bitmap(img);
                         var duration = BitConverter.ToInt32(times, 4 * i);
-                        var frame = new Frame(bmp, duration);
+                        var frame = new ImageFrame(img, duration);
                         yield return frame;
                         if (i + 1 < count)
                             img.SelectActiveFrame(FrameDimension.Time, i);
@@ -547,355 +564,5 @@ namespace SilDev.Drawing
         /// </param>
         public static bool EqualsEx(this Image source, Image target) =>
             (source as Bitmap).EqualsEx(target as Bitmap);
-
-        /// <summary>
-        ///     A base class that provides a pair of two elements of the <see cref="Image"/>
-        ///     class.
-        /// </summary>
-        [Serializable]
-        public class ImagePair : IDisposable, ISerializable, IEquatable<ImagePair>
-        {
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="ImagePair"/> class.
-            /// </summary>
-            /// <param name="image1">
-            ///     The first <see cref="Image"/>.
-            /// </param>
-            /// <param name="image2">
-            ///     The second <see cref="Image"/>.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     image1 or image2 is null.
-            /// </exception>
-            public ImagePair(Image image1, Image image2)
-            {
-                Image1 = image1 ?? throw new ArgumentNullException(nameof(image1));
-                Image2 = image2 ?? throw new ArgumentNullException(nameof(image2));
-            }
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="ImagePair"/> class.
-            /// </summary>
-            /// <param name="info">
-            ///     The object that holds the serialized object data.
-            /// </param>
-            /// <param name="context">
-            ///     The contextual information about the source or destination.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     info is null.
-            /// </exception>
-            protected ImagePair(SerializationInfo info, StreamingContext context)
-            {
-                if (info == null)
-                    throw new ArgumentNullException(nameof(info));
-                if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(ImagePair)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-                Image1 = (Image)info.GetValue(nameof(Image1), typeof(Image));
-                Image2 = (Image)info.GetValue(nameof(Image2), typeof(Image));
-            }
-
-            /// <summary>
-            ///     Gets the first <see cref="Image"/> of current image pair.
-            /// </summary>
-            public Image Image1 { get; }
-
-            /// <summary>
-            ///     Gets the second <see cref="Image"/> of current image pair.
-            /// </summary>
-            public Image Image2 { get; }
-
-            /// <summary>
-            ///     Releases all resources used by this <see cref="ImagePair"/>.
-            /// </summary>
-            public void Dispose()
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-
-            /// <summary>
-            ///     Determines whether the specified image pair is equal to the current
-            ///     image pair.
-            /// </summary>
-            /// <param name="other">
-            ///     The image pair to compare with the current image pair.
-            /// </param>
-            public virtual bool Equals(ImagePair other)
-            {
-                if (other == null)
-                    return false;
-                return GetHashCode() == other.GetHashCode();
-            }
-
-            /// <summary>
-            ///     Populates a <see cref="SerializationInfo"/> with the data needed to serialize
-            ///     the target object.
-            /// </summary>
-            /// <param name="info">
-            ///     The object that holds the serialized object data.
-            /// </param>
-            /// <param name="context">
-            ///     The contextual information about the source or destination.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     info is null.
-            /// </exception>
-            [SecurityCritical]
-            public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-            {
-                if (info == null)
-                    throw new ArgumentNullException(nameof(info));
-                if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(ImagePair)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-                info.AddValue(nameof(Image1), Image1);
-                info.AddValue(nameof(Image2), Image2);
-            }
-
-            /// <summary>
-            ///     Releases all resources used by this <see cref="ImagePair"/>.
-            /// </summary>
-            /// <param name="disposing">
-            ///     true to release both managed and unmanaged resources; false to release only
-            ///     unmanaged resources.
-            ///     <para>
-            ///         Please note that this parameter is ignored for the
-            ///         <see cref="ImagePair"/> class.
-            ///     </para>
-            /// </param>
-            protected virtual void Dispose(bool disposing)
-            {
-                Image1?.Dispose();
-                Image2?.Dispose();
-            }
-
-            /// <summary>
-            ///     Allows an object to try to free resources and perform other cleanup
-            ///     operations before it is reclaimed by garbage collection.
-            /// </summary>
-            ~ImagePair() =>
-                Dispose(false);
-
-            /// <summary>
-            ///     Determines whether the specified object is equal to the current object.
-            /// </summary>
-            /// <param name="other">
-            ///     The object to compare with the current object.
-            /// </param>
-            public override bool Equals(object other) =>
-                Equals(other as ImagePair);
-
-            /// <summary>
-            ///     Returns the hash code for the current image pair.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetClassHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified image pairs have the same value.
-            /// </summary>
-            /// <param name="left">
-            ///     The first image pair to compare, or null.
-            /// </param>
-            /// <param name="right">
-            ///     The second image pair to compare, or null.
-            /// </param>
-            public static bool operator ==(ImagePair left, ImagePair right)
-            {
-                var obj = (object)left;
-                if (obj != null)
-                    return left.Equals(right);
-                obj = right;
-                return obj == null;
-            }
-
-            /// <summary>
-            ///     Determines whether two specified image pairs have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first image pair to compare, or null.
-            /// </param>
-            /// <param name="right">
-            ///     The second image pair to compare, or null.
-            /// </param>
-            public static bool operator !=(ImagePair left, ImagePair right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     An base class that provides the <see cref="System.Drawing.Image"/> and
-        ///     duration of a single frame.
-        /// </summary>
-        [Serializable]
-        public class Frame : IDisposable, ISerializable, IEquatable<Frame>
-        {
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="Frame"/> class from the
-            ///     specified existing image and duration time of a single frame.
-            /// </summary>
-            /// <param name="image">
-            ///     The frame image from which to create the new Frame.
-            /// </param>
-            /// <param name="duration">
-            ///     The duration time, in milliseconds, of the new frame.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     image is null.
-            /// </exception>
-            /// <exception cref="ArgumentOutOfRangeException">
-            ///     duration is negative or zero.
-            /// </exception>
-            public Frame(Image image, int duration)
-            {
-                Image = image ?? throw new ArgumentNullException(nameof(image));
-                if (duration < 1)
-                    throw new ArgumentOutOfRangeException(nameof(duration));
-                Duration = duration;
-            }
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="Frame"/> class.
-            /// </summary>
-            /// <param name="info">
-            ///     The object that holds the serialized object data.
-            /// </param>
-            /// <param name="context">
-            ///     The contextual information about the source or destination.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     info is null.
-            /// </exception>
-            protected Frame(SerializationInfo info, StreamingContext context)
-            {
-                if (info == null)
-                    throw new ArgumentNullException(nameof(info));
-                if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(Frame)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-                Image = (Image)info.GetValue(nameof(Image), typeof(Image));
-                Duration = info.GetInt32(nameof(Duration));
-            }
-
-            /// <summary>
-            ///     Gets the image of this <see cref="Frame"/>.
-            /// </summary>
-            public Image Image { get; }
-
-            /// <summary>
-            ///     Gets the duration time, in milliseconds, of this <see cref="Frame"/>.
-            /// </summary>
-            public int Duration { get; }
-
-            /// <summary>
-            ///     Releases all resources used by this <see cref="Frame"/>.
-            /// </summary>
-            public void Dispose()
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-
-            /// <summary>
-            ///     Determines whether the specified frame is equal to the current frame.
-            /// </summary>
-            /// <param name="other">
-            ///     The frame to compare with the current frame.
-            /// </param>
-            public virtual bool Equals(Frame other)
-            {
-                if (other == null)
-                    return false;
-                return GetHashCode() == other.GetHashCode();
-            }
-
-            /// <summary>
-            ///     Populates a <see cref="SerializationInfo"/> with the data needed to serialize
-            ///     the target object.
-            /// </summary>
-            /// <param name="info">
-            ///     The object that holds the serialized object data.
-            /// </param>
-            /// <param name="context">
-            ///     The contextual information about the source or destination.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     info is null.
-            /// </exception>
-            [SecurityCritical]
-            public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-            {
-                if (info == null)
-                    throw new ArgumentNullException(nameof(info));
-                if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(Frame)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-                info.AddValue(nameof(Image), Image);
-                info.AddValue(nameof(Duration), Duration);
-            }
-
-            /// <summary>
-            ///     Releases all resources used by this <see cref="Frame"/>.
-            /// </summary>
-            /// <param name="disposing">
-            ///     true to release both managed and unmanaged resources; false to release only
-            ///     unmanaged resources.
-            ///     <para>
-            ///         Please note that this parameter is ignored for the
-            ///         <see cref="Frame"/> class.
-            ///     </para>
-            /// </param>
-            protected virtual void Dispose(bool disposing) =>
-                Image?.Dispose();
-
-            /// <summary>
-            ///     Allows an object to try to free resources and perform other cleanup
-            ///     operations before it is reclaimed by garbage collection.
-            /// </summary>
-            ~Frame() =>
-                Dispose(false);
-
-            /// <summary>
-            ///     Determines whether the specified object is equal to the current object.
-            /// </summary>
-            /// <param name="other">
-            ///     The object to compare with the current object.
-            /// </param>
-            public override bool Equals(object other) =>
-                Equals(other as Frame);
-
-            /// <summary>
-            ///     Returns the hash code for the current image pair.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetClassHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified frames have the same value.
-            /// </summary>
-            /// <param name="left">
-            ///     The first frame to compare, or null.
-            /// </param>
-            /// <param name="right">
-            ///     The second frame to compare, or null.
-            /// </param>
-            public static bool operator ==(Frame left, Frame right)
-            {
-                var obj = (object)left;
-                if (obj != null)
-                    return left.Equals(right);
-                obj = right;
-                return obj == null;
-            }
-
-            /// <summary>
-            ///     Determines whether two specified frames have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first frame to compare, or null.
-            /// </param>
-            /// <param name="right">
-            ///     The second frame to compare, or null.
-            /// </param>
-            public static bool operator !=(Frame left, Frame right) =>
-                !(left == right);
-        }
     }
 }
