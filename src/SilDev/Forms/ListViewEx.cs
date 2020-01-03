@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2019-10-20 16:44
+// Version:  2020-01-03 12:53
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,7 +16,6 @@
 namespace SilDev.Forms
 {
     using System;
-    using System.Collections;
     using System.Windows.Forms;
 
     /// <summary>
@@ -91,43 +90,6 @@ namespace SilDev.Forms
                         base.OnNotifyMessage(m);
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        ///     Provides a base class for comparison.
-        /// </summary>
-        public class AlphanumericComparer : IComparer
-        {
-            private readonly bool _d;
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="AlphanumericComparer"/> class. A
-            ///     parameter specifies whether the order is descended.
-            /// </summary>
-            /// <param name="descendent">
-            ///     true to enable the descending order; otherwise, false.
-            /// </param>
-            public AlphanumericComparer(bool descendent = false) =>
-                _d = descendent;
-
-            /// <summary>
-            ///     Compare two specified objects and returns an integer that indicates their
-            ///     relative position in the sort order.
-            /// </summary>
-            /// <param name="a">
-            ///     The first object to compare.
-            /// </param>
-            /// <param name="b">
-            ///     The second object to compare.
-            /// </param>
-            public int Compare(object a, object b)
-            {
-                if (!(a is ListViewItem lvi1) || !(b is ListViewItem lvi2))
-                    return 0;
-                var s1 = lvi1.Text;
-                var s2 = lvi2.Text;
-                return new Comparison.AlphanumericComparer(_d).Compare(s1, s2);
             }
         }
     }

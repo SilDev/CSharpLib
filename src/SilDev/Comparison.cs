@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2019-12-21 23:14
+// Version:  2020-01-03 12:52
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -19,9 +19,7 @@ namespace SilDev
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
-    using System.Security;
 
     /// <summary>
     ///     Provides static methods and base classes used for the comparison of two or
@@ -422,139 +420,5 @@ namespace SilDev
         /// </param>
         public static bool EqualsEx(this string source, string target) =>
             string.Equals(source, target, StringComparison.OrdinalIgnoreCase);
-
-        /// <summary>
-        ///     Provides a base class for comparison.
-        /// </summary>
-        [Serializable]
-        public class AlphanumericComparer : IComparer<object>
-        {
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="AlphanumericComparer"/>
-            ///     class. A parameter specifies whether the order is descended.
-            /// </summary>
-            /// <param name="descendant">
-            ///     true to enable the descending order; otherwise, false.
-            /// </param>
-            public AlphanumericComparer(bool descendant = false) =>
-                Descendant = descendant;
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="AlphanumericComparer"/> class with
-            ///     serialized data.
-            /// </summary>
-            /// <param name="info">
-            ///     The object that holds the serialized object data.
-            /// </param>
-            /// <param name="context">
-            ///     The contextual information about the source or destination.
-            /// </param>
-            protected AlphanumericComparer(SerializationInfo info, StreamingContext context)
-            {
-                if (info == null)
-                    throw new ArgumentNullException(nameof(info));
-
-                if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(AlphanumericComparer)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-
-                Descendant = info.GetBoolean(nameof(Descendant));
-            }
-
-            /// <summary>
-            ///     Gets the value that determines whether the order is descended.
-            /// </summary>
-            protected bool Descendant { get; }
-
-            /// <summary>
-            ///     Compare two specified objects and returns an integer that indicates their
-            ///     relative position in the sort order.
-            /// </summary>
-            /// <param name="a">
-            ///     The first object to compare.
-            /// </param>
-            /// <param name="b">
-            ///     The second object to compare.
-            /// </param>
-            public int Compare(object a, object b)
-            {
-                var s1 = !Descendant ? a as string : b as string;
-                if (s1 == null)
-                    return 0;
-                var s2 = !Descendant ? b as string : a as string;
-                if (s2 == null)
-                    return 0;
-                try
-                {
-                    var i1 = 0;
-                    var i2 = 0;
-                    while (i1 < s1.Length && i2 < s2.Length)
-                    {
-                        var c1 = s1[i1];
-                        var ca1 = new char[s1.Length];
-                        var l1 = 0;
-                        do
-                        {
-                            ca1[l1++] = c1;
-                            i1++;
-                            if (i1 >= s1.Length)
-                                break;
-                            c1 = s1[i1];
-                        }
-                        while (char.IsDigit(c1) == char.IsDigit(ca1[0]));
-                        var c2 = s2[i2];
-                        var ca2 = new char[s2.Length];
-                        var l2 = 0;
-                        do
-                        {
-                            ca2[l2++] = c2;
-                            i2++;
-                            if (i2 >= s2.Length)
-                                break;
-                            c2 = s2[i2];
-                        }
-                        while (char.IsDigit(c2) == char.IsDigit(ca2[0]));
-                        var str1 = new string(ca1);
-                        var str2 = new string(ca2);
-                        int r;
-                        if (char.IsDigit(ca1[0]) && char.IsDigit(ca2[0]))
-                        {
-                            var ch1 = int.Parse(str1, CultureConfig.GlobalCultureInfo);
-                            var ch2 = int.Parse(str2, CultureConfig.GlobalCultureInfo);
-                            r = ch1.CompareTo(ch2);
-                        }
-                        else
-                            r = string.Compare(str1, str2, StringComparison.InvariantCulture);
-                        if (r != 0)
-                            return r;
-                    }
-                    return s1.Length - s2.Length;
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    return string.Compare(s1, s2, StringComparison.InvariantCulture);
-                }
-            }
-
-            /// <summary>
-            ///     Sets the <see cref="SerializationInfo"/> object for this instance.
-            /// </summary>
-            /// <param name="info">
-            ///     The object that holds the serialized object data.
-            /// </param>
-            /// <param name="context">
-            ///     The contextual information about the source or destination.
-            /// </param>
-            [SecurityCritical]
-            public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-            {
-                if (info == null)
-                    throw new ArgumentNullException(nameof(info));
-
-                if (Log.DebugMode > 1)
-                    Log.Write($"{nameof(AlphanumericComparer)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-
-                info.AddValue(nameof(Descendant), Descendant);
-            }
-        }
     }
 }

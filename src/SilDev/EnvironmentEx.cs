@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2019-10-22 15:50
+// Version:  2020-01-03 12:52
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -290,7 +290,7 @@ namespace SilDev
         /// </summary>
         /// <param name="sort">
         ///     true to sort the arguments ascended with the rules of
-        ///     <see cref="Comparison.AlphanumericComparer(bool)"/> before returning the arguments;
+        ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
         ///     otherwise, false.
         /// </param>
         /// <param name="skip">
@@ -320,7 +320,7 @@ namespace SilDev
             if (defaultArgs.Count > skip)
                 defaultArgs = defaultArgs.Skip(skip).ToList();
             if (sort)
-                defaultArgs = defaultArgs.OrderBy(x => x, new Comparison.AlphanumericComparer()).ToList();
+                defaultArgs = defaultArgs.OrderBy(x => x, new AlphaNumericComparer()).ToList();
             _cmdLineArgs = quotes ? defaultArgs.Select(x => x.Any(char.IsWhiteSpace) ? $"\"{x}\"" : x).ToList() : defaultArgs;
             return _cmdLineArgs;
         }
@@ -331,7 +331,7 @@ namespace SilDev
         /// </summary>
         /// <param name="sort">
         ///     true to sort the arguments ascended with the rules of
-        ///     <see cref="Comparison.AlphanumericComparer(bool)"/> before returning the arguments;
+        ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
         ///     otherwise, false.
         /// </param>
         /// <param name="quotes">
@@ -357,7 +357,7 @@ namespace SilDev
         /// </summary>
         /// <param name="sort">
         ///     true to sort the arguments ascended with the rules of
-        ///     <see cref="Comparison.AlphanumericComparer(bool)"/> before returning the arguments;
+        ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
         ///     otherwise, false.
         /// </param>
         /// <param name="skip">
@@ -380,7 +380,7 @@ namespace SilDev
         /// </summary>
         /// <param name="sort">
         ///     true to sort the arguments ascended with the rules of
-        ///     <see cref="Comparison.AlphanumericComparer(bool)"/> before returning the arguments;
+        ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
         ///     otherwise, false.
         /// </param>
         /// <param name="quotes">
@@ -631,7 +631,7 @@ namespace SilDev
                 {
                     if (!refresh && _displayNames != null)
                         return _displayNames;
-                    var comparer = new Comparison.AlphanumericComparer();
+                    var comparer = new AlphaNumericComparer();
                     var entries = new[]
                     {
                         "DisplayName",

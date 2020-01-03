@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2019-12-24 09:14
+// Version:  2020-01-03 12:53
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -298,7 +298,7 @@ namespace SilDev.Investment
         {
             var names = Enum.GetNames(typeof(TKey)).AsEnumerable();
             if (sorted)
-                names = names.OrderBy(x => x, new Comparison.AlphanumericComparer());
+                names = names.OrderBy(x => x, new AlphaNumericComparer());
             return names;
         }
 
@@ -385,13 +385,13 @@ namespace SilDev.Investment
 
         /// <summary>
         ///     Sorts the elements in the entire <see cref="ItemDictionary"/> using the
-        ///     <see cref="Comparison.AlphanumericComparer"/> comparer.
+        ///     <see cref="AlphaNumericComparer"/> comparer.
         /// </summary>
         public void Sort()
         {
             var itemDict = ItemDictionary;
             if (itemDict.Count > 1)
-                ItemDictionary = itemDict.OrderBy(x => x.Key, new Comparison.AlphanumericComparer()).ToDictionary(x => x.Key, x => x.Value);
+                ItemDictionary = itemDict.OrderBy(x => x.Key, new AlphaNumericComparer()).ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <summary>

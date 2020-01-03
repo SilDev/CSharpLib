@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2019-12-16 16:43
+// Version:  2020-01-03 12:53
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -186,7 +186,7 @@ namespace SilDev
 
         private static Dictionary<string, Dictionary<string, List<string>>> SortHelper(this Dictionary<string, Dictionary<string, List<string>>> source)
         {
-            var comparer = new Comparison.AlphanumericComparer();
+            var comparer = new AlphaNumericComparer();
             var sorted = source.OrderBy(x => !x.Key.Equals(NonSectionId, StringComparison.Ordinal))
                                .ThenBy(x => !SortBySections.ContainsEx(x.Key))
                                .ThenBy(x => x.Key, comparer).ToDictionary(x => x.Key, x => x.Value.SortHelper());
@@ -195,14 +195,14 @@ namespace SilDev
 
         private static Dictionary<string, List<string>> SortHelper(this Dictionary<string, List<string>> source)
         {
-            var comparer = new Comparison.AlphanumericComparer();
+            var comparer = new AlphaNumericComparer();
             var sorted = source.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
             return sorted;
         }
 
         private static List<string> SortHelper(this IEnumerable<string> source)
         {
-            var comparer = new Comparison.AlphanumericComparer();
+            var comparer = new AlphaNumericComparer();
             var sorted = source.OrderBy(x => x, comparer).ToList();
             return sorted;
         }
