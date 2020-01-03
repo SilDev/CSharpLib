@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2019-10-31 22:01
+// Version:  2020-01-03 12:39
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,15 +18,118 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
-    using System.Windows.Forms;
-    using Drawing;
-    using Forms;
-    using Properties;
+
+    /// <summary>
+    ///     Provides enumerated symbol index values of the Windows Image Resource dynamic
+    ///     link library ('imageres.dll') file on Windows 10.
+    /// </summary>
+    public enum ImageResourceSymbol
+    {
+        Flip3D = 0,
+        Shield = 1,
+        UnknownFile = 2,
+        Directory = 3,
+        Folder = 4,
+        DirectoryFace = 5,
+        DirectoryPage = 6,
+        Application = 11,
+        OpenSearch = 13,
+        Postcard = 15,
+        Film = 18,
+        Network = 20,
+        SystemControl = 22,
+        FloppyDrive = 23,
+        DiscDrive = 25,
+        Drive = 27,
+        Chip = 29,
+        HardDrive = 30,
+        SystemDrive = 31,
+        DvdDrive = 32,
+        DvdR = 33,
+        DvdRam = 34,
+        DvdRom = 35,
+        DvdRw = 36,
+        VideoCamera = 41,
+        Handy = 42,
+        Printer = 46,
+        RecycleBinFull = 49,
+        RecycleBinEmpty = 50,
+        Dvd = 51,
+        PhotoCamera = 52,
+        Security = 54,
+        SdCard = 55,
+        Cd = 56,
+        CdR = 57,
+        CdRom = 58,
+        CdRw = 59,
+        MediaPlayer = 61,
+        ApplicationExtension = 62,
+        Batch = 63,
+        SetupInformationFile = 64,
+        Picture = 65,
+        Bitmap = 66,
+        JoinPhotographic = 67,
+        UnknownDrive = 70,
+        Uac = 73,
+        Asterisk = 76,
+        Key = 77,
+        NetworkGraphics = 78,
+        Warning = 79,
+        Barrier = 81,
+        Install = 82,
+        Sharing = 83,
+        RichTextFile = 85,
+        Error = 93,
+        Help = 94,
+        Question = 94,
+        Run = 95,
+        Screensaver = 96,
+        HelpShield = 99,
+        ErrorShield = 100,
+        CheckShield = 101,
+        WarnShield = 102,
+        Computer = 104,
+        Desktop = 105,
+        Defrag = 106,
+        UserDirectory = 117,
+        TaskManager = 144,
+        ShortcutMark = 154,
+        SharedMark = 155,
+        ZipFile = 165,
+        Search = 168,
+        DownArrow = 175,
+        UpperArrow = 176,
+        Explorer = 203,
+        Favorite = 204,
+        Stop = 207,
+        User = 208,
+        OneDriveDirectory = 217,
+        SyncWarnMark = 218,
+        SyncMark = 219,
+        OneDrive = 220,
+        Lock = 224,
+        Briefcase = 226,
+        FileLocallyAvailable = 227,
+        FileSync = 228,
+        SyncError = 229,
+        SyncWarn = 230,
+        FileOnlyOnlineAvailable = 231,
+        FileAlwaysKeepOnDevice = 232,
+        Unpin = 233,
+        Pin = 234,
+        Close = 235,
+        IsoFile = 238,
+        Clipboard = 241,
+        Retry = 251,
+        Undo = 255,
+        CommandPrompt = 262,
+        Play = 280
+    }
 
     /// <summary>
     ///     Provides static methods for the usage of data resources.
@@ -34,118 +137,115 @@ namespace SilDev
     public static class ResourcesEx
     {
         /// <summary>
-        ///     Provides enumerated symbol index values of the Windows Image Resource dynamic
-        ///     link library ('imageres.dll').
+        ///     Extracts all icon resources from the file under the specified path, and
+        ///     returns its <see cref="Tuple{T1, T2}"/> instances with the large icon as
+        ///     the first item and the small icon as the second.
         /// </summary>
-        public enum IconIndex
+        /// <param name="path">
+        ///     The path to the file that contains icon resources.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     path is null.
+        /// </exception>
+        /// <exception cref="PathNotFoundException">
+        ///     path not found.
+        /// </exception>
+        /// <exception cref="Win32Exception">
+        ///     path has no icon resources.
+        /// </exception>
+        public static IEnumerable<Tuple<Icon, Icon>> GetIconPairsFromFile(string path)
         {
-            Asterisk = 0x4c,
-            Barrier = 0x51,
-            BmpFile = 0x42,
-            Cam = 0x29,
-            Cd = 0x38,
-            CdR = 0x39,
-            CdRom = 0x3a,
-            CdRw = 0x3b,
-            Chip = 0x1d,
-            Clipboard = 0xf1,
-            Close = 0xeb,
-            CommandPrompt = 0x106,
-            Computer = 0x68,
-            Defrag = 0x6a,
-            Desktop = 0x69,
-            Directory = 0x3,
-            DirectorySearch = 0xd,
-            DiscDrive = 0x19,
-            DllFile = 0x3e,
-            Dvd = 0x33,
-            DvdDrive = 0x20,
-            DvdR = 0x21,
-            DvdRam = 0x22,
-            DvdRom = 0x23,
-            DvdRw = 0x24,
-            Eject = 0xa7,
-            Error = 0x5d,
-            ExeFile = 0xb,
-            Explorer = 0xcb,
-            Favorite = 0xcc,
-            FloppyDrive = 0x17,
-            Games = 0xa,
-            HardDrive = 0x1e,
-            Help = 0x5e,
-            HelpShield = 0x63,
-            InfFile = 0x40,
-            Install = 0x52,
-            JpgFile = 0x43,
-            Key = 0x4d,
-            Network = 0x14,
-            OneDrive = 0xdc,
-            Pin = 0xea,
-            Play = 0x118,
-            PngFile = 0x4e,
-            Printer = 0x2e,
-            Question = 0x5e,
-            RecycleBinEmpty = 0x32,
-            RecycleBinFull = 0x31,
-            Retry = 0xfb,
-            Run = 0x5f,
-            Screensaver = 0x60,
-            Search = 0xa8,
-            Security = 0x36,
-            SharedMarker = 0x9b,
-            Sharing = 0x53,
-            ShortcutMarker = 0x9a,
-            Stop = 0xcf,
-            SystemControl = 0x16,
-            SystemDrive = 0x1f,
-            TaskManager = 0x90,
-            Uac = 0x49,
-            Undo = 0xff,
-            UnknownDrive = 0x46,
-            Unpin = 0xe9,
-            User = 0xd0,
-            UserDir = 0x75,
-            Warning = 0x4f,
-            ZipFile = 0xa5
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+            path = PathEx.Combine(path);
+            if (!File.Exists(path))
+                throw new PathNotFoundException(path);
+            var count = WinApi.NativeMethods.ExtractIconEx(path, -1, null, null, 0);
+            if (count < 1)
+            {
+                WinApi.ThrowLastError();
+                yield break;
+            }
+            var ptrs1 = new IntPtr[count];
+            var ptrs2 = new IntPtr[count];
+            count = WinApi.NativeMethods.ExtractIconEx(path, 0, ptrs1, ptrs2, count);
+            for (var i = 0; i < count; i++)
+                yield return Tuple.Create(Icon.FromHandle(ptrs1[i]), Icon.FromHandle(ptrs2[i]));
         }
 
         /// <summary>
-        ///     Returns the specified <see cref="Icon"/> resource of a file.
+        ///     Extracts all large or small icon resources from the file under the
+        ///     specified path, and returns its <see cref="Icon"/> instances.
         /// </summary>
         /// <param name="path">
-        ///     The file to read.
+        ///     The path to the file that contains icon resources.
+        /// </param>
+        /// <param name="large">
+        ///     true to return the large icons; otherwise, false to return the small icons.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     path is null.
+        /// </exception>
+        /// <exception cref="PathNotFoundException">
+        ///     path not found.
+        /// </exception>
+        /// <exception cref="Win32Exception">
+        ///     path has no icon resources.
+        /// </exception>
+        public static IEnumerable<Icon> GetIconsFromFile(string path, bool large = false)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+            path = PathEx.Combine(path);
+            if (!File.Exists(path))
+                throw new PathNotFoundException(path);
+            var count = WinApi.NativeMethods.ExtractIconEx(path, -1, null, null, 0);
+            if (count < 1)
+            {
+                WinApi.ThrowLastError();
+                yield break;
+            }
+            var ptrs = new IntPtr[count];
+            count = WinApi.NativeMethods.ExtractIconEx(path, 0, large ? ptrs : null, !large ? ptrs : null, count);
+            for (var i = 0; i < count; i++)
+                yield return Icon.FromHandle(ptrs[i]);
+        }
+
+        /// <summary>
+        ///     Extracts an icon resource under the specified index, from the file under
+        ///     the specified path, and returns its <see cref="Icon"/> instance.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to the file that contains icon resources.
         /// </param>
         /// <param name="index">
         ///     The index of the icon to extract.
         /// </param>
         /// <param name="large">
-        ///     true to return the large image; otherwise, false.
+        ///     true to return the large icon; otherwise, false to return the small icon.
         /// </param>
         public static Icon GetIconFromFile(string path, int index = 0, bool large = false)
         {
             try
             {
-                path = PathEx.Combine(path);
                 if (string.IsNullOrEmpty(path))
                     throw new ArgumentNullException(nameof(path));
-                if (!File.Exists(path))
-                    throw new PathNotFoundException(path);
-                var ptrs = new IntPtr[1];
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 var file = PathEx.Combine(path);
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);
-                _ = WinApi.NativeMethods.ExtractIconEx(file, index, large ? ptrs : new IntPtr[1], !large ? ptrs : new IntPtr[1], 1);
-                var ptr = ptrs[0];
+                var ptrs = new IntPtr[1];
+                var count = WinApi.NativeMethods.ExtractIconEx(file, index, large ? ptrs : null, !large ? ptrs : null, 1);
+                if (count < 1)
+                {
+                    WinApi.ThrowLastError();
+                    return null;
+                }
+                var ptr = ptrs.FirstOrDefault();
                 if (ptr == IntPtr.Zero)
                     throw new ArgumentNullException(nameof(ptr));
-                var ico = (Icon)Icon.FromHandle(ptr).Clone();
-                WinApi.NativeMethods.DestroyIcon(ptr);
-                return ico;
-            }
-            catch (ArgumentException ex)
-            {
-                if (Log.DebugMode > 1)
-                    Log.Write(ex);
+                return Icon.FromHandle(ptr);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -155,8 +255,79 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the specified <see cref="Icon"/> resource from the system file
-        ///     "imageres.dll".
+        ///     Retrieves a backward-compatible integer value of the specified
+        ///     <see cref="ImageResourceSymbol"/> value, which depends on the file version of
+        ///     the 'imageres.dll' file under the specified location.
+        /// </summary>
+        /// <param name="value">
+        ///     The <see cref="ImageResourceSymbol"/> value.
+        /// </param>
+        /// <param name="location">
+        ///     The directory where the 'imageres.dll' file is located.
+        /// </param>
+        public static int GetImageResourceValue(ImageResourceSymbol value, string location = "%system%")
+        {
+            var path = PathEx.Combine(location);
+            if (!string.IsNullOrWhiteSpace(path) && PathEx.IsDir(path))
+                path = Path.Combine(path, "imageres.dll");
+            if (!path.EndsWithEx("imageres.dll") || !File.Exists(path))
+                path = PathEx.Combine("%system%\\imageres.dll");
+            var version = FileEx.GetFileVersion(path);
+
+            // Windows 10
+            if (version.Major >= 10)
+                return (int)value;
+
+            // Windows 7 + 8
+            var index = (int)value;
+            if (index < 187)
+                return index;
+            if (index.IsBetween(187, 215))
+                return --index;
+            if (index.IsBetween(233, version.Minor < 2 ? 235 : 322))
+                return index - (index < 257 ? 17 : 16);
+            return -1;
+        }
+
+        /// <summary>
+        ///     Retrieves a backward-compatible string value of the specified symbol index
+        ///     value, which depends on the file version of the 'imageres.dll' file under the
+        ///     specified location.
+        /// </summary>
+        /// <param name="value">
+        ///     The symbol index value.
+        /// </param>
+        /// <param name="location">
+        ///     The directory where the 'imageres.dll' file is located.
+        /// </param>
+        [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
+        public static string GetImageResourceName(int value, string location = "%system%")
+        {
+            var path = PathEx.Combine(location);
+            if (!string.IsNullOrWhiteSpace(path) && PathEx.IsDir(path))
+                path = Path.Combine(path, "imageres.dll");
+            if (!path.EndsWithEx("imageres.dll") || !File.Exists(path))
+                path = PathEx.Combine("%system%\\imageres.dll");
+            var version = FileEx.GetFileVersion(path);
+
+            // Windows 10
+            if (version.Major >= 10)
+                return Enum.GetName(typeof(ImageResourceSymbol), value);
+
+            // Windows 7 + 8
+            if (value < 187)
+                return Enum.GetName(typeof(ImageResourceSymbol), value);
+            if (value.IsBetween(186, 214))
+                return Enum.GetName(typeof(ImageResourceSymbol), ++value);
+            if (value.IsBetween(216, version.Minor < 2 ? 218 : 306))
+                return Enum.GetName(typeof(ImageResourceSymbol), value + (value < 240 ? 17 : 16));
+            return null;
+        }
+
+        /// <summary>
+        ///     Extracts a large or small icon resource under the specified index, from
+        ///     the 'imageres.dll' under specified location, and returns its
+        ///     <see cref="Icon"/> instance.
         /// </summary>
         /// <param name="index">
         ///     The index of the icon to extract.
@@ -165,9 +336,9 @@ namespace SilDev
         ///     true to return the large image; otherwise, false.
         /// </param>
         /// <param name="location">
-        ///     The directory where the "imageres.dll" file is located.
+        ///     The directory where the 'imageres.dll' file is located.
         /// </param>
-        public static Icon GetSystemIcon(IconIndex index, bool large = false, string location = "%system%")
+        public static Icon GetSystemIcon(ImageResourceSymbol index, bool large = false, string location = "%system%")
         {
             try
             {
@@ -178,13 +349,7 @@ namespace SilDev
                     path = Path.Combine(path, "imageres.dll");
                 if (!File.Exists(path))
                     path = PathEx.Combine("%system%\\imageres.dll");
-                if (!File.Exists(path))
-                    throw new PathNotFoundException(path);
-                return GetIconFromFile(path, (int)index, large);
-            }
-            catch (PathNotFoundException ex)
-            {
-                Log.Write(ex);
+                return GetIconFromFile(path, GetImageResourceValue(index), large);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -195,16 +360,17 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the specified <see cref="Icon"/> resource from the system file
-        ///     "imageres.dll".
+        ///     Extracts a small icon resource under the specified index, from the
+        ///     'imageres.dll' under specified location, and returns its
+        ///     <see cref="Icon"/> instance.
         /// </summary>
         /// <param name="index">
         ///     The index of the icon to extract.
         /// </param>
         /// <param name="location">
-        ///     The directory where the "imageres.dll" file is located.
+        ///     The directory where the 'imageres.dll' file is located.
         /// </param>
-        public static Icon GetSystemIcon(IconIndex index, string location) =>
+        public static Icon GetSystemIcon(ImageResourceSymbol index, string location) =>
             GetSystemIcon(index, false, location);
 
         /// <summary>
@@ -277,380 +443,6 @@ namespace SilDev
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
-            }
-        }
-
-        /// <summary>
-        ///     Displays a dialog box that prompts to the user to browse the icon resource of a file.
-        /// </summary>
-        public sealed class IconBrowserDialog : Form
-        {
-            private static readonly object Locker = new object();
-            private readonly Button _button;
-            private readonly Panel _buttonPanel;
-            private readonly IContainer _components;
-            private readonly List<IconBox> _iconBoxes;
-            private readonly TableLayoutPanel _innerTableLayoutPanel;
-            private readonly Panel _panel;
-            private readonly ProgressCircle _progressCircle;
-            private readonly TableLayoutPanel _tableLayoutPanel;
-            private readonly TextBox _textBox;
-            private readonly Timer _timer;
-            private int _count;
-            private string _path;
-
-            /// <summary>
-            ///     Initializes an instance of the <see cref="IconBrowserDialog"/> class.
-            /// </summary>
-            /// <param name="path">
-            ///     The path of the file to open.
-            /// </param>
-            /// <param name="backColor">
-            ///     The background color of the dialog box.
-            /// </param>
-            /// <param name="foreColor">
-            ///     The foreground color of the dialog box.
-            /// </param>
-            /// <param name="buttonFace">
-            ///     The button color of the dialog box.
-            /// </param>
-            /// <param name="buttonText">
-            ///     The button text color of the dialog box.
-            /// </param>
-            /// <param name="buttonHighlight">
-            ///     The button highlight color of the dialog box.
-            /// </param>
-            public IconBrowserDialog(string path = "%system%\\imageres.dll", Color? backColor = null, Color? foreColor = null, Color? buttonFace = null, Color? buttonText = null, Color? buttonHighlight = null)
-            {
-                _components = new Container();
-                SuspendLayout();
-                var resPath = PathEx.Combine(path);
-                if (PathEx.IsDir(resPath))
-                    resPath = PathEx.Combine(path, "imageres.dll");
-                if (!File.Exists(resPath))
-                    resPath = PathEx.Combine("%system%", "imageres.dll");
-                var resLoc = Path.GetDirectoryName(resPath);
-                AutoScaleDimensions = new SizeF(96f, 96f);
-                AutoScaleMode = AutoScaleMode.Dpi;
-                BackColor = backColor ?? SystemColors.Control;
-                ForeColor = foreColor ?? SystemColors.ControlText;
-                Font = new Font("Consolas", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
-                Icon = GetSystemIcon(IconIndex.DirectorySearch, true, resLoc);
-                MaximizeBox = false;
-                MaximumSize = new Size(680, Screen.FromHandle(Handle).WorkingArea.Height);
-                MinimizeBox = false;
-                MinimumSize = new Size(680, 448);
-                Name = "IconBrowserForm";
-                Size = MinimumSize;
-                SizeGripStyle = SizeGripStyle.Hide;
-                StartPosition = FormStartPosition.CenterScreen;
-                Text = UIStrings.ResourceBrowser;
-                _tableLayoutPanel = new TableLayoutPanel
-                {
-                    BackColor = Color.Transparent,
-                    CellBorderStyle = TableLayoutPanelCellBorderStyle.None,
-                    Dock = DockStyle.Fill,
-                    Name = "tableLayoutPanel",
-                    RowCount = 2
-                };
-                _tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-                _tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
-                Controls.Add(_tableLayoutPanel);
-                _panel = new Panel
-                {
-                    AutoScroll = true,
-                    BackColor = buttonFace ?? SystemColors.ButtonFace,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Enabled = false,
-                    ForeColor = buttonText ?? SystemColors.ControlText,
-                    Dock = DockStyle.Fill,
-                    Name = "panel",
-                    TabIndex = 0
-                };
-                _panel.Scroll += (s, e) => (s as Panel)?.Update();
-                _tableLayoutPanel.Controls.Add(_panel, 0, 0);
-                _innerTableLayoutPanel = new TableLayoutPanel
-                {
-                    BackColor = Color.Transparent,
-                    ColumnCount = 2,
-                    CellBorderStyle = TableLayoutPanelCellBorderStyle.None,
-                    Dock = DockStyle.Fill,
-                    Name = "innerTableLayoutPanel"
-                };
-                _innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-                _innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 24));
-                _tableLayoutPanel.Controls.Add(_innerTableLayoutPanel, 0, 1);
-                _textBox = new TextBox
-                {
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Dock = DockStyle.Top,
-                    Font = Font,
-                    Name = "textBox",
-                    TabIndex = 1
-                };
-                _textBox.TextChanged += TextBox_TextChanged;
-                _innerTableLayoutPanel.Controls.Add(_textBox, 0, 0);
-                _buttonPanel = new Panel
-                {
-                    Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                    BackColor = Color.Transparent,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Name = "buttonPanel",
-                    Size = new Size(20, 20)
-                };
-                _innerTableLayoutPanel.Controls.Add(_buttonPanel, 1, 0);
-                _button = new Button
-                {
-                    BackColor = buttonFace ?? SystemColors.ButtonFace,
-                    BackgroundImage = GetSystemIcon(IconIndex.Directory, false, resLoc).ToBitmap(),
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Dock = DockStyle.Fill,
-                    FlatStyle = FlatStyle.Flat,
-                    Font = Font,
-                    ForeColor = buttonText ?? SystemColors.ControlText,
-                    Name = "button",
-                    TabIndex = 2,
-                    UseVisualStyleBackColor = false
-                };
-                _button.FlatAppearance.BorderSize = 0;
-                _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? ProfessionalColors.ButtonSelectedHighlight;
-                _button.Click += Button_Click;
-                _buttonPanel.Controls.Add(_button);
-                _progressCircle = new ProgressCircle
-                {
-                    Active = false,
-                    Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                    BackColor = Color.Transparent,
-                    Dock = DockStyle.Fill,
-                    ForeColor = (backColor ?? SystemColors.Control).InvertRgb().ToGrayScale(),
-                    RotationSpeed = 80,
-                    Thickness = 2,
-                    Visible = true
-                };
-                _timer = new Timer(_components)
-                {
-                    Interval = 1
-                };
-                _timer.Tick += Timer_Tick;
-                _iconBoxes = new List<IconBox>();
-                Shown += (sender, args) => TaskBarProgress.SetState(Handle, TaskBarProgressState.Indeterminate);
-                ResumeLayout(false);
-                PerformLayout();
-                var curPath = PathEx.Combine(path);
-                if (!File.Exists(curPath))
-                    curPath = resPath;
-                if (!File.Exists(curPath))
-                    return;
-                _textBox.Text = curPath;
-            }
-
-            /// <summary>
-            ///     Gets the icon resource path.
-            /// </summary>
-            public string IconPath { get; private set; }
-
-            /// <summary>
-            ///     Gets the icon resource identifier.
-            /// </summary>
-            public int IconId { get; private set; }
-
-            /// <summary>
-            ///     Disposes of the resources (other than memory) used by the <see cref="Form"/>.
-            /// </summary>
-            protected override void Dispose(bool disposing)
-            {
-                if (disposing)
-                    _components.Dispose();
-                _iconBoxes?.ForEach(iconBox => iconBox?.Dispose());
-                _iconBoxes?.Clear();
-                if (_timer != null)
-                {
-                    _timer.Enabled = false;
-                    _timer.Dispose();
-                }
-                if (_progressCircle != null)
-                {
-                    _progressCircle.Enabled = false;
-                    _progressCircle.Dispose();
-                }
-                _button?.Dispose();
-                _buttonPanel?.Dispose();
-                _textBox?.Dispose();
-                _innerTableLayoutPanel?.Dispose();
-                _panel?.Dispose();
-                _tableLayoutPanel?.Dispose();
-                base.Dispose(disposing);
-            }
-
-            private void TextBox_TextChanged(object sender, EventArgs e)
-            {
-                if (!(sender is TextBox textBox))
-                    return;
-                var path = PathEx.Combine(textBox.Text);
-                if (string.IsNullOrWhiteSpace(path) || _path == path || !File.Exists(path) || GetIconFromFile(path, 0, true) == null)
-                    return;
-                TaskBarProgress.SetState(Handle, TaskBarProgressState.Indeterminate);
-                _path = path;
-                _panel.Enabled = false;
-                _textBox.Enabled = false;
-                _buttonPanel.SuspendLayout();
-                _buttonPanel.BorderStyle = BorderStyle.None;
-                _buttonPanel.Controls.Clear();
-                _buttonPanel.Controls.Add(_progressCircle);
-                _buttonPanel.ResumeLayout(false);
-                _progressCircle.Active = true;
-                _timer.Enabled = true;
-            }
-
-            private void Button_Click(object sender, EventArgs e)
-            {
-                using (var dialog = new OpenFileDialog
-                {
-                    InitialDirectory = PathEx.LocalDir,
-                    Multiselect = false,
-                    RestoreDirectory = false
-                })
-                {
-                    using (var owner = new Form { ShowIcon = false, TopMost = true })
-                        dialog.ShowDialog(owner);
-                    if (File.Exists(dialog.FileName))
-                        _textBox.Text = dialog.FileName;
-                }
-            }
-
-            private void Timer_Tick(object sender, EventArgs e)
-            {
-                lock (Locker)
-                {
-                    if (!(sender is Timer timer))
-                        return;
-                    if (_count == 0 && _panel.Controls.Count > 0)
-                        _panel.Controls.Clear();
-                    for (var i = 0; i < 3; i++)
-                    {
-                        _panel.SuspendLayout();
-                        try
-                        {
-                            var box = new IconBox(_path, _count++, _button.BackColor, _button.ForeColor, _button.FlatAppearance.MouseOverBackColor);
-                            if (_panel.Controls.Contains(box))
-                            {
-                                box.Dispose();
-                                continue;
-                            }
-                            _iconBoxes.Add(box);
-                            _panel.Controls.Add(box);
-                        }
-                        catch (Exception ex) when (ex.IsCaught())
-                        {
-                            timer.Enabled = false;
-                            if (_count > 0)
-                                _count = 0;
-                            break;
-                        }
-                        finally
-                        {
-                            _panel.ResumeLayout(false);
-                        }
-                    }
-                    var max = _panel.Width / _panel.Controls[0].Width;
-                    for (var i = 0; i < _panel.Controls.Count; i++)
-                    {
-                        if (_panel.Controls[i] == null)
-                            continue;
-                        var line = i / max;
-                        var column = i - line * max;
-                        _panel.Controls[i].Location = new Point(column * _panel.Controls[i].Width, line * _panel.Controls[i].Height);
-                    }
-                    if (timer.Enabled || _panel.Enabled)
-                        return;
-                    _panel.Enabled = true;
-                    _textBox.Enabled = true;
-                    _progressCircle.Active = false;
-                    _buttonPanel.SuspendLayout();
-                    _buttonPanel.Controls.Clear();
-                    _buttonPanel.Controls.Add(_button);
-                    _buttonPanel.BorderStyle = BorderStyle.FixedSingle;
-                    _buttonPanel.ResumeLayout(false);
-                    TaskBarProgress.SetState(Handle, TaskBarProgressState.NoProgress);
-                    if (!_panel.Focus())
-                        _panel.Select();
-                }
-            }
-
-            private sealed class IconBox : UserControl
-            {
-                private static string _file;
-                private static IntPtr[] _icons;
-                private readonly Button _button;
-                private readonly IContainer _components = null;
-
-                public IconBox(string path, int index, Color? buttonFace = null, Color? buttonText = null, Color? buttonHighlight = null)
-                {
-                    SuspendLayout();
-                    AutoScaleDimensions = new SizeF(96f, 96f);
-                    AutoScaleMode = AutoScaleMode.Dpi;
-                    BackColor = buttonFace ?? SystemColors.ButtonFace;
-                    ForeColor = buttonText ?? SystemColors.ControlText;
-                    Name = "IconBox";
-                    Size = new Size(58, 62);
-                    _button = new Button
-                    {
-                        BackColor = BackColor,
-                        FlatStyle = FlatStyle.Flat,
-                        ForeColor = ForeColor,
-                        ImageAlign = ContentAlignment.TopCenter,
-                        Location = new Point(3, 3),
-                        Name = "button",
-                        Size = new Size(52, 56),
-                        TabIndex = 0,
-                        TextAlign = ContentAlignment.BottomCenter,
-                        UseVisualStyleBackColor = false
-                    };
-                    _button.FlatAppearance.BorderSize = 0;
-                    _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? ProfessionalColors.ButtonSelectedHighlight;
-                    _button.Click += Button_Click;
-                    Controls.Add(_button);
-                    ResumeLayout(false);
-                    if (_file?.EqualsEx(path) ?? false)
-                        _icons = null;
-                    _file = path;
-                    var icon = GetIcons(index);
-                    _button.Image = new Bitmap(icon.ToBitmap(), icon.Width, icon.Height);
-                    _button.Text = index.ToString(CultureInfo.InvariantCulture);
-                }
-
-                protected override void Dispose(bool disposing)
-                {
-                    if (disposing)
-                        _components?.Dispose();
-                    _button?.Dispose();
-                    base.Dispose(disposing);
-                }
-
-                private static Icon GetIcons(int index)
-                {
-                    if (_icons != null)
-                        return index > _icons.Length - 1 ? null : Icon.FromHandle(_icons[index]);
-                    _icons = new IntPtr[short.MaxValue];
-                    _ = WinApi.NativeMethods.ExtractIconEx(_file, 0, _icons, new IntPtr[short.MaxValue], short.MaxValue);
-                    return index > _icons.Length - 1 ? null : Icon.FromHandle(_icons[index]);
-                }
-
-                private void Button_Click(object sender, EventArgs e)
-                {
-                    if (!(ParentForm is IconBrowserDialog dialog))
-                        return;
-                    if (int.TryParse(_button.Text, out var index))
-                    {
-                        var path = EnvironmentEx.GetVariablePathFull(_file, false, false);
-                        dialog.IconPath = path;
-                        if (path.Any(char.IsSeparator))
-                            path = $"\"{path}\"";
-                        dialog.IconId = index;
-                        dialog.Text = $@"{path},{index}";
-                    }
-                    dialog.Close();
-                }
             }
         }
     }
