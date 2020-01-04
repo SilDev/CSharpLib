@@ -213,6 +213,8 @@
     <Compile Include="SilDev\SymbolicLink.cs" />
     <Compile Include="SilDev\TaskBar.cs" />
     <Compile Include="SilDev\TextEx.cs" />
+    <Compile Include="SilDev\WebTransfer.cs" />
+    <Compile Include="SilDev\WebTransferAsync.cs" />
     <Compile Include="SilDev\Tray.cs" />
     <Compile Include="SilDev\WebClientEx.cs">
       <SubType>Component</SubType>
