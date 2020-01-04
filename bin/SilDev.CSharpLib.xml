@@ -61,6 +61,16 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ArgumentInvalid">
+            <summary>
+              Looks up a localized string similar to Argument is invalid..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ArgumentInvalidParam">
+            <summary>
+              Looks up a localized string similar to Argument &apos;{0}&apos; is invalid..
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.ExceptionMessages.AssemblyNotFound">
             <summary>
               Looks up a localized string similar to The required assembly could not be found..
@@ -129,6 +139,11 @@
               Looks up a localized string similar to The last block cannot be a single byte..
             </summary>
         </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.MemoryAccess">
+            <summary>
+              Looks up a localized string similar to Unable to access to the specified area of the memory..
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.ExceptionMessages.MultipleCalls">
             <summary>
               Looks up a localized string similar to Multiple calls are not supported..
@@ -151,7 +166,7 @@
         </member>
         <member name="P:SilDev.Properties.ExceptionMessages.PathHasInvalidPrefix">
             <summary>
-              Looks up a localized string similar to The &quot;\\?\&quot; prefix is not supported. - Path: .
+              Looks up a localized string similar to The &quot;{0}&quot; prefix is not supported. - Path: {1}.
             </summary>
         </member>
         <member name="P:SilDev.Properties.ExceptionMessages.PathHasInvalidSeparators">
@@ -172,6 +187,16 @@
         <member name="P:SilDev.Properties.ExceptionMessages.PathLengthIsTooLow">
             <summary>
               Looks up a localized string similar to The path length is lower than 3 characters. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathNotFound">
+            <summary>
+              Looks up a localized string similar to Unable to find the target from the specified path..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PathNotFoundTarget">
+            <summary>
+              Looks up a localized string similar to Target &apos;{0}&apos; could not be found..
             </summary>
         </member>
         <member name="P:SilDev.Properties.ExceptionMessages.PathSegmentLengthIsTooLong">
@@ -12045,1620 +12070,6 @@
                 The value of the User-agent HTTP header.
             </param>
         </member>
-        <member name="T:SilDev.NetEx.Transfer">
-            <summary>
-                Provides static methods for downloading internet resources.
-            </summary>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.Uri,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadFile(System.String,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.String,System.String,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.String,System.String,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.Uri,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.String,System.String,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.String,System.String,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadData(System.String,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.String,System.String,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.String,System.String,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.Uri,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.String,System.String,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.String,System.String,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.Boolean,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.Net.CookieContainer,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.Transfer.DownloadString(System.String,System.Int32,System.String)">
-            <summary>
-                Downloads the specified internet resource as a <see cref="T:System.String"/>.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-        </member>
-        <member name="T:SilDev.NetEx.AsyncTransfer">
-            <summary>
-                Provides asynchronous downloading of internet resources.
-            </summary>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.#ctor">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.NetEx.AsyncTransfer"/> class.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.Address">
-            <summary>
-                Gets the address to the resource.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.FileName">
-            <summary>
-                Gets the local file name of the resource.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.FilePath">
-            <summary>
-                Gets the local path of the resource.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.BytesReceived">
-            <summary>
-                Gets the number of bytes received.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.TotalBytesToReceive">
-            <summary>
-                Gets the total number of bytes received.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.DataReceived">
-            <summary>
-                Gets the total number of <see cref="P:SilDev.NetEx.AsyncTransfer.BytesReceived"/> and <see cref="P:SilDev.NetEx.AsyncTransfer.BytesReceived"/>
-                received in megabyte.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.ProgressPercentage">
-            <summary>
-                Gets the asynchronous progress percentage.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.TransferSpeed">
-            <summary>
-                Gets the megabyte per second of the asynchronous transfer.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.TransferSpeedAd">
-            <summary>
-                Gets the string representation of the speed of the asynchronous transfer.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.TimeElapsed">
-            <summary>
-                Gets the total elapsed time.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.HasCanceled">
-            <summary>
-                Determines whether the transfer has been canceled.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.AsyncTransfer.IsBusy">
-            <summary>
-                Gets whether a transfer is in progress.
-            </summary>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.Dispose">
-            <summary>
-                Releases all resources used by this <see cref="T:SilDev.NetEx.AsyncTransfer"/>.
-            </summary>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.Uri,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="userName">
-                The username associated with the credential.
-            </param>
-            <param name="password">
-                The password associated with the credential.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.DownloadFile(System.String,System.String,System.Int32,System.String,System.Boolean)">
-            <summary>
-                Downloads the specified internet resource to a local file.
-            </summary>
-            <param name="srcUri">
-                The full path of the resource to download.
-            </param>
-            <param name="destPath">
-                The local destination path of the file.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds.
-            </param>
-            <param name="userAgent">
-                The value of the User-agent HTTP header.
-            </param>
-            <param name="checkExists">
-                true to check the file availability before downloading; otherwise, false.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.AsyncTransfer.CancelAsync">
-            <summary>
-                Cancels a pending asynchronous transfer.
-            </summary>
-        </member>
-        <member name="T:SilDev.NetEx.WebClientEx">
-            <summary>
-                Provides common methods for sending data to and receiving data from a
-                resource identified by a URI.
-            </summary>
-        </member>
-        <member name="M:SilDev.NetEx.WebClientEx.#ctor(System.Boolean,System.Net.CookieContainer,System.Int32)">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.NetEx.WebClientEx"/> class.
-            </summary>
-            <param name="allowAutoRedirect">
-                true to indicate that the request should follow redirection responses;
-                otherwise, false.
-            </param>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds for the
-                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
-                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.WebClientEx.#ctor(System.Net.CookieContainer,System.Int32)">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.NetEx.WebClientEx"/> class.
-            </summary>
-            <param name="cookieContainer">
-                The cookies associated with the request.
-            </param>
-            <param name="timeout">
-                The time-out value in milliseconds for the
-                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
-                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
-            </param>
-        </member>
-        <member name="M:SilDev.NetEx.WebClientEx.#ctor(System.Int32)">
-            <summary>
-                Initializes a new instance of the <see cref="T:SilDev.NetEx.WebClientEx"/> class.
-            </summary>
-            <param name="timeout">
-                The time-out value in milliseconds for the
-                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
-                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
-            </param>
-        </member>
-        <member name="P:SilDev.NetEx.WebClientEx.AllowAutoRedirect">
-            <summary>
-                Gets or sets a value that indicates whether the request should follow
-                redirection responses.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.WebClientEx.CookieContainer">
-            <summary>
-                Gets or sets the cookies associated with the request.
-            </summary>
-        </member>
-        <member name="P:SilDev.NetEx.WebClientEx.Timeout">
-            <summary>
-                Gets or sets the time-out value in milliseconds for the
-                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
-                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
-            </summary>
-        </member>
-        <member name="M:SilDev.NetEx.WebClientEx.GetWebRequest(System.Uri)">
-            <summary>
-                Returns a <see cref="T:System.Net.WebRequest"/> object for the specified resource.
-            </summary>
-            <param name="address">
-                A <see cref="T:System.Uri"/> that identifies the resource to request.
-            </param>
-        </member>
         <member name="T:SilDev.NotifyBoxSound">
             <summary>
                 Provides enumerated constants used to retrieves the play sound of the notify box.
@@ -13978,6 +12389,36 @@
                 <see cref="T:System.String"/> instances that contain file or directory path information.
             </summary>
         </member>
+        <member name="P:SilDev.PathEx.VolumeSeparatorStr">
+            <summary>
+                Provides a platform-specific volume separator character string.
+                <para>
+                    The <see cref="T:System.String"/> representation of
+                    <see cref="F:System.IO.Path.VolumeSeparatorChar"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.PathEx.DirectorySeparatorStr">
+            <summary>
+                A platform-specific separator character string used to separate path
+                strings in environment variables.
+                <para>
+                    The <see cref="T:System.String"/> representation of
+                    <see cref="F:System.IO.Path.DirectorySeparatorChar"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.PathEx.AltDirectorySeparatorStr">
+            <summary>
+                Provides a platform-specific alternate character string used to separate
+                directory levels in a path string that reflects a hierarchical file system
+                organization.
+                <para>
+                    The <see cref="T:System.String"/> representation of
+                    <see cref="F:System.IO.Path.AltDirectorySeparatorChar"/>.
+                </para>
+            </summary>
+        </member>
         <member name="P:SilDev.PathEx.LocalPath">
             <summary>
                 Gets the full process executable path of the assembly based on
@@ -14285,9 +12726,7 @@
         </member>
         <member name="M:SilDev.PathEx.ForceDelete(System.String,System.Boolean,System.Int32)">
             <summary>
-                <para>
-                    Deletes any file or directory.
-                </para>
+                Deletes any file or directory.
                 <para>
                     Immediately stops all specified processes that are locking this file or directory.
                 </para>
@@ -14521,6 +12960,11 @@
                 local system processes.
             </summary>
         </member>
+        <member name="P:SilDev.ProcessEx.Current">
+            <summary>
+                Gets the currently active process.
+            </summary>
+        </member>
         <member name="P:SilDev.ProcessEx.CurrentHandle">
             <summary>
                 Gets the handle of the current process instance.
@@ -14549,9 +12993,21 @@
                 The <see cref="T:System.Diagnostics.Process"/> component.
             </param>
         </member>
+        <member name="M:SilDev.ProcessEx.SetParent(System.Diagnostics.Process,System.Diagnostics.Process)">
+            <summary>
+                Sets the parent process of this <see cref="T:System.Diagnostics.Process"/>.
+            </summary>
+            <param name="process">
+                The child <see cref="T:System.Diagnostics.Process"/> component.
+            </param>
+            <param name="newParent">
+                The new parent <see cref="T:System.Diagnostics.Process"/> component.
+            </param>
+        </member>
         <member name="M:SilDev.ProcessEx.GetInstances(System.String,System.Boolean)">
             <summary>
-                Gets all active instances associated with the specified application.
+                Gets all active instances associated with the specified application. If the
+                specified name/path is null, all running processes are returned.
             </summary>
             <param name="nameOrPath">
                 The filename or the full path to the application to check.
@@ -14567,7 +13023,8 @@
         <member name="M:SilDev.ProcessEx.InstancesCount(System.String,System.Boolean)">
             <summary>
                 Returns the number of all active instances associated with the specified
-                application.
+                application. If the specified name/path is null, the number of all running
+                processes is returned.
             </summary>
             <param name="nameOrPath">
                 The filename or the full path to the application to check.
@@ -17352,6 +15809,1548 @@
                 Returns a sequence of all line separator characters.
             </summary>
         </member>
+        <member name="T:SilDev.WebTransfer">
+            <summary>
+                Provides static methods for downloading internet resources.
+            </summary>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.Uri,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.Uri,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.Uri,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.Uri,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadFile(System.String,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.String,System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.String,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.Uri,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.String,System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.String,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadData(System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.Byte"/> array.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.String,System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.String,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.Uri,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.String,System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.String,System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.Net.CookieContainer,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransfer.DownloadString(System.String,System.Int32,System.String)">
+            <summary>
+                Downloads the specified internet resource as a <see cref="T:System.String"/>.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+        </member>
+        <member name="T:SilDev.WebTransferAsync">
+            <summary>
+                Provides asynchronous downloading of internet resources.
+            </summary>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.WebTransferAsync"/> class.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.Address">
+            <summary>
+                Gets the address to the resource.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.FileName">
+            <summary>
+                Gets the local file name of the resource.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.FilePath">
+            <summary>
+                Gets the local path of the resource.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.BytesReceived">
+            <summary>
+                Gets the number of bytes received.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.TotalBytesToReceive">
+            <summary>
+                Gets the total number of bytes received.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.DataReceived">
+            <summary>
+                Gets the total number of <see cref="P:SilDev.WebTransferAsync.BytesReceived"/> and <see cref="P:SilDev.WebTransferAsync.BytesReceived"/>
+                received in megabyte.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.ProgressPercentage">
+            <summary>
+                Gets the asynchronous progress percentage.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.TransferSpeed">
+            <summary>
+                Gets the megabyte per second of the asynchronous transfer.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.TransferSpeedAd">
+            <summary>
+                Gets the string representation of the speed of the asynchronous transfer.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.TimeElapsed">
+            <summary>
+                Gets the total elapsed time.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.HasCanceled">
+            <summary>
+                Determines whether the transfer has been canceled.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebTransferAsync.IsBusy">
+            <summary>
+                Gets whether a transfer is in progress.
+            </summary>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.Dispose">
+            <summary>
+                Releases all resources used by this <see cref="T:SilDev.WebTransferAsync"/>.
+            </summary>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.Uri,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.Uri,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.Uri,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.Uri,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.Uri,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.Uri,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.String,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="userName">
+                The username associated with the credential.
+            </param>
+            <param name="password">
+                The password associated with the credential.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.Boolean,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.Boolean,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.Net.CookieContainer,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.DownloadFile(System.String,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+                Downloads the specified internet resource to a local file.
+            </summary>
+            <param name="srcUri">
+                The full path of the resource to download.
+            </param>
+            <param name="destPath">
+                The local destination path of the file.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds.
+            </param>
+            <param name="userAgent">
+                The value of the User-agent HTTP header.
+            </param>
+            <param name="checkExists">
+                true to check the file availability before downloading; otherwise, false.
+            </param>
+        </member>
+        <member name="M:SilDev.WebTransferAsync.CancelAsync">
+            <summary>
+                Cancels a pending asynchronous transfer.
+            </summary>
+        </member>
         <member name="T:SilDev.Tray">
             <summary>
                 Provides the functionality to manage the items of the system tray area.
@@ -17371,6 +17370,78 @@
             </param>
             <param name="wait">
                 Delay between refreshes in milliseconds.
+            </param>
+        </member>
+        <member name="T:SilDev.WebClientEx">
+            <summary>
+                Provides common methods for sending data to and receiving data from a
+                resource identified by a URI.
+            </summary>
+        </member>
+        <member name="M:SilDev.WebClientEx.#ctor(System.Boolean,System.Net.CookieContainer,System.Int32)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.WebClientEx"/> class.
+            </summary>
+            <param name="allowAutoRedirect">
+                true to indicate that the request should follow redirection responses;
+                otherwise, false.
+            </param>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds for the
+                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
+                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
+            </param>
+        </member>
+        <member name="M:SilDev.WebClientEx.#ctor(System.Net.CookieContainer,System.Int32)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.WebClientEx"/> class.
+            </summary>
+            <param name="cookieContainer">
+                The cookies associated with the request.
+            </param>
+            <param name="timeout">
+                The time-out value in milliseconds for the
+                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
+                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
+            </param>
+        </member>
+        <member name="M:SilDev.WebClientEx.#ctor(System.Int32)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.WebClientEx"/> class.
+            </summary>
+            <param name="timeout">
+                The time-out value in milliseconds for the
+                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
+                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
+            </param>
+        </member>
+        <member name="P:SilDev.WebClientEx.AllowAutoRedirect">
+            <summary>
+                Gets or sets a value that indicates whether the request should follow
+                redirection responses.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebClientEx.CookieContainer">
+            <summary>
+                Gets or sets the cookies associated with the request.
+            </summary>
+        </member>
+        <member name="P:SilDev.WebClientEx.Timeout">
+            <summary>
+                Gets or sets the time-out value in milliseconds for the
+                <see cref="M:System.Net.HttpWebRequest.GetResponse"/> and
+                <see cref="M:System.Net.HttpWebRequest.GetRequestStream"/> methods.
+            </summary>
+        </member>
+        <member name="M:SilDev.WebClientEx.GetWebRequest(System.Uri)">
+            <summary>
+                Returns a <see cref="T:System.Net.WebRequest"/> object for the specified resource.
+            </summary>
+            <param name="address">
+                A <see cref="T:System.Uri"/> that identifies the resource to request.
             </param>
         </member>
         <member name="T:SilDev.WinApi">
