@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2019-12-29 23:54
+// Version:  2020-01-04 12:38
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -35,68 +35,45 @@ namespace SilDev
     /// </summary>
     public static class ProcessEx
     {
-        private static IntPtr _currentHandle;
-        private static int? _currentId;
-        private static string _currentName;
+        private static Process _current;
+
+        /// <summary>
+        ///     Gets the currently active process.
+        /// </summary>
+        public static Process Current
+        {
+            get
+            {
+                if (_current != default)
+                    return _current;
+                _current = Process.GetCurrentProcess();
+                return _current;
+            }
+        }
 
         /// <summary>
         ///     Gets the handle of the current process instance.
         /// </summary>
-        public static IntPtr CurrentHandle
-        {
-            get
-            {
-                if (_currentHandle != default)
-                    return _currentHandle;
-                using (var p = Process.GetCurrentProcess())
-                    _currentHandle = p.Handle;
-                return _currentHandle;
-            }
-        }
+        public static IntPtr CurrentHandle =>
+            Current.Handle;
 
         /// <summary>
         ///     Gets the unique identifier of the current process instance.
         /// </summary>
-        public static int CurrentId
-        {
-            get
-            {
-                if (_currentId.HasValue)
-                    return (int)_currentId;
-                using (var p = Process.GetCurrentProcess())
-                    _currentId = p.Id;
-                return (int)_currentId;
-            }
-        }
+        public static int CurrentId =>
+            Current.Id;
 
         /// <summary>
         ///     Gets the name of the current process instance.
         /// </summary>
-        public static string CurrentName
-        {
-            get
-            {
-                if (_currentName != default)
-                    return _currentName;
-                using (var p = Process.GetCurrentProcess())
-                    _currentName = p.ProcessName;
-                return _currentName;
-            }
-        }
+        public static string CurrentName =>
+            Current.ProcessName;
 
         /// <summary>
         ///     Gets the parent process of the current process instance.
         /// </summary>
-        public static Process CurrentParent
-        {
-            get
-            {
-                Process parentProcess;
-                using (var p = Process.GetCurrentProcess())
-                    parentProcess = p.GetParent();
-                return parentProcess;
-            }
-        }
+        public static Process CurrentParent =>
+            Current.GetParent();
 
         /// <summary>
         ///     Gets the parent process of this <see cref="Process"/>.
