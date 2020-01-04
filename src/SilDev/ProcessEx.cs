@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-04 12:46
+// Version:  2020-01-04 12:49
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -231,7 +231,7 @@ namespace SilDev
         ///     </para>
         /// </param>
         public static bool IsRunning(string nameOrPath, bool doubleTap = false) =>
-            InstancesCount(nameOrPath, doubleTap) > 0;
+            !string.IsNullOrWhiteSpace(nameOrPath) && InstancesCount(nameOrPath, doubleTap) > 0;
 
         /// <summary>
         ///     Determines whether this <see cref="Process"/> is running in a sandbox
