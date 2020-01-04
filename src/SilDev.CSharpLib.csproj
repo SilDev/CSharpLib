@@ -214,6 +214,9 @@
     <Compile Include="SilDev\TaskBar.cs" />
     <Compile Include="SilDev\TextEx.cs" />
     <Compile Include="SilDev\Tray.cs" />
+    <Compile Include="SilDev\WebClientEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SilDev\WinApi.cs" />
     <Compile Include="SilDev\Xml.cs" />
   </ItemGroup>
