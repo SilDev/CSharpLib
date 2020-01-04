@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-03 12:52
+// Version:  2020-01-04 13:39
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -20,7 +20,6 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Management;
@@ -488,9 +487,9 @@ namespace SilDev
                     output = output?.ToLowerInvariant();
                 if (!string.IsNullOrEmpty(output) && (!string.IsNullOrEmpty(key) || num > 1))
                     if (string.IsNullOrEmpty(key))
-                        output = output.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.DirectorySeparatorChar, num));
+                        output = output.Replace(PathEx.DirectorySeparatorStr, new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
-                        output = output.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.AltDirectorySeparatorChar, num));
+                        output = output.Replace(PathEx.DirectorySeparatorStr, new string(Path.AltDirectorySeparatorChar, num));
             }
             catch (InvalidOperationException ex)
             {

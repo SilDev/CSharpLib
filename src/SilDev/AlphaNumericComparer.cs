@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AlphaNumericComparer.cs
-// Version:  2020-01-03 13:25
+// Version:  2020-01-04 13:44
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -160,10 +160,8 @@ namespace SilDev
         {
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
-
             if (Log.DebugMode > 1)
                 Log.Write($"{nameof(AlphaNumericComparer)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-
             info.AddValue(nameof(Descendant), Descendant);
         }
     }

@@ -157,7 +157,7 @@
    Section: '{1}'
    Key: '{0}'
    FileOrContent: '{2}'</value>
-    <comment>string.format(this, section, key, content)</comment>
+    <comment>string.Format(this, section, key, content)</comment>
   </data>
   <data name="InvalidDriveInPath" xml:space="preserve">
     <value>The path does not contain a valid drive. - Path: </value>
@@ -180,8 +180,8 @@
     <comment>+</comment>
   </data>
   <data name="PathHasInvalidPrefix" xml:space="preserve">
-    <value>The "\\?\" prefix is not supported. - Path: </value>
-    <comment>+</comment>
+    <value>The "{0}" prefix is not supported. - Path: {1}</value>
+    <comment>string.Format(this, prefix, path)</comment>
   </data>
   <data name="PathHasInvalidSeparators" xml:space="preserve">
     <value>The path does not contain a valid separator. - Path: </value>

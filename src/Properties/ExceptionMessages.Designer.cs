@@ -217,7 +217,7 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The &quot;\\?\&quot; prefix is not supported. - Path: .
+        ///   Looks up a localized string similar to The &quot;{0}&quot; prefix is not supported. - Path: {1}.
         /// </summary>
         internal static string PathHasInvalidPrefix {
             get {

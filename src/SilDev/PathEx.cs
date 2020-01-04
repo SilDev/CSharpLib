@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2019-12-29 23:17
+// Version:  2020-01-04 13:39
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -46,6 +46,51 @@ namespace SilDev
             '\u0022', '\u002a', '\u003c', '\u003e',
             '\u003f', '\u007c'
         };
+
+        private static readonly string[] PathPrefixStrs =
+        {
+            "\\??\\UNC\\",
+            "\\??\\",
+            "\\\\?\\",
+            "\\\\.\\",
+            "\\\\"
+        };
+
+        private static readonly char[] PathSeparatorChars =
+        {
+            Path.DirectorySeparatorChar,
+            Path.AltDirectorySeparatorChar
+        };
+
+        /// <summary>
+        ///     Provides a platform-specific volume separator character string.
+        ///     <para>
+        ///         The <see cref="string"/> representation of
+        ///         <see cref="Path.VolumeSeparatorChar"/>.
+        ///     </para>
+        /// </summary>
+        public static string VolumeSeparatorStr { get; } = Path.VolumeSeparatorChar.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>
+        ///     A platform-specific separator character string used to separate path
+        ///     strings in environment variables.
+        ///     <para>
+        ///         The <see cref="string"/> representation of
+        ///         <see cref="Path.DirectorySeparatorChar"/>.
+        ///     </para>
+        /// </summary>
+        public static string DirectorySeparatorStr { get; } = Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>
+        ///     Provides a platform-specific alternate character string used to separate
+        ///     directory levels in a path string that reflects a hierarchical file system
+        ///     organization.
+        ///     <para>
+        ///         The <see cref="string"/> representation of
+        ///         <see cref="Path.AltDirectorySeparatorChar"/>.
+        ///     </para>
+        /// </summary>
+        public static string AltDirectorySeparatorStr { get; } = Path.AltDirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
 
         /// <summary>
         ///     Gets the full process executable path of the assembly based on
@@ -118,8 +163,8 @@ namespace SilDev
                         throw new ArgumentException(ExceptionMessages.PathHasNoSeparators + path);
                     throw new ArgumentException(ExceptionMessages.PathHasInvalidSeparators + path);
                 }
-                if (path.StartsWith("\\\\?\\", StringComparison.Ordinal))
-                    throw new NotSupportedException(ExceptionMessages.PathHasInvalidPrefix + path);
+                foreach (var s in PathPrefixStrs.Where(s => path.StartsWith(s, StringComparison.Ordinal)))
+                    throw new NotSupportedException(string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.PathHasInvalidPrefix, s, path));
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
                     throw new ArgumentException(ExceptionMessages.ConsecutiveSeparatorsInPath + path);
                 var drive = path.Substring(0, 3);
@@ -205,12 +250,7 @@ namespace SilDev
             {
                 if (specialFolder != null)
                     path = Environment.GetFolderPath((Environment.SpecialFolder)specialFolder);
-                var separators = new[]
-                {
-                    Path.DirectorySeparatorChar,
-                    Path.AltDirectorySeparatorChar
-                };
-                if (!(paths?.Join(Path.DirectorySeparatorChar).Split(separators, StringSplitOptions.RemoveEmptyEntries) is IEnumerable<string> plains))
+                if (!(paths?.Join(Path.DirectorySeparatorChar).Split(PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries) is IEnumerable<string> plains))
                     throw new ArgumentNullException(nameof(paths));
                 if (invalidPathChars?.Any() ?? false)
                     plains = plains.Select(x => x.RemoveChar(invalidPathChars));
@@ -246,9 +286,9 @@ namespace SilDev
 
                 if (!string.IsNullOrEmpty(key) || num > 1)
                     if (string.IsNullOrEmpty(key))
-                        path = path.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.DirectorySeparatorChar, num));
+                        path = path.Replace(DirectorySeparatorStr, new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
-                        path = path.Replace(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), new string(Path.AltDirectorySeparatorChar, num));
+                        path = path.Replace(DirectorySeparatorStr, new string(Path.AltDirectorySeparatorChar, num));
             }
             catch (ArgumentException ex)
             {
@@ -628,9 +668,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     <para>
-        ///         Deletes any file or directory.
-        ///     </para>
+        ///     Deletes any file or directory.
         ///     <para>
         ///         Immediately stops all specified processes that are locking this file or directory.
         ///     </para>
