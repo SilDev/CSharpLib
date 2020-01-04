@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-04 12:40
+// Version:  2020-01-04 12:46
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -106,6 +106,42 @@ namespace SilDev
                 Log.Write(ex);
             }
             return null;
+        }
+
+        /// <summary>
+        ///     Sets the parent process of this <see cref="Process"/>.
+        /// </summary>
+        /// <param name="process">
+        ///     The child <see cref="Process"/> component.
+        /// </param>
+        /// <param name="newParent">
+        ///     The new parent <see cref="Process"/> component.
+        /// </param>
+        public static bool SetParent(this Process process, Process newParent)
+        {
+            try
+            {
+                if (process == null)
+                    throw new ArgumentNullException(nameof(process));
+                var hWndChild = process.MainWindowHandle;
+                if (hWndChild == IntPtr.Zero)
+                    hWndChild = process.Handle;
+                var hWndNewParent = IntPtr.Zero;
+                if (newParent != null)
+                {
+                    hWndNewParent = newParent.MainWindowHandle;
+                    if (hWndNewParent == IntPtr.Zero)
+                        hWndNewParent = newParent.Handle;
+                }
+                if (WinApi.NativeMethods.SetParent(hWndChild, hWndNewParent) != IntPtr.Zero)
+                    return true;
+                WinApi.ThrowLastError();
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+            }
+            return false;
         }
 
         /// <summary>
