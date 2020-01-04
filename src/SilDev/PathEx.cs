@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2020-01-04 13:39
+// Version:  2020-01-04 13:40
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -163,8 +163,12 @@ namespace SilDev
                         throw new ArgumentException(ExceptionMessages.PathHasNoSeparators + path);
                     throw new ArgumentException(ExceptionMessages.PathHasInvalidSeparators + path);
                 }
-                foreach (var s in PathPrefixStrs.Where(s => path.StartsWith(s, StringComparison.Ordinal)))
-                    throw new NotSupportedException(string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.PathHasInvalidPrefix, s, path));
+                foreach (var prefix in PathPrefixStrs)
+                {
+                    if (!path.StartsWith(prefix, StringComparison.Ordinal))
+                        continue;
+                    throw new NotSupportedException(string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.PathHasInvalidPrefix, prefix, path));
+                }
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
                     throw new ArgumentException(ExceptionMessages.ConsecutiveSeparatorsInPath + path);
                 var drive = path.Substring(0, 3);
