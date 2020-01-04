@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathNotFoundException.cs
-// Version:  2019-10-23 17:48
+// Version:  2020-01-04 14:01
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Runtime.Serialization;
     using System.Security;
+    using Properties;
 
     /// <summary>
     ///     The exception thrown when an attempt to access an target fails.
@@ -38,7 +39,7 @@ namespace SilDev
         ///     The target that caused the exception.
         /// </param>
         public PathNotFoundException(string target) : base(target) =>
-            Message = $"Could not find target \'{target}\'.";
+            Message = string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.PathNotFoundTarget, target);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class
@@ -52,7 +53,7 @@ namespace SilDev
         ///     The exception that is the cause of the current exception, or a null reference.
         /// </param>
         public PathNotFoundException(string target, Exception innerException) : base(target, innerException) =>
-            Message = $"Could not find target \'{target}\'.";
+            Message = ExceptionMessages.PathNotFoundTarget + target;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class
@@ -69,7 +70,7 @@ namespace SilDev
         /// <summary>
         ///     Gets a message that describes the current exception.
         /// </summary>
-        public sealed override string Message { get; } = "Unable to find the target from the specified path.";
+        public sealed override string Message { get; } = ExceptionMessages.PathNotFound;
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object with the target and additional

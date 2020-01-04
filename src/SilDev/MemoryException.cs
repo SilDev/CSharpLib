@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MemoryException.cs
-// Version:  2019-10-23 17:48
+// Version:  2020-01-04 14:01
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Runtime.Serialization;
     using System.Security;
+    using Properties;
 
     /// <summary>
     ///     The exception that is thrown when an attempt to access some data in memory fails.
@@ -67,7 +68,7 @@ namespace SilDev
         /// <summary>
         ///     Gets a message that describes the current exception.
         /// </summary>
-        public sealed override string Message { get; } = "Unable to access to the specified area of the memory.";
+        public sealed override string Message { get; } = ExceptionMessages.MemoryAccess;
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object with the additional exception

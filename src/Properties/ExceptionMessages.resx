@@ -117,6 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArgumentInvalid" xml:space="preserve">
+    <value>Argument is invalid.</value>
+  </data>
+  <data name="ArgumentInvalidParam" xml:space="preserve">
+    <value>Argument '{0}' is invalid.</value>
+    <comment>string.Format(this, paramName)</comment>
+  </data>
   <data name="AssemblyNotFound" xml:space="preserve">
     <value>The required assembly could not be found.</value>
   </data>
@@ -166,6 +173,9 @@
   <data name="LastBlockIsSingleByte" xml:space="preserve">
     <value>The last block cannot be a single byte.</value>
   </data>
+  <data name="MemoryAccess" xml:space="preserve">
+    <value>Unable to access to the specified area of the memory.</value>
+  </data>
   <data name="MultipleCalls" xml:space="preserve">
     <value>Multiple calls are not supported.</value>
   </data>
@@ -198,6 +208,13 @@
   <data name="PathLengthIsTooLow" xml:space="preserve">
     <value>The path length is lower than 3 characters. - Path: </value>
     <comment>+</comment>
+  </data>
+  <data name="PathNotFound" xml:space="preserve">
+    <value>Unable to find the target from the specified path.</value>
+  </data>
+  <data name="PathNotFoundTarget" xml:space="preserve">
+    <value>Target '{0}' could not be found.</value>
+    <comment>string.Format(this, target)</comment>
   </data>
   <data name="PathSegmentLengthIsTooLong" xml:space="preserve">
     <value>A segment of the path is longer than 255 characters. - Path: </value>

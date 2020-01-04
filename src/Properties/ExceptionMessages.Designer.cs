@@ -61,6 +61,24 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Argument is invalid..
+        /// </summary>
+        internal static string ArgumentInvalid {
+            get {
+                return ResourceManager.GetString("ArgumentInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument &apos;{0}&apos; is invalid..
+        /// </summary>
+        internal static string ArgumentInvalidParam {
+            get {
+                return ResourceManager.GetString("ArgumentInvalidParam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The required assembly could not be found..
         /// </summary>
         internal static string AssemblyNotFound {
@@ -181,6 +199,15 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to access to the specified area of the memory..
+        /// </summary>
+        internal static string MemoryAccess {
+            get {
+                return ResourceManager.GetString("MemoryAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Multiple calls are not supported..
         /// </summary>
         internal static string MultipleCalls {
@@ -258,6 +285,24 @@ namespace SilDev.Properties {
         internal static string PathLengthIsTooLow {
             get {
                 return ResourceManager.GetString("PathLengthIsTooLow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find the target from the specified path..
+        /// </summary>
+        internal static string PathNotFound {
+            get {
+                return ResourceManager.GetString("PathNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target &apos;{0}&apos; could not be found..
+        /// </summary>
+        internal static string PathNotFoundTarget {
+            get {
+                return ResourceManager.GetString("PathNotFoundTarget", resourceCulture);
             }
         }
         
