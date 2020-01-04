@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-04 12:38
+// Version:  2020-01-04 12:40
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -109,7 +109,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets all active instances associated with the specified application.
+        ///     Gets all active instances associated with the specified application. If the
+        ///     specified name/path is null, all running processes are returned.
         /// </summary>
         /// <param name="nameOrPath">
         ///     The filename or the full path to the application to check.
@@ -123,38 +124,49 @@ namespace SilDev
         /// </param>
         public static IEnumerable<Process> GetInstances(string nameOrPath, bool doubleTap = false)
         {
-            try
+            if (nameOrPath != null && string.IsNullOrWhiteSpace(nameOrPath))
+                yield break;
+            var path = nameOrPath;
+            if (path?.StartsWith("\\", StringComparison.Ordinal) ?? false)
+                path = path.TrimStart('\t', ' ', '?', '\\');
+            path = PathEx.Combine(path);
+            var isPath = path.ContainsEx(Path.DirectorySeparatorChar);
+            if (isPath && !File.Exists(path))
+                yield break;
+            if (!isPath && !doubleTap)
+                doubleTap = true;
+            var name = nameOrPath;
+            if (!string.IsNullOrEmpty(name))
+                name = path.EndsWithEx(".com", ".exe", ".scr") ? Path.GetFileNameWithoutExtension(path) : Path.GetFileName(path);
+            foreach (var p in Process.GetProcesses())
             {
-                IEnumerable<Process> instances;
-                var path = PathEx.Combine(default(char[]), nameOrPath);
-                var name = Path.GetFileNameWithoutExtension(path);
-                try
+                if (name == null)
                 {
-                    if (!path.ContainsEx(Path.DirectorySeparatorChar) || !File.Exists(path))
+                    yield return p;
+                    continue;
+                }
+                if (!p.ProcessName.EqualsEx(name))
+                    continue;
+                var mPath = default(string);
+                if (isPath)
+                    try
                     {
-                        doubleTap = true;
-                        throw new ArgumentException();
+                        mPath = p.MainModule?.FileName;
                     }
-                    instances = Process.GetProcesses().Where(p => p.ProcessName.EqualsEx(name) && (p.MainModule ?? throw new ArgumentException()).FileName.EqualsEx(path));
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    if (!doubleTap)
-                        return null;
-                    instances = Process.GetProcessesByName(name);
-                }
-                return instances;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return null;
+                    catch (Exception ex) when (ex.IsCaught())
+                    {
+                        if (!(ex is ArgumentException))
+                            Log.Write(ex);
+                    }
+                if (mPath?.EqualsEx(path) ?? isPath && doubleTap || doubleTap)
+                    yield return p;
             }
         }
 
         /// <summary>
         ///     Returns the number of all active instances associated with the specified
-        ///     application.
+        ///     application. If the specified name/path is null, the number of all running
+        ///     processes is returned.
         /// </summary>
         /// <param name="nameOrPath">
         ///     The filename or the full path to the application to check.
@@ -166,23 +178,8 @@ namespace SilDev
         ///         only a name.
         ///     </para>
         /// </param>
-        public static int InstancesCount(string nameOrPath, bool doubleTap = false)
-        {
-            var count = 0;
-            try
-            {
-                foreach (var p in GetInstances(nameOrPath, doubleTap))
-                {
-                    count++;
-                    p?.Dispose();
-                }
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-            }
-            return count;
-        }
+        public static int InstancesCount(string nameOrPath, bool doubleTap = false) =>
+            GetInstances(nameOrPath, doubleTap).Count();
 
         /// <summary>
         ///     Determines whether the specified file is matched with a running process.
