@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2019-12-16 16:43
+// Version:  2020-01-05 07:10
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -189,7 +189,6 @@ namespace SilDev
         /// </param>
         public static IEnumerable<string> EnumerateDirectories(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
-            var dirs = default(IEnumerable<string>);
             try
             {
                 if (string.IsNullOrEmpty(path))
@@ -197,13 +196,13 @@ namespace SilDev
                 var dir = PathEx.Combine(path);
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(dir);
-                dirs = Directory.EnumerateDirectories(path, searchPattern, searchOption);
+                return Directory.EnumerateDirectories(path, searchPattern, searchOption);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
+                return null;
             }
-            return dirs;
         }
 
         /// <summary>
@@ -241,7 +240,6 @@ namespace SilDev
         /// </param>
         public static string[] GetDirectories(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
-            var dirs = default(string[]);
             try
             {
                 if (string.IsNullOrEmpty(path))
@@ -249,13 +247,16 @@ namespace SilDev
                 var dir = PathEx.Combine(path);
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(dir);
-                dirs = Directory.GetDirectories(path, searchPattern, searchOption);
+                var dirs = Directory.GetDirectories(dir, searchPattern, SearchOption.TopDirectoryOnly);
+                if (searchOption == SearchOption.TopDirectoryOnly || !dirs.Any())
+                    return dirs;
+                return dirs.Concat(dirs.AsParallel().SelectMany(s => EnumerateDirectories(s, searchPattern, SearchOption.AllDirectories))).ToArray();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
+                return null;
             }
-            return dirs;
         }
 
         /// <summary>
@@ -293,7 +294,6 @@ namespace SilDev
         /// </param>
         public static IEnumerable<string> EnumerateFiles(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
-            var files = default(IEnumerable<string>);
             try
             {
                 if (string.IsNullOrEmpty(path))
@@ -301,13 +301,13 @@ namespace SilDev
                 var dir = PathEx.Combine(path);
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(dir);
-                files = Directory.EnumerateFiles(path, searchPattern, searchOption);
+                return Directory.EnumerateFiles(path, searchPattern, searchOption);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
+                return null;
             }
-            return files;
         }
 
         /// <summary>
@@ -345,7 +345,6 @@ namespace SilDev
         /// </param>
         public static string[] GetFiles(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
-            var files = default(string[]);
             try
             {
                 if (string.IsNullOrEmpty(path))
@@ -353,13 +352,19 @@ namespace SilDev
                 var dir = PathEx.Combine(path);
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(dir);
-                files = Directory.GetFiles(path, searchPattern, searchOption);
+                var files = Directory.GetFiles(dir, searchPattern, SearchOption.TopDirectoryOnly);
+                if (searchOption == SearchOption.TopDirectoryOnly)
+                    return files;
+                var dirs = EnumerateDirectories(dir, searchPattern)?.AsParallel();
+                if (dirs != null)
+                    files = files.Concat(dirs.SelectMany(s => EnumerateFiles(s, searchPattern, SearchOption.AllDirectories))).ToArray();
+                return files;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
+                return null;
             }
-            return files;
         }
 
         /// <summary>

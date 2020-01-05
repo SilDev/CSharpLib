@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2020-01-04 13:40
+// Version:  2020-01-05 07:10
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -620,24 +620,8 @@ namespace SilDev
         /// </param>
         /// <exception cref="Win32Exception">
         /// </exception>
-        public static IEnumerable<Process> GetLocks(IEnumerable<string> paths)
-        {
-            if (paths == null)
-                return null;
-            var files = new List<string>();
-            foreach (var path in paths.Select(Combine))
-            {
-                if (IsDir(path))
-                {
-                    var innerFiles = DirectoryEx.GetFiles(path, SearchOption.AllDirectories);
-                    if (innerFiles?.Any() ?? false)
-                        files.AddRange(innerFiles);
-                    continue;
-                }
-                files.Add(path);
-            }
-            return files.Any() ? FileEx.GetLocks(files.ToArray()) : null;
-        }
+        public static IEnumerable<Process> GetLocks(IEnumerable<string> paths) =>
+            paths != null ? FileEx.GetLocks(paths.Select(Combine).SelectMany(x => IsDir(x) ? DirectoryEx.GetFiles(x, SearchOption.AllDirectories) : new[] { x })) : null;
 
         /// <summary>
         ///     Returns processes that have locked the specified path.
