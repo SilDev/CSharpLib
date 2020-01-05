@@ -164,6 +164,11 @@
               Looks up a localized string similar to The path does not contain any drive. - Path: .
             </summary>
         </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.NoProcessWithDuplicatedToken">
+            <summary>
+              Looks up a localized string similar to Unable to create a new process with the duplicated token..
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.ExceptionMessages.PathHasInvalidPrefix">
             <summary>
               Looks up a localized string similar to The &quot;{0}&quot; prefix is not supported. - Path: {1}.
@@ -202,6 +207,21 @@
         <member name="P:SilDev.Properties.ExceptionMessages.PathSegmentLengthIsTooLong">
             <summary>
               Looks up a localized string similar to A segment of the path is longer than 255 characters. - Path: .
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PrivilegeValueAccess">
+            <summary>
+              Looks up a localized string similar to Privilege value could not be retrieved..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PseudoHandleNotFound">
+            <summary>
+              Looks up a localized string similar to The pseudo handle could not be retrieved..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.PseudoHandleTokenAccess">
+            <summary>
+              Looks up a localized string similar to Unable to open the token for the pseudo handle..
             </summary>
         </member>
         <member name="P:SilDev.Properties.ExceptionMessages.SCManagerConnectionCanceled">
@@ -244,9 +264,34 @@
               Looks up a localized string similar to Service could not be deleted. - Error: .
             </summary>
         </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ShellPidNotFound">
+            <summary>
+              Looks up a localized string similar to Unable to identifier the shell process..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ShellProcessAccess">
+            <summary>
+              Looks up a localized string similar to Unable to open the shell process object..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ShellProcessTokenAccess">
+            <summary>
+              Looks up a localized string similar to Unable to open the shell process token..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ShellProcessTokenDuplication">
+            <summary>
+              Looks up a localized string similar to Unable to duplicate the shell process token..
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.ExceptionMessages.SystemRestoringIsDisabled">
             <summary>
               Looks up a localized string similar to System restoring is disabled..
+            </summary>
+        </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.TokenPrivilegesAdjustment">
+            <summary>
+              Looks up a localized string similar to Unable to adjust the token privileges..
             </summary>
         </member>
         <member name="T:SilDev.Properties.UIStrings">
