@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-04 12:49
+// Version:  2020-01-05 07:23
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -353,19 +353,19 @@ namespace SilDev
                             {
                                 var pseudoHandle = WinApi.NativeMethods.GetCurrentProcess();
                                 if (pseudoHandle == IntPtr.Zero)
-                                    WinApi.ThrowLastError("The pseudo handle could not be retrieved.");
+                                    WinApi.ThrowLastError(ExceptionMessages.PseudoHandleNotFound);
                                 if (!WinApi.NativeMethods.OpenProcessToken(pseudoHandle, 0x20, out tokenHandle))
-                                    WinApi.ThrowLastError("Unable to open the token for the pseudo handle.");
+                                    WinApi.ThrowLastError(ExceptionMessages.PseudoHandleTokenAccess);
                                 var newState = new WinApi.TokenPrivileges
                                 {
                                     PrivilegeCount = 1,
                                     Privileges = new WinApi.LuIdAndAttributes[1]
                                 };
                                 if (!WinApi.NativeMethods.LookupPrivilegeValue(null, "SeIncreaseQuotaPrivilege", ref newState.Privileges[0].Luid))
-                                    WinApi.ThrowLastError("Privilege value could not be retrieved.");
+                                    WinApi.ThrowLastError(ExceptionMessages.PrivilegeValueAccess);
                                 newState.Privileges[0].Attributes = 0x2;
                                 if (!WinApi.NativeHelper.AdjustTokenPrivileges(tokenHandle, false, ref newState))
-                                    WinApi.ThrowLastError("Unable to adjust the token privileges.");
+                                    WinApi.ThrowLastError(ExceptionMessages.TokenPrivilegesAdjustment);
                             }
                             finally
                             {
@@ -380,17 +380,17 @@ namespace SilDev
                             try
                             {
                                 if (WinApi.NativeMethods.GetWindowThreadProcessId(shellWindow, out var pid) <= 0)
-                                    WinApi.ThrowLastError("Unable to identifier the shell process.");
+                                    WinApi.ThrowLastError(ExceptionMessages.ShellPidNotFound);
                                 shellHandle = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessQueryInformation, false, pid);
                                 if (shellHandle == IntPtr.Zero)
-                                    WinApi.ThrowLastError("Unable to open the shell process object.");
+                                    WinApi.ThrowLastError(ExceptionMessages.ShellProcessAccess);
                                 if (!WinApi.NativeMethods.OpenProcessToken(shellHandle, 0x2, out shellToken))
-                                    WinApi.ThrowLastError("Unable to open the shell process token.");
+                                    WinApi.ThrowLastError(ExceptionMessages.ShellProcessTokenAccess);
                                 if (!WinApi.NativeMethods.DuplicateTokenEx(shellToken, 0x18bu, IntPtr.Zero, WinApi.SecurityImpersonationLevels.SecurityImpersonation, WinApi.TokenTypes.TokenPrimary, out primaryToken))
-                                    WinApi.ThrowLastError("Unable to duplicate the shell process token.");
+                                    WinApi.ThrowLastError(ExceptionMessages.ShellProcessTokenDuplication);
                                 var startupInfo = new WinApi.StartupInfo();
                                 if (!WinApi.NativeMethods.CreateProcessWithTokenW(primaryToken, 0, process.StartInfo.FileName, process.StartInfo.Arguments, 0, IntPtr.Zero, process.StartInfo.WorkingDirectory, ref startupInfo, out var processInformation))
-                                    WinApi.ThrowLastError("Unable to create a new process with the duplicated token.");
+                                    WinApi.ThrowLastError(ExceptionMessages.NoProcessWithDuplicatedToken);
                                 processId = processInformation.dwProcessId;
                             }
                             finally

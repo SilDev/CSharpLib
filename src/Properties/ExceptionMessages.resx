@@ -189,6 +189,9 @@
     <value>The path does not contain any drive. - Path: </value>
     <comment>+</comment>
   </data>
+  <data name="NoProcessWithDuplicatedToken" xml:space="preserve">
+    <value>Unable to create a new process with the duplicated token.</value>
+  </data>
   <data name="PathHasInvalidPrefix" xml:space="preserve">
     <value>The "{0}" prefix is not supported. - Path: {1}</value>
     <comment>string.Format(this, prefix, path)</comment>
@@ -220,6 +223,15 @@
     <value>A segment of the path is longer than 255 characters. - Path: </value>
     <comment>+</comment>
   </data>
+  <data name="PrivilegeValueAccess" xml:space="preserve">
+    <value>Privilege value could not be retrieved.</value>
+  </data>
+  <data name="PseudoHandleNotFound" xml:space="preserve">
+    <value>The pseudo handle could not be retrieved.</value>
+  </data>
+  <data name="PseudoHandleTokenAccess" xml:space="preserve">
+    <value>Unable to open the token for the pseudo handle.</value>
+  </data>
   <data name="SCManagerConnectionCanceled" xml:space="preserve">
     <value>Could not connect to service control manager.</value>
   </data>
@@ -245,7 +257,22 @@
     <value>Service could not be deleted. - Error: </value>
     <comment>+</comment>
   </data>
+  <data name="ShellPidNotFound" xml:space="preserve">
+    <value>Unable to identifier the shell process.</value>
+  </data>
+  <data name="ShellProcessAccess" xml:space="preserve">
+    <value>Unable to open the shell process object.</value>
+  </data>
+  <data name="ShellProcessTokenAccess" xml:space="preserve">
+    <value>Unable to open the shell process token.</value>
+  </data>
+  <data name="ShellProcessTokenDuplication" xml:space="preserve">
+    <value>Unable to duplicate the shell process token.</value>
+  </data>
   <data name="SystemRestoringIsDisabled" xml:space="preserve">
     <value>System restoring is disabled.</value>
+  </data>
+  <data name="TokenPrivilegesAdjustment" xml:space="preserve">
+    <value>Unable to adjust the token privileges.</value>
   </data>
 </root>

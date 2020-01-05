@@ -244,6 +244,15 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to create a new process with the duplicated token..
+        /// </summary>
+        internal static string NoProcessWithDuplicatedToken {
+            get {
+                return ResourceManager.GetString("NoProcessWithDuplicatedToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &quot;{0}&quot; prefix is not supported. - Path: {1}.
         /// </summary>
         internal static string PathHasInvalidPrefix {
@@ -312,6 +321,33 @@ namespace SilDev.Properties {
         internal static string PathSegmentLengthIsTooLong {
             get {
                 return ResourceManager.GetString("PathSegmentLengthIsTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privilege value could not be retrieved..
+        /// </summary>
+        internal static string PrivilegeValueAccess {
+            get {
+                return ResourceManager.GetString("PrivilegeValueAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The pseudo handle could not be retrieved..
+        /// </summary>
+        internal static string PseudoHandleNotFound {
+            get {
+                return ResourceManager.GetString("PseudoHandleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to open the token for the pseudo handle..
+        /// </summary>
+        internal static string PseudoHandleTokenAccess {
+            get {
+                return ResourceManager.GetString("PseudoHandleTokenAccess", resourceCulture);
             }
         }
         
@@ -388,11 +424,56 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to identifier the shell process..
+        /// </summary>
+        internal static string ShellPidNotFound {
+            get {
+                return ResourceManager.GetString("ShellPidNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to open the shell process object..
+        /// </summary>
+        internal static string ShellProcessAccess {
+            get {
+                return ResourceManager.GetString("ShellProcessAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to open the shell process token..
+        /// </summary>
+        internal static string ShellProcessTokenAccess {
+            get {
+                return ResourceManager.GetString("ShellProcessTokenAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to duplicate the shell process token..
+        /// </summary>
+        internal static string ShellProcessTokenDuplication {
+            get {
+                return ResourceManager.GetString("ShellProcessTokenDuplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to System restoring is disabled..
         /// </summary>
         internal static string SystemRestoringIsDisabled {
             get {
                 return ResourceManager.GetString("SystemRestoringIsDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to adjust the token privileges..
+        /// </summary>
+        internal static string TokenPrivilegesAdjustment {
+            get {
+                return ResourceManager.GetString("TokenPrivilegesAdjustment", resourceCulture);
             }
         }
     }
