@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2019-12-24 09:06
+// Version:  2020-01-05 07:10
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -1276,8 +1276,8 @@ namespace SilDev
         /// </exception>
         public static IEnumerable<Process> GetLocks(IEnumerable<string> files)
         {
-            var paths = files?.Select(PathEx.Combine).Where(PathEx.IsFile).ToArray();
-            if (paths?.Any() ?? true)
+            var paths = files?.Select(PathEx.Combine).ToArray();
+            if (!paths?.Any() ?? true)
                 yield break;
             WinApi.ThrowError(WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString()));
             IEnumerable<int> procIds;
