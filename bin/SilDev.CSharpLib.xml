@@ -684,48 +684,117 @@
         </member>
         <member name="P:SilDev.AssemblyInfo.Company">
             <summary>
-                Gets company name information.
+                Gets company name information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.Configuration">
             <summary>
-                Gets configuration information.
+                Gets configuration information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.Copyright">
             <summary>
-                Gets copyright information.
+                Gets copyright information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.Description">
             <summary>
-                Gets description information.
+                Gets description information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.FileVersion">
             <summary>
-                Gets file version information.
+                Gets file version information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.Product">
             <summary>
-                Gets product information.
+                Gets product information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.Title">
             <summary>
-                Gets title information.
+                Gets title information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.Trademark">
             <summary>
-                Gets trademark information.
+                Gets trademark information of the current process.
             </summary>
         </member>
         <member name="P:SilDev.AssemblyInfo.Version">
             <summary>
-                Gets version information.
+                Gets version information of the current process.
             </summary>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetCompanyFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets company name information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetConfigurationFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets configuration information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetCopyrightFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets copyright information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetDescriptionFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets description information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetFileVersionFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets file version information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetProductFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets product information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetTitleFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets title information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetTrademarkFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets trademark information.
+            </summary>
+        </member>
+        <member name="M:SilDev.AssemblyInfo.GetVersionFrom(System.Reflection.Assembly)">
+            <summary>
+                Gets version information from specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to get the information.
+            </param>
         </member>
         <member name="T:SilDev.AlphaNumericComparer">
             <summary>
@@ -12466,15 +12535,58 @@
         </member>
         <member name="P:SilDev.PathEx.LocalPath">
             <summary>
-                Gets the full process executable path of the assembly based on
+                Gets the executable file path of the current process based on
                 <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
             </summary>
         </member>
         <member name="P:SilDev.PathEx.LocalDir">
             <summary>
-                Gets the process executable located directory path of the assembly based on
+                Gets the executable located directory path of the current process based on
                 <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
             </summary>
+        </member>
+        <member name="P:SilDev.PathEx.LibraryPath">
+            <summary>
+                Gets the file path of the current loaded Si13n7 Dev.™ CSharp Library.
+            </summary>
+        </member>
+        <member name="P:SilDev.PathEx.LibraryDir">
+            <summary>
+                Gets the executable located directory path of the current loaded Si13n7 Dev.™ CSharp
+                Library.
+            </summary>
+        </member>
+        <member name="M:SilDev.PathEx.FindAssemblyPath(System.Reflection.Assembly)">
+            <summary>
+                Returns the file path of the specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to find the path.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.FindAssemblyDir(System.Reflection.Assembly)">
+            <summary>
+                Returns the directory path of the specified assembly, if available.
+            </summary>
+            <param name="element">
+                The assembly element to find the path.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.FindTypePath(System.Type)">
+            <summary>
+                Returns the file path of the specified type, if available.
+            </summary>
+            <param name="type">
+                The type to find the path.
+            </param>
+        </member>
+        <member name="M:SilDev.PathEx.FindTypeDir(System.Type)">
+            <summary>
+                Returns the directory path of the specified type, if available.
+            </summary>
+            <param name="type">
+                The type to find the path.
+            </param>
         </member>
         <member name="M:SilDev.PathEx.DirOrFileExists(System.String)">
             <summary>
@@ -14652,6 +14764,84 @@
                 stream was closed while the bytes were being written.
             </exception>
         </member>
+        <member name="M:SilDev.Reorganize.WriteByte(System.IO.Stream,System.Char)">
+            <summary>
+                Writes a character to the this stream and advances the current position within this
+                stream by the number of bytes written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
+            </param>
+            <param name="chr">
+                The character to write.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.Reorganize.WriteByte(System.IO.Stream,System.Char,System.Int32)">
+            <summary>
+                Writes a character repeated a specified number of times to the this stream and advances
+                the current position within this stream by the number of bytes written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
+            </param>
+            <param name="chr">
+                The character to write.
+            </param>
+            <param name="count">
+                The number of times chr occurs.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                count is less than zero.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.Reorganize.WriteBytes(System.IO.Stream,System.String)">
+            <summary>
+                Writes a string to the this stream and advances the current position within this stream
+                by the number of bytes written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
+            </param>
+            <param name="str">
+                The string to write.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream or str is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occured, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
         <member name="M:SilDev.Reorganize.WriteBytes(System.IO.Stream,System.Byte[])">
             <summary>
                 Writes a sequence of bytes to the this stream and advances the current position within
@@ -14718,6 +14908,132 @@
                 The number to be incremented.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+            <param name="arg2">
+                The third object to format.
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object[])">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                The objects to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+            <param name="arg2">
+                The third object to format.
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object[])">
+            <summary>
+                Replaces one or more format items in this string with the string representation
+                of a specified object using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/>
+                format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                The objects to format.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.Replace(System.String,System.String,System.String,System.StringComparison)">
             <summary>
                 Returns a new string in which all occurrences of a specified string in the current
@@ -14766,6 +15082,74 @@
                 The maximum width in pixel.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToStringDefault``1(``0,System.String)">
+            <summary>
+                Converts the value of this element to its equivalent string representation using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+            <param name="format">
+                The format to use.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringDefault``1(``0)">
+            <summary>
+                Converts the value of this element to its equivalent string representation using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringDefault(System.Boolean)">
+            <summary>
+                Converts the value of this boolean to its equivalent string representation using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <param name="b">
+                The boolean value to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringDefault(System.Char)">
+            <summary>
+                Converts the value of this character to its equivalent string representation using
+                the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <param name="chr">
+                The character to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringDefault(System.DateTime,System.String)">
+            <summary>
+                Converts the value of this <see cref="T:System.DateTime"/> object to its equivalent string
+                representation using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format
+                information.
+            </summary>
+            <param name="dateTime">
+                The <see cref="T:System.DateTime"/> value to convert.
+            </param>
+            <param name="format">
+                A standard or custom date and time format string.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToStringDefault(System.DateTime)">
+            <summary>
+                Converts the value of this <see cref="T:System.DateTime"/> object to its equivalent string
+                representation using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format
+                information.
+            </summary>
+            <param name="dateTime">
+                The <see cref="T:System.DateTime"/> value to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToStrings(System.String)">
             <summary>
                 Creates a sequence of strings based on natural (base e) logarithm of a count
@@ -14777,8 +15161,8 @@
         </member>
         <member name="M:SilDev.Reorganize.Sort(System.String[])">
             <summary>
-                Sorts the elements in an entire string array using the <see cref="T:System.IComparable`1"/> generic
-                interface implementation of each element of the string array.
+                Sorts the elements in an entire string array using the <see cref="T:System.IComparable`1"/>
+                generic interface implementation of each element of the string array.
             </summary>
             <param name="strs">
                 The sequence of strings to sort.
@@ -14786,8 +15170,8 @@
         </member>
         <member name="M:SilDev.Reorganize.Split(System.String,System.String,System.StringSplitOptions)">
             <summary>
-                Splits a string into substrings based on the strings in an array. You can specify whether
-                the substrings include empty array elements.
+                Splits a string into substrings based on the strings in an array. You can specify
+                whether the substrings include empty array elements.
             </summary>
             <param name="str">
                 The string to split.
@@ -14826,8 +15210,8 @@
         </member>
         <member name="M:SilDev.Reorganize.ToBytes``1(System.String,``0)">
             <summary>
-                Converts all the characters in the specified string into a sequence of bytes with the
-                specified <see cref="T:System.Text.Encoding"/> format.
+                Converts all the characters in the specified string into a sequence of bytes with
+                the specified <see cref="T:System.Text.Encoding"/> format.
             </summary>
             <typeparam name="TEncoding">
                 The type of encoding.
