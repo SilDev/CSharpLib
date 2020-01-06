@@ -224,6 +224,11 @@
               Looks up a localized string similar to Unable to open the token for the pseudo handle..
             </summary>
         </member>
+        <member name="P:SilDev.Properties.ExceptionMessages.ReadOnlyCollection">
+            <summary>
+              Looks up a localized string similar to Collection is read-only..
+            </summary>
+        </member>
         <member name="P:SilDev.Properties.ExceptionMessages.SCManagerConnectionCanceled">
             <summary>
               Looks up a localized string similar to Could not connect to service control manager..
@@ -15453,6 +15458,9 @@
             </param>
             <exception cref="T:System.ArgumentNullException">
                 source or key is null.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                source is read-only.
             </exception>
         </member>
         <member name="T:SilDev.ImageResourceSymbol">
