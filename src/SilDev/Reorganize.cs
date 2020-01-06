@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-06 07:39
+// Version:  2020-01-06 07:59
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -402,7 +402,7 @@ namespace SilDev
                 stream.WriteByte((byte)chr);
                 return;
             }
-            var str = chr.ToString(CultureConfig.GlobalCultureInfo);
+            var str = chr.ToStringDefault();
             stream.WriteBytes(str.ToBytes());
         }
 

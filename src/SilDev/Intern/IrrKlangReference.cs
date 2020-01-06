@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IrrKlangReference.cs
-// Version:  2019-10-22 15:33
+// Version:  2020-01-06 07:57
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,7 +17,6 @@ namespace SilDev.Intern
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -70,7 +69,7 @@ namespace SilDev.Intern
                         "%MyDocuments%\\Visual Studio 2017\\References\\dotNet4\\irrKlang",
                         "%MyDocuments%\\Visual Studio 2019\\References",
                         "%MyDocuments%\\Visual Studio 2019\\References\\dotNet4\\irrKlang",
-                        string.Format(CultureInfo.InvariantCulture, Resources.TempDirFormat, Math.Abs(PathEx.LocalPath.GetHashCode()))
+                        Resources.TempDirFormat.FormatDefault(Resources.TempDirFormat, Math.Abs(PathEx.LocalPath.GetHashCode()))
                     };
 
                     var isValid = false;

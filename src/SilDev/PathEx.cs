@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2020-01-06 06:46
+// Version:  2020-01-06 07:59
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -19,7 +19,6 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -69,7 +68,7 @@ namespace SilDev
         ///         <see cref="Path.VolumeSeparatorChar"/>.
         ///     </para>
         /// </summary>
-        public static string VolumeSeparatorStr { get; } = Path.VolumeSeparatorChar.ToString(CultureInfo.InvariantCulture);
+        public static string VolumeSeparatorStr { get; } = Path.VolumeSeparatorChar.ToStringDefault();
 
         /// <summary>
         ///     A platform-specific separator character string used to separate path
@@ -79,7 +78,7 @@ namespace SilDev
         ///         <see cref="Path.DirectorySeparatorChar"/>.
         ///     </para>
         /// </summary>
-        public static string DirectorySeparatorStr { get; } = Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+        public static string DirectorySeparatorStr { get; } = Path.DirectorySeparatorChar.ToStringDefault();
 
         /// <summary>
         ///     Provides a platform-specific alternate character string used to separate
@@ -90,7 +89,7 @@ namespace SilDev
         ///         <see cref="Path.AltDirectorySeparatorChar"/>.
         ///     </para>
         /// </summary>
-        public static string AltDirectorySeparatorStr { get; } = Path.AltDirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+        public static string AltDirectorySeparatorStr { get; } = Path.AltDirectorySeparatorChar.ToStringDefault();
 
         /// <summary>
         ///     Gets the executable file path of the current process based on
@@ -223,7 +222,7 @@ namespace SilDev
                 {
                     if (!path.StartsWith(prefix, StringComparison.Ordinal))
                         continue;
-                    throw new NotSupportedException(string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.PathHasInvalidPrefix, prefix, path));
+                    throw new NotSupportedException(ExceptionMessages.PathHasInvalidPrefix.FormatCurrent(prefix, path));
                 }
                 if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
                     throw new ArgumentException(ExceptionMessages.ConsecutiveSeparatorsInPath + path);

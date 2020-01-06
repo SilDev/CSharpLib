@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathNotFoundException.cs
-// Version:  2020-01-04 14:01
+// Version:  2020-01-06 07:59
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -39,7 +39,7 @@ namespace SilDev
         ///     The target that caused the exception.
         /// </param>
         public PathNotFoundException(string target) : base(target) =>
-            Message = string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.PathNotFoundTarget, target);
+            Message = ExceptionMessages.PathNotFoundTarget.FormatCurrent(target);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class
@@ -53,7 +53,7 @@ namespace SilDev
         ///     The exception that is the cause of the current exception, or a null reference.
         /// </param>
         public PathNotFoundException(string target, Exception innerException) : base(target, innerException) =>
-            Message = ExceptionMessages.PathNotFoundTarget + target;
+            Message = ExceptionMessages.PathNotFoundTarget.FormatCurrent(target);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class

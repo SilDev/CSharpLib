@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2019-12-16 16:45
+// Version:  2020-01-06 08:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -3748,7 +3748,7 @@ namespace SilDev
                 try
                 {
                     NativeMethods.DwmGetColorizationParameters(out var parameters);
-                    var color = Color.FromArgb(int.Parse(parameters.clrColor.ToString("X", CultureInfo.InvariantCulture), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+                    var color = Color.FromArgb(int.Parse(parameters.clrColor.ToStringDefault("X"), NumberStyles.HexNumber, CultureConfig.GlobalCultureInfo));
                     if (!alpha)
                         color = Color.FromArgb(color.R, color.G, color.B);
                     return color;

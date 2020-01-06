@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2019-12-16 16:42
+// Version:  2020-01-06 08:02
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -260,9 +260,9 @@ namespace SilDev.Drawing
                 switch (code.Length)
                 {
                     case 8:
-                        return Color.FromArgb(int.Parse(code, NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+                        return Color.FromArgb(int.Parse(code, NumberStyles.HexNumber, CultureConfig.GlobalCultureInfo));
                     case 6:
-                        return FromRgb(int.Parse(code, NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+                        return FromRgb(int.Parse(code, NumberStyles.HexNumber, CultureConfig.GlobalCultureInfo));
                     case 3:
                         foreach (var c in code)
                         {

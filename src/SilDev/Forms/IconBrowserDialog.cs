@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2020-01-03 12:39
+// Version:  2020-01-06 07:57
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -18,7 +18,6 @@ namespace SilDev.Forms
     using System;
     using System.ComponentModel;
     using System.Drawing;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -407,7 +406,7 @@ namespace SilDev.Forms
                 if (icon == null)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 _button.Image = new Bitmap(icon.ToBitmap(), icon.Width, icon.Height);
-                _button.Text = index.ToString(CultureInfo.InvariantCulture);
+                _button.Text = index.ToStringDefault();
             }
 
             protected override void Dispose(bool disposing)

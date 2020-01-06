@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2020-01-03 12:52
+// Version:  2020-01-06 07:58
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -158,7 +158,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.IndexOf(s.ToString(CultureConfig.GlobalCultureInfo), 0, comparisonType) != -1);
+            return targets.Any(s => source.IndexOf(s.ToStringDefault(), 0, comparisonType) != -1);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.StartsWith(s.ToString(CultureConfig.GlobalCultureInfo), comparisonType));
+            return targets.Any(s => source.StartsWith(s.ToStringDefault(), comparisonType));
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace SilDev
         {
             if (string.IsNullOrEmpty(source) || targets == null)
                 return false;
-            return targets.Any(s => source.EndsWith(s.ToString(CultureConfig.GlobalCultureInfo), comparisonType));
+            return targets.Any(s => source.EndsWith(s.ToStringDefault(), comparisonType));
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-03 12:53
+// Version:  2020-01-06 07:58
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -682,7 +682,7 @@ namespace SilDev
                 if (string.IsNullOrEmpty(strValue))
                 {
                     if (Log.DebugMode > 1)
-                        throw new WarningException(string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.IniValueNotFound, section, key, (fileOrContent?.Any(TextEx.IsLineSeparator) ?? false ? fileOrContent.Encrypt() : GetFile()) ?? "(NULL)"));
+                        throw new WarningException(ExceptionMessages.IniValueNotFound.FormatCurrent(section, key, (fileOrContent?.Any(TextEx.IsLineSeparator) ?? false ? fileOrContent.Encrypt() : GetFile()) ?? "(NULL)"));
                     newValue = (object)defValue ?? string.Empty;
                 }
                 else if (strValue.StartsWith(ObjectPrefix, StringComparison.Ordinal) && strValue.EndsWith(ObjectSuffix, StringComparison.Ordinal))

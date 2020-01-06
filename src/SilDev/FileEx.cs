@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2020-01-05 07:10
+// Version:  2020-01-06 07:58
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -1395,7 +1395,7 @@ namespace SilDev
                     using (var p = rf.CreatePipeline())
                     {
                         const string command = "Get-AuthenticodeSignature \"{0}\"";
-                        p.Commands.AddScript(string.Format(CultureConfig.GlobalCultureInfo, command, path));
+                        p.Commands.AddScript(command.FormatCurrent(path));
                         var s = p.Invoke()[0];
                         rf.Close();
                         return s.Status.ToString();

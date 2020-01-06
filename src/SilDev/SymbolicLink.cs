@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: SymbolicLink.cs
-// Version:  2019-12-16 16:45
+// Version:  2020-01-06 07:59
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -161,7 +161,7 @@ namespace SilDev
             if (backup && PathEx.DirOrFileExists(link))
                 if (!DirectoryEx.IsLink(link))
                 {
-                    var prior = string.Format(CultureConfig.GlobalCultureInfo, Resources.BackupFormat, link, EnvironmentEx.MachineId);
+                    var prior = Resources.BackupFormat.FormatCurrent(link, EnvironmentEx.MachineId);
                     sb.AppendFormat(CultureConfig.GlobalCultureInfo, "MOVE /Y \"{0}\" \"{1}\"", link, prior);
                 }
                 else
@@ -221,7 +221,7 @@ namespace SilDev
             var sb = new StringBuilder();
             sb.AppendFormat(CultureConfig.GlobalCultureInfo, pathIsDir ? "RMDIR /Q \"{0}\"" : isLink ? "DEL /F /Q /A:L \"{0}\"" : "DEL /F /Q \"{0}\"", link);
 
-            var prior = string.Format(CultureConfig.GlobalCultureInfo, Resources.BackupFormat, link, EnvironmentEx.MachineId);
+            var prior = Resources.BackupFormat.FormatCurrent(link, EnvironmentEx.MachineId);
             if (backup && PathEx.DirOrFileExists(prior))
                 sb.AppendFormat(CultureConfig.GlobalCultureInfo, " && MOVE /Y \"{0}\" \"{1}\"", prior, link);
 

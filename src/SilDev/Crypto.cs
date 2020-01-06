@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2019-12-20 18:43
+// Version:  2020-01-06 07:58
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,7 +17,6 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
@@ -1921,7 +1920,7 @@ namespace SilDev
                     int i;
                     var p = 0;
                     while ((i = si.ReadByte()) != -1)
-                        foreach (var b in i.ToString("x2", CultureInfo.InvariantCulture).PadLeft(2, '0').ToBytes())
+                        foreach (var b in i.ToStringDefault("x2").PadLeft(2, '0').ToBytes())
                             WriteLine(so, b, lineLength, ref p);
                 }
                 finally
@@ -2748,7 +2747,7 @@ namespace SilDev
                 }
                 var sb = new StringBuilder(ba.Length * 2);
                 foreach (var b in ba)
-                    sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
+                    sb.Append(b.ToStringDefault("x2"));
                 return sb.ToStringThenClear();
             }
 
@@ -2866,7 +2865,7 @@ namespace SilDev
                     uia[1] = (uia[1] + uia[0]) % 65521;
                 }
                 var ui = (uia[1] << 16) | uia[0];
-                return ui.ToString("x2", CultureInfo.InvariantCulture).PadLeft(8, '0');
+                return ui.ToStringDefault("x2").PadLeft(8, '0');
             }
 
             /// <summary>
@@ -2919,7 +2918,7 @@ namespace SilDev
                 };
                 var sb = new StringBuilder(ba.Length * 2);
                 foreach (var b in ba)
-                    sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
+                    sb.Append(b.ToStringDefault("x2"));
                 return sb.ToStringThenClear();
             }
 
@@ -2961,7 +2960,7 @@ namespace SilDev
                     for (var j = 0; j < 8; j++)
                         ui = (uint)((ui >> 1) ^ (0xedb88320u & -(ui & 1)));
                 }
-                return (~ui).ToString("x2", CultureInfo.InvariantCulture).PadLeft(8, '0');
+                return (~ui).ToStringDefault("x2").PadLeft(8, '0');
             }
 
             /// <summary>

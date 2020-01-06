@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2019-10-31 21:58
+// Version:  2020-01-06 07:58
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -929,7 +929,7 @@ namespace SilDev
         ///     The character to use as a separator.
         /// </param>
         public static string Join(this IEnumerable<string> values, char separator) =>
-            values.Join(separator.ToString(CultureConfig.GlobalCultureInfo));
+            values.Join(separator.ToStringDefault());
 
         /// <summary>
         ///     Returns a specified number of contiguous elements from the end of a sequence.

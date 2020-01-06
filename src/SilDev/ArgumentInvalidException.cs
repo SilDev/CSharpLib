@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ArgumentInvalidException.cs
-// Version:  2020-01-04 14:01
+// Version:  2020-01-06 07:57
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -40,7 +40,7 @@ namespace SilDev
         ///     The name of the parameter that caused the exception.
         /// </param>
         public ArgumentInvalidException(string paramName) : base(paramName) =>
-            Message = string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.ArgumentInvalidParam, paramName);
+            Message = ExceptionMessages.ArgumentInvalidParam.FormatCurrent(paramName);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ArgumentInvalidException"/> class
@@ -53,7 +53,7 @@ namespace SilDev
         ///     The exception that is the cause of the current exception, or a null reference.
         /// </param>
         public ArgumentInvalidException(string paramName, Exception innerException) : base(paramName, innerException) =>
-            Message = string.Format(CultureConfig.GlobalCultureInfo, ExceptionMessages.ArgumentInvalidParam, paramName);
+            Message = ExceptionMessages.ArgumentInvalidParam.FormatCurrent(paramName);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ArgumentInvalidException"/> class

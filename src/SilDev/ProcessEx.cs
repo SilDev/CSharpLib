@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-05 07:23
+// Version:  2020-01-06 07:59
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -1073,7 +1073,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return true;
                 int exitCode;
-                using (var p = Send(string.Format(CultureConfig.GlobalCultureInfo, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src), runAsAdmin, false))
+                using (var p = Send((PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src), runAsAdmin, false))
                 {
                     if (!wait)
                         return true;
@@ -1148,7 +1148,7 @@ namespace SilDev
                 if (!PathEx.DirOrFileExists(src))
                     return null;
                 var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                var command = string.Format(CultureConfig.GlobalCultureInfo, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                var command = (PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src);
                 return WaitThenCmd(command, time, runAsAdmin, dispose);
             }
 
@@ -1314,7 +1314,7 @@ namespace SilDev
                 var src = PathEx.Combine(path);
                 if (!PathEx.DirOrFileExists(src))
                     return null;
-                var command = string.Format(CultureConfig.GlobalCultureInfo, PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", src);
+                var command = (PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src);
                 return WaitForExitThenCmd(command, processName, extension, 0, runAsAdmin, dispose);
             }
 
