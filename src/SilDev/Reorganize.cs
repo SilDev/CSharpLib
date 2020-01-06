@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-06 07:08
+// Version:  2020-01-06 07:39
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -605,6 +605,140 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        public static string FormatCurrent(this string format, object arg0) =>
+            string.Format(CultureInfo.CurrentCulture, format, arg0);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        /// <param name="arg1">
+        ///     The second object to format.
+        /// </param>
+        public static string FormatCurrent(this string format, object arg0, object arg1) =>
+            string.Format(CultureInfo.CurrentCulture, format, arg0, arg1);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        /// <param name="arg1">
+        ///     The second object to format.
+        /// </param>
+        /// <param name="arg2">
+        ///     The third object to format.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static string FormatCurrent(this string format, object arg0, object arg1, object arg2) =>
+            string.Format(CultureInfo.CurrentCulture, format, arg0, arg1, arg2);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     The objects to format.
+        /// </param>
+        public static string FormatCurrent(this string format, params object[] args) =>
+            string.Format(CultureInfo.CurrentCulture, format, args);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        public static string FormatDefault(this string format, object arg0) =>
+            string.Format(CultureConfig.GlobalCultureInfo, format, arg0);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        /// <param name="arg1">
+        ///     The second object to format.
+        /// </param>
+        public static string FormatDefault(this string format, object arg0, object arg1) =>
+            string.Format(CultureConfig.GlobalCultureInfo, format, arg0, arg1);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        /// <param name="arg1">
+        ///     The second object to format.
+        /// </param>
+        /// <param name="arg2">
+        ///     The third object to format.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static string FormatDefault(this string format, object arg0, object arg1, object arg2) =>
+            string.Format(CultureConfig.GlobalCultureInfo, format, arg0, arg1, arg2);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string representation
+        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     The objects to format.
+        /// </param>
+        public static string FormatDefault(this string format, params object[] args) =>
+            string.Format(CultureConfig.GlobalCultureInfo, format, args);
+
+        /// <summary>
         ///     Returns a new string in which all occurrences of a specified string in the current
         ///     instance are replaced with another specified string.
         /// </summary>
@@ -744,7 +878,7 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the value of this element to its equivalent string representation using the
-        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the source element.
@@ -754,50 +888,67 @@ namespace SilDev
         /// </param>
         /// <param name="format">
         ///     The format to use.
-        ///     <para>
-        ///         Please note that the standard format will be used if <see langword="null"/> is
-        ///         specified.
-        ///     </para>
         /// </param>
-        public static string ToStringInvariant<TSource>(this TSource src, string format = default) where TSource : IFormattable =>
-            src.ToString(format, CultureInfo.InvariantCulture);
+        public static string ToStringDefault<TSource>(this TSource src, string format) where TSource : IFormattable =>
+            src.ToString(format, CultureConfig.GlobalCultureInfo);
+
+        /// <summary>
+        ///     Converts the value of this element to its equivalent string representation using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static string ToStringDefault<TSource>(this TSource src) where TSource : IFormattable =>
+            src.ToString(null, CultureConfig.GlobalCultureInfo);
 
         /// <summary>
         ///     Converts the value of this boolean to its equivalent string representation using the
-        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="b">
         ///     The boolean value to convert.
         /// </param>
-        public static string ToStringInvariant(this bool b) =>
-            b.ToString(CultureInfo.InvariantCulture);
+        public static string ToStringDefault(this bool b) =>
+            b.ToString(CultureConfig.GlobalCultureInfo);
 
         /// <summary>
         ///     Converts the value of this character to its equivalent string representation using
-        ///     the <see cref="CultureInfo.InvariantCulture"/> format information.
+        ///     the <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="chr">
         ///     The character to convert.
         /// </param>
-        public static string ToStringInvariant(this char chr) =>
-            chr.ToString(CultureInfo.InvariantCulture);
+        public static string ToStringDefault(this char chr) =>
+            chr.ToString(CultureConfig.GlobalCultureInfo);
 
         /// <summary>
         ///     Converts the value of this <see cref="DateTime"/> object to its equivalent string
-        ///     representation using the <see cref="CultureInfo.InvariantCulture"/> format information.
+        ///     representation using the <see cref="CultureConfig.GlobalCultureInfo"/> format
+        ///     information.
         /// </summary>
         /// <param name="dateTime">
         ///     The <see cref="DateTime"/> value to convert.
         /// </param>
         /// <param name="format">
         ///     A standard or custom date and time format string.
-        ///     <para>
-        ///         Please note that the standard format will be used if <see langword="null"/> is
-        ///         specified.
-        ///     </para>
         /// </param>
-        public static string ToStringInvariant(this DateTime dateTime, string format = null) =>
-            dateTime.ToString(format, CultureInfo.InvariantCulture);
+        public static string ToStringDefault(this DateTime dateTime, string format) =>
+            dateTime.ToString(format, CultureConfig.GlobalCultureInfo);
+
+        /// <summary>
+        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent string
+        ///     representation using the <see cref="CultureConfig.GlobalCultureInfo"/> format
+        ///     information.
+        /// </summary>
+        /// <param name="dateTime">
+        ///     The <see cref="DateTime"/> value to convert.
+        /// </param>
+        public static string ToStringDefault(this DateTime dateTime) =>
+            dateTime.ToString(CultureConfig.GlobalCultureInfo);
 
         /// <summary>
         ///     Creates a sequence of strings based on natural (base e) logarithm of a count
