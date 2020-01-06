@@ -352,6 +352,15 @@ namespace SilDev.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection is read-only..
+        /// </summary>
+        internal static string ReadOnlyCollection {
+            get {
+                return ResourceManager.GetString("ReadOnlyCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not connect to service control manager..
         /// </summary>
         internal static string SCManagerConnectionCanceled {

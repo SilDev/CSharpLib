@@ -232,6 +232,9 @@
   <data name="PseudoHandleTokenAccess" xml:space="preserve">
     <value>Unable to open the token for the pseudo handle.</value>
   </data>
+  <data name="ReadOnlyCollection" xml:space="preserve">
+    <value>Collection is read-only.</value>
+  </data>
   <data name="SCManagerConnectionCanceled" xml:space="preserve">
     <value>Could not connect to service control manager.</value>
   </data>

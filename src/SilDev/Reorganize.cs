@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-06 07:59
+// Version:  2020-01-06 09:04
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -27,6 +27,7 @@ namespace SilDev
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Properties;
 
     /// <summary>
     ///     Provides size format options.
@@ -1499,10 +1500,19 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     source or key is null.
         /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     source is read-only.
+        /// </exception>
         public static void Update<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue value) where TValue : IComparable, IComparable<TValue>
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            switch (source)
+            {
+                case IReadOnlyDictionary<TKey, TValue> _:
+                case IReadOnlyCollection<KeyValuePair<TKey, TValue>> _:
+                    throw new NotSupportedException(ExceptionMessages.ReadOnlyCollection);
+            }
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
             if (source.ContainsKey(key))
