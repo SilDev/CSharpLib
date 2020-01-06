@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2020-01-05 07:10
+// Version:  2020-01-06 06:46
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -93,16 +93,72 @@ namespace SilDev
         public static string AltDirectorySeparatorStr { get; } = Path.AltDirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
 
         /// <summary>
-        ///     Gets the full process executable path of the assembly based on
+        ///     Gets the executable file path of the current process based on
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
-        public static string LocalPath { get; } = Assembly.GetEntryAssembly()?.CodeBase.ToUri()?.LocalPath;
+        public static string LocalPath { get; } = FindAssemblyPath(Assembly.GetEntryAssembly());
 
         /// <summary>
-        ///     Gets the process executable located directory path of the assembly based on
+        ///     Gets the executable located directory path of the current process based on
         ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         /// </summary>
-        public static string LocalDir { get; } = Path.GetDirectoryName(LocalPath)?.TrimEnd(Path.DirectorySeparatorChar);
+        public static string LocalDir { get; } = FindAssemblyDir(Assembly.GetEntryAssembly());
+
+        /// <summary>
+        ///     Gets the file path of the current loaded Si13n7 Dev.™ CSharp Library.
+        /// </summary>
+        public static string LibraryPath { get; } = FindAssemblyPath(Assembly.GetAssembly(typeof(PathEx)));
+
+        /// <summary>
+        ///     Gets the executable located directory path of the current loaded Si13n7 Dev.™ CSharp
+        ///     Library.
+        /// </summary>
+        public static string LibraryDir { get; } = FindAssemblyDir(Assembly.GetAssembly(typeof(PathEx)));
+
+        /// <summary>
+        ///     Returns the file path of the specified assembly, if available.
+        /// </summary>
+        /// <param name="element">
+        ///     The assembly element to find the path.
+        /// </param>
+        public static string FindAssemblyPath(Assembly element) =>
+            element?.CodeBase.ToUri()?.LocalPath;
+
+        /// <summary>
+        ///     Returns the directory path of the specified assembly, if available.
+        /// </summary>
+        /// <param name="element">
+        ///     The assembly element to find the path.
+        /// </param>
+        public static string FindAssemblyDir(Assembly element)
+        {
+            var path = FindAssemblyPath(element);
+            return string.IsNullOrEmpty(path) ? null : Path.GetDirectoryName(path)?.TrimEnd(Path.DirectorySeparatorChar);
+        }
+
+        /// <summary>
+        ///     Returns the file path of the specified type, if available.
+        /// </summary>
+        /// <param name="type">
+        ///     The type to find the path.
+        /// </param>
+        public static string FindTypePath(Type type)
+        {
+            var assembly = Assembly.GetAssembly(type);
+            return FindAssemblyPath(assembly);
+        }
+
+        /// <summary>
+        ///     Returns the directory path of the specified type, if available.
+        /// </summary>
+        /// <param name="type">
+        ///     The type to find the path.
+        /// </param>
+        public static string FindTypeDir(Type type)
+        {
+            var path = FindTypePath(type);
+            return string.IsNullOrEmpty(path) ? null : Path.GetDirectoryName(path)?.TrimEnd(Path.DirectorySeparatorChar);
+        }
 
         /// <summary>
         ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
