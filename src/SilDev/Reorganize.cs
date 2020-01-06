@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-06 06:19
+// Version:  2020-01-06 06:40
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -369,6 +369,115 @@ namespace SilDev
             var ba = new byte[4096];
             while ((i = srcStream.Read(ba, 0, ba.Length)) > 0)
                 destStream.Write(ba, 0, i);
+        }
+
+        /// <summary>
+        ///     Writes a character to the this stream and advances the current position within this
+        ///     stream by the number of bytes written.
+        /// </summary>
+        /// <param name="stream">
+        ///     The <see cref="Stream"/> to write.
+        /// </param>
+        /// <param name="chr">
+        ///     The character to write.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stream is null.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occured, such as the specified file cannot be found.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     The stream does not support writing.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///     stream was closed while the bytes were being written.
+        /// </exception>
+        public static void WriteByte(this Stream stream, char chr)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (chr <= byte.MaxValue)
+            {
+                stream.WriteByte((byte)chr);
+                return;
+            }
+            var str = chr.ToString(CultureConfig.GlobalCultureInfo);
+            stream.WriteBytes(str.ToBytes());
+        }
+
+        /// <summary>
+        ///     Writes a character repeated a specified number of times to the this stream and advances
+        ///     the current position within this stream by the number of bytes written.
+        /// </summary>
+        /// <param name="stream">
+        ///     The <see cref="Stream"/> to write.
+        /// </param>
+        /// <param name="chr">
+        ///     The character to write.
+        /// </param>
+        /// <param name="count">
+        ///     The number of times chr occurs.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stream is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     count is less than zero.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occured, such as the specified file cannot be found.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     The stream does not support writing.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///     stream was closed while the bytes were being written.
+        /// </exception>
+        public static void WriteByte(this Stream stream, char chr, int count)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (count == 0)
+                return;
+            for (var i = 0; i < count; i++)
+                stream.WriteByte(chr);
+        }
+
+        /// <summary>
+        ///     Writes a string to the this stream and advances the current position within this stream
+        ///     by the number of bytes written.
+        /// </summary>
+        /// <param name="stream">
+        ///     The <see cref="Stream"/> to write.
+        /// </param>
+        /// <param name="str">
+        ///     The string to write.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stream or str is null.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     An I/O error occured, such as the specified file cannot be found.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     The stream does not support writing.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///     stream was closed while the bytes were being written.
+        /// </exception>
+        public static void WriteBytes(this Stream stream, string str)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (str == null)
+                throw new ArgumentNullException(nameof(str));
+            if (string.IsNullOrEmpty(str))
+                return;
+            foreach (var c in str.ToCharArray())
+                stream.WriteByte(c);
         }
 
         /// <summary>

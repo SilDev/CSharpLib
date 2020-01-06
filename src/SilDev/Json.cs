@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2019-12-24 19:35
+// Version:  2020-01-06 06:40
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -83,33 +83,6 @@ namespace SilDev
                 _recursionLimit = value == 0 ? int.MaxValue : value;
                 _jsonSerializer = default;
             }
-        }
-
-        private static void WriteByte(this Stream stream, char value)
-        {
-            if (value <= byte.MaxValue)
-            {
-                stream?.WriteByte((byte)value);
-                return;
-            }
-            var str = value.ToString(CultureConfig.GlobalCultureInfo);
-            stream?.WriteBytes(str.ToBytes());
-        }
-
-        private static void WriteByte(this Stream stream, char value, int count)
-        {
-            if (stream == null || count < 1)
-                return;
-            for (var i = 0; i < count; i++)
-                stream.WriteByte(value);
-        }
-
-        private static void WriteBytes(this Stream stream, string values)
-        {
-            if (string.IsNullOrEmpty(values))
-                return;
-            foreach (var c in values.ToCharArray())
-                stream?.WriteByte(c);
         }
 
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
