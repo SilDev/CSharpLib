@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2019-12-16 16:41
+// Version:  2020-01-06 06:19
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,6 +20,7 @@ namespace SilDev
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -631,6 +632,19 @@ namespace SilDev
             }
             return s;
         }
+
+        /// <summary>
+        ///     Converts the value of this element to its equivalent string representation using the
+        ///     <see cref="CultureInfo.InvariantCulture"/> culture-specific format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static string ToStringInvariant<TSource>(this TSource src) where TSource : IFormattable =>
+            src.ToString(null, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///     Creates a sequence of strings based on natural (base e) logarithm of a count
