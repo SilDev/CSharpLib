@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-06 06:40
+// Version:  2020-01-06 07:08
 // 
 // Copyright (c) 2020, Si13n7 Developments (r)
 // All rights reserved.
@@ -744,7 +744,7 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the value of this element to its equivalent string representation using the
-        ///     <see cref="CultureInfo.InvariantCulture"/> culture-specific format information.
+        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the source element.
@@ -752,8 +752,52 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static string ToStringInvariant<TSource>(this TSource src) where TSource : IFormattable =>
-            src.ToString(null, CultureInfo.InvariantCulture);
+        /// <param name="format">
+        ///     The format to use.
+        ///     <para>
+        ///         Please note that the standard format will be used if <see langword="null"/> is
+        ///         specified.
+        ///     </para>
+        /// </param>
+        public static string ToStringInvariant<TSource>(this TSource src, string format = default) where TSource : IFormattable =>
+            src.ToString(format, CultureInfo.InvariantCulture);
+
+        /// <summary>
+        ///     Converts the value of this boolean to its equivalent string representation using the
+        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
+        /// </summary>
+        /// <param name="b">
+        ///     The boolean value to convert.
+        /// </param>
+        public static string ToStringInvariant(this bool b) =>
+            b.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>
+        ///     Converts the value of this character to its equivalent string representation using
+        ///     the <see cref="CultureInfo.InvariantCulture"/> format information.
+        /// </summary>
+        /// <param name="chr">
+        ///     The character to convert.
+        /// </param>
+        public static string ToStringInvariant(this char chr) =>
+            chr.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>
+        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent string
+        ///     representation using the <see cref="CultureInfo.InvariantCulture"/> format information.
+        /// </summary>
+        /// <param name="dateTime">
+        ///     The <see cref="DateTime"/> value to convert.
+        /// </param>
+        /// <param name="format">
+        ///     A standard or custom date and time format string.
+        ///     <para>
+        ///         Please note that the standard format will be used if <see langword="null"/> is
+        ///         specified.
+        ///     </para>
+        /// </param>
+        public static string ToStringInvariant(this DateTime dateTime, string format = null) =>
+            dateTime.ToString(format, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///     Creates a sequence of strings based on natural (base e) logarithm of a count
@@ -772,8 +816,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Sorts the elements in an entire string array using the <see cref="IComparable{T}"/> generic
-        ///     interface implementation of each element of the string array.
+        ///     Sorts the elements in an entire string array using the <see cref="IComparable{T}"/>
+        ///     generic interface implementation of each element of the string array.
         /// </summary>
         /// <param name="strs">
         ///     The sequence of strings to sort.
@@ -788,8 +832,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Splits a string into substrings based on the strings in an array. You can specify whether
-        ///     the substrings include empty array elements.
+        ///     Splits a string into substrings based on the strings in an array. You can specify
+        ///     whether the substrings include empty array elements.
         /// </summary>
         /// <param name="str">
         ///     The string to split.
@@ -843,8 +887,8 @@ namespace SilDev
             str.SplitNewLine(StringSplitOptions.RemoveEmptyEntries, trim);
 
         /// <summary>
-        ///     Converts all the characters in the specified string into a sequence of bytes with the
-        ///     specified <see cref="Encoding"/> format.
+        ///     Converts all the characters in the specified string into a sequence of bytes with
+        ///     the specified <see cref="Encoding"/> format.
         /// </summary>
         /// <typeparam name="TEncoding">
         ///     The type of encoding.
