@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MediaDeviceManager.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-13 13:39
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -35,7 +35,7 @@ namespace SilDev.Media
             if (volume == null)
                 return null;
             _ = volume.GetMasterVolume(out var level);
-            return level * 0x64;
+            return level * 100f;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace SilDev.Media
             if (volume == null)
                 return;
             var guid = Guid.Empty;
-            _ = volume.SetMasterVolume(level / 0x64, ref guid);
+            _ = volume.SetMasterVolume(level / 100f, ref guid);
         }
 
         /// <summary>
