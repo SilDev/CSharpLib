@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2020-01-13 15:17
+// Version:  2020-01-13 16:15
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -463,7 +463,7 @@ namespace SilDev.Investment
                     builder.Append(',');
                 else
                     first = true;
-                builder.AppendFormatCurrent("Key={0},Item={1}", key, item);
+                builder.AppendFormatCurrent("Key={0},Item={1}", key, (object)item);
             }
             builder.Append("}");
             return builder.ToStringThenClear();

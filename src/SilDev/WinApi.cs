@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-13 13:01
+// Version:  2020-01-13 16:15
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -5813,6 +5813,46 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Contains file name constants of the used Windows dynamic-link library (DLL)
+        ///     files.
+        /// </summary>
+        public static class DllNames
+        {
+            /// <summary>
+            ///     The Windows NT BASE API Client DLL file name.
+            /// </summary>
+            public const string Kernel32 = "kernel32.dll";
+
+            /// <summary>
+            ///     The NT Layer DLL file name.
+            /// </summary>
+            public const string Ntdll = "ntdll.dll";
+
+            /// <summary>
+            ///     The Process Status Helper DLL file name.
+            /// </summary>
+            public const string Psapi = "psapi.dll";
+
+            /// <summary>
+            ///     The Windows Shell Common DLL file name.
+            /// </summary>
+            public const string Shell32 = "shell32.dll";
+
+            /// <summary>
+            ///     The Multi-User Windows USER API Client DLL file name.
+            /// </summary>
+            public const string User32 = "user32.dll";
+
+            internal const string Advapi32 = "advapi32.dll";
+            internal const string Dwmapi = "dwmapi.dll";
+            internal const string Msi = "msi.dll";
+            internal const string Rstrtmgr = "rstrtmgr.dll";
+            internal const string Urlmon = "urlmon.dll";
+            internal const string Uxtheme = "uxtheme.dll";
+            internal const string Winmm = "winmm.dll";
+        }
+
+        /// <summary>
         ///     Represents native methods.
         /// </summary>
         [SuppressUnmanagedCodeSecurity]
@@ -9824,46 +9864,6 @@ namespace SilDev
             /// </param>
             public static bool operator !=(DeviceInput left, DeviceInput right) =>
                 !(left == right);
-        }
-
-        /// <summary>
-        ///     Contains file name constants of the used Windows dynamic-link library (DLL)
-        ///     files.
-        /// </summary>
-        public static class DllNames
-        {
-            /// <summary>
-            ///     The Windows NT BASE API Client DLL file name.
-            /// </summary>
-            public const string Kernel32 = "kernel32.dll";
-
-            /// <summary>
-            ///     The NT Layer DLL file name.
-            /// </summary>
-            public const string Ntdll = "ntdll.dll";
-
-            /// <summary>
-            ///     The Process Status Helper file name.
-            /// </summary>
-            public const string Psapi = "psapi.dll";
-
-            /// <summary>
-            ///     The Windows Shell Common DLL file name.
-            /// </summary>
-            public const string Shell32 = "shell32.dll";
-
-            /// <summary>
-            ///     The Multi-User Windows USER API Client DLL file name.
-            /// </summary>
-            public const string User32 = "user32.dll";
-
-            internal const string Advapi32 = "advapi32.dll";
-            internal const string Dwmapi = "dwmapi.dll";
-            internal const string Msi = "msi.dll";
-            internal const string Rstrtmgr = "rstrtmgr.dll";
-            internal const string Urlmon = "urlmon.dll";
-            internal const string Uxtheme = "uxtheme.dll";
-            internal const string Winmm = "winmm.dll";
         }
 
         /// <summary>
