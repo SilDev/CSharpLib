@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-13 15:58
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -366,12 +366,17 @@ namespace SilDev
         /// <param name="secondFile">
         ///     The second file to compare.
         /// </param>
+        /// <exception cref="ArgumentInvalidException">
+        ///     firstFile or secondFile is invalid.
+        /// </exception>
         public static bool ContentIsEqual(string firstFile, string secondFile)
         {
             var first = PathEx.Combine(firstFile);
-            var second = PathEx.Combine(secondFile);
             if (!PathEx.IsValidPath(first))
-                return PathEx.IsValidPath(second);
+                throw new ArgumentInvalidException(nameof(firstFile));
+            var second = PathEx.Combine(secondFile);
+            if (!PathEx.IsValidPath(second))
+                throw new ArgumentInvalidException(nameof(secondFile));
             var fs1 = new FileInfo(first);
             var fs2 = new FileInfo(second);
             return fs1.ContentIsEqual(fs2);
