@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WindowsPlayer.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-13 13:55
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev.Media
 {
     using System;
+    using System.ComponentModel;
     using System.IO;
     using System.Reflection;
     using System.Text;
@@ -62,9 +63,11 @@ namespace SilDev.Media
         /// <summary>
         ///     Retrieves the sound volume of the current application.
         /// </summary>
+        /// <exception cref="Win32Exception">
+        /// </exception>
         public static int GetSoundVolume()
         {
-            _ = WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out var currVol);
+            WinApi.ThrowError(WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out var currVol));
             var calcVol = (ushort)(currVol & 0xffff);
             return calcVol / (ushort.MaxValue / 0xa) * 0xa;
         }
@@ -75,17 +78,19 @@ namespace SilDev.Media
         /// <param name="value">
         ///     The sound volume value, in percent.
         /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
         public static void SetSoundVolume(int value)
         {
             var newVolume = ushort.MaxValue / 0xa * (value.IsBetween(0x0, 0x64) ? value / 0xa : 0x64);
             var newVolumeAllChannels = ((uint)newVolume & 0xffff) | ((uint)newVolume << 16);
-            _ = WinApi.NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
+            WinApi.ThrowError(WinApi.NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels));
         }
 
         private static string SndStatus()
         {
             var sb = new StringBuilder(128);
-            _ = WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero);
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero));
             return sb.ToStringThenClear();
         }
 
@@ -94,19 +99,19 @@ namespace SilDev.Media
             if (!string.IsNullOrEmpty(SndStatus()))
                 SndClose();
             var arg = $"open \"{path}\" alias {Alias}";
-            _ = WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
         }
 
         private static void SndClose()
         {
             var arg = $"close {Alias}";
-            _ = WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
         }
 
         private static void SndPlay(bool loop = false)
         {
             var arg = $"play {Alias}{(loop ? " repeat" : string.Empty)}";
-            _ = WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero);
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
         }
 
         /// <summary>
@@ -127,10 +132,17 @@ namespace SilDev.Media
             path = PathEx.Combine(path);
             if (!File.Exists(path))
                 return;
-            if (GetSoundVolume() != volume)
-                SetSoundVolume(volume);
-            SndOpen(path);
-            SndPlay(loop);
+            try
+            {
+                if (GetSoundVolume() != volume)
+                    SetSoundVolume(volume);
+                SndOpen(path);
+                SndPlay(loop);
+            }
+            catch (Win32Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+            }
         }
 
         /// <summary>
@@ -148,7 +160,16 @@ namespace SilDev.Media
         /// <summary>
         ///     Stops playing sounds.
         /// </summary>
-        public static void Stop() =>
-            SndClose();
+        public static void Stop()
+        {
+            try
+            {
+                SndClose();
+            }
+            catch (Win32Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+            }
+        }
     }
 }
