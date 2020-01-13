@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-13 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -447,7 +447,7 @@ namespace SilDev
 
         /// <summary>
         ///     Determines whether the specified element occurs within this sequence of
-        ///     element.
+        ///     elements.
         /// </summary>
         /// <typeparam name="TElement">
         ///     The type of the element.
@@ -517,9 +517,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether one of specified strings occurs within this sequence of
-        ///     strings. A parameter specifies the culture, case, and sort rules used in
-        ///     the comparison.
+        ///     Determines whether one of specified elements occurs within this sequence of
+        ///     elements.
         /// </summary>
         /// <typeparam name="TElement">
         ///     The type of the element.
@@ -545,9 +544,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the specified string occurs within this sequence of
-        ///     strings. A parameter specifies the culture, case, and sort rules used in
-        ///     the comparison.
+        ///     Determines whether the specified element occurs within this sequence of
+        ///     elements.
         /// </summary>
         /// <param name="source">
         ///     The sequence to browse.
@@ -573,9 +571,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether one of specified strings occurs within this sequence of
-        ///     strings. A parameter specifies the culture, case, and sort rules used in
-        ///     the comparison.
+        ///     Determines whether one of specified elements occurs within this sequence of
+        ///     elements.
         /// </summary>
         /// <param name="source">
         ///     The sequence to browse.
@@ -606,9 +603,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether one of specified strings occurs within this sequence of
-        ///     strings. A parameter specifies the culture, case, and sort rules used in
-        ///     the comparison.
+        ///     Determines whether one of specified elements occurs within this sequence of
+        ///     elements.
         /// </summary>
         /// <param name="source">
         ///     The sequence to browse.
@@ -643,9 +639,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether one of specified strings occurs within this sequence of
-        ///     strings. A parameter specifies the culture, case, and sort rules used in
-        ///     the comparison.
+        ///     Determines whether one of specified elements occurs within this sequence of
+        ///     elements.
         /// </summary>
         /// <param name="source">
         ///     The sequence to browse.
