@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IrrKlangPlayer.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-13 13:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -52,7 +52,7 @@ namespace SilDev.Media
                 if (!_assemblyFinalizer)
                 {
                     curDir = Directory.GetCurrentDirectory();
-                    if (curDir.EqualsEx(IrrKlangReference.Location))
+                    if (!curDir.EqualsEx(IrrKlangReference.Location))
                         Directory.SetCurrentDirectory(IrrKlangReference.Location);
                     else
                         curDir = null;
