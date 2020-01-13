@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-13 14:29
+// Version:  2020-01-13 14:40
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -2783,8 +2783,7 @@ namespace SilDev
                 using var csp = algorithm;
                 if (csp == null)
                     throw new ArgumentNullException(nameof(algorithm));
-                var ba = csp.ComputeHash(stream);
-                RawHash = ba;
+                RawHash = csp.ComputeHash(stream);
             }
 
             /// <summary>
@@ -2833,8 +2832,7 @@ namespace SilDev
                 using var csp = algorithm;
                 if (csp == null)
                     throw new ArgumentNullException(nameof(algorithm));
-                ba = csp.ComputeHash(ba);
-                RawHash = ba;
+                RawHash = csp.ComputeHash(ba);
             }
 
             /// <summary>
@@ -2889,12 +2887,12 @@ namespace SilDev
             public virtual bool Equals(Checksum other)
             {
                 if (!(RawHash is byte[] ba1))
-                    return other == null;
+                    return other?.RawHash == null;
                 if (!(other?.RawHash is byte[] ba2) || ba1.Length != ba2.Length)
                     return false;
                 for (var i = 0; i < ba2.Length; i++)
                 {
-                    if (ba1[i] == ba2.Length)
+                    if (ba1[i] == ba2[i])
                         continue;
                     return false;
                 }
