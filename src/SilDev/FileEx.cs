@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2020-01-06 07:58
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,21 +22,23 @@ namespace SilDev
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
+    using Compression;
     using Intern;
     using Properties;
 
     /// <summary>
-    ///     Provides static methods based on the <see cref="File"/> class to perform file
-    ///     operations.
+    ///     Provides static methods based on the <see cref="File"/> class to perform
+    ///     file operations.
     /// </summary>
     public static class FileEx
     {
-        private const int CsDatHeaderSize = 16;
+        private const int DatHeaderSize = 16;
 
-        private static byte[] DefCsDatHeader =>
+        private static byte[] DefDatHeader =>
             new byte[]
             {
                 // type version
@@ -57,15 +59,15 @@ namespace SilDev
                 0, 0, 0
             };
 
-        private static bool CsDatHeaderIsValid(IReadOnlyList<byte> header)
+        private static bool DatHeaderIsValid(IReadOnlyList<byte> header)
         {
-            if (header.Count != CsDatHeaderSize)
+            if (header.Count != DatHeaderSize)
                 return false;
-            var defHeader = DefCsDatHeader;
-            for (var i = 0; i < CsDatHeaderSize; i++)
-                switch ((CsDatHeaderKey)i)
+            var defHeader = DefDatHeader;
+            for (var i = 0; i < DatHeaderSize; i++)
+                switch ((DatHeaderKey)i)
                 {
-                    case CsDatHeaderKey.CompressionMode:
+                    case DatHeaderKey.CompressionMode:
                     {
                         var value = header[i];
                         if (!value.IsBetween((byte)0, (byte)1))
@@ -84,8 +86,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a new file, writes the specified object graph into to the file, and then
-        ///     closes the file.
+        ///     Creates a new file, writes the specified object graph into to the file, and
+        ///     then closes the file.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the source.
@@ -97,10 +99,12 @@ namespace SilDev
         ///     The object graph to write to the file.
         /// </param>
         /// <param name="compress">
-        ///     true to compress the file after serialization; otherwise, false.
+        ///     <see langword="true"/> to compress the file after serialization; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Serialize<TSource>(string path, TSource source, bool compress = false, bool overwrite = true)
         {
@@ -109,16 +113,18 @@ namespace SilDev
                 var dest = PathEx.Combine(path);
                 using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
                 {
-                    var header = DefCsDatHeader;
-                    header[(int)CsDatHeaderKey.CompressionMode] = Convert.ToByte(compress);
+                    var header = DefDatHeader;
+                    header[(int)DatHeaderKey.CompressionMode] = Convert.ToByte(compress);
                     fs.WriteBytes(header);
+                    var bf = new BinaryFormatter(null, new StreamingContext(StreamingContextStates.File));
                     if (compress)
                     {
-                        using (var ms = new MemoryStream(source.SerializeObject().Zip()))
-                            ms.WriteTo(fs);
+                        using var ms = new MemoryStream();
+                        bf.Serialize(ms, source);
+                        ms.Position = 0;
+                        GZip.Compress(ms, fs, false);
                         return true;
                     }
-                    var bf = new BinaryFormatter();
                     bf.Serialize(fs, source);
                 }
                 return true;
@@ -149,35 +155,24 @@ namespace SilDev
                 var src = PathEx.Combine(path);
                 if (!File.Exists(src))
                     return defValue;
-                TResult result;
-                using (var fs = new FileStream(src, FileMode.Open, FileAccess.Read))
+                using var fs = new FileStream(src, FileMode.Open, FileAccess.Read);
+                bool decompress;
+                var header = new byte[DatHeaderSize];
+                fs.Read(header, 0, header.Length);
+                if (DatHeaderIsValid(header))
+                    decompress = header[(int)DatHeaderKey.CompressionMode] > 0;
+                else
                 {
-                    bool decompress;
-                    var header = new byte[CsDatHeaderSize];
-                    fs.Read(header, 0, header.Length);
-                    if (CsDatHeaderIsValid(header))
-                        decompress = header[(int)CsDatHeaderKey.CompressionMode] > 0;
-                    else
-                    {
-                        decompress = header[0] == 0x1f &&
-                                     header[1] == 0x8b &&
-                                     header[2] == 0x08 &&
-                                     header[3] == 0x00;
-                        fs.Position = 0;
-                    }
-                    if (decompress)
-                        using (var ms = new MemoryStream())
-                        {
-                            fs.CopyTo(ms);
-                            result = ms.ToArray().Unzip().DeserializeObject<TResult>();
-                        }
-                    else
-                    {
-                        var bf = new BinaryFormatter();
-                        result = (TResult)bf.Deserialize(fs);
-                    }
+                    decompress = !GZip.Header.Where((b, i) => header[i] != b).Any();
+                    fs.Position = 0;
                 }
-                return result;
+                var bf = new BinaryFormatter(null, new StreamingContext(StreamingContextStates.File));
+                if (!decompress)
+                    return (TResult)bf.Deserialize(fs);
+                using var ms = new MemoryStream();
+                GZip.Decompress(fs, ms, false);
+                ms.Position = 0;
+                return (TResult)bf.Deserialize(ms);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -199,7 +194,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the specified path specifies the specified file attributes.
+        ///     Determines whether the specified path specifies the specified file
+        ///     attributes.
         /// </summary>
         /// <param name="fileInfo">
         ///     The file instance member that contains the file to check.
@@ -224,7 +220,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the specified path specifies the specified file attributes.
+        ///     Determines whether the specified path specifies the specified file
+        ///     attributes.
         /// </summary>
         /// <param name="path">
         ///     The file or directory to check.
@@ -350,16 +347,12 @@ namespace SilDev
             }
             var buffer1 = new byte[count];
             var buffer2 = new byte[count];
-            using (var fs1 = fileInfo.OpenRead())
-            {
-                using (var fs2 = otherFileInfo.OpenRead())
-                {
-                    int len1, len2;
-                    while ((len1 = fs1.Read(buffer1, 0, count)) > 0 && (len2 = fs2.Read(buffer2, 0, count)) > 0)
-                        if (len1 != len2 || len1 < count && !buffer1.Take(len1).SequenceEqual(buffer2.Take(len2)) || !buffer1.SequenceEqual(buffer2))
-                            return false;
-                }
-            }
+            using var fs1 = fileInfo.OpenRead();
+            using var fs2 = otherFileInfo.OpenRead();
+            int len1, len2;
+            while ((len1 = fs1.Read(buffer1, 0, count)) > 0 && (len2 = fs2.Read(buffer2, 0, count)) > 0)
+                if (len1 != len2 || len1 < count && !buffer1.Take(len1).SequenceEqual(buffer2.Take(len2)) || !buffer1.SequenceEqual(buffer2))
+                    return false;
             return true;
         }
 
@@ -385,8 +378,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Opens a binary file, reads the contents of the file into a byte array, and then
-        ///     closes the file.
+        ///     Opens a binary file, reads the contents of the file into a byte array, and
+        ///     then closes the file.
         /// </summary>
         /// <param name="path">
         ///     The file to open for reading.
@@ -406,8 +399,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Opens a file, reads all lines of the file with the specified encoding, and then
-        ///     closes the file.
+        ///     Opens a file, reads all lines of the file with the specified encoding, and
+        ///     then closes the file.
         /// </summary>
         /// <param name="path">
         ///     The file to open for reading.
@@ -430,8 +423,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Opens a file, reads all lines of the file with the specified encoding, and then
-        ///     closes the file.
+        ///     Opens a file, reads all lines of the file with the specified encoding, and
+        ///     then closes the file.
         /// </summary>
         /// <param name="path">
         ///     The file to open for reading.
@@ -454,12 +447,13 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Appends lines to a file by using a specified encoding, and then closes the file.
-        ///     If the specified file does not exist, this method creates a file, writes the
-        ///     specified lines to the file, and then closes the file.
+        ///     Appends lines to a file by using a specified encoding, and then closes the
+        ///     file. If the specified file does not exist, this method creates a file,
+        ///     writes the specified lines to the file, and then closes the file.
         /// </summary>
         /// <param name="path">
-        ///     The file to append the lines to. The file is created if it doesn't already exist.
+        ///     The file to append the lines to. The file is created if it doesn't already
+        ///     exist.
         /// </param>
         /// <param name="contents">
         ///     The lines to append to the file.
@@ -474,7 +468,7 @@ namespace SilDev
             {
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 if (encoding != null)
@@ -491,8 +485,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Appends the specified string to the file, creating the file if it does not already
-        ///     exist.
+        ///     Appends the specified string to the file, creating the file if it does not
+        ///     already exist.
         /// </summary>
         /// <param name="path">
         ///     The file to append the specified string to.
@@ -510,7 +504,7 @@ namespace SilDev
             {
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 if (encoding != null)
@@ -527,8 +521,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Replaces all occurrences of a specified sequence of bytes in the specified file
-        ///     with another sequence of bytes.
+        ///     Replaces all occurrences of a specified sequence of bytes in the specified
+        ///     file with another sequence of bytes.
         /// </summary>
         /// <param name="file">
         ///     The file to overwrite.
@@ -540,7 +534,8 @@ namespace SilDev
         ///     The sequence of bytes to replace all all occurrences of oldValue.
         /// </param>
         /// <param name="backup">
-        ///     true to create a backup; otherwise, false.
+        ///     <see langword="true"/> to create a backup; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="offsets">
         ///     A list with all positions where bytes were overwritten.
@@ -672,9 +667,9 @@ namespace SilDev
                 {
                     if (File.Exists(backupPath) && File.Exists(targetPath))
                     {
-                        var backupHash = new Crypto.Md5().EncryptFile(backupPath);
-                        var targetHash = new Crypto.Md5().EncryptFile(targetPath);
-                        if (backupHash.Equals(targetHash, StringComparison.Ordinal))
+                        var backupHash = new Crypto.Md5(backupPath, true);
+                        var targetHash = new Crypto.Md5(targetPath, true);
+                        if (backupHash == targetHash)
                             File.Delete(backupPath);
                     }
                 }
@@ -698,8 +693,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Replaces all occurrences of a specified sequence of bytes in the specified file
-        ///     with another sequence of bytes.
+        ///     Replaces all occurrences of a specified sequence of bytes in the specified
+        ///     file with another sequence of bytes.
         /// </summary>
         /// <param name="file">
         ///     The file to overwrite.
@@ -711,7 +706,8 @@ namespace SilDev
         ///     The sequence of bytes to replace all all occurrences of oldValue.
         /// </param>
         /// <param name="backup">
-        ///     true to create a backup; otherwise, false.
+        ///     <see langword="true"/> to create a backup; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static bool BinaryReplace(string file, byte[] oldValue, byte[] newValue, bool backup = true) =>
             BinaryReplace(file, oldValue, newValue, backup, out var _);
@@ -727,7 +723,8 @@ namespace SilDev
         ///     The bytes to write to the file.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool WriteAllBytes(string path, IEnumerable<byte> bytes, bool overwrite = true)
         {
@@ -738,7 +735,7 @@ namespace SilDev
             {
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 File.WriteAllBytes(file, bytes.ToArray());
@@ -765,7 +762,8 @@ namespace SilDev
         ///     The character encoding to use.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding, bool overwrite = true)
         {
@@ -776,7 +774,7 @@ namespace SilDev
             {
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 File.WriteAllLines(file, contents, encoding);
@@ -800,7 +798,8 @@ namespace SilDev
         ///     The lines to write to the file.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool WriteAllLines(string path, IEnumerable<string> contents, bool overwrite = true)
         {
@@ -811,7 +810,7 @@ namespace SilDev
             {
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 File.WriteAllLines(file, contents);
@@ -825,8 +824,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a new file, writes the specified string to the file using the specified
-        ///     encoding, and then closes the file.
+        ///     Creates a new file, writes the specified string to the file using the
+        ///     specified encoding, and then closes the file.
         /// </summary>
         /// <param name="path">
         ///     The file to write to.
@@ -838,7 +837,8 @@ namespace SilDev
         ///     The encoding to apply to the string.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool WriteAllText(string path, string contents, Encoding encoding, bool overwrite = true)
         {
@@ -849,7 +849,7 @@ namespace SilDev
             {
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 File.WriteAllText(file, contents, encoding);
@@ -863,8 +863,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a new file, writes the specified string to the file, and then closes
-        ///     the file.
+        ///     Creates a new file, writes the specified string to the file, and then
+        ///     closes the file.
         /// </summary>
         /// <param name="path">
         ///     The file to write to.
@@ -873,7 +873,8 @@ namespace SilDev
         ///     The string to write to the file.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool WriteAllText(string path, string contents, bool overwrite = true)
         {
@@ -884,7 +885,7 @@ namespace SilDev
             {
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 File.WriteAllText(file, contents);
@@ -904,7 +905,8 @@ namespace SilDev
         ///     The path and name of the file to create.
         /// </param>
         /// <param name="overwrite">
-        ///     true to overwrite an existing file; otherwise, false.
+        ///     <see langword="true"/> to overwrite an existing file; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static bool Create(string path, bool overwrite = false)
         {
@@ -917,7 +919,7 @@ namespace SilDev
                     return true;
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 File.Create(file).Close();
@@ -942,7 +944,8 @@ namespace SilDev
         ///     The fully qualified name of the destination file.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Copy(string srcFile, string destFile, bool overwrite = false)
         {
@@ -987,7 +990,8 @@ namespace SilDev
         ///     The fully qualified name of the destination file.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Move(string srcFile, string destFile, bool overwrite = false)
         {
@@ -1055,22 +1059,24 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a unique name starting with a given prefix, followed by a hash of the specified
-        ///     length and a specified suffix.
+        ///     Returns a unique name starting with a given prefix, followed by a hash of
+        ///     the specified length and a specified suffix.
         /// </summary>
         /// <param name="prefix">
         ///     This text is at the beginning of the name.
         ///     <para>
-        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
-        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///         Uppercase letters are converted to lowercase letters. Supported
+        ///         characters are only from '0' to '9' and from 'a' to 'z' but can be
+        ///         completely empty to omit the prefix.
         ///     </para>
         /// </param>
         /// <param name="suffix">
         ///     This text is at the end of the name.
         ///     <para>
-        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
-        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
-        ///         'z' but can be completely empty to omit the suffix.
+        ///         If it does not begin with a dot, it will be added. Uppercase letters
+        ///         are converted to lowercase letters. Supported characters are only from
+        ///         '0' to '9' and from 'a' to 'z' but can be completely empty to omit the
+        ///         suffix.
         ///     </para>
         /// </param>
         /// <param name="hashLen">
@@ -1086,8 +1092,8 @@ namespace SilDev
             PathEx.GetUniqueName(prefix, suffix, hashLen);
 
         /// <summary>
-        ///     Returns a unique name starting with 'tmp' prefix, followed by a hash of the specified
-        ///     length and '.tmp' suffix.
+        ///     Returns a unique name starting with 'tmp' prefix, followed by a hash of the
+        ///     specified length and '.tmp' suffix.
         /// </summary>
         /// <param name="hashLen">
         ///     The length of the hash. Valid values are 4 through 24.
@@ -1099,22 +1105,25 @@ namespace SilDev
             PathEx.GetUniqueName("tmp", ".tmp", hashLen);
 
         /// <summary>
-        ///     Returns the current user's temporary path in combination with unique name starting with
-        ///     a given prefix, followed by a hash of the specified length and a specified suffix.
+        ///     Returns the current user's temporary path in combination with unique name
+        ///     starting with a given prefix, followed by a hash of the specified length
+        ///     and a specified suffix.
         /// </summary>
         /// <param name="prefix">
         ///     This text is at the beginning of the name.
         ///     <para>
-        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
-        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///         Uppercase letters are converted to lowercase letters. Supported
+        ///         characters are only from '0' to '9' and from 'a' to 'z' but can be
+        ///         completely empty to omit the prefix.
         ///     </para>
         /// </param>
         /// <param name="suffix">
         ///     This text is at the end of the name.
         ///     <para>
-        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
-        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
-        ///         'z' but can be completely empty to omit the suffix.
+        ///         If it does not begin with a dot, it will be added. Uppercase letters
+        ///         are converted to lowercase letters. Supported characters are only from
+        ///         '0' to '9' and from 'a' to 'z' but can be completely empty to omit the
+        ///         suffix.
         ///     </para>
         /// </param>
         /// <param name="hashLen">
@@ -1130,8 +1139,9 @@ namespace SilDev
             PathEx.GetUniquePath("%TEMP%", prefix, suffix, hashLen);
 
         /// <summary>
-        ///     Returns the current user's temporary path in combination with unique name starting with
-        ///     'tmp' prefix, followed by a hash of the specified length and '.tmp' suffix.
+        ///     Returns the current user's temporary path in combination with unique name
+        ///     starting with 'tmp' prefix, followed by a hash of the specified length and
+        ///     '.tmp' suffix.
         /// </summary>
         /// <param name="hashLen">
         ///     The length of the hash. Valid values are 4 through 24.
@@ -1158,8 +1168,8 @@ namespace SilDev
         ///     The icon resource path and resource identifier.
         /// </param>
         /// <param name="skipExists">
-        ///     true to skip existing shortcuts, even if the target path of
-        ///     the same; otherwise, false.
+        ///     <see langword="true"/> to skip existing shortcuts, even if the target path
+        ///     of the same; otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateShellLink(string targetPath, string linkPath, string startArgs = null, (string, int) iconLocation = default, bool skipExists = false)
         {
@@ -1188,8 +1198,8 @@ namespace SilDev
         ///     The arguments which applies when the link is started.
         /// </param>
         /// <param name="skipExists">
-        ///     true to skip existing shortcuts, even if the target path of
-        ///     the same; otherwise, false.
+        ///     <see langword="true"/> to skip existing shortcuts, even if the target path
+        ///     of the same; otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateShellLink(string targetPath, string linkPath, string startArgs, bool skipExists) =>
             CreateShellLink(targetPath, linkPath, startArgs, (null, 0), skipExists);
@@ -1204,8 +1214,8 @@ namespace SilDev
         ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="skipExists">
-        ///     true to skip existing shortcuts, even if the target path of
-        ///     the same; otherwise, false.
+        ///     <see langword="true"/> to skip existing shortcuts, even if the target path
+        ///     of the same; otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateShellLink(string targetPath, string linkPath, bool skipExists) =>
             CreateShellLink(targetPath, linkPath, null, (null, 0), skipExists);
@@ -1242,10 +1252,12 @@ namespace SilDev
         ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="backup">
-        ///     true to create an backup for existing files; otherwise, false.
+        ///     <see langword="true"/> to create an backup for existing files; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="elevated">
-        ///     true to create this link with highest privileges; otherwise, false.
+        ///     <see langword="true"/> to create this link with highest privileges;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateSymbolicLink(string linkPath, string destFile, bool backup = false, bool elevated = false) =>
             SymbolicLink.Create(linkPath, destFile, false, backup, elevated);
@@ -1258,10 +1270,12 @@ namespace SilDev
         ///     The link to be removed.
         /// </param>
         /// <param name="backup">
-        ///     true to restore found backups; otherwise, false.
+        ///     <see langword="true"/> to restore found backups; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="elevated">
-        ///     true to remove this link with highest privileges; otherwise, false.
+        ///     <see langword="true"/> to remove this link with highest privileges;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool DestroySymbolicLink(string path, bool backup = false, bool elevated = false) =>
             SymbolicLink.Destroy(path, false, backup, elevated);
@@ -1329,13 +1343,15 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the subject distinguished name from the certificate of the specified file.
+        ///     Gets the subject distinguished name from the certificate of the specified
+        ///     file.
         /// </summary>
         /// <param name="path">
         ///     The path to the file to be checked.
         /// </param>
         /// <param name="multiLine">
-        ///     true if the return string should contain carriage returns; otherwise, false.
+        ///     <see langword="true"/> if the return string should contain carriage
+        ///     returns; otherwise, <see langword="false"/>.
         /// </param>
         public static string GetSignatureSubject(string path, bool multiLine = true)
         {
@@ -1346,9 +1362,9 @@ namespace SilDev
                 return null;
             try
             {
-                using (var cert1 = X509Certificate.CreateFromSignedFile(file))
-                    using (var cert2 = new X509Certificate2(cert1))
-                        return cert2.SubjectName.Format(multiLine);
+                using var cert1 = X509Certificate.CreateFromSignedFile(file);
+                using var cert2 = new X509Certificate2(cert1);
+                return cert2.SubjectName.Format(multiLine);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -1389,18 +1405,17 @@ namespace SilDev
                 var rfType = PowerShellReference.Assembly.GetType(rfClass, true);
                 var rfMethod = rfType.GetMethods().First(x => x.Name == rfFunc && x.GetParameters().FirstOrDefault()?.Name == rfPara);
 
-                using (var rf = (dynamic)rfMethod.Invoke(null, new[] { (dynamic)rcMethod.Invoke(null, null) }))
+                using var rf = (dynamic)rfMethod.Invoke(null, new[]
                 {
-                    rf.Open();
-                    using (var p = rf.CreatePipeline())
-                    {
-                        const string command = "Get-AuthenticodeSignature \"{0}\"";
-                        p.Commands.AddScript(command.FormatCurrent(path));
-                        var s = p.Invoke()[0];
-                        rf.Close();
-                        return s.Status.ToString();
-                    }
-                }
+                    (dynamic)rcMethod.Invoke(null, null)
+                });
+                rf.Open();
+                using var p = rf.CreatePipeline();
+                const string command = "Get-AuthenticodeSignature \"{0}\"";
+                p.Commands.AddScript(command.FormatCurrent(path));
+                var s = p.Invoke()[0];
+                rf.Close();
+                return s.Status.ToString();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -1529,7 +1544,7 @@ namespace SilDev
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        private enum CsDatHeaderKey
+        private enum DatHeaderKey
         {
             VersionNumber1,
             VersionNumber2,

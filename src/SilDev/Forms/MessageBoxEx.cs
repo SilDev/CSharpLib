@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2019-12-16 16:44
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -23,28 +23,19 @@ namespace SilDev.Forms
     using Properties;
 
     /// <summary>
-    ///     Displays a message window, also known as a dialog box, based on <see cref="MessageBox"/>,
-    ///     which presents a message to the user. It is a modal window, blocking other actions in the
-    ///     application until the user closes it. A <see cref="MessageBoxEx"/> can contain text,
-    ///     buttons, and symbols that inform and instruct the user.
+    ///     Displays a message window, also known as a dialog box, based on
+    ///     <see cref="MessageBox"/>, which presents a message to the user. It is a
+    ///     modal window, blocking other actions in the application until the user
+    ///     closes it. A <see cref="MessageBoxEx"/> can contain text, buttons, and
+    ///     symbols that inform and instruct the user.
     ///     <para>
-    ///         The difference to <see cref="MessageBox"/> is that the message window displays
-    ///         in the center of the specified <see cref="IWin32Window"/> owner object.
+    ///         The difference to <see cref="MessageBox"/> is that the message window
+    ///         displays in the center of the specified <see cref="IWin32Window"/>
+    ///         owner object.
     ///     </para>
     /// </summary>
     public static class MessageBoxEx
     {
-        /// <summary>
-        ///     Specifies that the mouse pointer moves once to a new dialog box.
-        /// </summary>
-        public static bool CenterMousePointer = false;
-
-        /// <summary>
-        ///     Specifies that the dialog box is placed above all non-topmost windows. This
-        ///     option has no effect if an <see cref="IWin32Window"/> owner is defined.
-        /// </summary>
-        public static bool TopMost = false;
-
         [ThreadStatic]
         private static IntPtr _hHook;
 
@@ -55,6 +46,33 @@ namespace SilDev.Forms
         private static readonly WinApi.EnumChildProc EnumProc = MessageBoxEnumProc;
         private static readonly WinApi.HookProc HookProc = MessageBoxHookProc;
         static MessageBoxEx() => _hHook = IntPtr.Zero;
+
+        /// <summary>
+        ///     Specifies that the mouse pointer moves once to a new dialog box.
+        /// </summary>
+        public static bool CenterMousePointer { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the <see cref="MessageBoxButtonText"/> structure that is used
+        ///     when <see cref="ButtonTextOverrideEnabled"/> is enabled.
+        /// </summary>
+        public static MessageBoxButtonText ButtonText { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether the override options should be
+        ///     applied once at the next dialog box.
+        /// </summary>
+        public static bool ButtonTextOverrideEnabled { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether all dialog boxes are placed above
+        ///     all non-topmost windows.
+        ///     <para>
+        ///         This option has no effect if an <see cref="IWin32Window"/> owner is
+        ///         defined.
+        ///     </para>
+        /// </summary>
+        public static bool TopMost { get; set; }
 
         /// <summary>
         ///     Displays a message box with the specified text, caption, buttons, icon,
@@ -75,12 +93,12 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <param name="options">
         ///     One of the <see cref="MessageBoxOptions"/> values that specifies which
@@ -105,8 +123,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box with the specified text, caption, buttons, icon,
-        ///     and default button in the center of the specified owner object.
+        ///     Displays a message box with the specified text, caption, buttons, icon, and
+        ///     default button in the center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -123,12 +141,12 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -166,8 +184,8 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -187,8 +205,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box with the specified text, caption, and buttons in
-        ///     the center of the specified owner object.
+        ///     Displays a message box with the specified text, caption, and buttons in the
+        ///     center of the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -222,8 +240,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box with the specified text and caption in the center
-        ///     of the specified owner object.
+        ///     Displays a message box with the specified text and caption in the center of
+        ///     the specified owner object.
         /// </summary>
         /// <param name="owner">
         ///     An implementation of <see cref="IWin32Window"/> that will own the modal
@@ -268,12 +286,12 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <param name="options">
         ///     One of the <see cref="MessageBoxOptions"/> values that specifies which
@@ -302,12 +320,12 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -331,8 +349,8 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -390,8 +408,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Displays a message box with the specified text, caption, buttons, icon, default
-        ///     button, and options.
+        ///     Displays a message box with the specified text, caption, buttons, icon,
+        ///     default button, and options.
         /// </summary>
         /// <param name="text">
         ///     The text to display in the message box.
@@ -404,17 +422,17 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <param name="options">
         ///     One of the <see cref="MessageBoxOptions"/> values that specifies which
-        ///     display and association options will be used for the message box. You may pass
-        ///     in 0 if you wish to use the defaults.
+        ///     display and association options will be used for the message box. You may
+        ///     pass in 0 if you wish to use the defaults.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -424,13 +442,16 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon, defButton, options);
-            using (var f = new Form { TopMost = true })
-                return MessageBox.Show(f, text, caption, buttons, icon, defButton, options);
+            using var f = new Form
+            {
+                TopMost = true
+            };
+            return MessageBox.Show(f, text, caption, buttons, icon, defButton, options);
         }
 
         /// <summary>
-        ///     Displays a message box with the specified text, caption, buttons, icon, default,
-        ///     and button.
+        ///     Displays a message box with the specified text, caption, buttons, icon,
+        ///     default, and button.
         /// </summary>
         /// <param name="text">
         ///     The text to display in the message box.
@@ -443,12 +464,12 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -458,8 +479,11 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon, defButton);
-            using (var f = new Form { TopMost = true })
-                return MessageBox.Show(f, text, caption, buttons, icon, defButton);
+            using var f = new Form
+            {
+                TopMost = true
+            };
+            return MessageBox.Show(f, text, caption, buttons, icon, defButton);
         }
 
         /// <summary>
@@ -476,8 +500,8 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -487,8 +511,11 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon);
-            using (var f = new Form { TopMost = true })
-                return MessageBox.Show(f, text, caption, buttons, icon);
+            using var f = new Form
+            {
+                TopMost = true
+            };
+            return MessageBox.Show(f, text, caption, buttons, icon);
         }
 
         /// <summary>
@@ -512,8 +539,11 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons);
-            using (var f = new Form { TopMost = true })
-                return MessageBox.Show(f, text, caption, buttons);
+            using var f = new Form
+            {
+                TopMost = true
+            };
+            return MessageBox.Show(f, text, caption, buttons);
         }
 
         /// <summary>
@@ -533,13 +563,16 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption);
-            using (var f = new Form { TopMost = true })
-                return MessageBox.Show(f, text, caption);
+            using var f = new Form
+            {
+                TopMost = true
+            };
+            return MessageBox.Show(f, text, caption);
         }
 
         /// <summary>
-        ///     Displays a message box with the specified text, buttons, icon, default button,
-        ///     and options.
+        ///     Displays a message box with the specified text, buttons, icon, default
+        ///     button, and options.
         /// </summary>
         /// <param name="text">
         ///     The text to display in the message box.
@@ -549,17 +582,17 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <param name="options">
         ///     One of the <see cref="MessageBoxOptions"/> values that specifies which
-        ///     display and association options will be used for the message box. You may pass
-        ///     in 0 if you wish to use the defaults.
+        ///     display and association options will be used for the message box. You may
+        ///     pass in 0 if you wish to use the defaults.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -579,12 +612,12 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <param name="defButton">
-        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies
-        ///     the default button for the message box.
+        ///     One of the <see cref="MessageBoxDefaultButton"/> values that specifies the
+        ///     default button for the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -603,8 +636,8 @@ namespace SilDev.Forms
         ///     buttons to display in the message box.
         /// </param>
         /// <param name="icon">
-        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon
-        ///     to display in the message box.
+        ///     One of the <see cref="MessageBoxIcon"/> values that specifies which icon to
+        ///     display in the message box.
         /// </param>
         /// <returns>
         ///     One of the <see cref="DialogResult"/> values.
@@ -642,8 +675,11 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text);
-            using (var f = new Form { TopMost = true })
-                return MessageBox.Show(f, text);
+            using var f = new Form
+            {
+                TopMost = true
+            };
+            return MessageBox.Show(f, text);
         }
 
         private static void Initialize(IWin32Window owner = null)
@@ -659,11 +695,11 @@ namespace SilDev.Forms
                     {
                         var placement = new WinApi.WindowPlacement();
                         WinApi.NativeMethods.GetWindowPlacement(_owner.Handle, ref placement);
-                        if (placement.showCmd == 2)
+                        if (placement.ShowCmd == 2)
                             return;
                     }
                 }
-                if (_owner != null || ButtonText.OverrideEnabled)
+                if (_owner != null || ButtonTextOverrideEnabled)
                     _hHook = WinApi.NativeMethods.SetWindowsHookEx(WinApi.Win32HookFlags.WhCallWndProcRet, HookProc, IntPtr.Zero, (int)WinApi.NativeMethods.GetCurrentThreadId());
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -677,25 +713,25 @@ namespace SilDev.Forms
             if (nCode < 0)
                 return WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
             var msg = (WinApi.CallWndProcRet)Marshal.PtrToStructure(lParam, typeof(WinApi.CallWndProcRet));
-            if (msg.message != (int)WinApi.Win32HookFlags.HCbtActivate)
+            if (msg.Message != (int)WinApi.Win32HookFlags.HCbtActivate)
             {
-                if (msg.message != (int)WinApi.WindowMenuFlags.WmInitDialog)
+                if (msg.Message != (int)WinApi.WindowMenuFlags.WmInitDialog)
                     return WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
-                if (!ButtonText.OverrideEnabled)
+                if (!ButtonTextOverrideEnabled)
                     return MessageBoxUnhookProc();
                 try
                 {
                     var className = new StringBuilder(10);
-                    _ = WinApi.NativeMethods.GetClassName(msg.hwnd, className, className.Capacity);
+                    _ = WinApi.NativeMethods.GetClassName(msg.HWnd, className, className.Capacity);
                     if (className.ToStringThenClear() == "#32770")
                     {
                         _nButton = 0;
-                        WinApi.NativeMethods.EnumChildWindows(msg.hwnd, EnumProc, IntPtr.Zero);
+                        WinApi.NativeMethods.EnumChildWindows(msg.HWnd, EnumProc, IntPtr.Zero);
                         if (_nButton == 1)
                         {
-                            var hButton = WinApi.NativeMethods.GetDlgItem(msg.hwnd, 2);
+                            var hButton = WinApi.NativeMethods.GetDlgItem(msg.HWnd, 2);
                             if (hButton != IntPtr.Zero)
-                                WinApi.NativeMethods.SetWindowText(hButton, ButtonText.OK);
+                                WinApi.NativeMethods.SetWindowText(hButton, ButtonText.Ok);
                         }
                     }
                 }
@@ -710,13 +746,13 @@ namespace SilDev.Forms
                 if (_owner != null)
                 {
                     var cRect = new Rectangle(0, 0, 0, 0);
-                    if (WinApi.NativeMethods.GetWindowRect(msg.hwnd, ref cRect))
+                    if (WinApi.NativeMethods.GetWindowRect(msg.HWnd, ref cRect))
                     {
                         var width = cRect.Width - cRect.X;
                         var height = cRect.Height - cRect.Y;
-                        WinApi.NativeHelper.CenterWindow(msg.hwnd, _owner.Handle, true);
+                        WinApi.NativeHelper.CenterWindow(msg.HWnd, _owner.Handle, true);
                         if (CenterMousePointer)
-                            WinApi.NativeHelper.SetCursorPos(msg.hwnd, new Point(width / 2, height / 2 + 24));
+                            WinApi.NativeHelper.SetCursorPos(msg.HWnd, new Point(width / 2, height / 2 + 24));
                     }
                 }
             }
@@ -724,7 +760,7 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
-            return !ButtonText.OverrideEnabled ? MessageBoxUnhookProc() : WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
+            return !ButtonTextOverrideEnabled ? MessageBoxUnhookProc() : WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
         }
 
         private static IntPtr MessageBoxUnhookProc()
@@ -732,8 +768,8 @@ namespace SilDev.Forms
             _ = WinApi.NativeMethods.UnhookWindowsHookEx(_hHook);
             _hHook = IntPtr.Zero;
             _owner = null;
-            if (ButtonText.OverrideEnabled)
-                ButtonText.OverrideEnabled = false;
+            if (ButtonTextOverrideEnabled)
+                ButtonTextOverrideEnabled = false;
             return _hHook;
         }
 
@@ -746,77 +782,36 @@ namespace SilDev.Forms
             switch (WinApi.NativeMethods.GetDlgCtrlID(hWnd))
             {
                 case 1:
-                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.OK);
+                    if (ButtonText.Ok != null)
+                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Ok);
                     break;
                 case 2:
-                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Cancel);
+                    if (ButtonText.Cancel != null)
+                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Cancel);
                     break;
                 case 3:
-                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Abort);
+                    if (ButtonText.Abort != null)
+                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Abort);
                     break;
                 case 4:
-                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Retry);
+                    if (ButtonText.Retry != null)
+                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Retry);
                     break;
                 case 5:
-                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Ignore);
+                    if (ButtonText.Ignore != null)
+                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Ignore);
                     break;
                 case 6:
-                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Yes);
+                    if (ButtonText.Yes != null)
+                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Yes);
                     break;
                 case 7:
-                    WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.No);
+                    if (ButtonText.No != null)
+                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.No);
                     break;
             }
             _nButton++;
             return true;
-        }
-
-        /// <summary>
-        ///     Specifies button text overrides.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public static class ButtonText
-        {
-            /// <summary>
-            ///     The OK button.
-            /// </summary>
-            public static string OK = "&OK";
-
-            /// <summary>
-            ///     The Cancel button.
-            /// </summary>
-            public static string Cancel = "&Cancel";
-
-            /// <summary>
-            ///     The Abort button.
-            /// </summary>
-            public static string Abort = "&Abort";
-
-            /// <summary>
-            ///     The Retry button.
-            /// </summary>
-            public static string Retry = "&Retry";
-
-            /// <summary>
-            ///     The Ignore button.
-            /// </summary>
-            public static string Ignore = "&Ignore";
-
-            /// <summary>
-            ///     The Yes button.
-            /// </summary>
-            public static string Yes = "&Yes";
-
-            /// <summary>
-            ///     The No button.
-            /// </summary>
-            public static string No = "&No";
-
-            /// <summary>
-            ///     Gets or sets a value indicating whether the override options to
-            ///     be applied.
-            /// </summary>
-            public static bool OverrideEnabled { get; set; }
         }
     }
 }

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: AppCompat.cs
-// Version:  2019-12-12 16:28
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -48,6 +48,7 @@ namespace SilDev
     ///     Provides DPI scaling behavior options. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum AppCompatDpiScalingBehavior
     {
         /// <summary>
@@ -68,7 +69,6 @@ namespace SilDev
         /// <summary>
         ///     DPI scaling performed by system (enhanced).
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         GdiDpiScaling_DpiUnaware = 4
     }
 
@@ -179,23 +179,27 @@ namespace SilDev
         public AppCompatSystemVersion OperatingSystem { get; set; }
 
         /// <summary>
-        ///     true to disable the Windows 10 fullscreen optimizations; otherwise, false.
+        ///     <see langword="true"/> to disable the Windows 10 fullscreen optimizations;
+        ///     otherwise, <see langword="false"/>.
         /// </summary>
         public bool DisableFullscreenOptimizations { get; set; }
 
         /// <summary>
-        ///     true to run the program in 640x480 screen resolution; otherwise, false.
+        ///     <see langword="true"/> to run the program in 640x480 screen resolution;
+        ///     otherwise, <see langword="false"/>.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public bool RunIn640x480ScreenResolution { get; set; }
 
         /// <summary>
-        ///     true to run the program as administrator; otherwise, false.
+        ///     <see langword="true"/> to run the program as administrator; otherwise,
+        ///     <see langword="false"/>.
         /// </summary>
         public bool RunAsAdministrator { get; set; }
 
         /// <summary>
-        ///     Determines whether this instance have same values as the specified <see cref="AppCompatLayers"/> instance.
+        ///     Determines whether this instance have same values as the specified
+        ///     <see cref="AppCompatLayers"/> instance.
         /// </summary>
         /// <param name="other">
         ///     The <see cref="AppCompatLayers"/> instance to compare.
@@ -204,7 +208,8 @@ namespace SilDev
             GetHashCode(true) == other.GetHashCode(true);
 
         /// <summary>
-        ///     Determines whether this instance have same values as the specified <see cref="object"/>.
+        ///     Determines whether this instance have same values as the specified
+        ///     <see cref="object"/>.
         /// </summary>
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
@@ -220,7 +225,8 @@ namespace SilDev
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <param name="nonReadOnly">
-        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        ///     <see langword="true"/> to include the hashes of non-readonly properties;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public int GetHashCode(bool nonReadOnly) =>
             Crypto.GetStructHashCode(this, nonReadOnly);
@@ -232,7 +238,8 @@ namespace SilDev
             Crypto.GetStructHashCode(this);
 
         /// <summary>
-        ///     Determines whether two specified <see cref="AppCompatLayers"/> instances have same values.
+        ///     Determines whether two specified <see cref="AppCompatLayers"/> instances
+        ///     have same values.
         /// </summary>
         /// <param name="left">
         ///     The first <see cref="AppCompatLayers"/> instance to compare.
@@ -244,7 +251,8 @@ namespace SilDev
             left.Equals(right);
 
         /// <summary>
-        ///     Determines whether two specified <see cref="AppCompatLayers"/> instances have different values.
+        ///     Determines whether two specified <see cref="AppCompatLayers"/> instances
+        ///     have different values.
         /// </summary>
         /// <param name="left">
         ///     The first <see cref="AppCompatLayers"/> instance to compare.
@@ -262,7 +270,8 @@ namespace SilDev
     public static class AppCompat
     {
         /// <summary>
-        ///     Sets the specified application compatibility layers for the specified executable file.
+        ///     Sets the specified application compatibility layers for the specified
+        ///     executable file.
         /// </summary>
         /// <param name="path">
         ///     The path to the file to be configured.

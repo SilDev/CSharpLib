@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2020-01-03 12:39
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -25,8 +25,8 @@ namespace SilDev
     using System.Runtime.InteropServices;
 
     /// <summary>
-    ///     Provides enumerated symbol index values of the Windows Image Resource dynamic
-    ///     link library ('imageres.dll') file on Windows 10.
+    ///     Provides enumerated symbol index values of the Windows Image Resource
+    ///     dynamic link library ('imageres.dll') file on Windows 10.
     /// </summary>
     public enum ImageResourceSymbol
     {
@@ -181,7 +181,8 @@ namespace SilDev
         ///     The path to the file that contains icon resources.
         /// </param>
         /// <param name="large">
-        ///     true to return the large icons; otherwise, false to return the small icons.
+        ///     <see langword="true"/> to return the large icons; otherwise,
+        ///     <see langword="false"/> to return the small icons.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     path is null.
@@ -222,7 +223,8 @@ namespace SilDev
         ///     The index of the icon to extract.
         /// </param>
         /// <param name="large">
-        ///     true to return the large icon; otherwise, false to return the small icon.
+        ///     <see langword="true"/> to return the large icon; otherwise,
+        ///     <see langword="false"/> to return the small icon.
         /// </param>
         public static Icon GetIconFromFile(string path, int index = 0, bool large = false)
         {
@@ -244,7 +246,7 @@ namespace SilDev
                 }
                 var ptr = ptrs.FirstOrDefault();
                 if (ptr == IntPtr.Zero)
-                    throw new ArgumentNullException(nameof(ptr));
+                    throw new NullReferenceException();
                 return Icon.FromHandle(ptr);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -256,8 +258,8 @@ namespace SilDev
 
         /// <summary>
         ///     Retrieves a backward-compatible integer value of the specified
-        ///     <see cref="ImageResourceSymbol"/> value, which depends on the file version of
-        ///     the 'imageres.dll' file under the specified location.
+        ///     <see cref="ImageResourceSymbol"/> value, which depends on the file version
+        ///     of the 'imageres.dll' file under the specified location.
         /// </summary>
         /// <param name="value">
         ///     The <see cref="ImageResourceSymbol"/> value.
@@ -291,8 +293,8 @@ namespace SilDev
 
         /// <summary>
         ///     Retrieves a backward-compatible string value of the specified symbol index
-        ///     value, which depends on the file version of the 'imageres.dll' file under the
-        ///     specified location.
+        ///     value, which depends on the file version of the 'imageres.dll' file under
+        ///     the specified location.
         /// </summary>
         /// <param name="value">
         ///     The symbol index value.
@@ -325,15 +327,16 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Extracts a large or small icon resource under the specified index, from
-        ///     the 'imageres.dll' under specified location, and returns its
-        ///     <see cref="Icon"/> instance.
+        ///     Extracts a large or small icon resource under the specified index, from the
+        ///     'imageres.dll' under specified location, and returns its <see cref="Icon"/>
+        ///     instance.
         /// </summary>
         /// <param name="index">
         ///     The index of the icon to extract.
         /// </param>
         /// <param name="large">
-        ///     true to return the large image; otherwise, false.
+        ///     <see langword="true"/> to return the large image; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="location">
         ///     The directory where the 'imageres.dll' file is located.
@@ -344,7 +347,7 @@ namespace SilDev
             {
                 var path = PathEx.Combine(location);
                 if (string.IsNullOrWhiteSpace(path))
-                    throw new ArgumentNullException(nameof(path));
+                    throw new ArgumentNullException(nameof(location));
                 if (PathEx.IsDir(path))
                     path = Path.Combine(path, "imageres.dll");
                 if (!File.Exists(path))
@@ -361,8 +364,8 @@ namespace SilDev
 
         /// <summary>
         ///     Extracts a small icon resource under the specified index, from the
-        ///     'imageres.dll' under specified location, and returns its
-        ///     <see cref="Icon"/> instance.
+        ///     'imageres.dll' under specified location, and returns its <see cref="Icon"/>
+        ///     instance.
         /// </summary>
         /// <param name="index">
         ///     The index of the icon to extract.
@@ -380,7 +383,8 @@ namespace SilDev
         ///     The file to get the file type icon.
         /// </param>
         /// <param name="large">
-        ///     true to return the large image; otherwise, false.
+        ///     <see langword="true"/> to return the large image; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static Icon GetFileTypeIcon(string path, bool large = false)
         {
@@ -416,8 +420,8 @@ namespace SilDev
         ///     The file to create.
         /// </param>
         /// <param name="reverseBytes">
-        ///     true to invert the order of the bytes in the specified sequence before extracting;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to invert the order of the bytes in the specified
+        ///     sequence before extracting; otherwise, <see langword="false"/>.
         /// </param>
         public static void Extract(byte[] resData, string destPath, bool reverseBytes = false)
         {
@@ -425,20 +429,18 @@ namespace SilDev
             {
                 var path = PathEx.Combine(destPath);
                 if (string.IsNullOrEmpty(path))
-                    throw new ArgumentNullException(nameof(path));
+                    throw new ArgumentNullException(nameof(destPath));
                 var dir = Path.GetDirectoryName(path);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new NullReferenceException();
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
-                using (var ms = new MemoryStream(resData))
-                {
-                    var data = ms.ToArray();
-                    if (reverseBytes)
-                        data = data.Reverse().ToArray();
-                    using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
-                        fs.Write(data, 0, data.Length);
-                }
+                using var ms = new MemoryStream(resData);
+                var data = ms.ToArray();
+                if (reverseBytes)
+                    data = data.Reverse().ToArray();
+                using var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write);
+                fs.Write(data, 0, data.Length);
             }
             catch (Exception ex) when (ex.IsCaught())
             {

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2019-12-16 16:44
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -30,8 +30,8 @@ namespace SilDev
         private GCHandle _handle;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MemoryPinner"/> class with
-        ///     the specified object to pin.
+        ///     Initializes a new instance of the <see cref="MemoryPinner"/> class with the
+        ///     specified object to pin.
         /// </summary>
         /// <param name="value">
         ///     The object to pin.
@@ -39,13 +39,13 @@ namespace SilDev
         public MemoryPinner(object value)
         {
             _handle = GCHandle.Alloc(value, GCHandleType.Pinned);
-            Pointer = _handle.AddrOfPinnedObject();
+            PointerHandle = _handle.AddrOfPinnedObject();
         }
 
         /// <summary>
         ///     Returns the pointer to the pinned object.
         /// </summary>
-        public IntPtr Pointer { get; private set; }
+        public IntPtr PointerHandle { get; private set; }
 
         /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
@@ -65,12 +65,13 @@ namespace SilDev
                 return;
             if (_handle.IsAllocated)
                 _handle.Free();
-            Pointer = IntPtr.Zero;
+            PointerHandle = IntPtr.Zero;
         }
     }
 
     /// <summary>
-    ///     Provides the functionality to manage data from an area of memory in a specified process.
+    ///     Provides the functionality to manage data from an area of memory in a
+    ///     specified process.
     /// </summary>
     public class ProcessMemory : IDisposable
     {
@@ -151,14 +152,12 @@ namespace SilDev
         {
             try
             {
-                using (var pin = new MemoryPinner(value))
-                {
-                    var bytesRead = IntPtr.Zero;
-                    var size = new IntPtr(Marshal.SizeOf(value));
-                    if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, pin.Pointer, size, ref bytesRead))
-                        return;
-                    throw new MemoryException(ExceptionMessages.BytesReadFailed + bytesRead);
-                }
+                using var pin = new MemoryPinner(value);
+                var bytesRead = IntPtr.Zero;
+                var size = new IntPtr(Marshal.SizeOf(value));
+                if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, pin.PointerHandle, size, ref bytesRead))
+                    return;
+                throw new MemoryException(ExceptionMessages.BytesReadFailed + bytesRead);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -209,12 +208,10 @@ namespace SilDev
         {
             try
             {
-                using (var pin = new MemoryPinner(value))
-                {
-                    if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.Pointer, size, out var bytesWritten))
-                        return;
-                    throw new MemoryException(ExceptionMessages.BytesWriteFailed + bytesWritten);
-                }
+                using var pin = new MemoryPinner(value);
+                if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.PointerHandle, size, out var bytesWritten))
+                    return;
+                throw new MemoryException(ExceptionMessages.BytesWriteFailed + bytesWritten);
             }
             catch (Exception ex) when (ex.IsCaught())
             {

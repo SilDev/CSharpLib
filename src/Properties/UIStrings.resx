@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Abort" xml:space="preserve">
+    <value>&amp;Abort</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>&amp;Cancel</value>
+  </data>
   <data name="Copy" xml:space="preserve">
     <value>Copy</value>
   </data>
@@ -129,8 +135,17 @@
   <data name="FileSuccessfullySaved" xml:space="preserve">
     <value>File successfully saved!</value>
   </data>
+  <data name="Ignore" xml:space="preserve">
+    <value>&amp;Ignore</value>
+  </data>
   <data name="LoadFile" xml:space="preserve">
     <value>Load File</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>&amp;No</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>&amp;OK</value>
   </data>
   <data name="OperationCanceled" xml:space="preserve">
     <value>Operation canceled!</value>
@@ -140,6 +155,9 @@
   </data>
   <data name="ResourceBrowser" xml:space="preserve">
     <value>Icon Resource Browser</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>&amp;Retry</value>
   </data>
   <data name="SaveAll" xml:space="preserve">
     <value>Save All</value>
@@ -155,5 +173,8 @@
   </data>
   <data name="Undo" xml:space="preserve">
     <value>Undo</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>&amp;Yes</value>
   </data>
 </root>

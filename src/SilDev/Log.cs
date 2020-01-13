@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2019-12-16 16:44
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -37,10 +37,19 @@ namespace SilDev
         private const string DateTimeFormat = @"yyyy-MM-dd HH:mm:ss,fff zzz";
         private static volatile AssemblyName _assemblyEntryName;
         private static volatile StringBuilder _builder;
-        private static volatile bool _catchUnhandledExceptions = true, _conIsOpen, _firstCall, _firstEntry = true;
+
+        private static volatile bool _catchUnhandledExceptions = true,
+                                     _conIsOpen,
+                                     _firstCall,
+                                     _firstEntry;
+
         private static volatile string _debugKey;
         private static volatile int _debugMode;
-        private static volatile string _fileDir, _fileName, _filePath;
+
+        private static volatile string _fileDir,
+                                       _fileName,
+                                       _filePath;
+
         private static volatile FileStream _fs;
         private static volatile SafeFileHandle _sfh;
         private static volatile IntPtr _stdHandle = IntPtr.Zero;
@@ -141,7 +150,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     true to enable the catching of unhandled <see cref="Exception"/>'s; otherwise, false.
+        ///     <see langword="true"/> to enable the catching of unhandled
+        ///     <see cref="Exception"/>'s; otherwise, <see langword="false"/>.
         /// </summary>
         public static bool CatchUnhandledExceptions
         {
@@ -159,8 +169,9 @@ namespace SilDev
         public static CultureInfo CurrentCulture => CultureConfig.GlobalCultureInfo;
 
         /// <summary>
-        ///     Gets the current <see cref="DebugMode"/> value that determines how <see cref="Exception"/>'s
-        ///     are handled. For more information see <see cref="ActivateLogging(int)"/>.
+        ///     Gets the current <see cref="DebugMode"/> value that determines how
+        ///     <see cref="Exception"/>'s are handled. For more information see
+        ///     <see cref="ActivateLogging(int)"/>.
         /// </summary>
         public static int DebugMode
         {
@@ -178,9 +189,9 @@ namespace SilDev
         ///         If the specified path doesn't exists, it is created.
         ///     </para>
         ///     <para>
-        ///         If the specified path is invalid or this process doesn't have the necessary permissions
-        ///         to write to this location, the location is changed to the Windows specified folder for
-        ///         temporary files.
+        ///         If the specified path is invalid or this process doesn't have the
+        ///         necessary permissions to write to this location, the location is
+        ///         changed to the Windows specified folder for temporary files.
         ///     </para>
         /// </summary>
         public static string FileDir
@@ -240,25 +251,28 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Specifies the <see cref="DebugMode"/> for the handling of <see cref="Exception"/>'s. The
-        ///     <see cref="DebugMode"/> can also specified over an command line argument or an config
-        ///     parameter in combination with <see cref="AllowLogging(string, string, Regex)"/>. The
-        ///     following <see cref="DebugMode"/> options are available.
+        ///     Specifies the <see cref="DebugMode"/> for the handling of
+        ///     <see cref="Exception"/>'s. The <see cref="DebugMode"/> can also specified
+        ///     over an command line argument or an config parameter in combination with
+        ///     <see cref="AllowLogging(string, string, Regex)"/>. The following
+        ///     <see cref="DebugMode"/> options are available.
         ///     <para>
         ///         0: Logging is disabled. <see cref="Exception"/>'s are caught, and if
-        ///         <see cref="CatchUnhandledExceptions"/> is enabled, unhandled <see cref="Exception"/>'s
-        ///         are also discarded. This can be useful for public releases to prevent any kind of
-        ///         <see cref="Exception"/> notifications to the client. Please note that these functions
-        ///         may have dangerous consequences if used incorrectly.
+        ///         <see cref="CatchUnhandledExceptions"/> is enabled, unhandled
+        ///         <see cref="Exception"/>'s are also discarded. This can be useful for
+        ///         public releases to prevent any kind of <see cref="Exception"/>
+        ///         notifications to the client. Please note that these functions may have
+        ///         dangerous consequences if used incorrectly.
         ///     </para>
         ///     <para>
         ///         1: Logging is enabled, <see cref="Exception"/>'s are caught, and all
         ///         <see cref="Exception"/>'s are logged.
         ///     </para>
         ///     <para>
-        ///         2: Logging is enabled, <see cref="Exception"/>'s are caught, all <see cref="Exception"/>'s
-        ///         are logged, and a new <see cref="Console"/> window is allocated for the current process
-        ///         to display the current log in real time.
+        ///         2: Logging is enabled, <see cref="Exception"/>'s are caught, all
+        ///         <see cref="Exception"/>'s are logged, and a new <see cref="Console"/>
+        ///         window is allocated for the current process to display the current log
+        ///         in real time.
         ///     </para>
         ///     <para>
         ///         3: Logging is enabled, but <see cref="Exception"/>'s are thrown.
@@ -296,8 +310,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Allows you to enable logging by command line arguments or a specified configuration file. For
-        ///     more information see <see cref="ActivateLogging(int)"/>.
+        ///     Allows you to enable logging by command line arguments or a specified
+        ///     configuration file. For more information see
+        ///     <see cref="ActivateLogging(int)"/>.
         /// </summary>
         /// <param name="configPath">
         ///     The full path of the configuration file.
@@ -317,7 +332,7 @@ namespace SilDev
                     DebugKey = key;
                 var arg = string.Concat('/', key);
                 var mode = 0;
-                if (args.ContainsEx(arg))
+                if (args.ContainsItem(arg))
                 {
                     string option;
                     try
@@ -355,11 +370,10 @@ namespace SilDev
                 {
                     source = File.ReadAllText(path);
                     if (string.IsNullOrEmpty(source))
-                        throw new ArgumentNullException(nameof(source));
+                        throw new WarningException();
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
-                    Debug.WriteLine(ex);
                     goto Finalize;
                 }
                 foreach (var match in regex.Matches(source).Cast<Match>())
@@ -391,8 +405,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether this <see cref="Exception"/> should be caught or thrown. For more
-        ///     information see <see cref="ActivateLogging(int)"/>.
+        ///     Determines whether this <see cref="Exception"/> should be caught or thrown.
+        ///     For more information see <see cref="ActivateLogging(int)"/>.
         /// </summary>
         /// <param name="exception">
         ///     The <see cref="Exception"/> to be checked.
@@ -420,16 +434,17 @@ namespace SilDev
         ///     The message text to write.
         /// </param>
         /// <param name="exitProcess">
-        ///     true to terminate this process after logging; otherwise, false.
+        ///     <see langword="true"/> to terminate this process after logging; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static void Write(string logMessage, bool exitProcess = false)
         {
-            if (!FirstCall || DebugMode < 1 || !FirstEntry && string.IsNullOrEmpty(logMessage))
+            if (!FirstCall || DebugMode < 1 || FirstEntry && string.IsNullOrEmpty(logMessage))
                 return;
             lock (SyncObject)
             {
                 Build:
-                if (!FirstEntry)
+                if (FirstEntry)
                 {
                     Builder.Append(ProcessEx.CurrentId);
                     Builder.Append(" ");
@@ -438,7 +453,7 @@ namespace SilDev
                 }
                 else
                 {
-                    FirstEntry = false;
+                    FirstEntry = true;
                     var separator = new string('=', 65);
 
                     Builder.Append("New Process ");
@@ -552,10 +567,12 @@ namespace SilDev
         ///     The handled <see cref="Exception"/> to write.
         /// </param>
         /// <param name="forceLogging">
-        ///     true to enforce that <see cref="DebugMode"/> is enabled; otherwise, false.
+        ///     <see langword="true"/> to enforce that <see cref="DebugMode"/> is enabled;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="exitProcess">
-        ///     true to terminate this process after logging; otherwise, false.
+        ///     <see langword="true"/> to terminate this process after logging; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static void Write(Exception exception, bool forceLogging = false, bool exitProcess = false)
         {
@@ -578,7 +595,7 @@ namespace SilDev
 
         private static string AppendToFile()
         {
-            if (Builder.Length <= 0) 
+            if (Builder.Length <= 0)
                 return string.Empty;
             var content = Builder.ToStringThenClear();
             if (Directory.Exists(FileDir))

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Service.cs
-// Version:  2019-10-22 16:14
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -99,7 +99,8 @@ namespace SilDev
         ///     The name of the service to install.
         /// </param>
         /// <param name="displayName">
-        ///     The display name to be used by user interface programs to identify the service.
+        ///     The display name to be used by user interface programs to identify the
+        ///     service.
         /// </param>
         /// <param name="path">
         ///     The fully qualified path to the service binary file.

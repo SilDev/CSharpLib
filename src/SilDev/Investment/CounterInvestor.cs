@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: CounterInvestor.cs
-// Version:  2019-12-12 16:31
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -29,16 +29,18 @@ namespace SilDev.Investment
         private readonly Dictionary<int, TCounter> _counter;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CounterInvestor{TNumber}"/> class.
+        ///     Initializes a new instance of the <see cref="CounterInvestor{TNumber}"/>
+        ///     class.
         ///     <para>
-        ///         Allowed types: <see cref="char"/>, <see cref="sbyte"/>, <see cref="byte"/>,
-        ///         <see cref="short"/>, <see cref="ushort"/>, <see cref="int"/>, <see cref="uint"/>,
-        ///         <see cref="long"/>, <see cref="ulong"/>, and <see cref="decimal"/>.
+        ///         Allowed types: <see cref="char"/>, <see cref="sbyte"/>,
+        ///         <see cref="byte"/>, <see cref="short"/>, <see cref="ushort"/>,
+        ///         <see cref="int"/>, <see cref="uint"/>, <see cref="long"/>,
+        ///         <see cref="ulong"/>, and <see cref="decimal"/>.
         ///     </para>
         /// </summary>
         /// <exception cref="NotSupportedException">
-        ///     The generic type is not char, sbyte, byte, short, ushort, int, uint, long, ulong,
-        ///     or decimal.
+        ///     The generic type is not char, sbyte, byte, short, ushort, int, uint, long,
+        ///     ulong, or decimal.
         /// </exception>
         public CounterInvestor()
         {

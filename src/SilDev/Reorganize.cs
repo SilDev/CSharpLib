@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-06 09:04
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -93,19 +93,83 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Provides static un-categorized extension methods for converting or reorganizing of data.
+    ///     Provides static un-categorized extension methods for converting or
+    ///     reorganizing of data.
     /// </summary>
     public static class Reorganize
     {
         /// <summary>
-        ///     Appends the string returned by processing a composite format string, which contains
-        ///     zero or more format items followed by the default line terminator to the end, to this
-        ///     <see cref="StringBuilder"/> instance. Each format item is replaced by the string
-        ///     representation of a corresponding argument in a parameter array using a specified
-        ///     format provider.
+        ///     Appends the string returned by processing a composite format string, which
+        ///     contains zero or more format items, to this <see cref="StringBuilder"/>
+        ///     instance. Each format item is replaced by the string representation of a
+        ///     corresponding argument in a parameter array using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format provider.
         /// </summary>
         /// <param name="stringBuilder">
-        ///     The <see cref="StringBuilder"/> instance to which the string should be append.
+        ///     The <see cref="StringBuilder"/> instance to which the string should be
+        ///     append.
+        /// </param>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     An array of objects to format.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stringBuilder, format or args is null.
+        /// </exception>
+        public static StringBuilder AppendFormatCurrent(this StringBuilder stringBuilder, string format, params object[] args)
+        {
+            if (stringBuilder == null)
+                throw new ArgumentNullException(nameof(stringBuilder));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+            return stringBuilder.AppendFormat(CultureInfo.CurrentCulture, format, args);
+        }
+
+        /// <summary>
+        ///     Appends the string returned by processing a composite format string, which
+        ///     contains zero or more format items, to this <see cref="StringBuilder"/>
+        ///     instance. Each format item is replaced by the string representation of a
+        ///     corresponding argument in a parameter array using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format provider.
+        /// </summary>
+        /// <param name="stringBuilder">
+        ///     The <see cref="StringBuilder"/> instance to which the string should be
+        ///     append.
+        /// </param>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     An array of objects to format.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stringBuilder, format or args is null.
+        /// </exception>
+        public static StringBuilder AppendFormatDefault(this StringBuilder stringBuilder, string format, params object[] args)
+        {
+            if (stringBuilder == null)
+                throw new ArgumentNullException(nameof(stringBuilder));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+            return stringBuilder.AppendFormat(CultureConfig.GlobalCultureInfo, format, args);
+        }
+
+        /// <summary>
+        ///     Appends the string returned by processing a composite format string, which
+        ///     contains zero or more format items followed by the default line terminator
+        ///     to the end, to this <see cref="StringBuilder"/> instance. Each format item
+        ///     is replaced by the string representation of a corresponding argument in a
+        ///     parameter array using a specified format provider.
+        /// </summary>
+        /// <param name="stringBuilder">
+        ///     The <see cref="StringBuilder"/> instance to which the string should be
+        ///     append.
         /// </param>
         /// <param name="provider">
         ///     An object that supplies culture-specific formatting information.
@@ -134,13 +198,16 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Appends the string returned by processing a composite format string, which contains
-        ///     zero or more format items followed by the default line terminator to the end, to this
-        ///     <see cref="StringBuilder"/> instance. Each format item is replaced by the string
-        ///     representation of a corresponding argument in a parameter array.
+        ///     Appends the string returned by processing a composite format string, which
+        ///     contains zero or more format items followed by the default line terminator
+        ///     to the end, to this <see cref="StringBuilder"/> instance. Each format item
+        ///     is replaced by the string representation of a corresponding argument in a
+        ///     parameter array using the <see cref="CultureInfo.CurrentCulture"/> format
+        ///     provider.
         /// </summary>
         /// <param name="stringBuilder">
-        ///     The <see cref="StringBuilder"/> instance to which the string should be append.
+        ///     The <see cref="StringBuilder"/> instance to which the string should be
+        ///     append.
         /// </param>
         /// <param name="format">
         ///     A composite format string.
@@ -151,23 +218,37 @@ namespace SilDev
         /// <exception cref="ArgumentNullException">
         ///     stringBuilder, format or args is null.
         /// </exception>
-        public static StringBuilder AppendFormatLine(this StringBuilder stringBuilder, string format, params object[] args)
-        {
-            if (stringBuilder == null)
-                throw new ArgumentNullException(nameof(stringBuilder));
-            if (format == null)
-                throw new ArgumentNullException(nameof(format));
-            if (args == null)
-                throw new ArgumentNullException(nameof(args));
-            var sb = stringBuilder;
-            sb.AppendFormat(CultureConfig.GlobalCultureInfo, format, args);
-            sb.AppendLine();
-            return sb;
-        }
+        public static StringBuilder AppendFormatLineCurrent(this StringBuilder stringBuilder, string format, params object[] args) =>
+            stringBuilder.AppendFormatLine(CultureInfo.CurrentCulture, format, args);
 
         /// <summary>
-        ///     Converts the value of this <see cref="StringBuilder"/> instance to <see cref="string"/>
-        ///     and removes all characters before <see cref="string"/> is returned.
+        ///     Appends the string returned by processing a composite format string, which
+        ///     contains zero or more format items followed by the default line terminator
+        ///     to the end, to this <see cref="StringBuilder"/> instance. Each format item
+        ///     is replaced by the string representation of a corresponding argument in a
+        ///     parameter array using the <see cref="CultureConfig.GlobalCultureInfo"/>
+        ///     format provider.
+        /// </summary>
+        /// <param name="stringBuilder">
+        ///     The <see cref="StringBuilder"/> instance to which the string should be
+        ///     append.
+        /// </param>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     An array of objects to format.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     stringBuilder, format or args is null.
+        /// </exception>
+        public static StringBuilder AppendFormatLineDefault(this StringBuilder stringBuilder, string format, params object[] args) =>
+            stringBuilder.AppendFormatLine(CultureConfig.GlobalCultureInfo, format, args);
+
+        /// <summary>
+        ///     Converts the value of this <see cref="StringBuilder"/> instance to
+        ///     <see cref="string"/> and removes all characters before <see cref="string"/>
+        ///     is returned.
         /// </summary>
         /// <param name="stringBuilder">
         ///     The <see cref="StringBuilder"/> instance to convert.
@@ -186,9 +267,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the value of a substring of this <see cref="StringBuilder"/> instance to
-        ///     <see cref="string"/> and removes all characters before <see cref="string"/> is
-        ///     returned.
+        ///     Converts the value of a substring of this <see cref="StringBuilder"/>
+        ///     instance to <see cref="string"/> and removes all characters before
+        ///     <see cref="string"/> is returned.
         /// </summary>
         /// <param name="stringBuilder">
         ///     The <see cref="StringBuilder"/> instance to convert.
@@ -197,8 +278,8 @@ namespace SilDev
         ///     stringBuilder is null.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     startIndex or length is less than zero. -or- The sum of startIndex and length is
-        ///     greater than the length of the current instance.
+        ///     startIndex or length is less than zero. -or- The sum of startIndex and
+        ///     length is greater than the length of the current instance.
         /// </exception>
         public static string ToStringThenClear(this StringBuilder stringBuilder, int startIndex, int length)
         {
@@ -210,15 +291,15 @@ namespace SilDev
                 throw new ArgumentOutOfRangeException(nameof(length));
             var sb = stringBuilder;
             if (startIndex + length > sb.Length)
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(length));
             var str = sb.ToString(startIndex, length);
             sb.Clear();
             return str;
         }
 
         /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnit"/>.
+        ///     Converts this numeric value into a string that represents the number
+        ///     expressed as a size value in the specified <see cref="SizeUnit"/>.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -227,10 +308,12 @@ namespace SilDev
         ///     The new unit.
         /// </param>
         /// <param name="binary">
-        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        ///     <see langword="true"/> for the binary numeral system; otherwise,
+        ///     <see langword="false"/> for the decimal numeral system.
         /// </param>
         /// <param name="suffix">
-        ///     true to show the size unit suffix; otherwise, false.
+        ///     <see langword="true"/> to show the size unit suffix; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
@@ -254,8 +337,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnit"/>.
+        ///     Converts this numeric value into a string that represents the number
+        ///     expressed as a size value in the specified <see cref="SizeUnit"/>.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -264,7 +347,8 @@ namespace SilDev
         ///     The new unit.
         /// </param>
         /// <param name="binary">
-        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        ///     <see langword="true"/> for the binary numeral system; otherwise,
+        ///     <see langword="false"/> for the decimal numeral system.
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
@@ -272,8 +356,8 @@ namespace SilDev
             value.FormatSize(unit, binary, true, sizeOptions);
 
         /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in the specified <see cref="SizeUnit"/>.
+        ///     Converts this numeric value into a string that represents the number
+        ///     expressed as a size value in the specified <see cref="SizeUnit"/>.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -287,18 +371,20 @@ namespace SilDev
             value.FormatSize(unit, true, true, sizeOptions);
 
         /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-        ///     on the size.
+        ///     Converts this numeric value into a string that represents the number
+        ///     expressed as a size value in bytes, kilobytes, megabytes, gigabytes,
+        ///     terabyte, petabyte, exabyte, depending on the size.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
         /// </param>
         /// <param name="binary">
-        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        ///     <see langword="true"/> for the binary numeral system; otherwise,
+        ///     <see langword="false"/> for the decimal numeral system.
         /// </param>
         /// <param name="suffix">
-        ///     true to show the size unit suffix; otherwise, false.
+        ///     <see langword="true"/> to show the size unit suffix; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
@@ -311,15 +397,16 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-        ///     on the size.
+        ///     Converts this numeric value into a string that represents the number
+        ///     expressed as a size value in bytes, kilobytes, megabytes, gigabytes,
+        ///     terabyte, petabyte, exabyte, depending on the size.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
         /// </param>
         /// <param name="binary">
-        ///     true for the binary numeral system; otherwise, false for the decimal numeral system.
+        ///     <see langword="true"/> for the binary numeral system; otherwise,
+        ///     <see langword="false"/> for the decimal numeral system.
         /// </param>
         /// <param name="sizeOptions">
         /// </param>
@@ -327,9 +414,9 @@ namespace SilDev
             value.FormatSize(SizeUnit.Byte, binary, true, sizeOptions);
 
         /// <summary>
-        ///     Converts this numeric value into a string that represents the number expressed as a size
-        ///     value in bytes, kilobytes, megabytes, gigabytes, terabyte, petabyte, exabyte, depending
-        ///     on the size.
+        ///     Converts this numeric value into a string that represents the number
+        ///     expressed as a size value in bytes, kilobytes, megabytes, gigabytes,
+        ///     terabyte, petabyte, exabyte, depending on the size.
         /// </summary>
         /// <param name="value">
         ///     The value to be converted.
@@ -340,7 +427,8 @@ namespace SilDev
             value.FormatSize(true, true, sizeOptions);
 
         /// <summary>
-        ///     Reads the bytes from the specified stream and writes them to another stream.
+        ///     Reads the bytes from the specified stream and writes them to another
+        ///     stream.
         /// </summary>
         /// <param name="srcStream">
         ///     The <see cref="Stream"/> to copy.
@@ -373,8 +461,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes a character to the this stream and advances the current position within this
-        ///     stream by the number of bytes written.
+        ///     Writes a character to the this stream and advances the current position
+        ///     within this stream by the number of bytes written.
         /// </summary>
         /// <param name="stream">
         ///     The <see cref="Stream"/> to write.
@@ -408,8 +496,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes a character repeated a specified number of times to the this stream and advances
-        ///     the current position within this stream by the number of bytes written.
+        ///     Writes a character repeated a specified number of times to the this stream
+        ///     and advances the current position within this stream by the number of bytes
+        ///     written.
         /// </summary>
         /// <param name="stream">
         ///     The <see cref="Stream"/> to write.
@@ -448,8 +537,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes a string to the this stream and advances the current position within this stream
-        ///     by the number of bytes written.
+        ///     Writes a string to the this stream and advances the current position within
+        ///     this stream by the number of bytes written.
         /// </summary>
         /// <param name="stream">
         ///     The <see cref="Stream"/> to write.
@@ -482,8 +571,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Writes a sequence of bytes to the this stream and advances the current position within
-        ///     this stream by the number of bytes written.
+        ///     Writes a sequence of bytes to the this stream and advances the current
+        ///     position within this stream by the number of bytes written.
         /// </summary>
         /// <param name="stream">
         ///     The <see cref="Stream"/> to write.
@@ -584,7 +673,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Increments the length of a platform-specific type number with the specified value.
+        ///     Increments the length of a platform-specific type number with the specified
+        ///     value.
         /// </summary>
         /// <param name="intPointer">
         ///     The platform-specific type to change.
@@ -606,9 +696,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified object using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -620,9 +710,9 @@ namespace SilDev
             string.Format(CultureInfo.CurrentCulture, format, arg0);
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -637,9 +727,9 @@ namespace SilDev
             string.Format(CultureInfo.CurrentCulture, format, arg0, arg1);
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -659,9 +749,9 @@ namespace SilDev
             string.Format(CultureInfo.CurrentCulture, format, arg0, arg1, arg2);
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureInfo.CurrentCulture"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -673,9 +763,9 @@ namespace SilDev
             string.Format(CultureInfo.CurrentCulture, format, args);
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified object using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -687,9 +777,9 @@ namespace SilDev
             string.Format(CultureConfig.GlobalCultureInfo, format, arg0);
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -704,9 +794,9 @@ namespace SilDev
             string.Format(CultureConfig.GlobalCultureInfo, format, arg0, arg1);
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -726,9 +816,9 @@ namespace SilDev
             string.Format(CultureConfig.GlobalCultureInfo, format, arg0, arg1, arg2);
 
         /// <summary>
-        ///     Replaces one or more format items in this string with the string representation
-        ///     of a specified object using the <see cref="CultureConfig.GlobalCultureInfo"/>
-        ///     format information.
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="format">
         ///     A composite format string.
@@ -740,8 +830,8 @@ namespace SilDev
             string.Format(CultureConfig.GlobalCultureInfo, format, args);
 
         /// <summary>
-        ///     Returns a new string in which all occurrences of a specified string in the current
-        ///     instance are replaced with another specified string.
+        ///     Returns a new string in which all occurrences of a specified string in the
+        ///     current instance are replaced with another specified string.
         /// </summary>
         /// <param name="str">
         /// </param>
@@ -852,17 +942,15 @@ namespace SilDev
             {
                 const string suffix = "...";
                 s = str ?? throw new ArgumentNullException(nameof(str));
-                using (var g = Graphics.FromHwnd(IntPtr.Zero))
+                using var g = Graphics.FromHwnd(IntPtr.Zero);
+                var x = Math.Floor(g.MeasureString(suffix, font).Width);
+                var c = g.MeasureString(s, font).Width;
+                var r = width / c;
+                while (r < 1.0)
                 {
-                    var x = Math.Floor(g.MeasureString(suffix, font).Width);
-                    var c = g.MeasureString(s, font).Width;
-                    var r = width / c;
-                    while (r < 1.0)
-                    {
-                        s = string.Concat(s.Substring(0, (int)Math.Floor(s.Length * r - x)), suffix);
-                        c = g.MeasureString(s, font).Width;
-                        r = width / c;
-                    }
+                    s = string.Concat(s.Substring(0, (int)Math.Floor(s.Length * r - x)), suffix);
+                    c = g.MeasureString(s, font).Width;
+                    r = width / c;
                 }
             }
             catch (ArgumentOutOfRangeException ex)
@@ -878,8 +966,83 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the value of this element to its equivalent string representation using the
-        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
+        ///     Converts the value of this element to its equivalent string representation
+        ///     using the <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        /// <param name="format">
+        ///     The format to use.
+        /// </param>
+        public static string ToStringCurrent<TSource>(this TSource src, string format) where TSource : IFormattable =>
+            src.ToString(format, CultureInfo.CurrentCulture);
+
+        /// <summary>
+        ///     Converts the value of this element to its equivalent string representation
+        ///     using the <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static string ToStringCurrent<TSource>(this TSource src) where TSource : IFormattable =>
+            src.ToString(null, CultureInfo.CurrentCulture);
+
+        /// <summary>
+        ///     Converts the value of this boolean to its equivalent string representation
+        ///     using the <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <param name="b">
+        ///     The boolean value to convert.
+        /// </param>
+        public static string ToStringCurrent(this bool b) =>
+            b.ToString(CultureInfo.CurrentCulture);
+
+        /// <summary>
+        ///     Converts the value of this character to its equivalent string
+        ///     representation using the <see cref="CultureInfo.CurrentCulture"/> format
+        ///     information.
+        /// </summary>
+        /// <param name="chr">
+        ///     The character to convert.
+        /// </param>
+        public static string ToStringCurrent(this char chr) =>
+            chr.ToString(CultureInfo.CurrentCulture);
+
+        /// <summary>
+        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent
+        ///     string representation using the <see cref="CultureInfo.CurrentCulture"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="dateTime">
+        ///     The <see cref="DateTime"/> value to convert.
+        /// </param>
+        /// <param name="format">
+        ///     A standard or custom date and time format string.
+        /// </param>
+        public static string ToStringCurrent(this DateTime dateTime, string format) =>
+            dateTime.ToString(format, CultureInfo.CurrentCulture);
+
+        /// <summary>
+        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent
+        ///     string representation using the <see cref="CultureInfo.CurrentCulture"/>
+        ///     format information.
+        /// </summary>
+        /// <param name="dateTime">
+        ///     The <see cref="DateTime"/> value to convert.
+        /// </param>
+        public static string ToStringCurrent(this DateTime dateTime) =>
+            dateTime.ToString(CultureInfo.CurrentCulture);
+
+        /// <summary>
+        ///     Converts the value of this element to its equivalent string representation
+        ///     using the <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the source element.
@@ -894,8 +1057,8 @@ namespace SilDev
             src.ToString(format, CultureConfig.GlobalCultureInfo);
 
         /// <summary>
-        ///     Converts the value of this element to its equivalent string representation using the
-        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
+        ///     Converts the value of this element to its equivalent string representation
+        ///     using the <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the source element.
@@ -907,8 +1070,8 @@ namespace SilDev
             src.ToString(null, CultureConfig.GlobalCultureInfo);
 
         /// <summary>
-        ///     Converts the value of this boolean to its equivalent string representation using the
-        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
+        ///     Converts the value of this boolean to its equivalent string representation
+        ///     using the <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="b">
         ///     The boolean value to convert.
@@ -917,8 +1080,9 @@ namespace SilDev
             b.ToString(CultureConfig.GlobalCultureInfo);
 
         /// <summary>
-        ///     Converts the value of this character to its equivalent string representation using
-        ///     the <see cref="CultureConfig.GlobalCultureInfo"/> format information.
+        ///     Converts the value of this character to its equivalent string
+        ///     representation using the <see cref="CultureConfig.GlobalCultureInfo"/>
+        ///     format information.
         /// </summary>
         /// <param name="chr">
         ///     The character to convert.
@@ -927,9 +1091,9 @@ namespace SilDev
             chr.ToString(CultureConfig.GlobalCultureInfo);
 
         /// <summary>
-        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent string
-        ///     representation using the <see cref="CultureConfig.GlobalCultureInfo"/> format
-        ///     information.
+        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent
+        ///     string representation using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="dateTime">
         ///     The <see cref="DateTime"/> value to convert.
@@ -941,9 +1105,9 @@ namespace SilDev
             dateTime.ToString(format, CultureConfig.GlobalCultureInfo);
 
         /// <summary>
-        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent string
-        ///     representation using the <see cref="CultureConfig.GlobalCultureInfo"/> format
-        ///     information.
+        ///     Converts the value of this <see cref="DateTime"/> object to its equivalent
+        ///     string representation using the
+        ///     <see cref="CultureConfig.GlobalCultureInfo"/> format information.
         /// </summary>
         /// <param name="dateTime">
         ///     The <see cref="DateTime"/> value to convert.
@@ -952,8 +1116,8 @@ namespace SilDev
             dateTime.ToString(CultureConfig.GlobalCultureInfo);
 
         /// <summary>
-        ///     Creates a sequence of strings based on natural (base e) logarithm of a count
-        ///     of all the characters in the specified string.
+        ///     Creates a sequence of strings based on natural (base e) logarithm of a
+        ///     count of all the characters in the specified string.
         /// </summary>
         /// <param name="str">
         ///     The string to change.
@@ -968,8 +1132,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Sorts the elements in an entire string array using the <see cref="IComparable{T}"/>
-        ///     generic interface implementation of each element of the string array.
+        ///     Sorts the elements in an entire string array using the
+        ///     <see cref="IComparable{T}"/> generic interface implementation of each
+        ///     element of the string array.
         /// </summary>
         /// <param name="strs">
         ///     The sequence of strings to sort.
@@ -984,8 +1149,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Splits a string into substrings based on the strings in an array. You can specify
-        ///     whether the substrings include empty array elements.
+        ///     Splits a string into substrings based on the strings in an array. You can
+        ///     specify whether the substrings include empty array elements.
         /// </summary>
         /// <param name="str">
         ///     The string to split.
@@ -996,7 +1161,7 @@ namespace SilDev
         /// <param name="splitOptions">
         ///     The split options.
         /// </param>
-        public static string[] Split(this string str, string separator = TextEx.NewLineFormats.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None) =>
+        public static string[] Split(this string str, string separator = StringNewLineFormats.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None) =>
             string.IsNullOrEmpty(str) ? null : str.Split(new[] { separator }, splitOptions);
 
         /// <summary>
@@ -1009,7 +1174,8 @@ namespace SilDev
         ///     The split options.
         /// </param>
         /// <param name="trim">
-        ///     true to trim each line; otherwise, false.
+        ///     <see langword="true"/> to trim each line; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string[] SplitNewLine(this string str, StringSplitOptions splitOptions = StringSplitOptions.RemoveEmptyEntries, bool trim = false)
         {
@@ -1033,14 +1199,15 @@ namespace SilDev
         ///     The string to split.
         /// </param>
         /// <param name="trim">
-        ///     true to trim each line; otherwise, false.
+        ///     <see langword="true"/> to trim each line; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string[] SplitNewLine(this string str, bool trim) =>
             str.SplitNewLine(StringSplitOptions.RemoveEmptyEntries, trim);
 
         /// <summary>
-        ///     Converts all the characters in the specified string into a sequence of bytes with
-        ///     the specified <see cref="Encoding"/> format.
+        ///     Converts all the characters in the specified string into a sequence of
+        ///     bytes with the specified <see cref="Encoding"/> format.
         /// </summary>
         /// <typeparam name="TEncoding">
         ///     The type of encoding.
@@ -1071,8 +1238,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts all the characters in the specified string into a sequence of bytes with the
-        ///     <see cref="TextEx.DefaultEncoding"/> format.
+        ///     Converts all the characters in the specified string into a sequence of
+        ///     bytes with the <see cref="TextEx.DefaultEncoding"/> format.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
@@ -1081,8 +1248,8 @@ namespace SilDev
             str.ToBytes(TextEx.DefaultEncoding);
 
         /// <summary>
-        ///     Converts all the characters in the specified string into a sequence of bytes with the
-        ///     Windows-1252 <see cref="Encoding"/> format.
+        ///     Converts all the characters in the specified string into a sequence of
+        ///     bytes with the Windows-1252 <see cref="Encoding"/> format.
         ///     <para>
         ///         This method is equal to <see cref="ToBytes"/>.
         ///     </para>
@@ -1143,13 +1310,13 @@ namespace SilDev
             var instance = (TConverter)Activator.CreateInstance(typeof(TConverter));
             var result = instance.ConvertFrom(item);
             if (result == null)
-                throw new ArgumentNullException(nameof(result));
+                throw new NullReferenceException();
             return result;
         }
 
         /// <summary>
-        ///     Converts the specified string, which stores a set of four integers that represent the
-        ///     location and size of a rectangle, to <see cref="Rectangle"/>.
+        ///     Converts the specified string, which stores a set of four integers that
+        ///     represent the location and size of a rectangle, to <see cref="Rectangle"/>.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
@@ -1171,8 +1338,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified string, which stores an ordered pair of integer x- and y-coordinates,
-        ///     to <see cref="Point"/>.
+        ///     Converts the specified string, which stores an ordered pair of integer x-
+        ///     and y-coordinates, to <see cref="Point"/>.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
@@ -1194,7 +1361,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified string, which stores an ordered pair of integers, to <see cref="Size"/>.
+        ///     Converts the specified string, which stores an ordered pair of integers, to
+        ///     <see cref="Size"/>.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
@@ -1216,8 +1384,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified <see cref="string"/> to an equivalent <see cref="bool"/>
-        ///     value, which returns always false for unsupported <see cref="string"/> values.
+        ///     Converts the specified <see cref="string"/> to an equivalent
+        ///     <see cref="bool"/> value, which returns always <see langword="false"/> for
+        ///     unsupported <see cref="string"/> values.
         /// </summary>
         /// <param name="str">
         ///     The <see cref="string"/> to convert.
@@ -1261,7 +1430,8 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the specified <see cref="Nullable"/> value to an equivalent
-        ///     <see cref="bool"/> value, which returns always false for null.
+        ///     <see cref="bool"/> value, which returns always <see langword="false"/> on
+        ///     <see langword="null"/>.
         /// </summary>
         /// <param name="src">
         ///     The <see cref="Nullable"/> value to convert.
@@ -1385,8 +1555,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a new sequence of bytes in which all occurrences of a specified sequence of bytes
-        ///     in this instance are replaced with another specified sequence of bytes.
+        ///     Returns a new sequence of bytes in which all occurrences of a specified
+        ///     sequence of bytes in this instance are replaced with another specified
+        ///     sequence of bytes.
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to change.
@@ -1431,7 +1602,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the given <see cref="object"/> value to the specified <see cref="Type"/>.
+        ///     Converts the given <see cref="object"/> value to the specified
+        ///     <see cref="Type"/>.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
@@ -1450,7 +1622,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Try to convert the given <see cref="object"/> value to the specified <see cref="Type"/>.
+        ///     Try to convert the given <see cref="object"/> value to the specified
+        ///     <see cref="Type"/>.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
@@ -1480,7 +1653,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Updates an element with the provided key and value of the specified dictionary.
+        ///     Updates an element with the provided key and value of the specified
+        ///     dictionary.
         /// </summary>
         /// <typeparam name="TKey">
         ///     The type of the keys in the dictionary.
@@ -1507,12 +1681,8 @@ namespace SilDev
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            switch (source)
-            {
-                case IReadOnlyDictionary<TKey, TValue> _:
-                case IReadOnlyCollection<KeyValuePair<TKey, TValue>> _:
-                    throw new NotSupportedException(ExceptionMessages.ReadOnlyCollection);
-            }
+            if (source.IsReadOnly)
+                throw new NotSupportedException(ExceptionMessages.ReadOnlyCollection);
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
             if (source.ContainsKey(key))

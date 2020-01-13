@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2019-10-21 13:52
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -81,7 +81,7 @@ namespace SilDev.Forms
         /// </param>
         public static void CloseOnMouseLeave(this ContextMenuStrip contextMenuStrip, int toleration = 0)
         {
-            if (!(contextMenuStrip is ContextMenuStrip cms))
+            if (!(contextMenuStrip is { } cms))
                 return;
             if (toleration < 0)
                 toleration = 0;
@@ -105,7 +105,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Enables you to produce special effects when showing this <see cref="ContextMenuStrip"/>.
+        ///     Enables you to produce special effects when showing this
+        ///     <see cref="ContextMenuStrip"/>.
         /// </summary>
         /// <param name="contextMenuStrip">
         ///     The <see cref="ContextMenuStrip"/>.
@@ -122,7 +123,7 @@ namespace SilDev.Forms
         /// </param>
         public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, ContextMenuStripExAnimation animation = ContextMenuStripExAnimation.Default, int time = 200)
         {
-            if (!(contextMenuStrip is ContextMenuStrip cms))
+            if (!(contextMenuStrip is { } cms))
                 return;
             var settings = new KeyValuePair<int, WinApi.AnimateWindowFlags>(time, (WinApi.AnimateWindowFlags)animation);
             if (EnabledAnimation.ContainsKey(cms))
@@ -172,24 +173,22 @@ namespace SilDev.Forms
         /// </param>
         public static void SetFixedSingle(this ContextMenuStrip contextMenuStrip, Color? borderColor = null)
         {
-            if (!(contextMenuStrip is ContextMenuStrip cms))
+            if (!(contextMenuStrip is { } cms))
                 return;
             _menuBorder = borderColor ?? SystemColors.ControlDark;
             cms.Renderer = new Renderer();
             cms.Paint += (sender, args) =>
             {
-                using (var gp = new GraphicsPath())
-                {
-                    var rects = new RectangleF[2];
-                    for (var i = 0; i < rects.Length; i++)
-                        rects[i] = new RectangleF(2, 2, cms.Width - 4 - i, cms.Height - 4 - i);
-                    cms.Region = new Region(rects.FirstOrDefault());
-                    gp.AddRectangle(rects.LastOrDefault());
-                    using (var b = new SolidBrush(cms.BackColor))
-                        args.Graphics.FillPath(b, gp);
-                    using (var p = new Pen(borderColor ?? SystemColors.ControlDark, 1))
-                        args.Graphics.DrawPath(p, gp);
-                }
+                using var gp = new GraphicsPath();
+                var rects = new RectangleF[2];
+                for (var i = 0; i < rects.Length; i++)
+                    rects[i] = new RectangleF(2, 2, cms.Width - 4 - i, cms.Height - 4 - i);
+                cms.Region = new Region(rects.FirstOrDefault());
+                gp.AddRectangle(rects.LastOrDefault());
+                using (var b = new SolidBrush(cms.BackColor))
+                    args.Graphics.FillPath(b, gp);
+                using var p = new Pen(borderColor ?? SystemColors.ControlDark, 1);
+                args.Graphics.DrawPath(p, gp);
             };
         }
 

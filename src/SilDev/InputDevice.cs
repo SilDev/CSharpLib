@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: InputDevice.cs
-// Version:  2019-10-21 15:06
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -923,8 +923,9 @@ namespace SilDev
         Process = 0xe5,
 
         /// <summary>
-        ///     Used to pass Unicode characters as if they were keystrokes. The Packet key value
-        ///     is the low word of a 32-bit virtual-key value used for non-keyboard input methods.
+        ///     Used to pass Unicode characters as if they were keystrokes. The Packet key
+        ///     value is the low word of a 32-bit virtual-key value used for non-keyboard
+        ///     input methods.
         /// </summary>
         Packet = 0xe7,
 
@@ -975,24 +976,27 @@ namespace SilDev
     public enum VirtualKeyState
     {
         /// <summary>
-        ///     Posted to the window with the keyboard focus when a non-system key is pressed.
+        ///     Posted to the window with the keyboard focus when a non-system key is
+        ///     pressed.
         /// </summary>
         KeyDown = 0x100,
 
         /// <summary>
-        ///     Posted to the window with the keyboard focus when a non-system key is released.
+        ///     Posted to the window with the keyboard focus when a non-system key is
+        ///     released.
         /// </summary>
         KeyUp = 0x101,
 
         /// <summary>
-        ///     Posted to the window with the keyboard focus when the user presses the F10 key (which
-        ///     activates the menu bar) or holds down the ALT key and then presses another key.
+        ///     Posted to the window with the keyboard focus when the user presses the F10
+        ///     key (which activates the menu bar) or holds down the ALT key and then
+        ///     presses another key.
         /// </summary>
         SysKeyDown = 0x104,
 
         /// <summary>
-        ///     Posted to the window with the keyboard focus when the user releases a key that was
-        ///     pressed while the ALT key was held down.
+        ///     Posted to the window with the keyboard focus when the user releases a key
+        ///     that was pressed while the ALT key was held down.
         /// </summary>
         SysKeyUp = 0x105
     }
@@ -1003,8 +1007,8 @@ namespace SilDev
     public static class InputDevice
     {
         /// <summary>
-        ///     Returns the <see cref="VirtualKey"/> of the <see cref="ushort"/> representation of a
-        ///     Virtual-Key code.
+        ///     Returns the <see cref="VirtualKey"/> of the <see cref="ushort"/>
+        ///     representation of a Virtual-Key code.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="VirtualKey"/> value.
@@ -1013,8 +1017,8 @@ namespace SilDev
             (VirtualKey)key;
 
         /// <summary>
-        ///     Returns the <see cref="VirtualKey"/> of the <see cref="string"/> representation of a
-        ///     Virtual-Key code.
+        ///     Returns the <see cref="VirtualKey"/> of the <see cref="string"/>
+        ///     representation of a Virtual-Key code.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="string"/> representation of a Virtual-Key code.
@@ -1023,7 +1027,8 @@ namespace SilDev
             (VirtualKey)GetKeyCode(key);
 
         /// <summary>
-        ///     Returns the <see cref="ushort"/> representation of the <see cref="VirtualKey"/> value.
+        ///     Returns the <see cref="ushort"/> representation of the
+        ///     <see cref="VirtualKey"/> value.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="VirtualKey"/> value.
@@ -1032,8 +1037,8 @@ namespace SilDev
             (ushort)key;
 
         /// <summary>
-        ///     Returns the <see cref="ushort"/> representation of the <see cref="string"/> representation
-        ///     of a Virtual-Key code.
+        ///     Returns the <see cref="ushort"/> representation of the <see cref="string"/>
+        ///     representation of a Virtual-Key code.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="string"/> representation of a Virtual-Key code.
@@ -1046,7 +1051,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the <see cref="string"/> representation of the <see cref="VirtualKey"/> value.
+        ///     Returns the <see cref="string"/> representation of the
+        ///     <see cref="VirtualKey"/> value.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="VirtualKey"/> value.
@@ -1055,8 +1061,8 @@ namespace SilDev
             Enum.GetName(typeof(VirtualKey), key);
 
         /// <summary>
-        ///     Returns the <see cref="string"/> representation of the <see cref="ushort"/> representation
-        ///     of a Virtual-Key code.
+        ///     Returns the <see cref="string"/> representation of the <see cref="ushort"/>
+        ///     representation of a Virtual-Key code.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="ushort"/> representation of a Virtual-Key code.
@@ -1088,8 +1094,9 @@ namespace SilDev
             GetScanCode(GetKey(key), extended);
 
         /// <summary>
-        ///     Determines whether a key is up or down at the time the function is called, and whether the
-        ///     key was pressed after a previous call to <see cref="GetKeyState(VirtualKey)"/>.
+        ///     Determines whether a key is up or down at the time the function is called,
+        ///     and whether the key was pressed after a previous call to
+        ///     <see cref="GetKeyState(VirtualKey)"/>.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="VirtualKey"/> value to check.
@@ -1098,8 +1105,9 @@ namespace SilDev
             WinApi.NativeMethods.GetAsyncKeyState((int)key) < 0;
 
         /// <summary>
-        ///     Determines whether a key is up or down at the time the function is called, and whether the
-        ///     key was pressed after a previous call to <see cref="GetKeyState(ushort)"/>.
+        ///     Determines whether a key is up or down at the time the function is called,
+        ///     and whether the key was pressed after a previous call to
+        ///     <see cref="GetKeyState(ushort)"/>.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="ushort"/> representation of a Virtual-Key code to check.
@@ -1108,8 +1116,9 @@ namespace SilDev
             WinApi.NativeMethods.GetAsyncKeyState(key) < 0;
 
         /// <summary>
-        ///     Determines whether a key is up or down at the time the function is called, and whether the
-        ///     key was pressed after a previous call to <see cref="GetKeyState(string)"/>.
+        ///     Determines whether a key is up or down at the time the function is called,
+        ///     and whether the key was pressed after a previous call to
+        ///     <see cref="GetKeyState(string)"/>.
         /// </summary>
         /// <param name="key">
         ///     The <see cref="string"/> representation of a Virtual-Key code to check.
@@ -1118,8 +1127,8 @@ namespace SilDev
             WinApi.NativeMethods.GetAsyncKeyState(GetKeyCode(key)) < 0;
 
         /// <summary>
-        ///     Determines which keys were up or down at the time the function is called, and which keys
-        ///     were pressed.
+        ///     Determines which keys were up or down at the time the function is called,
+        ///     and which keys were pressed.
         /// </summary>
         public static IEnumerable<VirtualKey> GetKeyStates()
         {
@@ -1129,8 +1138,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Places (posts) the specified key in the message queue associated with the thread that created
-        ///     the specified window and returns without waiting for the thread to process the message.
+        ///     Places (posts) the specified key in the message queue associated with the
+        ///     thread that created the specified window and returns without waiting for
+        ///     the thread to process the message.
         /// </summary>
         /// <param name="hWnd">
         ///     A handle to the window whose window procedure is to receive the message.
@@ -1142,7 +1152,8 @@ namespace SilDev
         ///     The key state to post.
         /// </param>
         /// <param name="scanCode">
-        ///     true to post the scan code of the specified key; otherwise, false.
+        ///     <see langword="true"/> to post the scan code of the specified key;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool PostKeyState(IntPtr hWnd, VirtualKey key, VirtualKeyState keyState, bool scanCode = false)
         {
@@ -1152,8 +1163,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Sends the specified key to a window. This function calls the window procedure for the
-        ///     specified window and does not return until the window procedure has processed the message.
+        ///     Sends the specified key to a window. This function calls the window
+        ///     procedure for the specified window and does not return until the window
+        ///     procedure has processed the message.
         /// </summary>
         /// <param name="hWnd">
         ///     A handle to the window whose window procedure is to receive the message.
@@ -1165,7 +1177,8 @@ namespace SilDev
         ///     The key state to send.
         /// </param>
         /// <param name="scanCode">
-        ///     true to send the scan code of the specified key; otherwise, false.
+        ///     <see langword="true"/> to send the scan code of the specified key;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static IntPtr SendKeyState(IntPtr hWnd, VirtualKey key, VirtualKeyState keyState, bool scanCode = false)
         {
@@ -1189,18 +1202,30 @@ namespace SilDev
                 return;
             }
 
-            var mouseDown = new WinApi.DeviceInput();
-            mouseDown.Data.Mouse.Flags = 0x2;
-            mouseDown.Type = 0;
-
-            var mouseUp = new WinApi.DeviceInput();
-            mouseUp.Data.Mouse.Flags = 0x4;
-            mouseUp.Type = 0;
-
             var inputs = new[]
             {
-                mouseDown,
-                mouseUp
+                new WinApi.DeviceInput
+                {
+                    Data = new WinApi.MouseKeyboardHardwareInput
+                    {
+                        Mouse = new WinApi.MouseInput
+                        {
+                            Flags = 0x2
+                        }
+                    },
+                    Type = 0
+                },
+                new WinApi.DeviceInput
+                {
+                    Data = new WinApi.MouseKeyboardHardwareInput
+                    {
+                        Mouse = new WinApi.MouseInput
+                        {
+                            Flags = 0x4
+                        }
+                    },
+                    Type = 0
+                }
             };
 
             _ = WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));

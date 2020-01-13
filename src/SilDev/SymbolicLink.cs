@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: SymbolicLink.cs
-// Version:  2020-01-06 07:59
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -26,8 +26,9 @@ namespace SilDev
     public static class SymbolicLink
     {
         /// <summary>
-        ///     Creates a symbolic link to the specified file or directory based on command prompt
-        ///     which allows a simple solution for the elevated execution of this order.
+        ///     Creates a symbolic link to the specified file or directory based on command
+        ///     prompt which allows a simple solution for the elevated execution of this
+        ///     order.
         /// </summary>
         /// <param name="linkPath">
         ///     The file or directory to be linked.
@@ -36,13 +37,16 @@ namespace SilDev
         ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="destIsDir">
-        ///     true to determine that the destination path is a directory; otherwise, false.
+        ///     <see langword="true"/> to determine that the destination path is a
+        ///     directory; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="backup">
-        ///     true to create an backup for existing files; otherwise, false.
+        ///     <see langword="true"/> to create an backup for existing files; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="elevated">
-        ///     true to create this link with highest privileges; otherwise, false.
+        ///     <see langword="true"/> to create this link with highest privileges;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Create(string linkPath, string destPath, bool destIsDir, bool backup = false, bool elevated = false)
         {
@@ -188,7 +192,7 @@ namespace SilDev
                 return false;
 
             int? exitCode;
-            using (var p = ProcessEx.Send(sb.ToStringThenClear(), elevated, false))
+            using (var p = CmdExec.Send(sb.ToStringThenClear(), elevated, false))
             {
                 if (p?.HasExited ?? false)
                     p.WaitForExit();
@@ -198,20 +202,24 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Removes an symbolic link of the specified file or directory link based on command
-        ///     prompt which allows a simple solution for the elevated execution of this order.
+        ///     Removes an symbolic link of the specified file or directory link based on
+        ///     command prompt which allows a simple solution for the elevated execution of
+        ///     this order.
         /// </summary>
         /// <param name="path">
         ///     The link to be removed.
         /// </param>
         /// <param name="pathIsDir">
-        ///     true to determine that the path is a directory; otherwise, false.
+        ///     <see langword="true"/> to determine that the path is a directory;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="backup">
-        ///     true to restore found backups; otherwise, false.
+        ///     <see langword="true"/> to restore found backups; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="elevated">
-        ///     true to remove this link with highest privileges; otherwise, false.
+        ///     <see langword="true"/> to remove this link with highest privileges;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Destroy(string path, bool pathIsDir, bool backup = false, bool elevated = false)
         {
@@ -229,7 +237,7 @@ namespace SilDev
                 return false;
 
             int? exitCode;
-            using (var p = ProcessEx.Send(sb.ToStringThenClear(), elevated, false))
+            using (var p = CmdExec.Send(sb.ToStringThenClear(), elevated, false))
             {
                 if (p?.HasExited ?? false)
                     p.WaitForExit();

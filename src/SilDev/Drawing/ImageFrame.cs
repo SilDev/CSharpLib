@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ImageFrame.cs
-// Version:  2020-01-03 12:37
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -98,16 +98,12 @@ namespace SilDev.Drawing
         /// <param name="other">
         ///     The frame to compare with the current frame.
         /// </param>
-        public virtual bool Equals(ImageFrame other)
-        {
-            if (other == null)
-                return false;
-            return GetHashCode() == other.GetHashCode();
-        }
+        public virtual bool Equals(ImageFrame other) =>
+            Duration == other?.Duration && Image.GetHashCodeEx() == other.Image.GetHashCodeEx();
 
         /// <summary>
-        ///     Populates a <see cref="SerializationInfo"/> with the data needed to serialize
-        ///     the target object.
+        ///     Populates a <see cref="SerializationInfo"/> with the data needed to
+        ///     serialize the target object.
         /// </summary>
         /// <param name="info">
         ///     The object that holds the serialized object data.
@@ -133,8 +129,8 @@ namespace SilDev.Drawing
         ///     Releases all resources used by this <see cref="ImageFrame"/>.
         /// </summary>
         /// <param name="disposing">
-        ///     true to release both managed and unmanaged resources; false to release only
-        ///     unmanaged resources.
+        ///     <see langword="true"/> to release both managed and unmanaged resources;
+        ///     otherwise, <see langword="false"/> to release only unmanaged resources.
         ///     <para>
         ///         Please note that this parameter is ignored for the
         ///         <see cref="ImageFrame"/> class.

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PowerShellReference.cs
-// Version:  2019-10-22 15:33
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -39,12 +39,12 @@ namespace SilDev.Intern
                     try
                     {
                         if (string.IsNullOrEmpty(path))
-                            throw new ArgumentNullException(nameof(path));
+                            throw new NullReferenceException();
                         if (!File.Exists(path))
                             throw new FileNotFoundException();
                         dir = Path.GetDirectoryName(path);
                         if (string.IsNullOrEmpty(dir))
-                            throw new ArgumentNullException(nameof(dir));
+                            throw new NullReferenceException();
                         _assembly = Assembly.LoadFrom(path);
                         Location = dir;
                     }

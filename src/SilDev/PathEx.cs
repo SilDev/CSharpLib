@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2020-01-06 07:59
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -24,11 +24,13 @@ namespace SilDev
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Network;
     using Properties;
 
     /// <summary>
-    ///     Provides static methods based on the <see cref="Path"/> class to perform operations on
-    ///     <see cref="string"/> instances that contain file or directory path information.
+    ///     Provides static methods based on the <see cref="Path"/> class to perform
+    ///     operations on <see cref="string"/> instances that contain file or directory
+    ///     path information.
     /// </summary>
     public static class PathEx
     {
@@ -109,8 +111,8 @@ namespace SilDev
         public static string LibraryPath { get; } = FindAssemblyPath(Assembly.GetAssembly(typeof(PathEx)));
 
         /// <summary>
-        ///     Gets the executable located directory path of the current loaded Si13n7 Dev.™ CSharp
-        ///     Library.
+        ///     Gets the executable located directory path of the current loaded Si13n7
+        ///     Dev.™ CSharp Library.
         /// </summary>
         public static string LibraryDir { get; } = FindAssemblyDir(Assembly.GetAssembly(typeof(PathEx)));
 
@@ -160,8 +162,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
-        ///     to determine whether the specified path element exists.
+        ///     Combines <see cref="Directory.Exists(string)"/> and
+        ///     <see cref="File.Exists(string)"/> to determine whether the specified path
+        ///     element exists.
         /// </summary>
         /// <param name="path">
         ///     The file or directory to check.
@@ -170,8 +173,9 @@ namespace SilDev
             DirectoryEx.Exists(path) || FileEx.Exists(path);
 
         /// <summary>
-        ///     Combines <see cref="Directory.Exists(string)"/> and <see cref="File.Exists(string)"/>
-        ///     to determine whether the specified path elements exists.
+        ///     Combines <see cref="Directory.Exists(string)"/> and
+        ///     <see cref="File.Exists(string)"/> to determine whether the specified path
+        ///     elements exists.
         /// </summary>
         /// <param name="paths">
         ///     An array of files and directories to check.
@@ -189,8 +193,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the specified path is specified as reparse
-        ///     point.
+        ///     Determines whether the specified path is specified as reparse point.
         /// </summary>
         /// <param name="path">
         ///     The file or directory to check.
@@ -289,28 +292,26 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Combines a <see cref="Environment.SpecialFolder"/> constant with an array of
-        ///     strings into a valid path.
+        ///     Filters the specified string into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
         /// </param>
-        /// <param name="specialFolder">
-        ///     A specified enumerated constant used to retrieve directory paths to system
-        ///     special folders.
+        /// <param name="path0">
+        ///     The path to be filtered.
         /// </param>
-        /// <param name="paths">
-        ///     An array of parts of the path.
-        /// </param>
-        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder? specialFolder, params string[] paths)
+        public static string Combine(char[] invalidPathChars, string path0)
         {
             var path = string.Empty;
             try
             {
-                if (specialFolder != null)
-                    path = Environment.GetFolderPath((Environment.SpecialFolder)specialFolder);
-                if (!(paths?.Join(Path.DirectorySeparatorChar).Split(PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries) is IEnumerable<string> plains))
-                    throw new ArgumentNullException(nameof(paths));
+                if (!(path0?.Split(PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries) is IEnumerable<string> plains))
+                    throw new ArgumentInvalidException(nameof(path0));
                 if (invalidPathChars?.Any() ?? false)
                     plains = plains.Select(x => x.RemoveChar(invalidPathChars));
                 path = !string.IsNullOrEmpty(path) ? Path.Combine(path, plains.Join(Path.DirectorySeparatorChar)) : plains.Join(Path.DirectorySeparatorChar);
@@ -333,12 +334,8 @@ namespace SilDev
                         }
                     }
                 }
-                else if (path.StartsWith($".{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-                    path = Path.Combine(LocalDir, path.Substring(2));
-                else if (path.Equals(".", StringComparison.Ordinal))
-                    path = LocalDir;
 
-                if (path.Contains($"{Path.DirectorySeparatorChar}.."))
+                if (path.StartsWith($".{Path.DirectorySeparatorChar}", StringComparison.Ordinal) || path.Equals(".", StringComparison.Ordinal) || path.Contains($"{Path.DirectorySeparatorChar}.."))
                     path = Path.GetFullPath(path);
                 if (path.EndsWith(".", StringComparison.Ordinal))
                     path = path.TrimEnd('.');
@@ -362,96 +359,329 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Combines an array of strings into a valid path.
+        ///     Combines the specified strings and filters the result into a valid path.
         ///     <para>
-        ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, string path0, string path1) =>
+            Combine(invalidPathChars, path0 + DirectorySeparatorStr + path1);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        /// <param name="path2">
+        ///     The third path to combine.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, string path0, string path1, string path2) =>
+            Combine(invalidPathChars, path0 + DirectorySeparatorStr + path1 + DirectorySeparatorStr + path2);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
         /// </param>
         /// <param name="paths">
-        ///     An array of parts of the path.
+        ///     An array of paths to be combined.
         /// </param>
         public static string Combine(char[] invalidPathChars, params string[] paths) =>
-            Combine(invalidPathChars, null, paths);
+            Combine(invalidPathChars, paths?.Join(Path.DirectorySeparatorChar));
 
         /// <summary>
-        ///     Filters a string into a valid path.
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified string and filters the result into a valid path.
         ///     <para>
-        ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
         /// </param>
-        /// <param name="path">
-        ///     The string to be filtered.
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
         /// </param>
-        public static string Combine(char[] invalidPathChars, string path) =>
-            Combine(invalidPathChars, new[] { path });
+        /// <param name="path0">
+        ///     The path to be filtered.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder specialFolder, string path0) =>
+            Combine(invalidPathChars, Environment.GetFolderPath(specialFolder), path0);
 
         /// <summary>
-        ///     Combines a <see cref="Environment.SpecialFolder"/> constant with an array of
-        ///     strings into a valid path.
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
+        /// </param>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder specialFolder, string path0, string path1) =>
+            Combine(invalidPathChars, specialFolder, path0 + DirectorySeparatorStr + path1);
+
+        /// <summary>
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
+        /// </param>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        /// <param name="path2">
+        ///     The third path to combine.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder specialFolder, string path0, string path1, string path2) =>
+            Combine(invalidPathChars, specialFolder, path0 + DirectorySeparatorStr + path1 + DirectorySeparatorStr + path2);
+
+        /// <summary>
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
+        /// </param>
+        /// <param name="paths">
+        ///     An array of paths to be combined.
+        /// </param>
+        public static string Combine(char[] invalidPathChars, Environment.SpecialFolder specialFolder, params string[] paths) =>
+            Combine(invalidPathChars, specialFolder, paths?.Join(Path.DirectorySeparatorChar));
+
+        /// <summary>
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified string and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="specialFolder">
+        ///     A specified enumerated constant used to retrieve directory paths to system
+        ///     special folders.
+        /// </param>
+        /// <param name="path0">
+        ///     The path to be filtered.
+        /// </param>
+        public static string Combine(Environment.SpecialFolder specialFolder, string path0) =>
+            Combine(InvalidPathChars, specialFolder, path0);
+
+        /// <summary>
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        public static string Combine(Environment.SpecialFolder specialFolder, string path0, string path1) =>
+            Combine(InvalidPathChars, specialFolder, path0, path1);
+
+        /// <summary>
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        /// <param name="path2">
+        ///     The third path to combine.
+        /// </param>
+        public static string Combine(Environment.SpecialFolder specialFolder, string path0, string path1, string path2) =>
+            Combine(InvalidPathChars, specialFolder, path0, path1, path2);
+
+        /// <summary>
+        ///     Combines the specified <see cref="Environment.SpecialFolder"/> value with
+        ///     the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
         /// </summary>
         /// <param name="specialFolder">
         ///     A specified enumerated constant used to retrieve directory paths to system
         ///     special folders.
         /// </param>
         /// <param name="paths">
-        ///     An array of parts of the path.
+        ///     An array of paths to be combined.
         /// </param>
-        public static string Combine(Environment.SpecialFolder? specialFolder, params string[] paths) =>
+        public static string Combine(Environment.SpecialFolder specialFolder, params string[] paths) =>
             Combine(InvalidPathChars, specialFolder, paths);
 
         /// <summary>
-        ///     Combines an array of strings into a valid path.
+        ///     Filters the specified string into a valid path.
         ///     <para>
-        ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The string to be filtered.
+        /// </param>
+        public static string Combine(string path0) =>
+            Combine(InvalidPathChars, path0);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        public static string Combine(string path0, string path1) =>
+            Combine(InvalidPathChars, path0, path1);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The first path to combine.
+        /// </param>
+        /// <param name="path1">
+        ///     The second path to combine.
+        /// </param>
+        /// <param name="path2">
+        ///     The third path to combine.
+        /// </param>
+        public static string Combine(string path0, string path1, string path2) =>
+            Combine(InvalidPathChars, path0, path1, path2);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="paths">
-        ///     An array of parts of the path.
+        ///     The sequence of strings to be filtered.
         /// </param>
         public static string Combine(params string[] paths) =>
             Combine(InvalidPathChars, paths);
 
         /// <summary>
-        ///     Filters a string into a valid path.
+        ///     Filters the specified string into a valid path.
         ///     <para>
-        ///         Hint: Allows superordinate directory navigation and environment variables
-        ///         based on <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
         ///     </para>
-        /// </summary>
-        /// <param name="path">
-        ///     The string to be filtered.
-        /// </param>
-        public static string Combine(string path) =>
-            Combine(InvalidPathChars, new[] { path });
-
-        /// <summary>
-        ///     Combines an array of strings, based on <see cref="Combine(string[])"/>, into a path.
         ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
         /// </param>
-        /// <param name="paths">
+        /// <param name="path0">
         ///     An array of parts of the path.
         /// </param>
-        public static string AltCombine(char[] invalidPathChars, params string[] paths)
+        public static string AltCombine(char[] invalidPathChars, string path0)
         {
-            var path = Combine(invalidPathChars, paths);
+            var path = Combine(invalidPathChars, path0);
             try
             {
                 if (string.IsNullOrWhiteSpace(path))
-                    throw new ArgumentNullException(nameof(path));
+                    throw new ArgumentNullException(nameof(path0));
                 path = path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                 var schemes = new[]
                 {
@@ -482,43 +712,139 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Filters a string, based on <see cref="Combine(string[])"/>, into a valid path.
+        ///     Combines the specified strings and filters the result into a valid path.
         ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
         ///     A sequence of invalid chars used as a filter.
         /// </param>
-        /// <param name="path">
+        /// <param name="path0">
         ///     The string to be filtered.
         /// </param>
-        public static string AltCombine(char[] invalidPathChars, string path) =>
-            AltCombine(invalidPathChars, new[] { path });
+        public static string AltCombine(char[] invalidPathChars, string path0, string path1) =>
+            AltCombine(invalidPathChars, Combine((char[])null, path0, path1));
 
         /// <summary>
-        ///     Combines an array of strings, based on <see cref="Combine(string[])"/>, into a path.
+        ///     Combines the specified strings and filters the result into a valid path.
         ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="path0">
+        ///     The string to be filtered.
+        /// </param>
+        public static string AltCombine(char[] invalidPathChars, string path0, string path1, string path2) =>
+            AltCombine(invalidPathChars, Combine((char[])null, path0, path1, path2));
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="invalidPathChars">
+        ///     A sequence of invalid chars used as a filter.
+        /// </param>
+        /// <param name="paths">
+        ///     The sequence of strings to be filtered.
+        /// </param>
+        public static string AltCombine(char[] invalidPathChars, params string[] paths) =>
+            AltCombine(invalidPathChars, Combine(null, paths));
+
+        /// <summary>
+        ///     Filters the specified string into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The string to be filtered.
+        /// </param>
+        public static string AltCombine(string path0) =>
+            AltCombine(InvalidPathChars, path0);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The string to be filtered.
+        /// </param>
+        public static string AltCombine(string path0, string path1) =>
+            AltCombine(InvalidPathChars, path0, path1);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
+        ///     </para>
+        /// </summary>
+        /// <param name="path0">
+        ///     The string to be filtered.
+        /// </param>
+        public static string AltCombine(string path0, string path1, string path2) =>
+            AltCombine(InvalidPathChars, path0, path1, path2);
+
+        /// <summary>
+        ///     Combines the specified strings and filters the result into a valid path.
+        ///     <para>
+        ///         Allows relative paths, superordinate directory navigation and
+        ///         environment variables based on
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
+        ///         levels.
         ///     </para>
         /// </summary>
         /// <param name="paths">
-        ///     An array of parts of the path.
+        ///     The sequence of strings to be filtered.
         /// </param>
         public static string AltCombine(params string[] paths) =>
             AltCombine(InvalidPathChars, paths);
-
-        /// <summary>
-        ///     Filters a string, based on <see cref="Combine(string[])"/>, into a valid path.
-        ///     <para>
-        ///         Hint: <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path levels.
-        ///     </para>
-        /// </summary>
-        /// <param name="path">
-        ///     The string to be filtered.
-        /// </param>
-        public static string AltCombine(string path) =>
-            AltCombine(InvalidPathChars, new[] { path });
 
         /// <summary>
         ///     Returns the directory information for the specified path string.
@@ -527,7 +853,8 @@ namespace SilDev
         ///     The path of a file or directory.
         /// </param>
         /// <param name="convertEnvVars">
-        ///     true to convert environment variables; otherwise, false.
+        ///     <see langword="true"/> to convert environment variables; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string GetDirectoryName(string path, bool convertEnvVars = false)
         {
@@ -558,22 +885,24 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a unique name starting with a given prefix, followed by a hash of the specified
-        ///     length and a specified suffix.
+        ///     Returns a unique name starting with a given prefix, followed by a hash of
+        ///     the specified length and a specified suffix.
         /// </summary>
         /// <param name="prefix">
         ///     This text is at the beginning of the name.
         ///     <para>
-        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
-        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///         Uppercase letters are converted to lowercase letters. Supported
+        ///         characters are only from '0' to '9' and from 'a' to 'z' but can be
+        ///         completely empty to omit the prefix.
         ///     </para>
         /// </param>
         /// <param name="suffix">
         ///     This text is at the end of the name.
         ///     <para>
-        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
-        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
-        ///         'z' but can be completely empty to omit the suffix.
+        ///         If it does not begin with a dot, it will be added. Uppercase letters
+        ///         are converted to lowercase letters. Supported characters are only from
+        ///         '0' to '9' and from 'a' to 'z' but can be completely empty to omit the
+        ///         suffix.
         ///     </para>
         /// </param>
         /// <param name="hashLen">
@@ -619,8 +948,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a fully qualified path with unique name starting with a given prefix, followed by
-        ///     a hash of the specified length and a specified suffix.
+        ///     Returns a fully qualified path with unique name starting with a given
+        ///     prefix, followed by a hash of the specified length and a specified suffix.
         /// </summary>
         /// <param name="baseDir">
         ///     This home directory for the uniquely named file or directory.
@@ -628,16 +957,18 @@ namespace SilDev
         /// <param name="namePrefix">
         ///     This text is at the beginning of the name.
         ///     <para>
-        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
-        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///         Uppercase letters are converted to lowercase letters. Supported
+        ///         characters are only from '0' to '9' and from 'a' to 'z' but can be
+        ///         completely empty to omit the prefix.
         ///     </para>
         /// </param>
         /// <param name="nameSuffix">
         ///     This text is at the end of the name.
         ///     <para>
-        ///         If it does not begin with a dot, it will be added. Uppercase letters are converted
-        ///         to lowercase letters. Supported characters are only from '0' to '9' and from 'a' to
-        ///         'z' but can be completely empty to omit the suffix.
+        ///         If it does not begin with a dot, it will be added. Uppercase letters
+        ///         are converted to lowercase letters. Supported characters are only from
+        ///         '0' to '9' and from 'a' to 'z' but can be completely empty to omit the
+        ///         suffix.
         ///     </para>
         /// </param>
         /// <param name="hashLen">
@@ -713,15 +1044,16 @@ namespace SilDev
         /// <summary>
         ///     Deletes any file or directory.
         ///     <para>
-        ///         Immediately stops all specified processes that are locking this file or directory.
+        ///         Immediately stops all specified processes that are locking this file or
+        ///         directory.
         ///     </para>
         /// </summary>
         /// <param name="path">
         ///     The path of the file or directory to be deleted.
         /// </param>
         /// <param name="elevated">
-        ///     true to run this task with administrator privileges if the deletion fails; otherwise,
-        ///     false.
+        ///     <see langword="true"/> to run this task with administrator privileges if
+        ///     the deletion fails; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timelimit">
         ///     The time limit in milliseconds.
@@ -737,9 +1069,9 @@ namespace SilDev
                 var locked = false;
                 using (var current = Process.GetCurrentProcess())
                 {
-                    foreach (var p in GetLocks(target).Where(x => x != current))
+                    foreach (var p in GetLocks(target))
                     {
-                        if (ProcessEx.Terminate(p) || locked)
+                        if (p == current || ProcessEx.Terminate(p) || locked)
                             continue;
                         locked = true;
                     }
@@ -762,23 +1094,23 @@ namespace SilDev
 
                     var helper = FileEx.GetUniqueTempPath("tmp", ".cmd");
                     sb.AppendLine("@ECHO OFF");
-                    sb.AppendFormatLine("ROBOCOPY \"{0}\" \"{1}\" /MIR", tmpDir, target);
-                    sb.AppendFormatLine("RMDIR /S /Q \"{0}\"", tmpDir);
-                    sb.AppendFormatLine("RMDIR /S /Q \"{0}\"", target);
+                    sb.AppendFormatLineCurrent("ROBOCOPY \"{0}\" \"{1}\" /MIR", tmpDir, target);
+                    sb.AppendFormatLineCurrent("RMDIR /S /Q \"{0}\"", tmpDir);
+                    sb.AppendFormatLineCurrent("RMDIR /S /Q \"{0}\"", target);
                     sb.AppendLine("EXIT");
                     File.WriteAllText(helper, sb.ToStringThenClear());
 
                     var call = $"CALL \"{helper}\"";
                     if (locked)
-                        ProcessEx.SendHelper.WaitForExitThenCmd(call, curName, elevated);
+                        CmdExec.WaitForExitThenCmd(call, curName, elevated);
                     else
-                        using (var p = ProcessEx.Send(call, elevated, false))
+                        using (var p = CmdExec.Send(call, elevated, false))
                             if (p?.HasExited ?? false)
                                 p.WaitForExit(timelimit);
 
                     DirectoryEx.Delete(tmpDir);
                     DirectoryEx.Delete(target);
-                    ProcessEx.SendHelper.WaitThenDelete(helper, elevated);
+                    CmdExec.WaitThenDelete(helper, elevated);
                 }
                 else
                     try
@@ -788,9 +1120,9 @@ namespace SilDev
                     catch (Exception ex) when (ex.IsCaught())
                     {
                         if (locked)
-                            ProcessEx.SendHelper.WaitForExitThenDelete(target, curName, true);
+                            CmdExec.WaitForExitThenDelete(target, curName, true);
                         else
-                            using (var p = ProcessEx.Send(sb.ToStringThenClear(), elevated, false))
+                            using (var p = CmdExec.Send(sb.ToStringThenClear(), elevated, false))
                                 if (p?.HasExited ?? false)
                                     p.WaitForExit(timelimit);
                     }

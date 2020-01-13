@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2020-01-05 07:10
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -26,8 +26,8 @@ namespace SilDev
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     Provides static methods based on the <see cref="Directory"/> class to perform
-    ///     directory operations.
+    ///     Provides static methods based on the <see cref="Directory"/> class to
+    ///     perform directory operations.
     /// </summary>
     public static class DirectoryEx
     {
@@ -180,12 +180,13 @@ namespace SilDev
         /// </param>
         /// <param name="searchPattern">
         ///     The search string to match against the names of directories in path. This
-        ///     parameter can contain a combination of valid literal path and wildcard
-        ///     (* and ?) characters, but doesn't support regular expressions.
+        ///     parameter can contain a combination of valid literal path and wildcard (*
+        ///     and ?) characters, but doesn't support regular expressions.
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static IEnumerable<string> EnumerateDirectories(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
@@ -215,15 +216,16 @@ namespace SilDev
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static IEnumerable<string> EnumerateDirectories(string path, SearchOption searchOption) =>
             EnumerateDirectories(path, "*", searchOption);
 
         /// <summary>
-        ///     Returns the names of the subdirectories (including their paths) that match the
-        ///     specified search pattern in the specified directory, and optionally searches
-        ///     subdirectories.
+        ///     Returns the names of the subdirectories (including their paths) that match
+        ///     the specified search pattern in the specified directory, and optionally
+        ///     searches subdirectories.
         /// </summary>
         /// <param name="path">
         ///     The relative or absolute path to the directory to search. This string is
@@ -231,12 +233,13 @@ namespace SilDev
         /// </param>
         /// <param name="searchPattern">
         ///     The search string to match against the names of directories in path. This
-        ///     parameter can contain a combination of valid literal path and wildcard
-        ///     (* and ?) characters, but doesn't support regular expressions.
+        ///     parameter can contain a combination of valid literal path and wildcard (*
+        ///     and ?) characters, but doesn't support regular expressions.
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static string[] GetDirectories(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
@@ -260,9 +263,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the names of the subdirectories (including their paths) that match the
-        ///     specified search pattern in the specified directory, and optionally searches
-        ///     subdirectories.
+        ///     Returns the names of the subdirectories (including their paths) that match
+        ///     the specified search pattern in the specified directory, and optionally
+        ///     searches subdirectories.
         /// </summary>
         /// <param name="path">
         ///     The relative or absolute path to the directory to search. This string is
@@ -270,27 +273,29 @@ namespace SilDev
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static string[] GetDirectories(string path, SearchOption searchOption) =>
             GetDirectories(path, "*", searchOption);
 
         /// <summary>
-        ///     Returns an enumerable collection of file names that match a search pattern in
-        ///     a specified path, and optionally searches subdirectories.
+        ///     Returns an enumerable collection of file names that match a search pattern
+        ///     in a specified path, and optionally searches subdirectories.
         /// </summary>
         /// <param name="path">
         ///     The relative or absolute path to the directory to search. This string is
         ///     not case-sensitive.
         /// </param>
         /// <param name="searchPattern">
-        ///     The search string to match against the names of files in path. This parameter
-        ///     can contain a combination of valid literal path and wildcard (* and ?)
-        ///     characters, but doesn't support regular expressions.
+        ///     The search string to match against the names of files in path. This
+        ///     parameter can contain a combination of valid literal path and wildcard (*
+        ///     and ?) characters, but doesn't support regular expressions.
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static IEnumerable<string> EnumerateFiles(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
@@ -311,8 +316,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns an enumerable collection of file names that match a search pattern in
-        ///     a specified path, and optionally searches subdirectories.
+        ///     Returns an enumerable collection of file names that match a search pattern
+        ///     in a specified path, and optionally searches subdirectories.
         /// </summary>
         /// <param name="path">
         ///     The relative or absolute path to the directory to search. This string is
@@ -320,28 +325,30 @@ namespace SilDev
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static IEnumerable<string> EnumerateFiles(string path, SearchOption searchOption) =>
             EnumerateFiles(path, "*", searchOption);
 
         /// <summary>
-        ///     Returns the names of files (including their paths) that match the specified search
-        ///     pattern in the specified directory, using a value to determine whether to search
-        ///     subdirectories.
+        ///     Returns the names of files (including their paths) that match the specified
+        ///     search pattern in the specified directory, using a value to determine
+        ///     whether to search subdirectories.
         /// </summary>
         /// <param name="path">
         ///     The relative or absolute path to the directory to search. This string is
         ///     not case-sensitive.
         /// </param>
         /// <param name="searchPattern">
-        ///     The search string to match against the names of files in path. This parameter
-        ///     can contain a combination of valid literal path and wildcard (* and ?)
-        ///     characters, but doesn't support regular expressions.
+        ///     The search string to match against the names of files in path. This
+        ///     parameter can contain a combination of valid literal path and wildcard (*
+        ///     and ?) characters, but doesn't support regular expressions.
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static string[] GetFiles(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
@@ -368,9 +375,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the names of files (including their paths) that match the specified search
-        ///     pattern in the specified directory, using a value to determine whether to search
-        ///     subdirectories.
+        ///     Returns the names of files (including their paths) that match the specified
+        ///     search pattern in the specified directory, using a value to determine
+        ///     whether to search subdirectories.
         /// </summary>
         /// <param name="path">
         ///     The relative or absolute path to the directory to search. This string is
@@ -378,14 +385,15 @@ namespace SilDev
         /// </param>
         /// <param name="searchOption">
         ///     One of the enumeration values that specifies whether the search operation
-        ///     should include only the current directory or should include all  subdirectories.
+        ///     should include only the current directory or should include all
+        ///     subdirectories.
         /// </param>
         public static string[] GetFiles(string path, SearchOption searchOption) =>
             GetFiles(path, "*", searchOption);
 
         /// <summary>
-        ///     Creates all directories and subdirectories in the specified path
-        ///     unless they already exist.
+        ///     Creates all directories and subdirectories in the specified path unless
+        ///     they already exist.
         /// </summary>
         /// <param name="path">
         ///     The directory to create.
@@ -421,10 +429,12 @@ namespace SilDev
         ///     The fully qualified name of the destination directory.
         /// </param>
         /// <param name="subDirs">
-        ///     true to include subdirectories; otherwise, false.
+        ///     <see langword="true"/> to include subdirectories; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow existing files to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow existing files to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Copy(string srcDir, string destDir, bool subDirs = true, bool overwrite = false)
         {
@@ -471,10 +481,12 @@ namespace SilDev
         ///     The fully qualified name of the destination directory.
         /// </param>
         /// <param name="subDirs">
-        ///     true to include subdirectories; otherwise, false.
+        ///     <see langword="true"/> to include subdirectories; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow existing files to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow existing files to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Copy(this DirectoryInfo dirInfo, string destDir, bool subDirs = true, bool overwrite = false) =>
             Copy(dirInfo?.FullName, destDir, subDirs, overwrite);
@@ -490,7 +502,8 @@ namespace SilDev
         ///     The fully qualified name of the destination directory.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow existing files to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow existing files to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool Move(string srcDir, string destDir, bool overwrite = false)
         {
@@ -564,7 +577,8 @@ namespace SilDev
         ///     The directory instance member to get the hash code.
         /// </param>
         /// <param name="size">
-        ///     true to include the size of each file; otherwise, false.
+        ///     <see langword="true"/> to include the size of each file; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static int GetFullHashCode(this DirectoryInfo dirInfo, bool size = true)
         {
@@ -597,7 +611,8 @@ namespace SilDev
         ///     The directory to get the hash code.
         /// </param>
         /// <param name="size">
-        ///     true to include the size of each file; otherwise, false.
+        ///     <see langword="true"/> to include the size of each file; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static int GetFullHashCode(string path, bool size = true)
         {
@@ -617,8 +632,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the total amount of free space available on the drive of the specified
-        ///     directory, in bytes.
+        ///     Returns the total amount of free space available on the drive of the
+        ///     specified directory, in bytes.
         /// </summary>
         /// <param name="dirInfo">
         ///     The directory instance member to check.
@@ -632,7 +647,7 @@ namespace SilDev
                 var root = Path.GetPathRoot(dirInfo.FullName).ToUpperInvariant();
                 var drive = DriveInfo.GetDrives().FirstOrDefault(x => root.Equals(x.Name, StringComparison.Ordinal));
                 if (drive == default(DriveInfo))
-                    throw new ArgumentNullException(nameof(drive));
+                    throw new DriveNotFoundException();
                 return drive.TotalFreeSpace;
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -642,8 +657,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the total amount of free space available on the drive of the specified
-        ///     directory, in bytes.
+        ///     Returns the total amount of free space available on the drive of the
+        ///     specified directory, in bytes.
         /// </summary>
         /// <param name="path">
         ///     The directory to check.
@@ -664,8 +679,8 @@ namespace SilDev
         ///     The directory instance member to get the size.
         /// </param>
         /// <param name="searchOption">
-        ///     One of the enumeration values that specifies whether the operation should include
-        ///     only the current directory or all subdirectories.
+        ///     One of the enumeration values that specifies whether the operation should
+        ///     include only the current directory or all subdirectories.
         /// </param>
         public static long GetSize(this DirectoryInfo dirInfo, SearchOption searchOption = SearchOption.AllDirectories)
         {
@@ -701,8 +716,8 @@ namespace SilDev
         ///     The directory to get the size.
         /// </param>
         /// <param name="searchOption">
-        ///     One of the enumeration values that specifies whether the operation should include
-        ///     only the current directory or all subdirectories.
+        ///     One of the enumeration values that specifies whether the operation should
+        ///     include only the current directory or all subdirectories.
         /// </param>
         public static long GetSize(string path, SearchOption searchOption = SearchOption.AllDirectories)
         {
@@ -714,14 +729,15 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a unique name starting with a given prefix, followed by a hash of the specified
-        ///     length.
+        ///     Returns a unique name starting with a given prefix, followed by a hash of
+        ///     the specified length.
         /// </summary>
         /// <param name="prefix">
         ///     This text is at the beginning of the name.
         ///     <para>
-        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
-        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///         Uppercase letters are converted to lowercase letters. Supported
+        ///         characters are only from '0' to '9' and from 'a' to 'z' but can be
+        ///         completely empty to omit the prefix.
         ///     </para>
         /// </param>
         /// <param name="hashLen">
@@ -737,8 +753,8 @@ namespace SilDev
             PathEx.GetUniqueName(prefix, null, hashLen);
 
         /// <summary>
-        ///     Returns a unique name starting with 'tmp' prefix, followed by a hash of the specified
-        ///     length.
+        ///     Returns a unique name starting with 'tmp' prefix, followed by a hash of the
+        ///     specified length.
         /// </summary>
         /// <param name="hashLen">
         ///     The length of the hash. Valid values are 4 through 24.
@@ -750,14 +766,15 @@ namespace SilDev
             PathEx.GetUniqueName("tmp", null, hashLen);
 
         /// <summary>
-        ///     Returns the current user's temporary path in combination with unique name starting with
-        ///     a given prefix, followed by a hash of the specified length.
+        ///     Returns the current user's temporary path in combination with unique name
+        ///     starting with a given prefix, followed by a hash of the specified length.
         /// </summary>
         /// <param name="prefix">
         ///     This text is at the beginning of the name.
         ///     <para>
-        ///         Uppercase letters are converted to lowercase letters. Supported characters are only
-        ///         from '0' to '9' and from 'a' to 'z' but can be completely empty to omit the prefix.
+        ///         Uppercase letters are converted to lowercase letters. Supported
+        ///         characters are only from '0' to '9' and from 'a' to 'z' but can be
+        ///         completely empty to omit the prefix.
         ///     </para>
         /// </param>
         /// <param name="hashLen">
@@ -773,8 +790,8 @@ namespace SilDev
             PathEx.GetUniquePath("%TEMP%", prefix, null, hashLen);
 
         /// <summary>
-        ///     Returns the current user's temporary path in combination with unique name starting with
-        ///     'tmp' prefix, followed by a hash of the specified length.
+        ///     Returns the current user's temporary path in combination with unique name
+        ///     starting with 'tmp' prefix, followed by a hash of the specified length.
         /// </summary>
         /// <param name="hashLen">
         ///     The length of the hash. Valid values are 4 through 24.
@@ -801,8 +818,8 @@ namespace SilDev
         ///     The icon resource path and resource identifier.
         /// </param>
         /// <param name="skipExists">
-        ///     true to skip existing shortcuts, even if the target path of
-        ///     the same; otherwise, false.
+        ///     <see langword="true"/> to skip existing shortcuts, even if the target path
+        ///     of the same; otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateShellLink(string targetPath, string linkPath, string startArgs = null, (string, int) iconLocation = default, bool skipExists = false)
         {
@@ -831,8 +848,8 @@ namespace SilDev
         ///     The arguments which applies when the link is started.
         /// </param>
         /// <param name="skipExists">
-        ///     true to skip existing shortcuts, even if the target path of
-        ///     the same; otherwise, false.
+        ///     <see langword="true"/> to skip existing shortcuts, even if the target path
+        ///     of the same; otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateShellLink(string targetPath, string linkPath, string startArgs, bool skipExists) =>
             CreateShellLink(targetPath, linkPath, startArgs, (null, 0), skipExists);
@@ -847,8 +864,8 @@ namespace SilDev
         ///     The fully qualified name of the new link.
         /// </param>
         /// <param name="skipExists">
-        ///     true to skip existing shortcuts, even if the target path of
-        ///     the same; otherwise, false.
+        ///     <see langword="true"/> to skip existing shortcuts, even if the target path
+        ///     of the same; otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateShellLink(string targetPath, string linkPath, bool skipExists) =>
             CreateShellLink(targetPath, linkPath, null, (null, 0), skipExists);
@@ -875,8 +892,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a symbolic link to the specified directory based on command prompt which
-        ///     allows a simple solution for the elevated execution of this order.
+        ///     Creates a symbolic link to the specified directory based on command prompt
+        ///     which allows a simple solution for the elevated execution of this order.
         /// </summary>
         /// <param name="linkPath">
         ///     The fully qualified name of the new link.
@@ -885,26 +902,31 @@ namespace SilDev
         ///     The directory to be linked.
         /// </param>
         /// <param name="backup">
-        ///     true to create an backup for existing files; otherwise, false.
+        ///     <see langword="true"/> to create an backup for existing files; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="elevated">
-        ///     true to create this link with highest privileges; otherwise, false.
+        ///     <see langword="true"/> to create this link with highest privileges;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateSymbolicLink(string linkPath, string srcDir, bool backup = false, bool elevated = false) =>
             SymbolicLink.Create(linkPath, srcDir, true, backup, elevated);
 
         /// <summary>
-        ///     Removes an symbolic link of the specified directory link based on command prompt
-        ///     which allows a simple solution for the elevated execution of this order.
+        ///     Removes an symbolic link of the specified directory link based on command
+        ///     prompt which allows a simple solution for the elevated execution of this
+        ///     order.
         /// </summary>
         /// <param name="path">
         ///     The link to be removed.
         /// </param>
         /// <param name="backup">
-        ///     true to restore found backups; otherwise, false.
+        ///     <see langword="true"/> to restore found backups; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="elevated">
-        ///     true to remove this link with highest privileges; otherwise, false.
+        ///     <see langword="true"/> to remove this link with highest privileges;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool DestroySymbolicLink(string path, bool backup = false, bool elevated = false) =>
             SymbolicLink.Destroy(path, true, backup, elevated);

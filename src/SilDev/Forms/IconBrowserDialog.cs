@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2020-01-06 07:57
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -27,7 +27,8 @@ namespace SilDev.Forms
     using Timer = System.Windows.Forms.Timer;
 
     /// <summary>
-    ///     Displays a dialog box that prompts to the user to browse the icon resource of a file.
+    ///     Displays a dialog box that prompts to the user to browse the icon resource
+    ///     of a file.
     /// </summary>
     public sealed class IconBrowserDialog : Form
     {
@@ -240,7 +241,8 @@ namespace SilDev.Forms
         public int IconId { get; private set; }
 
         /// <summary>
-        ///     Disposes of the resources (other than memory) used by the <see cref="Form"/>.
+        ///     Disposes of the resources (other than memory) used by the
+        ///     <see cref="Form"/>.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
@@ -293,18 +295,16 @@ namespace SilDev.Forms
 
         private void Button_Click(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog
+            using var dialog = new OpenFileDialog
             {
                 InitialDirectory = PathEx.LocalDir,
                 Multiselect = false,
                 RestoreDirectory = false
-            })
-            {
-                using (var owner = new Form { ShowIcon = false, TopMost = true })
-                    dialog.ShowDialog(owner);
-                if (File.Exists(dialog.FileName))
-                    _textBox.Text = dialog.FileName;
-            }
+            };
+            using (var owner = new Form { ShowIcon = false, TopMost = true })
+                dialog.ShowDialog(owner);
+            if (File.Exists(dialog.FileName))
+                _textBox.Text = dialog.FileName;
         }
 
         private void Timer_Tick(object sender, EventArgs e)

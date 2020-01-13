@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-06 07:58
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,11 +16,13 @@
 namespace SilDev
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using Intern;
     using Properties;
 
     /// <summary>
@@ -111,6 +113,11 @@ namespace SilDev
         Crc32,
 
         /// <summary>
+        ///     Cyclic Redundancy Check (CRC-64).
+        /// </summary>
+        Crc64,
+
+        /// <summary>
         ///     Message-Digest 5.
         /// </summary>
         Md5,
@@ -165,22 +172,48 @@ namespace SilDev
                 builder.Append('}');
         }
 
-        private static int GetHashCode<TSource>(TSource source, bool nonReadOnly)
+        private static int GetHashCode(object source, bool nonReadOnly)
         {
             try
             {
                 var current = source;
-                var properties = current.GetType().GetProperties();
                 var hashCode = 17011;
-                foreach (var pi in properties)
+                foreach (var pi in current.GetType().GetProperties())
                 {
+                    hashCode += pi.Name.GetHashCode();
+                    if (nonReadOnly || pi.GetSetMethod() == null)
+                    {
+                        var value = pi.GetValue(source);
+                        if (value != null)
+                        {
+                            hashCode += value.GetHashCode();
+                            switch (value)
+                            {
+                                case IDictionary dict:
+                                {
+                                    var enu = dict.GetEnumerator();
+                                    while (enu.MoveNext())
+                                    {
+                                        var key = enu.Key;
+                                        if (key == null)
+                                            continue;
+                                        hashCode += key.GetHashCode();
+                                        var val = enu.Value;
+                                        if (val == null)
+                                            continue;
+                                        hashCode += val.GetHashCode();
+                                    }
+                                    break;
+                                }
+                                case IList list:
+                                {
+                                    hashCode += list.Cast<object>().Where(o => o != null).Select(o => o.GetHashCode()).Sum();
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     hashCode *= 23011;
-                    if (!nonReadOnly && pi.GetSetMethod() != null)
-                        continue;
-                    var value = pi.GetValue(current);
-                    if (value == null)
-                        continue;
-                    hashCode += value.GetHashCode();
                 }
                 return hashCode;
             }
@@ -201,7 +234,8 @@ namespace SilDev
         ///     The instance value.
         /// </param>
         /// <param name="nonReadOnly">
-        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        ///     <see langword="true"/> to include the hashes of non-readonly properties;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static int GetClassHashCode<TSource>(TSource source, bool nonReadOnly = false) where TSource : class =>
             source == null ? 0 : GetHashCode(source, nonReadOnly);
@@ -216,20 +250,23 @@ namespace SilDev
         ///     The instance value.
         /// </param>
         /// <param name="nonReadOnly">
-        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        ///     <see langword="true"/> to include the hashes of non-readonly properties;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static int GetStructHashCode<TSource>(TSource source, bool nonReadOnly = false) where TSource : struct =>
             GetHashCode(source, nonReadOnly);
 
         /// <summary>
-        ///     Encrypts this sequence of bytes with the specified <see cref="ChecksumAlgorithm"/>
-        ///     and combines both hashes into a unique GUID.
+        ///     Encrypts this sequence of bytes with the specified
+        ///     <see cref="ChecksumAlgorithm"/> and combines both hashes into a unique
+        ///     GUID.
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to encrypt.
         /// </param>
         /// <param name="braces">
-        ///     true to place the GUID between braces; otherwise, false.
+        ///     <see langword="true"/> to place the GUID between braces; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="algorithm1">
         ///     The first algorithm to use.
@@ -252,7 +289,8 @@ namespace SilDev
         ///     The string to encrypt.
         /// </param>
         /// <param name="braces">
-        ///     true to place the GUID between braces; otherwise, false.
+        ///     <see langword="true"/> to place the GUID between braces; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="algorithm1">
         ///     The first algorithm to use.
@@ -740,98 +778,140 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Encrypts this stream with the specified algorithm.
+        ///     Encrypts this <typeparamref name="TSource"/> object with the
+        ///     <see cref="ChecksumAlgorithm.Crc32"/> algorithm.
         /// </summary>
-        /// <param name="stream">
-        ///     The stream to encrypt.
+        /// <typeparam name="TSource">
+        ///     The type of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The object to encrypt.
         /// </param>
-        /// <param name="algorithm">
-        ///     The algorithm to use.
-        /// </param>
-        public static string Encrypt(this Stream stream, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
+        public static uint EncryptRaw<TSource>(this TSource source)
         {
-            switch (algorithm)
+            switch (source)
             {
-                case ChecksumAlgorithm.Adler32:
-                    return new Adler32().EncryptStream(stream);
-                case ChecksumAlgorithm.Crc16:
-                    return new Crc16().EncryptStream(stream);
-                case ChecksumAlgorithm.Crc32:
-                    return new Crc32().EncryptStream(stream);
-                case ChecksumAlgorithm.Sha1:
-                    return new Sha1().EncryptStream(stream);
-                case ChecksumAlgorithm.Sha256:
-                    return new Sha256().EncryptStream(stream);
-                case ChecksumAlgorithm.Sha384:
-                    return new Sha384().EncryptStream(stream);
-                case ChecksumAlgorithm.Sha512:
-                    return new Sha512().EncryptStream(stream);
-                default:
-                    return new Md5().EncryptStream(stream);
+                case null:
+                    return 0;
+                case Stream stream:
+                    return new Crc32(stream).RawHash;
+                case IEnumerable<byte> bytes:
+                    return new Crc32(bytes as byte[] ?? bytes.ToArray()).RawHash;
+                case IEnumerable<char> chars:
+                    return new Crc32(chars is string text ? text : new string(chars.ToArray())).RawHash;
             }
+            return new Crc32(source.SerializeObject()).RawHash;
         }
 
         /// <summary>
-        ///     Encrypts this sequence of bytes with the specified algorithm.
+        ///     Encrypts this object with the specified algorithm.
         /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
+        /// <typeparam name="TSource">
+        ///     The type of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The object to encrypt.
         /// </param>
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encrypt(this byte[] bytes, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
+        public static string Encrypt<TSource>(this TSource source, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
         {
-            switch (algorithm)
+            switch (source)
             {
-                case ChecksumAlgorithm.Adler32:
-                    return new Adler32().EncryptBytes(bytes);
-                case ChecksumAlgorithm.Crc16:
-                    return new Crc16().EncryptBytes(bytes);
-                case ChecksumAlgorithm.Crc32:
-                    return new Crc32().EncryptBytes(bytes);
-                case ChecksumAlgorithm.Sha1:
-                    return new Sha1().EncryptBytes(bytes);
-                case ChecksumAlgorithm.Sha256:
-                    return new Sha256().EncryptBytes(bytes);
-                case ChecksumAlgorithm.Sha384:
-                    return new Sha384().EncryptBytes(bytes);
-                case ChecksumAlgorithm.Sha512:
-                    return new Sha512().EncryptBytes(bytes);
-                default:
-                    return new Md5().EncryptBytes(bytes);
+                case Stream stream:
+                    switch (algorithm)
+                    {
+                        case ChecksumAlgorithm.Adler32:
+                            return new Adler32(stream).Hash;
+                        case ChecksumAlgorithm.Crc16:
+                            return new Crc16(stream).Hash;
+                        case ChecksumAlgorithm.Crc32:
+                            return new Crc32(stream).Hash;
+                        case ChecksumAlgorithm.Crc64:
+                            return new Crc64(stream).Hash;
+                        case ChecksumAlgorithm.Sha1:
+                            return new Sha1(stream).Hash;
+                        case ChecksumAlgorithm.Sha256:
+                            return new Sha256(stream).Hash;
+                        case ChecksumAlgorithm.Sha384:
+                            return new Sha384(stream).Hash;
+                        case ChecksumAlgorithm.Sha512:
+                            return new Sha512(stream).Hash;
+                        default:
+                            return new Md5(stream).Hash;
+                    }
+                case IEnumerable<byte> bytes:
+                    if (!(bytes is byte[] ba))
+                        ba = bytes.ToArray();
+                    switch (algorithm)
+                    {
+                        case ChecksumAlgorithm.Adler32:
+                            return new Adler32(ba).Hash;
+                        case ChecksumAlgorithm.Crc16:
+                            return new Crc16(ba).Hash;
+                        case ChecksumAlgorithm.Crc32:
+                            return new Crc32(ba).Hash;
+                        case ChecksumAlgorithm.Crc64:
+                            return new Crc64(ba).Hash;
+                        case ChecksumAlgorithm.Sha1:
+                            return new Sha1(ba).Hash;
+                        case ChecksumAlgorithm.Sha256:
+                            return new Sha256(ba).Hash;
+                        case ChecksumAlgorithm.Sha384:
+                            return new Sha384(ba).Hash;
+                        case ChecksumAlgorithm.Sha512:
+                            return new Sha512(ba).Hash;
+                        default:
+                            return new Md5(ba).Hash;
+                    }
+                case IEnumerable<char> chars:
+                    if (!(chars is string text))
+                        text = new string(chars.ToArray());
+                    switch (algorithm)
+                    {
+                        case ChecksumAlgorithm.Adler32:
+                            return new Adler32(text).Hash;
+                        case ChecksumAlgorithm.Crc16:
+                            return new Crc16(text).Hash;
+                        case ChecksumAlgorithm.Crc32:
+                            return new Crc32(text).Hash;
+                        case ChecksumAlgorithm.Crc64:
+                            return new Crc64(text).Hash;
+                        case ChecksumAlgorithm.Sha1:
+                            return new Sha1(text).Hash;
+                        case ChecksumAlgorithm.Sha256:
+                            return new Sha256(text).Hash;
+                        case ChecksumAlgorithm.Sha384:
+                            return new Sha384(text).Hash;
+                        case ChecksumAlgorithm.Sha512:
+                            return new Sha512(text).Hash;
+                        default:
+                            return new Md5(text).Hash;
+                    }
             }
-        }
-
-        /// <summary>
-        ///     Encrypts this string with the specified algorithm.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        /// <param name="algorithm">
-        ///     The algorithm to use.
-        /// </param>
-        public static string Encrypt(this string text, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
-        {
+            if (!(source?.SerializeObject() is { } data))
+                return string.Empty;
             switch (algorithm)
             {
                 case ChecksumAlgorithm.Adler32:
-                    return new Adler32().EncryptString(text);
+                    return new Adler32(data).Hash;
                 case ChecksumAlgorithm.Crc16:
-                    return new Crc16().EncryptString(text);
+                    return new Crc16(data).Hash;
                 case ChecksumAlgorithm.Crc32:
-                    return new Crc32().EncryptString(text);
+                    return new Crc32(data).Hash;
+                case ChecksumAlgorithm.Crc64:
+                    return new Crc64(data).Hash;
                 case ChecksumAlgorithm.Sha1:
-                    return new Sha1().EncryptString(text);
+                    return new Sha1(data).Hash;
                 case ChecksumAlgorithm.Sha256:
-                    return new Sha256().EncryptString(text);
+                    return new Sha256(data).Hash;
                 case ChecksumAlgorithm.Sha384:
-                    return new Sha384().EncryptString(text);
+                    return new Sha384(data).Hash;
                 case ChecksumAlgorithm.Sha512:
-                    return new Sha512().EncryptString(text);
+                    return new Sha512(data).Hash;
                 default:
-                    return new Md5().EncryptString(text);
+                    return new Md5(data).Hash;
             }
         }
 
@@ -849,21 +929,23 @@ namespace SilDev
             switch (algorithm)
             {
                 case ChecksumAlgorithm.Adler32:
-                    return new Adler32().EncryptFile(path);
+                    return new Adler32(path, true).Hash;
                 case ChecksumAlgorithm.Crc16:
-                    return new Crc16().EncryptFile(path);
+                    return new Crc16(path, true).Hash;
                 case ChecksumAlgorithm.Crc32:
-                    return new Crc32().EncryptFile(path);
+                    return new Crc32(path, true).Hash;
+                case ChecksumAlgorithm.Crc64:
+                    return new Crc64(path, true).Hash;
                 case ChecksumAlgorithm.Sha1:
-                    return new Sha1().EncryptFile(path);
+                    return new Sha1(path, true).Hash;
                 case ChecksumAlgorithm.Sha256:
-                    return new Sha256().EncryptFile(path);
+                    return new Sha256(path, true).Hash;
                 case ChecksumAlgorithm.Sha384:
-                    return new Sha384().EncryptFile(path);
+                    return new Sha384(path, true).Hash;
                 case ChecksumAlgorithm.Sha512:
-                    return new Sha512().EncryptFile(path);
+                    return new Sha512(path, true).Hash;
                 default:
-                    return new Md5().EncryptFile(path);
+                    return new Md5(path, true).Hash;
             }
         }
 
@@ -890,9 +972,9 @@ namespace SilDev
                 {
                     var keyStamp = $"rsa-{keySize}-{DateTime.Now:yyyyMMdd}";
                     var privPath = PathEx.Combine(dirPath, $"{keyStamp}-private.xml");
-                    Xml.SerializeToFile(privPath, csp.ExportParameters(true));
+                    XmlHelper.SerializeToFile(privPath, csp.ExportParameters(true));
                     var pubPath = PathEx.Combine(dirPath, $"{keyStamp}-public.xml");
-                    Xml.SerializeToFile(pubPath, csp.ExportParameters(false));
+                    XmlHelper.SerializeToFile(pubPath, csp.ExportParameters(false));
                 }
                 finally
                 {
@@ -916,7 +998,7 @@ namespace SilDev
                 var text = default(string);
                 try
                 {
-                    var pubKey = Xml.DeserializeFile<RSAParameters>(publicKeyPath);
+                    var pubKey = XmlHelper.DeserializeFile<RSAParameters>(publicKeyPath);
                     csp.ImportParameters(pubKey);
                     var cypher = csp.Encrypt(bytes, true);
                     text = Convert.ToBase64String(cypher);
@@ -960,7 +1042,7 @@ namespace SilDev
                 var data = default(byte[]);
                 try
                 {
-                    var privKey = Xml.DeserializeFile<RSAParameters>(privateKeyPath);
+                    var privKey = XmlHelper.DeserializeFile<RSAParameters>(privateKeyPath);
                     csp.ImportParameters(privKey);
                     var cypher = Convert.FromBase64String(code);
                     data = csp.Decrypt(cypher, true);
@@ -1178,8 +1260,8 @@ namespace SilDev
         #region Binary-To-Text Encodings
 
         /// <summary>
-        ///     Represents the base class from which all implementations of binary-to-text encoding
-        ///     algorithms must derive.
+        ///     Represents the base class from which all implementations of binary-to-text
+        ///     encoding algorithms must derive.
         /// </summary>
         public abstract class BinaryToText
         {
@@ -1205,8 +1287,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             public abstract void EncodeStream(Stream inputStream, Stream outputStream, int lineLength = 0, bool dispose = false);
 
@@ -1220,11 +1302,12 @@ namespace SilDev
             ///     The output stream for encoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="NotSupportedException">
-            ///     <see cref="EncodeStream(Stream, Stream, int, bool)"/> method has no functionality.
+            ///     <see cref="EncodeStream(Stream, Stream, int, bool)"/> method has no
+            ///     functionality.
             /// </exception>
             public void EncodeStream(Stream inputStream, Stream outputStream, bool dispose) =>
                 EncodeStream(inputStream, outputStream, 0, dispose);
@@ -1244,18 +1327,14 @@ namespace SilDev
                 {
                     if (bytes == null)
                         throw new ArgumentNullException(nameof(bytes));
-                    string s;
-                    using (var msi = new MemoryStream(bytes))
+                    byte[] ba;
+                    using var msi = new MemoryStream(bytes);
+                    using (var mso = new MemoryStream())
                     {
-                        byte[] ba;
-                        using (var mso = new MemoryStream())
-                        {
-                            EncodeStream(msi, mso, lineLength);
-                            ba = mso.ToArray();
-                        }
-                        s = ba.ToStringDefault();
+                        EncodeStream(msi, mso, lineLength);
+                        ba = mso.ToArray();
                     }
-                    return s;
+                    return ba.ToStringDefault();
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
@@ -1289,7 +1368,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="overwrite">
-            ///     true to allow an existing file to be overwritten; otherwise, false.
+            ///     <see langword="true"/> to allow an existing file to be overwritten;
+            ///     otherwise, <see langword="false"/>.
             /// </param>
             public bool EncodeFile(string srcPath, string destPath, int lineLength = 0, bool overwrite = true)
             {
@@ -1305,9 +1385,9 @@ namespace SilDev
                     var dest = PathEx.Combine(destPath);
                     if (!PathEx.IsValidPath(dest))
                         throw new ArgumentException(ExceptionMessages.DestPathNotValid);
-                    using (var fsi = new FileStream(src, FileMode.Open, FileAccess.Read))
-                        using (var fso = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                            EncodeStream(fsi, fso, lineLength);
+                    using var fsi = new FileStream(src, FileMode.Open, FileAccess.Read);
+                    using var fso = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew);
+                    EncodeStream(fsi, fso, lineLength);
                     return true;
                 }
                 catch (Exception ex) when (ex.IsCaught())
@@ -1335,18 +1415,11 @@ namespace SilDev
                     var file = PathEx.Combine(path);
                     if (!File.Exists(file))
                         throw new PathNotFoundException(path);
-                    string s;
-                    using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-                    {
-                        byte[] ba;
-                        using (var ms = new MemoryStream())
-                        {
-                            EncodeStream(fs, ms, lineLength);
-                            ba = ms.ToArray();
-                        }
-                        s = ba.ToStringDefault();
-                    }
-                    return s;
+                    using var fs = new FileStream(file, FileMode.Open, FileAccess.Read);
+                    using var ms = new MemoryStream();
+                    EncodeStream(fs, ms, lineLength);
+                    var ba = ms.ToArray();
+                    return ba.ToStringDefault();
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
@@ -1365,8 +1438,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             public abstract void DecodeStream(Stream inputStream, Stream outputStream, bool dispose = false);
 
@@ -1382,16 +1455,10 @@ namespace SilDev
                 {
                     if (string.IsNullOrEmpty(code))
                         throw new ArgumentNullException(nameof(code));
-                    using (var msi = new MemoryStream(code.ToBytes()))
-                    {
-                        byte[] ba;
-                        using (var mso = new MemoryStream())
-                        {
-                            DecodeStream(msi, mso);
-                            ba = mso.ToArray();
-                        }
-                        return ba;
-                    }
+                    using var msi = new MemoryStream(code.ToBytes());
+                    using var mso = new MemoryStream();
+                    DecodeStream(msi, mso);
+                    return mso.ToArray();
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
@@ -1419,7 +1486,8 @@ namespace SilDev
             ///     The destination file to create.
             /// </param>
             /// <param name="overwrite">
-            ///     true to allow an existing file to be overwritten; otherwise, false.
+            ///     <see langword="true"/> to allow an existing file to be overwritten;
+            ///     otherwise, <see langword="false"/>.
             /// </param>
             public bool DecodeFile(string srcPath, string destPath, bool overwrite = true)
             {
@@ -1435,9 +1503,9 @@ namespace SilDev
                     var dest = PathEx.Combine(destPath);
                     if (!PathEx.IsValidPath(dest))
                         throw new ArgumentException(ExceptionMessages.DestPathNotValid);
-                    using (var fsi = new FileStream(src, FileMode.Open, FileAccess.Read))
-                        using (var fso = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                            DecodeStream(fsi, fso);
+                    using var fsi = new FileStream(src, FileMode.Open, FileAccess.Read);
+                    using var fso = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew);
+                    DecodeStream(fsi, fso);
                     return true;
                 }
                 catch (Exception ex) when (ex.IsCaught())
@@ -1448,7 +1516,8 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Decodes the specified string into a sequence of bytes containing a small file.
+            ///     Decodes the specified string into a sequence of bytes containing a small
+            ///     file.
             /// </summary>
             /// <param name="code">
             ///     The string to decode.
@@ -1502,8 +1571,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -1556,8 +1625,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -1631,8 +1700,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -1685,8 +1754,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -1760,8 +1829,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -1814,8 +1883,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -1889,8 +1958,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -1943,8 +2012,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2026,8 +2095,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2095,8 +2164,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2189,8 +2258,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2248,8 +2317,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2278,14 +2347,12 @@ namespace SilDev
                 {
                     var bai = new byte[4096];
                     var bao = new byte[bai.Length];
-                    using (var fbt = new FromBase64Transform())
+                    using var fbt = new FromBase64Transform();
+                    int i;
+                    while ((i = si.Read(bai, 0, bai.Length)) > 0)
                     {
-                        int i;
-                        while ((i = si.Read(bai, 0, bai.Length)) > 0)
-                        {
-                            i = fbt.TransformBlock(bai, 0, i, bao, 0);
-                            so.Write(bao, 0, i);
-                        }
+                        i = fbt.TransformBlock(bai, 0, i, bao, 0);
+                        so.Write(bao, 0, i);
                     }
                 }
                 finally
@@ -2329,8 +2396,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2415,8 +2482,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2509,10 +2576,7 @@ namespace SilDev
         /// </summary>
         public class Base91 : BinaryToText
         {
-            /// <summary>
-            ///     The default character table for translation.
-            /// </summary>
-            protected static readonly byte[] DefaultCharacterTable91 =
+            private static readonly byte[] CharacterTable91 =
             {
                 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
                 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51, 0x52,
@@ -2527,22 +2591,6 @@ namespace SilDev
                 0x22
             };
 
-            private byte[] _characterTable91;
-
-            /// <summary>
-            ///     The character table for translation.
-            /// </summary>
-            protected virtual byte[] CharacterTable91
-            {
-                get => _characterTable91 ?? (_characterTable91 = DefaultCharacterTable91);
-                set
-                {
-                    if (value == default || value.Distinct().Count() != DefaultCharacterTable91.Length)
-                        return;
-                    _characterTable91 = value;
-                }
-            }
-
             /// <summary>
             ///     Encodes the specified input stream into the specified output stream.
             /// </summary>
@@ -2556,8 +2604,8 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2634,8 +2682,8 @@ namespace SilDev
             ///     The output stream for decoding.
             /// </param>
             /// <param name="dispose">
-            ///     true to release all resources used by the input and output <see cref="Stream"/>;
-            ///     otherwise, false.
+            ///     <see langword="true"/> to release all resources used by the input and
+            ///     output <see cref="Stream"/>; otherwise, <see langword="false"/>.
             /// </param>
             /// <exception cref="ArgumentNullException">
             ///     inputStream or outputStream is null.
@@ -2679,7 +2727,7 @@ namespace SilDev
                                 continue;
                         }
                         if (!CharacterTable91.Contains((byte)b))
-                            throw new DecoderFallbackException($"The character number '{b}' is invalid.");
+                            throw new DecoderFallbackException(ExceptionMessages.FollowingCharCodeIsInvalid + b);
                         ia[0] = a91[b];
                         if (ia[0] == -1)
                             continue;
@@ -2719,13 +2767,24 @@ namespace SilDev
         #region Checksum Algorithms
 
         /// <summary>
-        ///     Represents the base class from which all implementations of checksum encryption
-        ///     algorithms must derive.
+        ///     Represents the base class from which all implementations of checksum
+        ///     encryption algorithms must derive.
         /// </summary>
         public abstract class Checksum
         {
             /// <summary>
-            ///     Encrypts the specified stream with the specified <see cref="HashAlgorithm"/>.
+            ///     Gets the computed hash code value.
+            /// </summary>
+            public virtual IReadOnlyList<byte> RawHash { get; protected set; }
+
+            /// <summary>
+            ///     Gets the string representation of the computed hash code.
+            /// </summary>
+            public string Hash => ToString();
+
+            /// <summary>
+            ///     Encrypts the specified stream with the specified
+            ///     <see cref="HashAlgorithm"/>.
             /// </summary>
             /// <typeparam name="THashAlgorithm">
             ///     The type of the algorithm.
@@ -2736,19 +2795,16 @@ namespace SilDev
             /// <param name="algorithm">
             ///     The algorithm to encrypt.
             /// </param>
-            protected string EncryptStream<THashAlgorithm>(Stream stream, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
+            /// <exception cref="ArgumentNullException">
+            ///     algorithm is null.
+            /// </exception>
+            protected void Encrypt<THashAlgorithm>(Stream stream, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
             {
-                byte[] ba;
-                using (var csp = algorithm)
-                {
-                    if (csp == null)
-                        throw new ArgumentNullException(nameof(csp));
-                    ba = csp.ComputeHash(stream);
-                }
-                var sb = new StringBuilder(ba.Length * 2);
-                foreach (var b in ba)
-                    sb.Append(b.ToStringDefault("x2"));
-                return sb.ToStringThenClear();
+                using var csp = algorithm;
+                if (csp == null)
+                    throw new ArgumentNullException(nameof(algorithm));
+                var ba = csp.ComputeHash(stream);
+                RawHash = ba;
             }
 
             /// <summary>
@@ -2757,7 +2813,7 @@ namespace SilDev
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public abstract string EncryptStream(Stream stream);
+            public abstract void Encrypt(Stream stream);
 
             /// <summary>
             ///     Encrypts the specified sequence of bytes.
@@ -2765,18 +2821,17 @@ namespace SilDev
             /// <param name="bytes">
             ///     The sequence of bytes to encrypt.
             /// </param>
-            public string EncryptBytes(byte[] bytes)
+            public void Encrypt(byte[] bytes)
             {
                 if (bytes == null || !bytes.Any())
-                    return string.Empty;
-                string s;
-                using (var ms = new MemoryStream(bytes))
-                    s = EncryptStream(ms);
-                return s;
+                    return;
+                using var ms = new MemoryStream(bytes);
+                Encrypt(ms);
             }
 
             /// <summary>
-            ///     Encrypts the specified string with the specified <see cref="HashAlgorithm"/>.
+            ///     Encrypts the specified string with the specified
+            ///     <see cref="HashAlgorithm"/>.
             /// </summary>
             /// <typeparam name="THashAlgorithm">
             ///     The type of the algorithm.
@@ -2787,19 +2842,19 @@ namespace SilDev
             /// <param name="algorithm">
             ///     The algorithm to encrypt.
             /// </param>
-            protected string EncryptString<THashAlgorithm>(string text, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
+            /// <exception cref="ArgumentNullException">
+            ///     algorithm is null.
+            /// </exception>
+            protected void Encrypt<THashAlgorithm>(string text, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
             {
                 if (string.IsNullOrEmpty(text))
-                    return string.Empty;
+                    return;
                 var ba = text.ToBytes();
-                using (var csp = algorithm)
-                {
-                    if (csp == null)
-                        throw new ArgumentNullException(nameof(csp));
-                    ba = csp.ComputeHash(ba);
-                }
-                var s = BitConverter.ToString(ba);
-                return s.RemoveChar('-').ToLowerInvariant();
+                using var csp = algorithm;
+                if (csp == null)
+                    throw new ArgumentNullException(nameof(algorithm));
+                ba = csp.ComputeHash(ba);
+                RawHash = ba;
             }
 
             /// <summary>
@@ -2808,7 +2863,7 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public abstract string EncryptString(string text);
+            public abstract void Encrypt(string text);
 
             /// <summary>
             ///     Encrypts the specified file.
@@ -2816,27 +2871,123 @@ namespace SilDev
             /// <param name="path">
             ///     The full path of the file to encrypt.
             /// </param>
-            public string EncryptFile(string path)
+            public void EncryptFile(string path)
             {
                 try
                 {
                     var s = PathEx.Combine(path);
-                    using (var fs = File.OpenRead(s))
-                        s = EncryptStream(fs);
-                    return s;
+                    using var fs = File.OpenRead(s);
+                    Encrypt(fs);
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
                     Log.Write(ex);
-                    return string.Empty;
                 }
             }
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString()
+            {
+                if (!(RawHash is byte[] ba))
+                    return string.Empty;
+                var sb = new StringBuilder(ba.Length * 2);
+                foreach (var b in ba)
+                    sb.Append(b.ToStringDefault("x2"));
+                return sb.ToStringThenClear();
+            }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="Checksum"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public virtual bool Equals(Checksum other)
+            {
+                if (!(RawHash is byte[] ba1))
+                    return other == null;
+                if (!(other?.RawHash is byte[] ba2) || ba1.Length != ba2.Length)
+                    return false;
+                for (var i = 0; i < ba2.Length; i++)
+                {
+                    if (ba1[i] == ba2.Length)
+                        continue;
+                    return false;
+                }
+                return true;
+            }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is Checksum item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                GetClassHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                GetClassHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="Checksum"/> instances have same
+            ///     values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="Checksum"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public static bool operator ==(Checksum left, Checksum right)
+            {
+                var obj = (object)left;
+                if (obj != null)
+                    return left.Equals(right);
+                obj = right;
+                return obj == null;
+            }
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="Checksum"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="Checksum"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public static bool operator !=(Checksum left, Checksum right) =>
+                !(left == right);
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Adler32"/> class.
+        ///     Provides functionality to compute Adler-32 hashes.
         /// </summary>
-        public class Adler32 : Checksum
+        public sealed class Adler32 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2844,12 +2995,76 @@ namespace SilDev
             public const int HashLength = 8;
 
             /// <summary>
+            ///     Initializes a new instance of the <see cref="Adler32"/> class.
+            /// </summary>
+            public Adler32() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Adler32"/> class and encrypts
+            ///     the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Adler32(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Adler32"/> class and encrypts
+            ///     the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Adler32(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Adler32"/> class and encrypts
+            ///     the specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Adler32(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Adler32"/> class and encrypts
+            ///     the specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Adler32(string str) =>
+                Encrypt(str);
+
+            /// <summary>
+            ///     Gets the computed hash code value.
+            /// </summary>
+            public new uint RawHash { get; private set; }
+
+            /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream)
+            /// <exception cref="ArgumentNullException">
+            ///     stream is null.
+            /// </exception>
+            public override void Encrypt(Stream stream)
             {
                 if (stream == null)
                     throw new ArgumentNullException(nameof(stream));
@@ -2864,8 +3079,7 @@ namespace SilDev
                     uia[0] = (uia[0] + (uint)i) % 65521;
                     uia[1] = (uia[1] + uia[0]) % 65521;
                 }
-                var ui = (uia[1] << 16) | uia[0];
-                return ui.ToStringDefault("x2").PadLeft(8, '0');
+                RawHash = (uia[1] << 16) | uia[0];
             }
 
             /// <summary>
@@ -2874,52 +3088,123 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptBytes(text?.ToBytes());
+            public override void Encrypt(string text) =>
+                Encrypt(text?.ToBytes());
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="Checksum"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public override bool Equals(Checksum other)
+            {
+                if (!(other is Adler32 adler32))
+                    return false;
+                return RawHash == adler32.RawHash;
+            }
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Crc16"/> class.
+        ///     Provides functionality to compute Cyclic Redundancy Check (CRC-16) hashes.
         /// </summary>
-        public class Crc16 : Checksum
+        public sealed class Crc16 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
             public const int HashLength = 4;
 
+            private const ushort Polynomial = 0xa001;
+            private const ushort Seed = ushort.MaxValue;
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc16"/> class.
+            /// </summary>
+            public Crc16() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc16"/> class and encrypts
+            ///     the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Crc16(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc16"/> class and encrypts
+            ///     the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Crc16(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc16"/> class and encrypts
+            ///     the specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Crc16(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc16"/> class and encrypts
+            ///     the specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Crc16(string str) =>
+                Encrypt(str);
+
+            /// <summary>
+            ///     Gets the raw data of computed hash.
+            /// </summary>
+            public new ushort RawHash { get; private set; }
+
             /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream)
+            public override void Encrypt(Stream stream)
             {
                 if (stream == null)
                     throw new ArgumentNullException(nameof(stream));
-                int i, x = 0xffff;
+                int i, x = Seed;
                 while ((i = stream.ReadByte()) != -1)
                     for (var j = 0; j < 8; j++)
                     {
-                        if (((x ^ i) & 1) == 1)
-                        {
-                            x >>= 1;
-                            x ^= 0xa001;
-                        }
-                        else
-                            x >>= 1;
+                        x = ((x ^ i) & 1) == 1 ? (x >> 1) ^ Polynomial : x >> 1;
                         i >>= 1;
                     }
-                var ba = new[]
-                {
-                    (byte)(x % 256),
-                    (byte)(x / 256)
-                };
-                var sb = new StringBuilder(ba.Length * 2);
-                foreach (var b in ba)
-                    sb.Append(b.ToStringDefault("x2"));
-                return sb.ToStringThenClear();
+                RawHash = (ushort)(((byte)(x % 256) << 8) | (byte)(x / 256));
             }
 
             /// <summary>
@@ -2928,39 +3213,153 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptBytes(text?.ToBytes());
+            public override void Encrypt(string text) =>
+                Encrypt(text?.ToBytes());
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="Checksum"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public override bool Equals(Checksum other)
+            {
+                if (!(other is Crc16 crc16))
+                    return false;
+                return RawHash == crc16.RawHash;
+            }
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Crc32"/> class.
+        ///     Provides functionality to compute Cyclic Redundancy Check (CRC-32) hashes.
         /// </summary>
-        public class Crc32 : Checksum
+        public sealed class Crc32 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
             /// </summary>
             public const int HashLength = 8;
 
+            private const uint Polynomial = 0xedb88320u;
+            private const uint Seed = uint.MaxValue;
+            private static IReadOnlyList<uint> _crcTable;
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc32"/> class.
+            /// </summary>
+            public Crc32() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc32"/> class and encrypts
+            ///     the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Crc32(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc32"/> class and encrypts
+            ///     the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Crc32(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc32"/> class and encrypts
+            ///     the specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Crc32(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc32"/> class and encrypts
+            ///     the specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Crc32(string str) =>
+                Encrypt(str);
+
+            /// <summary>
+            ///     Gets the raw data of computed hash.
+            /// </summary>
+            public new uint RawHash { get; private set; }
+
+            private static IReadOnlyList<uint> CrcTable
+            {
+                get
+                {
+                    if (_crcTable != null)
+                        return _crcTable;
+                    var table = new uint[256];
+                    for (var i = 0; i < 256; i++)
+                    {
+                        var ui = (uint)i;
+                        for (var j = 0; j < 8; j++)
+                            ui = (ui & 1) == 1 ? (ui >> 1) ^ Polynomial : ui >> 1;
+                        table[i] = ui;
+                    }
+                    _crcTable = table;
+                    return _crcTable;
+                }
+            }
+
             /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream)
+            public override void Encrypt(Stream stream)
             {
                 if (stream == null)
                     throw new ArgumentNullException(nameof(stream));
+
+                /* old code without table
                 int i;
-                var ui = 0xffffffffu;
+                var ui = Seed;
                 while ((i = stream.ReadByte()) != -1)
                 {
                     ui ^= (uint)i;
                     for (var j = 0; j < 8; j++)
-                        ui = (uint)((ui >> 1) ^ (0xedb88320u & -(ui & 1)));
+                        ui = (uint)((ui >> 1) ^ (Polynomial & -(ui & 1)));
                 }
-                return (~ui).ToStringDefault("x2").PadLeft(8, '0');
+                RawHash = ~ui;
+                */
+
+                int i;
+                var ui = Seed;
+                while ((i = stream.ReadByte()) != -1)
+                    ui = (ui >> 8) ^ CrcTable[(int)(i ^ (ui & 0xff))];
+                RawHash = ~ui;
             }
 
             /// <summary>
@@ -2969,14 +3368,177 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text) =>
-                EncryptBytes(text?.ToBytes());
+            public override void Encrypt(string text) =>
+                Encrypt(text?.ToBytes());
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="Checksum"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public override bool Equals(Checksum other)
+            {
+                if (!(other is Crc32 crc32))
+                    return false;
+                return RawHash == crc32.RawHash;
+            }
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Md5"/> class.
+        ///     Provides functionality to compute Cyclic Redundancy Check (CRC-64) hashes.
         /// </summary>
-        public class Md5 : Checksum
+        public sealed class Crc64 : Checksum
+        {
+            /// <summary>
+            ///     Gets the required hash length.
+            /// </summary>
+            public const int HashLength = 16;
+
+            private const ulong Polynomial = 0xd800000000000000uL;
+            private const ulong Seed = ulong.MinValue;
+            private static IReadOnlyList<ulong> _crcTable;
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc64"/> class.
+            /// </summary>
+            public Crc64() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc64"/> class and encrypts
+            ///     the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Crc64(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc64"/> class and encrypts
+            ///     the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Crc64(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc64"/> class and encrypts
+            ///     the specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Crc64(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Crc64"/> class and encrypts
+            ///     the specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Crc64(string str) =>
+                Encrypt(str);
+
+            /// <summary>
+            ///     Gets the raw data of computed hash.
+            /// </summary>
+            public new ulong RawHash { get; private set; }
+
+            private static IReadOnlyList<ulong> CrcTable
+            {
+                get
+                {
+                    if (_crcTable != null)
+                        return _crcTable;
+                    var table = new ulong[256];
+                    for (var i = 0; i < 256; i++)
+                    {
+                        var ul = (ulong)i;
+                        for (var j = 0; j < 8; j++)
+                            ul = (ul & 1) == 1 ? (ul >> 1) ^ Polynomial : ul >> 1;
+                        table[i] = ul;
+                    }
+                    _crcTable = table;
+                    return _crcTable;
+                }
+            }
+
+            /// <summary>
+            ///     Encrypts the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public override void Encrypt(Stream stream)
+            {
+                if (stream == null)
+                    throw new ArgumentNullException(nameof(stream));
+                int i;
+                var ul = Seed;
+                while ((i = stream.ReadByte()) != -1)
+                    ul = (ul >> 8) ^ CrcTable[(int)(i ^ (long)ul) & 0xff];
+                RawHash = ~ul;
+            }
+
+            /// <summary>
+            ///     Encrypts the specified string.
+            /// </summary>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            public override void Encrypt(string text) =>
+                Encrypt(text?.ToBytes());
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="Checksum"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public override bool Equals(Checksum other)
+            {
+                if (!(other is Crc64 crc64))
+                    return false;
+                return RawHash == crc64.RawHash;
+            }
+        }
+
+        /// <summary>
+        ///     Provides functionality to compute Message-Digest 5 (MD5) hashes.
+        /// </summary>
+        public sealed class Md5 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -2984,13 +3546,69 @@ namespace SilDev
             public const int HashLength = 32;
 
             /// <summary>
+            ///     Initializes a new instance of the <see cref="Md5"/> class.
+            /// </summary>
+            public Md5() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Md5"/> class and encrypts the
+            ///     specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Md5(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Md5"/> class and encrypts the
+            ///     specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Md5(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Md5"/> class and encrypts the
+            ///     specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Md5(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Md5"/> class and encrypts the
+            ///     specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Md5(string str) =>
+                Encrypt(str);
+
+            /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream) =>
-                EncryptStream(stream, new MD5CryptoServiceProvider());
+            public override void Encrypt(Stream stream) =>
+                Encrypt(stream, new MD5CryptoServiceProvider());
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -2998,13 +3616,13 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text)
+            public override void Encrypt(string text)
             {
                 var algo = default(MD5);
                 try
                 {
                     algo = MD5.Create();
-                    return EncryptString(text, algo);
+                    Encrypt(text, algo);
                 }
                 finally
                 {
@@ -3014,9 +3632,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha1"/> class.
+        ///     Provides functionality to compute Secure Hash Algorithm 1 (SHA-1) hashes.
         /// </summary>
-        public class Sha1 : Checksum
+        public sealed class Sha1 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -3024,13 +3642,69 @@ namespace SilDev
             public const int HashLength = 40;
 
             /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha1"/> class.
+            /// </summary>
+            public Sha1() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha1"/> class and encrypts the
+            ///     specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Sha1(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha1"/> class and encrypts the
+            ///     specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Sha1(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha1"/> class and encrypts the
+            ///     specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Sha1(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha1"/> class and encrypts the
+            ///     specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Sha1(string str) =>
+                Encrypt(str);
+
+            /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream) =>
-                EncryptStream(stream, new SHA1CryptoServiceProvider());
+            public override void Encrypt(Stream stream) =>
+                Encrypt(stream, new SHA1CryptoServiceProvider());
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -3038,13 +3712,13 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text)
+            public override void Encrypt(string text)
             {
                 var algo = default(SHA1);
                 try
                 {
                     algo = SHA1.Create();
-                    return EncryptString(text, algo);
+                    Encrypt(text, algo);
                 }
                 finally
                 {
@@ -3054,9 +3728,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha256"/> class.
+        ///     Provides functionality to compute Secure Hash Algorithm 2 (SHA-256) hashes.
         /// </summary>
-        public class Sha256 : Checksum
+        public sealed class Sha256 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -3064,13 +3738,69 @@ namespace SilDev
             public const int HashLength = 64;
 
             /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha256"/> class.
+            /// </summary>
+            public Sha256() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha256"/> class and encrypts
+            ///     the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Sha256(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha256"/> class and encrypts
+            ///     the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Sha256(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha256"/> class and encrypts
+            ///     the specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Sha256(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha256"/> class and encrypts
+            ///     the specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Sha256(string str) =>
+                Encrypt(str);
+
+            /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream) =>
-                EncryptStream(stream, new SHA256CryptoServiceProvider());
+            public override void Encrypt(Stream stream) =>
+                Encrypt(stream, new SHA256CryptoServiceProvider());
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -3078,13 +3808,13 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text)
+            public override void Encrypt(string text)
             {
                 var algo = default(SHA256);
                 try
                 {
                     algo = SHA256.Create();
-                    return EncryptString(text, algo);
+                    Encrypt(text, algo);
                 }
                 finally
                 {
@@ -3094,9 +3824,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha384"/> class.
+        ///     Provides functionality to compute Secure Hash Algorithm 2 (SHA-384) hashes.
         /// </summary>
-        public class Sha384 : Checksum
+        public sealed class Sha384 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -3104,13 +3834,69 @@ namespace SilDev
             public const int HashLength = 96;
 
             /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha384"/> class.
+            /// </summary>
+            public Sha384() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha384"/> class and encrypts
+            ///     the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Sha384(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha384"/> class and encrypts
+            ///     the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Sha384(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha384"/> class and encrypts
+            ///     the specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Sha384(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha384"/> class and encrypts
+            ///     the specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Sha384(string str) =>
+                Encrypt(str);
+
+            /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream) =>
-                EncryptStream(stream, new SHA384CryptoServiceProvider());
+            public override void Encrypt(Stream stream) =>
+                Encrypt(stream, new SHA384CryptoServiceProvider());
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -3118,13 +3904,13 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text)
+            public override void Encrypt(string text)
             {
                 var algo = default(SHA384);
                 try
                 {
                     algo = SHA384.Create();
-                    return EncryptString(text, algo);
+                    Encrypt(text, algo);
                 }
                 finally
                 {
@@ -3134,9 +3920,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Sha512"/> class.
+        ///     Provides functionality to compute Secure Hash Algorithm 2 (SHA-512) hashes.
         /// </summary>
-        public class Sha512 : Checksum
+        public sealed class Sha512 : Checksum
         {
             /// <summary>
             ///     Gets the required hash length.
@@ -3144,13 +3930,69 @@ namespace SilDev
             public const int HashLength = 128;
 
             /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha512"/> class.
+            /// </summary>
+            public Sha512() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha512"/> class and encrypts
+            ///     the specified stream.
+            /// </summary>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            public Sha512(Stream stream) =>
+                Encrypt(stream);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha512"/> class and encrypts
+            ///     the specified sequence of bytes.
+            /// </summary>
+            /// <param name="bytes">
+            ///     The sequence of bytes to encrypt
+            /// </param>
+            public Sha512(byte[] bytes) =>
+                Encrypt(bytes);
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha512"/> class and encrypts
+            ///     the specified text or file.
+            /// </summary>
+            /// <param name="textOrFile">
+            ///     The text or file to encrypt
+            /// </param>
+            /// <param name="strIsFilePath">
+            ///     <see langword="true"/> if the specified value is a file path; otherwise,
+            ///     <see langword="false"/>
+            /// </param>
+            public Sha512(string textOrFile, bool strIsFilePath)
+            {
+                if (strIsFilePath)
+                {
+                    EncryptFile(textOrFile);
+                    return;
+                }
+                Encrypt(textOrFile);
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Sha512"/> class and encrypts
+            ///     the specified text.
+            /// </summary>
+            /// <param name="str">
+            ///     The text to encrypt
+            /// </param>
+            public Sha512(string str) =>
+                Encrypt(str);
+
+            /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
             ///     The stream to encrypt.
             /// </param>
-            public override string EncryptStream(Stream stream) =>
-                EncryptStream(stream, new SHA512CryptoServiceProvider());
+            public override void Encrypt(Stream stream) =>
+                Encrypt(stream, new SHA512CryptoServiceProvider());
 
             /// <summary>
             ///     Encrypts the specified string.
@@ -3158,13 +4000,13 @@ namespace SilDev
             /// <param name="text">
             ///     The string to encrypt.
             /// </param>
-            public override string EncryptString(string text)
+            public override void Encrypt(string text)
             {
                 var algo = default(SHA512);
                 try
                 {
                     algo = SHA512.Create();
-                    return EncryptString(text, algo);
+                    Encrypt(text, algo);
                 }
                 finally
                 {

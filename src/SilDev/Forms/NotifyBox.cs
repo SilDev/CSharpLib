@@ -5,15 +5,15 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2019-10-31 22:00
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
 #endregion
 
-namespace SilDev
+namespace SilDev.Forms
 {
     using System;
     using System.ComponentModel;
@@ -22,10 +22,12 @@ namespace SilDev
     using System.Media;
     using System.Threading;
     using System.Windows.Forms;
+    using Media;
     using Timer = System.Windows.Forms.Timer;
 
     /// <summary>
-    ///     Provides enumerated constants used to retrieves the play sound of the notify box.
+    ///     Provides enumerated constants used to retrieves the play sound of the
+    ///     notify box.
     /// </summary>
     public enum NotifyBoxSound
     {
@@ -37,7 +39,8 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Provides enumerated constants used to retrieves the start position of the notify box.
+    ///     Provides enumerated constants used to retrieves the start position of the
+    ///     notify box.
     /// </summary>
     public enum NotifyBoxStartPosition
     {
@@ -51,8 +54,8 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Represents a notification window, similar with a system tray notification, which presents a
-    ///     notification to the user.
+    ///     Represents a notification window, similar with a system tray notification,
+    ///     which presents a notification to the user.
     /// </summary>
     public class NotifyBox
     {
@@ -77,7 +80,8 @@ namespace SilDev
         ///     The text color.
         /// </param>
         /// <param name="topMost">
-        ///     true to place the notify box above all non-topmost windows; otherwise, false.
+        ///     <see langword="true"/> to place the notify box above all non-topmost
+        ///     windows; otherwise, <see langword="false"/>.
         /// </param>
         public NotifyBox(double opacity = .90d, Color backColor = default, Color borderColor = default, Color captionColor = default, Color textColor = default, bool topMost = false)
         {
@@ -160,7 +164,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, sound, duration, and borders.
+        ///     Displays a notify box with the specified text, caption, position, sound,
+        ///     duration, and borders.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -175,7 +180,8 @@ namespace SilDev
         ///     The play sound for the notify box.
         /// </param>
         /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        ///     The duration of the time, in milliseconds, which the notify box remains
+        ///     active.
         /// </param>
         public void Show(string text, string caption, NotifyBoxStartPosition position = NotifyBoxStartPosition.BottomRight, NotifyBoxSound sound = NotifyBoxSound.None, ushort duration = 0)
         {
@@ -200,7 +206,7 @@ namespace SilDev
                     case NotifyBoxSound.Notify:
                         var wavPath = PathEx.Combine(Environment.SpecialFolder.Windows, "Media\\Windows Notify System Generic.wav");
                         if (File.Exists(wavPath))
-                            Media.PlayWave(wavPath);
+                            BasicPlayer.PlayWave(wavPath);
                         break;
                 }
             }
@@ -211,7 +217,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, position, duration, and borders.
+        ///     Displays a notify box with the specified text, caption, position, duration,
+        ///     and borders.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -223,13 +230,15 @@ namespace SilDev
         ///     The window position for the notify box.
         /// </param>
         /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        ///     The duration of the time, in milliseconds, which the notify box remains
+        ///     active.
         /// </param>
         public void Show(string text, string caption, NotifyBoxStartPosition position, ushort duration) =>
             Show(text, caption, position, NotifyBoxSound.None, duration);
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, sound, duration, and borders.
+        ///     Displays a notify box with the specified text, caption, sound, duration,
+        ///     and borders.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -241,13 +250,15 @@ namespace SilDev
         ///     The play sound for the notify box.
         /// </param>
         /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        ///     The duration of the time, in milliseconds, which the notify box remains
+        ///     active.
         /// </param>
         public void Show(string text, string caption, NotifyBoxSound sound, ushort duration = 0) =>
             Show(text, caption, NotifyBoxStartPosition.BottomRight, sound, duration);
 
         /// <summary>
-        ///     Displays a notify box with the specified text, caption, duration, and borders.
+        ///     Displays a notify box with the specified text, caption, duration, and
+        ///     borders.
         /// </summary>
         /// <param name="text">
         ///     The notification text to display in the notify box.
@@ -256,7 +267,8 @@ namespace SilDev
         ///     The caption text to display in the notify box.
         /// </param>
         /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        ///     The duration of the time, in milliseconds, which the notify box remains
+        ///     active.
         /// </param>
         public void Show(string text, string caption, ushort duration) =>
             Show(text, caption, NotifyBoxStartPosition.BottomRight, NotifyBoxSound.None, duration);
@@ -411,7 +423,8 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Disposes of the resources (other than memory) used by the <see cref="Form"/>.
+            ///     Disposes of the resources (other than memory) used by the
+            ///     <see cref="Form"/>.
             /// </summary>
             protected override void Dispose(bool disposing)
             {
@@ -492,8 +505,8 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Displays a notification window, similar with a system tray notification, which presents a
-    ///     notification to the user.
+    ///     Displays a notification window, similar with a system tray notification,
+    ///     which presents a notification to the user.
     /// </summary>
     public static class NotifyBoxEx
     {
@@ -513,10 +526,12 @@ namespace SilDev
         ///     The play sound for the notify box.
         /// </param>
         /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        ///     The duration of the time, in milliseconds, which the notify box remains
+        ///     active.
         /// </param>
         /// <param name="topMost">
-        ///     true to place the notify box above all non-topmost windows; otherwise, false.
+        ///     <see langword="true"/> to place the notify box above all non-topmost
+        ///     windows; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="opacity">
         ///     The opacity level.
@@ -556,7 +571,8 @@ namespace SilDev
         ///     The play sound for the notify box.
         /// </param>
         /// <param name="topMost">
-        ///     true to place the notify box above all non-topmost windows; otherwise, false.
+        ///     <see langword="true"/> to place the notify box above all non-topmost
+        ///     windows; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="opacity">
         ///     The opacity level.
@@ -589,10 +605,12 @@ namespace SilDev
         ///     The window position for the notify box.
         /// </param>
         /// <param name="duration">
-        ///     The duration of the time, in milliseconds, which the notify box remains active.
+        ///     The duration of the time, in milliseconds, which the notify box remains
+        ///     active.
         /// </param>
         /// <param name="topMost">
-        ///     true to place the notify box above all non-topmost windows; otherwise, false.
+        ///     <see langword="true"/> to place the notify box above all non-topmost
+        ///     windows; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="opacity">
         ///     The opacity level.
@@ -625,7 +643,8 @@ namespace SilDev
         ///     The window position for the notify box.
         /// </param>
         /// <param name="topMost">
-        ///     true to place the notify box above all non-topmost windows; otherwise, false.
+        ///     <see langword="true"/> to place the notify box above all non-topmost
+        ///     windows; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="opacity">
         ///     The opacity level.

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Elevation.cs
-// Version:  2019-10-22 15:44
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -34,14 +34,14 @@ namespace SilDev
         public static WindowsPrincipal CurrentPrincipal => new WindowsPrincipal(WindowsIdentity.GetCurrent());
 
         /// <summary>
-        ///     Determines whether the current principal belongs to the Windows administrator
-        ///     user group.
+        ///     Determines whether the current principal belongs to the Windows
+        ///     administrator user group.
         /// </summary>
         public static bool IsAdministrator => CurrentPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
 
         /// <summary>
-        ///     Determines whether the current principal has enough privileges to write in the
-        ///     specified directory.
+        ///     Determines whether the current principal has enough privileges to write in
+        ///     the specified directory.
         /// </summary>
         /// <param name="path">
         ///     The path to check.
@@ -75,8 +75,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the current principal has enough privileges to write in the
-        ///     <see cref="PathEx.LocalDir"/> directory.
+        ///     Determines whether the current principal has enough privileges to write in
+        ///     the <see cref="PathEx.LocalDir"/> directory.
         /// </summary>
         public static bool WritableLocation() =>
             WritableLocation(PathEx.LocalDir);
@@ -85,8 +85,8 @@ namespace SilDev
         ///     Restarts the current process with highest privileges.
         /// </summary>
         /// <param name="cmdLineArgs">
-        ///     The command-line arguments to use when starting the application. Use null to use
-        ///     the current arguments, which are already in use.
+        ///     The command-line arguments to use when starting the application. Use null
+        ///     to use the current arguments, which are already in use.
         /// </param>
         public static void RestartAsAdministrator(string cmdLineArgs = null)
         {
@@ -112,8 +112,8 @@ namespace SilDev
         ///     Restarts the current process with non-elevated privileges.
         /// </summary>
         /// <param name="cmdLineArgs">
-        ///     The command-line arguments to use when starting the application. Use null to use
-        ///     the current arguments, which are already in use.
+        ///     The command-line arguments to use when starting the application. Use null
+        ///     to use the current arguments, which are already in use.
         /// </param>
         public static void RestartAsNonAdministrator(string cmdLineArgs = null)
         {

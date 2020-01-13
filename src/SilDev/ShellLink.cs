@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2019-12-12 16:28
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -83,7 +83,8 @@ namespace SilDev
         public string LinkPath { get; set; }
 
         /// <summary>
-        ///     Determines whether this instance have same values as the specified <see cref="ShellLinkInfo"/> instance.
+        ///     Determines whether this instance have same values as the specified
+        ///     <see cref="ShellLinkInfo"/> instance.
         /// </summary>
         /// <param name="other">
         ///     The <see cref="ShellLinkInfo"/> instance to compare.
@@ -92,7 +93,8 @@ namespace SilDev
             GetHashCode(true) == other.GetHashCode(true);
 
         /// <summary>
-        ///     Determines whether this instance have same values as the specified <see cref="object"/>.
+        ///     Determines whether this instance have same values as the specified
+        ///     <see cref="object"/>.
         /// </summary>
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
@@ -108,7 +110,8 @@ namespace SilDev
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <param name="nonReadOnly">
-        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        ///     <see langword="true"/> to include the hashes of non-readonly properties;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public int GetHashCode(bool nonReadOnly) =>
             Crypto.GetStructHashCode(this, nonReadOnly);
@@ -120,7 +123,8 @@ namespace SilDev
             Crypto.GetStructHashCode(this);
 
         /// <summary>
-        ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have same values.
+        ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have
+        ///     same values.
         /// </summary>
         /// <param name="left">
         ///     The first <see cref="ShellLinkInfo"/> instance to compare.
@@ -132,7 +136,8 @@ namespace SilDev
             left.Equals(right);
 
         /// <summary>
-        ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have different values.
+        ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have
+        ///     different values.
         /// </summary>
         /// <param name="left">
         ///     The first <see cref="ShellLinkInfo"/> instance to compare.
@@ -150,13 +155,15 @@ namespace SilDev
     public static class ShellLink
     {
         /// <summary>
-        ///     Creates a shell link based on the specified <see cref="ShellLinkInfo"/> structure.
+        ///     Creates a shell link based on the specified <see cref="ShellLinkInfo"/>
+        ///     structure.
         /// </summary>
         /// <param name="shellLinkInfo">
         ///     The <see cref="ShellLinkInfo"/> structure.
         /// </param>
         /// <param name="skipExists">
-        ///     true to skip existing links without further checks; otherwise, false.
+        ///     <see langword="true"/> to skip existing links without further checks;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public static bool Create(ShellLinkInfo shellLinkInfo, bool skipExists = false)
@@ -244,7 +251,7 @@ namespace SilDev
             {
                 var target = GetTarget(path);
                 if (string.IsNullOrEmpty(target))
-                    throw new ArgumentNullException(nameof(target));
+                    throw new ArgumentNullException(nameof(path));
                 var link = PathEx.Combine(path);
                 File.Delete(link);
                 return File.Exists(link);
@@ -272,7 +279,7 @@ namespace SilDev
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);
                 if (!Path.GetExtension(file).EqualsEx(".lnk"))
-                    throw new ArgumentException();
+                    throw new ArgumentInvalidException(nameof(path));
                 string s;
                 var fs = default(FileStream);
                 try

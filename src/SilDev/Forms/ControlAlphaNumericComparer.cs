@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ControlAlphaNumericComparer.cs
-// Version:  2020-01-03 13:25
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -27,7 +27,8 @@ namespace SilDev.Forms
         ///     class. A parameter specifies whether the order is descended.
         /// </summary>
         /// <param name="descendant">
-        ///     true to enable the descending order; otherwise, false.
+        ///     <see langword="true"/> to enable the descending order; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public ControlAlphaNumericComparer(bool descendant) : base(descendant) { }
 

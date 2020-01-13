@@ -7,6 +7,12 @@
   <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <SuppressLegacyCodeAnalysisDeprecatedWarning>true</SuppressLegacyCodeAnalysisDeprecatedWarning>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{48B9E661-5DAB-47FF-846A-DFF487444277}</ProjectGuid>
@@ -144,12 +150,25 @@
     <Compile Include="SilDev\ArgumentInvalidException.cs" />
     <Compile Include="SilDev\AssemblyInfo.cs" />
     <Compile Include="SilDev\AlphaNumericComparer.cs" />
+    <Compile Include="SilDev\CmdExec.cs" />
+    <Compile Include="SilDev\Compression\Archiver\WinRar.cs" />
+    <Compile Include="SilDev\Compression\Archiver\SevenZip.cs" />
+    <Compile Include="SilDev\Compression\GZip.cs" />
+    <Compile Include="SilDev\Compression\Zip.cs" />
+    <Compile Include="SilDev\Compression\Archiver\ArchiverBase.cs" />
     <Compile Include="SilDev\Drawing\IconFactory.cs" />
     <Compile Include="SilDev\Drawing\ImageFrame.cs" />
     <Compile Include="SilDev\Forms\ControlAlphaNumericComparer.cs" />
+    <Compile Include="SilDev\Forms\FormBorderlessResizable.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SilDev\Forms\IconBrowserDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SilDev\Forms\ListViewDoubleBuffered.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SilDev\Forms\MessageBoxButtonText.cs" />
     <Compile Include="SilDev\Investment\ValueItemHost.cs" />
     <Compile Include="SilDev\Investment\ValueItem.cs" />
     <Compile Include="SilDev\CultureConfig.cs" />
@@ -167,8 +186,12 @@
     <Compile Include="SilDev\Forms\LinkLabelEx.cs" />
     <Compile Include="SilDev\Forms\ListViewEx.cs" />
     <Compile Include="SilDev\Forms\MessageBoxEx.cs" />
-    <Compile Include="SilDev\Forms\PanelEx.cs" />
-    <Compile Include="SilDev\Forms\PictureBoxEx.cs" />
+    <Compile Include="SilDev\Forms\PanelFakeProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SilDev\Forms\PictureBoxNonClickable.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SilDev\Forms\ProgressBarEx.cs" />
     <Compile Include="SilDev\Forms\ProgressCircle.cs">
       <SubType>Component</SubType>
@@ -182,8 +205,12 @@
     <Compile Include="SilDev\Intern\PowerShellReference.cs" />
     <Compile Include="SilDev\Investment\CounterInvestor.cs" />
     <Compile Include="SilDev\Investment\RandomInvestor.cs" />
+    <Compile Include="SilDev\Media\IrrKlangPlayer.cs" />
+    <Compile Include="SilDev\Media\MediaDeviceManager.cs" />
+    <Compile Include="SilDev\Media\WindowsPlayer.cs" />
+    <Compile Include="SilDev\ProcessPrincipal.cs" />
+    <Compile Include="SilDev\StringNewLineFormats.cs" />
     <Compile Include="SilDev\QuickWmi\Win32_OperatingSystem.cs" />
-    <Compile Include="SilDev\Compaction.cs" />
     <Compile Include="SilDev\Comparison.cs" />
     <Compile Include="SilDev\Crypto.cs" />
     <Compile Include="SilDev\Desktop.cs" />
@@ -196,33 +223,38 @@
     <Compile Include="SilDev\Json.cs" />
     <Compile Include="SilDev\InputDevice.cs" />
     <Compile Include="SilDev\Log.cs" />
-    <Compile Include="SilDev\Media.cs" />
+    <Compile Include="SilDev\Media\BasicPlayer.cs" />
     <Compile Include="SilDev\Memory.cs" />
     <Compile Include="SilDev\MemoryException.cs" />
-    <Compile Include="SilDev\NetEx.cs" />
-    <Compile Include="SilDev\NotifyBox.cs" />
+    <Compile Include="SilDev\Network\NetEx.cs" />
+    <Compile Include="SilDev\Forms\NotifyBox.cs" />
     <Compile Include="SilDev\PathEx.cs" />
     <Compile Include="SilDev\PathNotFoundException.cs" />
     <Compile Include="SilDev\PortableExecutable.cs" />
     <Compile Include="SilDev\ProcessEx.cs" />
+    <Compile Include="SilDev\Redist.cs" />
     <Compile Include="SilDev\Reg.cs" />
     <Compile Include="SilDev\Reorganize.cs" />
     <Compile Include="SilDev\ResourcesEx.cs" />
     <Compile Include="SilDev\Service.cs" />
     <Compile Include="SilDev\ShellLink.cs" />
     <Compile Include="SilDev\SymbolicLink.cs" />
+    <Compile Include="SilDev\SystemRestore.cs" />
     <Compile Include="SilDev\TaskBar.cs" />
     <Compile Include="SilDev\TextEx.cs" />
-    <Compile Include="SilDev\WebTransfer.cs" />
-    <Compile Include="SilDev\WebTransferAsync.cs" />
+    <Compile Include="SilDev\Network\WebTransfer.cs" />
+    <Compile Include="SilDev\Network\WebTransferAsync.cs" />
     <Compile Include="SilDev\Tray.cs" />
-    <Compile Include="SilDev\WebClientEx.cs">
+    <Compile Include="SilDev\Network\WebClientEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SilDev\WinApi.cs" />
-    <Compile Include="SilDev\Xml.cs" />
+    <Compile Include="SilDev\Intern\XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -237,6 +269,7 @@
     <EmbeddedResource Include="Properties\ExceptionMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\UIStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>

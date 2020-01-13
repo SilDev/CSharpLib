@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2019-10-20 19:03
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -226,29 +226,31 @@ namespace SilDev.Forms
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (_spokes > 0)
+            if (_spokes < 1)
             {
-                e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-                var pos = _progressValue;
-                for (var i = 0; i < _spokes; i++)
+                base.OnPaint(e);
+                return;
+            }
+            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            var pos = _progressValue;
+            for (var i = 0; i < _spokes; i++)
+            {
+                var brush = default(SolidBrush);
+                try
                 {
-                    var brush = default(SolidBrush);
-                    try
+                    brush = new SolidBrush(_colors[i]);
+                    pos %= _spokes;
+                    using (var pen = new Pen(brush, _thickness))
                     {
-                        brush = new SolidBrush(_colors[i]);
-                        pos %= _spokes;
-                        using (var pen = new Pen(brush, _thickness))
-                        {
-                            pen.StartCap = LineCap.Round;
-                            pen.EndCap = LineCap.Round;
-                            e.Graphics.DrawLine(pen, GetCoordinate(_centerPoint, _innerRadius, _angles[pos]), GetCoordinate(_centerPoint, _outerRadius, _angles[pos]));
-                        }
-                        pos++;
+                        pen.StartCap = LineCap.Round;
+                        pen.EndCap = LineCap.Round;
+                        e.Graphics.DrawLine(pen, GetCoordinate(_centerPoint, _innerRadius, _angles[pos]), GetCoordinate(_centerPoint, _outerRadius, _angles[pos]));
                     }
-                    finally
-                    {
-                        brush?.Dispose();
-                    }
+                    pos++;
+                }
+                finally
+                {
+                    brush?.Dispose();
                 }
             }
             base.OnPaint(e);

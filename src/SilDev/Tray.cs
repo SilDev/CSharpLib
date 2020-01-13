@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Tray.cs
-// Version:  2019-10-22 16:16
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -51,7 +51,7 @@ namespace SilDev
                     {
                         WinApi.NativeHelper.FindNestedWindow(ref hWnd, str);
                         if (hWnd == IntPtr.Zero)
-                            throw new ArgumentNullException(nameof(hWnd));
+                            throw new NullReferenceException();
                     }
                     MouseMove:
                     WinApi.NativeMethods.GetClientRect(hWnd, out var rect1);

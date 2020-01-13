@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PortableExecutable.cs
-// Version:  2019-10-22 16:06
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,13 +20,15 @@ namespace SilDev
     using System.IO;
 
     /// <summary>
-    ///     Provides enumerated values of the machine field values that specifies its CPU type.
+    ///     Provides enumerated values of the machine field values that specifies its
+    ///     CPU type.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum MachineType
     {
         /// <summary>
-        ///     The contents of this field are assumed to be applicable to any machine type.
+        ///     The contents of this field are assumed to be applicable to any machine
+        ///     type.
         /// </summary>
         Unknown = 0x0,
 
@@ -152,7 +154,8 @@ namespace SilDev
     }
 
     /// <summary>
-    ///     Provides basic functionality for reading PE (Portable Executable) header information.
+    ///     Provides basic functionality for reading PE (Portable Executable) header
+    ///     information.
     /// </summary>
     public static class PortableExecutable
     {
@@ -169,22 +172,20 @@ namespace SilDev
             {
                 var file = PathEx.Combine(path);
                 if (!PathEx.IsValidPath(file))
-                    throw new ArgumentException();
+                    throw new ArgumentInvalidException(nameof(path));
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);
                 var fs = default(FileStream);
                 try
                 {
                     fs = new FileStream(file, FileMode.Open, FileAccess.Read);
-                    using (var br = new BinaryReader(fs))
-                    {
-                        var i = fs;
-                        fs = null;
-                        i.Seek(0x3c, SeekOrigin.Begin);
-                        i.Seek(br.ReadInt32(), SeekOrigin.Begin);
-                        br.ReadUInt32();
-                        pe = (MachineType)br.ReadUInt16();
-                    }
+                    using var br = new BinaryReader(fs);
+                    var i = fs;
+                    fs = null;
+                    i.Seek(0x3c, SeekOrigin.Begin);
+                    i.Seek(br.ReadInt32(), SeekOrigin.Begin);
+                    br.ReadUInt32();
+                    pe = (MachineType)br.ReadUInt16();
                 }
                 finally
                 {
@@ -199,7 +200,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Determines whether the specified file was compiled for 64-bit platform environments.
+        ///     Determines whether the specified file was compiled for 64-bit platform
+        ///     environments.
         /// </summary>
         /// <param name="path">
         ///     The file to check.

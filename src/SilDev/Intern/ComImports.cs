@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ComImports.cs
-// Version:  2019-10-20 19:45
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 

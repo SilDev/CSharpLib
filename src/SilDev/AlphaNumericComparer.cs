@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: AlphaNumericComparer.cs
-// Version:  2020-01-04 13:44
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -28,24 +28,24 @@ namespace SilDev
     public class AlphaNumericComparer : IComparer, IComparer<object>
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlphaNumericComparer"/>
-        ///     class. A parameter specifies whether the order is descended.
+        ///     Initializes a new instance of the <see cref="AlphaNumericComparer"/> class.
+        ///     A parameter specifies whether the order is descended.
         /// </summary>
         /// <param name="descendant">
-        ///     true to enable the descending order; otherwise, false.
+        ///     <see langword="true"/> to enable the descending order; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public AlphaNumericComparer(bool descendant) =>
             Descendant = descendant;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlphaNumericComparer"/>
-        ///     class.
+        ///     Initializes a new instance of the <see cref="AlphaNumericComparer"/> class.
         /// </summary>
         public AlphaNumericComparer() : this(false) { }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlphaNumericComparer"/> class with
-        ///     serialized data.
+        ///     Initializes a new instance of the <see cref="AlphaNumericComparer"/> class
+        ///     with serialized data.
         /// </summary>
         /// <param name="info">
         ///     The object that holds the serialized object data.

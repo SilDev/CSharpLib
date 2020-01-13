@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2020-01-06 07:58
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -55,8 +55,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Performs the specified <see cref="Action{T}"/> asynchronously on each element of the
-        ///     <see cref="IEnumerable{T}"/> collection.
+        ///     Performs the specified <see cref="Action{T}"/> asynchronously on each
+        ///     element of the <see cref="IEnumerable{T}"/> collection.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -69,8 +69,8 @@ namespace SilDev
         ///     <see cref="IEnumerable{T}"/> collection.
         /// </param>
         /// <param name="continueOnCapturedContext">
-        ///     true to attempt to marshal the continuation back to the original context captured;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to attempt to marshal the continuation back to the
+        ///     original context captured; otherwise, <see langword="false"/>.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     source or action is null.
@@ -116,8 +116,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Performs the specified <see cref="Action{T1, T2}"/> asynchronously on each element of the
-        ///     <see cref="IDictionary{TKey, TValue}"/>.
+        ///     Performs the specified <see cref="Action{T1, T2}"/> asynchronously on each
+        ///     element of the <see cref="IDictionary{TKey, TValue}"/>.
         /// </summary>
         /// <typeparam name="TKey">
         ///     The type of keys in the dictionary.
@@ -133,8 +133,8 @@ namespace SilDev
         ///     <see cref="IDictionary{TKey, TValue}"/>.
         /// </param>
         /// <param name="continueOnCapturedContext">
-        ///     true to attempt to marshal the continuation back to the original context captured;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to attempt to marshal the continuation back to the
+        ///     original context captured; otherwise, <see langword="false"/>.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     source or action is null.
@@ -234,7 +234,8 @@ namespace SilDev
         ///     The indicator value is negative.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        ///     No element satisfies the condition in predicate. -or- The source sequence is empty.
+        ///     No element satisfies the condition in predicate. -or- The source sequence
+        ///     is empty.
         /// </exception>
         public static TSource Just<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate = default, int indicator = 0)
         {
@@ -308,8 +309,8 @@ namespace SilDev
             source.Just(default, indicator);
 
         /// <summary>
-        ///     Returns a element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns a element in a sequence that satisfies a specified condition or a
+        ///     default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -342,8 +343,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns a element in a sequence that satisfies a specified condition or a
+        ///     default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -364,7 +365,8 @@ namespace SilDev
             source.JustOrDefault(default, indicator);
 
         /// <summary>
-        ///     Returns the second element in a sequence that satisfies a specified condition.
+        ///     Returns the second element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -385,8 +387,8 @@ namespace SilDev
             source.Just(predicate, 1);
 
         /// <summary>
-        ///     Returns the second element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the second element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -404,7 +406,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 1);
 
         /// <summary>
-        ///     Returns the third element in a sequence that satisfies a specified condition.
+        ///     Returns the third element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -425,8 +428,8 @@ namespace SilDev
             source.Just(predicate, 2);
 
         /// <summary>
-        ///     Returns the third element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the third element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -444,7 +447,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 2);
 
         /// <summary>
-        ///     Returns the fourth element in a sequence that satisfies a specified condition.
+        ///     Returns the fourth element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -465,8 +469,8 @@ namespace SilDev
             source.Just(predicate, 3);
 
         /// <summary>
-        ///     Returns the fourth element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the fourth element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -484,7 +488,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 3);
 
         /// <summary>
-        ///     Returns the fifth element in a sequence that satisfies a specified condition.
+        ///     Returns the fifth element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -505,8 +510,8 @@ namespace SilDev
             source.Just(predicate, 4);
 
         /// <summary>
-        ///     Returns the fifth element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the fifth element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -524,7 +529,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 4);
 
         /// <summary>
-        ///     Returns the sixth element in a sequence that satisfies a specified condition.
+        ///     Returns the sixth element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -545,8 +551,8 @@ namespace SilDev
             source.Just(predicate, 5);
 
         /// <summary>
-        ///     Returns the sixth element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the sixth element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -564,7 +570,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 5);
 
         /// <summary>
-        ///     Returns the seventh element in a sequence that satisfies a specified condition.
+        ///     Returns the seventh element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -585,8 +592,8 @@ namespace SilDev
             source.Just(predicate, 6);
 
         /// <summary>
-        ///     Returns the seventh element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the seventh element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -604,7 +611,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 6);
 
         /// <summary>
-        ///     Returns the eighth element in a sequence that satisfies a specified condition.
+        ///     Returns the eighth element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -625,8 +633,8 @@ namespace SilDev
             source.Just(predicate, 7);
 
         /// <summary>
-        ///     Returns the eighth element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the eighth element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -644,7 +652,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 7);
 
         /// <summary>
-        ///     Returns the ninth element in a sequence that satisfies a specified condition.
+        ///     Returns the ninth element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -665,8 +674,8 @@ namespace SilDev
             source.Just(predicate, 8);
 
         /// <summary>
-        ///     Returns the ninth element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the ninth element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -684,7 +693,8 @@ namespace SilDev
             source.JustOrDefault(predicate, 8);
 
         /// <summary>
-        ///     Returns the tenth element in a sequence that satisfies a specified condition.
+        ///     Returns the tenth element in a sequence that satisfies a specified
+        ///     condition.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -705,8 +715,8 @@ namespace SilDev
             source.Just(predicate, 9);
 
         /// <summary>
-        ///     Returns the tenth element in a sequence that satisfies a specified condition or a default
-        ///     value if no such element is found.
+        ///     Returns the tenth element in a sequence that satisfies a specified
+        ///     condition or a default value if no such element is found.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -724,185 +734,9 @@ namespace SilDev
             source.JustOrDefault(predicate, 9);
 
         /// <summary>
-        ///     Searches for the specified one-dimensional array and returns the index of its first
-        ///     occurrence in another one-dimensional array.
-        /// </summary>
-        /// <typeparam name="TElement">
-        ///     The type of the elements of the array.
-        /// </typeparam>
-        /// <param name="source">
-        ///     The one-dimensional array to search.
-        /// </param>
-        /// <param name="target">
-        ///     The one-dimensional array to locate.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     source is null.
-        /// </exception>
-        public static IEnumerable<int> IndexOf<TElement>(TElement[] source, TElement[] target)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (target == null || source.Length < target.Length)
-                yield break;
-            for (var i = 0; i < source.Length - target.Length + 1; i++)
-                if (!target.Where((data, index) => !source[i + index].Equals(data)).Any())
-                    yield return i;
-        }
-
-        /// <summary>
-        ///     Determines whether a specified sequence of elements occurs within this sequence of
-        ///     elements.
-        /// </summary>
-        /// <typeparam name="TElement">
-        ///     The type of the elements of the array.
-        /// </typeparam>
-        /// <param name="source">
-        ///     The sequence of elements to browse.
-        /// </param>
-        /// <param name="targets">
-        ///     The sequence of elements to seek.
-        /// </param>
-        public static bool ContainsEx<TElement>(this IEnumerable<TElement> source, params TElement[][] targets)
-        {
-            try
-            {
-                if (source == null || targets == null || targets.Length == 0 || targets.All(x => x == null || x.Length == 0))
-                    return false;
-                var r = targets.Any(x => IndexOf(source.ToArray(), x).Any(y => y >= 0));
-                return r;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether a specified string occurs within this sequence of strings. A
-        ///     parameter specifies the culture, case, and sort rules used in the comparison.
-        /// </summary>
-        /// <param name="source">
-        ///     The sequence to browse.
-        /// </param>
-        /// <param name="comparisonType">
-        ///     One of the enumeration values that specifies the rules for the search.
-        /// </param>
-        /// <param name="targets">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this IEnumerable<string> source, StringComparison comparisonType, params string[] targets)
-        {
-            if (source == null || targets == null || targets.All(string.IsNullOrEmpty))
-                return false;
-            var r = source.Any(x => targets.Any(y => string.Equals(x, y, comparisonType)));
-            return r;
-        }
-
-        /// <summary>
-        ///     Determines whether a specified string occurs within this sequence of strings. The
-        ///     <see cref="CultureConfig.GlobalStringComparisonIgnoreCase"/> parameter is used for this
-        ///     comparison.
-        /// </summary>
-        /// <param name="source">
-        ///     The sequence to browse.
-        /// </param>
-        /// <param name="targets">
-        ///     The sequence of strings to seek.
-        /// </param>
-        public static bool ContainsEx(this IEnumerable<string> source, params string[] targets) =>
-            source.ContainsEx(CultureConfig.GlobalStringComparisonIgnoreCase, targets);
-
-        /// <summary>
-        ///     Determines whether the beginning of this sequence of bytes matches the specified
-        ///     sequence of bytes
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool StartWith(this IEnumerable<byte> source, params byte[] target)
-        {
-            var ba = source?.ToArray();
-            if (ba == null || target == null || ba.Length < target.Length)
-                return false;
-            var r = !target.Where((t, i) => t != ba[i]).Any();
-            return r;
-        }
-
-        /// <summary>
-        ///     Determines whether the beginning of this sequence of bytes matches the specified
-        ///     sequence of bytes
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool StartWith(this IEnumerable<byte> source, IEnumerable<byte> target) =>
-            source.StartWith(target.ToArray());
-
-        /// <summary>
-        ///     Determines whether the end of this sequence of bytes matches the specified sequence of
-        ///     bytes.
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool EndsWith(this IEnumerable<byte> source, params byte[] target)
-        {
-            var ba = source?.ToArray();
-            if (ba == null || target == null || ba.Length < target.Length)
-                return false;
-            for (var i = target.Length - 1; i >= 0; i--)
-                if (target[i] != ba[i])
-                    return false;
-            return true;
-        }
-
-        /// <summary>
-        ///     Determines whether the end of this sequence of bytes matches the specified sequence of
-        ///     bytes.
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool EndsWith(this IEnumerable<byte> source, IEnumerable<byte> target) =>
-            source.EndsWith(target.ToArray());
-
-        /// <summary>
-        ///     Determines whether this sequence of bytes the same as the specified sequence of
-        ///     bytes.
-        /// </summary>
-        /// <param name="source">
-        ///     The first sequence of bytes to compare.
-        /// </param>
-        /// <param name="target">
-        ///     The sequence of bytes to compare with the first.
-        /// </param>
-        public static bool EqualsEx(this IEnumerable<byte> source, params byte[] target)
-        {
-            var ba = source?.ToArray();
-            if (ba == null && target == null)
-                return true;
-            if (ba == null || target == null || ba.Length != target.Length)
-                return false;
-            var r = !ba.Where((t, i) => t != target[i]).Any();
-            return r;
-        }
-
-        /// <summary>
-        ///     Concatenates the members of a constructed <see cref="IEnumerable{T}"/> collection of type
-        ///     <see cref="string"/>, using the specified separator between each number.
+        ///     Concatenates the members of a constructed <see cref="IEnumerable{T}"/>
+        ///     collection of type <see cref="string"/>, using the specified separator
+        ///     between each number.
         /// </summary>
         /// <param name="values">
         ///     An array that contains the elements to concatenate.
@@ -919,8 +753,9 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Concatenates the members of a constructed <see cref="IEnumerable{T}"/> collection of type
-        ///     <see cref="string"/>, using the specified separator between each number.
+        ///     Concatenates the members of a constructed <see cref="IEnumerable{T}"/>
+        ///     collection of type <see cref="string"/>, using the specified separator
+        ///     between each number.
         /// </summary>
         /// <param name="values">
         ///     An array that contains the elements to concatenate.
@@ -932,7 +767,8 @@ namespace SilDev
             values.Join(separator.ToStringDefault());
 
         /// <summary>
-        ///     Returns a specified number of contiguous elements from the end of a sequence.
+        ///     Returns a specified number of contiguous elements from the end of a
+        ///     sequence.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the elements of source.
@@ -955,15 +791,15 @@ namespace SilDev
                 throw new ArgumentNullException(nameof(source));
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            var queue = new Queue<TSource>();
-            using (var enumerator = source.GetEnumerator())
-                while (enumerator.MoveNext())
+            var stack = new Stack<TSource>();
+            using (var enumerator = source.Reverse().GetEnumerator())
+                for (var i = 0; i < count; i++)
                 {
-                    queue.Enqueue(enumerator.Current);
-                    if (queue.Count > count)
-                        queue.Dequeue();
+                    if (!enumerator.MoveNext())
+                        break;
+                    stack.Push(enumerator.Current);
                 }
-            return queue;
+            return stack;
         }
     }
 }

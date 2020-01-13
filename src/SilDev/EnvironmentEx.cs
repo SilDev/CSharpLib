@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-04 13:39
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,174 +18,18 @@ namespace SilDev
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
-    using System.Management;
     using System.Reflection;
     using Microsoft.Win32;
-    using Properties;
     using QuickWmi;
 
     /// <summary>
-    ///     Provides static methods based on the <see cref="Environment"/> class to provide information
-    ///     about the current environment.
+    ///     Provides static methods based on the <see cref="Environment"/> class to
+    ///     provide information about the current environment.
     /// </summary>
     public static class EnvironmentEx
     {
-        /// <summary>
-        ///     Provides identity flags of redistributable packages. For more information,
-        ///     see <see cref="Redist.IsInstalled(RedistFlags[])"/>.
-        /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [Flags]
-        public enum RedistFlags
-        {
-            /// <summary>
-            ///     Microsoft Visual C++ 2005 Redistributable Package (x86).
-            /// </summary>
-            VC2005X86 = 0x1,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2005 Redistributable Package (x64).
-            /// </summary>
-            VC2005X64 = 0x2,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2008 Redistributable Package (x86).
-            /// </summary>
-            VC2008X86 = 0x4,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2008 Redistributable Package (x64).
-            /// </summary>
-            VC2008X64 = 0x8,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2010 Redistributable Package (x86).
-            /// </summary>
-            VC2010X86 = 0x10,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2010 Redistributable Package (x64).
-            /// </summary>
-            VC2010X64 = 0x20,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2012 Redistributable Package (x86).
-            /// </summary>
-            VC2012X86 = 0x40,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2012 Redistributable Package (x64).
-            /// </summary>
-            VC2012X64 = 0x80,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2013 Redistributable Package (x86).
-            /// </summary>
-            VC2013X86 = 0x100,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2013 Redistributable Package (x64).
-            /// </summary>
-            VC2013X64 = 0x200,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2015 Redistributable Package (x86).
-            /// </summary>
-            VC2015X86 = 0x400,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2015 Redistributable Package (x64).
-            /// </summary>
-            VC2015X64 = 0x800,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2017 Redistributable Package (x86).
-            /// </summary>
-            VC2017X86 = 0x1000,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
-            /// </summary>
-            VC2017X64 = 0x2000,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2019 Redistributable Package (x86).
-            /// </summary>
-            VC2019X86 = 0x4000,
-
-            /// <summary>
-            ///     Microsoft Visual C++ 2019 Redistributable Package (x64).
-            /// </summary>
-            VC2019X64 = 0x8000
-        }
-
-        /// <summary>
-        ///     The type of event. For more information, see <see cref="SystemRestore.Create"/>.
-        /// </summary>
-        public enum RestoreEventType
-        {
-            /// <summary>
-            ///     A system change has begun. A subsequent nested call does not create a new restore
-            ///     point.
-            ///     <para>
-            ///         Subsequent calls must use <see cref="EndNestedSystemChange"/>, not
-            ///         <see cref="EndSystemChange"/>.
-            ///     </para>
-            /// </summary>
-            BeginNestedSystemChange = 0x66,
-
-            /// <summary>
-            ///     A system change has begun.
-            /// </summary>
-            BeginSystemChange = 0x64,
-
-            /// <summary>
-            ///     A system change has ended.
-            /// </summary>
-            EndNestedSystemChange = 0x67,
-
-            /// <summary>
-            ///     A system change has ended.
-            /// </summary>
-            EndSystemChange = 0x65
-        }
-
-        /// <summary>
-        ///     The type of restore point. For more information, see <see cref="SystemRestore.Create"/>.
-        /// </summary>
-        public enum RestorePointType
-        {
-            /// <summary>
-            ///     An application has been installed.
-            /// </summary>
-            ApplicationInstall = 0x0,
-
-            /// <summary>
-            ///     An application has been uninstalled.
-            /// </summary>
-            ApplicationUninstall = 0x1,
-
-            /// <summary>
-            ///     An application needs to delete the restore point it created. For example, an
-            ///     application would use this flag when a user cancels an installation.
-            /// </summary>
-            CancelledOperation = 0xd,
-
-            /// <summary>
-            ///     A device driver has been installed.
-            /// </summary>
-            DeviceDriverInstall = 0xa,
-
-            /// <summary>
-            ///     An application has had features added or removed.
-            /// </summary>
-            ModifySettings = 0xc
-        }
-
         private static List<string> _cmdLineArgs;
         private static bool _cmdLineArgsQuotes;
         private static string _commandLine;
@@ -210,8 +54,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets a <see cref="System.Version"/> object that describes the exact major, minor, build
-        ///     and revision numbers of the common language runtime.
+        ///     Gets a <see cref="System.Version"/> object that describes the exact major,
+        ///     minor, build and revision numbers of the common language runtime.
         /// </summary>
         public static Version Version
         {
@@ -284,20 +128,21 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides filtering and sorting options, and returns a string <see cref="List{T}"/>
-        ///     containing the command-line arguments for the current process.
+        ///     Provides filtering and sorting options, and returns a string
+        ///     <see cref="List{T}"/> containing the command-line arguments for the current
+        ///     process.
         /// </summary>
         /// <param name="sort">
-        ///     true to sort the arguments ascended with the rules of
+        ///     <see langword="true"/> to sort the arguments ascended with the rules of
         ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
-        ///     otherwise, false.
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="skip">
         ///     The number of arguments to skip before returning the remaining arguments.
         /// </param>
         /// <param name="quotes">
-        ///     true to store the arguments in quotation marks which containing spaces; otherwise,
-        ///     false.
+        ///     <see langword="true"/> to store the arguments in quotation marks which
+        ///     containing spaces; otherwise, <see langword="false"/>.
         /// </param>
         public static List<string> CommandLineArgs(bool sort = true, int skip = 1, bool quotes = true)
         {
@@ -325,24 +170,26 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides filtering and sorting options, and returns a string <see cref="List{T}"/>
-        ///     containing the command-line arguments for the current process.
+        ///     Provides filtering and sorting options, and returns a string
+        ///     <see cref="List{T}"/> containing the command-line arguments for the current
+        ///     process.
         /// </summary>
         /// <param name="sort">
-        ///     true to sort the arguments ascended with the rules of
+        ///     <see langword="true"/> to sort the arguments ascended with the rules of
         ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
-        ///     otherwise, false.
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="quotes">
-        ///     true to store the arguments in quotation marks which containing spaces; otherwise,
-        ///     false.
+        ///     <see langword="true"/> to store the arguments in quotation marks which
+        ///     containing spaces; otherwise, <see langword="false"/>.
         /// </param>
         public static List<string> CommandLineArgs(bool sort, bool quotes) =>
             CommandLineArgs(sort, 1, quotes);
 
         /// <summary>
-        ///     Provides filtering and sorting options, and returns a string <see cref="List{T}"/>
-        ///     containing the command-line arguments for the current process.
+        ///     Provides filtering and sorting options, and returns a string
+        ///     <see cref="List{T}"/> containing the command-line arguments for the current
+        ///     process.
         /// </summary>
         /// <param name="skip">
         ///     The number of arguments to skip before returning the remaining arguments.
@@ -355,16 +202,16 @@ namespace SilDev
         ///     command-line arguments for the current process.
         /// </summary>
         /// <param name="sort">
-        ///     true to sort the arguments ascended with the rules of
+        ///     <see langword="true"/> to sort the arguments ascended with the rules of
         ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
-        ///     otherwise, false.
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="skip">
         ///     The number of arguments to skip before returning the remaining arguments.
         /// </param>
         /// <param name="quotes">
-        ///     true to store the arguments in quotation marks which containing spaces; otherwise,
-        ///     false.
+        ///     <see langword="true"/> to store the arguments in quotation marks which
+        ///     containing spaces; otherwise, <see langword="false"/>.
         /// </param>
         public static string CommandLine(bool sort = true, int skip = 1, bool quotes = true)
         {
@@ -378,13 +225,13 @@ namespace SilDev
         ///     command-line arguments for the current process.
         /// </summary>
         /// <param name="sort">
-        ///     true to sort the arguments ascended with the rules of
+        ///     <see langword="true"/> to sort the arguments ascended with the rules of
         ///     <see cref="AlphaNumericComparer(bool)"/> before returning the arguments;
-        ///     otherwise, false.
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="quotes">
-        ///     true to store the arguments in quotation marks which containing spaces; otherwise,
-        ///     false.
+        ///     <see langword="true"/> to store the arguments in quotation marks which
+        ///     containing spaces; otherwise, <see langword="false"/>.
         /// </param>
         public static string CommandLine(bool sort, bool quotes) =>
             CommandLine(sort, 1, quotes);
@@ -446,8 +293,8 @@ namespace SilDev
         /// <summary>
         ///     Retrieves the value of an environment variable from the current process.
         ///     <para>
-        ///         Hint: Allows <see cref="Environment.SpecialFolder"/> names including a keyword
-        ///         "CurDir" to get the current code base location based on
+        ///         Hint: Allows <see cref="Environment.SpecialFolder"/> names including a
+        ///         keyword "CurDir" to get the current code base location based on
         ///         <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
         ///     </para>
         /// </summary>
@@ -455,7 +302,8 @@ namespace SilDev
         ///     The name of the environment variable.
         /// </param>
         /// <param name="lower">
-        ///     true to convert the result to lowercase; otherwise, false.
+        ///     <see langword="true"/> to convert the result to lowercase; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string GetVariableValue(string variable, bool lower = false)
         {
@@ -473,7 +321,7 @@ namespace SilDev
                     {
                         var match = Enum.GetNames(typeof(Environment.SpecialFolder)).First(s => variable.EqualsEx(s));
                         if (!Enum.TryParse(match, out Environment.SpecialFolder specialFolder))
-                            throw new ArgumentException();
+                            throw new NullReferenceException();
                         output = Environment.GetFolderPath(specialFolder);
                     }
                     catch (Exception ex) when (ex.IsCaught())
@@ -504,18 +352,21 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified path to an existing environment variable, if possible.
+        ///     Converts the specified path to an existing environment variable, if
+        ///     possible.
         /// </summary>
         /// <param name="path">
         ///     The path to convert.
         /// </param>
         /// <param name="curDir">
-        ///     true to consider the <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to consider the
+        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="special">
-        ///     true to consider the <see cref="Environment.SpecialFolder"/> values;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to consider the
+        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string GetVariablePath(string path, bool curDir = true, bool special = true)
         {
@@ -571,12 +422,14 @@ namespace SilDev
         ///     The path to convert.
         /// </param>
         /// <param name="curDir">
-        ///     true to consider the <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to consider the
+        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="special">
-        ///     true to consider the <see cref="Environment.SpecialFolder"/> values;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to consider the
+        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string GetVariablePathFull(string path, bool curDir = true, bool special = true)
         {
@@ -595,7 +448,7 @@ namespace SilDev
                     current = PathEx.Combine(current, "..").Trim(Path.DirectorySeparatorChar);
                 }
                 if (string.IsNullOrWhiteSpace(output))
-                    throw new ArgumentNullException(nameof(output));
+                    throw new NullReferenceException();
                 var sub = path.Substring(current.Length).Trim(Path.DirectorySeparatorChar);
                 output = output.Trim(Path.DirectorySeparatorChar);
                 output = Path.Combine(output, sub);
@@ -605,148 +458,6 @@ namespace SilDev
                 Log.Write(ex);
             }
             return !string.IsNullOrWhiteSpace(output) ? output : path;
-        }
-
-        /// <summary>
-        ///     Provides functionality to verify the installation of redistributable packages.
-        /// </summary>
-        public static class Redist
-        {
-            private static string[] _displayNames;
-
-            /// <summary>
-            ///     Returns the display names of all installed Microsoft Visual C++ redistributable packages.
-            /// </summary>
-            /// <param name="refresh">
-            ///     true to refresh all names; otherwise, false to get the cached names from previous call.
-            ///     <para>
-            ///         Please note that this parameter is always true if this function has never been called
-            ///         before.
-            ///     </para>
-            /// </param>
-            public static string[] GetDisplayNames(bool refresh = false)
-            {
-                try
-                {
-                    if (!refresh && _displayNames != null)
-                        return _displayNames;
-                    var comparer = new AlphaNumericComparer();
-                    var entries = new[]
-                    {
-                        "DisplayName",
-                        "ProductName"
-                    };
-                    var names = Reg.GetSubKeyTree(Registry.LocalMachine, "SOFTWARE\\Classes\\Installer", 3000)
-                                   .SelectMany(x => entries, (x, y) => Reg.ReadString(Registry.LocalMachine, x, y))
-                                   .Where(x => x.StartsWithEx("Microsoft Visual C++"))
-                                   .OrderBy(x => x, comparer);
-                    _displayNames = names.ToArray();
-                    return _displayNames;
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                    return null;
-                }
-            }
-
-            /// <summary>
-            ///     Determines whether the specified redistributable package is installed.
-            /// </summary>
-            /// <param name="keys">
-            ///     The redistributable package keys to check.
-            /// </param>
-            public static bool IsInstalled(params RedistFlags[] keys)
-            {
-                try
-                {
-                    keys = Enum.GetValues(typeof(RedistFlags)).Cast<RedistFlags>().SelectMany(item => keys, (item, key) => new { item, key })
-                               .Where(type => (type.item & type.key) != 0).Select(type => type.item).ToArray();
-                    var result = false;
-                    var names = GetDisplayNames();
-                    foreach (var key in keys.Select(x => x.ToString()))
-                    {
-                        var year = key.Substring(2, 4);
-                        var arch = key.Substring(6);
-                        Recheck:
-                        switch (year)
-                        {
-                            case "2005":
-                                result = names.Any(x => x.Contains(year) && (arch.EqualsEx("x64") && x.ContainsEx(arch) || !x.ContainsEx("x64")));
-                                break;
-                            default:
-                                result = names.Any(x => x.Contains(year) && x.ContainsEx(arch));
-                                break;
-                        }
-                        if (result)
-                            continue;
-                        switch (year)
-                        {
-                            case "2015":
-                                year = "2017";
-                                goto Recheck;
-                            case "2017":
-                                year = "2019";
-                                goto Recheck;
-                        }
-                        break;
-                    }
-                    return result;
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                    return false;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Provides functionality to handle system restore points.
-        /// </summary>
-        public static class SystemRestore
-        {
-            /// <summary>
-            ///     Determines whether the system restoring is enabled.
-            /// </summary>
-            public static bool IsEnabled =>
-                Reg.Read(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRestore", "RPSessionInterval", 0) > 0;
-
-            /// <summary>
-            ///     Creates a restore point on the local system.
-            /// </summary>
-            /// <param name="description">
-            ///     The description to be displayed so the user can easily identify a restore point.
-            /// </param>
-            /// <param name="eventType">
-            ///     The type of event.
-            /// </param>
-            /// <param name="restorePointType">
-            ///     The type of restore point.
-            /// </param>
-            public static void Create(string description, RestoreEventType eventType, RestorePointType restorePointType)
-            {
-                try
-                {
-                    if (!IsEnabled)
-                        throw new WarningException(ExceptionMessages.SystemRestoringIsDisabled);
-                    var mScope = new ManagementScope("\\\\localhost\\root\\default");
-                    var mPath = new ManagementPath("SystemRestore");
-                    var options = new ObjectGetOptions();
-                    using (var mClass = new ManagementClass(mScope, mPath, options))
-                        using (var parameters = mClass.GetMethodParameters("CreateRestorePoint"))
-                        {
-                            parameters["Description"] = description;
-                            parameters["EventType"] = (int)eventType;
-                            parameters["RestorePointType"] = (int)restorePointType;
-                            mClass.InvokeMethod("CreateRestorePoint", parameters, null);
-                        }
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                }
-            }
         }
     }
 }

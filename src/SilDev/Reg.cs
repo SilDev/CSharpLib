@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2019-10-31 22:30
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -113,11 +113,9 @@ namespace SilDev
         private static string _regLowEnvPath,
                               _regNatEnvPath;
 
-        private static string RegLowEnvPath =>
-            _regLowEnvPath ?? (_regLowEnvPath = Path.Combine(ComSpec.LowestEnvDir, "reg.exe"));
+        private static string RegLowEnvPath => _regLowEnvPath ??= Path.Combine(ComSpec.LowestEnvDir, "reg.exe");
 
-        private static string RegNatEnvPath =>
-            _regNatEnvPath ?? (_regNatEnvPath = Path.Combine(ComSpec.SysNativeEnvDir, "reg.exe"));
+        private static string RegNatEnvPath => _regNatEnvPath ??= Path.Combine(ComSpec.SysNativeEnvDir, "reg.exe");
 #else
         private const string RegLowEnvPath = "%SystemRoot%\\SysWOW64\\reg.exe";
         private const string RegNatEnvPath = "%SystemRoot%\\System32\\reg.exe";
@@ -183,7 +181,8 @@ namespace SilDev
         ///     The path of the subkey to create.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before creating; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before creating;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateNewSubKey(RegistryKey key, string subKey, bool overwrite = false)
         {
@@ -196,7 +195,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(subKey));
                 var path = string.Concat(key, Path.DirectorySeparatorChar, subKey);
                 if (path.Length > MaxPathLength)
-                    throw new ArgumentOutOfRangeException(nameof(path));
+                    throw new ArgumentOutOfRangeException(nameof(subKey));
                 if (overwrite && SubKeyExists(key, subKey))
                     RemoveSubKey(key, subKey);
                 rKey = key.CreateSubKey(subKey.KeyFilter());
@@ -222,7 +221,8 @@ namespace SilDev
         ///     The path of the subkey to create.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before creating; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before creating;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateNewSubKey(string key, string subKey, bool overwrite = false) =>
             CreateNewSubKey(key.AsRegistryKey(), subKey, overwrite);
@@ -234,7 +234,8 @@ namespace SilDev
         ///     The full path of the key to create.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before creating; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before creating;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CreateNewSubKey(string keyPath, bool overwrite = false) =>
             CreateNewSubKey(keyPath.GetKey(), keyPath.GetSubKeyName(), overwrite);
@@ -288,8 +289,8 @@ namespace SilDev
             RemoveSubKey(keyPath.GetKey(), keyPath.GetSubKeyName());
 
         /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with all subkeys of
-        ///     the specified registry path.
+        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with all
+        ///     subkeys of the specified registry path.
         /// </summary>
         /// <param name="key">
         ///     The root <see cref="Registry"/> key which contains the subkey.
@@ -307,14 +308,12 @@ namespace SilDev
                     return key.GetSubKeyNames();
                 var sKey = subKey.KeyFilter();
                 if (string.IsNullOrEmpty(sKey))
-                    throw new ArgumentNullException(nameof(sKey));
+                    throw new ArgumentNullException(nameof(subKey));
                 if (!SubKeyExists(key, subKey))
                     throw new PathNotFoundException(string.Concat(key, Path.DirectorySeparatorChar, subKey));
-                using (var rKey = key.OpenSubKey(sKey))
-                {
-                    var sKeys = rKey?.GetSubKeyNames();
-                    return sKeys?.Select(e => string.Concat(sKey, Path.DirectorySeparatorChar, e));
-                }
+                using var rKey = key.OpenSubKey(sKey);
+                var sKeys = rKey?.GetSubKeyNames();
+                return sKeys?.Select(e => string.Concat(sKey, Path.DirectorySeparatorChar, e));
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -324,8 +323,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with all subkeys of
-        ///     the specified registry path.
+        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with all
+        ///     subkeys of the specified registry path.
         /// </summary>
         /// <param name="key">
         ///     The root key which contains the subkey.
@@ -337,8 +336,8 @@ namespace SilDev
             GetSubKeys(key.AsRegistryKey(), subKey);
 
         /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with all subkeys of
-        ///     the specified registry path.
+        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with all
+        ///     subkeys of the specified registry path.
         /// </summary>
         /// <param name="keyPath">
         ///     The full path of the key to read.
@@ -347,8 +346,8 @@ namespace SilDev
             GetSubKeys(keyPath.GetKey(), keyPath.GetSubKeyName());
 
         /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the full subkey
-        ///     tree of the specified registry path.
+        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the
+        ///     full subkey tree of the specified registry path.
         /// </summary>
         /// <param name="key">
         ///     The root <see cref="Registry"/> key that contains the subkey.
@@ -363,8 +362,8 @@ namespace SilDev
             GetSubKeys(key, subKey)?.RecursiveSelect(e => GetSubKeys(key, e), timelimit);
 
         /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the full subkey
-        ///     tree of the specified registry path.
+        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the
+        ///     full subkey tree of the specified registry path.
         /// </summary>
         /// <param name="key">
         ///     The root key that contains the subkey.
@@ -379,8 +378,8 @@ namespace SilDev
             GetSubKeyTree(key.AsRegistryKey(), subKey, timelimit);
 
         /// <summary>
-        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the full subkey
-        ///     tree of the specified registry path.
+        ///     Returns a <see cref="string"/> based <see cref="IEnumerable{T}"/> with the
+        ///     full subkey tree of the specified registry path.
         /// </summary>
         /// <param name="keyPath">
         ///     The full path of the key to read.
@@ -407,7 +406,8 @@ namespace SilDev
         ///     The new path and name of the destination subkey.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before copying; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before copying;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CopySubKey(RegistryKey srcKey, string srcSubKey, RegistryKey destKey, string destSubKey, bool overwrite = false)
         {
@@ -425,7 +425,7 @@ namespace SilDev
                     throw new PathNotFoundException(string.Concat(srcKey, Path.DirectorySeparatorChar, srcSubKey));
                 var destPath = string.Concat(destKey, Path.DirectorySeparatorChar, destSubKey);
                 if (destPath.Length > MaxPathLength)
-                    throw new ArgumentOutOfRangeException(nameof(destPath));
+                    throw new ArgumentOutOfRangeException(nameof(destSubKey));
                 if (overwrite && SubKeyExists(destKey, destSubKey))
                     RemoveSubKey(destKey, destSubKey);
                 var releaseQueue = new Queue<RegistryKey>();
@@ -493,7 +493,8 @@ namespace SilDev
         ///     The new path and name of the destination subkey.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before copying; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before copying;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CopySubKey(string srcKey, string srcSubKey, string destKey, string destSubKey, bool overwrite = false) =>
             CopySubKey(srcKey.AsRegistryKey(), srcSubKey, destKey.AsRegistryKey(), destSubKey, overwrite);
@@ -508,7 +509,8 @@ namespace SilDev
         ///     The full path of the destination key.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before copying; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before copying;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool CopySubKey(string srcKeyPath, string destKeyPath, bool overwrite = false) =>
             CopySubKey(srcKeyPath.GetKey(), srcKeyPath.GetSubKeyName(), destKeyPath.GetKey(), destKeyPath.GetSubKeyName(), overwrite);
@@ -529,7 +531,8 @@ namespace SilDev
         ///     The new path and name of the subkey.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before moving; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before moving;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool MoveSubKey(RegistryKey oldKey, string oldSubKey, RegistryKey newKey, string newSubKey, bool overwrite = false)
         {
@@ -566,7 +569,8 @@ namespace SilDev
         ///     The new path and name of the subkey.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before moving; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before moving;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool MoveSubKey(string oldKey, string oldSubKey, string newKey, string newSubKey, bool overwrite = false) =>
             MoveSubKey(oldKey.AsRegistryKey(), oldSubKey, newKey.AsRegistryKey(), newSubKey, overwrite);
@@ -581,7 +585,8 @@ namespace SilDev
         ///     The full path of the destination key.
         /// </param>
         /// <param name="overwrite">
-        ///     true to remove an existing target before moving; otherwise, false.
+        ///     <see langword="true"/> to remove an existing target before moving;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool MoveSubKey(string oldKeyPath, string newKeyPath, bool overwrite = false) =>
             MoveSubKey(oldKeyPath.GetKey(), oldKeyPath.GetSubKeyName(), newKeyPath.GetKey(), newKeyPath.GetSubKeyName(), overwrite);
@@ -632,7 +637,8 @@ namespace SilDev
             EntryExists(keyPath.GetKey(), keyPath.GetSubKeyName(), entry);
 
         /// <summary>
-        ///     Retrieves the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified
+        ///     registry path.
         /// </summary>
         /// <typeparam name="TValue">
         ///     The value type.
@@ -686,7 +692,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Retrieves the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified
+        ///     registry path.
         /// </summary>
         /// <typeparam name="TValue">
         ///     The value type.
@@ -707,7 +714,8 @@ namespace SilDev
             Read(key.AsRegistryKey(), subKey, entry, defValue);
 
         /// <summary>
-        ///     Retrieves the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified
+        ///     registry path.
         /// </summary>
         /// <typeparam name="TValue">
         ///     The value type.
@@ -725,7 +733,8 @@ namespace SilDev
             Read(keyPath.GetKey(), keyPath.GetSubKeyName(), entry, defValue);
 
         /// <summary>
-        ///     Retrieves the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified
+        ///     registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -750,7 +759,7 @@ namespace SilDev
             {
                 var objValue = Read<object>(key, subKey, entry, defValue);
                 if (objValue == null)
-                    throw new ArgumentNullException(nameof(objValue));
+                    throw new NullReferenceException();
                 if (objValue is string[] strs)
                     value = strs.Join(Environment.NewLine);
                 else if (objValue is byte[] bytes)
@@ -766,7 +775,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Retrieves the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified
+        ///     registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -787,7 +797,8 @@ namespace SilDev
             ReadString(key.AsRegistryKey(), subKey, entry, defValue);
 
         /// <summary>
-        ///     Retrieves the value associated with the specified entry of the specified registry path.
+        ///     Retrieves the value associated with the specified entry of the specified
+        ///     registry path.
         ///     <para>
         ///         A non-string value is converted to a valid <see cref="string"/>.
         ///     </para>
@@ -811,7 +822,8 @@ namespace SilDev
         ///     The value type.
         /// </typeparam>
         /// <param name="key">
-        ///     The root <see cref="Registry"/> key that contains the subkey to create or override.
+        ///     The root <see cref="Registry"/> key that contains the subkey to create or
+        ///     override.
         /// </param>
         /// <param name="subKey">
         ///     The path of the subkey to create or override.
@@ -835,33 +847,33 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(subKey));
                 if (!SubKeyExists(key, subKey) && !CreateNewSubKey(key, subKey))
                     throw new PathNotFoundException(string.Concat(key, Path.DirectorySeparatorChar, subKey));
-                using (var rKey = key.OpenSubKey(subKey.KeyFilter(), true))
-                    try
+                using var rKey = key.OpenSubKey(subKey.KeyFilter(), true);
+                try
+                {
+                    object newValue = value;
+                    var valueType = typeof(TValue);
+                    if (type == RegistryValueKind.None || type == RegistryValueKind.Binary)
                     {
-                        object newValue = value;
-                        var valueType = typeof(TValue);
-                        if (type == RegistryValueKind.None || type == RegistryValueKind.Binary)
+                        if (type == RegistryValueKind.None && valueType == typeof(string))
                         {
-                            if (type == RegistryValueKind.None && valueType == typeof(string))
-                            {
-                                rKey?.SetValue(entry, newValue, RegistryValueKind.String);
-                                return true;
-                            }
-                            if (valueType.IsSerializable && valueType != typeof(byte[]))
-                            {
-                                newValue = value.SerializeObject();
-                                rKey?.SetValue(entry, newValue, RegistryValueKind.Binary);
-                                return true;
-                            }
+                            rKey?.SetValue(entry, newValue, RegistryValueKind.String);
+                            return true;
                         }
-                        rKey?.SetValue(entry, newValue, type);
-                        return true;
+                        if (valueType.IsSerializable && valueType != typeof(byte[]))
+                        {
+                            newValue = value.SerializeObject();
+                            rKey?.SetValue(entry, newValue, RegistryValueKind.Binary);
+                            return true;
+                        }
                     }
-                    catch (Exception ex) when (ex.IsCaught())
-                    {
-                        Log.Write(ex);
-                        return false;
-                    }
+                    rKey?.SetValue(entry, newValue, type);
+                    return true;
+                }
+                catch (Exception ex) when (ex.IsCaught())
+                {
+                    Log.Write(ex);
+                    return false;
+                }
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -919,7 +931,8 @@ namespace SilDev
         ///     Removes the specified entry from the specified registry path.
         /// </summary>
         /// <param name="key">
-        ///     The root <see cref="Registry"/> key that contains the subkey with the entry to remove.
+        ///     The root <see cref="Registry"/> key that contains the subkey with the entry
+        ///     to remove.
         /// </param>
         /// <param name="subKey">
         ///     The path of the subkey with the entry to remove.
@@ -980,13 +993,15 @@ namespace SilDev
         ///     The full path of the file to import.
         /// </param>
         /// <param name="elevated">
-        ///     true to import with highest user permissions; otherwise, false.
+        ///     <see langword="true"/> to import with highest user permissions; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="native">
-        ///     true to import with the system native architecture; otherwise, false.
+        ///     <see langword="true"/> to import with the system native architecture;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
 #if any || x86
-            public static bool ImportFile(string path, bool elevated = false, bool native = false)
+        public static bool ImportFile(string path, bool elevated = false, bool native = false)
 #else
             public static bool ImportFile(string path, bool elevated = false, bool native = true)
 #endif
@@ -1013,8 +1028,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a new REG file with the specified content, imports it into the registry, and then
-        ///     deletes the file.
+        ///     Creates a new REG file with the specified content, imports it into the
+        ///     registry, and then deletes the file.
         /// </summary>
         /// <param name="path">
         ///     The full path of the file to import.
@@ -1023,13 +1038,15 @@ namespace SilDev
         ///     The full content of the file to import.
         /// </param>
         /// <param name="elevated">
-        ///     true to import with highest user permissions; otherwise, false.
+        ///     <see langword="true"/> to import with highest user permissions; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="native">
-        ///     true to import with the system native architecture; otherwise, false.
+        ///     <see langword="true"/> to import with the system native architecture;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
 #if any || x86
-            public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
+        public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
 #else
             public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
 #endif
@@ -1040,7 +1057,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(path));
                 var filePath = PathEx.Combine(path);
                 if (string.IsNullOrEmpty(filePath))
-                    throw new ArgumentNullException(nameof(filePath));
+                    throw new NullReferenceException();
                 if (content == null)
                     throw new ArgumentNullException(nameof(content));
                 if (content.Length == 0)
@@ -1079,24 +1096,26 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a new REG file with the specified content, imports it into the registry, and then
-        ///     deletes the file.
+        ///     Creates a new REG file with the specified content, imports it into the
+        ///     registry, and then deletes the file.
         /// </summary>
         /// <param name="content">
         ///     The full content of the file to import.
         /// </param>
         /// <param name="elevated">
-        ///     true to import with highest user permissions; otherwise, false.
+        ///     <see langword="true"/> to import with highest user permissions; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="native">
-        ///     true to import with the system native architecture; otherwise, false.
+        ///     <see langword="true"/> to import with the system native architecture;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
 #if any || x86
-            public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
+        public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
 #else
             public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
 #endif
-                ImportFile(FileEx.GetUniqueTempPath("tmp", ".reg"), content, elevated, native);
+            ImportFile(FileEx.GetUniqueTempPath("tmp", ".reg"), content, elevated, native);
 
         /// <summary>
         ///     Exports the full content of the specified registry paths into an REG file.
@@ -1105,13 +1124,15 @@ namespace SilDev
         ///     The full path of the file to create or override.
         /// </param>
         /// <param name="elevated">
-        ///     true to export with highest user permissions; otherwise, false.
+        ///     <see langword="true"/> to export with highest user permissions; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="keyPaths">
         ///     The full paths of the keys to export.
         /// </param>
         /// <param name="native">
-        ///     true to import with the system native architecture; otherwise, false.
+        ///     <see langword="true"/> to import with the system native architecture;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static bool ExportKeys(string destPath, bool elevated, bool native, params string[] keyPaths)
         {
@@ -1125,10 +1146,10 @@ namespace SilDev
                     throw new ArgumentOutOfRangeException(nameof(keyPaths));
                 var filePath = PathEx.Combine(destPath);
                 if (string.IsNullOrEmpty(filePath))
-                    throw new ArgumentInvalidException(nameof(destPath));
+                    throw new NullReferenceException();
                 var destDir = Path.GetDirectoryName(filePath);
                 if (string.IsNullOrEmpty(destDir))
-                    throw new ArgumentNullException(nameof(destDir));
+                    throw new NullReferenceException();
                 if (!Directory.Exists(destDir))
                     Directory.CreateDirectory(destDir);
                 const string header = "Windows Registry Editor Version 5.00";
@@ -1164,7 +1185,8 @@ namespace SilDev
         ///     The full path of the file to create or override.
         /// </param>
         /// <param name="elevated">
-        ///     true to export with highest user permissions; otherwise, false.
+        ///     <see langword="true"/> to export with highest user permissions; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="keyPaths">
         ///     The full paths of the keys to export.
@@ -1175,7 +1197,6 @@ namespace SilDev
 #else
             ExportKeys(destPath, elevated, true, keyPaths);
 #endif
-
         /// <summary>
         ///     Exports the full content of the specified registry paths into an REG file.
         /// </summary>

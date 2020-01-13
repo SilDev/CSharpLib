@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2019-12-24 09:14
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -34,8 +34,8 @@ namespace SilDev.Investment
         private TValue _value;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> with the specified
-        ///     value, default value, minimum value and maximum value.
+        ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> with the
+        ///     specified value, default value, minimum value and maximum value.
         /// </summary>
         /// <param name="value">
         ///     The value to be set.
@@ -52,13 +52,15 @@ namespace SilDev.Investment
         /// <param name="getValidationFunc">
         ///     The method that is called when <see cref="Value"/> is get.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         /// <param name="setValidationFunc">
         ///     The method that is called when <see cref="Value"/> is set.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         public ValueItem(TValue value, TValue defValue, TValue minValue, TValue maxValue, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default)
@@ -86,8 +88,8 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> with the specified
-        ///     value and default value.
+        ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> with the
+        ///     specified value and default value.
         /// </summary>
         /// <param name="value">
         ///     The value to be set.
@@ -98,20 +100,22 @@ namespace SilDev.Investment
         /// <param name="getValidationFunc">
         ///     The method that is called when <see cref="Value"/> is get.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         /// <param name="setValidationFunc">
         ///     The method that is called when <see cref="Value"/> is set.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         public ValueItem(TValue value, TValue defValue = default, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default) : this(value, defValue, default, default, getValidationFunc, setValidationFunc) { }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> class with
-        ///     serialized data.
+        ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> class
+        ///     with serialized data.
         /// </summary>
         /// <param name="info">
         ///     The object that holds the serialized object data.
@@ -141,12 +145,14 @@ namespace SilDev.Investment
         public bool MinMaxValidation { get; }
 
         /// <summary>
-        ///     Gets the minimum value, if available; otherwise, the default value is returned.
+        ///     Gets the minimum value, if available; otherwise, the default value is
+        ///     returned.
         /// </summary>
         public TValue MinValue { get; }
 
         /// <summary>
-        ///     Gets the maximum value, if available; otherwise, the default value is returned.
+        ///     Gets the maximum value, if available; otherwise, the default value is
+        ///     returned.
         /// </summary>
         public TValue MaxValue { get; }
 
@@ -165,20 +171,22 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Gets the method that is called when <see cref="Value"/> is get, if available;
-        ///     otherwise, the default value is returned.
+        ///     Gets the method that is called when <see cref="Value"/> is get, if
+        ///     available; otherwise, the default value is returned.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </summary>
         [ScriptIgnore]
         public Func<TValue, TValue> ValueGetValidationFunc { get; set; }
 
         /// <summary>
-        ///     Gets the method that is called when <see cref="Value"/> is set, if available;
-        ///     otherwise, the default value is returned.
+        ///     Gets the method that is called when <see cref="Value"/> is set, if
+        ///     available; otherwise, the default value is returned.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </summary>
         [ScriptIgnore]
@@ -232,8 +240,8 @@ namespace SilDev.Investment
 
         /// <summary>
         ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
-        ///     <see cref="MaxValue"/> have been set and are valid, the specified value
-        ///     is calibrated if it is not between <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/> have been set and are valid, the specified value is
+        ///     calibrated if it is not between <see cref="MinValue"/> and
         ///     <see cref="MaxValue"/>. If the value is default, it also ensures that
         ///     <see cref="DefValue"/> is returned instead.
         ///     <para>
@@ -257,8 +265,8 @@ namespace SilDev.Investment
 
         /// <summary>
         ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
-        ///     <see cref="MaxValue"/> have been set and are valid, the specified value
-        ///     is calibrated if it is not between <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/> have been set and are valid, the specified value is
+        ///     calibrated if it is not between <see cref="MinValue"/> and
         ///     <see cref="MaxValue"/>. If the value is default, it also ensures that
         ///     <see cref="DefValue"/> is returned instead.
         ///     <para>
@@ -314,7 +322,8 @@ namespace SilDev.Investment
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <param name="nonReadOnly">
-        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        ///     <see langword="true"/> to include the hashes of non-readonly properties;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public int GetHashCode(bool nonReadOnly) =>
             Crypto.GetClassHashCode(this, nonReadOnly);

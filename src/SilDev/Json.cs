@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2020-01-06 06:40
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -67,7 +67,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets or sets the limit for constraining the number of object levels to process.
+        ///     Gets or sets the limit for constraining the number of object levels to
+        ///     process.
         /// </summary>
         public static int RecursionLimit
         {
@@ -90,9 +91,7 @@ namespace SilDev
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-            if (count < 0)
-                throw new ArgumentException();
-            if (count > buffer.Length)
+            if (count < 0 || count > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(count));
             int width;
             switch (spacer)
@@ -216,11 +215,9 @@ namespace SilDev
             {
                 Format(ms, source);
                 ms.Seek(0, SeekOrigin.Begin);
-                using (var sr = new StreamReader(ms, TextEx.DefaultEncoding))
-                {
-                    ms = null;
-                    return sr.ReadToEnd();
-                }
+                using var sr = new StreamReader(ms, TextEx.DefaultEncoding);
+                ms = null;
+                return sr.ReadToEnd();
             }
             finally
             {
@@ -248,16 +245,14 @@ namespace SilDev
             var newFile = PathEx.GetUniquePath(srcDir, "tmp", ".json");
             using (var sr = new StreamReader(srcFile))
             {
-                using (var fs = new FileStream(newFile, FileMode.Create))
-                {
-                    int count;
-                    var ca = new char[4096];
-                    var depth = 0;
-                    var isEscape = false;
-                    var isValue = false;
-                    while ((count = sr.Read(ca, 0, ca.Length)) > 0)
-                        Format(fs, ca, count, ' ', ref depth, ref isEscape, ref isValue);
-                }
+                using var fs = new FileStream(newFile, FileMode.Create);
+                int count;
+                var ca = new char[4096];
+                var depth = 0;
+                var isEscape = false;
+                var isValue = false;
+                while ((count = sr.Read(ca, 0, ca.Length)) > 0)
+                    Format(fs, ca, count, ' ', ref depth, ref isEscape, ref isValue);
             }
             if (!FileEx.ContentIsEqual(srcFile, newFile))
                 return FileEx.Move(newFile, srcFile, true);
@@ -266,8 +261,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Serializes the specified object graph into a string representation of a JSON
-        ///     document.
+        ///     Serializes the specified object graph into a string representation of a
+        ///     JSON document.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the source.
@@ -276,7 +271,8 @@ namespace SilDev
         ///     The object graph to serialize.
         /// </param>
         /// <param name="format">
-        ///     true to format the string representation of the JSON document; otherwise, false.
+        ///     <see langword="true"/> to format the string representation of the JSON
+        ///     document; otherwise, <see langword="false"/>.
         /// </param>
         public static string Serialize<TSource>(TSource source, bool format = false)
         {
@@ -297,8 +293,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Creates a new JSON file, writes the specified object graph into to the JSON file,
-        ///     and then closes the file.
+        ///     Creates a new JSON file, writes the specified object graph into to the JSON
+        ///     file, and then closes the file.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of the source.
@@ -310,10 +306,12 @@ namespace SilDev
         ///     The object graph to write to the file.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="formatted">
-        ///     true to save the JSON document formatted; otherwise, false.
+        ///     <see langword="true"/> to save the JSON document formatted; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static bool SerializeToFile<TSource>(string path, TSource source, bool overwrite = true, bool formatted = true)
         {
@@ -323,7 +321,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(path));
                 var output = Serialize(source);
                 if (output == null)
-                    throw new ArgumentNullException(nameof(output));
+                    throw new NullReferenceException();
                 var dest = PathEx.Combine(path);
                 using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
                     if (!formatted)
@@ -340,7 +338,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Deserializes a string representation of a JSON document into an object graph.
+        ///     Deserializes a string representation of a JSON document into an object
+        ///     graph.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.

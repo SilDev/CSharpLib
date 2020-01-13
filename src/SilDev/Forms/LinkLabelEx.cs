@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: LinkLabelEx.cs
-// Version:  2019-10-31 21:55
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,7 @@ namespace SilDev.Forms
 {
     using System;
     using System.Windows.Forms;
+    using Network;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="LinkLabel"/> class.
@@ -24,7 +25,8 @@ namespace SilDev.Forms
     public static class LinkLabelEx
     {
         /// <summary>
-        ///     Creates a link for the specified text and associates it with the specified link.
+        ///     Creates a link for the specified text and associates it with the specified
+        ///     link.
         /// </summary>
         /// <param name="linkLabel">
         ///     The <see cref="LinkLabel"/> control to change.
@@ -36,7 +38,7 @@ namespace SilDev.Forms
         ///     The link to associate.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     any parameter is null.
+        ///     linkLabel, text or uri is null.
         /// </exception>
         public static void LinkText(this LinkLabel linkLabel, string text, Uri uri)
         {
@@ -58,7 +60,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Creates a link for the specified text and associates it with the specified link.
+        ///     Creates a link for the specified text and associates it with the specified
+        ///     link.
         /// </summary>
         /// <param name="linkLabel">
         ///     The <see cref="LinkLabel"/> control to change.
@@ -69,7 +72,10 @@ namespace SilDev.Forms
         /// <param name="uri">
         ///     The link to associate.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     linkLabel, text or uri is null.
+        /// </exception>
         public static void LinkText(this LinkLabel linkLabel, string text, string uri) =>
-            LinkText(linkLabel, text, uri.ToUri());
+            LinkText(linkLabel, text, uri?.ToUri());
     }
 }

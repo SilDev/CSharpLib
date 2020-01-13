@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-06 08:04
+// Version:  2020-01-13 13:01
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
@@ -29,16 +30,16 @@ namespace SilDev
     using FileTime = System.Runtime.InteropServices.ComTypes.FILETIME;
 
     /// <summary>
-    ///     An overkill class that provides a lot of Windows API (Application Programming Interface)
-    ///     functions.
+    ///     An overkill class that provides a lot of Windows API (Application
+    ///     Programming Interface) functions.
     /// </summary>
     [SuppressMessage("ReSharper", "CommentTypo")]
     public static class WinApi
     {
         /// <summary>
-        ///     An application-defined callback function. It receives the child window handles. The
-        ///     WNDENUMPROC type defines a pointer to this callback function. EnumChildProc is a
-        ///     placeholder for the application-defined function name.
+        ///     An application-defined callback function. It receives the child window
+        ///     handles. The WNDENUMPROC type defines a pointer to this callback function.
+        ///     EnumChildProc is a placeholder for the application-defined function name.
         /// </summary>
         /// <param name="hWnd">
         ///     A handle to a child window of the parent window.
@@ -47,28 +48,33 @@ namespace SilDev
         ///     The application-defined value.
         /// </param>
         /// <returns>
-        ///     To continue enumeration, the callback function must return TRUE; to stop enumeration,
-        ///     it must return FALSE.
+        ///     To continue enumeration, the callback function must return
+        ///     <see langword="true"/>; to stop enumeration, it must return
+        ///     <see langword="false"/>.
         /// </returns>
         public delegate bool EnumChildProc(IntPtr hWnd, IntPtr lParam);
 
         /// <summary>
-        ///     An application-defined callback function used with the EnumThreadWindows function.
-        ///     It receives the window handles associated with a thread. The WNDENUMPROC type defines
-        ///     a pointer to this callback function. EnumThreadWndProc is a placeholder for the
-        ///     application-defined function name.
+        ///     An application-defined callback function used with the EnumThreadWindows
+        ///     function. It receives the window handles associated with a thread. The
+        ///     WNDENUMPROC type defines a pointer to this callback function.
+        ///     EnumThreadWndProc is a placeholder for the application-defined function
+        ///     name.
         /// </summary>
         /// <param name="hWnd">
         ///     A handle to a window associated with the thread specified in the
-        ///     <see cref="NativeHelper.EnumThreadWindows(uint, EnumThreadWndProc, IntPtr)"/> function.
+        ///     <see cref="NativeHelper.EnumThreadWindows(uint, EnumThreadWndProc, IntPtr)"/>
+        ///     function.
         /// </param>
         /// <param name="lParam">
         ///     The application-defined value given in the
-        ///     <see cref="NativeHelper.EnumThreadWindows(uint, EnumThreadWndProc, IntPtr)"/> function.
+        ///     <see cref="NativeHelper.EnumThreadWindows(uint, EnumThreadWndProc, IntPtr)"/>
+        ///     function.
         /// </param>
         /// <returns>
-        ///     To continue enumeration, the callback function must return TRUE; to stop enumeration, it
-        ///     must return FALSE.
+        ///     To continue enumeration, the callback function must return
+        ///     <see langword="true"/>; to stop enumeration, it must return
+        ///     <see langword="false"/>.
         /// </returns>
         public delegate bool EnumThreadWndProc(IntPtr hWnd, IntPtr lParam);
 
@@ -76,20 +82,23 @@ namespace SilDev
         ///     Represents a pointer to the hook procedure.
         /// </summary>
         /// <param name="nCode">
-        ///     The hook code passed to the current hook procedure. The next hook procedure uses this
-        ///     code to determine how to process the hook information.
+        ///     The hook code passed to the current hook procedure. The next hook procedure
+        ///     uses this code to determine how to process the hook information.
         /// </param>
         /// <param name="wParam">
-        ///     The wParam value passed to the current hook procedure. The meaning of this parameter
-        ///     depends on the type of hook associated with the current hook chain.
+        ///     The wParam value passed to the current hook procedure. The meaning of this
+        ///     parameter depends on the type of hook associated with the current hook
+        ///     chain.
         /// </param>
         /// <param name="lParam">
-        ///     The lParam value passed to the current hook procedure. The meaning of this parameter
-        ///     depends on the type of hook associated with the current hook chain.
+        ///     The lParam value passed to the current hook procedure. The meaning of this
+        ///     parameter depends on the type of hook associated with the current hook
+        ///     chain.
         /// </param>
         /// <returns>
-        ///     If the function succeeds, the return value is the handle to the hook procedure. If the
-        ///     function fails, the return value is NULL.
+        ///     If the function succeeds, the return value is the handle to the hook
+        ///     procedure. If the function fails, the return value is
+        ///     <see langword="null"/>.
         /// </returns>
         public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -117,6 +126,76 @@ namespace SilDev
         public enum AccessRights : uint
         {
             /// <summary>
+            ///     Required to terminate a process using
+            ///     <see cref="NativeHelper.TerminateProcess(IntPtr, uint)"/>.
+            /// </summary>
+            ProcessTerminate = 0x1,
+
+            /// <summary>
+            ///     Required to create a thread.
+            /// </summary>
+            ProcessCreateThread = 0x2,
+
+            /// <summary>
+            ///     Required to perform an operation on the address space of a process.
+            /// </summary>
+            ProcessVmOperation = 0x8,
+
+            /// <summary>
+            ///     Required to read memory in a process using
+            ///     <see cref="NativeHelper.ReadProcessMemory(IntPtr, IntPtr, IntPtr, IntPtr, ref IntPtr)"/>
+            ///     .
+            /// </summary>
+            ProcessVmRead = 0x10,
+
+            /// <summary>
+            ///     Required to write to memory in a process using
+            ///     <see cref="NativeHelper.WriteProcessMemory(IntPtr, IntPtr, IntPtr, int, out IntPtr)"/>
+            ///     .
+            /// </summary>
+            ProcessVmWrite = 0x20,
+
+            /// <summary>
+            ///     Required to duplicate a handle using
+            ///     <see cref="NativeHelper.DuplicateHandle(IntPtr, IntPtr, IntPtr, out IntPtr, uint, bool, uint)"/>
+            /// </summary>
+            ProcessDupHandle = 0x40,
+
+            /// <summary>
+            ///     Required to create a process.
+            /// </summary>
+            ProcessCreateProcess = 0x80,
+
+            /// <summary>
+            ///     Required to set memory limits using
+            ///     <see cref="NativeHelper.SetProcessWorkingSetSize(IntPtr, UIntPtr, UIntPtr)"/>
+            ///     .
+            /// </summary>
+            ProcessSetQuota = 0x100,
+
+            /// <summary>
+            ///     Required to set certain information about a process, such as its priority
+            ///     class.
+            /// </summary>
+            ProcessSetInformation = 0x200,
+
+            /// <summary>
+            ///     Required to retrieve certain information about a process, such as its
+            ///     token, exit code, and priority class.
+            /// </summary>
+            ProcessQueryInformation = 0x400,
+
+            /// <summary>
+            ///     Required to suspend or resume a process.
+            /// </summary>
+            ProcessSuspendResume = 0x800,
+
+            /// <summary>
+            ///     Required to retrieve certain information about a process.
+            /// </summary>
+            ProcessQueryLimitedInformation = 0x1000,
+
+            /// <summary>
             ///     Required to delete the object.
             /// </summary>
             Delete = 0x10000,
@@ -126,12 +205,6 @@ namespace SilDev
             ///     including the information in the SACL.
             /// </summary>
             ReadControl = 0x20000,
-
-            /// <summary>
-            ///     The right to use the object for synchronization. This enables a thread to wait
-            ///     until the object is in the signaled state.
-            /// </summary>
-            Synchronize = 0x100000,
 
             /// <summary>
             ///     Required to modify the DACL in the security descriptor for the object.
@@ -144,70 +217,10 @@ namespace SilDev
             WriteOwner = 0x80000,
 
             /// <summary>
-            ///     Required to create a process.
+            ///     The right to use the object for synchronization. This enables a thread to
+            ///     wait until the object is in the signaled state.
             /// </summary>
-            ProcessCreateProcess = 0x80,
-
-            /// <summary>
-            ///     Required to create a thread.
-            /// </summary>
-            ProcessCreateThread = 0x2,
-
-            /// <summary>
-            ///     Required to duplicate a handle using
-            ///     <see cref="NativeHelper.DuplicateHandle(IntPtr, IntPtr, IntPtr, out IntPtr, uint, bool, uint)"/>
-            /// </summary>
-            ProcessDupHandle = 0x40,
-
-            /// <summary>
-            ///     Required to retrieve certain information about a process, such as its token,
-            ///     exit code, and priority class.
-            /// </summary>
-            ProcessQueryInformation = 0x400,
-
-            /// <summary>
-            ///     Required to retrieve certain information about a process.
-            /// </summary>
-            ProcessQueryLimitedInformation = 0x1000,
-
-            /// <summary>
-            ///     Required to set certain information about a process, such as its priority class.
-            /// </summary>
-            ProcessSetInformation = 0x200,
-
-            /// <summary>
-            ///     Required to set memory limits using
-            ///     <see cref="NativeHelper.SetProcessWorkingSetSize(IntPtr, UIntPtr, UIntPtr)"/>.
-            /// </summary>
-            ProcessSetQuota = 0x100,
-
-            /// <summary>
-            ///     Required to suspend or resume a process.
-            /// </summary>
-            ProcessSuspendResume = 0x800,
-
-            /// <summary>
-            ///     Required to terminate a process using
-            ///     <see cref="NativeHelper.TerminateProcess(IntPtr, uint)"/>.
-            /// </summary>
-            ProcessTerminate = 0x1,
-
-            /// <summary>
-            ///     Required to perform an operation on the address space of a process.
-            /// </summary>
-            ProcessVmOperation = 0x8,
-
-            /// <summary>
-            ///     Required to read memory in a process using
-            ///     <see cref="NativeHelper.ReadProcessMemory(IntPtr, IntPtr, IntPtr, IntPtr, ref IntPtr)"/>.
-            /// </summary>
-            ProcessVmRead = 0x10,
-
-            /// <summary>
-            ///     Required to write to memory in a process using
-            ///     <see cref="NativeHelper.WriteProcessMemory(IntPtr, IntPtr, IntPtr, int, out IntPtr)"/>.
-            /// </summary>
-            ProcessVmWrite = 0x20
+            Synchronize = 0x100000
         }
 
         /// <summary>
@@ -217,19 +230,37 @@ namespace SilDev
         public enum AnimateWindowFlags : uint
         {
             /// <summary>
-            ///     Activates the window. Do not use this value with <see cref="Hide"/>.
+            ///     Animates the window from left to right. This flag can be used with roll or
+            ///     slide animation. It is ignored when used with <see cref="Center"/> or
+            ///     <see cref="Blend"/>.
             /// </summary>
-            Activate = 0x20000,
+            HorPositive = 0x1,
 
             /// <summary>
-            ///     Uses a fade effect. This flag can be used only if hwnd is a top-level window.
+            ///     Animates the window from right to left. This flag can be used with roll or
+            ///     slide animation. It is ignored when used with <see cref="Center"/> or
+            ///     <see cref="Blend"/>.
             /// </summary>
-            Blend = 0x80000,
+            HorNegative = 0x2,
 
             /// <summary>
-            ///     Makes the window appear to collapse inward if <see cref="Hide"/> is
-            ///     used or expand outward if the <see cref="Hide"/> is not used. The
-            ///     various direction flags have no effect.
+            ///     Animates the window from top to bottom. This flag can be used with roll or
+            ///     slide animation. It is ignored when used with <see cref="Center"/> or
+            ///     <see cref="Blend"/>.
+            /// </summary>
+            VerPositive = 0x4,
+
+            /// <summary>
+            ///     Animates the window from bottom to top. This flag can be used with roll or
+            ///     slide animation. It is ignored when used with <see cref="Center"/> or
+            ///     <see cref="Blend"/>.
+            /// </summary>
+            VerNegative = 0x8,
+
+            /// <summary>
+            ///     Makes the window appear to collapse inward if <see cref="Hide"/> is used or
+            ///     expand outward if the <see cref="Hide"/> is not used. The various direction
+            ///     flags have no effect.
             /// </summary>
             Center = 0x10,
 
@@ -239,38 +270,21 @@ namespace SilDev
             Hide = 0x10000,
 
             /// <summary>
-            ///     Animates the window from left to right. This flag can be used with roll or slide
-            ///     animation. It is ignored when used with <see cref="Center"/> or
-            ///     <see cref="Blend"/>.
+            ///     Activates the window. Do not use this value with <see cref="Hide"/>.
             /// </summary>
-            HorPositive = 0x1,
+            Activate = 0x20000,
 
             /// <summary>
-            ///     Animates the window from right to left. This flag can be used with roll or slide
-            ///     animation. It is ignored when used with <see cref="Center"/>
-            ///     or <see cref="Blend"/>.
-            /// </summary>
-            HorNegative = 0x2,
-
-            /// <summary>
-            ///     Uses slide animation. By default, roll animation is used. This flag is ignored
-            ///     when used with <see cref="Center"/>.
+            ///     Uses slide animation. By default, roll animation is used. This flag is
+            ///     ignored when used with <see cref="Center"/>.
             /// </summary>
             Slide = 0x40000,
 
             /// <summary>
-            ///     Animates the window from top to bottom. This flag can be used with roll or slide
-            ///     animation. It is ignored when used with <see cref="Center"/> or
-            ///     <see cref="Blend"/>.
+            ///     Uses a fade effect. This flag can be used only if hwnd is a top-level
+            ///     window.
             /// </summary>
-            VerPositive = 0x4,
-
-            /// <summary>
-            ///     Animates the window from bottom to top. This flag can be used with roll or slide
-            ///     animation. It is ignored when used with <see cref="Center"/> or
-            ///     <see cref="Blend"/>.
-            /// </summary>
-            VerNegative = 0x8
+            Blend = 0x80000
         }
 
         /// <summary>
@@ -280,7 +294,7 @@ namespace SilDev
         {
             /// <summary>
             ///     Registers a new appbar and specifies the message identifier that the system
-            ///     should use to send notification messages to the appbar
+            ///     should use to send notification messages to the appbar.
             /// </summary>
             New = 0x0,
 
@@ -305,25 +319,27 @@ namespace SilDev
             GetState = 0x4,
 
             /// <summary>
-            ///     Retrieves the bounding rectangle of the Windows taskbar. Note that this applies only
-            ///     to the system taskbar. Other objects, particularly toolbars supplied with third-party
-            ///     software, also can be present. As a result, some of the screen area not covered by the
-            ///     Windows taskbar might not be visible to the user. To retrieve the area of the screen
-            ///     not covered by both the taskbar and other app bars-the working area available to your
-            ///     application-, use the GetMonitorInfo function.
+            ///     Retrieves the bounding rectangle of the Windows taskbar. Note that this
+            ///     applies only to the system taskbar. Other objects, particularly toolbars
+            ///     supplied with third-party software, also can be present. As a result, some
+            ///     of the screen area not covered by the Windows taskbar might not be visible
+            ///     to the user. To retrieve the area of the screen not covered by both the
+            ///     taskbar and other app bars-the working area available to your application-,
+            ///     use the GetMonitorInfo function.
             /// </summary>
             GetTaskBarPos = 0x5,
 
             /// <summary>
-            ///     Notifies the system to activate or deactivate an appbar. The lParam member of the
-            ///     <see cref="AppBarData"/> pointed to by pData is set to TRUE to activate or FALSE to
+            ///     Notifies the system to activate or deactivate an appbar. The lParam member
+            ///     of the <see cref="AppBarData"/> pointed to by pData is set to
+            ///     <see langword="true"/> to activate or <see langword="false"/> to
             ///     deactivate.
             /// </summary>
             Activate = 0x6,
 
             /// <summary>
-            ///     Retrieves the handle to the autohide appbar associated with a particular edge of the
-            ///     screen.
+            ///     Retrieves the handle to the autohide appbar associated with a particular
+            ///     edge of the screen.
             /// </summary>
             GetAutoHideBar = 0x7,
 
@@ -343,13 +359,14 @@ namespace SilDev
             SetState = 0xa,
 
             /// <summary>
-            ///     Retrieves the handle to the autohide appbar associated with a particular edge of a
-            ///     particular monitor.
+            ///     Retrieves the handle to the autohide appbar associated with a particular
+            ///     edge of a particular monitor.
             /// </summary>
             GetAutoHideBarEx = 0xb,
 
             /// <summary>
-            ///     Registers or unregisters an autohide appbar for an edge of a particular monitor.
+            ///     Registers or unregisters an autohide appbar for an edge of a particular
+            ///     monitor.
             /// </summary>
             SetAutoHideBarEx = 0xc
         }
@@ -360,13 +377,14 @@ namespace SilDev
         public enum DuplicateOption : uint
         {
             /// <summary>
-            ///     Closes the source handle. This occurs regardless of any error status returned.
+            ///     Closes the source handle. This occurs regardless of any error status
+            ///     returned.
             /// </summary>
             CloseSource = 0x1,
 
             /// <summary>
-            ///     Ignores the dwDesiredAccess parameter. The duplicate handle has the same access as the
-            ///     source handle.
+            ///     Ignores the dwDesiredAccess parameter. The duplicate handle has the same
+            ///     access as the source handle.
             /// </summary>
             SameAccess = 0x2
         }
@@ -379,20 +397,25 @@ namespace SilDev
         public enum LocalAllocFlags : uint
         {
             /// <summary>
-            ///     Combines <see cref="LMemMoveable"/> and <see cref="LMemZeroInit"/>.
-            /// </summary>
-            LHND = LMemMoveable | LMemZeroInit,
-
-            /// <summary>
             ///     Allocates fixed memory. The return value is a pointer to the memory object.
             /// </summary>
             LMemFixed = 0x0,
+
+            /// <summary>
+            ///     Same as <see cref="LMemFixed"/>.
+            /// </summary>
+            NonZeroLPtr = LMemFixed,
 
             /// <summary>
             ///     Allocates movable memory. Memory blocks are never moved in physical memory,
             ///     but they can be moved within the default heap.
             /// </summary>
             LMemMoveable = 0x2,
+
+            /// <summary>
+            ///     Same as <see cref="LMemMoveable"/>.
+            /// </summary>
+            NonZeroLHND = LMemMoveable,
 
             /// <summary>
             ///     Initializes memory contents to zero.
@@ -405,14 +428,9 @@ namespace SilDev
             LPtr = LMemFixed | LMemZeroInit,
 
             /// <summary>
-            ///     Same as <see cref="LMemMoveable"/>.
+            ///     Combines <see cref="LMemMoveable"/> and <see cref="LMemZeroInit"/>.
             /// </summary>
-            NonZeroLHND = LMemMoveable,
-
-            /// <summary>
-            ///     Same as <see cref="LMemFixed"/>.
-            /// </summary>
-            NonZeroLPtr = LMemFixed
+            LHND = LMemMoveable | LMemZeroInit
         }
 
         /// <summary>
@@ -422,17 +440,17 @@ namespace SilDev
         public enum MemAllocTypes : uint
         {
             /// <summary>
-            ///     Allocates memory charges (from the overall size of memory and the paging files
-            ///     on disk) for the specified reserved memory pages. The function also guarantees
-            ///     that when the caller later initially accesses the memory, the contents will be
-            ///     zero. Actual physical pages are not allocated unless/until the virtual
-            ///     addresses are actually accessed.
+            ///     Allocates memory charges (from the overall size of memory and the paging
+            ///     files on disk) for the specified reserved memory pages. The function also
+            ///     guarantees that when the caller later initially accesses the memory, the
+            ///     contents will be zero. Actual physical pages are not allocated unless/until
+            ///     the virtual addresses are actually accessed.
             /// </summary>
             Commit = 0x1000,
 
             /// <summary>
-            ///     Reserves a range of the process's virtual address space without allocating any
-            ///     actual physical storage in memory or in the paging file on disk.
+            ///     Reserves a range of the process's virtual address space without allocating
+            ///     any actual physical storage in memory or in the paging file on disk.
             /// </summary>
             Reserve = 0x2000,
 
@@ -443,22 +461,22 @@ namespace SilDev
             Decommit = 0x4000,
 
             /// <summary>
-            ///     Releases the specified region of pages. After the operation, the pages are in
-            ///     the free state.
+            ///     Releases the specified region of pages. After the operation, the pages are
+            ///     in the free state.
             /// </summary>
             Release = 0x8000,
 
             /// <summary>
-            ///     Indicates that data in the memory range specified by lpAddress and dwSize is
-            ///     no longer of interest. The pages should not be read from or written to the
-            ///     paging file. However, the memory block will be used again later, so it should
-            ///     not be decommitted. This value cannot be used with any other value.
+            ///     Indicates that data in the memory range specified by lpAddress and dwSize
+            ///     is no longer of interest. The pages should not be read from or written to
+            ///     the paging file. However, the memory block will be used again later, so it
+            ///     should not be decommitted. This value cannot be used with any other value.
             /// </summary>
             Reset = 0x80000,
 
             /// <summary>
-            ///     Reserves an address range that can be used to map Address Windowing Extensions
-            ///     (AWE) pages.
+            ///     Reserves an address range that can be used to map Address Windowing
+            ///     Extensions (AWE) pages.
             /// </summary>
             Physical = 0x400000,
 
@@ -469,8 +487,9 @@ namespace SilDev
             TopDown = 0x100000,
 
             /// <summary>
-            ///     Causes the system to track pages that are written to in the allocated region.
-            ///     If you specify this value, you must also specify <see cref="Reserve"/>.
+            ///     Causes the system to track pages that are written to in the allocated
+            ///     region. If you specify this value, you must also specify
+            ///     <see cref="Reserve"/>.
             /// </summary>
             WriteWatch = 0x200000,
 
@@ -492,8 +511,8 @@ namespace SilDev
             Decommit = 0x4000,
 
             /// <summary>
-            ///     Releases the specified region of pages. After the operation, the pages are in
-            ///     the free state.
+            ///     Releases the specified region of pages. After the operation, the pages are
+            ///     in the free state.
             /// </summary>
             Release = 0x8000
         }
@@ -505,8 +524,41 @@ namespace SilDev
         public enum MemProtectFlags : uint
         {
             /// <summary>
-            ///     Enables execute access to the committed region of pages. An attempt to write
-            ///     to the committed region results in an access violation.
+            ///     Disables all access to the committed region of pages. An attempt to read
+            ///     from, write to, or execute the committed region results in an access
+            ///     violation.
+            /// </summary>
+            PageNoAccess = 0x1,
+
+            /// <summary>
+            ///     Enables read-only access to the committed region of pages. An attempt to
+            ///     write to the committed region results in an access violation. If Data
+            ///     Execution Prevention is enabled, an attempt to execute code in the
+            ///     committed region results in an access violation.
+            /// </summary>
+            PageReadOnly = 0x2,
+
+            /// <summary>
+            ///     Enables read-only or read/write access to the committed region of pages. If
+            ///     Data Execution Prevention is enabled, attempting to execute code in the
+            ///     committed region results in an access violation.
+            /// </summary>
+            PageReadWrite = 0x4,
+
+            /// <summary>
+            ///     Enables read-only or copy-on-write access to a mapped view of a file
+            ///     mapping object. An attempt to write to a committed copy-on-write page
+            ///     results in a private copy of the page being made for the process. The
+            ///     private page is marked as <see cref="PageReadWrite"/>, and the change is
+            ///     written to the new page. If Data Execution Prevention is enabled,
+            ///     attempting to execute code in the committed region results in an access
+            ///     violation.
+            /// </summary>
+            PageWriteCopy = 0x8,
+
+            /// <summary>
+            ///     Enables execute access to the committed region of pages. An attempt to
+            ///     write to the committed region results in an access violation.
             /// </summary>
             PageExecute = 0x10,
 
@@ -523,44 +575,34 @@ namespace SilDev
             PageExecuteReadWrite = 0x40,
 
             /// <summary>
-            ///     Enables execute, read-only, or copy-on-write access to a mapped view of a file
-            ///     mapping object. An attempt to write to a committed copy-on-write page results
-            ///     in a private copy of the page being made for the process. The private page is
-            ///     marked as <see cref="PageExecuteReadWrite"/>, and the change is written to
-            ///     the new page.
+            ///     Enables execute, read-only, or copy-on-write access to a mapped view of a
+            ///     file mapping object. An attempt to write to a committed copy-on-write page
+            ///     results in a private copy of the page being made for the process. The
+            ///     private page is marked as <see cref="PageExecuteReadWrite"/>, and the
+            ///     change is written to the new page.
             /// </summary>
             PageExecuteWriteCopy = 0x80,
 
             /// <summary>
-            ///     Disables all access to the committed region of pages. An attempt to read from,
-            ///     write to, or execute the committed region results in an access violation.
+            ///     Pages in the region become guard pages. Any attempt to access a guard page
+            ///     causes the system to raise a STATUS_GUARD_PAGE_VIOLATION (0x80000001)
+            ///     exception and turn off the guard page status. Guard pages thus act as a
+            ///     one-time access alarm.
             /// </summary>
-            PageNoAccess = 0x1,
+            PageGuard = 0x100,
 
             /// <summary>
-            ///     Enables read-only access to the committed region of pages. An attempt to write
-            ///     to the committed region results in an access violation. If Data Execution
-            ///     Prevention is enabled, an attempt to execute code in the committed region
-            ///     results in an access violation.
+            ///     Sets all pages to be non-cachable. Applications should not use this
+            ///     attribute except when explicitly required for a device. Using the
+            ///     interlocked functions with memory that is mapped with
+            ///     <see cref="PageNoCache"/> can result in an <see cref="ExternalException"/>.
             /// </summary>
-            PageReadOnly = 0x2,
+            PageNoCache = 0x200,
 
             /// <summary>
-            ///     Enables read-only or read/write access to the committed region of pages. If
-            ///     Data Execution Prevention is enabled, attempting to execute code in the
-            ///     committed region results in an access violation.
+            ///     Sets all pages to be write-combined.
             /// </summary>
-            PageReadWrite = 0x4,
-
-            /// <summary>
-            ///     Enables read-only or copy-on-write access to a mapped view of a file mapping
-            ///     object. An attempt to write to a committed copy-on-write page results in a
-            ///     private copy of the page being made for the process. The private page is
-            ///     marked as <see cref="PageReadWrite"/>, and the change is written to the new
-            ///     page. If Data Execution Prevention is enabled, attempting to execute code in
-            ///     the committed region results in an access violation.
-            /// </summary>
-            PageWriteCopy = 0x8,
+            PageWriteCombine = 0x400,
 
             /// <summary>
             ///     Sets all locations in the pages as invalid targets for CFG. Used along with
@@ -575,37 +617,16 @@ namespace SilDev
 
             /// <summary>
             ///     Pages in the region will not have their CFG information updated while the
-            ///     protection changes for VirtualProtect. For example, if the pages in the region
-            ///     was allocated using <see cref="PageTargetsInvalid"/>, then the invalid
-            ///     information will be maintained while the page protection changes. This flag is
-            ///     only valid when the protection changes to an executable type like
-            ///     <see cref="PageExecute"/>, <see cref="PageExecuteRead"/>,
+            ///     protection changes for VirtualProtect. For example, if the pages in the
+            ///     region was allocated using <see cref="PageTargetsInvalid"/>, then the
+            ///     invalid information will be maintained while the page protection changes.
+            ///     This flag is only valid when the protection changes to an executable type
+            ///     like <see cref="PageExecute"/>, <see cref="PageExecuteRead"/>,
             ///     <see cref="PageExecuteReadWrite"/> and <see cref="PageExecuteWriteCopy"/>.
-            ///     The default behavior for VirtualProtect protection change to executable is to
-            ///     mark all locations as valid call targets for CFG.
+            ///     The default behavior for VirtualProtect protection change to executable is
+            ///     to mark all locations as valid call targets for CFG.
             /// </summary>
-            PageTargetsNoUpdate = 0x40000000,
-
-            /// <summary>
-            ///     Pages in the region become guard pages. Any attempt to access a guard page
-            ///     causes the system to raise a STATUS_GUARD_PAGE_VIOLATION (0x80000001) exception
-            ///     and turn off the guard page status. Guard pages thus act as a one-time access
-            ///     alarm.
-            /// </summary>
-            PageGuard = 0x100,
-
-            /// <summary>
-            ///     Sets all pages to be non-cachable. Applications should not use this attribute
-            ///     except when explicitly required for a device. Using the interlocked functions
-            ///     with memory that is mapped with <see cref="PageNoCache"/> can result
-            ///     in an <see cref="ExternalException"/>.
-            /// </summary>
-            PageNoCache = 0x200,
-
-            /// <summary>
-            ///     Sets all pages to be write-combined.
-            /// </summary>
-            PageWriteCombine = 0x400
+            PageTargetsNoUpdate = 0x40000000
         }
 
         /// <summary>
@@ -625,34 +646,36 @@ namespace SilDev
             UrlAsFileName = 0x1,
 
             /// <summary>
-            ///     Internet Explorer 6 for Windows XP SP2 and later. Use MIME-type detection even
-            ///     if FEATURE_MIME_SNIFFING is detected. Usually, this feature control key would
-            ///     disable MIME-type detection.
+            ///     Internet Explorer 6 for Windows XP SP2 and later. Use MIME-type detection
+            ///     even if FEATURE_MIME_SNIFFING is detected. Usually, this feature control
+            ///     key would disable MIME-type detection.
             /// </summary>
             EnableMimeSniffing = 0x2,
 
             /// <summary>
-            ///     Internet Explorer 6 for Windows XP SP2 and later. Perform MIME-type detection
-            ///     if "text/plain" is proposed, even if data sniffing is otherwise disabled. Plain
-            ///     text may be converted to text/html if HTML tags are detected.
+            ///     Internet Explorer 6 for Windows XP SP2 and later. Perform MIME-type
+            ///     detection if "text/plain" is proposed, even if data sniffing is otherwise
+            ///     disabled. Plain text may be converted to text/html if HTML tags are
+            ///     detected.
             /// </summary>
             IgnoreMimeTextPlain = 0x4,
 
             /// <summary>
-            ///     Internet Explorer 8. Use the authoritative MIME type specified in pwzMimeProposed.
-            ///     Unless <see cref="IgnoreMimeTextPlain"/> is specified, no data sniffing is
-            ///     performed.
+            ///     Internet Explorer 8. Use the authoritative MIME type specified in
+            ///     pwzMimeProposed. Unless <see cref="IgnoreMimeTextPlain"/> is specified, no
+            ///     data sniffing is performed.
             /// </summary>
             ServerMime = 0x8,
 
             /// <summary>
-            ///     Internet Explorer 9. Do not perform detection if "text/plain" is specified in
-            ///     pwzMimeProposed.
+            ///     Internet Explorer 9. Do not perform detection if "text/plain" is specified
+            ///     in pwzMimeProposed.
             /// </summary>
             RespectTextPlain = 0x10,
 
             /// <summary>
-            ///     Internet Explorer 9. Returns image/png and image/jpeg instead of image/x-png and image/pjpeg.
+            ///     Internet Explorer 9. Returns image/png and image/jpeg instead of
+            ///     image/x-png and image/pjpeg.
             /// </summary>
             ReturnUpdatedImgMimes = 0x20
         }
@@ -664,36 +687,11 @@ namespace SilDev
         public enum ModifyMenuFlags : uint
         {
             /// <summary>
-            ///     Indicates that the uPosition parameter gives the identifier of the menu item.
-            ///     The <see cref="ByCommand"/> flag is the default if neither the
+            ///     Indicates that the uPosition parameter gives the identifier of the menu
+            ///     item. The <see cref="ByCommand"/> flag is the default if neither the
             ///     <see cref="ByCommand"/> nor <see cref="ByPosition"/> flag is specified.
             /// </summary>
             ByCommand = 0x0,
-
-            /// <summary>
-            ///     Indicates that the uPosition parameter gives the zero-based relative position
-            ///     of the menu item.
-            /// </summary>
-            ByPosition = 0x400,
-
-            /// <summary>
-            ///     Uses a bitmap as the menu item. The lpNewItem parameter contains a handle to
-            ///     the bitmap.
-            /// </summary>
-            Bitmap = 0x4,
-
-            /// <summary>
-            ///     Places a check mark next to the item. If your application provides check-mark
-            ///     bitmaps (see the SetMenuItemBitmaps function), this flag displays a selected
-            ///     bitmap next to the menu item.
-            /// </summary>
-            Checked = 0x8,
-
-            /// <summary>
-            ///     Disables the menu item so that it cannot be selected, but this flag does not
-            ///     gray it.
-            /// </summary>
-            Disabled = 0x2,
 
             /// <summary>
             ///     Enables the menu item so that it can be selected and restores it from its
@@ -702,14 +700,54 @@ namespace SilDev
             Enabled = 0x0,
 
             /// <summary>
+            ///     Specifies that the menu item is a text string; the lpNewItem parameter is a
+            ///     pointer to the string.
+            /// </summary>
+            TextString = 0x0,
+
+            /// <summary>
+            ///     Does not place a check mark next to the item (the default). If your
+            ///     application supplies check-mark bitmaps (see the SetMenuItemBitmaps
+            ///     function), this flag displays a clear bitmap next to the menu item.
+            /// </summary>
+            Unchecked = 0x0,
+
+            /// <summary>
             ///     Disables the menu item and grays it so that it cannot be selected.
             /// </summary>
             Grayed = 0x1,
 
             /// <summary>
+            ///     Disables the menu item so that it cannot be selected, but this flag does
+            ///     not gray it.
+            /// </summary>
+            Disabled = 0x2,
+
+            /// <summary>
+            ///     Uses a bitmap as the menu item. The lpNewItem parameter contains a handle
+            ///     to the bitmap.
+            /// </summary>
+            Bitmap = 0x4,
+
+            /// <summary>
+            ///     Places a check mark next to the item. If your application provides
+            ///     check-mark bitmaps (see the SetMenuItemBitmaps function), this flag
+            ///     displays a selected bitmap next to the menu item.
+            /// </summary>
+            Checked = 0x8,
+
+            /// <summary>
+            ///     Specifies that the menu item opens a drop-down menu or submenu. The
+            ///     uIDNewItem parameter specifies a handle to the drop-down menu or submenu.
+            ///     This flag is used to add a menu name to a menu bar or a menu item that
+            ///     opens a submenu to a drop-down menu, submenu, or shortcut menu.
+            /// </summary>
+            Popup = 0x10,
+
+            /// <summary>
             ///     Functions the same as the <see cref="MenuBreak"/> flag for a menu bar. For
-            ///     a drop-down menu, submenu, or shortcut menu, the new column is separated from
-            ///     the old column by a vertical line.
+            ///     a drop-down menu, submenu, or shortcut menu, the new column is separated
+            ///     from the old column by a vertical line.
             /// </summary>
             MenuBarBreak = 0x20,
 
@@ -720,41 +758,26 @@ namespace SilDev
             MenuBreak = 0x40,
 
             /// <summary>
-            ///     Specifies that the item is an owner-drawn item. Before the menu is displayed
-            ///     for the first time, the window that owns the menu receives a WM_MEASUREITEM
-            ///     message to retrieve the width and height of the menu item. The WM_DRAWITEM
-            ///     message is then sent to the window procedure of the owner window whenever
-            ///     the appearance of the menu item must be updated.
+            ///     Specifies that the item is an owner-drawn item. Before the menu is
+            ///     displayed for the first time, the window that owns the menu receives a
+            ///     WM_MEASUREITEM message to retrieve the width and height of the menu item.
+            ///     The WM_DRAWITEM message is then sent to the window procedure of the owner
+            ///     window whenever the appearance of the menu item must be updated.
             /// </summary>
             OwnerDraw = 0x100,
 
             /// <summary>
-            ///     Specifies that the menu item opens a drop-down menu or submenu. The uIDNewItem
-            ///     parameter specifies a handle to the drop-down menu or submenu. This flag is
-            ///     used to add a menu name to a menu bar or a menu item that opens a submenu to a
-            ///     drop-down menu, submenu, or shortcut menu.
+            ///     Indicates that the uPosition parameter gives the zero-based relative
+            ///     position of the menu item.
             /// </summary>
-            Popup = 0x10,
+            ByPosition = 0x400,
 
             /// <summary>
-            ///     Draws a horizontal dividing line. This flag is used only in a drop-down menu,
-            ///     submenu, or shortcut menu. The line cannot be grayed, disabled, or highlighted.
-            ///     The lpNewItem and uIDNewItem parameters are ignored.
+            ///     Draws a horizontal dividing line. This flag is used only in a drop-down
+            ///     menu, submenu, or shortcut menu. The line cannot be grayed, disabled, or
+            ///     highlighted. The lpNewItem and uIDNewItem parameters are ignored.
             /// </summary>
             Separator = 0x800,
-
-            /// <summary>
-            ///     Specifies that the menu item is a text string; the lpNewItem parameter is a
-            ///     pointer to the string.
-            /// </summary>
-            String = 0x0,
-
-            /// <summary>
-            ///     Does not place a check mark next to the item (the default). If your application
-            ///     supplies check-mark bitmaps (see the SetMenuItemBitmaps function), this flag
-            ///     displays a clear bitmap next to the menu item.
-            /// </summary>
-            Unchecked = 0x0,
 
             /// <summary>
             ///     Remove uPosition parameters.
@@ -769,34 +792,35 @@ namespace SilDev
         public enum ProcessInfoFlags : uint
         {
             /// <summary>
-            ///     Retrieves a pointer to a PEB structure that can be used to determine whether the
-            ///     specified process is being debugged, and a unique value used by the system to identify
-            ///     the specified process.
+            ///     Retrieves a pointer to a PEB structure that can be used to determine
+            ///     whether the specified process is being debugged, and a unique value used by
+            ///     the system to identify the specified process.
             /// </summary>
             ProcessBasicInformation = 0x0,
 
             /// <summary>
-            ///     Retrieves a DWORD_PTR value that is the port number of the debugger for the process. A
-            ///     nonzero value indicates that the process is being run under the control of a ring 3
-            ///     debugger.
+            ///     Retrieves a DWORD_PTR value that is the port number of the debugger for the
+            ///     process. A nonzero value indicates that the process is being run under the
+            ///     control of a ring 3 debugger.
             /// </summary>
             ProcessDebugPort = 0x7,
 
             /// <summary>
-            ///     Determines whether the process is running in the WOW64 environment (WOW64 is the x86
-            ///     emulator that allows Win32-based applications to run on 64-bit Windows).
+            ///     Determines whether the process is running in the WOW64 environment (WOW64
+            ///     is the x86 emulator that allows Win32-based applications to run on 64-bit
+            ///     Windows).
             /// </summary>
             ProcessWow64Information = 0x1a,
 
             /// <summary>
-            ///     Retrieves a <see cref="string"/> value containing the name of the image file for the
-            ///     process.
+            ///     Retrieves a <see cref="string"/> value containing the name of the image
+            ///     file for the process.
             /// </summary>
             ProcessImageFileName = 0x1b,
 
             /// <summary>
-            ///     Retrieves a <see cref="ulong"/> value indicating whether the process is considered
-            ///     critical.
+            ///     Retrieves a <see cref="ulong"/> value indicating whether the process is
+            ///     considered critical.
             /// </summary>
             ProcessBreakOnTermination = 0x1d
         }
@@ -808,32 +832,38 @@ namespace SilDev
         public enum RedrawWindowFlags : uint
         {
             /// <summary>
-            ///     Causes the window to receive a WM_ERASEBKGND message when the window is repainted.
-            ///     The <see cref="Invalidate"/> flag must also be specified; otherwise,
-            ///     <see cref="Erase"/> has no effect.
+            ///     Invalidates lprcUpdate or hrgnUpdate (only one may be non-
+            ///     <see langword="null"/>). If both are <see langword="null"/>, the entire
+            ///     window is invalidated.
             /// </summary>
-            Erase = 0x4,
+            Invalidate = 0x1,
 
             /// <summary>
-            ///     Causes any part of the nonclient area of the window that intersects the update region
-            ///     to receive a WM_NCPAINT message. The <see cref="Invalidate"/> flag must also be specified;
-            ///     otherwise, <see cref="Frame"/> has no effect. The WM_NCPAINT message is typically not sent
-            ///     during the execution of RedrawWindow unless either <see cref="UpdateNow"/> or
-            ///     <see cref="EraseNow"/> is specified.
-            /// </summary>
-            Frame = 0x400,
-
-            /// <summary>
-            ///     Causes a WM_PAINT message to be posted to the window regardless of whether any portion of
-            ///     the window is invalid.
+            ///     Causes a WM_PAINT message to be posted to the window regardless of whether
+            ///     any portion of the window is invalid.
             /// </summary>
             InternalPaint = 0x2,
 
             /// <summary>
-            ///     Invalidates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the
-            ///     entire window is invalidated.
+            ///     Causes the window to receive a WM_ERASEBKGND message when the window is
+            ///     repainted. The <see cref="Invalidate"/> flag must also be specified;
+            ///     otherwise, <see cref="Erase"/> has no effect.
             /// </summary>
-            Invalidate = 0x1,
+            Erase = 0x4,
+
+            /// <summary>
+            ///     Validates lprcUpdate or hrgnUpdate (only one may be non-
+            ///     <see langword="null"/>). If both are <see langword="null"/>, the entire
+            ///     window is validated. This flag does not affect internal WM_PAINT messages.
+            /// </summary>
+            Validate = 0x8,
+
+            /// <summary>
+            ///     Suppresses any pending internal WM_PAINT messages. This flag does not
+            ///     affect WM_PAINT messages resulting from a non-<see langword="null"/> update
+            ///     area.
+            /// </summary>
+            NoInternalPaint = 0x10,
 
             /// <summary>
             ///     Suppresses any pending WM_ERASEBKGND messages.
@@ -841,37 +871,9 @@ namespace SilDev
             NoErase = 0x20,
 
             /// <summary>
-            ///     Suppresses any pending WM_NCPAINT messages. This flag must be used with <see cref="Validate"/>
-            ///     and is typically used with <see cref="NoChildren"/>. <see cref="NoFrame"/> should be used with
-            ///     care, as it could cause parts of a window to be painted improperly.
+            ///     Excludes child windows, if any, from the repainting operation.
             /// </summary>
-            NoFrame = 0x800,
-
-            /// <summary>
-            ///     Suppresses any pending internal WM_PAINT messages. This flag does not affect WM_PAINT messages
-            ///     resulting from a non-NULL update area.
-            /// </summary>
-            NoInternalPaint = 0x10,
-
-            /// <summary>
-            ///     Validates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the entire
-            ///     window is validated. This flag does not affect internal WM_PAINT messages.
-            /// </summary>
-            Validate = 0x8,
-
-            /// <summary>
-            ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to
-            ///     receive WM_NCPAINT and WM_ERASEBKGND messages, if necessary, before the function returns.
-            ///     WM_PAINT messages are received at the ordinary time.
-            /// </summary>
-            EraseNow = 0x200,
-
-            /// <summary>
-            ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to
-            ///     receive WM_NCPAINT, WM_ERASEBKGND, and WM_PAINT messages, if necessary, before the function
-            ///     returns.
-            /// </summary>
-            UpdateNow = 0x100,
+            NoChildren = 0x40,
 
             /// <summary>
             ///     Includes child windows, if any, in the repainting operation.
@@ -879,9 +881,37 @@ namespace SilDev
             AllChildren = 0x80,
 
             /// <summary>
-            ///     Excludes child windows, if any, from the repainting operation.
+            ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and
+            ///     RDW_NOCHILDREN flags) to receive WM_NCPAINT, WM_ERASEBKGND, and WM_PAINT
+            ///     messages, if necessary, before the function returns.
             /// </summary>
-            NoChildren = 0x40
+            UpdateNow = 0x100,
+
+            /// <summary>
+            ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and
+            ///     RDW_NOCHILDREN flags) to receive WM_NCPAINT and WM_ERASEBKGND messages, if
+            ///     necessary, before the function returns. WM_PAINT messages are received at
+            ///     the ordinary time.
+            /// </summary>
+            EraseNow = 0x200,
+
+            /// <summary>
+            ///     Causes any part of the nonclient area of the window that intersects the
+            ///     update region to receive a WM_NCPAINT message. The <see cref="Invalidate"/>
+            ///     flag must also be specified; otherwise, <see cref="Frame"/> has no effect.
+            ///     The WM_NCPAINT message is typically not sent during the execution of
+            ///     RedrawWindow unless either <see cref="UpdateNow"/> or
+            ///     <see cref="EraseNow"/> is specified.
+            /// </summary>
+            Frame = 0x400,
+
+            /// <summary>
+            ///     Suppresses any pending WM_NCPAINT messages. This flag must be used with
+            ///     <see cref="Validate"/> and is typically used with <see cref="NoChildren"/>.
+            ///     <see cref="NoFrame"/> should be used with care, as it could cause parts of
+            ///     a window to be painted improperly.
+            /// </summary>
+            NoFrame = 0x800
         }
 
         /// <summary>
@@ -890,28 +920,30 @@ namespace SilDev
         public enum ServiceError
         {
             /// <summary>
-            ///     The startup program logs the error in the event log, if possible. If the last-known-good
-            ///     configuration is being started, the startup operation fails. Otherwise, the system is
-            ///     restarted with the last-known good configuration.
-            /// </summary>
-            Critical = 0x3,
-
-            /// <summary>
             ///     The startup program ignores the error and continues the startup operation.
             /// </summary>
             Ignore = 0x0,
 
             /// <summary>
-            ///     The startup program logs the error in the event log but continues the startup operation.
+            ///     The startup program logs the error in the event log but continues the
+            ///     startup operation.
             /// </summary>
             Normal = 0x1,
 
             /// <summary>
-            ///     The startup program logs the error in the event log. If the last-known-good configuration is
-            ///     being started, the startup operation continues. Otherwise, the system is restarted with the
-            ///     last-known-good configuration.
+            ///     The startup program logs the error in the event log. If the last-known-good
+            ///     configuration is being started, the startup operation continues. Otherwise,
+            ///     the system is restarted with the last-known-good configuration.
             /// </summary>
-            Severe = 0x2
+            Severe = 0x2,
+
+            /// <summary>
+            ///     The startup program logs the error in the event log, if possible. If the
+            ///     last-known-good configuration is being started, the startup operation
+            ///     fails. Otherwise, the system is restarted with the last-known good
+            ///     configuration.
+            /// </summary>
+            Critical = 0x3
         }
 
         /// <summary>
@@ -922,47 +954,9 @@ namespace SilDev
         public enum SetWindowPosFlags : uint
         {
             /// <summary>
-            ///     If the calling thread and the thread that owns the window are attached to different input
-            ///     queues, the system posts the request to the thread that owns the window. This prevents the
-            ///     calling thread from blocking its execution while other threads process the request.
+            ///     Retains the current size (ignores the cx and cy parameters).
             /// </summary>
-            AsyncWindowPos = 0x4000,
-
-            /// <summary>
-            ///     Prevents generation of the WM_SYNCPAINT message.
-            /// </summary>
-            DeferErase = 0x2000,
-
-            /// <summary>
-            ///     Draws a frame (defined in the window's class description) around the window.
-            /// </summary>
-            DrawFrame = 0x20,
-
-            /// <summary>
-            ///     Applies new frame styles set using the SetWindowLong function. Sends a WM_NCCALCSIZE message
-            ///     to the window, even if the window's size is not being changed. If this flag is not specified,
-            ///     WM_NCCALCSIZE is sent only when the window's size is being changed.
-            /// </summary>
-            FrameChanged = 0x20,
-
-            /// <summary>
-            ///     Hides the window.
-            /// </summary>
-            HideWindow = 0x80,
-
-            /// <summary>
-            ///     Does not activate the window. If this flag is not set, the window is activated and moved to
-            ///     the top of either the topmost or non-topmost group (depending on the setting of the
-            ///     hWndInsertAfter parameter).
-            /// </summary>
-            NoActive = 0x10,
-
-            /// <summary>
-            ///     Discards the entire contents of the client area. If this flag is not specified, the valid
-            ///     contents of the client area are saved and copied back into the client area after the window
-            ///     is sized or repositioned.
-            /// </summary>
-            NoCopyBits = 0x100,
+            NoSize = 0x1,
 
             /// <summary>
             ///     Retains the current position (ignores X and Y parameters).
@@ -970,18 +964,62 @@ namespace SilDev
             NoMove = 0x2,
 
             /// <summary>
+            ///     Retains the current Z order (ignores the hWndInsertAfter parameter).
+            /// </summary>
+            NoZOrder = 0x4,
+
+            /// <summary>
+            ///     Does not redraw changes. If this flag is set, no repainting of any kind
+            ///     occurs. This applies to the client area, the nonclient area (including the
+            ///     title bar and scroll bars), and any part of the parent window uncovered as
+            ///     a result of the window being moved. When this flag is set, the application
+            ///     must explicitly invalidate or redraw any parts of the window and parent
+            ///     window that need redrawing.
+            /// </summary>
+            NoRedraw = 0x8,
+
+            /// <summary>
+            ///     Does not activate the window. If this flag is not set, the window is
+            ///     activated and moved to the top of either the topmost or non-topmost group
+            ///     (depending on the setting of the hWndInsertAfter parameter).
+            /// </summary>
+            NoActive = 0x10,
+
+            /// <summary>
+            ///     Draws a frame (defined in the window's class description) around the
+            ///     window.
+            /// </summary>
+            DrawFrame = 0x20,
+
+            /// <summary>
+            ///     Applies new frame styles set using the SetWindowLong function. Sends a
+            ///     WM_NCCALCSIZE message to the window, even if the window's size is not being
+            ///     changed. If this flag is not specified, WM_NCCALCSIZE is sent only when the
+            ///     window's size is being changed.
+            /// </summary>
+            FrameChanged = 0x20,
+
+            /// <summary>
+            ///     Displays the window.
+            /// </summary>
+            ShowWindow = 0x40,
+
+            /// <summary>
+            ///     Hides the window.
+            /// </summary>
+            HideWindow = 0x80,
+
+            /// <summary>
+            ///     Discards the entire contents of the client area. If this flag is not
+            ///     specified, the valid contents of the client area are saved and copied back
+            ///     into the client area after the window is sized or repositioned.
+            /// </summary>
+            NoCopyBits = 0x100,
+
+            /// <summary>
             ///     Does not change the owner window's position in the Z order.
             /// </summary>
             NoOwnerZOrder = 0x200,
-
-            /// <summary>
-            ///     Does not redraw changes. If this flag is set, no repainting of any kind occurs. This
-            ///     applies to the client area, the nonclient area (including the title bar and scroll bars),
-            ///     and any part of the parent window uncovered as a result of the window being moved. When this
-            ///     flag is set, the application must explicitly invalidate or redraw any parts of the window and
-            ///     parent window that need redrawing.
-            /// </summary>
-            NoRedraw = 0x8,
 
             /// <summary>
             ///     Same as the <see cref="SetWindowPosFlags.NoOwnerZOrder"/> flag.
@@ -994,19 +1032,17 @@ namespace SilDev
             NoSendChanging = 0x400,
 
             /// <summary>
-            ///     Retains the current size (ignores the cx and cy parameters).
+            ///     Prevents generation of the WM_SYNCPAINT message.
             /// </summary>
-            NoSize = 0x1,
+            DeferErase = 0x2000,
 
             /// <summary>
-            ///     Retains the current Z order (ignores the hWndInsertAfter parameter).
+            ///     If the calling thread and the thread that owns the window are attached to
+            ///     different input queues, the system posts the request to the thread that
+            ///     owns the window. This prevents the calling thread from blocking its
+            ///     execution while other threads process the request.
             /// </summary>
-            NoZOrder = 0x4,
-
-            /// <summary>
-            ///     Displays the window.
-            /// </summary>
-            ShowWindow = 0x40
+            AsyncWindowPos = 0x4000
         }
 
         /// <summary>
@@ -1017,22 +1053,23 @@ namespace SilDev
             /// <summary>
             ///     Shows or hides a window's standard horizontal scroll bars.
             /// </summary>
-            Horizontal = 0,
+            Horizontal = 0x0,
 
             /// <summary>
             ///     Shows or hides a window's standard vertical scroll bar.
             /// </summary>
-            Vertical = 1,
+            Vertical = 0x1,
 
             /// <summary>
-            ///     Shows or hides a scroll bar control. The hwnd parameter must be the handle to the scroll bar control.
+            ///     Shows or hides a scroll bar control. The hwnd parameter must be the handle
+            ///     to the scroll bar control.
             /// </summary>
-            Control = 2,
+            Control = 0x2,
 
             /// <summary>
             ///     Shows or hides a window's standard horizontal and vertical scroll bars.
             /// </summary>
-            Both = 3
+            Both = 0x3
         }
 
         /// <summary>
@@ -1042,15 +1079,21 @@ namespace SilDev
         public enum ShowWindowFlags : uint
         {
             /// <summary>
-            ///     Minimizes a window, even if the thread that owns the window is not responding.
-            ///     This flag should only be used when minimizing windows from a different thread.
-            /// </summary>
-            ForceMinimize = 0xb,
-
-            /// <summary>
             ///     Hides the window and activates another window.
             /// </summary>
             Hide = 0x0,
+
+            /// <summary>
+            ///     Activates and displays a window. If the window is minimized or maximized,
+            ///     the system restores it to its original size and position. An application
+            ///     should specify this flag when displaying the window for the first time.
+            /// </summary>
+            ShowNormal = 0x1,
+
+            /// <summary>
+            ///     Activates the window and displays it as a minimized window.
+            /// </summary>
+            ShowMinimized = 0x2,
 
             /// <summary>
             ///     Maximizes the specified window.
@@ -1058,10 +1101,39 @@ namespace SilDev
             Maximize = 0x3,
 
             /// <summary>
-            ///     Minimizes the specified window and activates the next top-level window in the
-            ///     Z order.
+            ///     Activates the window and displays it as a maximized window.
+            /// </summary>
+            ShowMaximized = 0x3,
+
+            /// <summary>
+            ///     Displays a window in its most recent size and position. This value is
+            ///     similar to <see cref="ShowNormal"/>, except that the window is not
+            ///     activated.
+            /// </summary>
+            ShowNoActivate = 0x4,
+
+            /// <summary>
+            ///     Activates the window and displays it in its current size and position.
+            /// </summary>
+            Show = 0x5,
+
+            /// <summary>
+            ///     Minimizes the specified window and activates the next top-level window in
+            ///     the Z order.
             /// </summary>
             Minimize = 0x6,
+
+            /// <summary>
+            ///     Displays the window as a minimized window. This value is similar to
+            ///     <see cref="ShowMinimized"/>, except the window is not activated.
+            /// </summary>
+            ShowMinNoActive = 0x7,
+
+            /// <summary>
+            ///     Displays the window in its current size and position. This value is similar
+            ///     to <see cref="Show"/>, except that the window is not activated.
+            /// </summary>
+            ShowNa = 0x8,
 
             /// <summary>
             ///     Activates and displays the window. If the window is minimized or maximized,
@@ -1071,11 +1143,6 @@ namespace SilDev
             Restore = 0x9,
 
             /// <summary>
-            ///     Activates the window and displays it in its current size and position.
-            /// </summary>
-            Show = 0x5,
-
-            /// <summary>
             ///     Sets the show state based on the SW_ value specified in the STARTUPINFO
             ///     structure passed to the CreateProcess function by the program that started
             ///     the application.
@@ -1083,59 +1150,26 @@ namespace SilDev
             ShowDefault = 0xa,
 
             /// <summary>
-            ///     Activates the window and displays it as a maximized window.
+            ///     Minimizes a window, even if the thread that owns the window is not
+            ///     responding. This flag should only be used when minimizing windows from a
+            ///     different thread.
             /// </summary>
-            ShowMaximized = 0x3,
-
-            /// <summary>
-            ///     Activates the window and displays it as a minimized window.
-            /// </summary>
-            ShowMinimized = 0x2,
-
-            /// <summary>
-            ///     Displays the window as a minimized window. This value is similar to
-            ///     <see cref="ShowMinimized"/>, except the window is not activated.
-            /// </summary>
-            ShowMinNoActive = 0x7,
-
-            /// <summary>
-            ///     Displays the window in its current size and position. This value is similar to
-            ///     <see cref="Show"/>, except that the window is not activated.
-            /// </summary>
-            ShowNa = 0x8,
-
-            /// <summary>
-            ///     Displays a window in its most recent size and position. This value is similar
-            ///     to <see cref="ShowNormal"/>, except that the window is not activated.
-            /// </summary>
-            ShowNoActivate = 0x4,
-
-            /// <summary>
-            ///     Activates and displays a window. If the window is minimized or maximized, the
-            ///     system restores it to its original size and position. An application should
-            ///     specify this flag when displaying the window for the first time.
-            /// </summary>
-            ShowNormal = 0x1
+            ForceMinimize = 0xb
         }
 
         /// <summary>
         ///     Provides enumerated values of standard access rights.
         ///     <para>
-        ///         Each type of securable object has a set of access rights that correspond to
-        ///         operations specific to that type of object. In addition to these object-specific
-        ///         access rights, there is a set of standard access rights that correspond to
-        ///         operations common to most types of securable objects.
+        ///         Each type of securable object has a set of access rights that
+        ///         correspond to operations specific to that type of object. In addition
+        ///         to these object-specific access rights, there is a set of standard
+        ///         access rights that correspond to operations common to most types of
+        ///         securable objects.
         ///     </para>
         /// </summary>
         [Flags]
         public enum StandardAccessRights : long
         {
-            /// <summary>
-            ///     Combines <see cref="Delete"/>, <see cref="ReadControl"/>, <see cref="WriteDac"/>,
-            ///     and <see cref="WriteOwner"/> access.
-            /// </summary>
-            All = Delete | ReadControl | WriteDac | WriteOwner,
-
             /// <summary>
             ///     The right to delete the object.
             /// </summary>
@@ -1148,28 +1182,34 @@ namespace SilDev
             ReadControl = 0x20000,
 
             /// <summary>
-            ///     Combines <see cref="Delete"/>, <see cref="ReadControl"/>, <see cref="WriteDac"/>,
-            ///     and <see cref="WriteOwner"/> access.
-            /// </summary>
-            Required = Delete | ReadControl | WriteDac | WriteOwner,
-
-            /// <summary>
-            ///     The right to use the object for synchronization. This enables a thread to wait
-            ///     until the object is in the signaled state. Some object types do not support
-            ///     this access right.
-            /// </summary>
-            Synchronize = 0x100000,
-
-            /// <summary>
-            ///     The right to modify the discretionary access control list (DACL) in the object's
-            ///     security descriptor.
+            ///     The right to modify the discretionary access control list (DACL) in the
+            ///     object's security descriptor.
             /// </summary>
             WriteDac = 0x40000,
 
             /// <summary>
             ///     The right to change the owner in the object's security descriptor.
             /// </summary>
-            WriteOwner = 0x80000
+            WriteOwner = 0x80000,
+
+            /// <summary>
+            ///     The right to use the object for synchronization. This enables a thread to
+            ///     wait until the object is in the signaled state. Some object types do not
+            ///     support this access right.
+            /// </summary>
+            Synchronize = 0x100000,
+
+            /// <summary>
+            ///     Combines <see cref="Delete"/>, <see cref="ReadControl"/>,
+            ///     <see cref="WriteDac"/>, and <see cref="WriteOwner"/> access.
+            /// </summary>
+            All = Delete | ReadControl | WriteDac | WriteOwner,
+
+            /// <summary>
+            ///     Combines <see cref="Delete"/>, <see cref="ReadControl"/>,
+            ///     <see cref="WriteDac"/>, and <see cref="WriteOwner"/> access.
+            /// </summary>
+            Required = Delete | ReadControl | WriteDac | WriteOwner
         }
 
         /// <summary>
@@ -1179,29 +1219,35 @@ namespace SilDev
         public enum Win32HookFlags
         {
             /// <summary>
-            ///     The system is about to activate a window.
+            ///     A window is about to be moved or sized.
             /// </summary>
-            HCbtActivate = 0x5,
+            HCbtMoveSize = 0x0,
 
             /// <summary>
-            ///     The system has removed a mouse message from the system message queue. Upon receiving
-            ///     this hook code, a CBT application must install a <see cref="WhJournalPlayback"/> hook
-            ///     procedure in response to the mouse message.
+            ///     A window is about to be minimized or maximized.
             /// </summary>
-            HCbtClickSkipped = 0x6,
+            HCbtMinMax = 0x1,
 
             /// <summary>
-            ///     A window is about to be created. The system calls the hook procedure before sending
-            ///     the WM_CREATE or WM_NCCREATE message to the window. If the hook procedure returns a
-            ///     nonzero value, the system destroys the window; the CreateWindow function returns NULL,
-            ///     but the WM_DESTROY message is not sent to the window. If the hook procedure returns
-            ///     zero, the window is created normally. At the time of the <see cref="HCbtCreateWnd"/>
-            ///     notification, the window has been created, but its final size and position may not
-            ///     have been determined and its parent window may not have been established. It is
-            ///     possible to send messages to the newly created window, although it has not yet
-            ///     received WM_NCCREATE or WM_CREATE messages. It is also possible to change the position
-            ///     in the z-order of the newly created window by modifying the hwndInsertAfter member of
-            ///     the CBT_CREATEWND structure.
+            ///     The system has retrieved a WM_QUEUESYNC message from the system message
+            ///     queue.
+            /// </summary>
+            HCbtQs = 0x2,
+
+            /// <summary>
+            ///     A window is about to be created. The system calls the hook procedure before
+            ///     sending the WM_CREATE or WM_NCCREATE message to the window. If the hook
+            ///     procedure returns a nonzero value, the system destroys the window; the
+            ///     CreateWindow function returns <see langword="null"/>, but the WM_DESTROY
+            ///     message is not sent to the window. If the hook procedure returns zero, the
+            ///     window is created normally. At the time of the <see cref="HCbtCreateWnd"/>
+            ///     notification, the window has been created, but its final size and position
+            ///     may not have been determined and its parent window may not have been
+            ///     established. It is possible to send messages to the newly created window,
+            ///     although it has not yet received WM_NCCREATE or WM_CREATE messages. It is
+            ///     also possible to change the position in the z-order of the newly created
+            ///     window by modifying the hwndInsertAfter member of the CBT_CREATEWND
+            ///     structure.
             /// </summary>
             HCbtCreateWnd = 0x3,
 
@@ -1211,37 +1257,36 @@ namespace SilDev
             HCbtDestroyWnd = 0x4,
 
             /// <summary>
-            ///     The system has removed a keyboard message from the system message queue. Upon receiving
-            ///     this hook code, a CBT application must install a <see cref="WhJournalPlayback"/> hook
-            ///     procedure in response to the keyboard message.
+            ///     The system is about to activate a window.
+            /// </summary>
+            HCbtActivate = 0x5,
+
+            /// <summary>
+            ///     The system has removed a mouse message from the system message queue. Upon
+            ///     receiving this hook code, a CBT application must install a
+            ///     <see cref="WhJournalPlayback"/> hook procedure in response to the mouse
+            ///     message.
+            /// </summary>
+            HCbtClickSkipped = 0x6,
+
+            /// <summary>
+            ///     The system has removed a keyboard message from the system message queue.
+            ///     Upon receiving this hook code, a CBT application must install a
+            ///     <see cref="WhJournalPlayback"/> hook procedure in response to the keyboard
+            ///     message.
             /// </summary>
             HCbtKeySkipped = 0x7,
 
             /// <summary>
-            ///     A window is about to be minimized or maximized.
+            ///     A system command is about to be carried out. This allows a CBT application
+            ///     to prevent task switching by means of hot keys.
             /// </summary>
-            HCbtMinMax = 0x1,
-
-            /// <summary>
-            ///     A window is about to be moved or sized.
-            /// </summary>
-            HCbtMoveSize = 0x0,
-
-            /// <summary>
-            ///     The system has retrieved a WM_QUEUESYNC message from the system message queue.
-            /// </summary>
-            HCbtQs = 0x2,
+            HCbtSysCommand = 0x8,
 
             /// <summary>
             ///     A window is about to receive the keyboard focus.
             /// </summary>
             HCbtSetFocus = 0x9,
-
-            /// <summary>
-            ///     A system command is about to be carried out. This allows a CBT application to prevent
-            ///     task switching by means of hot keys.
-            /// </summary>
-            HCbtSysCommand = 0x8,
 
             /// <summary>
             ///     The input event occurred in a message box or dialog box.
@@ -1254,157 +1299,181 @@ namespace SilDev
             MsgFMenu = 0x2,
 
             /// <summary>
+            ///     The <see cref="WhMsgFilter"/> and <see cref="WhSysMsgFilter"/> hooks enable
+            ///     you to monitor messages about to be processed by a menu, scroll bar,
+            ///     message box, or dialog box, and to detect when a different window is about
+            ///     to be activated as a result of the user's pressing the ALT+TAB or ALT+ESC
+            ///     key combination. The <see cref="WhMsgFilter"/> hook can only monitor
+            ///     messages passed to a menu, scroll bar, message box, or dialog box created
+            ///     by the application that installed the hook procedure. The
+            ///     <see cref="WhSysMsgFilter"/> hook monitors such messages for all
+            ///     applications.
+            /// </summary>
+            WhMsgFilter = -0x1,
+
+            /// <summary>
+            ///     The <see cref="WhJournalRecord"/> hook enables you to monitor and record
+            ///     input events. Typically, you use this hook to record a sequence of mouse
+            ///     and keyboard events to play back later by using
+            ///     <see cref="WhJournalPlayback"/>. The <see cref="WhJournalRecord"/> hook is
+            ///     a global hook-it cannot be used as a thread-specific hook.
+            /// </summary>
+            WhJournalRecord = 0x0,
+
+            /// <summary>
+            ///     The <see cref="WhJournalPlayback"/> hook enables an application to insert
+            ///     messages into the system message queue. You can use this hook to play back
+            ///     a series of mouse and keyboard events recorded earlier by using
+            ///     <see cref="WhJournalRecord"/>. Regular mouse and keyboard input is disabled
+            ///     as long as a <see cref="WhJournalPlayback"/> hook is installed. A
+            ///     <see cref="WhJournalPlayback"/> hook is a global hook-it cannot be used as
+            ///     a thread-specific hook. The <see cref="WhJournalPlayback"/> hook returns a
+            ///     time-out value. This value tells the system how many milliseconds to wait
+            ///     before processing the current message from the playback hook. This enables
+            ///     the hook to control the timing of the events it plays back.
+            /// </summary>
+            WhJournalPlayback = 0x1,
+
+            /// <summary>
+            ///     The <see cref="WhKeyboard"/> hook enables an application to monitor message
+            ///     traffic for WM_KEYDOWN and WM_KEYUP messages about to be returned by the
+            ///     GetMessage or PeekMessage function. You can use the
+            ///     <see cref="WhKeyboard"/> hook to monitor keyboard input posted to a message
+            ///     queue.
+            /// </summary>
+            WhKeyboard = 0x2,
+
+            /// <summary>
+            ///     The <see cref="WhCallWndProc"/> and <see cref="WhCallWndProcRet"/> hooks
+            ///     enable you to monitor messages sent to window procedures. The system calls
+            ///     a <see cref="WhCallWndProc"/> hook procedure before passing the message to
+            ///     the receiving window procedure, and calls the
+            ///     <see cref="WhCallWndProcRet"/> hook procedure after the window procedure
+            ///     has processed the message. The <see cref="WhCallWndProcRet"/> hook passes a
+            ///     pointer to a CWPRETSTRUCT structure to the hook procedure. The structure
+            ///     contains the return value from the window procedure that processed the
+            ///     message, as well as the message parameters associated with the message.
+            ///     Subclassing the window does not work for messages set between processes.
+            /// </summary>
+            WhCallWndProc = 0x4,
+
+            /// <summary>
             ///     The input event occurred in a scroll bar.
             /// </summary>
             MsgFScrollbar = 0x5,
 
             /// <summary>
-            ///     The <see cref="WhCallWndProc"/> and <see cref="WhCallWndProcRet"/> hooks enable you to
-            ///     monitor messages sent to window procedures. The system calls a <see cref="WhCallWndProc"/>
-            ///     hook procedure before passing the message to the receiving window procedure, and calls the
-            ///     <see cref="WhCallWndProcRet"/> hook procedure after the window procedure has processed the
-            ///     message. The <see cref="WhCallWndProcRet"/> hook passes a pointer to a CWPRETSTRUCT structure
-            ///     to the hook procedure. The structure contains the return value from the window procedure that
-            ///     processed the message, as well as the message parameters associated with the message.
-            ///     Subclassing the window does not work for messages
-            ///     set between processes.
-            /// </summary>
-            WhCallWndProc = 0x4,
-
-            /// <summary>
-            ///     The <see cref="WhCallWndProc"/> and <see cref="WhCallWndProcRet"/> hooks enable you to monitor
-            ///     messages sent to window procedures. The system calls a <see cref="WhCallWndProc"/> hook procedure
-            ///     before passing the message to the receiving window procedure, and calls the
-            ///     <see cref="WhCallWndProcRet"/> hook procedure after the window procedure has processed the message.
-            ///     The <see cref="WhCallWndProcRet"/> hook passes a pointer to a CWPRETSTRUCT structure to the hook
-            ///     procedure. The structure contains the return value from the window procedure that processed the
-            ///     message, as well as the message parameters associated with the message. Subclassing the window does
-            ///     not work for messages set between processes.
-            /// </summary>
-            WhCallWndProcRet = 0xc,
-
-            /// <summary>
-            ///     The system calls a <see cref="WhCbt"/> hook procedure before activating, creating, destroying,
-            ///     minimizing, maximizing, moving, or sizing a window; before completing a system command; before
-            ///     removing a mouse or keyboard event from the system message queue; before setting the input focus;
-            ///     or before synchronizing with the system message queue. The value the hook procedure returns
-            ///     determines whether the system allows or prevents one of these operations. The <see cref="WhCbt"/>
-            ///     hook is intended primarily for computer-based training (CBT) applications.
-            /// </summary>
-            WhCbt = 0x5,
-
-            /// <summary>
-            ///     The system calls a <see cref="WhDebug"/> hook procedure before calling hook procedures associated
-            ///     with any other hook in the system. You can use this hook to determine whether to allow the system
-            ///     to call hook procedures associated with other types
-            ///     of hooks.
-            /// </summary>
-            WhDebug = 0x9,
-
-            /// <summary>
-            ///     The <see cref="WhForegroundIdle"/> hook enables you to perform low priority tasks during times
-            ///     when its foreground thread is idle. The system calls a <see cref="WhForegroundIdle"/> hook
-            ///     procedure when the application's foreground thread is about to become idle.
-            /// </summary>
-            WhForegroundIdle = 0xb,
-
-            /// <summary>
-            ///     The <see cref="WhGetMessage"/> hook enables an application to monitor messages about to be
-            ///     returned by the GetMessage or PeekMessage function. You can use the <see cref="WhGetMessage"/>
-            ///     hook to monitor mouse and keyboard input and other messages posted to the message
-            ///     queue.
+            ///     The <see cref="WhGetMessage"/> hook enables an application to monitor
+            ///     messages about to be returned by the GetMessage or PeekMessage function.
+            ///     You can use the <see cref="WhGetMessage"/> hook to monitor mouse and
+            ///     keyboard input and other messages posted to the message queue.
             /// </summary>
             WhGetMessage = 0x3,
 
             /// <summary>
-            ///     The <see cref="WhHardware"/> hook enables you to monitor various hardware events.
+            ///     The system calls a <see cref="WhCbt"/> hook procedure before activating,
+            ///     creating, destroying, minimizing, maximizing, moving, or sizing a window;
+            ///     before completing a system command; before removing a mouse or keyboard
+            ///     event from the system message queue; before setting the input focus; or
+            ///     before synchronizing with the system message queue. The value the hook
+            ///     procedure returns determines whether the system allows or prevents one of
+            ///     these operations. The <see cref="WhCbt"/> hook is intended primarily for
+            ///     computer-based training (CBT) applications.
             /// </summary>
-            WhHardware = 0x8,
+            WhCbt = 0x5,
 
             /// <summary>
-            ///     The <see cref="WhJournalPlayback"/> hook enables an application to insert messages into the
-            ///     system message queue. You can use this hook to play back a series of mouse and
-            ///     keyboard events recorded earlier by using <see cref="WhJournalRecord"/>. Regular mouse and
-            ///     keyboard input is disabled as long as a <see cref="WhJournalPlayback"/> hook is installed. A
-            ///     <see cref="WhJournalPlayback"/> hook is a global hook-it cannot be used as a thread-specific
-            ///     hook. The <see cref="WhJournalPlayback"/> hook returns a time-out value. This value tells the
-            ///     system how many milliseconds to wait before processing the current message from the playback
-            ///     hook. This enables the hook to control the timing of the events it plays back.
+            ///     The <see cref="WhMsgFilter"/> and <see cref="WhSysMsgFilter"/> hooks enable
+            ///     you to monitor messages about to be processed by a menu, scroll bar,
+            ///     message box, or dialog box, and to detect when a different window is about
+            ///     to be activated as a result of the user's pressing the ALT+TAB or ALT+ESC
+            ///     key combination. The <see cref="WhMsgFilter"/> hook can only monitor
+            ///     messages passed to a menu, scroll bar, message box, or dialog box created
+            ///     by the application that installed the hook procedure. The
+            ///     <see cref="WhSysMsgFilter"/> hook monitors such messages for all
+            ///     applications. The <see cref="WhMsgFilter"/> and
+            ///     <see cref="WhSysMsgFilter"/> hooks enable you to perform message filtering
+            ///     during modal loops that is equivalent to the filtering done in the main
+            ///     message loop. For example, an application often examines a new message in
+            ///     the main loop between the time it retrieves the message from the queue and
+            ///     the time it dispatches the message, performing special processing as
+            ///     appropriate. However, during a modal loop, the system retrieves and
+            ///     dispatches messages without allowing an application the chance to filter
+            ///     the messages in its main message loop. If an application installs a
+            ///     <see cref="WhMsgFilter"/> or <see cref="WhSysMsgFilter"/> hook procedure,
+            ///     the system calls the procedure during the modal loop.
             /// </summary>
-            WhJournalPlayback = 0x1,
+            WhSysMsgFilter = 0x6,
 
             /// <summary>
-            ///     The <see cref="WhJournalRecord"/> hook enables you to monitor and record input events. Typically,
-            ///     you use this hook to record a sequence of mouse and keyboard events to play back later by using
-            ///     <see cref="WhJournalPlayback"/>. The <see cref="WhJournalRecord"/> hook is a global hook-it cannot
-            ///     be used as a thread-specific hook.
-            /// </summary>
-            WhJournalRecord = 0x0,
-
-            /// <summary>
-            ///     The <see cref="WhKeyboard"/> hook enables an application to monitor message traffic for WM_KEYDOWN
-            ///     and WM_KEYUP messages about to be returned by the GetMessage or PeekMessage function. You can use
-            ///     the <see cref="WhKeyboard"/> hook to monitor keyboard input posted to a message queue.
-            /// </summary>
-            WhKeyboard = 0x2,
-
-            /// <summary>
-            ///     The <see cref="WhKeyboardLl"/> hook enables you to monitor keyboard input events about to be
-            ///     posted in a thread input queue.
-            /// </summary>
-            WhKeyboardLl = 0xd,
-
-            /// <summary>
-            ///     The <see cref="WhMouse"/> hook enables you to monitor mouse messages about to be returned by
-            ///     the GetMessage or PeekMessage function. You can use the <see cref="WhMouse"/> hook to monitor
-            ///     mouse input posted to a message queue.
+            ///     The <see cref="WhMouse"/> hook enables you to monitor mouse messages about
+            ///     to be returned by the GetMessage or PeekMessage function. You can use the
+            ///     <see cref="WhMouse"/> hook to monitor mouse input posted to a message
+            ///     queue.
             /// </summary>
             WhMouse = 0x7,
 
             /// <summary>
-            ///     The <see cref="WhMouseLl"/> hook enables you to monitor mouse input events about to be posted
-            ///     in a thread input queue.
+            ///     The <see cref="WhHardware"/> hook enables you to monitor various hardware
+            ///     events.
             /// </summary>
-            WhMouseLl = 0xe,
+            WhHardware = 0x8,
 
             /// <summary>
-            ///     The <see cref="WhMsgFilter"/> and <see cref="WhSysMsgFilter"/> hooks enable you to monitor messages
-            ///     about to be processed by a menu, scroll bar, message box, or dialog box, and to detect when a
-            ///     different window is about to be activated as a result of the user's pressing the ALT+TAB or ALT+ESC
-            ///     key combination. The <see cref="WhMsgFilter"/> hook can only monitor messages passed to a menu,
-            ///     scroll bar, message box, or dialog box created by the application that installed the hook procedure.
-            ///     The <see cref="WhSysMsgFilter"/> hook monitors such messages for all applications.
+            ///     The system calls a <see cref="WhDebug"/> hook procedure before calling hook
+            ///     procedures associated with any other hook in the system. You can use this
+            ///     hook to determine whether to allow the system to call hook procedures
+            ///     associated with other types of hooks.
             /// </summary>
-            WhMsgFilter = -0x1,
+            WhDebug = 0x9,
 
             /// <summary>
-            ///     A shell application can use the <see cref="WhShell"/> hook to receive important notifications. The
-            ///     system calls a <see cref="WhShell"/> hook procedure when the shell application is about to be
-            ///     activated and when a top-level window is created or destroyed. Note that custom shell applications
-            ///     do not receive <see cref="WhShell"/> messages. Therefore, any application that registers itself as
-            ///     the default shell must call the SystemParametersInfo function before it (or any other application)
-            ///     can receive WH_SHELL messages. This function must be called with SPI_SETMINIMIZEDMETRICS and a
-            ///     MINIMIZEDMETRICS structure. Set the iArrange member of this structure to ARW_HIDE.
+            ///     A shell application can use the <see cref="WhShell"/> hook to receive
+            ///     important notifications. The system calls a <see cref="WhShell"/> hook
+            ///     procedure when the shell application is about to be activated and when a
+            ///     top-level window is created or destroyed. Note that custom shell
+            ///     applications do not receive <see cref="WhShell"/> messages. Therefore, any
+            ///     application that registers itself as the default shell must call the
+            ///     SystemParametersInfo function before it (or any other application) can
+            ///     receive WH_SHELL messages. This function must be called with
+            ///     SPI_SETMINIMIZEDMETRICS and a MINIMIZEDMETRICS structure. Set the iArrange
+            ///     member of this structure to ARW_HIDE.
             /// </summary>
             WhShell = 0xa,
 
             /// <summary>
-            ///     The <see cref="WhMsgFilter"/> and <see cref="WhSysMsgFilter"/> hooks enable you to monitor messages
-            ///     about to be processed by a menu, scroll bar, message box, or dialog box, and to detect when a
-            ///     different window is about to be activated as a result of the user's pressing the ALT+TAB or ALT+ESC
-            ///     key combination. The <see cref="WhMsgFilter"/> hook can only monitor messages passed to a menu,
-            ///     scroll bar, message box, or dialog box created by the application that installed the hook procedure.
-            ///     The <see cref="WhSysMsgFilter"/> hook monitors such messages for all applications. The
-            ///     <see cref="WhMsgFilter"/> and <see cref="WhSysMsgFilter"/> hooks enable you to perform message
-            ///     filtering during modal loops that is equivalent to the filtering done in the main message loop. For
-            ///     example, an application often examines a new message in the main loop between the time it retrieves
-            ///     the message from the queue and the time it dispatches the message, performing special processing as
-            ///     appropriate. However, during a modal loop, the system retrieves and dispatches messages without
-            ///     allowing an application the chance to filter the messages in its main message loop. If an
-            ///     application installs a <see cref="WhMsgFilter"/> or <see cref="WhSysMsgFilter"/> hook procedure,
-            ///     the system calls the procedure during the modal loop.
+            ///     The <see cref="WhForegroundIdle"/> hook enables you to perform low priority
+            ///     tasks during times when its foreground thread is idle. The system calls a
+            ///     <see cref="WhForegroundIdle"/> hook procedure when the application's
+            ///     foreground thread is about to become idle.
             /// </summary>
-            WhSysMsgFilter = 0x6
+            WhForegroundIdle = 0xb,
+
+            /// <summary>
+            ///     The <see cref="WhCallWndProc"/> and <see cref="WhCallWndProcRet"/> hooks
+            ///     enable you to monitor messages sent to window procedures. The system calls
+            ///     a <see cref="WhCallWndProc"/> hook procedure before passing the message to
+            ///     the receiving window procedure, and calls the
+            ///     <see cref="WhCallWndProcRet"/> hook procedure after the window procedure
+            ///     has processed the message. The <see cref="WhCallWndProcRet"/> hook passes a
+            ///     pointer to a CWPRETSTRUCT structure to the hook procedure. The structure
+            ///     contains the return value from the window procedure that processed the
+            ///     message, as well as the message parameters associated with the message.
+            ///     Subclassing the window does not work for messages set between processes.
+            /// </summary>
+            WhCallWndProcRet = 0xc,
+
+            /// <summary>
+            ///     The <see cref="WhKeyboardLl"/> hook enables you to monitor keyboard input
+            ///     events about to be posted in a thread input queue.
+            /// </summary>
+            WhKeyboardLl = 0xd,
+
+            /// <summary>
+            ///     The <see cref="WhMouseLl"/> hook enables you to monitor mouse input events
+            ///     about to be posted in a thread input queue.
+            /// </summary>
+            WhMouseLl = 0xe
         }
 
         /// <summary>
@@ -1414,36 +1483,11 @@ namespace SilDev
         public enum WindowLongFlags
         {
             /// <summary>
-            ///     Retrieves the address of the dialog box procedure, or a handle representing the
-            ///     address of the dialog box procedure. You must use the CallWindowProc function to
-            ///     call the dialog box procedure.
+            ///     Sets the user data associated with the window. This data is intended for
+            ///     use by the application that created the window. Its value is initially
+            ///     zero.
             /// </summary>
-            DwlDlgProc = 0x4,
-
-            /// <summary>
-            ///     Retrieves the return value of a message processed in the dialog box procedure.
-            /// </summary>
-            DwlMsgResult = 0x0,
-
-            /// <summary>
-            ///     Retrieves extra information private to the application, such as handles or pointers.
-            /// </summary>
-            DwlUser = 0x8,
-
-            /// <summary>
-            ///     Sets a new extended window style.
-            /// </summary>
-            GwlExStyle = -0x2,
-
-            /// <summary>
-            ///     Sets a new application instance handle.
-            /// </summary>
-            GwlHandleInstance = -0x6,
-
-            /// <summary>
-            ///     Sets a new identifier of the child window. The window cannot be a top-level window.
-            /// </summary>
-            GwlId = -0xc,
+            GwlUserData = -0x15,
 
             /// <summary>
             ///     Sets a new window style.
@@ -1451,16 +1495,46 @@ namespace SilDev
             GwlStyle = -0x10,
 
             /// <summary>
-            ///     Sets the user data associated with the window. This data is intended for use by the
-            ///     application that created the window. Its value is initially zero.
+            ///     Sets a new identifier of the child window. The window cannot be a top-level
+            ///     window.
             /// </summary>
-            GwlUserData = -0x15,
+            GwlId = -0xc,
 
             /// <summary>
-            ///     Sets a new address for the window procedure. You cannot change this attribute if the
-            ///     window does not belong to the same process as the calling thread.
+            ///     Sets a new application instance handle.
             /// </summary>
-            GwlWndProc = -0x4
+            GwlHandleInstance = -0x6,
+
+            /// <summary>
+            ///     Sets a new address for the window procedure. You cannot change this
+            ///     attribute if the window does not belong to the same process as the calling
+            ///     thread.
+            /// </summary>
+            GwlWndProc = -0x4,
+
+            /// <summary>
+            ///     Sets a new extended window style.
+            /// </summary>
+            GwlExStyle = -0x2,
+
+            /// <summary>
+            ///     Retrieves the return value of a message processed in the dialog box
+            ///     procedure.
+            /// </summary>
+            DwlMsgResult = 0x0,
+
+            /// <summary>
+            ///     Retrieves the address of the dialog box procedure, or a handle representing
+            ///     the address of the dialog box procedure. You must use the CallWindowProc
+            ///     function to call the dialog box procedure.
+            /// </summary>
+            DwlDlgProc = 0x4,
+
+            /// <summary>
+            ///     Retrieves extra information private to the application, such as handles or
+            ///     pointers.
+            /// </summary>
+            DwlUser = 0x8
         }
 
         /// <summary>
@@ -1470,41 +1544,63 @@ namespace SilDev
         public enum WindowMenuFlags : uint
         {
             /// <summary>
-            ///     Closes the window.
+            ///     Indicates whether the screen saver is secure.
             /// </summary>
-            ScClose = 0xf060,
+            ScfIsSecure = 0x1,
 
             /// <summary>
-            ///     Changes the cursor to a question mark with a pointer. If the user then clicks a
-            ///     control in the dialog box, the control receives a WM_HELP message.
+            ///     A message that is sent to all top-level windows when the
+            ///     SystemParametersInfo  function changes a system-wide setting or when policy
+            ///     settings have changed.
             /// </summary>
-            ScContextHelp = 0xf180,
+            WmSettingChange = 0x1a,
 
             /// <summary>
-            ///     Selects the default item; the user double-clicked the window menu.
+            ///     If the receiving application processes this message, it should return
+            ///     <see langword="true"/>; otherwise, it should return <see langword="false"/>
+            ///     . The data being passed must not contain pointers or other references to
+            ///     objects not accessible to the application receiving the data. While this
+            ///     message is being sent, the referenced data must not be changed by another
+            ///     thread of the sending process. The receiving application should consider
+            ///     the data read-only. The lParam parameter is valid only during the
+            ///     processing of the message. The receiving application should not free the
+            ///     memory referenced by lParam. If the receiving application must access the
+            ///     data after SendMessage returns, it must copy the data into a local buffer.
             /// </summary>
-            ScDefault = 0xf160,
+            WmCopyData = 0x4a,
 
             /// <summary>
-            ///     Activates the window associated with the application-specified hot key. The lParam
-            ///     parameter identifies the window to activate.
+            ///     The dialog box procedure should return <see langword="true"/> to direct the
+            ///     system to set the keyboard focus to the control specified by wParam.
+            ///     Otherwise, it should return <see langword="false"/> to prevent the system
+            ///     from setting the default keyboard focus.
             /// </summary>
-            ScHotkey = 0xf150,
+            WmInitDialog = 0x110,
 
             /// <summary>
-            ///     Scrolls horizontally.
+            ///     A window receives this message when the user chooses a command from the
+            ///     Window menu (formerly known as the system or control menu) or when the user
+            ///     chooses the maximize button, minimize button, restore button, or close
+            ///     button.
             /// </summary>
-            ScHScroll = 0xf080,
+            WmSysCommand = 0x112,
 
             /// <summary>
-            ///     Retrieves the window menu as a result of a keystroke.
+            ///     Posted to a window when the cursor moves. If the mouse is not captured, the
+            ///     message is posted to the window that contains the cursor. Otherwise, the
+            ///     message is posted to the window that has captured the mouse.
             /// </summary>
-            ScKeyMenu = 0xf100,
+            WmMouseMove = 0x200,
 
             /// <summary>
-            ///     Maximizes the window.
+            ///     Sizes the window.
             /// </summary>
-            ScMaximize = 0xf030,
+            ScSize = 0xf000,
+
+            /// <summary>
+            ///     Moves the window.
+            /// </summary>
+            ScMove = 0xf010,
 
             /// <summary>
             ///     Minimizes the window.
@@ -1512,22 +1608,9 @@ namespace SilDev
             ScMinimize = 0xf020,
 
             /// <summary>
-            ///     Sets the state of the display. This command supports devices that have power-saving
-            ///     features, such as a battery-powered personal computer. - The lParam parameter can
-            ///     have the following values: -1 (the display is powering on), 1 (the display is going
-            ///     to low power), 2 (the display is being shut off).
+            ///     Maximizes the window.
             /// </summary>
-            ScMonitorPower = 0xf170,
-
-            /// <summary>
-            ///     Retrieves the window menu as a result of a mouse click.
-            /// </summary>
-            ScMouseMenu = 0xf090,
-
-            /// <summary>
-            ///     Moves the window.
-            /// </summary>
-            ScMove = 0xf010,
+            ScMaximize = 0xf030,
 
             /// <summary>
             ///     Moves to the next window.
@@ -1540,24 +1623,9 @@ namespace SilDev
             ScPrevWindow = 0xf050,
 
             /// <summary>
-            ///     Restores the window to its normal position and size.
+            ///     Closes the window.
             /// </summary>
-            ScRestore = 0xf120,
-
-            /// <summary>
-            ///     Executes the screen saver application specified in the [boot] section of the System.ini file.
-            /// </summary>
-            ScScreenSave = 0xf140,
-
-            /// <summary>
-            ///     Sizes the window.
-            /// </summary>
-            ScSize = 0xf000,
-
-            /// <summary>
-            ///     Activates the Start menu.
-            /// </summary>
-            ScTaskList = 0xf130,
+            ScClose = 0xf060,
 
             /// <summary>
             ///     Scrolls vertically.
@@ -1565,48 +1633,61 @@ namespace SilDev
             ScVScroll = 0xf070,
 
             /// <summary>
-            ///     Indicates whether the screen saver is secure.
+            ///     Scrolls horizontally.
             /// </summary>
-            ScfIsSecure = 0x1,
+            ScHScroll = 0xf080,
 
             /// <summary>
-            ///     If the receiving application processes this message, it should return TRUE; otherwise, it
-            ///     should return FALSE. The data being passed must not contain pointers or other references to
-            ///     objects not accessible to the application receiving the data. While this message is being
-            ///     sent, the referenced data must not be changed by another thread of the sending process. The
-            ///     receiving application should consider the data read-only. The lParam parameter is valid only
-            ///     during the processing of the message. The receiving application should not free the memory
-            ///     referenced by lParam. If the receiving application must access the data after SendMessage
-            ///     returns, it must copy the data into a local buffer.
+            ///     Retrieves the window menu as a result of a mouse click.
             /// </summary>
-            WmCopyData = 0x4a,
+            ScMouseMenu = 0xf090,
 
             /// <summary>
-            ///     The dialog box procedure should return TRUE to direct the system to set the keyboard focus to
-            ///     the control specified by wParam. Otherwise, it should return FALSE to prevent the system from
-            ///     setting the default keyboard focus.
+            ///     Retrieves the window menu as a result of a keystroke.
             /// </summary>
-            WmInitDialog = 0x110,
+            ScKeyMenu = 0xf100,
 
             /// <summary>
-            ///     Posted to a window when the cursor moves. If the mouse is not captured, the message is posted
-            ///     to the window that contains the cursor. Otherwise, the message is posted to the window that
-            ///     has captured the mouse.
+            ///     Restores the window to its normal position and size.
             /// </summary>
-            WmMouseMove = 0x200,
+            ScRestore = 0xf120,
 
             /// <summary>
-            ///     A message that is sent to all top-level windows when the SystemParametersInfo  function changes
-            ///     a system-wide setting or when policy settings have changed.
+            ///     Activates the Start menu.
             /// </summary>
-            WmSettingChange = 0x1a,
+            ScTaskList = 0xf130,
 
             /// <summary>
-            ///     A window receives this message when the user chooses a command from the Window menu (formerly
-            ///     known as the system or control menu) or when the user chooses the maximize button, minimize
-            ///     button, restore button, or close button.
+            ///     Executes the screen saver application specified in the [boot] section of
+            ///     the System.ini file.
             /// </summary>
-            WmSysCommand = 0x112
+            ScScreenSave = 0xf140,
+
+            /// <summary>
+            ///     Activates the window associated with the application-specified hot key. The
+            ///     lParam parameter identifies the window to activate.
+            /// </summary>
+            ScHotkey = 0xf150,
+
+            /// <summary>
+            ///     Selects the default item; the user double-clicked the window menu.
+            /// </summary>
+            ScDefault = 0xf160,
+
+            /// <summary>
+            ///     Sets the state of the display. This command supports devices that have
+            ///     power-saving features, such as a battery-powered personal computer. - The
+            ///     lParam parameter can have the following values: -1 (the display is powering
+            ///     on), 1 (the display is going to low power), 2 (the display is being shut
+            ///     off).
+            /// </summary>
+            ScMonitorPower = 0xf170,
+
+            /// <summary>
+            ///     Changes the cursor to a question mark with a pointer. If the user then
+            ///     clicks a control in the dialog box, the control receives a WM_HELP message.
+            /// </summary>
+            ScContextHelp = 0xf180
         }
 
         /// <summary>
@@ -1616,20 +1697,22 @@ namespace SilDev
         public enum WindowPlacementFlags : uint
         {
             /// <summary>
-            ///     If the calling thread and the thread that owns the window are attached to different
-            ///     input queues, the system posts the request to the thread that owns the window. This
-            ///     prevents the calling thread from blocking its execution while other threads process
-            ///     the request.
+            ///     If the calling thread and the thread that owns the window are attached to
+            ///     different input queues, the system posts the request to the thread that
+            ///     owns the window. This prevents the calling thread from blocking its
+            ///     execution while other threads process the request.
             /// </summary>
             AsyncWindowPlacement = 0x4,
 
             /// <summary>
-            ///     The restored window will be maximized, regardless of whether it was maximized before it
-            ///     was minimized. This setting is only valid the next time the window is restored. It does
-            ///     not change the default restoration behavior.
+            ///     The restored window will be maximized, regardless of whether it was
+            ///     maximized before it was minimized. This setting is only valid the next time
+            ///     the window is restored. It does not change the default restoration
+            ///     behavior.
             ///     <para>
-            ///         This flag is only valid when the <see cref="ShowWindowFlags.ShowMinimized"/> value
-            ///         is specified for the showCmd member.
+            ///         This flag is only valid when the
+            ///         <see cref="ShowWindowFlags.ShowMinimized"/> value is specified for the
+            ///         showCmd member.
             ///     </para>
             /// </summary>
             RestoreToMaximized = 0x2,
@@ -1637,7 +1720,8 @@ namespace SilDev
             /// <summary>
             ///     The coordinates of the minimized window may be specified.
             ///     <para>
-            ///         This flag must be specified if the coordinates are set in the ptMinPosition member.
+            ///         This flag must be specified if the coordinates are set in the
+            ///         ptMinPosition member.
             ///     </para>
             /// </summary>
             SetMinimizedPosition = 0x1
@@ -1660,8 +1744,8 @@ namespace SilDev
             Caption = 0xc00000,
 
             /// <summary>
-            ///     The window is a child window. A window with this style cannot have a menu bar. This style cannot
-            ///     be used with the WS_POPUP style.
+            ///     The window is a child window. A window with this style cannot have a menu
+            ///     bar. This style cannot be used with the WS_POPUP style.
             /// </summary>
             Child = 0x40000000,
 
@@ -1671,38 +1755,42 @@ namespace SilDev
             ChildWindow = Child,
 
             /// <summary>
-            ///     Excludes the area occupied by child windows when drawing occurs within the parent window. This
-            ///     style is used when creating the parent window.
+            ///     Excludes the area occupied by child windows when drawing occurs within the
+            ///     parent window. This style is used when creating the parent window.
             /// </summary>
             ClipChildren = 0x2000000,
 
             /// <summary>
-            ///     Clips child windows relative to each other; that is, when a particular child window receives a
-            ///     WM_PAINT message, the <see cref="ClipSiblings"/> style clips all other overlapping child
-            ///     windows out of the region of the child window to be updated. If <see cref="ClipSiblings"/>
-            ///     is not specified and child windows overlap, it is possible, when drawing within the client area
-            ///     of a child window, to draw within the client area of a neighboring child window.
+            ///     Clips child windows relative to each other; that is, when a particular
+            ///     child window receives a WM_PAINT message, the <see cref="ClipSiblings"/>
+            ///     style clips all other overlapping child windows out of the region of the
+            ///     child window to be updated. If <see cref="ClipSiblings"/> is not specified
+            ///     and child windows overlap, it is possible, when drawing within the client
+            ///     area of a child window, to draw within the client area of a neighboring
+            ///     child window.
             /// </summary>
             ClipSiblings = 0x4000000,
 
             /// <summary>
-            ///     The window is initially disabled. A disabled window cannot receive input from the user. To change
-            ///     this after a window has been created, use the EnableWindow function.
+            ///     The window is initially disabled. A disabled window cannot receive input
+            ///     from the user. To change this after a window has been created, use the
+            ///     EnableWindow function.
             /// </summary>
             Disabled = 0x8000000,
 
             /// <summary>
-            ///     The window has a border of a style typically used with dialog boxes. A window with this style
-            ///     cannot have a title bar.
+            ///     The window has a border of a style typically used with dialog boxes. A
+            ///     window with this style cannot have a title bar.
             /// </summary>
             DlgFrame = 0x400000,
 
             /// <summary>
-            ///     The window is the first control of a group of controls. The group consists of this first control
-            ///     and all controls defined after it, up to the next control with the WS_GROUP style. The first
-            ///     control in each group usually has the <see cref="TabStop"/> style so that the user can move
-            ///     from group to group. The user can subsequently change the keyboard focus from one control in the
-            ///     group to the next control in the group by using the direction keys.
+            ///     The window is the first control of a group of controls. The group consists
+            ///     of this first control and all controls defined after it, up to the next
+            ///     control with the WS_GROUP style. The first control in each group usually
+            ///     has the <see cref="TabStop"/> style so that the user can move from group to
+            ///     group. The user can subsequently change the keyboard focus from one control
+            ///     in the group to the next control in the group by using the direction keys.
             /// </summary>
             Group = 0x20000,
 
@@ -1712,7 +1800,8 @@ namespace SilDev
             HorScroll = 0x100000,
 
             /// <summary>
-            ///     The window is initially minimized. Same as the <see cref="Minimize"/> style.
+            ///     The window is initially minimized. Same as the <see cref="Minimize"/>
+            ///     style.
             /// </summary>
             Iconic = Minimize,
 
@@ -1722,8 +1811,9 @@ namespace SilDev
             Maximize = 0x1000000,
 
             /// <summary>
-            ///     The window has a maximize button. Cannot be combined with the <see cref="ExContextHelp"/> style.
-            ///     The <see cref="SysMenu"/> style must also be specified.
+            ///     The window has a maximize button. Cannot be combined with the
+            ///     <see cref="ExContextHelp"/> style. The <see cref="SysMenu"/> style must
+            ///     also be specified.
             /// </summary>
             MaximizeBox = 0x10000,
 
@@ -1733,30 +1823,34 @@ namespace SilDev
             Minimize = 0x20000000,
 
             /// <summary>
-            ///     The window has a minimize button. Cannot be combined with the <see cref="ExContextHelp"/> style.
-            ///     The <see cref="SysMenu"/> style must also be specified.
+            ///     The window has a minimize button. Cannot be combined with the
+            ///     <see cref="ExContextHelp"/> style. The <see cref="SysMenu"/> style must
+            ///     also be specified.
             /// </summary>
             MinimizeBox = 0x20000,
 
             /// <summary>
-            ///     The window is an overlapped window. An overlapped window has a title bar and a border. Same
-            ///     as the <see cref="Tiled"/> style.
+            ///     The window is an overlapped window. An overlapped window has a title bar
+            ///     and a border. Same as the <see cref="Tiled"/> style.
             /// </summary>
             Overlapped = 0x0,
 
             /// <summary>
-            ///     The window is an overlapped window. Same as the <see cref="TiledWindow"/> style.
+            ///     The window is an overlapped window. Same as the <see cref="TiledWindow"/>
+            ///     style.
             /// </summary>
             OverlappedWindow = Overlapped | Caption | SysMenu | ThickFrame | MinimizeBox | MaximizeBox,
 
             /// <summary>
-            ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
+            ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD
+            ///     style.
             /// </summary>
             Popup = 0x80000000,
 
             /// <summary>
-            ///     The window is a pop-up window. The <see cref="Caption"/> and <see cref="PopupWindow"/> styles
-            ///     must be combined to make the window menu visible.
+            ///     The window is a pop-up window. The <see cref="Caption"/> and
+            ///     <see cref="PopupWindow"/> styles must be combined to make the window menu
+            ///     visible.
             /// </summary>
             PopupWindow = Popup | Border | SysMenu,
 
@@ -1766,17 +1860,19 @@ namespace SilDev
             SizeBox = 0x40000,
 
             /// <summary>
-            ///     The window has a window menu on its title bar. The <see cref="Caption"/> style must also be
-            ///     specified.
+            ///     The window has a window menu on its title bar. The <see cref="Caption"/>
+            ///     style must also be specified.
             /// </summary>
             SysMenu = 0x80000,
 
             /// <summary>
-            ///     The window is a control that can receive the keyboard focus when the user presses the TAB key.
-            ///     Pressing the TAB key changes the keyboard focus to the next control with the <see cref="TabStop"/>
-            ///     style. You can turn this style on and off to change dialog box navigation. To change this style after
-            ///     a window has been created, use the SetWindowLong function. For user-created windows and modeless
-            ///     dialogs to work with tab stops, alter the message loop to call the IsDialogMessage function.
+            ///     The window is a control that can receive the keyboard focus when the user
+            ///     presses the TAB key. Pressing the TAB key changes the keyboard focus to the
+            ///     next control with the <see cref="TabStop"/> style. You can turn this style
+            ///     on and off to change dialog box navigation. To change this style after a
+            ///     window has been created, use the SetWindowLong function. For user-created
+            ///     windows and modeless dialogs to work with tab stops, alter the message loop
+            ///     to call the IsDialogMessage function.
             /// </summary>
             TabStop = 0x10000,
 
@@ -1786,19 +1882,20 @@ namespace SilDev
             ThickFrame = 0x40000,
 
             /// <summary>
-            ///     The window is an overlapped window. An overlapped window has a title bar and a border. Same
-            ///     as the <see cref="Overlapped"/> style.
+            ///     The window is an overlapped window. An overlapped window has a title bar
+            ///     and a border. Same as the <see cref="Overlapped"/> style.
             /// </summary>
             Tiled = 0x0,
 
             /// <summary>
-            ///     The window is an overlapped window. Same as the <see cref="OverlappedWindow"/> style.
+            ///     The window is an overlapped window. Same as the
+            ///     <see cref="OverlappedWindow"/> style.
             /// </summary>
             TiledWindow = Overlapped | Caption | SysMenu | ThickFrame | MinimizeBox | MaximizeBox,
 
             /// <summary>
-            ///     The window is initially visible. This style can be turned on and off by using the ShowWindow
-            ///     or SetWindowPos function.
+            ///     The window is initially visible. This style can be turned on and off by
+            ///     using the ShowWindow or SetWindowPos function.
             /// </summary>
             Visible = 0x10000000,
 
@@ -1823,45 +1920,48 @@ namespace SilDev
             ExClientEdge = 0x200,
 
             /// <summary>
-            ///     Paints all descendants of a window in bottom-to-top painting order using double-buffering.
+            ///     Paints all descendants of a window in bottom-to-top painting order using
+            ///     double-buffering.
             /// </summary>
             ExComposited = 0x2000000,
 
             /// <summary>
-            ///     The title bar of the window includes a question mark. When the user clicks the question mark,
-            ///     the cursor changes to a question mark with a pointer. If the user then clicks a child window,
-            ///     the child receives a WM_HELP message. The child window should pass the message to the parent
-            ///     window procedure, which should call the WinHelp function using the HELP_WM_HELP command. The
-            ///     Help application displays a pop-up window that typically contains help for the child window.
-            ///     <see cref="ExContextHelp"/> cannot be used with the <see cref="MaximizeBox"/> or
-            ///     <see cref="MinimizeBox"/> styles.
+            ///     The title bar of the window includes a question mark. When the user clicks
+            ///     the question mark, the cursor changes to a question mark with a pointer. If
+            ///     the user then clicks a child window, the child receives a WM_HELP message.
+            ///     The child window should pass the message to the parent window procedure,
+            ///     which should call the WinHelp function using the HELP_WM_HELP command. The
+            ///     Help application displays a pop-up window that typically contains help for
+            ///     the child window. <see cref="ExContextHelp"/> cannot be used with the
+            ///     <see cref="MaximizeBox"/> or <see cref="MinimizeBox"/> styles.
             /// </summary>
             ExContextHelp = 0x400,
 
             /// <summary>
-            ///     The window itself contains child windows that should take part in dialog box navigation. If
-            ///     this style is specified, the dialog manager recurses into children of this window when
-            ///     performing navigation operations such as handling the TAB key, an arrow key, or a keyboard
-            ///     mnemonic.
+            ///     The window itself contains child windows that should take part in dialog
+            ///     box navigation. If this style is specified, the dialog manager recurses
+            ///     into children of this window when performing navigation operations such as
+            ///     handling the TAB key, an arrow key, or a keyboard mnemonic.
             /// </summary>
             ExControlParent = 0x10000,
 
             /// <summary>
-            ///     The window has a double border; the window can, optionally, be created with a title bar by
-            ///     specifying the <see cref="Caption"/> style in the dwStyle parameter.
+            ///     The window has a double border; the window can, optionally, be created with
+            ///     a title bar by specifying the <see cref="Caption"/> style in the dwStyle
+            ///     parameter.
             /// </summary>
             ExDlgModalFrame = 0x1,
 
             /// <summary>
-            ///     The window is a layered window. This style cannot be used if the window has a class style of
-            ///     either CS_OWNDC or CS_CLASSDC.
+            ///     The window is a layered window. This style cannot be used if the window has
+            ///     a class style of either CS_OWNDC or CS_CLASSDC.
             /// </summary>
             ExLayered = 0x80000,
 
             /// <summary>
-            ///     If the shell language is Hebrew, Arabic, or another language that supports reading order
-            ///     alignment, the horizontal origin of the window is on the right edge. Increasing horizontal
-            ///     values advance to the left.
+            ///     If the shell language is Hebrew, Arabic, or another language that supports
+            ///     reading order alignment, the horizontal origin of the window is on the
+            ///     right edge. Increasing horizontal values advance to the left.
             /// </summary>
             ExLayoutRightToLeft = 0x400000,
 
@@ -1871,15 +1971,15 @@ namespace SilDev
             ExLeft = 0x0,
 
             /// <summary>
-            ///     If the shell language is Hebrew, Arabic, or another language that supports reading order
-            ///     alignment, the vertical scroll bar (if present) is to the left of the client area. For
-            ///     other languages, the style is ignored.
+            ///     If the shell language is Hebrew, Arabic, or another language that supports
+            ///     reading order alignment, the vertical scroll bar (if present) is to the
+            ///     left of the client area. For other languages, the style is ignored.
             /// </summary>
             ExLeftScrollbar = 0x4000,
 
             /// <summary>
-            ///     The window text is displayed using left-to-right reading-order properties. This is the
-            ///     default.
+            ///     The window text is displayed using left-to-right reading-order properties.
+            ///     This is the default.
             /// </summary>
             ExLeftToRightReading = 0x0,
 
@@ -1889,12 +1989,12 @@ namespace SilDev
             ExMdiChild = 0x40,
 
             /// <summary>
-            ///     A top-level window created with this style does not become the foreground window when
-            ///     the user clicks it. The system does not bring this window to the foreground when the
-            ///     user minimizes or closes the foreground window. To activate the window, use the
-            ///     SetActiveWindow or SetForegroundWindow function. The window does not appear on the
-            ///     taskbar by default. To force the window to appear on the taskbar, use the
-            ///     WS_EX_APPWINDOW style.
+            ///     A top-level window created with this style does not become the foreground
+            ///     window when the user clicks it. The system does not bring this window to
+            ///     the foreground when the user minimizes or closes the foreground window. To
+            ///     activate the window, use the SetActiveWindow or SetForegroundWindow
+            ///     function. The window does not appear on the taskbar by default. To force
+            ///     the window to appear on the taskbar, use the WS_EX_APPWINDOW style.
             /// </summary>
             ExNoActivate = 0x8000000,
 
@@ -1904,14 +2004,15 @@ namespace SilDev
             ExNoInheritLayout = 0x100000,
 
             /// <summary>
-            ///     The child window created with this style does not send the WM_PARENTNOTIFY message
-            ///     to its parent window when it is created or destroyed.
+            ///     The child window created with this style does not send the WM_PARENTNOTIFY
+            ///     message to its parent window when it is created or destroyed.
             /// </summary>
             ExNoParentNotify = 0x4,
 
             /// <summary>
-            ///     The window does not render to a redirection surface. This is for windows that do not
-            ///     have visible content or that use mechanisms other than surfaces to provide their visual.
+            ///     The window does not render to a redirection surface. This is for windows
+            ///     that do not have visible content or that use mechanisms other than surfaces
+            ///     to provide their visual.
             /// </summary>
             ExNoRedirectionBitmap = 0x200000,
 
@@ -1921,62 +2022,65 @@ namespace SilDev
             ExOverlappedWindow = ExWindowEdge | ExClientEdge,
 
             /// <summary>
-            ///     The window is palette window, which is a modeless dialog box that presents an array
-            ///     of commands.
+            ///     The window is palette window, which is a modeless dialog box that presents
+            ///     an array of commands.
             /// </summary>
             ExPaletteWindow = ExWindowEdge | ExToolWindow | ExTopMost,
 
             /// <summary>
-            ///     The window has generic "right-aligned" properties. This depends on the window class.
-            ///     This style has an effect only if the shell language is Hebrew, Arabic, or another
-            ///     language that supports reading-order alignment; otherwise, the style is ignored.
-            ///     Using the WS_EX_RIGHT style for static or edit controls has the same effect as using
-            ///     the SS_RIGHT or ES_RIGHT style, respectively. Using this style with button controls
-            ///     has the same effect as using BS_RIGHT and BS_RIGHTBUTTON styles.
+            ///     The window has generic "right-aligned" properties. This depends on the
+            ///     window class. This style has an effect only if the shell language is
+            ///     Hebrew, Arabic, or another language that supports reading-order alignment;
+            ///     otherwise, the style is ignored. Using the WS_EX_RIGHT style for static or
+            ///     edit controls has the same effect as using the SS_RIGHT or ES_RIGHT style,
+            ///     respectively. Using this style with button controls has the same effect as
+            ///     using BS_RIGHT and BS_RIGHTBUTTON styles.
             /// </summary>
             ExRight = 0x1000,
 
             /// <summary>
-            ///     The vertical scroll bar (if present) is to the right of the client area. This is the
-            ///     default.
+            ///     The vertical scroll bar (if present) is to the right of the client area.
+            ///     This is the default.
             /// </summary>
             ExRightScrollbar = 0x0,
 
             /// <summary>
-            ///     If the shell language is Hebrew, Arabic, or another language that supports reading-order
-            ///     alignment, the window text is displayed using right-to-left reading-order properties.
-            ///     For other languages, the style is ignored.
+            ///     If the shell language is Hebrew, Arabic, or another language that supports
+            ///     reading-order alignment, the window text is displayed using right-to-left
+            ///     reading-order properties. For other languages, the style is ignored.
             /// </summary>
             ExRightToLeftReading = 0x2000,
 
             /// <summary>
-            ///     The window has a three-dimensional border style intended to be used for items that do
-            ///     not accept user input.
+            ///     The window has a three-dimensional border style intended to be used for
+            ///     items that do not accept user input.
             /// </summary>
             ExStaticEdge = 0x20000,
 
             /// <summary>
-            ///     The window is intended to be used as a floating toolbar. A tool window has a title bar
-            ///     that is shorter than a normal title bar, and the window title is drawn using a smaller
-            ///     font. A tool window does not appear in the taskbar or in the dialog that appears when
-            ///     the user presses ALT+TAB. If a tool window has a system menu, its icon is not displayed
-            ///     on the title bar. However, you can display the system menu by right-clicking or by
-            ///     typing ALT+SPACE.
+            ///     The window is intended to be used as a floating toolbar. A tool window has
+            ///     a title bar that is shorter than a normal title bar, and the window title
+            ///     is drawn using a smaller font. A tool window does not appear in the taskbar
+            ///     or in the dialog that appears when the user presses ALT+TAB. If a tool
+            ///     window has a system menu, its icon is not displayed on the title bar.
+            ///     However, you can display the system menu by right-clicking or by typing
+            ///     ALT+SPACE.
             /// </summary>
             ExToolWindow = 0x80,
 
             /// <summary>
-            ///     The window should be placed above all non-topmost windows and should stay above them,
-            ///     even when the window is deactivated. To add or remove this style, use the SetWindowPos
-            ///     function.
+            ///     The window should be placed above all non-topmost windows and should stay
+            ///     above them, even when the window is deactivated. To add or remove this
+            ///     style, use the SetWindowPos function.
             /// </summary>
             ExTopMost = 0x8,
 
             /// <summary>
-            ///     The window should not be painted until siblings beneath the window (that were created
-            ///     by the same thread) have been painted. The window appears transparent because the bits
-            ///     of underlying sibling windows have already been painted. To achieve transparency without
-            ///     these restrictions, use the SetWindowRgn function.
+            ///     The window should not be painted until siblings beneath the window (that
+            ///     were created by the same thread) have been painted. The window appears
+            ///     transparent because the bits of underlying sibling windows have already
+            ///     been painted. To achieve transparency without these restrictions, use the
+            ///     SetWindowRgn function.
             /// </summary>
             ExTransparent = 0x20,
 
@@ -2008,7 +2112,8 @@ namespace SilDev
             NoSysMenu = 0x4,
 
             /// <summary>
-            ///     Prevents mirroring of the question mark, even in right-to-left (RTL) layout.
+            ///     Prevents mirroring of the question mark, even in right-to-left (RTL)
+            ///     layout.
             /// </summary>
             NoMirrorHelp = 0x8,
 
@@ -2016,24 +2121,6 @@ namespace SilDev
             ///     A mask that contains all the valid bits.
             /// </summary>
             ValidBits = NoDrawCaption | NoDrawIcon | NoSysMenu | NoMirrorHelp
-        }
-
-        /// <summary>
-        ///     Throws the specified error code if it is not specified as a handled error.
-        /// </summary>
-        /// <param name="error">
-        ///     The Win32 error code associated with this exception.
-        /// </param>
-        /// <param name="handledErrors">
-        ///     A sequence of handled Win32 error codes.
-        /// </param>
-        /// <exception cref="Win32Exception">
-        /// </exception>
-        public static int ThrowError(int error, params int[] handledErrors)
-        {
-            if (handledErrors?.Any(i => i == error) ?? false)
-                return error;
-            throw new Win32Exception(error);
         }
 
         /// <summary>
@@ -2055,12 +2142,32 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Throws the specified error code if it is not specified as a handled error.
+        /// </summary>
+        /// <param name="error">
+        ///     The Win32 error code associated with this exception.
+        /// </param>
+        /// <param name="handledErrors">
+        ///     A sequence of handled Win32 error codes.
+        /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static int ThrowError(int error, params int[] handledErrors)
+        {
+            if (handledErrors?.Any(i => i == error) ?? false)
+                return error;
+            throw new Win32Exception(error);
+        }
+
+        /// <summary>
         ///     Throws the last error code returned by the last unmanaged function.
         /// </summary>
         /// <param name="forceMessage">
-        ///     A detailed description of the error that is thrown if no Win32 error code was found.
+        ///     A detailed description of the error that is thrown if no Win32 error code
+        ///     was found.
         ///     <para>
-        ///         If this parameter is NULL, no exception is thrown in this case.
+        ///         If this parameter is <see langword="null"/>, no exception is thrown in
+        ///         this case.
         ///     </para>
         /// </param>
         /// <exception cref="Win32Exception">
@@ -2081,23 +2188,25 @@ namespace SilDev
         internal enum AccessTokenFlags : uint
         {
             /// <summary>
-            ///     The right to read the information in the object's security descriptor, not including the
-            ///     information in the system access control list (SACL), the right to delete the object,
-            ///     the right to modify the discretionary access control list (DACL) in the object's security
-            ///     descriptor, the right to change the owner in the object's security descriptor, and the
-            ///     right to use the object for synchronization.
+            ///     The right to read the information in the object's security descriptor, not
+            ///     including the information in the system access control list (SACL), the
+            ///     right to delete the object, the right to modify the discretionary access
+            ///     control list (DACL) in the object's security descriptor, the right to
+            ///     change the owner in the object's security descriptor, and the right to use
+            ///     the object for synchronization.
             /// </summary>
             StandardRightsRequired = 0xf0000,
 
             /// <summary>
-            ///     The right to read the information in the object's security descriptor, not including the
-            ///     information in the system access control list (SACL).
+            ///     The right to read the information in the object's security descriptor, not
+            ///     including the information in the system access control list (SACL).
             /// </summary>
             StandardRightsRead = 0x20000,
 
             /// <summary>
-            ///     Required to attach a primary token to a process. The SE_ASSIGNPRIMARYTOKEN_NAME privilege
-            ///     is also required to accomplish this task.
+            ///     Required to attach a primary token to a process. The
+            ///     SE_ASSIGNPRIMARYTOKEN_NAME privilege is also required to accomplish this
+            ///     task.
             /// </summary>
             TokenAssignPrimary = 0x1,
 
@@ -2132,12 +2241,14 @@ namespace SilDev
             TokenAdjustGroups = 0x40,
 
             /// <summary>
-            ///     Required to change the default owner, primary group, or DACL of an access token.
+            ///     Required to change the default owner, primary group, or DACL of an access
+            ///     token.
             /// </summary>
             TokenAdjustDefault = 0x80,
 
             /// <summary>
-            ///     Required to adjust the session ID of an access token. The SE_TCB_NAME privilege is required.
+            ///     Required to adjust the session ID of an access token. The SE_TCB_NAME
+            ///     privilege is required.
             /// </summary>
             TokenAdjustSessionid = 0x100,
 
@@ -2159,32 +2270,35 @@ namespace SilDev
         internal enum CreationFlags
         {
             /// <summary>
-            ///     The new process does not inherit the error mode of the calling process. Instead, the new
-            ///     process gets the current default error mode.
+            ///     The new process does not inherit the error mode of the calling process.
+            ///     Instead, the new process gets the current default error mode.
             /// </summary>
             CreateDefaultErrorMode = 0x4000000,
 
             /// <summary>
-            ///     The new process has a new console, instead of inheriting the parent's console.
+            ///     The new process has a new console, instead of inheriting the parent's
+            ///     console.
             /// </summary>
             CreateNewConsole = 0x10,
 
             /// <summary>
-            ///     The new process is the root process of a new process group. The process group includes all
-            ///     processes that are descendants of this root process. The process identifier of the new
-            ///     process group is the same as the process identifier, which is returned in the lpProcessInfo
-            ///     parameter.
+            ///     The new process is the root process of a new process group. The process
+            ///     group includes all processes that are descendants of this root process. The
+            ///     process identifier of the new process group is the same as the process
+            ///     identifier, which is returned in the lpProcessInfo parameter.
             /// </summary>
             CreateNewProcessGroup = 0x200,
 
             /// <summary>
-            ///     This flag is only valid starting a 16-bit Windows-based application. If set, the new process
-            ///     runs in a private Virtual DOS Machine (VDM). By default, all 16-bit Windows-based applications
-            ///     run in a single, shared VDM. The advantage of running separately is that a crash only terminates
-            ///     the single VDM; any other programs running in distinct VDMs continue to function normally. Also,
-            ///     16-bit Windows-based applications that run in separate VDMs have separate input queues. That
-            ///     means that if one application stops responding momentarily, applications in separate VDMs continue
-            ///     to receive input.
+            ///     This flag is only valid starting a 16-bit Windows-based application. If
+            ///     set, the new process runs in a private Virtual DOS Machine (VDM). By
+            ///     default, all 16-bit Windows-based applications run in a single, shared VDM.
+            ///     The advantage of running separately is that a crash only terminates the
+            ///     single VDM; any other programs running in distinct VDMs continue to
+            ///     function normally. Also, 16-bit Windows-based applications that run in
+            ///     separate VDMs have separate input queues. That means that if one
+            ///     application stops responding momentarily, applications in separate VDMs
+            ///     continue to receive input.
             /// </summary>
             CreateSeparateWowVdm = 0x800,
 
@@ -2194,9 +2308,9 @@ namespace SilDev
             CreateSuspended = 0x4,
 
             /// <summary>
-            ///     Indicates the format of the lpEnvironment parameter. If this flag is set, the environment block
-            ///     pointed to by lpEnvironment uses Unicode characters. Otherwise, the environment block uses ANSI
-            ///     characters.
+            ///     Indicates the format of the lpEnvironment parameter. If this flag is set,
+            ///     the environment block pointed to by lpEnvironment uses Unicode characters.
+            ///     Otherwise, the environment block uses ANSI characters.
             /// </summary>
             CreateUnicodeEnvironment = 0x400,
 
@@ -2213,130 +2327,143 @@ namespace SilDev
         internal enum FileInfoFlags : uint
         {
             /// <summary>
-            ///     Apply the appropriate overlays to the file's icon. The <see cref="Icon"/> flag must also be set.
+            ///     Apply the appropriate overlays to the file's icon. The <see cref="Icon"/>
+            ///     flag must also be set.
             /// </summary>
             AddOverlays = 0x20,
 
             /// <summary>
-            ///     Modify <see cref="Attributes"/> to indicate that the dwAttributes member of the SHFILEINFO structure
-            ///     at psfi contains the specific attributes that are desired. These attributes are passed to
-            ///     IShellFolder::GetAttributesOf. If this flag is not specified, 0xFFFFFFFF is passed to
-            ///     IShellFolder::GetAttributesOf, requesting all attributes. This flag cannot be specified with
-            ///     the <see cref="Icon"/> flag.
+            ///     Modify <see cref="Attributes"/> to indicate that the dwAttributes member of
+            ///     the SHFILEINFO structure at psfi contains the specific attributes that are
+            ///     desired. These attributes are passed to IShellFolder::GetAttributesOf. If
+            ///     this flag is not specified, 0xFFFFFFFF is passed to
+            ///     IShellFolder::GetAttributesOf, requesting all attributes. This flag cannot
+            ///     be specified with the <see cref="Icon"/> flag.
             /// </summary>
             AttrSpecified = 0x20000,
 
             /// <summary>
-            ///     Retrieve the item attributes. The attributes are copied to the dwAttributes member of the
-            ///     structure specified in the psfi parameter. These are the same attributes that are obtained
-            ///     from IShellFolder::GetAttributesOf.
+            ///     Retrieve the item attributes. The attributes are copied to the dwAttributes
+            ///     member of the structure specified in the psfi parameter. These are the same
+            ///     attributes that are obtained from IShellFolder::GetAttributesOf.
             /// </summary>
             Attributes = 0x800,
 
             /// <summary>
-            ///     Retrieve the display name for the file, which is the name as it appears in Windows Explorer.
-            ///     The name is copied to the szDisplayName member of the structure specified in psfi. The
-            ///     returned display name uses the long file name, if there is one, rather than the 8.3 form of
-            ///     the file name. Note that the display name can be affected by settings such as whether
-            ///     extensions are shown.
+            ///     Retrieve the display name for the file, which is the name as it appears in
+            ///     Windows Explorer. The name is copied to the szDisplayName member of the
+            ///     structure specified in psfi. The returned display name uses the long file
+            ///     name, if there is one, rather than the 8.3 form of the file name. Note that
+            ///     the display name can be affected by settings such as whether extensions are
+            ///     shown.
             /// </summary>
             DisplayName = 0x200,
 
             /// <summary>
-            ///     Retrieve the type of the executable file if pszPath identifies an executable file. The
-            ///     information is packed into the return value. This flag cannot be specified with any other
-            ///     flags.
+            ///     Retrieve the type of the executable file if pszPath identifies an
+            ///     executable file. The information is packed into the return value. This flag
+            ///     cannot be specified with any other flags.
             /// </summary>
             ExeType = 0x2000,
 
             /// <summary>
-            ///     Retrieve the handle to the icon that represents the file and the index of the icon within
-            ///     the system image list. The handle is copied to the hIcon member of the structure specified
-            ///     by psfi, and the index is copied to the iIcon member.
+            ///     Retrieve the handle to the icon that represents the file and the index of
+            ///     the icon within the system image list. The handle is copied to the hIcon
+            ///     member of the structure specified by psfi, and the index is copied to the
+            ///     iIcon member.
             /// </summary>
             Icon = 0x100,
 
             /// <summary>
-            ///     Retrieve the name of the file that contains the icon representing the file specified by
-            ///     pszPath, as returned by the IExtractIcon::GetIconLocation method of the file's icon handler.
-            ///     Also retrieve the icon index within that file. The name of the file containing the icon is
-            ///     copied to the szDisplayName member of the structure specified by psfi. The icon's index is
-            ///     copied to that structure's iIcon member.
+            ///     Retrieve the name of the file that contains the icon representing the file
+            ///     specified by pszPath, as returned by the IExtractIcon::GetIconLocation
+            ///     method of the file's icon handler. Also retrieve the icon index within that
+            ///     file. The name of the file containing the icon is copied to the
+            ///     szDisplayName member of the structure specified by psfi. The icon's index
+            ///     is copied to that structure's iIcon member.
             /// </summary>
             IconLocation = 0x1000,
 
             /// <summary>
-            ///     Modify <see cref="Icon"/>, causing the function to retrieve the file's large icon. The
-            ///     <see cref="Icon"/> flag must also be set.
+            ///     Modify <see cref="Icon"/>, causing the function to retrieve the file's
+            ///     large icon. The <see cref="Icon"/> flag must also be set.
             /// </summary>
             LargeIcon = 0x0,
 
             /// <summary>
-            ///     Modify <see cref="Icon"/>, causing the function to add the link overlay to the file's icon. The
-            ///     <see cref="Icon"/> flag must also be set.
+            ///     Modify <see cref="Icon"/>, causing the function to add the link overlay to
+            ///     the file's icon. The <see cref="Icon"/> flag must also be set.
             /// </summary>
             LinkOverlay = 0x8000,
 
             /// <summary>
-            ///     Modify <see cref="Icon"/>, causing the function to retrieve the file's open icon. Also used to modify
-            ///     <see cref="SysIconIndex"/>, causing the function to return the handle to the system image list that
-            ///     contains the file's small open icon. A container object displays an open icon to indicate that the
-            ///     container is open. The <see cref="Icon"/> and/or <see cref="SysIconIndex"/> flag must also be set.
+            ///     Modify <see cref="Icon"/>, causing the function to retrieve the file's open
+            ///     icon. Also used to modify <see cref="SysIconIndex"/>, causing the function
+            ///     to return the handle to the system image list that contains the file's
+            ///     small open icon. A container object displays an open icon to indicate that
+            ///     the container is open. The <see cref="Icon"/> and/or
+            ///     <see cref="SysIconIndex"/> flag must also be set.
             /// </summary>
             OpenIcon = 0x2,
 
             /// <summary>
-            ///     Return the index of the overlay icon. The value of the overlay index is returned in the upper
-            ///     eight bits of the iIcon member of the structure specified by psfi. This flag requires that the
-            ///     <see cref="Icon"/> be set as well.
+            ///     Return the index of the overlay icon. The value of the overlay index is
+            ///     returned in the upper eight bits of the iIcon member of the structure
+            ///     specified by psfi. This flag requires that the <see cref="Icon"/> be set as
+            ///     well.
             /// </summary>
             OverlayIndex = 0x40,
 
             /// <summary>
-            ///     Indicate that pszPath is the address of an ITEMIDLIST structure rather than a path name.
+            ///     Indicate that pszPath is the address of an ITEMIDLIST structure rather than
+            ///     a path name.
             /// </summary>
             PidL = 0x8,
 
             /// <summary>
-            ///     Modify <see cref="Icon"/>, causing the function to blend the file's icon with the system highlight
-            ///     color. The <see cref="Icon"/> flag must also be set.
+            ///     Modify <see cref="Icon"/>, causing the function to blend the file's icon
+            ///     with the system highlight color. The <see cref="Icon"/> flag must also be
+            ///     set.
             /// </summary>
             Selected = 0x10000,
 
             /// <summary>
-            ///     Modify <see cref="Icon"/>, causing the function to retrieve a Shell-sized icon. If this flag is not
-            ///     specified the function sizes the icon according to the system metric values. The <see cref="Icon"/>
-            ///     flag must also be set.
+            ///     Modify <see cref="Icon"/>, causing the function to retrieve a Shell-sized
+            ///     icon. If this flag is not specified the function sizes the icon according
+            ///     to the system metric values. The <see cref="Icon"/> flag must also be set.
             /// </summary>
             ShellIconSize = 0x4,
 
             /// <summary>
-            ///     Modify <see cref="Icon"/>, causing the function to retrieve the file's small icon. Also used to modify
-            ///     <see cref="SysIconIndex"/>, causing the function to return the handle to the system image list that
-            ///     contains small icon images. The <see cref="Icon"/> and/or <see cref="SysIconIndex"/> flag must also
-            ///     be set.
+            ///     Modify <see cref="Icon"/>, causing the function to retrieve the file's
+            ///     small icon. Also used to modify <see cref="SysIconIndex"/>, causing the
+            ///     function to return the handle to the system image list that contains small
+            ///     icon images. The <see cref="Icon"/> and/or <see cref="SysIconIndex"/> flag
+            ///     must also be set.
             /// </summary>
             SmallIcon = 0x1,
 
             /// <summary>
-            ///     Retrieve the index of a system image list icon. If successful, the index is copied to the iIcon
-            ///     member of psfi. The return value is a handle to the system image list. Only those images whose
-            ///     indices are successfully copied to iIcon are valid. Attempting to access other images in the
-            ///     system image list will result in undefined behavior.
+            ///     Retrieve the index of a system image list icon. If successful, the index is
+            ///     copied to the iIcon member of psfi. The return value is a handle to the
+            ///     system image list. Only those images whose indices are successfully copied
+            ///     to iIcon are valid. Attempting to access other images in the system image
+            ///     list will result in undefined behavior.
             /// </summary>
             SysIconIndex = 0x4000,
 
             /// <summary>
-            ///     Retrieve the string that describes the file's type. The string is copied to the szTypeName
-            ///     member of the structure specified in psfi.
+            ///     Retrieve the string that describes the file's type. The string is copied to
+            ///     the szTypeName member of the structure specified in psfi.
             /// </summary>
             TypeName = 0x400,
 
             /// <summary>
-            ///     Indicates that the function should not attempt to access the file specified by pszPath. Rather,
-            ///     it should act as if the file specified by pszPath exists with the file attributes passed in
-            ///     dwFileAttributes. This flag cannot be combined with the <see cref="Attributes"/>,
-            ///     <see cref="ExeType"/>, or <see cref="PidL"/> flags.
+            ///     Indicates that the function should not attempt to access the file specified
+            ///     by pszPath. Rather, it should act as if the file specified by pszPath
+            ///     exists with the file attributes passed in dwFileAttributes. This flag
+            ///     cannot be combined with the <see cref="Attributes"/>, <see cref="ExeType"/>
+            ///     , or <see cref="PidL"/> flags.
             /// </summary>
             UseFileAttributes = 0x10
         }
@@ -2347,45 +2474,48 @@ namespace SilDev
         internal enum LogonOptions
         {
             /// <summary>
-            ///     Log on, then load the user's profile in the HKEY_USERS registry key. The function returns
-            ///     after the profile has been loaded. Loading the profile can be time-consuming, so it is best
-            ///     to use this value only if you must access the information in the HKEY_CURRENT_USER registry
-            ///     key.
+            ///     Log on, then load the user's profile in the HKEY_USERS registry key. The
+            ///     function returns after the profile has been loaded. Loading the profile can
+            ///     be time-consuming, so it is best to use this value only if you must access
+            ///     the information in the HKEY_CURRENT_USER registry key.
             /// </summary>
             WithProfile = 1,
 
             /// <summary>
-            ///     Log on, but use the specified credentials on the network only. The new process uses the same
-            ///     token as the caller, but the system creates a new logon session within LSA, and the process
-            ///     uses the specified credentials as the default credentials.
+            ///     Log on, but use the specified credentials on the network only. The new
+            ///     process uses the same token as the caller, but the system creates a new
+            ///     logon session within LSA, and the process uses the specified credentials as
+            ///     the default credentials.
             ///     <para>
-            ///         This value can be used to create a process that uses a different set of credentials locally
-            ///         than it does remotely. This is useful in inter-domain scenarios where there is no trust
-            ///         relationship.
+            ///         This value can be used to create a process that uses a different set of
+            ///         credentials locally than it does remotely. This is useful in
+            ///         inter-domain scenarios where there is no trust relationship.
             ///     </para>
             /// </summary>
             NetCredentialsOnly = 2
         }
 
         /// <summary>
-        ///     Specifies the type of application that is described by the <see cref="RmProcessInfo"/> structure.
+        ///     Specifies the type of application that is described by the
+        ///     <see cref="RmProcessInfo"/> structure.
         /// </summary>
         internal enum RmAppTypes
         {
             /// <summary>
-            ///     The application cannot be classified as any other type. An application of this type can
-            ///     only be shut down by a forced shutdown.
+            ///     The application cannot be classified as any other type. An application of
+            ///     this type can only be shut down by a forced shutdown.
             /// </summary>
             UnknownApp = 0x0,
 
             /// <summary>
-            ///     A Windows application run as a stand-alone process that displays a top-level window.
+            ///     A Windows application run as a stand-alone process that displays a
+            ///     top-level window.
             /// </summary>
             MainWindow = 0x1,
 
             /// <summary>
-            ///     A Windows application that does not run as a stand-alone process and does not display a
-            ///     top-level window.
+            ///     A Windows application that does not run as a stand-alone process and does
+            ///     not display a top-level window.
             /// </summary>
             OtherWindow = 0x2,
 
@@ -2405,10 +2535,11 @@ namespace SilDev
             Console = 0x5,
 
             /// <summary>
-            ///     A system restart is required to complete the installation because a process cannot be shut
-            ///     down. The process cannot be shut down because of the following reasons. The process may be
-            ///     a critical process. The current user may not have permission to shut down the process. The
-            ///     process may belong to the primary installer that started the Restart Manager.
+            ///     A system restart is required to complete the installation because a process
+            ///     cannot be shut down. The process cannot be shut down because of the
+            ///     following reasons. The process may be a critical process. The current user
+            ///     may not have permission to shut down the process. The process may belong to
+            ///     the primary installer that started the Restart Manager.
             /// </summary>
             Critical = 0x3e8
         }
@@ -2420,32 +2551,34 @@ namespace SilDev
         internal enum ServiceAccessRights
         {
             /// <summary>
-            ///     Includes <see cref="StandardRequired"/> in addition to all access rights in this table.
+            ///     Includes <see cref="StandardRequired"/> in addition to all access rights in
+            ///     this table.
             /// </summary>
             AllAccess = 0xf01ff,
 
             /// <summary>
-            ///     Required to call the ChangeServiceConfig or ChangeServiceConfig2 function to
-            ///     change the service configuration. Because this grants the caller the right to
-            ///     change the executable file that the system runs, it should be granted only to
-            ///     administrators.
+            ///     Required to call the ChangeServiceConfig or ChangeServiceConfig2 function
+            ///     to change the service configuration. Because this grants the caller the
+            ///     right to change the executable file that the system runs, it should be
+            ///     granted only to administrators.
             /// </summary>
             ChangeConfig = 0x2,
 
             /// <summary>
-            ///     Required to call the EnumDependentServices function to enumerate all the services
-            ///     dependent on the service.
+            ///     Required to call the EnumDependentServices function to enumerate all the
+            ///     services dependent on the service.
             /// </summary>
             EnumerateDependents = 0x8,
 
             /// <summary>
-            ///     Required to call the ControlService function to ask the service to report its
-            ///     status immediately.
+            ///     Required to call the ControlService function to ask the service to report
+            ///     its status immediately.
             /// </summary>
             Interrogate = 0x80,
 
             /// <summary>
-            ///     Required to call the ControlService function to pause or continue the service.
+            ///     Required to call the ControlService function to pause or continue the
+            ///     service.
             /// </summary>
             PauseContinue = 0x40,
 
@@ -2456,11 +2589,11 @@ namespace SilDev
             QueryConfig = 0x1,
 
             /// <summary>
-            ///     Required to call the QueryServiceStatus or QueryServiceStatusEx function to ask
-            ///     the service control manager about the status of the service.
+            ///     Required to call the QueryServiceStatus or QueryServiceStatusEx function to
+            ///     ask the service control manager about the status of the service.
             ///     <para>
-            ///         Required to call the NotifyServiceStatusChange function to receive notification
-            ///         when a service changes status.
+            ///         Required to call the NotifyServiceStatusChange function to receive
+            ///         notification when a service changes status.
             ///     </para>
             /// </summary>
             QueryStatus = 0x4,
@@ -2481,8 +2614,8 @@ namespace SilDev
             Stop = 0x20,
 
             /// <summary>
-            ///     Required to call the ControlService function to specify a user-defined control
-            ///     code.
+            ///     Required to call the ControlService function to specify a user-defined
+            ///     control code.
             /// </summary>
             UserDefinedControl = 0x100
         }
@@ -2493,32 +2626,33 @@ namespace SilDev
         internal enum ServiceBootFlags
         {
             /// <summary>
-            ///     A service started automatically by the service control manager during system startup.
-            ///     For more information, see Automatically Starting Services.
+            ///     A service started automatically by the service control manager during
+            ///     system startup. For more information, see Automatically Starting Services.
             /// </summary>
             AutoStart = 0x2,
 
             /// <summary>
-            ///     A device driver started by the system loader. This value is valid only for driver
-            ///     services.
+            ///     A device driver started by the system loader. This value is valid only for
+            ///     driver services.
             /// </summary>
             BootStart = 0x0,
 
             /// <summary>
             ///     A service started by the service control manager when a process calls the
-            ///     StartService function. For more information, see Starting Services on Demand.
+            ///     StartService function. For more information, see Starting Services on
+            ///     Demand.
             /// </summary>
             DemandStart = 0x3,
 
             /// <summary>
-            ///     A service that cannot be started. Attempts to start the service result in the error
-            ///     code.
+            ///     A service that cannot be started. Attempts to start the service result in
+            ///     the error code.
             /// </summary>
             Disabled = 0x4,
 
             /// <summary>
-            ///     A device driver started by the IoInitSystem function. This value is valid only for
-            ///     driver services.
+            ///     A device driver started by the IoInitSystem function. This value is valid
+            ///     only for driver services.
             /// </summary>
             SystemStart = 0x1
         }
@@ -2529,53 +2663,58 @@ namespace SilDev
         internal enum ServiceControlOptions
         {
             /// <summary>
-            ///     Notifies a paused service that it should resume. The hService handle must have the
-            ///     <see cref="ServiceAccessRights.PauseContinue"/> access right.
+            ///     Notifies a paused service that it should resume. The hService handle must
+            ///     have the <see cref="ServiceAccessRights.PauseContinue"/> access right.
             /// </summary>
             Continue = 0x3,
 
             /// <summary>
-            ///     Notifies a service that it should report its current status information to the service control
-            ///     manager. The hService handle must have the <see cref="ServiceAccessRights.Interrogate"/>
-            ///     access right.
+            ///     Notifies a service that it should report its current status information to
+            ///     the service control manager. The hService handle must have the
+            ///     <see cref="ServiceAccessRights.Interrogate"/> access right.
             ///     <para>
-            ///         Note that this control is not generally useful as the SCM is aware of the current state of
-            ///         the service.
+            ///         Note that this control is not generally useful as the SCM is aware of
+            ///         the current state of the service.
             ///     </para>
             /// </summary>
             Interrogate = 0x4,
 
             /// <summary>
-            ///     Notifies a network service that there is a new component for binding. The hService handle must
-            ///     have the <see cref="ServiceAccessRights.PauseContinue"/> access right. However, this
+            ///     Notifies a network service that there is a new component for binding. The
+            ///     hService handle must have the
+            ///     <see cref="ServiceAccessRights.PauseContinue"/> access right. However, this
             ///     control code has been deprecated; use Plug and Play functionality instead.
             /// </summary>
             NetBindAdd = 0x7,
 
             /// <summary>
-            ///     Notifies a network service that one of its bindings has been disabled. The hService handle must
-            ///     have the <see cref="ServiceAccessRights.PauseContinue"/> access right. However, this
+            ///     Notifies a network service that one of its bindings has been disabled. The
+            ///     hService handle must have the
+            ///     <see cref="ServiceAccessRights.PauseContinue"/> access right. However, this
             ///     control code has been deprecated; use Plug and Play functionality instead.
             /// </summary>
             NetBindDisable = 0xa,
 
             /// <summary>
-            ///     Notifies a network service that a disabled binding has been enabled. The hService handle must
-            ///     have the <see cref="ServiceAccessRights.PauseContinue"/> access right. However, this
+            ///     Notifies a network service that a disabled binding has been enabled. The
+            ///     hService handle must have the
+            ///     <see cref="ServiceAccessRights.PauseContinue"/> access right. However, this
             ///     control code has been deprecated; use Plug and Play functionality instead.
             /// </summary>
             NetBindEnable = 0x9,
 
             /// <summary>
-            ///     Notifies a network service that a component for binding has been removed. The hService handle
-            ///     must have the <see cref="ServiceAccessRights.PauseContinue"/> access right. However,
-            ///     this control code has been deprecated; use Plug and Play functionality instead.
+            ///     Notifies a network service that a component for binding has been removed.
+            ///     The hService handle must have the
+            ///     <see cref="ServiceAccessRights.PauseContinue"/> access right. However, this
+            ///     control code has been deprecated; use Plug and Play functionality instead.
             /// </summary>
             NetBindRemove = 0x8,
 
             /// <summary>
-            ///     Notifies a service that its startup parameters have changed. The hService handle must have the
-            ///     <see cref="ServiceAccessRights.PauseContinue"/> access right.
+            ///     Notifies a service that its startup parameters have changed. The hService
+            ///     handle must have the <see cref="ServiceAccessRights.PauseContinue"/> access
+            ///     right.
             /// </summary>
             ParamChange = 0x6,
 
@@ -2589,8 +2728,8 @@ namespace SilDev
             ///     Notifies a service that it should stop. The hService handle must have the
             ///     <see cref="ServiceAccessRights.Stop"/> access right.
             ///     <para>
-            ///         After sending the stop request to a service, you should not send other controls to the
-            ///         service.
+            ///         After sending the stop request to a service, you should not send other
+            ///         controls to the service.
             ///     </para>
             /// </summary>
             Stop = 0x1
@@ -2602,13 +2741,14 @@ namespace SilDev
         internal enum ServiceControlTypes
         {
             /// <summary>
-            ///     The service is a network component that can accept changes in its binding without being
-            ///     stopped and restarted.
+            ///     The service is a network component that can accept changes in its binding
+            ///     without being stopped and restarted.
             /// </summary>
             AcceptNetBindChange = 0x10,
 
             /// <summary>
-            ///     The service can reread its startup parameters without being stopped and restarted.
+            ///     The service can reread its startup parameters without being stopped and
+            ///     restarted.
             /// </summary>
             AcceptParamChange = 0x8,
 
@@ -2630,13 +2770,14 @@ namespace SilDev
         internal enum ServiceManagerAccessRights
         {
             /// <summary>
-            ///     Includes <see cref="StandardRequired"/>, in addition to all access rights in this table.
+            ///     Includes <see cref="StandardRequired"/>, in addition to all access rights
+            ///     in this table.
             /// </summary>
             AllAccess = 0xf003f,
 
             /// <summary>
-            ///     Required to call the CreateService function to create a service object and add it
-            ///     to the database.
+            ///     Required to call the CreateService function to create a service object and
+            ///     add it to the database.
             /// </summary>
             CreateService = 0x2,
 
@@ -2646,17 +2787,18 @@ namespace SilDev
             Connect = 0x1,
 
             /// <summary>
-            ///     Required to call the EnumServicesStatus or EnumServicesStatusEx function to list
-            ///     the services that are in the database.
+            ///     Required to call the EnumServicesStatus or EnumServicesStatusEx function to
+            ///     list the services that are in the database.
             ///     <para>
-            ///         Required to call the NotifyServiceStatusChange function to receive notification
-            ///         when any service is created or deleted.
+            ///         Required to call the NotifyServiceStatusChange function to receive
+            ///         notification when any service is created or deleted.
             ///     </para>
             /// </summary>
             EnumerateService = 0x4,
 
             /// <summary>
-            ///     Required to call the LockServiceDatabase function to acquire a lock on the database.
+            ///     Required to call the LockServiceDatabase function to acquire a lock on the
+            ///     database.
             /// </summary>
             Lock = 0x8,
 
@@ -2666,8 +2808,8 @@ namespace SilDev
             ModifyBootConfig = 0x20,
 
             /// <summary>
-            ///     Required to call the QueryServiceLockStatus function to retrieve the lock status
-            ///     information for the database.
+            ///     Required to call the QueryServiceLockStatus function to retrieve the lock
+            ///     status information for the database.
             /// </summary>
             QueryLockStatus = 0x10,
 
@@ -2724,29 +2866,32 @@ namespace SilDev
         internal enum SecurityImpersonationLevels
         {
             /// <summary>
-            ///     The server process cannot obtain identification information about the client, and it cannot
-            ///     impersonate the client. It is defined with no value given, and thus, by ANSI C rules,
-            ///     defaults to a value of zero.
+            ///     The server process cannot obtain identification information about the
+            ///     client, and it cannot impersonate the client. It is defined with no value
+            ///     given, and thus, by ANSI C rules, defaults to a value of zero.
             /// </summary>
             SecurityAnonymous = 0,
 
             /// <summary>
-            ///     The server process can obtain information about the client, such as security identifiers and
-            ///     privileges, but it cannot impersonate the client. This is useful for servers that export
-            ///     their own objects, for example, database products that export tables and views. Using the
-            ///     retrieved client-security information, the server can make access-validation decisions
-            ///     without being able to use other services that are using the client's security context.
+            ///     The server process can obtain information about the client, such as
+            ///     security identifiers and privileges, but it cannot impersonate the client.
+            ///     This is useful for servers that export their own objects, for example,
+            ///     database products that export tables and views. Using the retrieved
+            ///     client-security information, the server can make access-validation
+            ///     decisions without being able to use other services that are using the
+            ///     client's security context.
             /// </summary>
             SecurityIdentification = 1,
 
             /// <summary>
-            ///     The server process can impersonate the client's security context on its local system. The
-            ///     server cannot impersonate the client on remote systems.
+            ///     The server process can impersonate the client's security context on its
+            ///     local system. The server cannot impersonate the client on remote systems.
             /// </summary>
             SecurityImpersonation = 2,
 
             /// <summary>
-            ///     The server process can impersonate the client's security context on remote systems.
+            ///     The server process can impersonate the client's security context on remote
+            ///     systems.
             /// </summary>
             SecurityDelegation = 3
         }
@@ -2804,25 +2949,27 @@ namespace SilDev
         internal enum StartFlags
         {
             /// <summary>
-            ///     Indicates that the cursor is in feedback mode for two seconds after CreateProcess is called.
-            ///     The Working in Background cursor is displayed (see the Pointers tab in the Mouse control
-            ///     panel utility).
+            ///     Indicates that the cursor is in feedback mode for two seconds after
+            ///     CreateProcess is called. The Working in Background cursor is displayed (see
+            ///     the Pointers tab in the Mouse control panel utility).
             ///     <para>
-            ///         If during those two seconds the process makes the first GUI call, the system gives five
-            ///         more seconds to the process. If during those five seconds the process shows a window,
-            ///         the system gives five more seconds to the process to finish drawing the window.
+            ///         If during those two seconds the process makes the first GUI call, the
+            ///         system gives five more seconds to the process. If during those five
+            ///         seconds the process shows a window, the system gives five more seconds
+            ///         to the process to finish drawing the window.
             ///     </para>
             /// </summary>
             ForceOnFeedback = 0x40,
 
             /// <summary>
-            ///     Indicates that the feedback cursor is forced off while the process is starting. The Normal
-            ///     Select cursor is displayed.
+            ///     Indicates that the feedback cursor is forced off while the process is
+            ///     starting. The Normal Select cursor is displayed.
             /// </summary>
             ForceOffFeedback = 0x80,
 
             /// <summary>
-            ///     Indicates that any windows created by the process cannot be pinned on the taskbar.
+            ///     Indicates that any windows created by the process cannot be pinned on the
+            ///     taskbar.
             ///     <para>
             ///         This flag must be combined with <see cref="TitleIsAppId"/>.
             ///     </para>
@@ -2830,21 +2977,24 @@ namespace SilDev
             PreventPinning = 0x2000,
 
             /// <summary>
-            ///     Indicates that the process should be run in full-screen mode, rather than in windowed mode.
+            ///     Indicates that the process should be run in full-screen mode, rather than
+            ///     in windowed mode.
             ///     <para>
-            ///         This flag is only valid for console applications running on an x86 computer.
+            ///         This flag is only valid for console applications running on an x86
+            ///         computer.
             ///     </para>
             /// </summary>
             RunFullscreen = 0x20,
 
             /// <summary>
-            ///     The lpTitle member contains an AppUserModelID. This identifier controls how the taskbar and
-            ///     Start menu present the application, and enables it to be associated with the correct shortcuts
-            ///     and Jump Lists.
+            ///     The lpTitle member contains an AppUserModelID. This identifier controls how
+            ///     the taskbar and Start menu present the application, and enables it to be
+            ///     associated with the correct shortcuts and Jump Lists.
             ///     <para>
-            ///         If <see cref="PreventPinning"/> is used, application windows cannot be pinned on the
-            ///         taskbar. The use of any AppUserModelID-related window properties by the application
-            ///         overrides this setting for that window only.
+            ///         If <see cref="PreventPinning"/> is used, application windows cannot be
+            ///         pinned on the taskbar. The use of any AppUserModelID-related window
+            ///         properties by the application overrides this setting for that window
+            ///         only.
             ///     </para>
             ///     <para>
             ///         This flag cannot be used with <see cref="TitleIsLinkName"/>.
@@ -2853,9 +3003,10 @@ namespace SilDev
             TitleIsAppId = 0x1000,
 
             /// <summary>
-            ///     The lpTitle member contains the path of the shortcut file (.lnk) that the user invoked to
-            ///     start this process. This is typically set by the shell when a .lnk file pointing to the
-            ///     launched application is invoked. Most applications will not need to set this value.
+            ///     The lpTitle member contains the path of the shortcut file (.lnk) that the
+            ///     user invoked to start this process. This is typically set by the shell when
+            ///     a .lnk file pointing to the launched application is invoked. Most
+            ///     applications will not need to set this value.
             ///     <para>
             ///         This flag cannot be used with <see cref="TitleIsAppId"/>.
             ///     </para>
@@ -2901,15 +3052,16 @@ namespace SilDev
             UseSize = 0x2,
 
             /// <summary>
-            ///     The hStdInput, hStdOutput, and hStdError members contain additional information.
+            ///     The hStdInput, hStdOutput, and hStdError members contain additional
+            ///     information.
             ///     <para>
-            ///         If this flag is specified when calling one of the process creation functions, the
-            ///         handles must be inheritable and the function's bInheritHandles parameter must be set
-            ///         to TRUE.
+            ///         If this flag is specified when calling one of the process creation
+            ///         functions, the handles must be inheritable and the function's
+            ///         bInheritHandles parameter must be set to <see langword="true"/>.
             ///     </para>
             ///     <para>
-            ///         Handles must be closed with <see cref="NativeMethods.CloseHandle"/> when they are no
-            ///         longer needed.
+            ///         Handles must be closed with <see cref="NativeMethods.CloseHandle"/>
+            ///         when they are no longer needed.
             ///     </para>
             ///     <para>
             ///         This flag cannot be used with <see cref="UseHotkey"/>.
@@ -2919,7 +3071,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides enumerated values that differentiate between a primary token and an impersonation token.
+        ///     Provides enumerated values that differentiate between a primary token and
+        ///     an impersonation token.
         /// </summary>
         internal enum TokenTypes
         {
@@ -2951,39 +3104,47 @@ namespace SilDev
         public static class NativeHelper
         {
             /// <summary>
-            ///     Enables or disables privileges in the specified access token. Enabling or disabling privileges in
-            ///     an access token requires <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access.
+            ///     Enables or disables privileges in the specified access token. Enabling or
+            ///     disabling privileges in an access token requires
+            ///     <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access.
             /// </summary>
             /// <param name="tokenHandle">
-            ///     A handle to the access token that contains the privileges to be modified. The handle must have
-            ///     <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access to the token. If the PreviousState
-            ///     parameter is not NULL, the handle must also have <see cref="AccessTokenFlags.TokenQuery"/> access.
+            ///     A handle to the access token that contains the privileges to be modified.
+            ///     The handle must have <see cref="AccessTokenFlags.TokenAdjustPrivileges"/>
+            ///     access to the token. If the PreviousState parameter is not
+            ///     <see langword="null"/>, the handle must also have
+            ///     <see cref="AccessTokenFlags.TokenQuery"/> access.
             /// </param>
             /// <param name="disableAllPrivileges">
-            ///     Specifies whether the function disables all of the token's privileges. If this value is TRUE, the
-            ///     function disables all privileges and ignores the NewState parameter. If it is FALSE, the function
-            ///     modifies privileges based on the information pointed to by the NewState parameter.
+            ///     Specifies whether the function disables all of the token's privileges. If
+            ///     this value is <see langword="true"/>, the function disables all privileges
+            ///     and ignores the NewState parameter. If it is <see langword="false"/>, the
+            ///     function modifies privileges based on the information pointed to by the
+            ///     NewState parameter.
             /// </param>
             /// <param name="newState">
-            ///     A pointer to a <see cref="TokenPrivileges"/> structure that specifies an array of privileges and their
-            ///     attributes. If the disableAllPrivileges parameter is FALSE, the AdjustTokenPrivileges function
-            ///     enables, disables, or removes these privileges for the token. The following table describes the
-            ///     action taken by the AdjustTokenPrivileges function, based on the privilege attribute. If
-            ///     disableAllPrivileges is TRUE, the function ignores this parameter.
+            ///     A pointer to a <see cref="TokenPrivileges"/> structure that specifies an
+            ///     array of privileges and their attributes. If the disableAllPrivileges
+            ///     parameter is <see langword="false"/>, the AdjustTokenPrivileges function
+            ///     enables, disables, or removes these privileges for the token. The following
+            ///     table describes the action taken by the AdjustTokenPrivileges function,
+            ///     based on the privilege attribute. If disableAllPrivileges is
+            ///     <see langword="true"/>, the function ignores this parameter.
             /// </param>
             public static bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TokenPrivileges newState) =>
                 NativeMethods.AdjustTokenPrivileges(tokenHandle, disableAllPrivileges, ref newState, 0u, IntPtr.Zero, IntPtr.Zero);
 
             /// <summary>
-            ///     Enables you to produce special effects when showing or hiding windows. There are four types of
-            ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
+            ///     Enables you to produce special effects when showing or hiding windows.
+            ///     There are four types of animation: roll, slide, collapse or expand, and
+            ///     alpha-blended fade.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window to animate. The calling thread must own this window.
             /// </param>
             /// <param name="time">
-            ///     The time it takes to play the animation, in milliseconds. Typically, an animation takes 200
-            ///     milliseconds to play.
+            ///     The time it takes to play the animation, in milliseconds. Typically, an
+            ///     animation takes 200 milliseconds to play.
             /// </param>
             /// <param name="flags">
             ///     The type of animation.
@@ -2992,8 +3153,9 @@ namespace SilDev
                 NativeMethods.AnimateWindow(hWnd, time, flags);
 
             /// <summary>
-            ///     Enables you to produce special effects when showing or hiding windows. There are four types of
-            ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
+            ///     Enables you to produce special effects when showing or hiding windows.
+            ///     There are four types of animation: roll, slide, collapse or expand, and
+            ///     alpha-blended fade.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window to animate. The calling thread must own this window.
@@ -3005,20 +3167,23 @@ namespace SilDev
                 NativeMethods.AnimateWindow(hWnd, 200, flags);
 
             /// <summary>
-            ///     Passes the hook information to the next hook procedure in the current hook chain. A hook
-            ///     procedure can call this function either before or after processing the hook information.
+            ///     Passes the hook information to the next hook procedure in the current hook
+            ///     chain. A hook procedure can call this function either before or after
+            ///     processing the hook information.
             /// </summary>
             /// <param name="nCode">
-            ///     The hook code passed to the current hook procedure. The next hook procedure uses this code
-            ///     to determine how to process the hook information.
+            ///     The hook code passed to the current hook procedure. The next hook procedure
+            ///     uses this code to determine how to process the hook information.
             /// </param>
             /// <param name="wParam">
-            ///     The wParam value passed to the current hook procedure. The meaning of this parameter
-            ///     depends on the type of hook associated with the current hook chain.
+            ///     The wParam value passed to the current hook procedure. The meaning of this
+            ///     parameter depends on the type of hook associated with the current hook
+            ///     chain.
             /// </param>
             /// <param name="lParam">
-            ///     The lParam value passed to the current hook procedure. The meaning of this parameter
-            ///     depends on the type of hook associated with the current hook chain.
+            ///     The lParam value passed to the current hook procedure. The meaning of this
+            ///     parameter depends on the type of hook associated with the current hook
+            ///     chain.
             /// </param>
             public static IntPtr CallNextHookEx(int nCode, IntPtr wParam, IntPtr lParam) =>
                 NativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
@@ -3033,7 +3198,8 @@ namespace SilDev
             ///     A handle to the parent window.
             /// </param>
             /// <param name="alwaysVisible">
-            ///     true to force the window to remain in screen area; otherwise, false.
+            ///     <see langword="true"/> to force the window to remain in screen area;
+            ///     otherwise, <see langword="false"/>.
             /// </param>
             public static void CenterWindow(IntPtr hWnd, IntPtr hPar, bool alwaysVisible = false)
             {
@@ -3090,21 +3256,23 @@ namespace SilDev
             ///     A handle to the window to change.
             /// </param>
             /// <param name="alwaysVisible">
-            ///     true to force the window to remain in screen area; otherwise, false.
+            ///     <see langword="true"/> to force the window to remain in screen area;
+            ///     otherwise, <see langword="false"/>.
             /// </param>
             public static void CenterWindow(IntPtr hWnd, bool alwaysVisible = true) =>
                 CenterWindow(hWnd, default, alwaysVisible);
 
             /// <summary>
-            ///     The ClientToScreen function converts the client-area coordinates of a specified point to screen
-            ///     coordinates.
+            ///     The ClientToScreen function converts the client-area coordinates of a
+            ///     specified point to screen coordinates.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose client area is used for the conversion.
             /// </param>
             /// <param name="lpPoint">
-            ///     A pointer to a <see cref="Point"/> structure that contains the client coordinates to be converted.
-            ///     The new screen coordinates are copied into this structure if the function succeeds.
+            ///     A pointer to a <see cref="Point"/> structure that contains the client
+            ///     coordinates to be converted. The new screen coordinates are copied into
+            ///     this structure if the function succeeds.
             /// </param>
             public static bool ClientToScreen(IntPtr hWnd, ref Point lpPoint) =>
                 NativeMethods.ClientToScreen(hWnd, ref lpPoint);
@@ -3119,8 +3287,9 @@ namespace SilDev
                 NativeMethods.CloseHandle(handle);
 
             /// <summary>
-            ///     Deletes an item from the specified menu. If the menu item opens a menu or submenu, this function
-            ///     destroys the handle to the menu or submenu and frees the memory used by the menu or submenu.
+            ///     Deletes an item from the specified menu. If the menu item opens a menu or
+            ///     submenu, this function destroys the handle to the menu or submenu and frees
+            ///     the memory used by the menu or submenu.
             /// </summary>
             /// <param name="hMenu">
             ///     A handle to the menu to be changed.
@@ -3129,8 +3298,9 @@ namespace SilDev
             ///     The menu item to be deleted, as determined by the uFlags parameter.
             /// </param>
             /// <param name="wFlags">
-            ///     Indicates how the uPosition parameter is interpreted. This parameter must be
-            ///     <see cref="ModifyMenuFlags.ByCommand"/> or <see cref="ModifyMenuFlags.ByPosition"/>.
+            ///     Indicates how the uPosition parameter is interpreted. This parameter must
+            ///     be <see cref="ModifyMenuFlags.ByCommand"/> or
+            ///     <see cref="ModifyMenuFlags.ByPosition"/>.
             /// </param>
             public static int DeleteMenu(IntPtr hMenu, uint nPosition, ModifyMenuFlags wFlags) =>
                 NativeMethods.DeleteMenu(hMenu, nPosition, wFlags);
@@ -3173,8 +3343,9 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Redraws the menu bar of the specified window. If the menu bar changes after the system has
-            ///     created the window, this function must be called to draw the changed menu bar.
+            ///     Redraws the menu bar of the specified window. If the menu bar changes after
+            ///     the system has created the window, this function must be called to draw the
+            ///     changed menu bar.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose menu bar is to be redrawn.
@@ -3188,47 +3359,53 @@ namespace SilDev
             /// <param name="hSourceProcessHandle">
             ///     A handle to the process with the handle to be duplicated.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="hSourceHandle">
-            ///     The handle to be duplicated. This is an open object handle that is valid in the context
-            ///     of the source process. For a list of objects whose handles can be duplicated, see the
-            ///     following Remarks section.
+            ///     The handle to be duplicated. This is an open object handle that is valid in
+            ///     the context of the source process. For a list of objects whose handles can
+            ///     be duplicated, see the following Remarks section.
             /// </param>
             /// <param name="hTargetProcessHandle">
             ///     A handle to the process that is to receive the duplicated handle.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="lpTargetHandle">
-            ///     A pointer to a variable that receives the duplicate handle. This handle value is valid
-            ///     in the context of the target process.
+            ///     A pointer to a variable that receives the duplicate handle. This handle
+            ///     value is valid in the context of the target process.
             ///     <para>
-            ///         If hSourceHandle is a pseudo handle returned by GetCurrentProcess or GetCurrentThread,
-            ///         DuplicateHandle converts it to a real handle to a process or thread, respectively.
+            ///         If hSourceHandle is a pseudo handle returned by GetCurrentProcess or
+            ///         GetCurrentThread, DuplicateHandle converts it to a real handle to a
+            ///         process or thread, respectively.
             ///     </para>
             ///     <para>
-            ///         If lpTargetHandle is NULL, the function duplicates the handle, but does not return the
-            ///         duplicate handle value to the caller. This behavior exists only for backward
-            ///         compatibility with previous versions of this function. You should not use this feature,
-            ///         as you will lose system resources until the target process terminates.
+            ///         If lpTargetHandle is <see langword="null"/>, the function duplicates
+            ///         the handle, but does not return the duplicate handle value to the
+            ///         caller. This behavior exists only for backward compatibility with
+            ///         previous versions of this function. You should not use this feature, as
+            ///         you will lose system resources until the target process terminates.
             ///     </para>
             /// </param>
             /// <param name="dwDesiredAccess">
-            ///     The access requested for the new handle. For the flags that can be specified for each
-            ///     object type, see the following Remarks section.
+            ///     The access requested for the new handle. For the flags that can be
+            ///     specified for each object type, see the following Remarks section.
             ///     <para>
             ///         This parameter is ignored if the dwOptions parameter specifies the
-            ///         <see cref="DuplicateOption.SameAccess"/> flag. Otherwise, the flags that
-            ///         can be specified depend on the type of object whose handle is to be duplicated.
+            ///         <see cref="DuplicateOption.SameAccess"/> flag. Otherwise, the flags
+            ///         that can be specified depend on the type of object whose handle is to
+            ///         be duplicated.
             ///     </para>
             /// </param>
             /// <param name="bInheritHandle">
-            ///     A variable that indicates whether the handle is inheritable. If TRUE, the duplicate handle
-            ///     can be inherited by new processes created by the target process. If FALSE, the new handle
-            ///     cannot be inherited.
+            ///     A variable that indicates whether the handle is inheritable. If
+            ///     <see langword="true"/>, the duplicate handle can be inherited by new
+            ///     processes created by the target process. If <see langword="false"/>, the
+            ///     new handle cannot be inherited.
             /// </param>
             /// <param name="dwOptions">
             ///     Optional actions. This parameter can be zero, or any combination of
@@ -3241,45 +3418,52 @@ namespace SilDev
             ///     Extends the window frame into the client area.
             /// </summary>
             /// <param name="hWnd">
-            ///     The handle to the window in which the frame will be extended into the client area.
+            ///     The handle to the window in which the frame will be extended into the
+            ///     client area.
             /// </param>
             /// <param name="pMarInset">
-            ///     A pointer to a MARGINS structure that describes the margins to use when extending the frame
-            ///     into the client area.
+            ///     A pointer to a MARGINS structure that describes the margins to use when
+            ///     extending the frame into the client area.
             /// </param>
             public static int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref ThemeMargins pMarInset) =>
                 NativeMethods.DwmExtendFrameIntoClientArea(hWnd, ref pMarInset);
 
             /// <summary>
-            ///     Obtains a value that indicates whether Desktop Window Manager (DWM) composition is enabled.
+            ///     Obtains a value that indicates whether Desktop Window Manager (DWM)
+            ///     composition is enabled.
             /// </summary>
             /// <param name="pfEnabled">
-            ///     A pointer to a value that, when this function returns successfully, receives TRUE if DWM
-            ///     composition is enabled; otherwise, FALSE.
+            ///     A pointer to a value that, when this function returns successfully,
+            ///     receives <see langword="true"/> if DWM composition is enabled; otherwise,
+            ///     <see langword="false"/>.
             /// </param>
             public static int DwmIsCompositionEnabled(ref int pfEnabled) =>
                 NativeMethods.DwmIsCompositionEnabled(ref pfEnabled);
 
             /// <summary>
-            ///     Destroys a modal dialog box, causing the system to end any processing for the dialog box.
+            ///     Destroys a modal dialog box, causing the system to end any processing for
+            ///     the dialog box.
             /// </summary>
             /// <param name="hDlg">
             ///     A handle to the dialog box to be destroyed.
             /// </param>
             /// <param name="nResult">
-            ///     The value to be returned to the application from the function that created the dialog box.
+            ///     The value to be returned to the application from the function that created
+            ///     the dialog box.
             /// </param>
             public static int EndDialog(IntPtr hDlg, IntPtr nResult) =>
                 NativeMethods.EndDialog(hDlg, nResult);
 
             /// <summary>
-            ///     Enumerates the child windows that belong to the specified parent window by passing the handle
-            ///     to each child window, in turn, to an application-defined callback function. EnumChildWindows
-            ///     continues until the last child window is enumerated or the callback function returns FALSE.
+            ///     Enumerates the child windows that belong to the specified parent window by
+            ///     passing the handle to each child window, in turn, to an application-defined
+            ///     callback function. EnumChildWindows continues until the last child window
+            ///     is enumerated or the callback function returns <see langword="false"/>.
             /// </summary>
             /// <param name="hWndParent">
-            ///     A handle to the parent window whose child windows are to be enumerated. If this parameter is
-            ///     NULL, this function is equivalent to EnumWindows.
+            ///     A handle to the parent window whose child windows are to be enumerated. If
+            ///     this parameter is <see langword="null"/>, this function is equivalent to
+            ///     EnumWindows.
             /// </param>
             /// <param name="lpEnumFunc">
             ///     A pointer to an application-defined callback function.
@@ -3291,8 +3475,9 @@ namespace SilDev
                 NativeMethods.EnumChildWindows(hWndParent, lpEnumFunc, lParam);
 
             /// <summary>
-            ///     Enumerates all nonchild windows associated with a thread by passing the handle to each window,
-            ///     in turn, to an application-defined callback function.
+            ///     Enumerates all nonchild windows associated with a thread by passing the
+            ///     handle to each window, in turn, to an application-defined callback
+            ///     function.
             /// </summary>
             /// <param name="dwThreadId">
             ///     The identifier of the thread whose windows are to be enumerated.
@@ -3307,34 +3492,40 @@ namespace SilDev
                 NativeMethods.EnumThreadWindows(dwThreadId, lpfn, lParam);
 
             /// <summary>
-            ///     Creates an array of handles to large or small icons extracted from the specified executable
-            ///     file, DLL, or icon file.
+            ///     Creates an array of handles to large or small icons extracted from the
+            ///     specified executable file, DLL, or icon file.
             /// </summary>
             /// <param name="lpszFile">
-            ///     The name of an executable file, DLL, or icon file from which icons will be extracted.
+            ///     The name of an executable file, DLL, or icon file from which icons will be
+            ///     extracted.
             /// </param>
             /// <param name="nIconIndex">
-            ///     The zero-based index of the first icon to extract. For example, if this value is zero, the
-            ///     function extracts the first icon in the specified file.
+            ///     The zero-based index of the first icon to extract. For example, if this
+            ///     value is zero, the function extracts the first icon in the specified file.
             ///     <para>
-            ///         If this value is –1 and phiconLarge and phiconSmall are both NULL, the function returns the
-            ///         total number of icons in the specified file. If the file is an executable file or DLL, the
-            ///         return value is the number of RT_GROUP_ICON resources. If the file is an .ico file, the
-            ///         return value is 1.
+            ///         If this value is –1 and phiconLarge and phiconSmall are both
+            ///         <see langword="null"/>, the function returns the total number of icons
+            ///         in the specified file. If the file is an executable file or DLL, the
+            ///         return value is the number of RT_GROUP_ICON resources. If the file is
+            ///         an .ico file, the return value is 1.
             ///     </para>
             ///     <para>
-            ///         If this value is a negative number and either phiconLarge or phiconSmall is not NULL, the
-            ///         function begins by extracting the icon whose resource identifier is equal to the absolute
-            ///         value of nIconIndex. For example, use -3 to extract the icon whose resource identifier is 3.
+            ///         If this value is a negative number and either phiconLarge or
+            ///         phiconSmall is not <see langword="null"/>, the function begins by
+            ///         extracting the icon whose resource identifier is equal to the absolute
+            ///         value of nIconIndex. For example, use -3 to extract the icon whose
+            ///         resource identifier is 3.
             ///     </para>
             /// </param>
             /// <param name="phiconLarge">
-            ///     An array of icon handles that receives handles to the large icons extracted from the file. If
-            ///     this parameter is NULL, no large icons are extracted from the file.
+            ///     An array of icon handles that receives handles to the large icons extracted
+            ///     from the file. If this parameter is <see langword="null"/>, no large icons
+            ///     are extracted from the file.
             /// </param>
             /// <param name="phiconSmall">
-            ///     An array of icon handles that receives handles to the small icons extracted from the file. If
-            ///     this parameter is NULL, no small icons are extracted from the file.
+            ///     An array of icon handles that receives handles to the small icons extracted
+            ///     from the file. If this parameter is <see langword="null"/>, no small icons
+            ///     are extracted from the file.
             /// </param>
             /// <param name="nIcons">
             ///     The number of icons to be extracted from the file.
@@ -3346,23 +3537,24 @@ namespace SilDev
             ///     Determines the MIME type from the data provided.
             /// </summary>
             /// <param name="pBc">
-            ///     A pointer to the IBindCtx interface. Can be set to NULL.
+            ///     A pointer to the IBindCtx interface. Can be set to <see langword="null"/>.
             /// </param>
             /// <param name="pwzUrl">
-            ///     A pointer to a string value that contains the URL of the data. Can be set to NULL if pBuffer
-            ///     contains the data to be sniffed.
+            ///     A pointer to a string value that contains the URL of the data. Can be set
+            ///     to <see langword="null"/> if pBuffer contains the data to be sniffed.
             /// </param>
             /// <param name="pBuffer">
-            ///     A pointer to the buffer that contains the data to be sniffed. Can be set to NULL if pwzUrl
-            ///     contains a valid URL.
+            ///     A pointer to the buffer that contains the data to be sniffed. Can be set to
+            ///     <see langword="null"/> if pwzUrl contains a valid URL.
             /// </param>
             /// <param name="cbSize">
             ///     An unsigned long integer value that contains the size of the buffer.
             /// </param>
             /// <param name="pwzMimeProposed">
-            ///     A pointer to a string value that contains the proposed MIME type. This value is authoritative if
-            ///     type cannot be determined from the data. If the proposed type contains a semi-colon (;) it is
-            ///     removed. This parameter can be set to NULL.
+            ///     A pointer to a string value that contains the proposed MIME type. This
+            ///     value is authoritative if type cannot be determined from the data. If the
+            ///     proposed type contains a semi-colon (;) it is removed. This parameter can
+            ///     be set to <see langword="null"/>.
             /// </param>
             /// <param name="dwMimeFlags">
             ///     The search and filter options.
@@ -3406,7 +3598,7 @@ namespace SilDev
                 {
                     var file = PathEx.Combine(fPath);
                     if (!PathEx.IsValidPath(file))
-                        throw new ArgumentException();
+                        throw new ArgumentInvalidException(nameof(fPath));
                     if (!File.Exists(file))
                         throw new PathNotFoundException(file);
                     var buffer = new byte[256];
@@ -3431,8 +3623,8 @@ namespace SilDev
             ///     A handle to the parent window whose child windows are to be searched.
             /// </param>
             /// <param name="className">
-            ///     The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx
-            ///     function.
+            ///     The class name or a class atom created by a previous call to the
+            ///     RegisterClass or RegisterClassEx function.
             /// </param>
             public static void FindNestedWindow(ref IntPtr hWndParent, string className)
             {
@@ -3449,83 +3641,97 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Retrieves a handle to the top-level window whose class name and window name match the specified
-            ///     strings. This function does not search child windows. This function does not perform a
-            ///     case-sensitive search.
+            ///     Retrieves a handle to the top-level window whose class name and window name
+            ///     match the specified strings. This function does not search child windows.
+            ///     This function does not perform a case-sensitive search.
             /// </summary>
             /// <param name="lpClassName">
-            ///     The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx
-            ///     function. The atom must be in the low-order word of lpClassName; the high-order word must be zero.
+            ///     The class name or a class atom created by a previous call to the
+            ///     RegisterClass or RegisterClassEx function. The atom must be in the
+            ///     low-order word of lpClassName; the high-order word must be zero.
             ///     <para>
-            ///         If lpClassName points to a string, it specifies the window class name. The class name can be
-            ///         any name registered with RegisterClass or RegisterClassEx, or any of the predefined
-            ///         control-class names.
+            ///         If lpClassName points to a string, it specifies the window class name.
+            ///         The class name can be any name registered with RegisterClass or
+            ///         RegisterClassEx, or any of the predefined control-class names.
             ///     </para>
             ///     <para>
-            ///         If lpClassName is NULL, it finds any window whose title matches the lpWindowName parameter.
+            ///         If lpClassName is <see langword="null"/>, it finds any window whose
+            ///         title matches the lpWindowName parameter.
             ///     </para>
             /// </param>
             /// <param name="lpWindowName">
-            ///     The window name (the window's title). If this parameter is NULL, all window names match.
+            ///     The window name (the window's title). If this parameter is
+            ///     <see langword="null"/>, all window names match.
             /// </param>
             public static IntPtr FindWindow(string lpClassName, string lpWindowName) =>
                 NativeMethods.FindWindow(lpClassName, lpWindowName);
 
             /// <summary>
-            ///     Retrieves a handle to the top-level window whose window name match the specified strings. This
-            ///     function does not search child windows. This function does not perform a case-sensitive search.
+            ///     Retrieves a handle to the top-level window whose window name match the
+            ///     specified strings. This function does not search child windows. This
+            ///     function does not perform a case-sensitive search.
             /// </summary>
             /// <param name="lpWindowName">
-            ///     The window name (the window's title). If this parameter is NULL, all window names match.
+            ///     The window name (the window's title). If this parameter is
+            ///     <see langword="null"/>, all window names match.
             /// </param>
             public static IntPtr FindWindowByCaption(string lpWindowName) =>
                 NativeMethods.FindWindowByCaption(IntPtr.Zero, lpWindowName);
 
             /// <summary>
-            ///     Retrieves a handle to a window whose class name and window name match the specified strings. The
-            ///     function searches child windows, beginning with the one following the specified child window. This
-            ///     function does not perform a case-sensitive search.
+            ///     Retrieves a handle to a window whose class name and window name match the
+            ///     specified strings. The function searches child windows, beginning with the
+            ///     one following the specified child window. This function does not perform a
+            ///     case-sensitive search.
             /// </summary>
             /// <param name="hWndParent">
             ///     A handle to the parent window whose child windows are to be searched.
             ///     <para>
-            ///         If hwndParent is NULL, the function uses the desktop window as the parent window. The function
-            ///         searches among windows that are child windows of the desktop.
+            ///         If hwndParent is <see langword="null"/>, the function uses the desktop
+            ///         window as the parent window. The function searches among windows that
+            ///         are child windows of the desktop.
             ///     </para>
             ///     <para>
-            ///         If hwndParent is HWND_MESSAGE, the function searches all message-only windows.
+            ///         If hwndParent is HWND_MESSAGE, the function searches all message-only
+            ///         windows.
             ///     </para>
             /// </param>
             /// <param name="hWndChildAfter">
-            ///     A handle to a child window. The search begins with the next child window in the Z order. The child
-            ///     window must be a direct child window of hwndParent, not just a descendant window.
+            ///     A handle to a child window. The search begins with the next child window in
+            ///     the Z order. The child window must be a direct child window of hwndParent,
+            ///     not just a descendant window.
             ///     <para>
-            ///         If hwndChildAfter is NULL, the search begins with the first child window of hwndParent.
+            ///         If hwndChildAfter is <see langword="null"/>, the search begins with the
+            ///         first child window of hwndParent.
             ///     </para>
             ///     <para>
-            ///         Note that if both hwndParent and hwndChildAfter are NULL, the function searches all top-level
-            ///         and message-only windows.
+            ///         Note that if both hwndParent and hwndChildAfter are
+            ///         <see langword="null"/>, the function searches all top-level and
+            ///         message-only windows.
             ///     </para>
             /// </param>
             /// <param name="lpszClass">
-            ///     The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx
-            ///     function. The atom must be placed in the low-order word of lpszClass; the high-order word must be
-            ///     zero.
+            ///     The class name or a class atom created by a previous call to the
+            ///     RegisterClass or RegisterClassEx function. The atom must be placed in the
+            ///     low-order word of lpszClass; the high-order word must be zero.
             ///     <para>
-            ///         If lpszClass is a string, it specifies the window class name. The class name can be any name
-            ///         registered with RegisterClass or RegisterClassEx, or any of the predefined control-class names,
-            ///         or it can be MAKEINTATOM (0x8000). In this latter case, 0x8000 is the atom for a menu class. For
+            ///         If lpszClass is a string, it specifies the window class name. The class
+            ///         name can be any name registered with RegisterClass or RegisterClassEx,
+            ///         or any of the predefined control-class names, or it can be MAKEINTATOM
+            ///         (0x8000). In this latter case, 0x8000 is the atom for a menu class. For
             ///         more information, see the Remarks section of this topic.
             ///     </para>
             /// </param>
             /// <param name="lpszWindow">
-            ///     The window name (the window's title). If this parameter is NULL, all window names match.
+            ///     The window name (the window's title). If this parameter is
+            ///     <see langword="null"/>, all window names match.
             /// </param>
             public static IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hWndChildAfter, string lpszClass, string lpszWindow) =>
                 NativeMethods.FindWindowEx(hWndParent, hWndChildAfter, lpszClass, lpszWindow);
 
             /// <summary>
-            ///     Gets the window title from the foreground window (the window with which the user is currently working).
+            ///     Gets the window title from the foreground window (the window with which the
+            ///     user is currently working).
             /// </summary>
             public static string GetActiveWindowTitle()
             {
@@ -3538,29 +3744,33 @@ namespace SilDev
             ///     Retrieves the name of the class to which the specified window belongs.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window belongs.
+            ///     A handle to the window and, indirectly, the class to which the window
+            ///     belongs.
             /// </param>
             /// <param name="lpClassName">
             ///     The class name string.
             /// </param>
             /// <param name="nMaxCount">
-            ///     The length of the lpClassName buffer, in characters. The buffer must be large enough to include the
-            ///     terminating null character; otherwise, the class name string is truncated to nMaxCount-1 characters.
+            ///     The length of the lpClassName buffer, in characters. The buffer must be
+            ///     large enough to include the terminating null character; otherwise, the
+            ///     class name string is truncated to nMaxCount-1 characters.
             /// </param>
             public static int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount) =>
                 NativeMethods.GetClassName(hWnd, lpClassName, nMaxCount);
 
             /// <summary>
-            ///     Retrieves the coordinates of a window's client area. The client coordinates specify the upper-left
-            ///     and lower-right corners of the client area. Because client coordinates are relative to the upper-left
-            ///     corner of a window's client area, the coordinates of the upper-left corner are (0,0).
+            ///     Retrieves the coordinates of a window's client area. The client coordinates
+            ///     specify the upper-left and lower-right corners of the client area. Because
+            ///     client coordinates are relative to the upper-left corner of a window's
+            ///     client area, the coordinates of the upper-left corner are (0,0).
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose client coordinates are to be retrieved.
             /// </param>
             /// <param name="lpRect">
-            ///     A pointer to a <see cref="Rectangle"/> structure that receives the client coordinates. The left and
-            ///     top members are zero. The right and bottom members contain the width and height of the window.
+            ///     A pointer to a <see cref="Rectangle"/> structure that receives the client
+            ///     coordinates. The left and top members are zero. The right and bottom
+            ///     members contain the width and height of the window.
             /// </param>
             public static bool GetClientRect(IntPtr hWnd, out Rectangle lpRect) =>
                 NativeMethods.GetClientRect(hWnd, out lpRect);
@@ -3582,8 +3792,9 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Retrieves a handle to the desktop window. The desktop window covers the entire screen.
-            ///     The desktop window is the area on top of which other windows are painted.
+            ///     Retrieves a handle to the desktop window. The desktop window covers the
+            ///     entire screen. The desktop window is the area on top of which other windows
+            ///     are painted.
             /// </summary>
             public static IntPtr GetDesktopWindow() =>
                 NativeMethods.GetDesktopWindow();
@@ -3610,16 +3821,16 @@ namespace SilDev
                 NativeMethods.GetDlgItem(hDlg, nIddlgItem);
 
             /// <summary>
-            ///     Retrieves a handle to the foreground window (the window with which the user is currently working).
-            ///     The system assigns a slightly higher priority to the thread that creates the foreground window
-            ///     than it does to other threads.
+            ///     Retrieves a handle to the foreground window (the window with which the user
+            ///     is currently working). The system assigns a slightly higher priority to the
+            ///     thread that creates the foreground window than it does to other threads.
             /// </summary>
             public static IntPtr GetForegroundWindow() =>
                 NativeMethods.GetForegroundWindow();
 
             /// <summary>
-            ///     Retrieves the calling thread's last-error code value. The last-error code is
-            ///     maintained on a per-thread basis. Multiple threads do not overwrite each
+            ///     Retrieves the calling thread's last-error code value. The last-error code
+            ///     is maintained on a per-thread basis. Multiple threads do not overwrite each
             ///     other's last-error code.
             /// </summary>
             public static int GetLastError() =>
@@ -3664,7 +3875,7 @@ namespace SilDev
                 try
                 {
                     if (status >= 0xc0000000)
-                        throw new ArgumentOutOfRangeException(nameof(status));
+                        throw new InvalidOperationException();
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
@@ -3700,39 +3911,41 @@ namespace SilDev
                 NativeMethods.GetProcessImageFileName(hProcess, lpImageFileName, nSize);
 
             /// <summary>
-            ///     Retrieves a handle to the specified standard device (standard input, standard
-            ///     output, or standard error).
+            ///     Retrieves a handle to the specified standard device (standard input,
+            ///     standard output, or standard error).
             /// </summary>
             /// <param name="nStdHandle">
             ///     The standard device. This parameter can be one of the following values.
             ///     <para>
-            ///         STD_INPUT_HANDLE (DWORD)-10: The standard input device. Initially, this is
-            ///         the console input buffer, CONIN$.
+            ///         STD_INPUT_HANDLE (DWORD)-10: The standard input device. Initially, this
+            ///         is the console input buffer, CONIN$.
             ///     </para>
             ///     <para>
-            ///         STD_OUTPUT_HANDLE (DWORD)-11: The standard output device. Initially, this
+            ///         STD_OUTPUT_HANDLE (DWORD)-11: The standard output device. Initially,
+            ///         this is the active console screen buffer, CONOUT$.
+            ///     </para>
+            ///     <para>
+            ///         STD_ERROR_HANDLE (DWORD)-12: The standard error device. Initially, this
             ///         is the active console screen buffer, CONOUT$.
-            ///     </para>
-            ///     <para>
-            ///         STD_ERROR_HANDLE (DWORD)-12: The standard error device. Initially, this is
-            ///         the active console screen buffer, CONOUT$.
             ///     </para>
             /// </param>
             public static IntPtr GetStdHandle(int nStdHandle) =>
                 NativeMethods.GetStdHandle(nStdHandle);
 
             /// <summary>
-            ///     Enables the application to access the window menu (also known as the system menu or the control
-            ///     menu) for copying and modifying.
+            ///     Enables the application to access the window menu (also known as the system
+            ///     menu or the control menu) for copying and modifying.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window that will own a copy of the window menu.
             /// </param>
             /// <param name="bRevert">
-            ///     The action to be taken. If this parameter is FALSE, GetSystemMenu returns a handle to the copy of
-            ///     the window menu currently in use. The copy is initially identical to the window menu, but it can
-            ///     be modified. If this parameter is TRUE, GetSystemMenu resets the window menu back to the default
-            ///     state. The previous window menu, if any, is destroyed.
+            ///     The action to be taken. If this parameter is <see langword="false"/>,
+            ///     GetSystemMenu returns a handle to the copy of the window menu currently in
+            ///     use. The copy is initially identical to the window menu, but it can be
+            ///     modified. If this parameter is <see langword="true"/>, GetSystemMenu resets
+            ///     the window menu back to the default state. The previous window menu, if
+            ///     any, is destroyed.
             /// </param>
             public static IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert) =>
                 NativeMethods.GetSystemMenu(hWnd, bRevert);
@@ -3741,7 +3954,8 @@ namespace SilDev
             ///     Gets the current theme color of the operating system.
             /// </summary>
             /// <param name="alpha">
-            ///     true to get also the alpha channel; otherwise, false.
+            ///     <see langword="true"/> to get also the alpha channel; otherwise,
+            ///     <see langword="false"/>.
             /// </param>
             public static Color GetSystemThemeColor(bool alpha = false)
             {
@@ -3760,40 +3974,46 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Returns the language identifier for the user UI language for the current user. If the current user
-            ///     has not set a language, <see cref="GetUserDefaultUILanguage"/> returns the preferred language set
-            ///     for the system. If there is no preferred language set for the system, then the system default UI
-            ///     language (also known as "install language") is returned.
+            ///     Returns the language identifier for the user UI language for the current
+            ///     user. If the current user has not set a language,
+            ///     <see cref="GetUserDefaultUILanguage"/> returns the preferred language set
+            ///     for the system. If there is no preferred language set for the system, then
+            ///     the system default UI language (also known as "install language") is
+            ///     returned.
             /// </summary>
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public static ushort GetUserDefaultUILanguage() =>
                 NativeMethods.GetUserDefaultUILanguage();
 
             /// <summary>
-            ///     Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD)
-            ///     value at the specified offset into the extra window memory.
+            ///     Retrieves information about the specified window. The function also
+            ///     retrieves the 32-bit (DWORD) value at the specified offset into the extra
+            ///     window memory.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window belongs.
+            ///     A handle to the window and, indirectly, the class to which the window
+            ///     belongs.
             /// </param>
             /// <param name="nIndex">
-            ///     The zero-based offset to the value to be retrieved. Valid values are in the range zero through the
-            ///     number of bytes of extra window memory, minus four; for example, if you specified 12 or more bytes
-            ///     of extra memory, a value of 8 would be an index to the third 32-bit integer. To retrieve any other
+            ///     The zero-based offset to the value to be retrieved. Valid values are in the
+            ///     range zero through the number of bytes of extra window memory, minus four;
+            ///     for example, if you specified 12 or more bytes of extra memory, a value of
+            ///     8 would be an index to the third 32-bit integer. To retrieve any other
             ///     value, specify one of the <see cref="WindowLongFlags"/>.GWL_??? values.
             /// </param>
             public static int GetWindowLong(IntPtr hWnd, WindowLongFlags nIndex) =>
                 NativeMethods.GetWindowLong(hWnd, nIndex);
 
             /// <summary>
-            ///     Gets the show state and the restored, minimized, and maximized positions of the specified window.
+            ///     Gets the show state and the restored, minimized, and maximized positions of
+            ///     the specified window.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpwndpl">
-            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the new show state and window
-            ///     positions.
+            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the
+            ///     new show state and window positions.
             /// </param>
             public static bool GetWindowPlacement(IntPtr hWnd, ref WindowPlacement lpwndpl) =>
                 NativeMethods.GetWindowPlacement(hWnd, ref lpwndpl);
@@ -3812,43 +4032,47 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Retrieves the dimensions of the bounding rectangle of the specified window. The dimensions are given
-            ///     in screen coordinates that are relative to the upper-left corner of the screen.
+            ///     Retrieves the dimensions of the bounding rectangle of the specified window.
+            ///     The dimensions are given in screen coordinates that are relative to the
+            ///     upper-left corner of the screen.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpRect">
-            ///     A pointer to a <see cref="Rectangle"/> structure that receives the screen coordinates of the
-            ///     upper-left and lower-right corners of the window.
+            ///     A pointer to a <see cref="Rectangle"/> structure that receives the screen
+            ///     coordinates of the upper-left and lower-right corners of the window.
             /// </param>
             public static bool GetWindowRect(IntPtr hWnd, ref Rectangle lpRect) =>
                 NativeMethods.GetWindowRect(hWnd, ref lpRect);
 
             /// <summary>
-            ///     Copies the text of the specified window's title bar (if it has one) into a buffer. If the specified
-            ///     window is a control, the text of the control is copied. However, GetWindowText cannot retrieve the
-            ///     text of a control in another application.
+            ///     Copies the text of the specified window's title bar (if it has one) into a
+            ///     buffer. If the specified window is a control, the text of the control is
+            ///     copied. However, GetWindowText cannot retrieve the text of a control in
+            ///     another application.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window or control containing the text.
             /// </param>
             /// <param name="text">
-            ///     The buffer that will receive the text. If the string is as long or longer than the buffer, the string
-            ///     is truncated and terminated with a null character.
+            ///     The buffer that will receive the text. If the string is as long or longer
+            ///     than the buffer, the string is truncated and terminated with a null
+            ///     character.
             /// </param>
             /// <param name="maxLength">
-            ///     The maximum number of characters to copy to the buffer, including the null character. If the text
-            ///     exceeds this limit, it is truncated.
+            ///     The maximum number of characters to copy to the buffer, including the null
+            ///     character. If the text exceeds this limit, it is truncated.
             /// </param>
             public static int GetWindowText(IntPtr hWnd, StringBuilder text, int maxLength) =>
                 NativeMethods.GetWindowText(hWnd, text, maxLength);
 
             /// <summary>
-            ///     Retrieves the length, in characters, of the specified window's title bar text (if the window has a
-            ///     title bar). If the specified window is a control, the function retrieves the length of the text within
-            ///     the control. However, GetWindowTextLength cannot retrieve the length of the text of an edit control in
-            ///     another application.
+            ///     Retrieves the length, in characters, of the specified window's title bar
+            ///     text (if the window has a title bar). If the specified window is a control,
+            ///     the function retrieves the length of the text within the control. However,
+            ///     GetWindowTextLength cannot retrieve the length of the text of an edit
+            ///     control in another application.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window or control.
@@ -3857,26 +4081,28 @@ namespace SilDev
                 NativeMethods.GetWindowTextLength(hWnd);
 
             /// <summary>
-            ///     Retrieves the identifier of the thread that created the specified window and, optionally, the identifier
-            ///     of the process that created the window.
+            ///     Retrieves the identifier of the thread that created the specified window
+            ///     and, optionally, the identifier of the process that created the window.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpdwProcessId">
-            ///     A pointer to a variable that receives the process identifier. If this parameter is not NULL,
-            ///     GetWindowThreadProcessId copies the identifier of the process to the variable; otherwise, it does not.
+            ///     A pointer to a variable that receives the process identifier. If this
+            ///     parameter is not <see langword="null"/>, GetWindowThreadProcessId copies
+            ///     the identifier of the process to the variable; otherwise, it does not.
             /// </param>
             public static uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId) =>
                 NativeMethods.GetWindowThreadProcessId(hWnd, out lpdwProcessId);
 
             /// <summary>
-            ///     Removes the caret from the screen. Hiding a caret does not destroy its current shape or invalidate the
-            ///     insertion point.
+            ///     Removes the caret from the screen. Hiding a caret does not destroy its
+            ///     current shape or invalidate the insertion point.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window that owns the caret. If this parameter is NULL, HideCaret searches the current
-            ///     task for the window that owns the caret.
+            ///     A handle to the window that owns the caret. If this parameter is
+            ///     <see langword="null"/>, HideCaret searches the current task for the window
+            ///     that owns the caret.
             /// </param>
             public static bool HideCaret(IntPtr hWnd) =>
                 NativeMethods.HideCaret(hWnd);
@@ -3894,48 +4120,59 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Note  The InsertMenu function has been superseded by the InsertMenuItem function. You can still use
-            ///     InsertMenu, however, if you do not need any of the extended features of InsertMenuItem.
+            ///     Note  The InsertMenu function has been superseded by the InsertMenuItem
+            ///     function. You can still use InsertMenu, however, if you do not need any of
+            ///     the extended features of InsertMenuItem.
             /// </summary>
             /// <param name="hMenu">
             ///     A handle to the menu to be changed.
             /// </param>
             /// <param name="wPosition">
-            ///     The menu item before which the new menu item is to be inserted, as determined by the uFlags parameter.
+            ///     The menu item before which the new menu item is to be inserted, as
+            ///     determined by the uFlags parameter.
             /// </param>
             /// <param name="wFlags">
-            ///     Controls the interpretation of the uPosition parameter and the content, appearance, and behavior of the
-            ///     new menu item.
+            ///     Controls the interpretation of the uPosition parameter and the content,
+            ///     appearance, and behavior of the new menu item.
             /// </param>
             /// <param name="wIdNewItem">
-            ///     The identifier of the new menu item or, if the uFlags parameter has the <see cref="ModifyMenuFlags.Popup"/>
-            ///     flag set, a handle to the drop-down menu or submenu.
+            ///     The identifier of the new menu item or, if the uFlags parameter has the
+            ///     <see cref="ModifyMenuFlags.Popup"/> flag set, a handle to the drop-down
+            ///     menu or submenu.
             /// </param>
             /// <param name="lpNewItem">
-            ///     The content of the new menu item. The interpretation of lpNewItem depends on whether the uFlags parameter
-            ///     includes the <see cref="ModifyMenuFlags.Bitmap"/>, <see cref="ModifyMenuFlags.OwnerDraw"/>, or
-            ///     <see cref="ModifyMenuFlags.String"/> flag, as follows.
+            ///     The content of the new menu item. The interpretation of lpNewItem depends
+            ///     on whether the uFlags parameter includes the
+            ///     <see cref="ModifyMenuFlags.Bitmap"/>,
+            ///     <see cref="ModifyMenuFlags.OwnerDraw"/>, or
+            ///     <see cref="ModifyMenuFlags.TextString"/> flag, as follows.
             /// </param>
             public static bool InsertMenu(IntPtr hMenu, uint wPosition, ModifyMenuFlags wFlags, UIntPtr wIdNewItem, string lpNewItem) =>
                 NativeMethods.InsertMenu(hMenu, wPosition, wFlags, wIdNewItem, lpNewItem);
 
             /// <summary>
-            ///     Adds a rectangle to the specified window's update region. The update region represents the portion of the
-            ///     window's client area that must be redrawn.
+            ///     Adds a rectangle to the specified window's update region. The update region
+            ///     represents the portion of the window's client area that must be redrawn.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose update region has changed. If this parameter is NULL, the system invalidates
-            ///     and redraws all windows, not just the windows for this application, and sends the WM_ERASEBKGND and
-            ///     WM_NCPAINT messages before the function returns. Setting this parameter to NULL is not recommended.
+            ///     A handle to the window whose update region has changed. If this parameter
+            ///     is <see langword="null"/>, the system invalidates and redraws all windows,
+            ///     not just the windows for this application, and sends the WM_ERASEBKGND and
+            ///     WM_NCPAINT messages before the function returns. Setting this parameter to
+            ///     <see langword="null"/> is not recommended.
             /// </param>
             /// <param name="lpRect">
-            ///     A pointer to a RECT structure that contains the client coordinates of the rectangle to be added to the update
-            ///     region. If this parameter is NULL, the entire client area is added to the update region.
+            ///     A pointer to a RECT structure that contains the client coordinates of the
+            ///     rectangle to be added to the update region. If this parameter is
+            ///     <see langword="null"/>, the entire client area is added to the update
+            ///     region.
             /// </param>
             /// <param name="bErase">
-            ///     Specifies whether the background within the update region is to be erased when the update region is processed.
-            ///     If this parameter is TRUE, the background is erased when the BeginPaint function is called. If this parameter
-            ///     is FALSE, the background remains unchanged.
+            ///     Specifies whether the background within the update region is to be erased
+            ///     when the update region is processed. If this parameter is
+            ///     <see langword="true"/>, the background is erased when the BeginPaint
+            ///     function is called. If this parameter is <see langword="false"/>, the
+            ///     background remains unchanged.
             /// </param>
             public static bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase) =>
                 NativeMethods.InvalidateRect(hWnd, lpRect, bErase);
@@ -3947,35 +4184,40 @@ namespace SilDev
                 NativeMethods.IsThemeActive();
 
             /// <summary>
-            ///     Loads the specified module into the address space of the calling process. The
-            ///     specified module may cause other modules to be loaded.
+            ///     Loads the specified module into the address space of the calling process.
+            ///     The specified module may cause other modules to be loaded.
             /// </summary>
             /// <param name="lpFileName">
-            ///     The name of the module. This can be either a library module (a .dll file) or an
-            ///     executable module (an .exe file). The name specified is the file name of the
-            ///     module and is not related to the name stored in the library module itself, as
-            ///     specified by the LIBRARY keyword in the module-definition (.def) file.
+            ///     The name of the module. This can be either a library module (a .dll file)
+            ///     or an executable module (an .exe file). The name specified is the file name
+            ///     of the module and is not related to the name stored in the library module
+            ///     itself, as specified by the LIBRARY keyword in the module-definition (.def)
+            ///     file.
             /// </param>
             public static IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName) =>
                 NativeMethods.LoadLibrary(lpFileName);
 
             /// <summary>
-            ///     Loads a string resource from the executable file associated with a specified module, copies the string into
-            ///     a buffer, and appends a terminating null character.
+            ///     Loads a string resource from the executable file associated with a
+            ///     specified module, copies the string into a buffer, and appends a
+            ///     terminating null character.
             /// </summary>
             /// <param name="hInstance">
-            ///     A handle to an instance of the module whose executable file contains the string resource. To get the handle
-            ///     to the application itself, call the GetModuleHandle function with NULL.
+            ///     A handle to an instance of the module whose executable file contains the
+            ///     string resource. To get the handle to the application itself, call the
+            ///     GetModuleHandle function with <see langword="null"/>.
             /// </param>
             /// <param name="uId">
             ///     The identifier of the string to be loaded.
             /// </param>
             /// <param name="lpBuffer">
-            ///     The buffer is to receive the string. Must be of sufficient length to hold a pointer (8 bytes).
+            ///     The buffer is to receive the string. Must be of sufficient length to hold a
+            ///     pointer (8 bytes).
             /// </param>
             /// <param name="nBufferMax">
-            ///     The size of the buffer, in characters. The string is truncated and null-terminated if it is longer than the
-            ///     number of characters specified. If this parameter is 0, then lpBuffer receives a read-only pointer to the
+            ///     The size of the buffer, in characters. The string is truncated and
+            ///     null-terminated if it is longer than the number of characters specified. If
+            ///     this parameter is 0, then lpBuffer receives a read-only pointer to the
             ///     resource itself.
             /// </param>
             public static int LoadString(IntPtr hInstance, uint uId, StringBuilder lpBuffer, int nBufferMax) =>
@@ -3990,8 +4232,8 @@ namespace SilDev
             /// </param>
             /// <param name="size">
             ///     The number of bytes to allocate. If this parameter is zero and the uFlags
-            ///     parameter specifies <see cref="LocalAllocFlags.LMemMoveable"/>, the function
-            ///     returns a handle to a memory object that is marked as discarded.
+            ///     parameter specifies <see cref="LocalAllocFlags.LMemMoveable"/>, the
+            ///     function returns a handle to a memory object that is marked as discarded.
             /// </param>
             public static IntPtr LocalAlloc(LocalAllocFlags flag, UIntPtr size) =>
                 NativeMethods.LocalAlloc(flag, size);
@@ -4007,36 +4249,39 @@ namespace SilDev
                 NativeMethods.LocalFree(hMem);
 
             /// <summary>
-            ///     Disables or enables drawing in the specified window. Only one window can be locked
-            ///     at a time.
+            ///     Disables or enables drawing in the specified window. Only one window can be
+            ///     locked at a time.
             /// </summary>
             /// <param name="hWndLock">
-            ///     The window in which drawing will be disabled. If this parameter is NULL, drawing in
-            ///     the locked window is enabled.
+            ///     The window in which drawing will be disabled. If this parameter is
+            ///     <see langword="null"/>, drawing in the locked window is enabled.
             /// </param>
             public static bool LockWindowUpdate(IntPtr hWndLock) =>
                 NativeMethods.LockWindowUpdate(hWndLock);
 
             /// <summary>
-            ///     Retrieves the name that corresponds to the privilege represented on a specific system by a specified
-            ///     locally unique identifier (LUID).
+            ///     Retrieves the name that corresponds to the privilege represented on a
+            ///     specific system by a specified locally unique identifier (LUID).
             /// </summary>
             /// <param name="lpSystemName">
-            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
-            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
-            ///     on the local system.
+            ///     A pointer to a null-terminated string that specifies the name of the system
+            ///     on which the privilege name is retrieved. If a null string is specified,
+            ///     the function attempts to find the privilege name on the local system.
             /// </param>
             /// <param name="lpLuid">
-            ///     A pointer to the <see cref="LuId"/> by which the privilege is known on the target system.
+            ///     A pointer to the <see cref="LuId"/> by which the privilege is known on the
+            ///     target system.
             /// </param>
             /// <param name="lpName">
-            ///     A pointer to a buffer that receives a null-terminated string that represents the privilege name.
-            ///     For example, this string could be "SeSecurityPrivilege".
+            ///     A pointer to a buffer that receives a null-terminated string that
+            ///     represents the privilege name. For example, this string could be
+            ///     "SeSecurityPrivilege".
             /// </param>
             /// <param name="cchName">
-            ///     A pointer to a variable that specifies the size, in a TCHAR value, of the lpName buffer. When the
-            ///     function returns, this parameter contains the length of the privilege name, not including the
-            ///     terminating null character. If the buffer pointed to by the lpName parameter is too small, this
+            ///     A pointer to a variable that specifies the size, in a TCHAR value, of the
+            ///     lpName buffer. When the function returns, this parameter contains the
+            ///     length of the privilege name, not including the terminating null character.
+            ///     If the buffer pointed to by the lpName parameter is too small, this
             ///     variable contains the required size.
             /// </param>
             /// <exception cref="ArgumentNullException">
@@ -4065,36 +4310,36 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Retrieves the <see cref="LuId"/> used on a specified system to locally represent the specified
-            ///     privilege name.
+            ///     Retrieves the <see cref="LuId"/> used on a specified system to locally
+            ///     represent the specified privilege name.
             /// </summary>
             /// <param name="lpSystemName">
-            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
-            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
-            ///     on the local system.
+            ///     A pointer to a null-terminated string that specifies the name of the system
+            ///     on which the privilege name is retrieved. If a null string is specified,
+            ///     the function attempts to find the privilege name on the local system.
             /// </param>
             /// <param name="lpName">
-            ///     A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
-            ///     Winnt.h header file.
+            ///     A pointer to a null-terminated string that specifies the name of the
+            ///     privilege, as defined in the Winnt.h header file.
             /// </param>
             /// <param name="lpLuid">
-            ///     A pointer to a variable that receives the <see cref="LuId"/> by which the privilege is known on
-            ///     the system specified by the lpSystemName parameter.
+            ///     A pointer to a variable that receives the <see cref="LuId"/> by which the
+            ///     privilege is known on the system specified by the lpSystemName parameter.
             /// </param>
             public static bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid) =>
                 NativeMethods.LookupPrivilegeValue(lpSystemName, lpName, ref lpLuid);
 
             /// <summary>
-            ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code
-            ///     into a virtual-key code.
+            ///     Translates (maps) a virtual-key code into a scan code or character value,
+            ///     or translates a scan code into a virtual-key code.
             /// </summary>
             /// <param name="uCode">
-            ///     The virtual key code or scan code for a key. How this value is interpreted depends on the value of
-            ///     the uMapType parameter.
+            ///     The virtual key code or scan code for a key. How this value is interpreted
+            ///     depends on the value of the uMapType parameter.
             /// </param>
             /// <param name="uMapType">
-            ///     The translation to be performed. The value of this parameter depends on the value of the uCode
-            ///     parameter.
+            ///     The translation to be performed. The value of this parameter depends on the
+            ///     value of the uCode parameter.
             /// </param>
             public static uint MapVirtualKey(uint uCode, uint uMapType) =>
                 NativeMethods.MapVirtualKey(uCode, uMapType);
@@ -4162,8 +4407,9 @@ namespace SilDev
                 MoveWindow(hWnd, new Point(x, y));
 
             /// <summary>
-            ///     Changes the position and dimensions of the specified window. For a top-level window, the position and
-            ///     dimensions are relative to the upper-left corner of the screen. For a child window, they are relative to
+            ///     Changes the position and dimensions of the specified window. For a
+            ///     top-level window, the position and dimensions are relative to the
+            ///     upper-left corner of the screen. For a child window, they are relative to
             ///     the upper-left corner of the parent window's client area.
             /// </summary>
             /// <param name="hWnd">
@@ -4182,17 +4428,19 @@ namespace SilDev
             ///     The new height of the window.
             /// </param>
             /// <param name="bRepaint">
-            ///     Indicates whether the window is to be repainted. If this parameter is TRUE, the window receives a message.
-            ///     If the parameter is FALSE, no repainting of any kind occurs. This applies to the client area, the nonclient
-            ///     area (including the title bar and scroll bars), and any part of the parent window uncovered as a result of
-            ///     moving a child window.
+            ///     Indicates whether the window is to be repainted. If this parameter is
+            ///     <see langword="true"/>, the window receives a message. If the parameter is
+            ///     <see langword="false"/>, no repainting of any kind occurs. This applies to
+            ///     the client area, the nonclient area (including the title bar and scroll
+            ///     bars), and any part of the parent window uncovered as a result of moving a
+            ///     child window.
             /// </param>
             public static int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint) =>
                 NativeMethods.MoveWindow(hWnd, x, y, nWidth, nHeight, bRepaint);
 
             /// <summary>
-            ///     Changes the position of a specified window that is outside the virtual screen to move it back to the visible
-            ///     screen area.
+            ///     Changes the position of a specified window that is outside the virtual
+            ///     screen to move it back to the visible screen area.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
@@ -4214,18 +4462,22 @@ namespace SilDev
             ///     The type of process information to be retrieved.
             /// </param>
             /// <param name="processInformation">
-            ///     A pointer to a buffer supplied by the calling application into which the function writes the requested
-            ///     information. The size of the information written varies depending on the data type of the
+            ///     A pointer to a buffer supplied by the calling application into which the
+            ///     function writes the requested information. The size of the information
+            ///     written varies depending on the data type of the
             ///     <see cref="ProcessBasicInformation"/> parameter.
             /// </param>
             /// <param name="piLen">
-            ///     The size of the buffer pointed to by the <see cref="ProcessBasicInformation"/> parameter, in bytes.
+            ///     The size of the buffer pointed to by the
+            ///     <see cref="ProcessBasicInformation"/> parameter, in bytes.
             /// </param>
             /// <param name="rLen">
-            ///     A pointer to a variable in which the function returns the size of the requested information. If the function
-            ///     was successful, this is the size of the information written to the buffer pointed to by the
-            ///     <see cref="ProcessBasicInformation"/> parameter, but if the buffer was too small, this is the minimum size
-            ///     of buffer needed to receive the information successfully.
+            ///     A pointer to a variable in which the function returns the size of the
+            ///     requested information. If the function was successful, this is the size of
+            ///     the information written to the buffer pointed to by the
+            ///     <see cref="ProcessBasicInformation"/> parameter, but if the buffer was too
+            ///     small, this is the minimum size of buffer needed to receive the information
+            ///     successfully.
             /// </param>
             public static uint NtQueryInformationProcess([In] IntPtr hndl, [In] ProcessInfoFlags piCl, [Out] out ProcessBasicInformation processInformation, [In] uint piLen, [Out] out IntPtr rLen) =>
                 NativeMethods.NtQueryInformationProcess(hndl, piCl, out processInformation, piLen, out rLen);
@@ -4235,12 +4487,13 @@ namespace SilDev
             /// </summary>
             /// <param name="dwDesiredAccess">
             ///     The access to the process object. This access right is checked against the
-            ///     security descriptor for the process. This parameter can be one or more of the
-            ///     process access rights.
+            ///     security descriptor for the process. This parameter can be one or more of
+            ///     the process access rights.
             /// </param>
             /// <param name="bInheritHandle">
-            ///     If this value is TRUE, processes created by this process will inherit the handle.
-            ///     Otherwise, the processes do not inherit this handle.
+            ///     If this value is <see langword="true"/>, processes created by this process
+            ///     will inherit the handle. Otherwise, the processes do not inherit this
+            ///     handle.
             /// </param>
             /// <param name="dwProcessId">
             ///     The identifier of the local process to be opened.
@@ -4249,20 +4502,23 @@ namespace SilDev
                 NativeMethods.OpenProcess(dwDesiredAccess, bInheritHandle, dwProcessId);
 
             /// <summary>
-            ///     Places (posts) a message in the message queue associated with the thread that created the
-            ///     specified window and returns without waiting for the thread to process the message.
+            ///     Places (posts) a message in the message queue associated with the thread
+            ///     that created the specified window and returns without waiting for the
+            ///     thread to process the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure is to receive the message. The following values
-            ///     have special meanings.
+            ///     A handle to the window whose window procedure is to receive the message.
+            ///     The following values have special meanings.
             ///     <para>
-            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
-            ///         including disabled or invisible unowned windows, overlapped windows, and pop-up windows. The
-            ///         message is not posted to child windows.
+            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level
+            ///         windows in the system, including disabled or invisible unowned windows,
+            ///         overlapped windows, and pop-up windows. The message is not posted to
+            ///         child windows.
             ///     </para>
             ///     <para>
-            ///         NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter
-            ///         set to the identifier of the current thread.
+            ///         <see langword="null"/>: The function behaves like a call to
+            ///         PostThreadMessage with the dwThreadId parameter set to the identifier
+            ///         of the current thread.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -4278,20 +4534,23 @@ namespace SilDev
                 NativeMethods.PostMessage(hWnd, msg, wParam, lParam);
 
             /// <summary>
-            ///     Places (posts) a message in the message queue associated with the thread that created the
-            ///     specified window and returns without waiting for the thread to process the message.
+            ///     Places (posts) a message in the message queue associated with the thread
+            ///     that created the specified window and returns without waiting for the
+            ///     thread to process the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure is to receive the message. The following values
-            ///     have special meanings.
+            ///     A handle to the window whose window procedure is to receive the message.
+            ///     The following values have special meanings.
             ///     <para>
-            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
-            ///         including disabled or invisible unowned windows, overlapped windows, and pop-up windows.
-            ///         The message is not posted to child windows.
+            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level
+            ///         windows in the system, including disabled or invisible unowned windows,
+            ///         overlapped windows, and pop-up windows. The message is not posted to
+            ///         child windows.
             ///     </para>
             ///     <para>
-            ///         NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter
-            ///         set to the identifier of the current thread.
+            ///         <see langword="null"/>: The function behaves like a call to
+            ///         PostThreadMessage with the dwThreadId parameter set to the identifier
+            ///         of the current thread.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -4307,57 +4566,59 @@ namespace SilDev
                 NativeMethods.PostMessage(new HandleRef(null, hWnd), msg, wParam, lParam);
 
             /// <summary>
-            ///     Reads data from an area of memory in a specified process. The entire area to be
-            ///     read must be accessible or the operation fails.
+            ///     Reads data from an area of memory in a specified process. The entire area
+            ///     to be read must be accessible or the operation fails.
             /// </summary>
             /// <param name="hProcess">
-            ///     A handle to the process with memory that is being read. The handle must have
-            ///     <see cref="AccessRights.ProcessVmRead"/> access to the process.
+            ///     A handle to the process with memory that is being read. The handle must
+            ///     have <see cref="AccessRights.ProcessVmRead"/> access to the process.
             /// </param>
             /// <param name="lpBaseAddress">
-            ///     A pointer to the base address in the specified process from which to read. Before
-            ///     any data transfer occurs, the system verifies that all data in the base address
-            ///     and memory of the specified size is accessible for read access, and if it is not
-            ///     accessible the function fails.
+            ///     A pointer to the base address in the specified process from which to read.
+            ///     Before any data transfer occurs, the system verifies that all data in the
+            ///     base address and memory of the specified size is accessible for read
+            ///     access, and if it is not accessible the function fails.
             /// </param>
             /// <param name="lpBuffer">
-            ///     A pointer to a buffer that receives the contents from the address space of the
-            ///     specified process.
+            ///     A pointer to a buffer that receives the contents from the address space of
+            ///     the specified process.
             /// </param>
             /// <param name="nSize">
             ///     The number of bytes to be read from the specified process.
             /// </param>
             /// <param name="lpNumberOfBytesRead">
-            ///     A pointer to a variable that receives the number of bytes transferred into the
-            ///     specified buffer. If lpNumberOfBytesRead is NULL, the parameter is ignored.
+            ///     A pointer to a variable that receives the number of bytes transferred into
+            ///     the specified buffer. If lpNumberOfBytesRead is <see langword="null"/>, the
+            ///     parameter is ignored.
             /// </param>
             public static bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, IntPtr nSize, ref IntPtr lpNumberOfBytesRead) =>
                 NativeMethods.ReadProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, ref lpNumberOfBytesRead);
 
             /// <summary>
-            ///     Reads data from an area of memory in a specified process. The entire area to be
-            ///     read must be accessible or the operation fails.
+            ///     Reads data from an area of memory in a specified process. The entire area
+            ///     to be read must be accessible or the operation fails.
             /// </summary>
             /// <param name="hProcess">
-            ///     A handle to the process with memory that is being read. The handle must have
-            ///     <see cref="AccessRights.ProcessVmRead"/> access to the process.
+            ///     A handle to the process with memory that is being read. The handle must
+            ///     have <see cref="AccessRights.ProcessVmRead"/> access to the process.
             /// </param>
             /// <param name="lpBaseAddress">
-            ///     A pointer to the base address in the specified process from which to read. Before
-            ///     any data transfer occurs, the system verifies that all data in the base address
-            ///     and memory of the specified size is accessible for read access, and if it is not
-            ///     accessible the function fails.
+            ///     A pointer to the base address in the specified process from which to read.
+            ///     Before any data transfer occurs, the system verifies that all data in the
+            ///     base address and memory of the specified size is accessible for read
+            ///     access, and if it is not accessible the function fails.
             /// </param>
             /// <param name="lpBuffer">
-            ///     A pointer to a buffer that receives the contents from the address space of the
-            ///     specified process.
+            ///     A pointer to a buffer that receives the contents from the address space of
+            ///     the specified process.
             /// </param>
             /// <param name="nSize">
             ///     The number of bytes to be read from the specified process.
             /// </param>
             /// <param name="lpNumberOfBytesRead">
-            ///     A pointer to a variable that receives the number of bytes transferred into the
-            ///     specified buffer. If lpNumberOfBytesRead is NULL, the parameter is ignored.
+            ///     A pointer to a variable that receives the number of bytes transferred into
+            ///     the specified buffer. If lpNumberOfBytesRead is <see langword="null"/>, the
+            ///     parameter is ignored.
             /// </param>
             public static bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, StringBuilder lpBuffer, IntPtr nSize, ref IntPtr lpNumberOfBytesRead) =>
                 NativeMethods.ReadProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, ref lpNumberOfBytesRead);
@@ -4366,40 +4627,43 @@ namespace SilDev
             ///     Updates the specified rectangle or region in a window's client area.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window to be redrawn. If this parameter is NULL, the desktop window
-            ///     is updated.
+            ///     A handle to the window to be redrawn. If this parameter is
+            ///     <see langword="null"/>, the desktop window is updated.
             /// </param>
             /// <param name="lprcUpdate">
-            ///     A pointer to a RECT structure containing the coordinates, in device units, of the
-            ///     update rectangle. This parameter is ignored if the hrgnUpdate parameter identifies
-            ///     a region.
+            ///     A pointer to a RECT structure containing the coordinates, in device units,
+            ///     of the update rectangle. This parameter is ignored if the hrgnUpdate
+            ///     parameter identifies a region.
             /// </param>
             /// <param name="hrgnUpdate">
-            ///     A handle to the update region. If both the hrgnUpdate and lprcUpdate parameters are
-            ///     NULL, the entire client area is added to the update region.
+            ///     A handle to the update region. If both the hrgnUpdate and lprcUpdate
+            ///     parameters are <see langword="null"/>, the entire client area is added to
+            ///     the update region.
             /// </param>
             /// <param name="flags">
-            ///     One or more redraw flags. This parameter can be used to invalidate or validate a
-            ///     window, control repainting, and control which windows are affected by
-            ///     <see cref="RedrawWindow"/>.
+            ///     One or more redraw flags. This parameter can be used to invalidate or
+            ///     validate a window, control repainting, and control which windows are
+            ///     affected by <see cref="RedrawWindow"/>.
             /// </param>
             public static bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags) =>
                 NativeMethods.RedrawWindow(hWnd, lprcUpdate, hrgnUpdate, flags);
 
             /// <summary>
-            ///     Releases the mouse capture from a window in the current thread and restores normal mouse
-            ///     input processing. A window that has captured the mouse receives all mouse input, regardless
-            ///     of the position of the cursor, except when a mouse button is clicked while the cursor hot
-            ///     spot is in the window of another thread.
+            ///     Releases the mouse capture from a window in the current thread and restores
+            ///     normal mouse input processing. A window that has captured the mouse
+            ///     receives all mouse input, regardless of the position of the cursor, except
+            ///     when a mouse button is clicked while the cursor hot spot is in the window
+            ///     of another thread.
             /// </summary>
             public static bool ReleaseCapture() =>
                 NativeMethods.ReleaseCapture();
 
             /// <summary>
-            ///     Deletes a menu item or detaches a submenu from the specified menu. If the menu item
-            ///     opens a drop-down menu or submenu, RemoveMenu does not destroy the menu or its handle,
-            ///     allowing the menu to be reused. Before this function is called, the GetSubMenu function
-            ///     should retrieve a handle to the drop-down menu or submenu.
+            ///     Deletes a menu item or detaches a submenu from the specified menu. If the
+            ///     menu item opens a drop-down menu or submenu, RemoveMenu does not destroy
+            ///     the menu or its handle, allowing the menu to be reused. Before this
+            ///     function is called, the GetSubMenu function should retrieve a handle to the
+            ///     drop-down menu or submenu.
             /// </summary>
             /// <param name="hMenu">
             ///     A handle to the menu to be changed.
@@ -4408,8 +4672,9 @@ namespace SilDev
             ///     The menu item to be deleted, as determined by the uFlags parameter.
             /// </param>
             /// <param name="uFlags">
-            ///     Indicates how the uPosition parameter is interpreted. This parameter must be
-            ///     <see cref="ModifyMenuFlags.ByCommand"/> or <see cref="ModifyMenuFlags.ByPosition"/>.
+            ///     Indicates how the uPosition parameter is interpreted. This parameter must
+            ///     be <see cref="ModifyMenuFlags.ByCommand"/> or
+            ///     <see cref="ModifyMenuFlags.ByPosition"/>.
             /// </param>
             public static bool RemoveMenu(IntPtr hMenu, uint uPosition, ModifyMenuFlags uFlags) =>
                 NativeMethods.RemoveMenu(hMenu, uPosition, uFlags);
@@ -4421,10 +4686,12 @@ namespace SilDev
             ///     A handle to the window.
             /// </param>
             /// <param name="menuBar">
-            ///     true to remove an existing menu bar; otherwise, false.
+            ///     <see langword="true"/> to remove an existing menu bar; otherwise,
+            ///     <see langword="false"/>.
             /// </param>
             /// <param name="extended">
-            ///     true to remove an existing double border; otherwise, false.
+            ///     <see langword="true"/> to remove an existing double border; otherwise,
+            ///     <see langword="false"/>.
             /// </param>
             public static void RemoveWindowBorders(IntPtr hWnd, bool menuBar = false, bool extended = false)
             {
@@ -4499,10 +4766,10 @@ namespace SilDev
                 {
                     if (args == null)
                         throw new ArgumentNullException(nameof(args));
-                    cds.cbData = (args.Length + 1) * 2;
-                    cds.lpData = NativeMethods.LocalAlloc(LocalAllocFlags.LMemZeroInit, (UIntPtr)cds.cbData);
-                    Marshal.Copy(args.ToCharArray(), 0, cds.lpData, args.Length);
-                    cds.dwData = new IntPtr(1);
+                    cds.CbData = (args.Length + 1) * 2;
+                    cds.LpData = NativeMethods.LocalAlloc(LocalAllocFlags.LMemZeroInit, (UIntPtr)cds.CbData);
+                    Marshal.Copy(args.ToCharArray(), 0, cds.LpData, args.Length);
+                    cds.DwData = new IntPtr(1);
                     SendMessage(hWnd, WindowMenuFlags.WmCopyData, IntPtr.Zero, ref cds);
                     return true;
                 }
@@ -4524,26 +4791,27 @@ namespace SilDev
             ///     The number of structures in the pInputs array.
             /// </param>
             /// <param name="pInputs">
-            ///     An array of <see cref="DeviceInput"/> structures. Each structure represents an event
-            ///     to be inserted into the keyboard or mouse input stream.
+            ///     An array of <see cref="DeviceInput"/> structures. Each structure represents
+            ///     an event to be inserted into the keyboard or mouse input stream.
             /// </param>
             /// <param name="cbSize">
-            ///     The size, in bytes, of an <see cref="DeviceInput"/> structure. If cbSize is not the
-            ///     size of an <see cref="DeviceInput"/> structure, the function fails.
+            ///     The size, in bytes, of an <see cref="DeviceInput"/> structure. If cbSize is
+            ///     not the size of an <see cref="DeviceInput"/> structure, the function fails.
             /// </param>
             public static uint SendInput(uint nInputs, [In] DeviceInput[] pInputs, int cbSize) =>
                 NativeMethods.SendInput(nInputs, pInputs, cbSize);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. The SendMessage function
-            ///     calls the window procedure for the specified window and does not return until
-            ///     the window procedure has processed the message.
+            ///     Sends the specified message to a window or windows. The SendMessage
+            ///     function calls the window procedure for the specified window and does not
+            ///     return until the window procedure has processed the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this
-            ///     parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///     windows in the system, including disabled or invisible unowned windows, overlapped
-            ///     windows, and pop-up windows; but the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="uMsg">
             ///     The message to be sent.
@@ -4558,15 +4826,16 @@ namespace SilDev
                 NativeMethods.SendMessage(hWnd, uMsg, wParam, lParam);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. The SendMessage function
-            ///     calls the window procedure for the specified window and does not return until
-            ///     the window procedure has processed the message.
+            ///     Sends the specified message to a window or windows. The SendMessage
+            ///     function calls the window procedure for the specified window and does not
+            ///     return until the window procedure has processed the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this
-            ///     parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///     windows in the system, including disabled or invisible unowned windows, overlapped
-            ///     windows, and pop-up windows; but the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="uMsg">
             ///     The message to be sent.
@@ -4581,15 +4850,16 @@ namespace SilDev
                 NativeMethods.SendMessage(hWnd, uMsg, wParam, ref lParam);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. The SendMessage function
-            ///     calls the window procedure for the specified window and does not return until
-            ///     the window procedure has processed the message.
+            ///     Sends the specified message to a window or windows. The SendMessage
+            ///     function calls the window procedure for the specified window and does not
+            ///     return until the window procedure has processed the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this
-            ///     parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///     windows in the system, including disabled or invisible unowned windows, overlapped
-            ///     windows, and pop-up windows; but the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="uMsg">
             ///     The message to be sent.
@@ -4604,15 +4874,16 @@ namespace SilDev
                 NativeMethods.SendMessage(hWnd, (uint)uMsg, wParam, ref lParam);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. The SendMessage function
-            ///     calls the window procedure for the specified window and does not return until
-            ///     the window procedure has processed the message.
+            ///     Sends the specified message to a window or windows. The SendMessage
+            ///     function calls the window procedure for the specified window and does not
+            ///     return until the window procedure has processed the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this
-            ///     parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///     windows in the system, including disabled or invisible unowned windows, overlapped
-            ///     windows, and pop-up windows; but the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="uMsg">
             ///     The message to be sent.
@@ -4632,11 +4903,11 @@ namespace SilDev
             /// <param name="hWnd">
             ///     A handle to the window whose window procedure will receive the message.
             ///     <para>
-            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
-            ///         top-level windows in the system, including disabled or invisible unowned windows.
-            ///         The function does not return until each window has timed out. Therefore, the total
-            ///         wait time can be up to the value of uTimeout multiplied by the number of top-level
-            ///         windows.
+            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent
+            ///         to all top-level windows in the system, including disabled or invisible
+            ///         unowned windows. The function does not return until each window has
+            ///         timed out. Therefore, the total wait time can be up to the value of
+            ///         uTimeout multiplied by the number of top-level windows.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -4649,37 +4920,41 @@ namespace SilDev
             ///     Any additional message-specific information.
             /// </param>
             /// <param name="fuFlags">
-            ///     The behavior of this function. This parameter can be one or more of the following values.
+            ///     The behavior of this function. This parameter can be one or more of the
+            ///     following values.
             ///     <para>
-            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
-            ///         elapse if the receiving thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the
+            ///         time-out period to elapse if the receiving thread appears to not
+            ///         respond or hangs.
             ///     </para>
             ///     <para>
-            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until
-            ///         the function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other
+            ///         requests until the function returns.
             ///     </para>
             ///     <para>
-            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
-            ///         waiting for the function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing
+            ///         other requests while waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
-            ///         the receiving thread is processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the
+            ///         time-out period as long as the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
-            ///         or its owning thread dies while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving
+            ///         window is destroyed or its owning thread dies while the message is
+            ///         being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
-            ///     The duration of the time-out period, in milliseconds. If the message is a broadcast message,
-            ///     each window can use the full time-out period. For example, if you specify a five second time-out
-            ///     period and there are three top-level windows that fail to process the message, you could have up
-            ///     to a 15 second delay.
+            ///     The duration of the time-out period, in milliseconds. If the message is a
+            ///     broadcast message, each window can use the full time-out period. For
+            ///     example, if you specify a five second time-out period and there are three
+            ///     top-level windows that fail to process the message, you could have up to a
+            ///     15 second delay.
             /// </param>
             /// <param name="lpdwResult">
-            ///     The result of the message processing. The value of this parameter depends on the message that is
-            ///     specified.
+            ///     The result of the message processing. The value of this parameter depends
+            ///     on the message that is specified.
             /// </param>
             public static IntPtr SendMessageTimeout(IntPtr hWnd, uint msg, UIntPtr wParam, IntPtr lParam, uint fuFlags, uint uTimeout, out UIntPtr lpdwResult) =>
                 NativeMethods.SendMessageTimeout(hWnd, msg, wParam, lParam, fuFlags, uTimeout, out lpdwResult);
@@ -4690,10 +4965,11 @@ namespace SilDev
             /// <param name="hWnd">
             ///     A handle to the window whose window procedure will receive the message.
             ///     <para>
-            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///         windows in the system, including disabled or invisible unowned windows. The function does
-            ///         not return until each window has timed out. Therefore, the total wait time can be up to the
-            ///         value of uTimeout multiplied by the number of top-level windows.
+            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent
+            ///         to all top-level windows in the system, including disabled or invisible
+            ///         unowned windows. The function does not return until each window has
+            ///         timed out. Therefore, the total wait time can be up to the value of
+            ///         uTimeout multiplied by the number of top-level windows.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -4706,53 +4982,60 @@ namespace SilDev
             ///     Any additional message-specific information.
             /// </param>
             /// <param name="fuFlags">
-            ///     The behavior of this function. This parameter can be one or more of the following values.
+            ///     The behavior of this function. This parameter can be one or more of the
+            ///     following values.
             ///     <para>
-            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
-            ///         elapse if the receiving thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the
+            ///         time-out period to elapse if the receiving thread appears to not
+            ///         respond or hangs.
             ///     </para>
             ///     <para>
-            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until the
-            ///         function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other
+            ///         requests until the function returns.
             ///     </para>
             ///     <para>
-            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
-            ///         waiting for the function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing
+            ///         other requests while waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
-            ///         the receiving thread is processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the
+            ///         time-out period as long as the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed or
-            ///         its owning thread dies while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving
+            ///         window is destroyed or its owning thread dies while the message is
+            ///         being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
-            ///     The duration of the time-out period, in milliseconds. If the message is a broadcast message,
-            ///     each window can use the full time-out period. For example, if you specify a five second time-out
-            ///     period and there are three top-level windows that fail to process the message, you could have up
-            ///     to a 15 second delay.
+            ///     The duration of the time-out period, in milliseconds. If the message is a
+            ///     broadcast message, each window can use the full time-out period. For
+            ///     example, if you specify a five second time-out period and there are three
+            ///     top-level windows that fail to process the message, you could have up to a
+            ///     15 second delay.
             /// </param>
             /// <param name="lpdwResult">
-            ///     The result of the message processing. The value of this parameter depends on the message that is
-            ///     specified.
+            ///     The result of the message processing. The value of this parameter depends
+            ///     on the message that is specified.
             /// </param>
             public static IntPtr SendMessageTimeoutText(IntPtr hWnd, uint msg, UIntPtr wParam, StringBuilder lParam, uint fuFlags, uint uTimeout, out IntPtr lpdwResult) =>
                 NativeMethods.SendMessageTimeoutText(hWnd, msg, wParam, lParam, fuFlags, uTimeout, out lpdwResult);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. If the window was created by the calling
-            ///     thread, SendNotifyMessage calls the window procedure for the window and does not return until
-            ///     the window procedure has processed the message. If the window was created by a different thread,
-            ///     SendNotifyMessage passes the message to the window procedure and returns immediately; it does
-            ///     not wait for the window procedure to finish processing the message.
+            ///     Sends the specified message to a window or windows. If the window was
+            ///     created by the calling thread, SendNotifyMessage calls the window procedure
+            ///     for the window and does not return until the window procedure has processed
+            ///     the message. If the window was created by a different thread,
+            ///     SendNotifyMessage passes the message to the window procedure and returns
+            ///     immediately; it does not wait for the window procedure to finish processing
+            ///     the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this parameter is
-            ///     HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level windows in the system,
-            ///     including disabled or invisible unowned windows, overlapped windows, and pop-up windows; but
-            ///     the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="msg">
             ///     The message to be sent.
@@ -4806,9 +5089,10 @@ namespace SilDev
                 SetCursorPos(hWnd, new Point(x, y));
 
             /// <summary>
-            ///     Moves the cursor to the specified screen coordinates. If the new coordinates are not within
-            ///     the screen rectangle set by the most recent ClipCursor function call, the system automatically
-            ///     adjusts the coordinates so that the cursor stays within the rectangle.
+            ///     Moves the cursor to the specified screen coordinates. If the new
+            ///     coordinates are not within the screen rectangle set by the most recent
+            ///     ClipCursor function call, the system automatically adjusts the coordinates
+            ///     so that the cursor stays within the rectangle.
             /// </summary>
             /// <param name="x">
             ///     The new x-coordinate of the cursor, in screen coordinates.
@@ -4820,13 +5104,15 @@ namespace SilDev
                 NativeMethods.SetCursorPos(x, y);
 
             /// <summary>
-            ///     Brings the thread that created the specified window into the foreground and activates the window.
-            ///     Keyboard input is directed to the window, and various visual cues are changed for the user. The
-            ///     system assigns a slightly higher priority to the thread that created the foreground window than
-            ///     it does to other threads.
+            ///     Brings the thread that created the specified window into the foreground and
+            ///     activates the window. Keyboard input is directed to the window, and various
+            ///     visual cues are changed for the user. The system assigns a slightly higher
+            ///     priority to the thread that created the foreground window than it does to
+            ///     other threads.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window that should be activated and brought to the foreground.
+            ///     A handle to the window that should be activated and brought to the
+            ///     foreground.
             /// </param>
             public static bool SetForegroundWindow(IntPtr hWnd) =>
                 NativeMethods.SetForegroundWindow(hWnd);
@@ -4838,8 +5124,10 @@ namespace SilDev
             ///     A handle to the child window.
             /// </param>
             /// <param name="hWndNewParent">
-            ///     A handle to the new parent window. If this parameter is NULL, the desktop window becomes the new
-            ///     parent window. If this parameter is HWND_MESSAGE, the child window becomes a message-only window.
+            ///     A handle to the new parent window. If this parameter is
+            ///     <see langword="null"/>, the desktop window becomes the new parent window.
+            ///     If this parameter is HWND_MESSAGE, the child window becomes a message-only
+            ///     window.
             /// </param>
             public static IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent) =>
                 NativeMethods.SetParent(hWndChild, hWndNewParent);
@@ -4860,38 +5148,42 @@ namespace SilDev
             /// <param name="hProcess">
             ///     A handle to the process whose working set sizes is to be set.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessSetQuota"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessSetQuota"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="dwMinimumWorkingSetSize">
-            ///     The minimum working set size for the process, in bytes. The virtual memory manager attempts
-            ///     to keep at least this much memory resident in the process whenever the process is active.
+            ///     The minimum working set size for the process, in bytes. The virtual memory
+            ///     manager attempts to keep at least this much memory resident in the process
+            ///     whenever the process is active.
             ///     <para>
-            ///         This parameter must be greater than zero but less than or equal to the maximum working
-            ///         set size. The default size is 50 pages (for example, this is 204,800 bytes on systems
-            ///         with a 4K page size). If the value is greater than zero but less than 20 pages, the
-            ///         minimum value is set to 20 pages.
+            ///         This parameter must be greater than zero but less than or equal to the
+            ///         maximum working set size. The default size is 50 pages (for example,
+            ///         this is 204,800 bytes on systems with a 4K page size). If the value is
+            ///         greater than zero but less than 20 pages, the minimum value is set to
+            ///         20 pages.
             ///     </para>
             ///     <para>
-            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the value (SIZE_T)–1,
-            ///         the function removes as many pages as possible from the working set of the specified
-            ///         process.
+            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the
+            ///         value (SIZE_T)–1, the function removes as many pages as possible from
+            ///         the working set of the specified process.
             ///     </para>
             /// </param>
             /// <param name="dwMaximumWorkingSetSize">
-            ///     The maximum working set size for the process, in bytes. The virtual memory manager attempts
-            ///     to keep no more than this much memory resident in the process whenever the process is active
-            ///     and available memory is low.
+            ///     The maximum working set size for the process, in bytes. The virtual memory
+            ///     manager attempts to keep no more than this much memory resident in the
+            ///     process whenever the process is active and available memory is low.
             ///     <para>
-            ///         This parameter must be greater than or equal to 13 pages (for example, 53,248 on systems
-            ///         with a 4K page size), and less than the system-wide maximum (number of available pages
-            ///         minus 512 pages). The default size is 345 pages (for example, this is 1,413,120 bytes on
-            ///         systems with a 4K page size).
+            ///         This parameter must be greater than or equal to 13 pages (for example,
+            ///         53,248 on systems with a 4K page size), and less than the system-wide
+            ///         maximum (number of available pages minus 512 pages). The default size
+            ///         is 345 pages (for example, this is 1,413,120 bytes on systems with a 4K
+            ///         page size).
             ///     </para>
             ///     <para>
-            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the value (SIZE_T)–1,
-            ///         the function removes as many pages as possible from the working set of the specified
-            ///         process.
+            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the
+            ///         value (SIZE_T)–1, the function removes as many pages as possible from
+            ///         the working set of the specified process.
             ///     </para>
             /// </param>
             public static bool SetProcessWorkingSetSize(IntPtr hProcess, UIntPtr dwMinimumWorkingSetSize, UIntPtr dwMaximumWorkingSetSize) =>
@@ -4901,18 +5193,23 @@ namespace SilDev
             ///     Creates a timer with the specified time-out value.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window to be associated with the timer. This window must be owned by the calling
-            ///     thread. If a NULL value for hWnd is passed in along with an nIDEvent of an existing timer, that
-            ///     timer will be replaced in the same way that an existing non-NULL hWnd timer will be.
+            ///     A handle to the window to be associated with the timer. This window must be
+            ///     owned by the calling thread. If a <see langword="null"/> value for hWnd is
+            ///     passed in along with an nIDEvent of an existing timer, that timer will be
+            ///     replaced in the same way that an existing non-<see langword="null"/> hWnd
+            ///     timer will be.
             /// </param>
             /// <param name="nIdEvent">
-            ///     A nonzero timer identifier. If the hWnd parameter is NULL, and the nIDEvent does not match an
-            ///     existing timer then it is ignored and a new timer ID is generated. If the hWnd parameter is not
-            ///     NULL and the window specified by hWnd already has a timer with the value nIDEvent, then the
-            ///     existing timer is replaced by the new timer. When SetTimer replaces a timer, the timer is reset.
-            ///     Therefore, a message will be sent after the current time-out value elapses, but the previously
-            ///     set time-out value is ignored. If the call is not intended to replace an existing timer, nIDEvent
-            ///     should be 0 if the hWnd is NULL.
+            ///     A nonzero timer identifier. If the hWnd parameter is <see langword="null"/>
+            ///     , and the nIDEvent does not match an existing timer then it is ignored and
+            ///     a new timer ID is generated. If the hWnd parameter is not
+            ///     <see langword="null"/> and the window specified by hWnd already has a timer
+            ///     with the value nIDEvent, then the existing timer is replaced by the new
+            ///     timer. When SetTimer replaces a timer, the timer is reset. Therefore, a
+            ///     message will be sent after the current time-out value elapses, but the
+            ///     previously set time-out value is ignored. If the call is not intended to
+            ///     replace an existing timer, nIDEvent should be 0 if the hWnd is
+            ///     <see langword="null"/>.
             /// </param>
             /// <param name="uElapse">
             ///     The time-out value, in milliseconds.
@@ -4924,16 +5221,19 @@ namespace SilDev
                 NativeMethods.SetTimer(hWnd, nIdEvent, uElapse, lpTimerFunc);
 
             /// <summary>
-            ///     Changes the position and dimensions of the specified window to fill the entire screen.
+            ///     Changes the position and dimensions of the specified window to fill the
+            ///     entire screen.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="menuBar">
-            ///     true to remove an existing menu bar; otherwise, false.
+            ///     <see langword="true"/> to remove an existing menu bar; otherwise,
+            ///     <see langword="false"/>.
             /// </param>
             /// <param name="extended">
-            ///     true to remove an existing double border; otherwise, false.
+            ///     <see langword="true"/> to remove an existing double border; otherwise,
+            ///     <see langword="false"/>.
             /// </param>
             public static void SetWindowBorderlessFullscreen(IntPtr hWnd, bool menuBar = false, bool extended = false)
             {
@@ -4942,7 +5242,8 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Changes the position and dimensions of the specified window to fill the entire screen.
+            ///     Changes the position and dimensions of the specified window to fill the
+            ///     entire screen.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
@@ -4951,15 +5252,17 @@ namespace SilDev
                 _ = NativeMethods.MoveWindow(hWnd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, true);
 
             /// <summary>
-            ///     Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the
-            ///     specified offset into the extra window memory.
+            ///     Changes an attribute of the specified window. The function also sets the
+            ///     32-bit (long) value at the specified offset into the extra window memory.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window belongs.
+            ///     A handle to the window and, indirectly, the class to which the window
+            ///     belongs.
             /// </param>
             /// <param name="nIndex">
-            ///     The zero-based offset to the value to be set. Valid values are in the range zero through the number
-            ///     of bytes of extra window memory, minus the size of an integer.
+            ///     The zero-based offset to the value to be set. Valid values are in the range
+            ///     zero through the number of bytes of extra window memory, minus the size of
+            ///     an integer.
             /// </param>
             /// <param name="dwNewLong">
             ///     The replacement value.
@@ -4968,17 +5271,19 @@ namespace SilDev
                 NativeMethods.SetWindowLong(hWnd, (int)nIndex, dwNewLong);
 
             /// <summary>
-            ///     Sets the show state and the restored, minimized, and maximized positions of the specified window.
+            ///     Sets the show state and the restored, minimized, and maximized positions of
+            ///     the specified window.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpwndpl">
-            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the new show state and window
-            ///     positions.
+            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the
+            ///     new show state and window positions.
             ///     <para>
-            ///         Before calling SetWindowPlacement, set the length member of the <see cref="WindowPlacement"/>
-            ///         structure to sizeof(<see cref="WindowPlacement"/>). SetWindowPlacement fails if the length
+            ///         Before calling SetWindowPlacement, set the length member of the
+            ///         <see cref="WindowPlacement"/> structure to sizeof(
+            ///         <see cref="WindowPlacement"/>). SetWindowPlacement fails if the length
             ///         member is not set correctly.
             ///     </para>
             /// </param>
@@ -5017,31 +5322,34 @@ namespace SilDev
                 SetWindowPos(hWnd, new Point(x, y));
 
             /// <summary>
-            ///     Changes the size, position, and Z order of a child, pop-up, or top-level window. These windows are
-            ///     ordered according to their appearance on the screen. The topmost window receives the highest rank
-            ///     and is the first window in the Z order.
+            ///     Changes the size, position, and Z order of a child, pop-up, or top-level
+            ///     window. These windows are ordered according to their appearance on the
+            ///     screen. The topmost window receives the highest rank and is the first
+            ///     window in the Z order.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="hWndInsertAfter">
-            ///     A handle to the window to precede the positioned window in the Z order. This parameter must be a
-            ///     window handle or one of the following values.
+            ///     A handle to the window to precede the positioned window in the Z order.
+            ///     This parameter must be a window handle or one of the following values.
             ///     <para>
-            ///         HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order. If the hWnd parameter
-            ///         identifies a topmost window, the window loses its topmost status and is placed at the bottom of
-            ///         all other windows.
+            ///         HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order.
+            ///         If the hWnd parameter identifies a topmost window, the window loses its
+            ///         topmost status and is placed at the bottom of all other windows.
             ///     </para>
             ///     <para>
-            ///         HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost windows (that is, behind all
-            ///         topmost windows). This flag has no effect if the window is already a non-topmost window.
+            ///         HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost
+            ///         windows (that is, behind all topmost windows). This flag has no effect
+            ///         if the window is already a non-topmost window.
             ///     </para>
             ///     <para>
             ///         HWND_TOP ((HWND)0): Places the window at the top of the Z order.
             ///     </para>
             ///     <para>
-            ///         HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost windows. The window maintains
-            ///         its topmost position even when it is deactivated.
+            ///         HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost
+            ///         windows. The window maintains its topmost position even when it is
+            ///         deactivated.
             ///     </para>
             /// </param>
             /// <param name="x">
@@ -5063,28 +5371,32 @@ namespace SilDev
                 NativeMethods.SetWindowPos(hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 
             /// <summary>
-            ///     Installs an application-defined hook procedure into a hook chain. You would install a hook
-            ///     procedure to monitor the system for certain types of events. These events are associated
-            ///     either with a specific thread or with all threads in the same desktop as the calling thread.
+            ///     Installs an application-defined hook procedure into a hook chain. You would
+            ///     install a hook procedure to monitor the system for certain types of events.
+            ///     These events are associated either with a specific thread or with all
+            ///     threads in the same desktop as the calling thread.
             /// </summary>
             /// <param name="idHook">
             ///     The type of hook procedure to be installed.
             /// </param>
             /// <param name="lpfn">
-            ///     A pointer to the hook procedure. If the dwThreadId parameter is zero or specifies the identifier
-            ///     of a thread created by a different process, the lpfn parameter must point to a hook procedure in
-            ///     a DLL. Otherwise, lpfn can point to a hook procedure in the code associated with the current
-            ///     process.
+            ///     A pointer to the hook procedure. If the dwThreadId parameter is zero or
+            ///     specifies the identifier of a thread created by a different process, the
+            ///     lpfn parameter must point to a hook procedure in a DLL. Otherwise, lpfn can
+            ///     point to a hook procedure in the code associated with the current process.
             /// </param>
             /// <param name="hMod">
-            ///     A handle to the DLL containing the hook procedure pointed to by the lpfn parameter. The hMod
-            ///     parameter must be set to NULL if the dwThreadId parameter specifies a thread created by the current
-            ///     process and if the hook procedure is within the code associated with the current process.
+            ///     A handle to the DLL containing the hook procedure pointed to by the lpfn
+            ///     parameter. The hMod parameter must be set to <see langword="null"/> if the
+            ///     dwThreadId parameter specifies a thread created by the current process and
+            ///     if the hook procedure is within the code associated with the current
+            ///     process.
             /// </param>
             /// <param name="dwThreadId">
-            ///     The identifier of the thread with which the hook procedure is to be associated. For desktop apps,
-            ///     if this parameter is zero, the hook procedure is associated with all existing threads running in the
-            ///     same desktop as the calling thread. For Windows Store apps, see the Remarks section.
+            ///     The identifier of the thread with which the hook procedure is to be
+            ///     associated. For desktop apps, if this parameter is zero, the hook procedure
+            ///     is associated with all existing threads running in the same desktop as the
+            ///     calling thread. For Windows Store apps, see the Remarks section.
             /// </param>
             public static IntPtr SetWindowsHookEx(Win32HookFlags idHook, HookProc lpfn, IntPtr hMod, int dwThreadId) =>
                 NativeMethods.SetWindowsHookEx(idHook, lpfn, hMod, dwThreadId);
@@ -5122,9 +5434,10 @@ namespace SilDev
                 SetWindowSize(hWnd, new Size(width, height));
 
             /// <summary>
-            ///     Changes the text of the specified window's title bar (if it has one). If the specified window is a
-            ///     control, the text of the control is changed. However, SetWindowText cannot change the text of a control
-            ///     in another application.
+            ///     Changes the text of the specified window's title bar (if it has one). If
+            ///     the specified window is a control, the text of the control is changed.
+            ///     However, SetWindowText cannot change the text of a control in another
+            ///     application.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window or control whose text is to be changed.
@@ -5136,25 +5449,29 @@ namespace SilDev
                 NativeMethods.SetWindowText(hWnd, lpString);
 
             /// <summary>
-            ///     Causes a window to use a different set of visual style information than its class normally uses.
+            ///     Causes a window to use a different set of visual style information than its
+            ///     class normally uses.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose visual style information is to be changed.
             /// </param>
             /// <param name="pszSubAppName">
-            ///     Pointer to a string that contains the application name to use in place of the calling application's
-            ///     name. If this parameter is NULL, the calling application's name is used.
+            ///     Pointer to a string that contains the application name to use in place of
+            ///     the calling application's name. If this parameter is <see langword="null"/>
+            ///     , the calling application's name is used.
             /// </param>
             /// <param name="pszSubIdList">
-            ///     Pointer to a string that contains a semicolon-separated list of CLSID names to use in place of the
-            ///     actual list passed by the window's class. If this parameter is NULL, the ID list from the calling
-            ///     class is used.
+            ///     Pointer to a string that contains a semicolon-separated list of CLSID names
+            ///     to use in place of the actual list passed by the window's class. If this
+            ///     parameter is <see langword="null"/>, the ID list from the calling class is
+            ///     used.
             /// </param>
             public static int SetWindowTheme(IntPtr hWnd, string pszSubAppName = null, string pszSubIdList = null) =>
                 NativeMethods.SetWindowTheme(hWnd, pszSubAppName, pszSubIdList);
 
             /// <summary>
-            ///     Sets attributes to control how visual styles are applied to a specified window.
+            ///     Sets attributes to control how visual styles are applied to a specified
+            ///     window.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to a window to apply changes to.
@@ -5172,8 +5489,9 @@ namespace SilDev
             ///     Appbar message value to send.
             /// </param>
             /// <param name="pData">
-            ///     A pointer to an <see cref="AppBarData"/> structure. The content of the structure on entry and on exit
-            ///     depends on the value set in the dwMessage parameter. See the individual message pages for specifics.
+            ///     A pointer to an <see cref="AppBarData"/> structure. The content of the
+            ///     structure on entry and on exit depends on the value set in the dwMessage
+            ///     parameter. See the individual message pages for specifics.
             /// </param>
             [SuppressMessage("ReSharper", "InconsistentNaming")]
             public static UIntPtr SHAppBarMessage(AppBarMessageOption dwMessage, ref AppBarData pData) =>
@@ -5183,34 +5501,42 @@ namespace SilDev
             ///     Performs an operation on a specified file.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the
-            ///     operation is not associated with a window.
+            ///     A handle to the parent window used for displaying a UI or error messages.
+            ///     This value can be <see langword="null"/> if the operation is not associated
+            ///     with a window.
             /// </param>
             /// <param name="lpOperation">
-            ///     A pointer to a null-terminated string, referred to in this case as a verb, that specifies the action to
-            ///     be performed. The set of available verbs depends on the particular file or folder. Generally, the
-            ///     actions available from an object's shortcut menu are available verbs.
+            ///     A pointer to a null-terminated string, referred to in this case as a verb,
+            ///     that specifies the action to be performed. The set of available verbs
+            ///     depends on the particular file or folder. Generally, the actions available
+            ///     from an object's shortcut menu are available verbs.
             /// </param>
             /// <param name="lpFile">
-            ///     A pointer to a null-terminated string that specifies the file or object on which to execute the specified
-            ///     verb. To specify a Shell namespace object, pass the fully qualified parse name. Note that not all verbs
-            ///     are supported on all objects. For example, not all document types support the "print" verb. If a relative
-            ///     path is used for the lpDirectory parameter do not use a relative path for lpFile.
+            ///     A pointer to a null-terminated string that specifies the file or object on
+            ///     which to execute the specified verb. To specify a Shell namespace object,
+            ///     pass the fully qualified parse name. Note that not all verbs are supported
+            ///     on all objects. For example, not all document types support the "print"
+            ///     verb. If a relative path is used for the lpDirectory parameter do not use a
+            ///     relative path for lpFile.
             /// </param>
             /// <param name="lpParameters">
-            ///     If lpFile specifies an executable file, this parameter is a pointer to a null-terminated string that
-            ///     specifies the parameters to be passed to the application. The format of this string is determined by the
-            ///     verb that is to be invoked. If lpFile specifies a document file, lpParameters should be NULL.
+            ///     If lpFile specifies an executable file, this parameter is a pointer to a
+            ///     null-terminated string that specifies the parameters to be passed to the
+            ///     application. The format of this string is determined by the verb that is to
+            ///     be invoked. If lpFile specifies a document file, lpParameters should be
+            ///     <see langword="null"/>.
             /// </param>
             /// <param name="lpDirectory">
-            ///     A pointer to a null-terminated string that specifies the default (working) directory for the action. If
-            ///     this value is NULL, the current working directory is used. If a relative path is provided at lpFile, do
-            ///     not use a relative path for lpDirectory.
+            ///     A pointer to a null-terminated string that specifies the default (working)
+            ///     directory for the action. If this value is <see langword="null"/>, the
+            ///     current working directory is used. If a relative path is provided at
+            ///     lpFile, do not use a relative path for lpDirectory.
             /// </param>
             /// <param name="nShowCmd">
-            ///     The flags that specify how an application is to be displayed when it is opened. If lpFile specifies a
-            ///     document file, the flag is simply passed to the associated application. It is up to the application to
-            ///     decide how to handle it.
+            ///     The flags that specify how an application is to be displayed when it is
+            ///     opened. If lpFile specifies a document file, the flag is simply passed to
+            ///     the associated application. It is up to the application to decide how to
+            ///     handle it.
             /// </param>
             public static IntPtr ShellExecute(IntPtr hWnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, ShowWindowFlags nShowCmd) =>
                 NativeMethods.ShellExecute(hWnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
@@ -5219,15 +5545,15 @@ namespace SilDev
             ///     The ShowScrollBar function shows or hides the specified scroll bar.
             /// </summary>
             /// <param name="hWnd">
-            ///     Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the
-            ///     wBar parameter.
+            ///     Handle to a scroll bar control or a window with a standard scroll bar,
+            ///     depending on the value of the wBar parameter.
             /// </param>
             /// <param name="wBar">
             ///     Specifies the scroll bar(s) to be shown or hidden.
             /// </param>
             /// <param name="bShow">
-            ///     Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown;
-            ///     otherwise, it is hidden.
+            ///     Specifies whether the scroll bar is shown or hidden. If this parameter is
+            ///     <see langword="true"/>, the scroll bar is shown; otherwise, it is hidden.
             /// </param>
             public static bool ShowScrollBar(IntPtr hWnd, ShowScrollBarOption wBar, bool bShow) =>
                 NativeMethods.ShowScrollBar(hWnd, wBar, bShow);
@@ -5251,23 +5577,25 @@ namespace SilDev
             ///     A handle to the window.
             /// </param>
             /// <param name="nCmdShow">
-            ///     Controls how the window is to be shown. This parameter is ignored the first time an application calls
-            ///     ShowWindow, if the program that launched the application provides a STARTUPINFO structure. Otherwise,
-            ///     the first time ShowWindow is called, the value should be the value obtained by the WinMain function in
-            ///     its nCmdShow parameter.
+            ///     Controls how the window is to be shown. This parameter is ignored the first
+            ///     time an application calls ShowWindow, if the program that launched the
+            ///     application provides a STARTUPINFO structure. Otherwise, the first time
+            ///     ShowWindow is called, the value should be the value obtained by the WinMain
+            ///     function in its nCmdShow parameter.
             /// </param>
             public static bool ShowWindow(IntPtr hWnd, ShowWindowFlags nCmdShow) =>
                 NativeMethods.ShowWindow(hWnd, nCmdShow);
 
             /// <summary>
-            ///     Sets the show state of a window without waiting for the operation to complete.
+            ///     Sets the show state of a window without waiting for the operation to
+            ///     complete.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="nCmdShow">
-            ///     Controls how the window is to be shown. For a list of possible values, see the description of the
-            ///     ShowWindow function.
+            ///     Controls how the window is to be shown. For a list of possible values, see
+            ///     the description of the ShowWindow function.
             /// </param>
             public static bool ShowWindowAsync(IntPtr hWnd, ShowWindowFlags nCmdShow) =>
                 NativeMethods.ShowWindowAsync(hWnd, nCmdShow);
@@ -5278,32 +5606,36 @@ namespace SilDev
             /// <param name="hProcess">
             ///     A handle to the process to be terminated.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessTerminate"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessTerminate"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="uExitCode">
-            ///     The exit code to be used by the process and threads terminated as a result of this call.
-            ///     Use the GetExitCodeProcess function to retrieve a process's exit value. Use the
-            ///     GetExitCodeThread function to retrieve a thread's exit value.
+            ///     The exit code to be used by the process and threads terminated as a result
+            ///     of this call. Use the GetExitCodeProcess function to retrieve a process's
+            ///     exit value. Use the GetExitCodeThread function to retrieve a thread's exit
+            ///     value.
             /// </param>
             public static bool TerminateProcess(IntPtr hProcess, uint uExitCode) =>
                 NativeMethods.TerminateProcess(hProcess, uExitCode);
 
             /// <summary>
-            ///     Removes a hook procedure installed in a hook chain by the SetWindowsHookEx function.
+            ///     Removes a hook procedure installed in a hook chain by the SetWindowsHookEx
+            ///     function.
             /// </summary>
             /// <param name="hhk">
-            ///     A handle to the hook to be removed. This parameter is a hook handle obtained by a previous call
-            ///     SetWindowsHookEx.
+            ///     A handle to the hook to be removed. This parameter is a hook handle
+            ///     obtained by a previous call SetWindowsHookEx.
             /// </param>
             public static int UnhookWindowsHookEx(IntPtr hhk) =>
                 NativeMethods.UnhookWindowsHookEx(hhk);
 
             /// <summary>
-            ///     The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT
-            ///     message to the window if the window's update region is not empty. The function sends a WM_PAINT
-            ///     message directly to the window procedure of the specified window, bypassing the application
-            ///     queue. If the update region is empty, no message is sent.
+            ///     The UpdateWindow function updates the client area of the specified window
+            ///     by sending a WM_PAINT message to the window if the window's update region
+            ///     is not empty. The function sends a WM_PAINT message directly to the window
+            ///     procedure of the specified window, bypassing the application queue. If the
+            ///     update region is empty, no message is sent.
             /// </summary>
             /// <param name="hWnd">
             ///     Handle to the window to be updated.
@@ -5312,26 +5644,28 @@ namespace SilDev
                 NativeMethods.UpdateWindow(hWnd);
 
             /// <summary>
-            ///     Reserves, commits, or changes the state of a region of memory within the virtual address space
-            ///     of a specified process. The function initializes the memory it allocates to zero.
+            ///     Reserves, commits, or changes the state of a region of memory within the
+            ///     virtual address space of a specified process. The function initializes the
+            ///     memory it allocates to zero.
             /// </summary>
             /// <param name="hProcess">
-            ///     The handle to a process. The function allocates memory within the virtual address
-            ///     space of this process.
+            ///     The handle to a process. The function allocates memory within the virtual
+            ///     address space of this process.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/> access
-            ///         right.
+            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="lpAddress">
-            ///     The pointer that specifies a desired starting address for the region of pages
-            ///     that you want to allocate.
+            ///     The pointer that specifies a desired starting address for the region of
+            ///     pages that you want to allocate.
             /// </param>
             /// <param name="dwSize">
             ///     The size of the region of memory to allocate, in bytes.
             /// </param>
             /// <param name="flAllocationType">
-            ///     The type of memory allocation. This parameter must contain one of the following values.
+            ///     The type of memory allocation. This parameter must contain one of the
+            ///     following values.
             /// </param>
             /// <param name="flProtect">
             ///     The memory protection for the region of pages to be allocated.
@@ -5340,38 +5674,41 @@ namespace SilDev
                 NativeMethods.VirtualAllocEx(hProcess, lpAddress, dwSize, flAllocationType, flProtect);
 
             /// <summary>
-            ///     Releases, decommits, or releases and decommits a region of memory within the virtual address
-            ///     space of a specified process.
+            ///     Releases, decommits, or releases and decommits a region of memory within
+            ///     the virtual address space of a specified process.
             /// </summary>
             /// <param name="hProcess">
-            ///     The handle to a process. The function allocates memory within the virtual address space of this
-            ///     process.
+            ///     The handle to a process. The function allocates memory within the virtual
+            ///     address space of this process.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/> access
-            ///         right.
+            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="lpAddress">
             ///     A pointer to the starting address of the region of memory to be freed.
             ///     <para>
-            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>, lpAddress must be
-            ///         the base address returned by the VirtualAllocEx function when the region is reserved.
+            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>,
+            ///         lpAddress must be the base address returned by the VirtualAllocEx
+            ///         function when the region is reserved.
             ///     </para>
             /// </param>
             /// <param name="dwSize">
             ///     The size of the region of memory to free, in bytes.
             ///     <para>
-            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>, dwSize must
-            ///         be 0 (zero). The function frees the entire region that is reserved in the initial
-            ///         allocation call to VirtualAllocEx.
+            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>,
+            ///         dwSize must be 0 (zero). The function frees the entire region that is
+            ///         reserved in the initial allocation call to VirtualAllocEx.
             ///     </para>
             ///     <para>
-            ///         If dwFreeType is <see cref="MemAllocTypes.Decommit"/>, the function decommits all memory
-            ///         pages that contain one or more bytes in the range from the lpAddress parameter to
-            ///         (lpAddress+dwSize). This means, for example, that a 2-byte region of memory that straddles a
-            ///         page boundary causes both pages to be decommitted. If lpAddress is the base address returned by
-            ///         VirtualAllocEx and dwSize is 0 (zero), the function decommits the entire region that is
-            ///         allocated by VirtualAllocEx. After that, the entire region is in the reserved state.
+            ///         If dwFreeType is <see cref="MemAllocTypes.Decommit"/>, the function
+            ///         decommits all memory pages that contain one or more bytes in the range
+            ///         from the lpAddress parameter to (lpAddress+dwSize). This means, for
+            ///         example, that a 2-byte region of memory that straddles a page boundary
+            ///         causes both pages to be decommitted. If lpAddress is the base address
+            ///         returned by VirtualAllocEx and dwSize is 0 (zero), the function
+            ///         decommits the entire region that is allocated by VirtualAllocEx. After
+            ///         that, the entire region is in the reserved state.
             ///     </para>
             /// </param>
             /// <param name="dwFreeType">
@@ -5387,8 +5724,8 @@ namespace SilDev
             ///     A handle to the window.
             /// </param>
             /// <param name="vRect">
-            ///     A pointer to a <see cref="Rectangle"/> structure that receives the best screen coordinates of the
-            ///     upper-left and lower-right corners of the window.
+            ///     A pointer to a <see cref="Rectangle"/> structure that receives the best
+            ///     screen coordinates of the upper-left and lower-right corners of the window.
             /// </param>
             public static bool WindowIsOutOfScreenArea(IntPtr hWnd, out Rectangle vRect)
             {
@@ -5445,8 +5782,8 @@ namespace SilDev
                 WindowIsOutOfScreenArea(hWnd, out var _);
 
             /// <summary>
-            ///     Writes data to an area of memory in a specified process. The entire area to be written to must be
-            ///     accessible or the operation fails.
+            ///     Writes data to an area of memory in a specified process. The entire area to
+            ///     be written to must be accessible or the operation fails.
             /// </summary>
             /// <param name="hProcess">
             ///     A handle to the process memory to be modified. The handle must have
@@ -5454,19 +5791,22 @@ namespace SilDev
             ///     <see cref="AccessRights.ProcessVmOperation"/> access to the process.
             /// </param>
             /// <param name="lpBaseAddress">
-            ///     A pointer to the base address in the specified process to which data is written. Before data transfer
-            ///     occurs, the system verifies that all data in the base address and memory of the specified size is
-            ///     accessible for write access, and if it is not accessible, the function fails.
+            ///     A pointer to the base address in the specified process to which data is
+            ///     written. Before data transfer occurs, the system verifies that all data in
+            ///     the base address and memory of the specified size is accessible for write
+            ///     access, and if it is not accessible, the function fails.
             /// </param>
             /// <param name="lpBuffer">
-            ///     A pointer to the buffer that contains data to be written in the address space of the specified process.
+            ///     A pointer to the buffer that contains data to be written in the address
+            ///     space of the specified process.
             /// </param>
             /// <param name="nSize">
             ///     The number of bytes to be written to the specified process.
             /// </param>
             /// <param name="lpNumberOfBytesWritten">
-            ///     A pointer to a variable that receives the number of bytes transferred into the specified process. This
-            ///     parameter is optional. If lpNumberOfBytesWritten is NULL, the parameter is ignored.
+            ///     A pointer to a variable that receives the number of bytes transferred into
+            ///     the specified process. This parameter is optional. If
+            ///     lpNumberOfBytesWritten is <see langword="null"/>, the parameter is ignored.
             /// </param>
             public static bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, int nSize, out IntPtr lpNumberOfBytesWritten) =>
                 NativeMethods.WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, out lpNumberOfBytesWritten);
@@ -5479,44 +5819,57 @@ namespace SilDev
         internal static class NativeMethods
         {
             /// <summary>
-            ///     Enables or disables privileges in the specified access token. Enabling or disabling privileges in
-            ///     an access token requires <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access.
+            ///     Enables or disables privileges in the specified access token. Enabling or
+            ///     disabling privileges in an access token requires
+            ///     <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access.
             /// </summary>
             /// <param name="tokenHandle">
-            ///     A handle to the access token that contains the privileges to be modified. The handle must have
-            ///     <see cref="AccessTokenFlags.TokenAdjustPrivileges"/> access to the token. If the PreviousState
-            ///     parameter is not NULL, the handle must also have <see cref="AccessTokenFlags.TokenQuery"/> access.
+            ///     A handle to the access token that contains the privileges to be modified.
+            ///     The handle must have <see cref="AccessTokenFlags.TokenAdjustPrivileges"/>
+            ///     access to the token. If the PreviousState parameter is not
+            ///     <see langword="null"/>, the handle must also have
+            ///     <see cref="AccessTokenFlags.TokenQuery"/> access.
             /// </param>
             /// <param name="disableAllPrivileges">
-            ///     Specifies whether the function disables all of the token's privileges. If this value is TRUE, the
-            ///     function disables all privileges and ignores the NewState parameter. If it is FALSE, the function
-            ///     modifies privileges based on the information pointed to by the NewState parameter.
+            ///     Specifies whether the function disables all of the token's privileges. If
+            ///     this value is <see langword="true"/>, the function disables all privileges
+            ///     and ignores the NewState parameter. If it is <see langword="false"/>, the
+            ///     function modifies privileges based on the information pointed to by the
+            ///     NewState parameter.
             /// </param>
             /// <param name="newState">
-            ///     A pointer to a <see cref="TokenPrivileges"/> structure that specifies an array of privileges and their
-            ///     attributes. If the disableAllPrivileges parameter is FALSE, the AdjustTokenPrivileges function
-            ///     enables, disables, or removes these privileges for the token. The following table describes the
-            ///     action taken by the AdjustTokenPrivileges function, based on the privilege attribute. If
-            ///     disableAllPrivileges is TRUE, the function ignores this parameter.
+            ///     A pointer to a <see cref="TokenPrivileges"/> structure that specifies an
+            ///     array of privileges and their attributes. If the disableAllPrivileges
+            ///     parameter is <see langword="false"/>, the AdjustTokenPrivileges function
+            ///     enables, disables, or removes these privileges for the token. The following
+            ///     table describes the action taken by the AdjustTokenPrivileges function,
+            ///     based on the privilege attribute. If disableAllPrivileges is
+            ///     <see langword="true"/>, the function ignores this parameter.
             /// </param>
             /// <param name="bufferLength">
-            ///     Specifies the size, in bytes, of the buffer pointed to by the PreviousState parameter. This parameter
-            ///     can be zero if the PreviousState parameter is NULL.
+            ///     Specifies the size, in bytes, of the buffer pointed to by the PreviousState
+            ///     parameter. This parameter can be zero if the PreviousState parameter is
+            ///     <see langword="null"/>.
             /// </param>
             /// <param name="previousState">
-            ///     A pointer to a buffer that the function fills with a <see cref="TokenPrivileges"/> structure that
-            ///     contains the previous state of any privileges that the function modifies. That is, if a privilege
-            ///     has been modified by this function, the privilege and its previous state are contained in the
-            ///     <see cref="TokenPrivileges"/> structure referenced by PreviousState. If the PrivilegeCount member
-            ///     of <see cref="TokenPrivileges"/> is zero, then no privileges have been changed by this function.
-            ///     This parameter can be NULL. If you specify a buffer that is too small to receive the complete list
-            ///     of modified privileges, the function fails and does not adjust any privileges. In this case, the
-            ///     function sets the variable pointed to by the returnLength parameter to the number of bytes required
-            ///     to hold the complete list of modified privileges.
+            ///     A pointer to a buffer that the function fills with a
+            ///     <see cref="TokenPrivileges"/> structure that contains the previous state of
+            ///     any privileges that the function modifies. That is, if a privilege has been
+            ///     modified by this function, the privilege and its previous state are
+            ///     contained in the <see cref="TokenPrivileges"/> structure referenced by
+            ///     PreviousState. If the PrivilegeCount member of
+            ///     <see cref="TokenPrivileges"/> is zero, then no privileges have been changed
+            ///     by this function. This parameter can be <see langword="null"/>. If you
+            ///     specify a buffer that is too small to receive the complete list of modified
+            ///     privileges, the function fails and does not adjust any privileges. In this
+            ///     case, the function sets the variable pointed to by the returnLength
+            ///     parameter to the number of bytes required to hold the complete list of
+            ///     modified privileges.
             /// </param>
             /// <param name="returnLength">
-            ///     A pointer to a variable that receives the required size, in bytes, of the buffer pointed to by the
-            ///     previousState parameter. This parameter can be NULL if previousState is NULL.
+            ///     A pointer to a variable that receives the required size, in bytes, of the
+            ///     buffer pointed to by the previousState parameter. This parameter can be
+            ///     <see langword="null"/> if previousState is <see langword="null"/>.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -5534,15 +5887,16 @@ namespace SilDev
             internal static extern int AllocConsole();
 
             /// <summary>
-            ///     Enables you to produce special effects when showing or hiding windows. There are four types of
-            ///     animation: roll, slide, collapse or expand, and alpha-blended fade.
+            ///     Enables you to produce special effects when showing or hiding windows.
+            ///     There are four types of animation: roll, slide, collapse or expand, and
+            ///     alpha-blended fade.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window to animate. The calling thread must own this window.
             /// </param>
             /// <param name="time">
-            ///     The time it takes to play the animation, in milliseconds. Typically, an animation takes 200
-            ///     milliseconds to play.
+            ///     The time it takes to play the animation, in milliseconds. Typically, an
+            ///     animation takes 200 milliseconds to play.
             /// </param>
             /// <param name="flags">
             ///     The type of animation.
@@ -5554,41 +5908,46 @@ namespace SilDev
             internal static extern bool AnimateWindow(IntPtr hWnd, int time, AnimateWindowFlags flags);
 
             /// <summary>
-            ///     Passes the hook information to the next hook procedure in the current hook chain. A hook
-            ///     procedure can call this function either before or after processing the hook information.
+            ///     Passes the hook information to the next hook procedure in the current hook
+            ///     chain. A hook procedure can call this function either before or after
+            ///     processing the hook information.
             /// </summary>
             /// <param name="hhk">
             ///     This parameter is ignored.
             /// </param>
             /// <param name="nCode">
-            ///     The hook code passed to the current hook procedure. The next hook procedure uses this code
-            ///     to determine how to process the hook information.
+            ///     The hook code passed to the current hook procedure. The next hook procedure
+            ///     uses this code to determine how to process the hook information.
             /// </param>
             /// <param name="wParam">
-            ///     The wParam value passed to the current hook procedure. The meaning of this parameter
-            ///     depends on the type of hook associated with the current hook chain.
+            ///     The wParam value passed to the current hook procedure. The meaning of this
+            ///     parameter depends on the type of hook associated with the current hook
+            ///     chain.
             /// </param>
             /// <param name="lParam">
-            ///     The lParam value passed to the current hook procedure. The meaning of this parameter
-            ///     depends on the type of hook associated with the current hook chain.
+            ///     The lParam value passed to the current hook procedure. The meaning of this
+            ///     parameter depends on the type of hook associated with the current hook
+            ///     chain.
             /// </param>
             /// <returns>
-            ///     This value is returned by the next hook procedure in the chain. The current hook procedure
-            ///     must also return this value. The meaning of the return value depends on the hook type.
+            ///     This value is returned by the next hook procedure in the chain. The current
+            ///     hook procedure must also return this value. The meaning of the return value
+            ///     depends on the hook type.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
             /// <summary>
-            ///     The ClientToScreen function converts the client-area coordinates of a specified point to screen
-            ///     coordinates.
+            ///     The ClientToScreen function converts the client-area coordinates of a
+            ///     specified point to screen coordinates.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose client area is used for the conversion.
             /// </param>
             /// <param name="lpPoint">
-            ///     A pointer to a <see cref="Point"/> structure that contains the client coordinates to be converted.
-            ///     The new screen coordinates are copied into this structure if the function succeeds.
+            ///     A pointer to a <see cref="Point"/> structure that contains the client
+            ///     coordinates to be converted. The new screen coordinates are copied into
+            ///     this structure if the function succeeds.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -5612,9 +5971,10 @@ namespace SilDev
             ///     Closes a handle to a service control manager or service object.
             /// </summary>
             /// <param name="hScObject">
-            ///     A handle to the service control manager object or the service object to close. Handles to
-            ///     service control manager objects are returned by the OpenSCManager function, and handles to
-            ///     service objects are returned by either the OpenService or CreateService function.
+            ///     A handle to the service control manager object or the service object to
+            ///     close. Handles to service control manager objects are returned by the
+            ///     OpenSCManager function, and handles to service objects are returned by
+            ///     either the OpenService or CreateService function.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -5626,7 +5986,8 @@ namespace SilDev
             ///     Sends a control code to a service.
             /// </summary>
             /// <param name="hService">
-            ///     A handle to the service. This handle is returned by the OpenService or CreateService function.
+            ///     A handle to the service. This handle is returned by the OpenService or
+            ///     CreateService function.
             /// </param>
             /// <param name="dwControl">
             /// </param>
@@ -5638,75 +5999,86 @@ namespace SilDev
             internal static extern int ControlService(IntPtr hService, ServiceControlOptions dwControl, ServiceStatus lpServiceStatus);
 
             /// <summary>
-            ///     Creates a new process and its primary thread. The new process runs in the security context
-            ///     of the specified token. It can optionally load the user profile for the specified user.
+            ///     Creates a new process and its primary thread. The new process runs in the
+            ///     security context of the specified token. It can optionally load the user
+            ///     profile for the specified user.
             /// </summary>
             /// <param name="hToken">
-            ///     A handle to the primary token that represents a user. The handle must have the
-            ///     <see cref="AccessTokenFlags.TokenQuery"/>, <see cref="AccessTokenFlags.TokenDuplicate"/>,
-            ///     and <see cref="AccessTokenFlags.TokenAssignPrimary"/> access rights. The user represented
-            ///     by the token must have read and execute access to the application specified by the
-            ///     lpApplicationName or the lpCommandLine parameter.
+            ///     A handle to the primary token that represents a user. The handle must have
+            ///     the <see cref="AccessTokenFlags.TokenQuery"/>,
+            ///     <see cref="AccessTokenFlags.TokenDuplicate"/>, and
+            ///     <see cref="AccessTokenFlags.TokenAssignPrimary"/> access rights. The user
+            ///     represented by the token must have read and execute access to the
+            ///     application specified by the lpApplicationName or the lpCommandLine
+            ///     parameter.
             /// </param>
             /// <param name="dwLogonFlags">
             ///     The logon option.
             /// </param>
             /// <param name="lpApplicationName">
-            ///     The name of the module to be executed. This module can be a Windows-based application. It
-            ///     can be some other type of module (for example, MS-DOS or OS/2) if the appropriate subsystem
-            ///     is available on the local computer.
+            ///     The name of the module to be executed. This module can be a Windows-based
+            ///     application. It can be some other type of module (for example, MS-DOS or
+            ///     OS/2) if the appropriate subsystem is available on the local computer.
             ///     <para>
-            ///         The string can specify the full path and file name of the module to execute or it can
-            ///         specify a partial name. In the case of a partial name, the function uses the current
-            ///         drive and current directory to complete the specification. The function will not use
-            ///         the search path. This parameter must include the file name extension; no default
+            ///         The string can specify the full path and file name of the module to
+            ///         execute or it can specify a partial name. In the case of a partial
+            ///         name, the function uses the current drive and current directory to
+            ///         complete the specification. The function will not use the search path.
+            ///         This parameter must include the file name extension; no default
             ///         extension is assumed.
             ///     </para>
             ///     <para>
-            ///         The lpApplicationName parameter can be NULL. In that case, the module name must be the
-            ///         first white space–delimited token in the lpCommandLine string. If you are using a long
-            ///         file name that contains a space, use quoted strings to indicate where the file name ends
-            ///         and the arguments begin; otherwise, the file name is ambiguous.
+            ///         The lpApplicationName parameter can be <see langword="null"/>. In that
+            ///         case, the module name must be the first white space–delimited token in
+            ///         the lpCommandLine string. If you are using a long file name that
+            ///         contains a space, use quoted strings to indicate where the file name
+            ///         ends and the arguments begin; otherwise, the file name is ambiguous.
             ///     </para>
             /// </param>
             /// <param name="lpCommandLine">
-            ///     The command line to be executed. The maximum length of this string is 1024 characters. If
-            ///     lpApplicationName is NULL, the module name portion of lpCommandLine is limited to 255
-            ///     characters.
+            ///     The command line to be executed. The maximum length of this string is 1024
+            ///     characters. If lpApplicationName is <see langword="null"/>, the module name
+            ///     portion of lpCommandLine is limited to 255 characters.
             ///     <para>
-            ///         The lpCommandLine parameter can be NULL. In that case, the function uses the string
-            ///         pointed to by lpApplicationName as the command line.
+            ///         The lpCommandLine parameter can be <see langword="null"/>. In that
+            ///         case, the function uses the string pointed to by lpApplicationName as
+            ///         the command line.
             ///     </para>
             /// </param>
             /// <param name="dwCreationFlags">
             ///     The flags that control how the process is created.
             /// </param>
             /// <param name="lpEnvironment">
-            ///     A pointer to an environment block for the new process. If this parameter is NULL, the new
-            ///     process uses an environment created from the profile of the user specified by lpUsername.
+            ///     A pointer to an environment block for the new process. If this parameter is
+            ///     <see langword="null"/>, the new process uses an environment created from
+            ///     the profile of the user specified by lpUsername.
             /// </param>
             /// <param name="lpCurrentDirectory">
-            ///     The full path to the current directory for the process. The string can also specify a UNC path.
+            ///     The full path to the current directory for the process. The string can also
+            ///     specify a UNC path.
             ///     <para>
-            ///         If this parameter is NULL, the new process will have the same current drive and directory
-            ///         as the calling process. (This feature is provided primarily for shells that need to start
-            ///         an application and specify its initial drive and working directory.)
+            ///         If this parameter is <see langword="null"/>, the new process will have
+            ///         the same current drive and directory as the calling process. (This
+            ///         feature is provided primarily for shells that need to start an
+            ///         application and specify its initial drive and working directory.)
             ///     </para>
             /// </param>
             /// <param name="lpStartupInfo">
             ///     A pointer to a <see cref="StartupInfo"/> structure.
             ///     <para>
-            ///         If the lpDesktop member is NULL or an empty string, the new process inherits the desktop
-            ///         and window station of its parent process. The function adds permission for the specified
-            ///         user account to the inherited window station and desktop. Otherwise, if this member
-            ///         specifies a desktop, it is the responsibility of the application to add permission for
-            ///         the specified user account to the specified window station and desktop, even for
-            ///         WinSta0\Default.
+            ///         If the lpDesktop member is <see langword="null"/> or an empty string,
+            ///         the new process inherits the desktop and window station of its parent
+            ///         process. The function adds permission for the specified user account to
+            ///         the inherited window station and desktop. Otherwise, if this member
+            ///         specifies a desktop, it is the responsibility of the application to add
+            ///         permission for the specified user account to the specified window
+            ///         station and desktop, even for WinSta0\Default.
             ///     </para>
             /// </param>
             /// <param name="lpProcessInformation">
-            ///     A pointer to a <see cref="ProcessInformation"/> structure that receives identification
-            ///     information for the new process, including a handle to the process.
+            ///     A pointer to a <see cref="ProcessInformation"/> structure that receives
+            ///     identification information for the new process, including a handle to the
+            ///     process.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -5715,70 +6087,78 @@ namespace SilDev
             internal static extern bool CreateProcessWithTokenW(IntPtr hToken, LogonOptions dwLogonFlags, string lpApplicationName, string lpCommandLine, CreationFlags dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory, ref StartupInfo lpStartupInfo, out ProcessInformation lpProcessInformation);
 
             /// <summary>
-            ///     Creates a service object and adds it to the specified service control manager database.
+            ///     Creates a service object and adds it to the specified service control
+            ///     manager database.
             /// </summary>
             /// <param name="hScManager">
-            ///     A handle to the service control manager database. This handle is returned by the OpenSCManager
-            ///     function and must have the <see cref="ServiceManagerAccessRights.CreateService"/>
-            ///     access right.
+            ///     A handle to the service control manager database. This handle is returned
+            ///     by the OpenSCManager function and must have the
+            ///     <see cref="ServiceManagerAccessRights.CreateService"/> access right.
             /// </param>
             /// <param name="lpServiceName">
-            ///     The name of the service to install. The maximum string length is 256 characters. The service
-            ///     control manager database preserves the case of the characters, but service name comparisons
-            ///     are always case insensitive. Forward-slash (/) and backslash (\) are not valid service name
-            ///     characters.
+            ///     The name of the service to install. The maximum string length is 256
+            ///     characters. The service control manager database preserves the case of the
+            ///     characters, but service name comparisons are always case insensitive.
+            ///     Forward-slash (/) and backslash (\) are not valid service name characters.
             /// </param>
             /// <param name="lpDisplayName">
-            ///     The display name to be used by user interface programs to identify the service. This string
-            ///     has a maximum length of 256 characters. The name is case-preserved in the service control
-            ///     manager. Display name comparisons are always case-insensitive.
+            ///     The display name to be used by user interface programs to identify the
+            ///     service. This string has a maximum length of 256 characters. The name is
+            ///     case-preserved in the service control manager. Display name comparisons are
+            ///     always case-insensitive.
             /// </param>
             /// <param name="dwDesiredAccess">
-            ///     The access to the service. Before granting the requested access, the system checks the access
-            ///     token of the calling process.
+            ///     The access to the service. Before granting the requested access, the system
+            ///     checks the access token of the calling process.
             /// </param>
             /// <param name="dwServiceType">
             ///     The service type.
             /// </param>
             /// <param name="dwStartType">
-            ///     The service start options. This parameter can be one of the following values.
+            ///     The service start options. This parameter can be one of the following
+            ///     values.
             /// </param>
             /// <param name="dwErrorControl">
-            ///     The severity of the error, and action taken, if this service fails to start. This parameter
-            ///     can be one of the following values.
+            ///     The severity of the error, and action taken, if this service fails to
+            ///     start. This parameter can be one of the following values.
             /// </param>
             /// <param name="lpBinaryPathName">
-            ///     The fully qualified path to the service binary file. If the path contains a space, it must be
-            ///     quoted so that it is correctly interpreted. For example, "d:\\my share\\myservice.exe" should
-            ///     be specified as "\"d:\\my share\\myservice.exe\"".
+            ///     The fully qualified path to the service binary file. If the path contains a
+            ///     space, it must be quoted so that it is correctly interpreted. For example,
+            ///     "d:\\my share\\myservice.exe" should be specified as "\"d:\\my
+            ///     share\\myservice.exe\"".
             ///     <para>
-            ///         The path can also include arguments for an auto-start service. For example,
-            ///         "d:\\myshare\\myservice.exe arg1 arg2". These arguments are passed to the service entry
-            ///         point (typically the main function).
+            ///         The path can also include arguments for an auto-start service. For
+            ///         example, "d:\\myshare\\myservice.exe arg1 arg2". These arguments are
+            ///         passed to the service entry point (typically the main function).
             ///     </para>
             ///     <para>
-            ///         If you specify a path on another computer, the share must be accessible by the computer
-            ///         account of the local computer because this is the security context used in the remote
-            ///         call. However, this requirement allows any potential vulnerabilities in the remote
-            ///         computer to affect the local computer. Therefore, it is best to use a local file.
+            ///         If you specify a path on another computer, the share must be accessible
+            ///         by the computer account of the local computer because this is the
+            ///         security context used in the remote call. However, this requirement
+            ///         allows any potential vulnerabilities in the remote computer to affect
+            ///         the local computer. Therefore, it is best to use a local file.
             ///     </para>
             /// </param>
             /// <param name="lpLoadOrderGroup">
-            ///     The names of the load ordering group of which this service is a member. Specify NULL or an
-            ///     empty string if the service does not belong to a group.
+            ///     The names of the load ordering group of which this service is a member.
+            ///     Specify <see langword="null"/> or an empty string if the service does not
+            ///     belong to a group.
             ///     <para>
-            ///         The startup program uses load ordering groups to load groups of services in a specified
-            ///         order with respect to the other groups. The list of load ordering groups is contained in
-            ///         the following registry value:
+            ///         The startup program uses load ordering groups to load groups of
+            ///         services in a specified order with respect to the other groups. The
+            ///         list of load ordering groups is contained in the following registry
+            ///         value:
             ///         "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\ServiceGroupOrder"
             ///     </para>
             /// </param>
             /// <param name="lpdwTagId">
-            ///     A pointer to a variable that receives a tag value that is unique in the group specified in
-            ///     the lpLoadOrderGroup parameter. Specify NULL if you are not changing the existing tag.
+            ///     A pointer to a variable that receives a tag value that is unique in the
+            ///     group specified in the lpLoadOrderGroup parameter. Specify
+            ///     <see langword="null"/> if you are not changing the existing tag.
             ///     <para>
-            ///         You can use a tag for ordering service startup within a load ordering group by specifying
-            ///         a tag order vector in the following registry value:
+            ///         You can use a tag for ordering service startup within a load ordering
+            ///         group by specifying a tag order vector in the following registry value:
             ///         "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\GroupOrderList"
             ///     </para>
             ///     <para>
@@ -5788,30 +6168,34 @@ namespace SilDev
             ///     </para>
             /// </param>
             /// <param name="lpDependencies">
-            ///     A pointer to a double null-terminated array of null-separated names of services or load
-            ///     ordering groups that the system must start before this service. Specify NULL or an empty
-            ///     string if the service has no dependencies. Dependency on a group means that this service
-            ///     can run if at least one member of the group is running after an attempt to start all members
-            ///     of the group.
+            ///     A pointer to a double null-terminated array of null-separated names of
+            ///     services or load ordering groups that the system must start before this
+            ///     service. Specify <see langword="null"/> or an empty string if the service
+            ///     has no dependencies. Dependency on a group means that this service can run
+            ///     if at least one member of the group is running after an attempt to start
+            ///     all members of the group.
             ///     <para>
-            ///         You must prefix group names with SC_GROUP_IDENTIFIER so that they can be distinguished
-            ///         from a service name, because services and service groups share the same name space.
+            ///         You must prefix group names with SC_GROUP_IDENTIFIER so that they can
+            ///         be distinguished from a service name, because services and service
+            ///         groups share the same name space.
             ///     </para>
             /// </param>
             /// <param name="lpServiceStartName">
-            ///     The name of the account under which the service should run. If the service type is
-            ///     <see cref="ServiceTypes.Win32OwnProcess"/>, use an account name in the form
-            ///     DomainName\UserName. The service process will be logged on as this user. If the account
-            ///     belongs to the built-in domain, you can specify .\UserName.
+            ///     The name of the account under which the service should run. If the service
+            ///     type is <see cref="ServiceTypes.Win32OwnProcess"/>, use an account name in
+            ///     the form DomainName\UserName. The service process will be logged on as this
+            ///     user. If the account belongs to the built-in domain, you can specify
+            ///     .\UserName.
             ///     <para>
-            ///         If this parameter is NULL, CreateService uses the LocalSystem account. If the service
-            ///         type specifies <see cref="ServiceTypes.InteractiveProcess"/>, the service
-            ///         must run in the LocalSystem account.
+            ///         If this parameter is <see langword="null"/>, CreateService uses the
+            ///         LocalSystem account. If the service type specifies
+            ///         <see cref="ServiceTypes.InteractiveProcess"/>, the service must run in
+            ///         the LocalSystem account.
             ///     </para>
             ///     <para>
-            ///         If this parameter is NT AUTHORITY\LocalService, CreateService uses the LocalService
-            ///         account. If the parameter is NT AUTHORITY\NetworkService, CreateService uses the
-            ///         NetworkService account.
+            ///         If this parameter is NT AUTHORITY\LocalService, CreateService uses the
+            ///         LocalService account. If the parameter is NT AUTHORITY\NetworkService,
+            ///         CreateService uses the NetworkService account.
             ///     </para>
             ///     <para>
             ///         A shared process can run as any user.
@@ -5819,24 +6203,28 @@ namespace SilDev
             ///     <para>
             ///         If the service type is <see cref="ServiceTypes.KernelDriver"/> or
             ///         <see cref="ServiceTypes.FileSystemDriver"/>, the name is the driver
-            ///         object name that the system uses to load the device driver. Specify NULL if the driver
-            ///         is to use a default object name created by the I/O system.
+            ///         object name that the system uses to load the device driver. Specify
+            ///         <see langword="null"/> if the driver is to use a default object name
+            ///         created by the I/O system.
             ///     </para>
             ///     <para>
-            ///         A service can be configured to use a managed account or a virtual account. If the
-            ///         service is configured to use a managed service account, the name is the managed service
-            ///         account name. If the service is configured to use a virtual account, specify the name as
-            ///         NT SERVICE\ServiceName. For more information about managed service accounts and virtual
-            ///         accounts, see the Service Accounts Step-by-Step Guide.
+            ///         A service can be configured to use a managed account or a virtual
+            ///         account. If the service is configured to use a managed service account,
+            ///         the name is the managed service account name. If the service is
+            ///         configured to use a virtual account, specify the name as NT
+            ///         SERVICE\ServiceName. For more information about managed service
+            ///         accounts and virtual accounts, see the Service Accounts Step-by-Step
+            ///         Guide.
             ///     </para>
             /// </param>
             /// <param name="lpPassword">
-            ///     The password to the account name specified by the lpServiceStartName parameter. Specify an
-            ///     empty string if the account has no password or if the service runs in the LocalService,
-            ///     NetworkService, or LocalSystem account.
+            ///     The password to the account name specified by the lpServiceStartName
+            ///     parameter. Specify an empty string if the account has no password or if the
+            ///     service runs in the LocalService, NetworkService, or LocalSystem account.
             ///     <para>
-            ///         If the account name specified by the lpServiceStartName parameter is the name of a
-            ///         managed service account or virtual account name, the lpPassword parameter must be NULL.
+            ///         If the account name specified by the lpServiceStartName parameter is
+            ///         the name of a managed service account or virtual account name, the
+            ///         lpPassword parameter must be <see langword="null"/>.
             ///     </para>
             ///     <para>
             ///         Passwords are ignored for driver services.
@@ -5849,8 +6237,9 @@ namespace SilDev
             internal static extern IntPtr CreateService(IntPtr hScManager, [MarshalAs(UnmanagedType.LPStr)] string lpServiceName, [MarshalAs(UnmanagedType.LPStr)] string lpDisplayName, ServiceAccessRights dwDesiredAccess, ServiceTypes dwServiceType, ServiceBootFlags dwStartType, ServiceError dwErrorControl, [MarshalAs(UnmanagedType.LPStr)] string lpBinaryPathName, [MarshalAs(UnmanagedType.LPStr)] string lpLoadOrderGroup, IntPtr lpdwTagId, [MarshalAs(UnmanagedType.LPStr)] string lpDependencies, [MarshalAs(UnmanagedType.LPStr)] string lpServiceStartName, [MarshalAs(UnmanagedType.LPStr)] string lpPassword);
 
             /// <summary>
-            ///     Deletes an item from the specified menu. If the menu item opens a menu or submenu, this function
-            ///     destroys the handle to the menu or submenu and frees the memory used by the menu or submenu.
+            ///     Deletes an item from the specified menu. If the menu item opens a menu or
+            ///     submenu, this function destroys the handle to the menu or submenu and frees
+            ///     the memory used by the menu or submenu.
             /// </summary>
             /// <param name="hMenu">
             ///     A handle to the menu to be changed.
@@ -5859,8 +6248,9 @@ namespace SilDev
             ///     The menu item to be deleted, as determined by the uFlags parameter.
             /// </param>
             /// <param name="wFlags">
-            ///     Indicates how the uPosition parameter is interpreted. This parameter must be
-            ///     <see cref="ModifyMenuFlags.ByCommand"/> or <see cref="ModifyMenuFlags.ByPosition"/>.
+            ///     Indicates how the uPosition parameter is interpreted. This parameter must
+            ///     be <see cref="ModifyMenuFlags.ByCommand"/> or
+            ///     <see cref="ModifyMenuFlags.ByPosition"/>.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -5869,11 +6259,13 @@ namespace SilDev
             internal static extern int DeleteMenu(IntPtr hMenu, uint nPosition, ModifyMenuFlags wFlags);
 
             /// <summary>
-            ///     Marks the specified service for deletion from the service control manager database.
+            ///     Marks the specified service for deletion from the service control manager
+            ///     database.
             /// </summary>
             /// <param name="hService">
-            ///     A handle to the service. This handle is returned by the OpenService or CreateService function,
-            ///     and it must have the <see cref="AccessRights.Delete"/> access right.
+            ///     A handle to the service. This handle is returned by the OpenService or
+            ///     CreateService function, and it must have the
+            ///     <see cref="AccessRights.Delete"/> access right.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -5894,8 +6286,9 @@ namespace SilDev
             internal static extern bool DestroyIcon(IntPtr hIcon);
 
             /// <summary>
-            ///     Redraws the menu bar of the specified window. If the menu bar changes after the system has
-            ///     created the window, this function must be called to draw the changed menu bar.
+            ///     Redraws the menu bar of the specified window. If the menu bar changes after
+            ///     the system has created the window, this function must be called to draw the
+            ///     changed menu bar.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose menu bar is to be redrawn.
@@ -5912,47 +6305,53 @@ namespace SilDev
             /// <param name="hSourceProcessHandle">
             ///     A handle to the process with the handle to be duplicated.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="hSourceHandle">
-            ///     The handle to be duplicated. This is an open object handle that is valid in the context
-            ///     of the source process. For a list of objects whose handles can be duplicated, see the
-            ///     following Remarks section.
+            ///     The handle to be duplicated. This is an open object handle that is valid in
+            ///     the context of the source process. For a list of objects whose handles can
+            ///     be duplicated, see the following Remarks section.
             /// </param>
             /// <param name="hTargetProcessHandle">
             ///     A handle to the process that is to receive the duplicated handle.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessDupHandle"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="lpTargetHandle">
-            ///     A pointer to a variable that receives the duplicate handle. This handle value is valid
-            ///     in the context of the target process.
+            ///     A pointer to a variable that receives the duplicate handle. This handle
+            ///     value is valid in the context of the target process.
             ///     <para>
-            ///         If hSourceHandle is a pseudo handle returned by GetCurrentProcess or GetCurrentThread,
-            ///         DuplicateHandle converts it to a real handle to a process or thread, respectively.
+            ///         If hSourceHandle is a pseudo handle returned by GetCurrentProcess or
+            ///         GetCurrentThread, DuplicateHandle converts it to a real handle to a
+            ///         process or thread, respectively.
             ///     </para>
             ///     <para>
-            ///         If lpTargetHandle is NULL, the function duplicates the handle, but does not return the
-            ///         duplicate handle value to the caller. This behavior exists only for backward
-            ///         compatibility with previous versions of this function. You should not use this feature,
-            ///         as you will lose system resources until the target process terminates.
+            ///         If lpTargetHandle is <see langword="null"/>, the function duplicates
+            ///         the handle, but does not return the duplicate handle value to the
+            ///         caller. This behavior exists only for backward compatibility with
+            ///         previous versions of this function. You should not use this feature, as
+            ///         you will lose system resources until the target process terminates.
             ///     </para>
             /// </param>
             /// <param name="dwDesiredAccess">
-            ///     The access requested for the new handle. For the flags that can be specified for each
-            ///     object type, see the following Remarks section.
+            ///     The access requested for the new handle. For the flags that can be
+            ///     specified for each object type, see the following Remarks section.
             ///     <para>
             ///         This parameter is ignored if the dwOptions parameter specifies the
-            ///         <see cref="DuplicateOption.SameAccess"/> flag. Otherwise, the flags that
-            ///         can be specified depend on the type of object whose handle is to be duplicated.
+            ///         <see cref="DuplicateOption.SameAccess"/> flag. Otherwise, the flags
+            ///         that can be specified depend on the type of object whose handle is to
+            ///         be duplicated.
             ///     </para>
             /// </param>
             /// <param name="bInheritHandle">
-            ///     A variable that indicates whether the handle is inheritable. If TRUE, the duplicate handle
-            ///     can be inherited by new processes created by the target process. If FALSE, the new handle
-            ///     cannot be inherited.
+            ///     A variable that indicates whether the handle is inheritable. If
+            ///     <see langword="true"/>, the duplicate handle can be inherited by new
+            ///     processes created by the target process. If <see langword="false"/>, the
+            ///     new handle cannot be inherited.
             /// </param>
             /// <param name="dwOptions">
             ///     Optional actions. This parameter can be zero, or any combination of
@@ -5969,30 +6368,34 @@ namespace SilDev
             ///     Creates a new access token that duplicates one already in existence.
             /// </summary>
             /// <param name="hExistingToken">
-            ///     A handle to an access token opened with <see cref="AccessTokenFlags.TokenDuplicate"/> access.
+            ///     A handle to an access token opened with
+            ///     <see cref="AccessTokenFlags.TokenDuplicate"/> access.
             /// </param>
             /// <param name="dwDesiredAccess">
             ///     Specifies the requested access rights for the new token.
             /// </param>
             /// <param name="lpTokenAttributes">
-            ///     A pointer to a <see cref="SecurityAttributes"/> structure that specifies a security descriptor
-            ///     for the new token and determines whether child processes can inherit the token. If
-            ///     lpTokenAttributes is NULL, the token gets a default security descriptor and the handle cannot
-            ///     be inherited. If the security descriptor contains a system access control list (SACL), the token
-            ///     gets system security access rights, even if it was not requested in dwDesiredAccess.
+            ///     A pointer to a <see cref="SecurityAttributes"/> structure that specifies a
+            ///     security descriptor for the new token and determines whether child
+            ///     processes can inherit the token. If lpTokenAttributes is
+            ///     <see langword="null"/>, the token gets a default security descriptor and
+            ///     the handle cannot be inherited. If the security descriptor contains a
+            ///     system access control list (SACL), the token gets system security access
+            ///     rights, even if it was not requested in dwDesiredAccess.
             /// </param>
             /// <param name="impersonationLevel">
-            ///     Specifies a value from the <see cref="SecurityImpersonationLevels"/> enumeration that indicates
-            ///     the impersonation level of the new token.
+            ///     Specifies a value from the <see cref="SecurityImpersonationLevels"/>
+            ///     enumeration that indicates the impersonation level of the new token.
             /// </param>
             /// <param name="tokenType">
-            ///     Specifies one of the following values from the <see cref="TokenType"/> enumeration.
+            ///     Specifies one of the following values from the <see cref="TokenType"/>
+            ///     enumeration.
             /// </param>
             /// <param name="phNewToken">
             ///     A pointer to a HANDLE variable that receives the new token.
             ///     <para>
-            ///         When you have finished using the new token, call the <see cref="CloseHandle"/> function
-            ///         to close the token handle.
+            ///         When you have finished using the new token, call the
+            ///         <see cref="CloseHandle"/> function to close the token handle.
             ///     </para>
             /// </param>
             /// <returns>
@@ -6005,30 +6408,34 @@ namespace SilDev
             ///     Creates a new access token that duplicates one already in existence.
             /// </summary>
             /// <param name="hExistingToken">
-            ///     A handle to an access token opened with <see cref="AccessTokenFlags.TokenDuplicate"/> access.
+            ///     A handle to an access token opened with
+            ///     <see cref="AccessTokenFlags.TokenDuplicate"/> access.
             /// </param>
             /// <param name="dwDesiredAccess">
             ///     Specifies the requested access rights for the new token.
             /// </param>
             /// <param name="lpTokenAttributes">
-            ///     A pointer to a <see cref="SecurityAttributes"/> structure that specifies a security descriptor
-            ///     for the new token and determines whether child processes can inherit the token. If
-            ///     lpTokenAttributes is NULL, the token gets a default security descriptor and the handle cannot
-            ///     be inherited. If the security descriptor contains a system access control list (SACL), the token
-            ///     gets system security access rights, even if it was not requested in dwDesiredAccess.
+            ///     A pointer to a <see cref="SecurityAttributes"/> structure that specifies a
+            ///     security descriptor for the new token and determines whether child
+            ///     processes can inherit the token. If lpTokenAttributes is
+            ///     <see langword="null"/>, the token gets a default security descriptor and
+            ///     the handle cannot be inherited. If the security descriptor contains a
+            ///     system access control list (SACL), the token gets system security access
+            ///     rights, even if it was not requested in dwDesiredAccess.
             /// </param>
             /// <param name="impersonationLevel">
-            ///     Specifies a value from the <see cref="SecurityImpersonationLevels"/> enumeration that indicates
-            ///     the impersonation level of the new token.
+            ///     Specifies a value from the <see cref="SecurityImpersonationLevels"/>
+            ///     enumeration that indicates the impersonation level of the new token.
             /// </param>
             /// <param name="tokenType">
-            ///     Specifies one of the following values from the <see cref="TokenType"/> enumeration.
+            ///     Specifies one of the following values from the <see cref="TokenType"/>
+            ///     enumeration.
             /// </param>
             /// <param name="phNewToken">
             ///     A pointer to a HANDLE variable that receives the new token.
             ///     <para>
-            ///         When you have finished using the new token, call the <see cref="CloseHandle"/> function
-            ///         to close the token handle.
+            ///         When you have finished using the new token, call the
+            ///         <see cref="CloseHandle"/> function to close the token handle.
             ///     </para>
             /// </param>
             /// <returns>
@@ -6041,46 +6448,53 @@ namespace SilDev
             ///     Extends the window frame into the client area.
             /// </summary>
             /// <param name="hWnd">
-            ///     The handle to the window in which the frame will be extended into the client area.
+            ///     The handle to the window in which the frame will be extended into the
+            ///     client area.
             /// </param>
             /// <param name="pMarInset">
-            ///     A pointer to a MARGINS structure that describes the margins to use when extending the frame
-            ///     into the client area.
+            ///     A pointer to a MARGINS structure that describes the margins to use when
+            ///     extending the frame into the client area.
             /// </param>
             /// <returns>
-            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an
+            ///     HRESULT error code.
             /// </returns>
             [DllImport(DllNames.Dwmapi, SetLastError = true)]
             internal static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref ThemeMargins pMarInset);
 
             /// <summary>
-            ///     ***This is an undocumented API and as such is not supported by Microsoft and can be changed
-            ///     or removed in the future without futher notice.
+            ///     ***This is an undocumented API and as such is not supported by Microsoft
+            ///     and can be changed or removed in the future without futher notice.
             /// </summary>
             [DllImport(DllNames.Dwmapi, EntryPoint = "#127", PreserveSig = false, SetLastError = true)]
             internal static extern void DwmGetColorizationParameters(out DwmColorizationParams parameters);
 
             /// <summary>
-            ///     Obtains a value that indicates whether Desktop Window Manager (DWM) composition is enabled.
+            ///     Obtains a value that indicates whether Desktop Window Manager (DWM)
+            ///     composition is enabled.
             /// </summary>
             /// <param name="pfEnabled">
-            ///     A pointer to a value that, when this function returns successfully, receives TRUE if DWM
-            ///     composition is enabled; otherwise, FALSE.
+            ///     A pointer to a value that, when this function returns successfully,
+            ///     receives <see langword="true"/> if DWM composition is enabled; otherwise,
+            ///     <see langword="false"/>.
             /// </param>
             /// <returns>
-            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an
+            ///     HRESULT error code.
             /// </returns>
             [DllImport(DllNames.Dwmapi, SetLastError = true)]
             internal static extern int DwmIsCompositionEnabled(ref int pfEnabled);
 
             /// <summary>
-            ///     Destroys a modal dialog box, causing the system to end any processing for the dialog box.
+            ///     Destroys a modal dialog box, causing the system to end any processing for
+            ///     the dialog box.
             /// </summary>
             /// <param name="hDlg">
             ///     A handle to the dialog box to be destroyed.
             /// </param>
             /// <param name="nResult">
-            ///     The value to be returned to the application from the function that created the dialog box.
+            ///     The value to be returned to the application from the function that created
+            ///     the dialog box.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6089,13 +6503,15 @@ namespace SilDev
             internal static extern int EndDialog(IntPtr hDlg, IntPtr nResult);
 
             /// <summary>
-            ///     Enumerates the child windows that belong to the specified parent window by passing the handle
-            ///     to each child window, in turn, to an application-defined callback function. EnumChildWindows
-            ///     continues until the last child window is enumerated or the callback function returns FALSE.
+            ///     Enumerates the child windows that belong to the specified parent window by
+            ///     passing the handle to each child window, in turn, to an application-defined
+            ///     callback function. EnumChildWindows continues until the last child window
+            ///     is enumerated or the callback function returns <see langword="false"/>.
             /// </summary>
             /// <param name="hWndParent">
-            ///     A handle to the parent window whose child windows are to be enumerated. If this parameter is
-            ///     NULL, this function is equivalent to EnumWindows.
+            ///     A handle to the parent window whose child windows are to be enumerated. If
+            ///     this parameter is <see langword="null"/>, this function is equivalent to
+            ///     EnumWindows.
             /// </param>
             /// <param name="lpEnumFunc">
             ///     A pointer to an application-defined callback function.
@@ -6110,8 +6526,9 @@ namespace SilDev
             internal static extern bool EnumChildWindows(IntPtr hWndParent, EnumChildProc lpEnumFunc, IntPtr lParam);
 
             /// <summary>
-            ///     Enumerates all nonchild windows associated with a thread by passing the handle to each window,
-            ///     in turn, to an application-defined callback function.
+            ///     Enumerates all nonchild windows associated with a thread by passing the
+            ///     handle to each window, in turn, to an application-defined callback
+            ///     function.
             /// </summary>
             /// <param name="dwThreadId">
             ///     The identifier of the thread whose windows are to be enumerated.
@@ -6123,50 +6540,61 @@ namespace SilDev
             ///     An application-defined value to be passed to the callback function.
             /// </param>
             /// <returns>
-            ///     If the callback function returns TRUE for all windows in the thread specified by dwThreadId, the
-            ///     return value is TRUE. If the callback function returns FALSE on any enumerated window, or if
-            ///     there are no windows found in the thread specified by dwThreadId, the return value is FALSE.
+            ///     If the callback function returns <see langword="true"/> for all windows in
+            ///     the thread specified by dwThreadId, the return value is
+            ///     <see langword="true"/>. If the callback function returns
+            ///     <see langword="false"/> on any enumerated window, or if there are no
+            ///     windows found in the thread specified by dwThreadId, the return value is
+            ///     <see langword="false"/>.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern bool EnumThreadWindows(uint dwThreadId, EnumThreadWndProc lpfn, IntPtr lParam);
 
             /// <summary>
-            ///     Creates an array of handles to large or small icons extracted from the specified executable
-            ///     file, DLL, or icon file.
+            ///     Creates an array of handles to large or small icons extracted from the
+            ///     specified executable file, DLL, or icon file.
             /// </summary>
             /// <param name="lpszFile">
-            ///     The name of an executable file, DLL, or icon file from which icons will be extracted.
+            ///     The name of an executable file, DLL, or icon file from which icons will be
+            ///     extracted.
             /// </param>
             /// <param name="nIconIndex">
-            ///     The zero-based index of the first icon to extract. For example, if this value is zero, the
-            ///     function extracts the first icon in the specified file.
+            ///     The zero-based index of the first icon to extract. For example, if this
+            ///     value is zero, the function extracts the first icon in the specified file.
             ///     <para>
-            ///         If this value is –1 and phiconLarge and phiconSmall are both NULL, the function returns the
-            ///         total number of icons in the specified file. If the file is an executable file or DLL, the
-            ///         return value is the number of RT_GROUP_ICON resources. If the file is an .ico file, the
-            ///         return value is 1.
+            ///         If this value is –1 and phiconLarge and phiconSmall are both
+            ///         <see langword="null"/>, the function returns the total number of icons
+            ///         in the specified file. If the file is an executable file or DLL, the
+            ///         return value is the number of RT_GROUP_ICON resources. If the file is
+            ///         an .ico file, the return value is 1.
             ///     </para>
             ///     <para>
-            ///         If this value is a negative number and either phiconLarge or phiconSmall is not NULL, the
-            ///         function begins by extracting the icon whose resource identifier is equal to the absolute
-            ///         value of nIconIndex. For example, use -3 to extract the icon whose resource identifier is 3.
+            ///         If this value is a negative number and either phiconLarge or
+            ///         phiconSmall is not <see langword="null"/>, the function begins by
+            ///         extracting the icon whose resource identifier is equal to the absolute
+            ///         value of nIconIndex. For example, use -3 to extract the icon whose
+            ///         resource identifier is 3.
             ///     </para>
             /// </param>
             /// <param name="phiconLarge">
-            ///     An array of icon handles that receives handles to the large icons extracted from the file. If
-            ///     this parameter is NULL, no large icons are extracted from the file.
+            ///     An array of icon handles that receives handles to the large icons extracted
+            ///     from the file. If this parameter is <see langword="null"/>, no large icons
+            ///     are extracted from the file.
             /// </param>
             /// <param name="phiconSmall">
-            ///     An array of icon handles that receives handles to the small icons extracted from the file. If
-            ///     this parameter is NULL, no small icons are extracted from the file.
+            ///     An array of icon handles that receives handles to the small icons extracted
+            ///     from the file. If this parameter is <see langword="null"/>, no small icons
+            ///     are extracted from the file.
             /// </param>
             /// <param name="nIcons">
             ///     The number of icons to be extracted from the file.
             /// </param>
             /// <returns>
-            ///     If the nIconIndex parameter is -1, the phiconLarge parameter is NULL, and the phiconSmall
-            ///     parameter is NULL, then the return value is the number of icons contained in the specified file.
-            ///     Otherwise, the return value is the number of icons successfully extracted from the file.
+            ///     If the nIconIndex parameter is -1, the phiconLarge parameter is
+            ///     <see langword="null"/>, and the phiconSmall parameter is
+            ///     <see langword="null"/>, then the return value is the number of icons
+            ///     contained in the specified file. Otherwise, the return value is the number
+            ///     of icons successfully extracted from the file.
             /// </returns>
             [DllImport(DllNames.Shell32, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             internal static extern int ExtractIconEx([MarshalAs(UnmanagedType.LPStr)] string lpszFile, int nIconIndex, IntPtr[] phiconLarge, IntPtr[] phiconSmall, int nIcons);
@@ -6175,23 +6603,24 @@ namespace SilDev
             ///     Determines the MIME type from the data provided.
             /// </summary>
             /// <param name="pBc">
-            ///     A pointer to the IBindCtx interface. Can be set to NULL.
+            ///     A pointer to the IBindCtx interface. Can be set to <see langword="null"/>.
             /// </param>
             /// <param name="pwzUrl">
-            ///     A pointer to a string value that contains the URL of the data. Can be set to NULL if pBuffer
-            ///     contains the data to be sniffed.
+            ///     A pointer to a string value that contains the URL of the data. Can be set
+            ///     to <see langword="null"/> if pBuffer contains the data to be sniffed.
             /// </param>
             /// <param name="pBuffer">
-            ///     A pointer to the buffer that contains the data to be sniffed. Can be set to NULL if pwzUrl
-            ///     contains a valid URL.
+            ///     A pointer to the buffer that contains the data to be sniffed. Can be set to
+            ///     <see langword="null"/> if pwzUrl contains a valid URL.
             /// </param>
             /// <param name="cbSize">
             ///     An unsigned long integer value that contains the size of the buffer.
             /// </param>
             /// <param name="pwzMimeProposed">
-            ///     A pointer to a string value that contains the proposed MIME type. This value is authoritative if
-            ///     type cannot be determined from the data. If the proposed type contains a semi-colon (;) it is
-            ///     removed. This parameter can be set to NULL.
+            ///     A pointer to a string value that contains the proposed MIME type. This
+            ///     value is authoritative if type cannot be determined from the data. If the
+            ///     proposed type contains a semi-colon (;) it is removed. This parameter can
+            ///     be set to <see langword="null"/>.
             /// </param>
             /// <param name="dwMimeFlags">
             ///     The search and filter options.
@@ -6218,115 +6647,131 @@ namespace SilDev
             ///     </para>
             /// </returns>
             [DllImport(DllNames.Urlmon, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false)]
-            internal static extern int FindMimeFromData(IntPtr pBc, [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)] byte[] pBuffer, int cbSize, [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed, MimeFlags dwMimeFlags, out IntPtr ppwzMimeOut, int dwReserved);
+            internal static extern int FindMimeFromData(IntPtr pBc, [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)]
+                                                        byte[] pBuffer, int cbSize, [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed, MimeFlags dwMimeFlags, out IntPtr ppwzMimeOut, int dwReserved);
 
             /// <summary>
-            ///     Retrieves a handle to the top-level window whose class name and window name match the specified
-            ///     strings. This function does not search child windows. This function does not perform a
-            ///     case-sensitive search.
+            ///     Retrieves a handle to the top-level window whose class name and window name
+            ///     match the specified strings. This function does not search child windows.
+            ///     This function does not perform a case-sensitive search.
             /// </summary>
             /// <param name="lpClassName">
-            ///     The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx
-            ///     function. The atom must be in the low-order word of lpClassName; the high-order word must be zero.
+            ///     The class name or a class atom created by a previous call to the
+            ///     RegisterClass or RegisterClassEx function. The atom must be in the
+            ///     low-order word of lpClassName; the high-order word must be zero.
             ///     <para>
-            ///         If lpClassName points to a string, it specifies the window class name. The class name can be
-            ///         any name registered with RegisterClass or RegisterClassEx, or any of the predefined
-            ///         control-class names.
+            ///         If lpClassName points to a string, it specifies the window class name.
+            ///         The class name can be any name registered with RegisterClass or
+            ///         RegisterClassEx, or any of the predefined control-class names.
             ///     </para>
             ///     <para>
-            ///         If lpClassName is NULL, it finds any window whose title matches the lpWindowName parameter.
+            ///         If lpClassName is <see langword="null"/>, it finds any window whose
+            ///         title matches the lpWindowName parameter.
             ///     </para>
             /// </param>
             /// <param name="lpWindowName">
-            ///     The window name (the window's title). If this parameter is NULL, all window names match.
+            ///     The window name (the window's title). If this parameter is
+            ///     <see langword="null"/>, all window names match.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the window that has the specified class
-            ///     name and window name.
+            ///     If the function succeeds, the return value is a handle to the window that
+            ///     has the specified class name and window name.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "FindWindowA", CallingConvention = CallingConvention.StdCall, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             internal static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPStr)] string lpClassName, [MarshalAs(UnmanagedType.LPStr)] string lpWindowName);
 
             /// <summary>
-            ///     Retrieves a handle to the top-level window whose window name match the specified strings. This
-            ///     function does not search child windows. This function does not perform a case-sensitive search.
+            ///     Retrieves a handle to the top-level window whose window name match the
+            ///     specified strings. This function does not search child windows. This
+            ///     function does not perform a case-sensitive search.
             /// </summary>
             /// <param name="zeroOnly">
             ///     Must be <see cref="IntPtr.Zero"/>.
             /// </param>
             /// <param name="lpWindowName">
-            ///     The window name (the window's title). If this parameter is NULL, all window names match.
+            ///     The window name (the window's title). If this parameter is
+            ///     <see langword="null"/>, all window names match.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the window that has the specified window
-            ///     name.
+            ///     If the function succeeds, the return value is a handle to the window that
+            ///     has the specified window name.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "FindWindow", SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern IntPtr FindWindowByCaption(IntPtr zeroOnly, string lpWindowName);
 
             /// <summary>
-            ///     Retrieves a handle to a window whose class name and window name match the specified strings. The
-            ///     function searches child windows, beginning with the one following the specified child window. This
-            ///     function does not perform a case-sensitive search.
+            ///     Retrieves a handle to a window whose class name and window name match the
+            ///     specified strings. The function searches child windows, beginning with the
+            ///     one following the specified child window. This function does not perform a
+            ///     case-sensitive search.
             /// </summary>
             /// <param name="hWndParent">
             ///     A handle to the parent window whose child windows are to be searched.
             ///     <para>
-            ///         If hWndParent is NULL, the function uses the desktop window as the parent window. The function
-            ///         searches among windows that are child windows of the desktop.
+            ///         If hWndParent is <see langword="null"/>, the function uses the desktop
+            ///         window as the parent window. The function searches among windows that
+            ///         are child windows of the desktop.
             ///     </para>
             ///     <para>
-            ///         If hWndParent is HWND_MESSAGE, the function searches all message-only windows.
+            ///         If hWndParent is HWND_MESSAGE, the function searches all message-only
+            ///         windows.
             ///     </para>
             /// </param>
             /// <param name="hWndChildAfter">
-            ///     A handle to a child window. The search begins with the next child window in the Z order. The child
-            ///     window must be a direct child window of hWndParent, not just a descendant window.
+            ///     A handle to a child window. The search begins with the next child window in
+            ///     the Z order. The child window must be a direct child window of hWndParent,
+            ///     not just a descendant window.
             ///     <para>
-            ///         If hWndChildAfter is NULL, the search begins with the first child window of hWndParent.
+            ///         If hWndChildAfter is <see langword="null"/>, the search begins with the
+            ///         first child window of hWndParent.
             ///     </para>
             ///     <para>
-            ///         Note that if both hWndParent and hWndChildAfter are NULL, the function searches all top-level
-            ///         and message-only windows.
+            ///         Note that if both hWndParent and hWndChildAfter are
+            ///         <see langword="null"/>, the function searches all top-level and
+            ///         message-only windows.
             ///     </para>
             /// </param>
             /// <param name="lpszClass">
-            ///     The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx
-            ///     function. The atom must be placed in the low-order word of lpszClass; the high-order word must be
-            ///     zero.
+            ///     The class name or a class atom created by a previous call to the
+            ///     RegisterClass or RegisterClassEx function. The atom must be placed in the
+            ///     low-order word of lpszClass; the high-order word must be zero.
             ///     <para>
-            ///         If lpszClass is a string, it specifies the window class name. The class name can be any name
-            ///         registered with RegisterClass or RegisterClassEx, or any of the predefined control-class names,
-            ///         or it can be MAKEINTATOM (0x8000). In this latter case, 0x8000 is the atom for a menu class. For
+            ///         If lpszClass is a string, it specifies the window class name. The class
+            ///         name can be any name registered with RegisterClass or RegisterClassEx,
+            ///         or any of the predefined control-class names, or it can be MAKEINTATOM
+            ///         (0x8000). In this latter case, 0x8000 is the atom for a menu class. For
             ///         more information, see the Remarks section of this topic.
             ///     </para>
             /// </param>
             /// <param name="lpszWindow">
-            ///     The window name (the window's title). If this parameter is NULL, all window names match.
+            ///     The window name (the window's title). If this parameter is
+            ///     <see langword="null"/>, all window names match.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the window that has the specified class and
-            ///     window names.
+            ///     If the function succeeds, the return value is a handle to the window that
+            ///     has the specified class and window names.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "FindWindowExA", CallingConvention = CallingConvention.StdCall, BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             internal static extern IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hWndChildAfter, [MarshalAs(UnmanagedType.LPStr)] string lpszClass, [MarshalAs(UnmanagedType.LPStr)] string lpszWindow);
 
             /// <summary>
-            ///     Determines whether a key is up or down at the time the function is called, and whether the
-            ///     key was pressed after a previous call to <see cref="GetAsyncKeyState"/>.
+            ///     Determines whether a key is up or down at the time the function is called,
+            ///     and whether the key was pressed after a previous call to
+            ///     <see cref="GetAsyncKeyState"/>.
             /// </summary>
             /// <param name="vKey">
             ///     The virtual-key code.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value specifies whether the key was pressed since the
-            ///     last call to <see cref="GetAsyncKeyState"/>, and whether the key is currently up or down.
-            ///     If the most significant bit is set, the key is down, and if the least significant bit is
-            ///     set, the key was pressed after the previous call to <see cref="GetAsyncKeyState"/>.
+            ///     If the function succeeds, the return value specifies whether the key was
+            ///     pressed since the last call to <see cref="GetAsyncKeyState"/>, and whether
+            ///     the key is currently up or down. If the most significant bit is set, the
+            ///     key is down, and if the least significant bit is set, the key was pressed
+            ///     after the previous call to <see cref="GetAsyncKeyState"/>.
             ///     <para>
-            ///         The return value is zero if the current desktop is not the active desktop, or if the
-            ///         foreground thread belongs to another process and the desktop does not allow the hook or
-            ///         the journal record.
+            ///         The return value is zero if the current desktop is not the active
+            ///         desktop, or if the foreground thread belongs to another process and the
+            ///         desktop does not allow the hook or the journal record.
             ///     </para>
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Unicode)]
@@ -6336,33 +6781,37 @@ namespace SilDev
             ///     Retrieves the name of the class to which the specified window belongs.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window belongs.
+            ///     A handle to the window and, indirectly, the class to which the window
+            ///     belongs.
             /// </param>
             /// <param name="lpClassName">
             ///     The class name string.
             /// </param>
             /// <param name="nMaxCount">
-            ///     The length of the lpClassName buffer, in characters. The buffer must be large enough to include the
-            ///     terminating null character; otherwise, the class name string is truncated to nMaxCount-1 characters.
+            ///     The length of the lpClassName buffer, in characters. The buffer must be
+            ///     large enough to include the terminating null character; otherwise, the
+            ///     class name string is truncated to nMaxCount-1 characters.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the number of characters copied to the buffer, not
-            ///     including the terminating null character.
+            ///     If the function succeeds, the return value is the number of characters
+            ///     copied to the buffer, not including the terminating null character.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "GetClassNameW", BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             internal static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpClassName, int nMaxCount);
 
             /// <summary>
-            ///     Retrieves the coordinates of a window's client area. The client coordinates specify the upper-left
-            ///     and lower-right corners of the client area. Because client coordinates are relative to the upper-left
-            ///     corner of a window's client area, the coordinates of the upper-left corner are (0,0).
+            ///     Retrieves the coordinates of a window's client area. The client coordinates
+            ///     specify the upper-left and lower-right corners of the client area. Because
+            ///     client coordinates are relative to the upper-left corner of a window's
+            ///     client area, the coordinates of the upper-left corner are (0,0).
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose client coordinates are to be retrieved.
             /// </param>
             /// <param name="lpRect">
-            ///     A pointer to a <see cref="Rectangle"/> structure that receives the client coordinates. The left and
-            ///     top members are zero. The right and bottom members contain the width and height of the window.
+            ///     A pointer to a <see cref="Rectangle"/> structure that receives the client
+            ///     coordinates. The left and top members are zero. The right and bottom
+            ///     members contain the width and height of the window.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6375,8 +6824,9 @@ namespace SilDev
             ///     process.
             /// </summary>
             /// <returns>
-            ///     The return value is a handle to the window used by the console associated with
-            ///     the calling process or NULL if there is no such associated console.
+            ///     The return value is a handle to the window used by the console associated
+            ///     with the calling process or <see langword="null"/> if there is no such
+            ///     associated console.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr GetConsoleWindow();
@@ -6410,8 +6860,9 @@ namespace SilDev
             internal static extern bool GetCursorPos(out Point lpPoint);
 
             /// <summary>
-            ///     Retrieves a handle to the desktop window. The desktop window covers the entire screen.
-            ///     The desktop window is the area on top of which other windows are painted.
+            ///     Retrieves a handle to the desktop window. The desktop window covers the
+            ///     entire screen. The desktop window is the area on top of which other windows
+            ///     are painted.
             /// </summary>
             /// <returns>
             ///     The return value is a handle to the desktop window.
@@ -6426,7 +6877,8 @@ namespace SilDev
             ///     A handle to the control.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the identifier of the control.
+            ///     If the function succeeds, the return value is the identifier of the
+            ///     control.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Auto)]
             internal static extern int GetDlgCtrlID(IntPtr hWndCtl);
@@ -6441,26 +6893,28 @@ namespace SilDev
             ///     The identifier of the control to be retrieved.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the window handle of the specified control.
+            ///     If the function succeeds, the return value is the window handle of the
+            ///     specified control.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Auto)]
             internal static extern IntPtr GetDlgItem(IntPtr hDlg, int nIddlgItem);
 
             /// <summary>
-            ///     Retrieves a handle to the foreground window (the window with which the user is currently working).
-            ///     The system assigns a slightly higher priority to the thread that creates the foreground window
-            ///     than it does to other threads.
+            ///     Retrieves a handle to the foreground window (the window with which the user
+            ///     is currently working). The system assigns a slightly higher priority to the
+            ///     thread that creates the foreground window than it does to other threads.
             /// </summary>
             /// <returns>
-            ///     The return value is a handle to the foreground window. The foreground window can be NULL in certain
-            ///     circumstances, such as when a window is losing activation.
+            ///     The return value is a handle to the foreground window. The foreground
+            ///     window can be <see langword="null"/> in certain circumstances, such as when
+            ///     a window is losing activation.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr GetForegroundWindow();
 
             /// <summary>
-            ///     Retrieves the calling thread's last-error code value. The last-error code is
-            ///     maintained on a per-thread basis. Multiple threads do not overwrite each
+            ///     Retrieves the calling thread's last-error code value. The last-error code
+            ///     is maintained on a per-thread basis. Multiple threads do not overwrite each
             ///     other's last-error code.
             /// </summary>
             /// <returns>
@@ -6476,8 +6930,9 @@ namespace SilDev
             ///     A handle to the window whose menu handle is to be retrieved.
             /// </param>
             /// <returns>
-            ///     The return value is a handle to the menu. If the specified window has no menu, the return value is
-            ///     NULL. If the window is a child window, the return value is undefined.
+            ///     The return value is a handle to the menu. If the specified window has no
+            ///     menu, the return value is <see langword="null"/>. If the window is a child
+            ///     window, the return value is undefined.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr GetMenu(IntPtr hWnd);
@@ -6489,7 +6944,8 @@ namespace SilDev
             ///     A handle to the menu to be examined.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value specifies the number of items in the menu.
+            ///     If the function succeeds, the return value specifies the number of items in
+            ///     the menu.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern int GetMenuItemCount(IntPtr hMenu);
@@ -6501,8 +6957,9 @@ namespace SilDev
             ///     A handle to the window whose parent window handle is to be retrieved.
             /// </param>
             /// <returns>
-            ///     If the window is a child window, the return value is a handle to the parent window. If the window
-            ///     is a top-level window with the WS_POPUP style, the return value is a handle to the owner window.
+            ///     If the window is a child window, the return value is a handle to the parent
+            ///     window. If the window is a top-level window with the WS_POPUP style, the
+            ///     return value is a handle to the owner window.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr GetParent(IntPtr hWnd);
@@ -6511,21 +6968,25 @@ namespace SilDev
             ///     Retrieves a string from the specified section in an initialization file.
             /// </summary>
             /// <param name="lpApplicationName">
-            ///     The name of the section containing the key name. If this parameter is NULL, the
-            ///     GetPrivateProfileString function copies all section names in the file to the supplied buffer.
+            ///     The name of the section containing the key name. If this parameter is
+            ///     <see langword="null"/>, the GetPrivateProfileString function copies all
+            ///     section names in the file to the supplied buffer.
             /// </param>
             /// <param name="lpKeyName">
-            ///     The name of the key whose associated string is to be retrieved. If this parameter is NULL, all key
-            ///     names in the section specified by the lpAppName parameter are copied to the buffer specified by the
+            ///     The name of the key whose associated string is to be retrieved. If this
+            ///     parameter is <see langword="null"/>, all key names in the section specified
+            ///     by the lpAppName parameter are copied to the buffer specified by the
             ///     lpReturnedString parameter.
             /// </param>
             /// <param name="nDefault">
-            ///     A default string. If the lpKeyName key cannot be found in the initialization file,
-            ///     GetPrivateProfileString copies the default string to the lpReturnedString buffer. If this parameter
-            ///     is NULL, the default is an empty string.
+            ///     A default string. If the lpKeyName key cannot be found in the
+            ///     initialization file, GetPrivateProfileString copies the default string to
+            ///     the lpReturnedString buffer. If this parameter is <see langword="null"/>,
+            ///     the default is an empty string.
             ///     <para>
-            ///         Avoid specifying a default string with trailing blank characters. The function inserts a null
-            ///         character in the lpReturnedString buffer to strip any trailing blanks.
+            ///         Avoid specifying a default string with trailing blank characters. The
+            ///         function inserts a null character in the lpReturnedString buffer to
+            ///         strip any trailing blanks.
             ///     </para>
             /// </param>
             /// <param name="retVal">
@@ -6535,21 +6996,24 @@ namespace SilDev
             ///     The size of the buffer pointed to by the retVal parameter, in characters.
             /// </param>
             /// <param name="lpFileName">
-            ///     The name of the initialization file. If this parameter does not contain a full path to the file, the
-            ///     system searches for the file in the Windows directory.
+            ///     The name of the initialization file. If this parameter does not contain a
+            ///     full path to the file, the system searches for the file in the Windows
+            ///     directory.
             /// </param>
             /// <returns>
-            ///     The return value is the number of characters copied to the buffer, not including the terminating null
-            ///     character.
+            ///     The return value is the number of characters copied to the buffer, not
+            ///     including the terminating null character.
             ///     <para>
-            ///         If neither lpAppName nor lpKeyName is NULL and the supplied destination buffer is too small to
-            ///         hold the requested string, the string is truncated and followed by a null character, and the
+            ///         If neither lpAppName nor lpKeyName is <see langword="null"/> and the
+            ///         supplied destination buffer is too small to hold the requested string,
+            ///         the string is truncated and followed by a null character, and the
             ///         return value is equal to nSize minus one.
             ///     </para>
             ///     <para>
-            ///         If either lpAppName or lpKeyName is NULL and the supplied destination buffer is too small to hold
-            ///         all the strings, the last string is truncated and followed by two null characters. In this case,
-            ///         the return value is equal to nSize minus two.
+            ///         If either lpAppName or lpKeyName is <see langword="null"/> and the
+            ///         supplied destination buffer is too small to hold all the strings, the
+            ///         last string is truncated and followed by two null characters. In this
+            ///         case, the return value is equal to nSize minus two.
             ///     </para>
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true, CharSet = CharSet.Unicode)]
@@ -6579,8 +7043,8 @@ namespace SilDev
             ///     The size of the lpImageFileName buffer, in characters.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value specifies the length of the string
-            ///     copied to the buffer.
+            ///     If the function succeeds, the return value specifies the length of the
+            ///     string copied to the buffer.
             /// </returns>
             [DllImport(DllNames.Psapi, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern bool GetProcessImageFileName(IntPtr hProcess, StringBuilder lpImageFileName, int nSize);
@@ -6590,82 +7054,92 @@ namespace SilDev
             /// </summary>
             /// <returns>
             ///     The return value is the handle of the Shell's desktop window. If no Shell
-            ///     process is present, the return value is NULL.
+            ///     process is present, the return value is <see langword="null"/>.
             /// </returns>
             [DllImport(DllNames.User32)]
             internal static extern IntPtr GetShellWindow();
 
             /// <summary>
-            ///     Retrieves a handle to the specified standard device (standard input, standard
-            ///     output, or standard error).
+            ///     Retrieves a handle to the specified standard device (standard input,
+            ///     standard output, or standard error).
             /// </summary>
             /// <param name="nStdHandle">
             ///     The standard device. This parameter can be one of the following values.
             ///     <para>
-            ///         STD_INPUT_HANDLE (DWORD)-10: The standard input device. Initially, this is
-            ///         the console input buffer, CONIN$.
+            ///         STD_INPUT_HANDLE (DWORD)-10: The standard input device. Initially, this
+            ///         is the console input buffer, CONIN$.
             ///     </para>
             ///     <para>
-            ///         STD_OUTPUT_HANDLE (DWORD)-11: The standard output device. Initially, this
+            ///         STD_OUTPUT_HANDLE (DWORD)-11: The standard output device. Initially,
+            ///         this is the active console screen buffer, CONOUT$.
+            ///     </para>
+            ///     <para>
+            ///         STD_ERROR_HANDLE (DWORD)-12: The standard error device. Initially, this
             ///         is the active console screen buffer, CONOUT$.
-            ///     </para>
-            ///     <para>
-            ///         STD_ERROR_HANDLE (DWORD)-12: The standard error device. Initially, this is
-            ///         the active console screen buffer, CONOUT$.
             ///     </para>
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the specified device,
-            ///     or a redirected handle set by a previous call to SetStdHandle. The handle has
-            ///     GENERIC_READ and GENERIC_WRITE access rights, unless the application has used
-            ///     SetStdHandle to set a standard handle with lesser access.
+            ///     If the function succeeds, the return value is a handle to the specified
+            ///     device, or a redirected handle set by a previous call to SetStdHandle. The
+            ///     handle has GENERIC_READ and GENERIC_WRITE access rights, unless the
+            ///     application has used SetStdHandle to set a standard handle with lesser
+            ///     access.
             /// </returns>
             [DllImport(DllNames.Kernel32, EntryPoint = "GetStdHandle", SetLastError = true)]
             internal static extern IntPtr GetStdHandle(int nStdHandle);
 
             /// <summary>
-            ///     Enables the application to access the window menu (also known as the system menu or the control
-            ///     menu) for copying and modifying.
+            ///     Enables the application to access the window menu (also known as the system
+            ///     menu or the control menu) for copying and modifying.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window that will own a copy of the window menu.
             /// </param>
             /// <param name="bRevert">
-            ///     The action to be taken. If this parameter is FALSE, GetSystemMenu returns a handle to the copy of
-            ///     the window menu currently in use. The copy is initially identical to the window menu, but it can
-            ///     be modified. If this parameter is TRUE, GetSystemMenu resets the window menu back to the default
-            ///     state. The previous window menu, if any, is destroyed.
+            ///     The action to be taken. If this parameter is <see langword="false"/>,
+            ///     GetSystemMenu returns a handle to the copy of the window menu currently in
+            ///     use. The copy is initially identical to the window menu, but it can be
+            ///     modified. If this parameter is <see langword="true"/>, GetSystemMenu resets
+            ///     the window menu back to the default state. The previous window menu, if
+            ///     any, is destroyed.
             /// </param>
             /// <returns>
-            ///     If the bRevert parameter is FALSE, the return value is a handle to a copy of the window menu. If
-            ///     the bRevert parameter is TRUE, the return value is NULL.
+            ///     If the bRevert parameter is <see langword="false"/>, the return value is a
+            ///     handle to a copy of the window menu. If the bRevert parameter is
+            ///     <see langword="true"/>, the return value is <see langword="null"/>.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
             /// <summary>
-            ///     Returns the language identifier for the user UI language for the current user. If the current user
-            ///     has not set a language, <see cref="GetUserDefaultUILanguage"/> returns the preferred language set
-            ///     for the system. If there is no preferred language set for the system, then the system default UI
-            ///     language (also known as "install language") is returned.
+            ///     Returns the language identifier for the user UI language for the current
+            ///     user. If the current user has not set a language,
+            ///     <see cref="GetUserDefaultUILanguage"/> returns the preferred language set
+            ///     for the system. If there is no preferred language set for the system, then
+            ///     the system default UI language (also known as "install language") is
+            ///     returned.
             /// </summary>
             /// <returns>
-            ///     Returns the language identifier for the user UI language for the current user.
+            ///     Returns the language identifier for the user UI language for the current
+            ///     user.
             /// </returns>
             [DllImport(DllNames.Kernel32, CharSet = CharSet.Auto)]
             internal static extern ushort GetUserDefaultUILanguage();
 
             /// <summary>
-            ///     Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD)
-            ///     value at the specified offset into the extra window memory.
+            ///     Retrieves information about the specified window. The function also
+            ///     retrieves the 32-bit (DWORD) value at the specified offset into the extra
+            ///     window memory.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window belongs.
+            ///     A handle to the window and, indirectly, the class to which the window
+            ///     belongs.
             /// </param>
             /// <param name="nIndex">
-            ///     The zero-based offset to the value to be retrieved. Valid values are in the range zero through the
-            ///     number of bytes of extra window memory, minus four; for example, if you specified 12 or more bytes
-            ///     of extra memory, a value of 8 would be an index to the third 32-bit integer. To retrieve any other
+            ///     The zero-based offset to the value to be retrieved. Valid values are in the
+            ///     range zero through the number of bytes of extra window memory, minus four;
+            ///     for example, if you specified 12 or more bytes of extra memory, a value of
+            ///     8 would be an index to the third 32-bit integer. To retrieve any other
             ///     value, specify one of the <see cref="WindowLongFlags"/>.GWL_??? values.
             /// </param>
             /// <returns>
@@ -6675,14 +7149,15 @@ namespace SilDev
             internal static extern int GetWindowLong(IntPtr hWnd, WindowLongFlags nIndex);
 
             /// <summary>
-            ///     Gets the show state and the restored, minimized, and maximized positions of the specified window.
+            ///     Gets the show state and the restored, minimized, and maximized positions of
+            ///     the specified window.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpwndpl">
-            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the new show state and window
-            ///     positions.
+            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the
+            ///     new show state and window positions.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6692,15 +7167,16 @@ namespace SilDev
             internal static extern bool GetWindowPlacement(IntPtr hWnd, ref WindowPlacement lpwndpl);
 
             /// <summary>
-            ///     Retrieves the dimensions of the bounding rectangle of the specified window. The dimensions are given
-            ///     in screen coordinates that are relative to the upper-left corner of the screen.
+            ///     Retrieves the dimensions of the bounding rectangle of the specified window.
+            ///     The dimensions are given in screen coordinates that are relative to the
+            ///     upper-left corner of the screen.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpRect">
-            ///     A pointer to a <see cref="Rectangle"/> structure that receives the screen coordinates of the
-            ///     upper-left and lower-right corners of the window.
+            ///     A pointer to a <see cref="Rectangle"/> structure that receives the screen
+            ///     coordinates of the upper-left and lower-right corners of the window.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6709,55 +7185,61 @@ namespace SilDev
             internal static extern bool GetWindowRect(IntPtr hWnd, ref Rectangle lpRect);
 
             /// <summary>
-            ///     Copies the text of the specified window's title bar (if it has one) into a buffer. If the specified
-            ///     window is a control, the text of the control is copied. However, GetWindowText cannot retrieve the
-            ///     text of a control in another application.
+            ///     Copies the text of the specified window's title bar (if it has one) into a
+            ///     buffer. If the specified window is a control, the text of the control is
+            ///     copied. However, GetWindowText cannot retrieve the text of a control in
+            ///     another application.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window or control containing the text.
             /// </param>
             /// <param name="text">
-            ///     The buffer that will receive the text. If the string is as long or longer than the buffer, the string
-            ///     is truncated and terminated with a null character.
+            ///     The buffer that will receive the text. If the string is as long or longer
+            ///     than the buffer, the string is truncated and terminated with a null
+            ///     character.
             /// </param>
             /// <param name="maxLength">
-            ///     The maximum number of characters to copy to the buffer, including the null character. If the text
-            ///     exceeds this limit, it is truncated.
+            ///     The maximum number of characters to copy to the buffer, including the null
+            ///     character. If the text exceeds this limit, it is truncated.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the length, in characters, of the copied string, not
-            ///     including the terminating null character. If the window has no title bar or text, if the title bar is
-            ///     empty, or if the window or control handle is invalid, the return value is zero.
+            ///     If the function succeeds, the return value is the length, in characters, of
+            ///     the copied string, not including the terminating null character. If the
+            ///     window has no title bar or text, if the title bar is empty, or if the
+            ///     window or control handle is invalid, the return value is zero.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "GetWindowTextW", SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int maxLength);
 
             /// <summary>
-            ///     Retrieves the length, in characters, of the specified window's title bar text (if the window has a
-            ///     title bar). If the specified window is a control, the function retrieves the length of the text within
-            ///     the control. However, GetWindowTextLength cannot retrieve the length of the text of an edit control in
-            ///     another application.
+            ///     Retrieves the length, in characters, of the specified window's title bar
+            ///     text (if the window has a title bar). If the specified window is a control,
+            ///     the function retrieves the length of the text within the control. However,
+            ///     GetWindowTextLength cannot retrieve the length of the text of an edit
+            ///     control in another application.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window or control.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the length, in characters, of the text. Under certain
-            ///     conditions, this value may actually be greater than the length of the text.
+            ///     If the function succeeds, the return value is the length, in characters, of
+            ///     the text. Under certain conditions, this value may actually be greater than
+            ///     the length of the text.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "GetWindowTextLengthW", SetLastError = true)]
             internal static extern int GetWindowTextLength(IntPtr hWnd);
 
             /// <summary>
-            ///     Retrieves the identifier of the thread that created the specified window and, optionally, the identifier
-            ///     of the process that created the window.
+            ///     Retrieves the identifier of the thread that created the specified window
+            ///     and, optionally, the identifier of the process that created the window.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpdwProcessId">
-            ///     A pointer to a variable that receives the process identifier. If this parameter is not NULL,
-            ///     GetWindowThreadProcessId copies the identifier of the process to the variable; otherwise, it does not.
+            ///     A pointer to a variable that receives the process identifier. If this
+            ///     parameter is not <see langword="null"/>, GetWindowThreadProcessId copies
+            ///     the identifier of the process to the variable; otherwise, it does not.
             /// </param>
             /// <returns>
             ///     The return value is the identifier of the thread that created the window.
@@ -6766,12 +7248,13 @@ namespace SilDev
             internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
             /// <summary>
-            ///     Removes the caret from the screen. Hiding a caret does not destroy its current shape or invalidate the
-            ///     insertion point.
+            ///     Removes the caret from the screen. Hiding a caret does not destroy its
+            ///     current shape or invalidate the insertion point.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window that owns the caret. If this parameter is NULL, HideCaret searches the current
-            ///     task for the window that owns the caret.
+            ///     A handle to the window that owns the caret. If this parameter is
+            ///     <see langword="null"/>, HideCaret searches the current task for the window
+            ///     that owns the caret.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6781,27 +7264,32 @@ namespace SilDev
             internal static extern bool HideCaret(IntPtr hWnd);
 
             /// <summary>
-            ///     Note  The InsertMenu function has been superseded by the InsertMenuItem function. You can still use
-            ///     InsertMenu, however, if you do not need any of the extended features of InsertMenuItem.
+            ///     Note  The InsertMenu function has been superseded by the InsertMenuItem
+            ///     function. You can still use InsertMenu, however, if you do not need any of
+            ///     the extended features of InsertMenuItem.
             /// </summary>
             /// <param name="hMenu">
             ///     A handle to the menu to be changed.
             /// </param>
             /// <param name="wPosition">
-            ///     The menu item before which the new menu item is to be inserted, as determined by the uFlags parameter.
+            ///     The menu item before which the new menu item is to be inserted, as
+            ///     determined by the uFlags parameter.
             /// </param>
             /// <param name="wFlags">
-            ///     Controls the interpretation of the uPosition parameter and the content, appearance, and behavior of the
-            ///     new menu item.
+            ///     Controls the interpretation of the uPosition parameter and the content,
+            ///     appearance, and behavior of the new menu item.
             /// </param>
             /// <param name="wIdNewItem">
-            ///     The identifier of the new menu item or, if the uFlags parameter has the <see cref="ModifyMenuFlags.Popup"/>
-            ///     flag set, a handle to the drop-down menu or submenu.
+            ///     The identifier of the new menu item or, if the uFlags parameter has the
+            ///     <see cref="ModifyMenuFlags.Popup"/> flag set, a handle to the drop-down
+            ///     menu or submenu.
             /// </param>
             /// <param name="lpNewItem">
-            ///     The content of the new menu item. The interpretation of lpNewItem depends on whether the uFlags parameter
-            ///     includes the <see cref="ModifyMenuFlags.Bitmap"/>, <see cref="ModifyMenuFlags.OwnerDraw"/>, or
-            ///     <see cref="ModifyMenuFlags.String"/> flag, as follows.
+            ///     The content of the new menu item. The interpretation of lpNewItem depends
+            ///     on whether the uFlags parameter includes the
+            ///     <see cref="ModifyMenuFlags.Bitmap"/>,
+            ///     <see cref="ModifyMenuFlags.OwnerDraw"/>, or
+            ///     <see cref="ModifyMenuFlags.TextString"/> flag, as follows.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6810,22 +7298,28 @@ namespace SilDev
             internal static extern bool InsertMenu(IntPtr hMenu, uint wPosition, ModifyMenuFlags wFlags, UIntPtr wIdNewItem, [MarshalAs(UnmanagedType.LPStr)] string lpNewItem);
 
             /// <summary>
-            ///     Adds a rectangle to the specified window's update region. The update region represents the portion of the
-            ///     window's client area that must be redrawn.
+            ///     Adds a rectangle to the specified window's update region. The update region
+            ///     represents the portion of the window's client area that must be redrawn.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose update region has changed. If this parameter is NULL, the system invalidates
-            ///     and redraws all windows, not just the windows for this application, and sends the WM_ERASEBKGND and
-            ///     WM_NCPAINT messages before the function returns. Setting this parameter to NULL is not recommended.
+            ///     A handle to the window whose update region has changed. If this parameter
+            ///     is <see langword="null"/>, the system invalidates and redraws all windows,
+            ///     not just the windows for this application, and sends the WM_ERASEBKGND and
+            ///     WM_NCPAINT messages before the function returns. Setting this parameter to
+            ///     <see langword="null"/> is not recommended.
             /// </param>
             /// <param name="lpRect">
-            ///     A pointer to a RECT structure that contains the client coordinates of the rectangle to be added to the update
-            ///     region. If this parameter is NULL, the entire client area is added to the update region.
+            ///     A pointer to a RECT structure that contains the client coordinates of the
+            ///     rectangle to be added to the update region. If this parameter is
+            ///     <see langword="null"/>, the entire client area is added to the update
+            ///     region.
             /// </param>
             /// <param name="bErase">
-            ///     Specifies whether the background within the update region is to be erased when the update region is processed.
-            ///     If this parameter is TRUE, the background is erased when the BeginPaint function is called. If this parameter
-            ///     is FALSE, the background remains unchanged.
+            ///     Specifies whether the background within the update region is to be erased
+            ///     when the update region is processed. If this parameter is
+            ///     <see langword="true"/>, the background is erased when the BeginPaint
+            ///     function is called. If this parameter is <see langword="false"/>, the
+            ///     background remains unchanged.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6839,12 +7333,15 @@ namespace SilDev
             /// <returns>
             ///     Returns one of the following values.
             ///     <para>
-            ///         TRUE: A visual style is enabled, and windows with visual styles applied should call OpenThemeData to start
-            ///         using theme drawing services.
+            ///         <see langword="true"/>: A visual style is enabled, and windows with
+            ///         visual styles applied should call OpenThemeData to start using theme
+            ///         drawing services.
             ///     </para>
             ///     <para>
-            ///         FALSE: A visual style is not enabled, and the window message handler does not need to make another call to
-            ///         <see cref="IsThemeActive"/> until it receives a WM_THEMECHANGED message.
+            ///         <see langword="false"/>: A visual style is not enabled, and the window
+            ///         message handler does not need to make another call to
+            ///         <see cref="IsThemeActive"/> until it receives a WM_THEMECHANGED
+            ///         message.
             ///     </para>
             /// </returns>
             [DllImport(DllNames.Uxtheme, ExactSpelling = true, SetLastError = true)]
@@ -6852,13 +7349,15 @@ namespace SilDev
             internal static extern bool IsThemeActive();
 
             /// <summary>
-            ///     Loads the specified module into the address space of the calling process. The specified module may cause other
-            ///     modules to be loaded.
+            ///     Loads the specified module into the address space of the calling process.
+            ///     The specified module may cause other modules to be loaded.
             /// </summary>
             /// <param name="lpFileName">
-            ///     The name of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).
-            ///     The name specified is the file name of the module and is not related to the name stored in the library module
-            ///     itself, as specified by the LIBRARY keyword in the module-definition (.def) file.
+            ///     The name of the module. This can be either a library module (a .dll file)
+            ///     or an executable module (an .exe file). The name specified is the file name
+            ///     of the module and is not related to the name stored in the library module
+            ///     itself, as specified by the LIBRARY keyword in the module-definition (.def)
+            ///     file.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is a handle to the module.
@@ -6867,27 +7366,32 @@ namespace SilDev
             internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
             /// <summary>
-            ///     Loads a string resource from the executable file associated with a specified module, copies the string into
-            ///     a buffer, and appends a terminating null character.
+            ///     Loads a string resource from the executable file associated with a
+            ///     specified module, copies the string into a buffer, and appends a
+            ///     terminating null character.
             /// </summary>
             /// <param name="hInstance">
-            ///     A handle to an instance of the module whose executable file contains the string resource. To get the handle
-            ///     to the application itself, call the GetModuleHandle function with NULL.
+            ///     A handle to an instance of the module whose executable file contains the
+            ///     string resource. To get the handle to the application itself, call the
+            ///     GetModuleHandle function with <see langword="null"/>.
             /// </param>
             /// <param name="uId">
             ///     The identifier of the string to be loaded.
             /// </param>
             /// <param name="lpBuffer">
-            ///     The buffer is to receive the string. Must be of sufficient length to hold a pointer (8 bytes).
+            ///     The buffer is to receive the string. Must be of sufficient length to hold a
+            ///     pointer (8 bytes).
             /// </param>
             /// <param name="nBufferMax">
-            ///     The size of the buffer, in characters. The string is truncated and null-terminated if it is longer than the
-            ///     number of characters specified. If this parameter is 0, then lpBuffer receives a read-only pointer to the
+            ///     The size of the buffer, in characters. The string is truncated and
+            ///     null-terminated if it is longer than the number of characters specified. If
+            ///     this parameter is 0, then lpBuffer receives a read-only pointer to the
             ///     resource itself.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the number of characters copied into the buffer, not including
-            ///     the terminating null character, or zero if the string resource does not exist.
+            ///     If the function succeeds, the return value is the number of characters
+            ///     copied into the buffer, not including the terminating null character, or
+            ///     zero if the string resource does not exist.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern int LoadString(IntPtr hInstance, uint uId, StringBuilder lpBuffer, int nBufferMax);
@@ -6896,16 +7400,17 @@ namespace SilDev
             ///     Allocates the specified number of bytes from the heap.
             /// </summary>
             /// <param name="flag">
-            ///     The memory allocation attributes. The default is the LMEM_FIXED value. This parameter can be one or more
-            ///     of the <see cref="LocalAllocFlags"/>.
+            ///     The memory allocation attributes. The default is the LMEM_FIXED value. This
+            ///     parameter can be one or more of the <see cref="LocalAllocFlags"/>.
             /// </param>
             /// <param name="size">
-            ///     The number of bytes to allocate. If this parameter is zero and the uFlags parameter specifies
-            ///     <see cref="LocalAllocFlags.LMemMoveable"/>, the function returns a handle to a memory object that is
-            ///     marked as discarded.
+            ///     The number of bytes to allocate. If this parameter is zero and the uFlags
+            ///     parameter specifies <see cref="LocalAllocFlags.LMemMoveable"/>, the
+            ///     function returns a handle to a memory object that is marked as discarded.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the newly allocated memory object.
+            ///     If the function succeeds, the return value is a handle to the newly
+            ///     allocated memory object.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr LocalAlloc(LocalAllocFlags flag, UIntPtr size);
@@ -6914,21 +7419,22 @@ namespace SilDev
             ///     Frees the specified local memory object and invalidates its handle.
             /// </summary>
             /// <param name="hMem">
-            ///     A handle to the local memory object. This handle is returned by either the <see cref="LocalAlloc"/>
-            ///     function.
+            ///     A handle to the local memory object. This handle is returned by either the
+            ///     <see cref="LocalAlloc"/> function.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is NULL.
+            ///     If the function succeeds, the return value is <see langword="null"/>.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr LocalFree(IntPtr hMem);
 
             /// <summary>
-            ///     Disables or enables drawing in the specified window. Only one window can be locked at a time.
+            ///     Disables or enables drawing in the specified window. Only one window can be
+            ///     locked at a time.
             /// </summary>
             /// <param name="hWndLock">
-            ///     The window in which drawing will be disabled. If this parameter is NULL, drawing in the locked window
-            ///     is enabled.
+            ///     The window in which drawing will be disabled. If this parameter is
+            ///     <see langword="null"/>, drawing in the locked window is enabled.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -6937,25 +7443,28 @@ namespace SilDev
             internal static extern bool LockWindowUpdate(IntPtr hWndLock);
 
             /// <summary>
-            ///     Retrieves the name that corresponds to the privilege represented on a specific system by a specified
-            ///     locally unique identifier (LUID).
+            ///     Retrieves the name that corresponds to the privilege represented on a
+            ///     specific system by a specified locally unique identifier (LUID).
             /// </summary>
             /// <param name="lpSystemName">
-            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege
-            ///     name is retrieved. If a null string is specified, the function attempts to find the privilege name
-            ///     on the local system.
+            ///     A pointer to a null-terminated string that specifies the name of the system
+            ///     on which the privilege name is retrieved. If a null string is specified,
+            ///     the function attempts to find the privilege name on the local system.
             /// </param>
             /// <param name="lpLuid">
-            ///     A pointer to the <see cref="LuId"/> by which the privilege is known on the target system.
+            ///     A pointer to the <see cref="LuId"/> by which the privilege is known on the
+            ///     target system.
             /// </param>
             /// <param name="lpName">
-            ///     A pointer to a buffer that receives a null-terminated string that represents the privilege name.
-            ///     For example, this string could be "SeSecurityPrivilege".
+            ///     A pointer to a buffer that receives a null-terminated string that
+            ///     represents the privilege name. For example, this string could be
+            ///     "SeSecurityPrivilege".
             /// </param>
             /// <param name="cchName">
-            ///     A pointer to a variable that specifies the size, in a TCHAR value, of the lpName buffer. When the
-            ///     function returns, this parameter contains the length of the privilege name, not including the
-            ///     terminating null character. If the buffer pointed to by the lpName parameter is too small, this
+            ///     A pointer to a variable that specifies the size, in a TCHAR value, of the
+            ///     lpName buffer. When the function returns, this parameter contains the
+            ///     length of the privilege name, not including the terminating null character.
+            ///     If the buffer pointed to by the lpName parameter is too small, this
             ///     variable contains the required size.
             /// </param>
             /// <returns>
@@ -6966,21 +7475,21 @@ namespace SilDev
             internal static extern bool LookupPrivilegeName(string lpSystemName, IntPtr lpLuid, StringBuilder lpName, ref int cchName);
 
             /// <summary>
-            ///     Retrieves the <see cref="LuId"/> used on a specified system to locally represent the specified
-            ///     privilege name.
+            ///     Retrieves the <see cref="LuId"/> used on a specified system to locally
+            ///     represent the specified privilege name.
             /// </summary>
             /// <param name="lpSystemName">
-            ///     A pointer to a null-terminated string that specifies the name of the system on which the privilege name
-            ///     is retrieved. If a null string is specified, the function attempts to find the privilege name on the
-            ///     local system.
+            ///     A pointer to a null-terminated string that specifies the name of the system
+            ///     on which the privilege name is retrieved. If a null string is specified,
+            ///     the function attempts to find the privilege name on the local system.
             /// </param>
             /// <param name="lpName">
-            ///     A pointer to a null-terminated string that specifies the name of the privilege, as defined in the
-            ///     Winnt.h header file.
+            ///     A pointer to a null-terminated string that specifies the name of the
+            ///     privilege, as defined in the Winnt.h header file.
             /// </param>
             /// <param name="lpLuid">
-            ///     A pointer to a variable that receives the <see cref="LuId"/> by which the privilege is known on
-            ///     the system specified by the lpSystemName parameter.
+            ///     A pointer to a variable that receives the <see cref="LuId"/> by which the
+            ///     privilege is known on the system specified by the lpSystemName parameter.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the function returns nonzero.
@@ -6989,52 +7498,57 @@ namespace SilDev
             internal static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, ref LuId lpLuid);
 
             /// <summary>
-            ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code
-            ///     into a virtual-key code.
+            ///     Translates (maps) a virtual-key code into a scan code or character value,
+            ///     or translates a scan code into a virtual-key code.
             /// </summary>
             /// <param name="uCode">
-            ///     The virtual key code or scan code for a key. How this value is interpreted depends on the value of
-            ///     the uMapType parameter.
+            ///     The virtual key code or scan code for a key. How this value is interpreted
+            ///     depends on the value of the uMapType parameter.
             /// </param>
             /// <param name="uMapType">
-            ///     The translation to be performed. The value of this parameter depends on the value of the uCode
-            ///     parameter.
+            ///     The translation to be performed. The value of this parameter depends on the
+            ///     value of the uCode parameter.
             /// </param>
             /// <returns>
-            ///     The return value is either a scan code, a virtual-key code, or a character value, depending on the
-            ///     value of uCode and uMapType. If there is no translation, the return value is zero.
+            ///     The return value is either a scan code, a virtual-key code, or a character
+            ///     value, depending on the value of uCode and uMapType. If there is no
+            ///     translation, the return value is zero.
             /// </returns>
             [DllImport(DllNames.User32, CharSet = CharSet.Auto)]
             internal static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
             /// <summary>
-            ///     The mciSendString function sends a command string to an MCI device. The device that the command is sent
-            ///     to is specified in the command string.
+            ///     The mciSendString function sends a command string to an MCI device. The
+            ///     device that the command is sent to is specified in the command string.
             /// </summary>
             /// <param name="lpszCommand">
             ///     Pointer to a null-terminated string that specifies an MCI command string.
             /// </param>
             /// <param name="lpszReturnString">
-            ///     Pointer to a buffer that receives return information. If no return information is needed, this parameter
-            ///     can be NULL.
+            ///     Pointer to a buffer that receives return information. If no return
+            ///     information is needed, this parameter can be <see langword="null"/>.
             /// </param>
             /// <param name="cchReturn">
-            ///     Size, in characters, of the return buffer specified by the lpszReturnString parameter.
+            ///     Size, in characters, of the return buffer specified by the lpszReturnString
+            ///     parameter.
             /// </param>
             /// <param name="hWndCallback">
-            ///     Handle to a callback window if the "notify" flag was specified in the command string.
+            ///     Handle to a callback window if the "notify" flag was specified in the
+            ///     command string.
             /// </param>
             /// <returns>
-            ///     Returns zero if successful or an error otherwise. The low-order word of the returned DWORD
-            ///     value contains the error return value. If the error is device-specific, the high-order word
-            ///     of the return value is the driver identifier; otherwise, the high-order word is zero.
+            ///     Returns zero if successful or an error otherwise. The low-order word of the
+            ///     returned DWORD value contains the error return value. If the error is
+            ///     device-specific, the high-order word of the return value is the driver
+            ///     identifier; otherwise, the high-order word is zero.
             /// </returns>
             [DllImport(DllNames.Winmm, EntryPoint = "mciSendString", SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern int MciSendString(string lpszCommand, StringBuilder lpszReturnString, uint cchReturn, IntPtr hWndCallback);
 
             /// <summary>
-            ///     Changes the position and dimensions of the specified window. For a top-level window, the position and
-            ///     dimensions are relative to the upper-left corner of the screen. For a child window, they are relative to
+            ///     Changes the position and dimensions of the specified window. For a
+            ///     top-level window, the position and dimensions are relative to the
+            ///     upper-left corner of the screen. For a child window, they are relative to
             ///     the upper-left corner of the parent window's client area.
             /// </summary>
             /// <param name="hWnd">
@@ -7053,10 +7567,12 @@ namespace SilDev
             ///     The new height of the window.
             /// </param>
             /// <param name="bRepaint">
-            ///     Indicates whether the window is to be repainted. If this parameter is TRUE, the window receives a message.
-            ///     If the parameter is FALSE, no repainting of any kind occurs. This applies to the client area, the nonclient
-            ///     area (including the title bar and scroll bars), and any part of the parent window uncovered as a result of
-            ///     moving a child window.
+            ///     Indicates whether the window is to be repainted. If this parameter is
+            ///     <see langword="true"/>, the window receives a message. If the parameter is
+            ///     <see langword="false"/>, no repainting of any kind occurs. This applies to
+            ///     the client area, the nonclient area (including the title bar and scroll
+            ///     bars), and any part of the parent window uncovered as a result of moving a
+            ///     child window.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7074,18 +7590,22 @@ namespace SilDev
             ///     The type of process information to be retrieved.
             /// </param>
             /// <param name="processInformation">
-            ///     A pointer to a buffer supplied by the calling application into which the function writes the requested
-            ///     information. The size of the information written varies depending on the data type of the
+            ///     A pointer to a buffer supplied by the calling application into which the
+            ///     function writes the requested information. The size of the information
+            ///     written varies depending on the data type of the
             ///     <see cref="ProcessBasicInformation"/> parameter.
             /// </param>
             /// <param name="piLen">
-            ///     The size of the buffer pointed to by the <see cref="ProcessBasicInformation"/> parameter, in bytes.
+            ///     The size of the buffer pointed to by the
+            ///     <see cref="ProcessBasicInformation"/> parameter, in bytes.
             /// </param>
             /// <param name="rLen">
-            ///     A pointer to a variable in which the function returns the size of the requested information. If the function
-            ///     was successful, this is the size of the information written to the buffer pointed to by the
-            ///     <see cref="ProcessBasicInformation"/> parameter, but if the buffer was too small, this is the minimum size
-            ///     of buffer needed to receive the information successfully.
+            ///     A pointer to a variable in which the function returns the size of the
+            ///     requested information. If the function was successful, this is the size of
+            ///     the information written to the buffer pointed to by the
+            ///     <see cref="ProcessBasicInformation"/> parameter, but if the buffer was too
+            ///     small, this is the minimum size of buffer needed to receive the information
+            ///     successfully.
             /// </param>
             /// <returns>
             ///     The function returns an NTSTATUS success or error code.
@@ -7097,19 +7617,21 @@ namespace SilDev
             ///     Opens an existing local process object.
             /// </summary>
             /// <param name="dwDesiredAccess">
-            ///     The access to the process object. This access right is checked against the security descriptor for the
-            ///     process. This parameter can be one or more of the process access rights.
+            ///     The access to the process object. This access right is checked against the
+            ///     security descriptor for the process. This parameter can be one or more of
+            ///     the process access rights.
             /// </param>
             /// <param name="bInheritHandle">
-            ///     If this value is TRUE, processes created by this process will inherit the handle. Otherwise, the
-            ///     processes do not inherit this handle.
+            ///     If this value is <see langword="true"/>, processes created by this process
+            ///     will inherit the handle. Otherwise, the processes do not inherit this
+            ///     handle.
             /// </param>
             /// <param name="dwProcessId">
             ///     The identifier of the local process to be opened.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is an open handle to the specified
-            ///     process.
+            ///     If the function succeeds, the return value is an open handle to the
+            ///     specified process.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr OpenProcess(AccessRights dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
@@ -7118,16 +7640,18 @@ namespace SilDev
             ///     Opens the access token associated with a process.
             /// </summary>
             /// <param name="processHandle">
-            ///     A handle to the process whose access token is opened. The process must have the
-            ///     <see cref="AccessRights.ProcessQueryInformation"/> access permission.
+            ///     A handle to the process whose access token is opened. The process must have
+            ///     the <see cref="AccessRights.ProcessQueryInformation"/> access permission.
             /// </param>
             /// <param name="desiredAccess">
-            ///     Specifies an access mask that specifies the requested types of access to the access token.
-            ///     These requested access types are compared with the discretionary access control list (DACL)
-            ///     of the token to determine which accesses are granted or denied.
+            ///     Specifies an access mask that specifies the requested types of access to
+            ///     the access token. These requested access types are compared with the
+            ///     discretionary access control list (DACL) of the token to determine which
+            ///     accesses are granted or denied.
             /// </param>
             /// <param name="tokenHandle">
-            ///     A pointer to a handle that identifies the newly opened access token when the function returns.
+            ///     A pointer to a handle that identifies the newly opened access token when
+            ///     the function returns.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7137,25 +7661,26 @@ namespace SilDev
             internal static extern bool OpenProcessToken(IntPtr processHandle, uint desiredAccess, out IntPtr tokenHandle);
 
             /// <summary>
-            ///     Establishes a connection to the service control manager on the specified computer and opens
-            ///     the specified service control manager database.
+            ///     Establishes a connection to the service control manager on the specified
+            ///     computer and opens the specified service control manager database.
             /// </summary>
             /// <param name="lpMachineName">
-            ///     The name of the target computer. If the pointer is NULL or points to an empty string, the
-            ///     function connects to the service control manager on the local computer.
+            ///     The name of the target computer. If the pointer is <see langword="null"/>
+            ///     or points to an empty string, the function connects to the service control
+            ///     manager on the local computer.
             /// </param>
             /// <param name="lpDatabaseName">
-            ///     The name of the service control manager database. This parameter should be set to
-            ///     SERVICES_ACTIVE_DATABASE. If it is NULL, the SERVICES_ACTIVE_DATABASE database is opened by
-            ///     default.
+            ///     The name of the service control manager database. This parameter should be
+            ///     set to SERVICES_ACTIVE_DATABASE. If it is <see langword="null"/>, the
+            ///     SERVICES_ACTIVE_DATABASE database is opened by default.
             /// </param>
             /// <param name="dwDesiredAccess">
             ///     The access to the service control manager. For a list of access rights, see
             ///     <see cref="AccessRights"/>.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the specified service control
-            ///     manager database.
+            ///     If the function succeeds, the return value is a handle to the specified
+            ///     service control manager database.
             /// </returns>
             [DllImport(DllNames.Advapi32, EntryPoint = "OpenSCManagerA", BestFitMapping = false, SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Ansi)]
             internal static extern IntPtr OpenSCManager([MarshalAs(UnmanagedType.LPStr)] string lpMachineName, [MarshalAs(UnmanagedType.LPStr)] string lpDatabaseName, ServiceManagerAccessRights dwDesiredAccess);
@@ -7164,24 +7689,27 @@ namespace SilDev
             ///     Opens an existing service.
             /// </summary>
             /// <param name="hScManager">
-            ///     A handle to the service control manager database. The OpenSCManager function returns this handle.
+            ///     A handle to the service control manager database. The OpenSCManager
+            ///     function returns this handle.
             /// </param>
             /// <param name="lpServiceName">
-            ///     The name of the service to be opened. This is the name specified by the lpServiceName parameter
-            ///     of the CreateService function when the service object was created, not the service display name
-            ///     that is shown by user interface applications to identify the service.
+            ///     The name of the service to be opened. This is the name specified by the
+            ///     lpServiceName parameter of the CreateService function when the service
+            ///     object was created, not the service display name that is shown by user
+            ///     interface applications to identify the service.
             ///     <para>
-            ///         The maximum string length is 256 characters. The service control manager database preserves
-            ///         the case of the characters, but service name comparisons are always case insensitive.
-            ///         Forward-slash (/) and backslash (\) are invalid service name characters.
+            ///         The maximum string length is 256 characters. The service control
+            ///         manager database preserves the case of the characters, but service name
+            ///         comparisons are always case insensitive. Forward-slash (/) and
+            ///         backslash (\) are invalid service name characters.
             ///     </para>
             /// </param>
             /// <param name="dwDesiredAccess">
             ///     The access to the service.
             ///     <para>
-            ///         Before granting the requested access, the system checks the access token of the calling process
-            ///         against the discretionary access-control list of the security descriptor associated with the
-            ///         service object.
+            ///         Before granting the requested access, the system checks the access
+            ///         token of the calling process against the discretionary access-control
+            ///         list of the security descriptor associated with the service object.
             ///     </para>
             /// </param>
             /// <returns>
@@ -7191,20 +7719,23 @@ namespace SilDev
             internal static extern IntPtr OpenService(IntPtr hScManager, [MarshalAs(UnmanagedType.LPStr)] string lpServiceName, ServiceAccessRights dwDesiredAccess);
 
             /// <summary>
-            ///     Places (posts) a message in the message queue associated with the thread that created the
-            ///     specified window and returns without waiting for the thread to process the message.
+            ///     Places (posts) a message in the message queue associated with the thread
+            ///     that created the specified window and returns without waiting for the
+            ///     thread to process the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure is to receive the message. The following values
-            ///     have special meanings.
+            ///     A handle to the window whose window procedure is to receive the message.
+            ///     The following values have special meanings.
             ///     <para>
-            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level windows in the system,
-            ///         including disabled or invisible unowned windows, overlapped windows, and pop-up windows. The
-            ///         message is not posted to child windows.
+            ///         HWND_BROADCAST ((HWND)0xffff): The message is posted to all top-level
+            ///         windows in the system, including disabled or invisible unowned windows,
+            ///         overlapped windows, and pop-up windows. The message is not posted to
+            ///         child windows.
             ///     </para>
             ///     <para>
-            ///         NULL: The function behaves like a call to PostThreadMessage with the dwThreadId parameter set
-            ///         to the identifier of the current thread.
+            ///         <see langword="null"/>: The function behaves like a call to
+            ///         PostThreadMessage with the dwThreadId parameter set to the identifier
+            ///         of the current thread.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -7227,12 +7758,13 @@ namespace SilDev
             ///     Retrieves the current status of the specified service.
             /// </summary>
             /// <param name="hService">
-            ///     A handle to the service. This handle is returned by the OpenService or the CreateService
-            ///     function, and it must have the <see cref="ServiceAccessRights.QueryStatus"/> access
-            ///     right.
+            ///     A handle to the service. This handle is returned by the OpenService or the
+            ///     CreateService function, and it must have the
+            ///     <see cref="ServiceAccessRights.QueryStatus"/> access right.
             /// </param>
             /// <param name="lpServiceStatus">
-            ///     A pointer to a <see cref="ServiceStatus"/> structure that receives the status information.
+            ///     A pointer to a <see cref="ServiceStatus"/> structure that receives the
+            ///     status information.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7241,29 +7773,30 @@ namespace SilDev
             internal static extern int QueryServiceStatus(IntPtr hService, ServiceStatus lpServiceStatus);
 
             /// <summary>
-            ///     Reads data from an area of memory in a specified process. The entire area to be
-            ///     read must be accessible or the operation fails.
+            ///     Reads data from an area of memory in a specified process. The entire area
+            ///     to be read must be accessible or the operation fails.
             /// </summary>
             /// <param name="hProcess">
-            ///     A handle to the process with memory that is being read. The handle must have
-            ///     <see cref="AccessRights.ProcessVmRead"/> access to the process.
+            ///     A handle to the process with memory that is being read. The handle must
+            ///     have <see cref="AccessRights.ProcessVmRead"/> access to the process.
             /// </param>
             /// <param name="lpBaseAddress">
-            ///     A pointer to the base address in the specified process from which to read. Before
-            ///     any data transfer occurs, the system verifies that all data in the base address
-            ///     and memory of the specified size is accessible for read access, and if it is not
-            ///     accessible the function fails.
+            ///     A pointer to the base address in the specified process from which to read.
+            ///     Before any data transfer occurs, the system verifies that all data in the
+            ///     base address and memory of the specified size is accessible for read
+            ///     access, and if it is not accessible the function fails.
             /// </param>
             /// <param name="lpBuffer">
-            ///     A pointer to a buffer that receives the contents from the address space of the
-            ///     specified process.
+            ///     A pointer to a buffer that receives the contents from the address space of
+            ///     the specified process.
             /// </param>
             /// <param name="nSize">
             ///     The number of bytes to be read from the specified process.
             /// </param>
             /// <param name="lpNumberOfBytesRead">
-            ///     A pointer to a variable that receives the number of bytes transferred into the
-            ///     specified buffer. If lpNumberOfBytesRead is NULL, the parameter is ignored.
+            ///     A pointer to a variable that receives the number of bytes transferred into
+            ///     the specified buffer. If lpNumberOfBytesRead is <see langword="null"/>, the
+            ///     parameter is ignored.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7272,29 +7805,30 @@ namespace SilDev
             internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, IntPtr nSize, ref IntPtr lpNumberOfBytesRead);
 
             /// <summary>
-            ///     Reads data from an area of memory in a specified process. The entire area to be
-            ///     read must be accessible or the operation fails.
+            ///     Reads data from an area of memory in a specified process. The entire area
+            ///     to be read must be accessible or the operation fails.
             /// </summary>
             /// <param name="hProcess">
-            ///     A handle to the process with memory that is being read. The handle must have
-            ///     <see cref="AccessRights.ProcessVmRead"/> access to the process.
+            ///     A handle to the process with memory that is being read. The handle must
+            ///     have <see cref="AccessRights.ProcessVmRead"/> access to the process.
             /// </param>
             /// <param name="lpBaseAddress">
-            ///     A pointer to the base address in the specified process from which to read. Before
-            ///     any data transfer occurs, the system verifies that all data in the base address
-            ///     and memory of the specified size is accessible for read access, and if it is not
-            ///     accessible the function fails.
+            ///     A pointer to the base address in the specified process from which to read.
+            ///     Before any data transfer occurs, the system verifies that all data in the
+            ///     base address and memory of the specified size is accessible for read
+            ///     access, and if it is not accessible the function fails.
             /// </param>
             /// <param name="lpBuffer">
-            ///     A pointer to a buffer that receives the contents from the address space of the
-            ///     specified process.
+            ///     A pointer to a buffer that receives the contents from the address space of
+            ///     the specified process.
             /// </param>
             /// <param name="nSize">
             ///     The number of bytes to be read from the specified process.
             /// </param>
             /// <param name="lpNumberOfBytesRead">
-            ///     A pointer to a variable that receives the number of bytes transferred into the
-            ///     specified buffer. If lpNumberOfBytesRead is NULL, the parameter is ignored.
+            ///     A pointer to a variable that receives the number of bytes transferred into
+            ///     the specified buffer. If lpNumberOfBytesRead is <see langword="null"/>, the
+            ///     parameter is ignored.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7306,22 +7840,23 @@ namespace SilDev
             ///     Updates the specified rectangle or region in a window's client area.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window to be redrawn. If this parameter is NULL, the desktop window
-            ///     is updated.
+            ///     A handle to the window to be redrawn. If this parameter is
+            ///     <see langword="null"/>, the desktop window is updated.
             /// </param>
             /// <param name="lprcUpdate">
-            ///     A pointer to a RECT structure containing the coordinates, in device units, of the
-            ///     update rectangle. This parameter is ignored if the hrgnUpdate parameter identifies
-            ///     a region.
+            ///     A pointer to a RECT structure containing the coordinates, in device units,
+            ///     of the update rectangle. This parameter is ignored if the hrgnUpdate
+            ///     parameter identifies a region.
             /// </param>
             /// <param name="hrgnUpdate">
-            ///     A handle to the update region. If both the hrgnUpdate and lprcUpdate parameters are
-            ///     NULL, the entire client area is added to the update region.
+            ///     A handle to the update region. If both the hrgnUpdate and lprcUpdate
+            ///     parameters are <see langword="null"/>, the entire client area is added to
+            ///     the update region.
             /// </param>
             /// <param name="flags">
-            ///     One or more redraw flags. This parameter can be used to invalidate or validate a
-            ///     window, control repainting, and control which windows are affected by
-            ///     <see cref="RedrawWindow"/>.
+            ///     One or more redraw flags. This parameter can be used to invalidate or
+            ///     validate a window, control repainting, and control which windows are
+            ///     affected by <see cref="RedrawWindow"/>.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7330,10 +7865,11 @@ namespace SilDev
             internal static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
 
             /// <summary>
-            ///     Releases the mouse capture from a window in the current thread and restores normal mouse
-            ///     input processing. A window that has captured the mouse receives all mouse input, regardless
-            ///     of the position of the cursor, except when a mouse button is clicked while the cursor hot
-            ///     spot is in the window of another thread.
+            ///     Releases the mouse capture from a window in the current thread and restores
+            ///     normal mouse input processing. A window that has captured the mouse
+            ///     receives all mouse input, regardless of the position of the cursor, except
+            ///     when a mouse button is clicked while the cursor hot spot is in the window
+            ///     of another thread.
             /// </summary>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7342,10 +7878,11 @@ namespace SilDev
             internal static extern bool ReleaseCapture();
 
             /// <summary>
-            ///     Deletes a menu item or detaches a submenu from the specified menu. If the menu item
-            ///     opens a drop-down menu or submenu, RemoveMenu does not destroy the menu or its handle,
-            ///     allowing the menu to be reused. Before this function is called, the GetSubMenu function
-            ///     should retrieve a handle to the drop-down menu or submenu.
+            ///     Deletes a menu item or detaches a submenu from the specified menu. If the
+            ///     menu item opens a drop-down menu or submenu, RemoveMenu does not destroy
+            ///     the menu or its handle, allowing the menu to be reused. Before this
+            ///     function is called, the GetSubMenu function should retrieve a handle to the
+            ///     drop-down menu or submenu.
             /// </summary>
             /// <param name="hMenu">
             ///     A handle to the menu to be changed.
@@ -7354,8 +7891,9 @@ namespace SilDev
             ///     The menu item to be deleted, as determined by the uFlags parameter.
             /// </param>
             /// <param name="uFlags">
-            ///     Indicates how the uPosition parameter is interpreted. This parameter must be
-            ///     <see cref="ModifyMenuFlags.ByCommand"/> or <see cref="ModifyMenuFlags.ByPosition"/>.
+            ///     Indicates how the uPosition parameter is interpreted. This parameter must
+            ///     be <see cref="ModifyMenuFlags.ByCommand"/> or
+            ///     <see cref="ModifyMenuFlags.ByPosition"/>.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -7364,10 +7902,11 @@ namespace SilDev
             internal static extern bool RemoveMenu(IntPtr hMenu, uint uPosition, ModifyMenuFlags uFlags);
 
             /// <summary>
-            ///     Ends the Restart Manager session. This function should be called by the primary installer
-            ///     that has previously started the session by calling the RmStartSession function. The
-            ///     RmEndSession function can be called by a secondary installer that is joined to the session
-            ///     once no more resources need to be registered by the secondary installer.
+            ///     Ends the Restart Manager session. This function should be called by the
+            ///     primary installer that has previously started the session by calling the
+            ///     RmStartSession function. The RmEndSession function can be called by a
+            ///     secondary installer that is joined to the session once no more resources
+            ///     need to be registered by the secondary installer.
             /// </summary>
             /// <param name="pSessionHandle">
             ///     A handle to an existing Restart Manager session.
@@ -7379,27 +7918,27 @@ namespace SilDev
             internal static extern int RmEndSession(uint pSessionHandle);
 
             /// <summary>
-            ///     Gets a list of all applications and services that are currently using resources that have
-            ///     been registered with the Restart Manager session.
+            ///     Gets a list of all applications and services that are currently using
+            ///     resources that have been registered with the Restart Manager session.
             /// </summary>
             /// <param name="dwSessionHandle">
             ///     A handle to an existing Restart Manager session.
             /// </param>
             /// <param name="pnProcInfoNeeded">
-            ///     A pointer to an array size necessary to receive RM_PROCESS_INFO structures required to
-            ///     return information for all affected applications and services.
+            ///     A pointer to an array size necessary to receive RM_PROCESS_INFO structures
+            ///     required to return information for all affected applications and services.
             /// </param>
             /// <param name="pnProcInfo">
-            ///     A pointer to the total number of RM_PROCESS_INFO structures in an array and number of
-            ///     structures filled.
+            ///     A pointer to the total number of RM_PROCESS_INFO structures in an array and
+            ///     number of structures filled.
             /// </param>
             /// <param name="rgAffectedApps">
-            ///     An array of RM_PROCESS_INFO structures that list the applications and services using
-            ///     resources that have been registered with the session.
+            ///     An array of RM_PROCESS_INFO structures that list the applications and
+            ///     services using resources that have been registered with the session.
             /// </param>
             /// <param name="lpdwRebootReasons">
-            ///     Pointer to location that receives a value of the RM_REBOOT_REASON enumeration that
-            ///     describes the reason a system restart is needed.
+            ///     Pointer to location that receives a value of the RM_REBOOT_REASON
+            ///     enumeration that describes the reason a system restart is needed.
             /// </param>
             /// <returns>
             ///     This is the most recent error received.
@@ -7408,10 +7947,11 @@ namespace SilDev
             internal static extern int RmGetList(uint dwSessionHandle, out uint pnProcInfoNeeded, ref uint pnProcInfo, [In][Out] RmProcessInfo[] rgAffectedApps, ref uint lpdwRebootReasons);
 
             /// <summary>
-            ///     Registers resources to a Restart Manager session. The Restart Manager uses the list of
-            ///     resources registered with the session to determine which applications and services must
-            ///     be shut down and restarted. Resources can be identified by filenames, service short names,
-            ///     or RM_UNIQUE_PROCESS structures that describe running applications. The RmRegisterResources
+            ///     Registers resources to a Restart Manager session. The Restart Manager uses
+            ///     the list of resources registered with the session to determine which
+            ///     applications and services must be shut down and restarted. Resources can be
+            ///     identified by filenames, service short names, or RM_UNIQUE_PROCESS
+            ///     structures that describe running applications. The RmRegisterResources
             ///     function can be used by a primary or secondary installer.
             /// </summary>
             /// <param name="dwSessionHandle">
@@ -7442,21 +7982,21 @@ namespace SilDev
             internal static extern int RmRegisterResources(uint dwSessionHandle, uint nFiles, string[] rgsFilenames, uint nApplications, [In] RmUniqueProcess[] rgApplications, uint nServices, string[] rgsServiceNames);
 
             /// <summary>
-            ///     Starts a new Restart Manager session. A maximum of 64 Restart Manager sessions per user
-            ///     session can be open on the system at the same time. When this function starts a session,
-            ///     it returns a session handle and session key that can be used in subsequent calls to the
-            ///     Restart Manager API.
+            ///     Starts a new Restart Manager session. A maximum of 64 Restart Manager
+            ///     sessions per user session can be open on the system at the same time. When
+            ///     this function starts a session, it returns a session handle and session key
+            ///     that can be used in subsequent calls to the Restart Manager API.
             /// </summary>
             /// <param name="pSessionHandle">
-            ///     A pointer to the handle of a Restart Manager session. The session handle can be passed in
-            ///     subsequent calls to the Restart Manager API.
+            ///     A pointer to the handle of a Restart Manager session. The session handle
+            ///     can be passed in subsequent calls to the Restart Manager API.
             /// </param>
             /// <param name="dwSessionFlags">
             ///     Reserved. This parameter should be 0.
             /// </param>
             /// <param name="strSessionKey">
-            ///     A null-terminated string that contains the session key to the new session. The string must
-            ///     be allocated before calling the RmStartSession function.
+            ///     A null-terminated string that contains the session key to the new session.
+            ///     The string must be allocated before calling the RmStartSession function.
             /// </param>
             /// <returns>
             ///     This is the most recent error received.
@@ -7471,31 +8011,32 @@ namespace SilDev
             ///     The number of structures in the pInputs array.
             /// </param>
             /// <param name="pInputs">
-            ///     An array of <see cref="DeviceInput"/> structures. Each structure represents an event
-            ///     to be inserted into the keyboard or mouse input stream.
+            ///     An array of <see cref="DeviceInput"/> structures. Each structure represents
+            ///     an event to be inserted into the keyboard or mouse input stream.
             /// </param>
             /// <param name="cbSize">
-            ///     The size, in bytes, of an <see cref="DeviceInput"/> structure. If cbSize is not the
-            ///     size of an <see cref="DeviceInput"/> structure, the function fails.
+            ///     The size, in bytes, of an <see cref="DeviceInput"/> structure. If cbSize is
+            ///     not the size of an <see cref="DeviceInput"/> structure, the function fails.
             /// </param>
             /// <returns>
-            ///     The function returns the number of events that it successfully inserted into
-            ///     the keyboard or mouse input stream. If the function returns zero, the input
-            ///     was already blocked by another thread.
+            ///     The function returns the number of events that it successfully inserted
+            ///     into the keyboard or mouse input stream. If the function returns zero, the
+            ///     input was already blocked by another thread.
             /// </returns>
             [DllImport(DllNames.User32)]
             internal static extern uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray)][In] DeviceInput[] pInputs, int cbSize);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. The SendMessage function
-            ///     calls the window procedure for the specified window and does not return until
-            ///     the window procedure has processed the message.
+            ///     Sends the specified message to a window or windows. The SendMessage
+            ///     function calls the window procedure for the specified window and does not
+            ///     return until the window procedure has processed the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this
-            ///     parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///     windows in the system, including disabled or invisible unowned windows, overlapped
-            ///     windows, and pop-up windows; but the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="uMsg">
             ///     The message to be sent.
@@ -7507,22 +8048,23 @@ namespace SilDev
             ///     Additional message-specific information.
             /// </param>
             /// <returns>
-            ///     The return value specifies the result of the message processing; it depends on the
-            ///     message sent.
+            ///     The return value specifies the result of the message processing; it depends
+            ///     on the message sent.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "SendMessageA", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
             internal static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. The SendMessage function
-            ///     calls the window procedure for the specified window and does not return until
-            ///     the window procedure has processed the message.
+            ///     Sends the specified message to a window or windows. The SendMessage
+            ///     function calls the window procedure for the specified window and does not
+            ///     return until the window procedure has processed the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this
-            ///     parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///     windows in the system, including disabled or invisible unowned windows, overlapped
-            ///     windows, and pop-up windows; but the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="uMsg">
             ///     The message to be sent.
@@ -7534,8 +8076,8 @@ namespace SilDev
             ///     Additional message-specific information.
             /// </param>
             /// <returns>
-            ///     The return value specifies the result of the message processing; it depends on the
-            ///     message sent.
+            ///     The return value specifies the result of the message processing; it depends
+            ///     on the message sent.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "SendMessageA", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
             internal static extern IntPtr SendMessage(IntPtr hWnd, uint uMsg, IntPtr wParam, ref CopyData lParam);
@@ -7546,11 +8088,11 @@ namespace SilDev
             /// <param name="hWnd">
             ///     A handle to the window whose window procedure will receive the message.
             ///     <para>
-            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
-            ///         top-level windows in the system, including disabled or invisible unowned windows.
-            ///         The function does not return until each window has timed out. Therefore, the total
-            ///         wait time can be up to the value of uTimeout multiplied by the number of top-level
-            ///         windows.
+            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent
+            ///         to all top-level windows in the system, including disabled or invisible
+            ///         unowned windows. The function does not return until each window has
+            ///         timed out. Therefore, the total wait time can be up to the value of
+            ///         uTimeout multiplied by the number of top-level windows.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -7563,41 +8105,46 @@ namespace SilDev
             ///     Any additional message-specific information.
             /// </param>
             /// <param name="fuFlags">
-            ///     The behavior of this function. This parameter can be one or more of the following values.
+            ///     The behavior of this function. This parameter can be one or more of the
+            ///     following values.
             ///     <para>
-            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
-            ///         elapse if the receiving thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the
+            ///         time-out period to elapse if the receiving thread appears to not
+            ///         respond or hangs.
             ///     </para>
             ///     <para>
-            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until
-            ///         the function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other
+            ///         requests until the function returns.
             ///     </para>
             ///     <para>
-            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
-            ///         waiting for the function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing
+            ///         other requests while waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
-            ///         the receiving thread is processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the
+            ///         time-out period as long as the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
-            ///         or its owning thread dies while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving
+            ///         window is destroyed or its owning thread dies while the message is
+            ///         being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
-            ///     The duration of the time-out period, in milliseconds. If the message is a broadcast message,
-            ///     each window can use the full time-out period. For example, if you specify a five second time-out
-            ///     period and there are three top-level windows that fail to process the message, you could have up
-            ///     to a 15 second delay.
+            ///     The duration of the time-out period, in milliseconds. If the message is a
+            ///     broadcast message, each window can use the full time-out period. For
+            ///     example, if you specify a five second time-out period and there are three
+            ///     top-level windows that fail to process the message, you could have up to a
+            ///     15 second delay.
             /// </param>
             /// <param name="lpdwResult">
-            ///     The result of the message processing. The value of this parameter depends on the message that is
-            ///     specified.
+            ///     The result of the message processing. The value of this parameter depends
+            ///     on the message that is specified.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is nonzero. SendMessageTimeout does not provide
-            ///     information about individual windows timing out if HWND_BROADCAST ((HWND)0xffff) is used.
+            ///     If the function succeeds, the return value is nonzero. SendMessageTimeout
+            ///     does not provide information about individual windows timing out if
+            ///     HWND_BROADCAST ((HWND)0xffff) is used.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint msg, UIntPtr wParam, IntPtr lParam, uint fuFlags, uint uTimeout, out UIntPtr lpdwResult);
@@ -7608,10 +8155,11 @@ namespace SilDev
             /// <param name="hWnd">
             ///     A handle to the window whose window procedure will receive the message.
             ///     <para>
-            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-            ///         windows in the system, including disabled or invisible unowned windows. The function does
-            ///         not return until each window has timed out. Therefore, the total wait time can be up to the
-            ///         value of uTimeout multiplied by the number of top-level windows.
+            ///         If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent
+            ///         to all top-level windows in the system, including disabled or invisible
+            ///         unowned windows. The function does not return until each window has
+            ///         timed out. Therefore, the total wait time can be up to the value of
+            ///         uTimeout multiplied by the number of top-level windows.
             ///     </para>
             /// </param>
             /// <param name="msg">
@@ -7624,57 +8172,65 @@ namespace SilDev
             ///     Any additional message-specific information.
             /// </param>
             /// <param name="fuFlags">
-            ///     The behavior of this function. This parameter can be one or more of the following values.
+            ///     The behavior of this function. This parameter can be one or more of the
+            ///     following values.
             ///     <para>
-            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the time-out period to
-            ///         elapse if the receiving thread appears to not respond or hangs.
+            ///         SMTO_ABORTIFHUNG (0x2): The function returns without waiting for the
+            ///         time-out period to elapse if the receiving thread appears to not
+            ///         respond or hangs.
             ///     </para>
             ///     <para>
-            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other requests until the
-            ///         function returns.
+            ///         SMTO_BLOCK (0x1): Prevents the calling thread from processing any other
+            ///         requests until the function returns.
             ///     </para>
             ///     <para>
-            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing other requests while
-            ///         waiting for the function to return.
+            ///         SMTO_NORMAL (0x0): The calling thread is not prevented from processing
+            ///         other requests while waiting for the function to return.
             ///     </para>
             ///     <para>
-            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the time-out period as long as
-            ///         the receiving thread is processing messages.
+            ///         SMTO_NOTIMEOUTIFNOTHUNG (0x8): The function does not enforce the
+            ///         time-out period as long as the receiving thread is processing messages.
             ///     </para>
             ///     <para>
-            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving window is destroyed
-            ///         or its owning thread dies while the message is being processed.
+            ///         SMTO_ERRORONEXIT (0x20): The function should return 0 if the receiving
+            ///         window is destroyed or its owning thread dies while the message is
+            ///         being processed.
             ///     </para>
             /// </param>
             /// <param name="uTimeout">
-            ///     The duration of the time-out period, in milliseconds. If the message is a broadcast message,
-            ///     each window can use the full time-out period. For example, if you specify a five second time-out
-            ///     period and there are three top-level windows that fail to process the message, you could have up
-            ///     to a 15 second delay.
+            ///     The duration of the time-out period, in milliseconds. If the message is a
+            ///     broadcast message, each window can use the full time-out period. For
+            ///     example, if you specify a five second time-out period and there are three
+            ///     top-level windows that fail to process the message, you could have up to a
+            ///     15 second delay.
             /// </param>
             /// <param name="lpdwResult">
-            ///     The result of the message processing. The value of this parameter depends on the message that is
-            ///     specified.
+            ///     The result of the message processing. The value of this parameter depends
+            ///     on the message that is specified.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is nonzero. SendMessageTimeout does not provide
-            ///     information about individual windows timing out if HWND_BROADCAST ((HWND)0xffff) is used.
+            ///     If the function succeeds, the return value is nonzero. SendMessageTimeout
+            ///     does not provide information about individual windows timing out if
+            ///     HWND_BROADCAST ((HWND)0xffff) is used.
             /// </returns>
             [DllImport(DllNames.User32, EntryPoint = "SendMessageTimeout", SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern IntPtr SendMessageTimeoutText(IntPtr hWnd, uint msg, UIntPtr wParam, StringBuilder lParam, uint fuFlags, uint uTimeout, out IntPtr lpdwResult);
 
             /// <summary>
-            ///     Sends the specified message to a window or windows. If the window was created by the calling
-            ///     thread, SendNotifyMessage calls the window procedure for the window and does not return until
-            ///     the window procedure has processed the message. If the window was created by a different thread,
-            ///     SendNotifyMessage passes the message to the window procedure and returns immediately; it does
-            ///     not wait for the window procedure to finish processing the message.
+            ///     Sends the specified message to a window or windows. If the window was
+            ///     created by the calling thread, SendNotifyMessage calls the window procedure
+            ///     for the window and does not return until the window procedure has processed
+            ///     the message. If the window was created by a different thread,
+            ///     SendNotifyMessage passes the message to the window procedure and returns
+            ///     immediately; it does not wait for the window procedure to finish processing
+            ///     the message.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window whose window procedure will receive the message. If this parameter is
-            ///     HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level windows in the system,
-            ///     including disabled or invisible unowned windows, overlapped windows, and pop-up windows; but
-            ///     the message is not sent to child windows.
+            ///     A handle to the window whose window procedure will receive the message. If
+            ///     this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all
+            ///     top-level windows in the system, including disabled or invisible unowned
+            ///     windows, overlapped windows, and pop-up windows; but the message is not
+            ///     sent to child windows.
             /// </param>
             /// <param name="msg">
             ///     The message to be sent.
@@ -7698,15 +8254,17 @@ namespace SilDev
             ///     The path to the new current directory.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+            ///     If the function succeeds, the return value is nonzero. If the function
+            ///     fails, the return value is zero.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
             internal static extern bool SetCurrentDirectory([MarshalAs(UnmanagedType.LPWStr)] string lpPathName);
 
             /// <summary>
-            ///     Moves the cursor to the specified screen coordinates. If the new coordinates are not within
-            ///     the screen rectangle set by the most recent ClipCursor function call, the system automatically
-            ///     adjusts the coordinates so that the cursor stays within the rectangle.
+            ///     Moves the cursor to the specified screen coordinates. If the new
+            ///     coordinates are not within the screen rectangle set by the most recent
+            ///     ClipCursor function call, the system automatically adjusts the coordinates
+            ///     so that the cursor stays within the rectangle.
             /// </summary>
             /// <param name="x">
             ///     The new x-coordinate of the cursor, in screen coordinates.
@@ -7722,18 +8280,21 @@ namespace SilDev
             internal static extern bool SetCursorPos(uint x, uint y);
 
             /// <summary>
-            ///     Brings the thread that created the specified window into the foreground and activates the window.
-            ///     Keyboard input is directed to the window, and various visual cues are changed for the user. The
-            ///     system assigns a slightly higher priority to the thread that created the foreground window than
-            ///     it does to other threads.
+            ///     Brings the thread that created the specified window into the foreground and
+            ///     activates the window. Keyboard input is directed to the window, and various
+            ///     visual cues are changed for the user. The system assigns a slightly higher
+            ///     priority to the thread that created the foreground window than it does to
+            ///     other threads.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window that should be activated and brought to the foreground.
+            ///     A handle to the window that should be activated and brought to the
+            ///     foreground.
             /// </param>
             /// <returns>
             ///     If the window was brought to the foreground, the return value is nonzero.
             ///     <para>
-            ///         If the window was not brought to the foreground, the return value is zero.
+            ///         If the window was not brought to the foreground, the return value is
+            ///         zero.
             ///     </para>
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
@@ -7746,13 +8307,16 @@ namespace SilDev
             ///     A handle to the child window.
             /// </param>
             /// <param name="hWndNewParent">
-            ///     A handle to the new parent window. If this parameter is NULL, the desktop window becomes the new
-            ///     parent window. If this parameter is HWND_MESSAGE, the child window becomes a message-only window.
+            ///     A handle to the new parent window. If this parameter is
+            ///     <see langword="null"/>, the desktop window becomes the new parent window.
+            ///     If this parameter is HWND_MESSAGE, the child window becomes a message-only
+            ///     window.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is a handle to the previous parent window.
+            ///     If the function succeeds, the return value is a handle to the previous
+            ///     parent window.
             ///     <para>
-            ///         If the function fails, the return value is NULL.
+            ///         If the function fails, the return value is <see langword="null"/>.
             ///     </para>
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
@@ -7773,38 +8337,42 @@ namespace SilDev
             /// <param name="hProcess">
             ///     A handle to the process whose working set sizes is to be set.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessSetQuota"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessSetQuota"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="dwMinimumWorkingSetSize">
-            ///     The minimum working set size for the process, in bytes. The virtual memory manager attempts
-            ///     to keep at least this much memory resident in the process whenever the process is active.
+            ///     The minimum working set size for the process, in bytes. The virtual memory
+            ///     manager attempts to keep at least this much memory resident in the process
+            ///     whenever the process is active.
             ///     <para>
-            ///         This parameter must be greater than zero but less than or equal to the maximum working
-            ///         set size. The default size is 50 pages (for example, this is 204,800 bytes on systems
-            ///         with a 4K page size). If the value is greater than zero but less than 20 pages, the
-            ///         minimum value is set to 20 pages.
+            ///         This parameter must be greater than zero but less than or equal to the
+            ///         maximum working set size. The default size is 50 pages (for example,
+            ///         this is 204,800 bytes on systems with a 4K page size). If the value is
+            ///         greater than zero but less than 20 pages, the minimum value is set to
+            ///         20 pages.
             ///     </para>
             ///     <para>
-            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the value (SIZE_T)–1,
-            ///         the function removes as many pages as possible from the working set of the specified
-            ///         process.
+            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the
+            ///         value (SIZE_T)–1, the function removes as many pages as possible from
+            ///         the working set of the specified process.
             ///     </para>
             /// </param>
             /// <param name="dwMaximumWorkingSetSize">
-            ///     The maximum working set size for the process, in bytes. The virtual memory manager attempts
-            ///     to keep no more than this much memory resident in the process whenever the process is active
-            ///     and available memory is low.
+            ///     The maximum working set size for the process, in bytes. The virtual memory
+            ///     manager attempts to keep no more than this much memory resident in the
+            ///     process whenever the process is active and available memory is low.
             ///     <para>
-            ///         This parameter must be greater than or equal to 13 pages (for example, 53,248 on systems
-            ///         with a 4K page size), and less than the system-wide maximum (number of available pages
-            ///         minus 512 pages). The default size is 345 pages (for example, this is 1,413,120 bytes on
-            ///         systems with a 4K page size).
+            ///         This parameter must be greater than or equal to 13 pages (for example,
+            ///         53,248 on systems with a 4K page size), and less than the system-wide
+            ///         maximum (number of available pages minus 512 pages). The default size
+            ///         is 345 pages (for example, this is 1,413,120 bytes on systems with a 4K
+            ///         page size).
             ///     </para>
             ///     <para>
-            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the value (SIZE_T)–1,
-            ///         the function removes as many pages as possible from the working set of the specified
-            ///         process.
+            ///         If both dwMinimumWorkingSetSize and dwMaximumWorkingSetSize have the
+            ///         value (SIZE_T)–1, the function removes as many pages as possible from
+            ///         the working set of the specified process.
             ///     </para>
             /// </param>
             /// <returns>
@@ -7817,18 +8385,23 @@ namespace SilDev
             ///     Creates a timer with the specified time-out value.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window to be associated with the timer. This window must be owned by the calling
-            ///     thread. If a NULL value for hWnd is passed in along with an nIDEvent of an existing timer, that
-            ///     timer will be replaced in the same way that an existing non-NULL hWnd timer will be.
+            ///     A handle to the window to be associated with the timer. This window must be
+            ///     owned by the calling thread. If a <see langword="null"/> value for hWnd is
+            ///     passed in along with an nIDEvent of an existing timer, that timer will be
+            ///     replaced in the same way that an existing non-<see langword="null"/> hWnd
+            ///     timer will be.
             /// </param>
             /// <param name="nIdEvent">
-            ///     A nonzero timer identifier. If the hWnd parameter is NULL, and the nIDEvent does not match an
-            ///     existing timer then it is ignored and a new timer ID is generated. If the hWnd parameter is not
-            ///     NULL and the window specified by hWnd already has a timer with the value nIDEvent, then the
-            ///     existing timer is replaced by the new timer. When SetTimer replaces a timer, the timer is reset.
-            ///     Therefore, a message will be sent after the current time-out value elapses, but the previously
-            ///     set time-out value is ignored. If the call is not intended to replace an existing timer, nIDEvent
-            ///     should be 0 if the hWnd is NULL.
+            ///     A nonzero timer identifier. If the hWnd parameter is <see langword="null"/>
+            ///     , and the nIDEvent does not match an existing timer then it is ignored and
+            ///     a new timer ID is generated. If the hWnd parameter is not
+            ///     <see langword="null"/> and the window specified by hWnd already has a timer
+            ///     with the value nIDEvent, then the existing timer is replaced by the new
+            ///     timer. When SetTimer replaces a timer, the timer is reset. Therefore, a
+            ///     message will be sent after the current time-out value elapses, but the
+            ///     previously set time-out value is ignored. If the call is not intended to
+            ///     replace an existing timer, nIDEvent should be 0 if the hWnd is
+            ///     <see langword="null"/>.
             /// </param>
             /// <param name="uElapse">
             ///     The time-out value, in milliseconds.
@@ -7837,13 +8410,14 @@ namespace SilDev
             ///     A pointer to the function to be notified when the time-out value elapses.
             /// </param>
             /// <returns>
-            ///     If the function succeeds and the hWnd parameter is NULL, the return value is an integer
-            ///     identifying the new timer. An application can pass this value to the KillTimer function to destroy
-            ///     the timer.
+            ///     If the function succeeds and the hWnd parameter is <see langword="null"/>,
+            ///     the return value is an integer identifying the new timer. An application
+            ///     can pass this value to the KillTimer function to destroy the timer.
             ///     <para>
-            ///         If the function succeeds and the hWnd parameter is not NULL, then the return value is a nonzero
-            ///         integer. An application can pass the value of the nIDEvent parameter to the KillTimer function
-            ///         to destroy the timer.
+            ///         If the function succeeds and the hWnd parameter is not
+            ///         <see langword="null"/>, then the return value is a nonzero integer. An
+            ///         application can pass the value of the nIDEvent parameter to the
+            ///         KillTimer function to destroy the timer.
             ///     </para>
             ///     <para>
             ///         If the function fails to create a timer, the return value is zero.
@@ -7853,15 +8427,17 @@ namespace SilDev
             internal static extern UIntPtr SetTimer(IntPtr hWnd, UIntPtr nIdEvent, uint uElapse, TimerProc lpTimerFunc);
 
             /// <summary>
-            ///     Changes an attribute of the specified window. The function also sets the 32-bit (long) value at the
-            ///     specified offset into the extra window memory.
+            ///     Changes an attribute of the specified window. The function also sets the
+            ///     32-bit (long) value at the specified offset into the extra window memory.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window belongs.
+            ///     A handle to the window and, indirectly, the class to which the window
+            ///     belongs.
             /// </param>
             /// <param name="nIndex">
-            ///     The zero-based offset to the value to be set. Valid values are in the range zero through the number
-            ///     of bytes of extra window memory, minus the size of an integer.
+            ///     The zero-based offset to the value to be set. Valid values are in the range
+            ///     zero through the number of bytes of extra window memory, minus the size of
+            ///     an integer.
             /// </param>
             /// <param name="dwNewLong">
             ///     The replacement value.
@@ -7876,17 +8452,19 @@ namespace SilDev
             private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
             /// <summary>
-            ///     Sets the show state and the restored, minimized, and maximized positions of the specified window.
+            ///     Sets the show state and the restored, minimized, and maximized positions of
+            ///     the specified window.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="lpwndpl">
-            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the new show state and window
-            ///     positions.
+            ///     A pointer to a <see cref="WindowPlacement"/> structure that specifies the
+            ///     new show state and window positions.
             ///     <para>
-            ///         Before calling SetWindowPlacement, set the length member of the <see cref="WindowPlacement"/>
-            ///         structure to sizeof(<see cref="WindowPlacement"/>). SetWindowPlacement fails if the length
+            ///         Before calling SetWindowPlacement, set the length member of the
+            ///         <see cref="WindowPlacement"/> structure to sizeof(
+            ///         <see cref="WindowPlacement"/>). SetWindowPlacement fails if the length
             ///         member is not set correctly.
             ///     </para>
             /// </param>
@@ -7898,31 +8476,34 @@ namespace SilDev
             internal static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WindowPlacement lpwndpl);
 
             /// <summary>
-            ///     Changes the size, position, and Z order of a child, pop-up, or top-level window. These windows are
-            ///     ordered according to their appearance on the screen. The topmost window receives the highest rank
-            ///     and is the first window in the Z order.
+            ///     Changes the size, position, and Z order of a child, pop-up, or top-level
+            ///     window. These windows are ordered according to their appearance on the
+            ///     screen. The topmost window receives the highest rank and is the first
+            ///     window in the Z order.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="hWndInsertAfter">
-            ///     A handle to the window to precede the positioned window in the Z order. This parameter must be a
-            ///     window handle or one of the following values.
+            ///     A handle to the window to precede the positioned window in the Z order.
+            ///     This parameter must be a window handle or one of the following values.
             ///     <para>
-            ///         HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order. If the hWnd parameter
-            ///         identifies a topmost window, the window loses its topmost status and is placed at the bottom
-            ///         of all other windows.
+            ///         HWND_BOTTOM ((HWND)1): Places the window at the bottom of the Z order.
+            ///         If the hWnd parameter identifies a topmost window, the window loses its
+            ///         topmost status and is placed at the bottom of all other windows.
             ///     </para>
             ///     <para>
-            ///         HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost windows (that is, behind all
-            ///         topmost windows). This flag has no effect if the window is already a non-topmost window.
+            ///         HWND_NOTOPMOST ((HWND)-2): Places the window above all non-topmost
+            ///         windows (that is, behind all topmost windows). This flag has no effect
+            ///         if the window is already a non-topmost window.
             ///     </para>
             ///     <para>
             ///         HWND_TOP ((HWND)0): Places the window at the top of the Z order.
             ///     </para>
             ///     <para>
-            ///         HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost windows. The window maintains
-            ///         its topmost position even when it is deactivated.
+            ///         HWND_TOPMOST ((HWND)-1): Places the window above all non-topmost
+            ///         windows. The window maintains its topmost position even when it is
+            ///         deactivated.
             ///     </para>
             /// </param>
             /// <param name="x">
@@ -7947,40 +8528,46 @@ namespace SilDev
             internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, SetWindowPosFlags uFlags);
 
             /// <summary>
-            ///     Installs an application-defined hook procedure into a hook chain. You would install a hook
-            ///     procedure to monitor the system for certain types of events. These events are associated
-            ///     either with a specific thread or with all threads in the same desktop as the calling thread.
+            ///     Installs an application-defined hook procedure into a hook chain. You would
+            ///     install a hook procedure to monitor the system for certain types of events.
+            ///     These events are associated either with a specific thread or with all
+            ///     threads in the same desktop as the calling thread.
             /// </summary>
             /// <param name="idHook">
             ///     The type of hook procedure to be installed.
             /// </param>
             /// <param name="lpfn">
-            ///     A pointer to the hook procedure. If the dwThreadId parameter is zero or specifies the identifier
-            ///     of a thread created by a different process, the lpfn parameter must point to a hook procedure in
-            ///     a DLL. Otherwise, lpfn can point to a hook procedure in the code associated with the current
-            ///     process.
+            ///     A pointer to the hook procedure. If the dwThreadId parameter is zero or
+            ///     specifies the identifier of a thread created by a different process, the
+            ///     lpfn parameter must point to a hook procedure in a DLL. Otherwise, lpfn can
+            ///     point to a hook procedure in the code associated with the current process.
             /// </param>
             /// <param name="hMod">
-            ///     A handle to the DLL containing the hook procedure pointed to by the lpfn parameter. The hMod
-            ///     parameter must be set to NULL if the dwThreadId parameter specifies a thread created by the current
-            ///     process and if the hook procedure is within the code associated with the current process.
+            ///     A handle to the DLL containing the hook procedure pointed to by the lpfn
+            ///     parameter. The hMod parameter must be set to <see langword="null"/> if the
+            ///     dwThreadId parameter specifies a thread created by the current process and
+            ///     if the hook procedure is within the code associated with the current
+            ///     process.
             /// </param>
             /// <param name="dwThreadId">
-            ///     The identifier of the thread with which the hook procedure is to be associated. For desktop apps,
-            ///     if this parameter is zero, the hook procedure is associated with all existing threads running in the
-            ///     same desktop as the calling thread. For Windows Store apps, see the Remarks section.
+            ///     The identifier of the thread with which the hook procedure is to be
+            ///     associated. For desktop apps, if this parameter is zero, the hook procedure
+            ///     is associated with all existing threads running in the same desktop as the
+            ///     calling thread. For Windows Store apps, see the Remarks section.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the handle to the hook procedure. If the function
-            ///     fails, the return value is NULL.
+            ///     If the function succeeds, the return value is the handle to the hook
+            ///     procedure. If the function fails, the return value is
+            ///     <see langword="null"/>.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr SetWindowsHookEx(Win32HookFlags idHook, HookProc lpfn, IntPtr hMod, int dwThreadId);
 
             /// <summary>
-            ///     Changes the text of the specified window's title bar (if it has one). If the specified window is a
-            ///     control, the text of the control is changed. However, SetWindowText cannot change the text of a control
-            ///     in another application.
+            ///     Changes the text of the specified window's title bar (if it has one). If
+            ///     the specified window is a control, the text of the control is changed.
+            ///     However, SetWindowText cannot change the text of a control in another
+            ///     application.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window or control whose text is to be changed.
@@ -7995,37 +8582,44 @@ namespace SilDev
             internal static extern bool SetWindowText(IntPtr hWnd, string lpString);
 
             /// <summary>
-            ///     Causes a window to use a different set of visual style information than its class normally uses.
+            ///     Causes a window to use a different set of visual style information than its
+            ///     class normally uses.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window whose visual style information is to be changed.
             /// </param>
             /// <param name="pszSubAppName">
-            ///     Pointer to a string that contains the application name to use in place of the calling application's
-            ///     name. If this parameter is NULL, the calling application's name is used.
+            ///     Pointer to a string that contains the application name to use in place of
+            ///     the calling application's name. If this parameter is <see langword="null"/>
+            ///     , the calling application's name is used.
             /// </param>
             /// <param name="pszSubIdList">
-            ///     Pointer to a string that contains a semicolon-separated list of CLSID names to use in place of the
-            ///     actual list passed by the window's class. If this parameter is NULL, the ID list from the calling
-            ///     class is used.
+            ///     Pointer to a string that contains a semicolon-separated list of CLSID names
+            ///     to use in place of the actual list passed by the window's class. If this
+            ///     parameter is <see langword="null"/>, the ID list from the calling class is
+            ///     used.
             /// </param>
             /// <returns>
-            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
+            ///     If this function succeeds, it returns S_OK. Otherwise, it returns an
+            ///     HRESULT error code.
             /// </returns>
             [DllImport(DllNames.Uxtheme, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
             internal static extern int SetWindowTheme(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] string pszSubAppName, [MarshalAs(UnmanagedType.LPTStr)] string pszSubIdList);
 
             /// <summary>
-            ///     Sets attributes to control how visual styles are applied to a specified window.
+            ///     Sets attributes to control how visual styles are applied to a specified
+            ///     window.
             /// </summary>
             /// <param name="hWnd">
             ///     Handle to a window to apply changes to.
             /// </param>
             /// <param name="eAttribute">
-            ///     Value of type <see cref="WindowThemeAttributeTypes"/> that specifies the type of attribute to set.
+            ///     Value of type <see cref="WindowThemeAttributeTypes"/> that specifies the
+            ///     type of attribute to set.
             /// </param>
             /// <param name="pvAttribute">
-            ///     A pointer that specifies attributes to set. Type is determined by the value of the eAttribute value.
+            ///     A pointer that specifies attributes to set. Type is determined by the value
+            ///     of the eAttribute value.
             /// </param>
             /// <param name="cbAttribute">
             ///     Specifies the size, in bytes, of the data pointed to by pvAttribute.
@@ -8040,12 +8634,14 @@ namespace SilDev
             ///     Appbar message value to send.
             /// </param>
             /// <param name="pData">
-            ///     A pointer to an <see cref="AppBarData"/> structure. The content of the structure on entry and on exit
-            ///     depends on the value set in the dwMessage parameter. See the individual message pages for specifics.
+            ///     A pointer to an <see cref="AppBarData"/> structure. The content of the
+            ///     structure on entry and on exit depends on the value set in the dwMessage
+            ///     parameter. See the individual message pages for specifics.
             /// </param>
             /// <returns>
-            ///     This function returns a message-dependent value. For more information, see the Windows SDK documentation
-            ///     for the specific appbar message sent. Links to those documents are given in the See Also section.
+            ///     This function returns a message-dependent value. For more information, see
+            ///     the Windows SDK documentation for the specific appbar message sent. Links
+            ///     to those documents are given in the See Also section.
             /// </returns>
             [DllImport(DllNames.Shell32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern UIntPtr SHAppBarMessage(AppBarMessageOption dwMessage, ref AppBarData pData);
@@ -8054,77 +8650,95 @@ namespace SilDev
             ///     Performs an operation on a specified file.
             /// </summary>
             /// <param name="hWnd">
-            ///     A handle to the parent window used for displaying a UI or error messages. This value can be NULL if the
-            ///     operation is not associated with a window.
+            ///     A handle to the parent window used for displaying a UI or error messages.
+            ///     This value can be <see langword="null"/> if the operation is not associated
+            ///     with a window.
             /// </param>
             /// <param name="lpOperation">
-            ///     A pointer to a null-terminated string, referred to in this case as a verb, that specifies the action to
-            ///     be performed. The set of available verbs depends on the particular file or folder. Generally, the
-            ///     actions available from an object's shortcut menu are available verbs.
+            ///     A pointer to a null-terminated string, referred to in this case as a verb,
+            ///     that specifies the action to be performed. The set of available verbs
+            ///     depends on the particular file or folder. Generally, the actions available
+            ///     from an object's shortcut menu are available verbs.
             /// </param>
             /// <param name="lpFile">
-            ///     A pointer to a null-terminated string that specifies the file or object on which to execute the specified
-            ///     verb. To specify a Shell namespace object, pass the fully qualified parse name. Note that not all verbs
-            ///     are supported on all objects. For example, not all document types support the "print" verb. If a relative
-            ///     path is used for the lpDirectory parameter do not use a relative path for lpFile.
+            ///     A pointer to a null-terminated string that specifies the file or object on
+            ///     which to execute the specified verb. To specify a Shell namespace object,
+            ///     pass the fully qualified parse name. Note that not all verbs are supported
+            ///     on all objects. For example, not all document types support the "print"
+            ///     verb. If a relative path is used for the lpDirectory parameter do not use a
+            ///     relative path for lpFile.
             /// </param>
             /// <param name="lpParameters">
-            ///     If lpFile specifies an executable file, this parameter is a pointer to a null-terminated string that
-            ///     specifies the parameters to be passed to the application. The format of this string is determined by the
-            ///     verb that is to be invoked. If lpFile specifies a document file, lpParameters should be NULL.
+            ///     If lpFile specifies an executable file, this parameter is a pointer to a
+            ///     null-terminated string that specifies the parameters to be passed to the
+            ///     application. The format of this string is determined by the verb that is to
+            ///     be invoked. If lpFile specifies a document file, lpParameters should be
+            ///     <see langword="null"/>.
             /// </param>
             /// <param name="lpDirectory">
-            ///     A pointer to a null-terminated string that specifies the default (working) directory for the action. If
-            ///     this value is NULL, the current working directory is used. If a relative path is provided at lpFile, do
-            ///     not use a relative path for lpDirectory.
+            ///     A pointer to a null-terminated string that specifies the default (working)
+            ///     directory for the action. If this value is <see langword="null"/>, the
+            ///     current working directory is used. If a relative path is provided at
+            ///     lpFile, do not use a relative path for lpDirectory.
             /// </param>
             /// <param name="nShowCmd">
-            ///     The flags that specify how an application is to be displayed when it is opened. If lpFile specifies a
-            ///     document file, the flag is simply passed to the associated application. It is up to the application to
-            ///     decide how to handle it.
+            ///     The flags that specify how an application is to be displayed when it is
+            ///     opened. If lpFile specifies a document file, the flag is simply passed to
+            ///     the associated application. It is up to the application to decide how to
+            ///     handle it.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, it returns a value greater than 32. If the function fails, it returns an error
-            ///     value that indicates the cause of the failure. The return value is cast as an HINSTANCE for backward
-            ///     compatibility with 16-bit Windows applications. It is not a true HINSTANCE, however.
+            ///     If the function succeeds, it returns a value greater than 32. If the
+            ///     function fails, it returns an error value that indicates the cause of the
+            ///     failure. The return value is cast as an HINSTANCE for backward
+            ///     compatibility with 16-bit Windows applications. It is not a
+            ///     <see langword="true"/> HINSTANCE, however.
             /// </returns>
             [DllImport(DllNames.Shell32, EntryPoint = "ShellExecute", SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
             internal static extern IntPtr ShellExecute(IntPtr hWnd, [MarshalAs(UnmanagedType.LPTStr)] string lpOperation, [MarshalAs(UnmanagedType.LPTStr)] string lpFile, [MarshalAs(UnmanagedType.LPTStr)] string lpParameters, [MarshalAs(UnmanagedType.LPTStr)] string lpDirectory, ShowWindowFlags nShowCmd);
 
             /// <summary>
-            ///     Retrieves information about an object in the file system, such as a file, folder, directory, or
-            ///     drive root.
+            ///     Retrieves information about an object in the file system, such as a file,
+            ///     folder, directory, or drive root.
             /// </summary>
             /// <param name="pszPath">
-            ///     A pointer to a null-terminated string of maximum length MAX_PATH that contains the path and file
-            ///     name. Both absolute and relative paths are valid.
+            ///     A pointer to a null-terminated string of maximum length MAX_PATH that
+            ///     contains the path and file name. Both absolute and relative paths are
+            ///     valid.
             ///     <para>
-            ///         If the uFlags parameter includes the <see cref="FileInfoFlags.PidL"/> flag, this parameter must
-            ///         be the address of an ITEMIDLIST (PIDL) structure that contains the list of item identifiers that
-            ///         uniquely identifies the file within the Shell's namespace. The PIDL must be a fully qualified PIDL.
-            ///         Relative PIDLs are not allowed.
+            ///         If the uFlags parameter includes the <see cref="FileInfoFlags.PidL"/>
+            ///         flag, this parameter must be the address of an ITEMIDLIST (PIDL)
+            ///         structure that contains the list of item identifiers that uniquely
+            ///         identifies the file within the Shell's namespace. The PIDL must be a
+            ///         fully qualified PIDL. Relative PIDLs are not allowed.
             ///     </para>
             ///     <para>
-            ///         If the uFlags parameter includes the <see cref="FileInfoFlags.UseFileAttributes"/> flag, this
-            ///         parameter does not have to be a valid file name. The function will proceed as if the file exists
-            ///         with the specified name and with the file attributes passed in the dwFileAttributes parameter. This
-            ///         allows you to obtain information about a file type by passing just the extension for pszPath and
-            ///         passing <see cref="System.IO.FileAttributes.Normal"/> in dwFileAttributes.
+            ///         If the uFlags parameter includes the
+            ///         <see cref="FileInfoFlags.UseFileAttributes"/> flag, this parameter does
+            ///         not have to be a valid file name. The function will proceed as if the
+            ///         file exists with the specified name and with the file attributes passed
+            ///         in the dwFileAttributes parameter. This allows you to obtain
+            ///         information about a file type by passing just the extension for pszPath
+            ///         and passing <see cref="System.IO.FileAttributes.Normal"/> in
+            ///         dwFileAttributes.
             ///     </para>
             ///     <para>
             ///         This string can use either short (the 8.3 form) or long file names.
             ///     </para>
             /// </param>
             /// <param name="dwFileAttributes">
-            ///     A combination of one or more file attribute flags (FILE_ATTRIBUTE_ values as defined in Winnt.h). If
-            ///     uFlags does not include the <see cref="FileInfoFlags.UseFileAttributes"/> flag, this parameter is
+            ///     A combination of one or more file attribute flags (FILE_ATTRIBUTE_ values
+            ///     as defined in Winnt.h). If uFlags does not include the
+            ///     <see cref="FileInfoFlags.UseFileAttributes"/> flag, this parameter is
             ///     ignored.
             /// </param>
             /// <param name="psfi">
-            ///     Pointer to a <see cref="ShFileInfo"/> structure to receive the file information.
+            ///     Pointer to a <see cref="ShFileInfo"/> structure to receive the file
+            ///     information.
             /// </param>
             /// <param name="cbFileInfo">
-            ///     The size, in bytes, of the <see cref="ShFileInfo"/> structure pointed to by the psfi parameter.
+            ///     The size, in bytes, of the <see cref="ShFileInfo"/> structure pointed to by
+            ///     the psfi parameter.
             /// </param>
             /// <param name="uFlags">
             ///     The flags that specify the file information to retrieve.
@@ -8132,21 +8746,22 @@ namespace SilDev
             /// <returns>
             /// </returns>
             [DllImport(DllNames.Shell32, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
-            internal static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, FileInfoFlags uFlags);
+            internal static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)]
+                                                        string pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, FileInfoFlags uFlags);
 
             /// <summary>
             ///     The ShowScrollBar function shows or hides the specified scroll bar.
             /// </summary>
             /// <param name="hWnd">
-            ///     Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the
-            ///     wBar parameter.
+            ///     Handle to a scroll bar control or a window with a standard scroll bar,
+            ///     depending on the value of the wBar parameter.
             /// </param>
             /// <param name="wBar">
             ///     Specifies the scroll bar(s) to be shown or hidden.
             /// </param>
             /// <param name="bShow">
-            ///     Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown;
-            ///     otherwise, it is hidden.
+            ///     Specifies whether the scroll bar is shown or hidden. If this parameter is
+            ///     <see langword="true"/>, the scroll bar is shown; otherwise, it is hidden.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -8162,10 +8777,11 @@ namespace SilDev
             ///     A handle to the window.
             /// </param>
             /// <param name="nCmdShow">
-            ///     Controls how the window is to be shown. This parameter is ignored the first time an application calls
-            ///     ShowWindow, if the program that launched the application provides a STARTUPINFO structure. Otherwise,
-            ///     the first time ShowWindow is called, the value should be the value obtained by the WinMain function in
-            ///     its nCmdShow parameter.
+            ///     Controls how the window is to be shown. This parameter is ignored the first
+            ///     time an application calls ShowWindow, if the program that launched the
+            ///     application provides a STARTUPINFO structure. Otherwise, the first time
+            ///     ShowWindow is called, the value should be the value obtained by the WinMain
+            ///     function in its nCmdShow parameter.
             /// </param>
             /// <returns>
             ///     If the window was previously visible, the return value is nonzero.
@@ -8177,14 +8793,15 @@ namespace SilDev
             internal static extern bool ShowWindow(IntPtr hWnd, ShowWindowFlags nCmdShow);
 
             /// <summary>
-            ///     Sets the show state of a window without waiting for the operation to complete.
+            ///     Sets the show state of a window without waiting for the operation to
+            ///     complete.
             /// </summary>
             /// <param name="hWnd">
             ///     A handle to the window.
             /// </param>
             /// <param name="nCmdShow">
-            ///     Controls how the window is to be shown. For a list of possible values, see the description of the
-            ///     ShowWindow function.
+            ///     Controls how the window is to be shown. For a list of possible values, see
+            ///     the description of the ShowWindow function.
             /// </param>
             /// <returns>
             ///     If the operation was successfully started, the return value is nonzero.
@@ -8196,18 +8813,21 @@ namespace SilDev
             ///     Starts a service.
             /// </summary>
             /// <param name="hService">
-            ///     A handle to the service. This handle is returned by the OpenService or CreateService function,
-            ///     and it must have the <see cref="ServiceAccessRights.Start"/> access right.
+            ///     A handle to the service. This handle is returned by the OpenService or
+            ///     CreateService function, and it must have the
+            ///     <see cref="ServiceAccessRights.Start"/> access right.
             /// </param>
             /// <param name="dwNumServiceArgs">
-            ///     The number of strings in the lpServiceArgVectors array. If lpServiceArgVectors is NULL, this
-            ///     parameter can be zero.
+            ///     The number of strings in the lpServiceArgVectors array. If
+            ///     lpServiceArgVectors is <see langword="null"/>, this parameter can be zero.
             /// </param>
             /// <param name="lpServiceArgVectors">
-            ///     The null-terminated strings to be passed to the ServiceMain function for the service as arguments.
-            ///     If there are no arguments, this parameter can be NULL. Otherwise, the first argument
-            ///     (lpServiceArgVectors[0]) is the name of the service, followed by any additional arguments
-            ///     (lpServiceArgVectors[1] through lpServiceArgVectors[dwNumServiceArgs-1]).
+            ///     The null-terminated strings to be passed to the ServiceMain function for
+            ///     the service as arguments. If there are no arguments, this parameter can be
+            ///     <see langword="null"/>. Otherwise, the first argument
+            ///     (lpServiceArgVectors[0]) is the name of the service, followed by any
+            ///     additional arguments (lpServiceArgVectors[1] through
+            ///     lpServiceArgVectors[dwNumServiceArgs-1]).
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -8221,13 +8841,15 @@ namespace SilDev
             /// <param name="hProcess">
             ///     A handle to the process to be terminated.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessTerminate"/> access right.
+            ///         The handle must have the <see cref="AccessRights.ProcessTerminate"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="uExitCode">
-            ///     The exit code to be used by the process and threads terminated as a result of this call.
-            ///     Use the GetExitCodeProcess function to retrieve a process's exit value. Use the
-            ///     GetExitCodeThread function to retrieve a thread's exit value.
+            ///     The exit code to be used by the process and threads terminated as a result
+            ///     of this call. Use the GetExitCodeProcess function to retrieve a process's
+            ///     exit value. Use the GetExitCodeThread function to retrieve a thread's exit
+            ///     value.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -8237,51 +8859,56 @@ namespace SilDev
             internal static extern bool TerminateProcess(IntPtr hProcess, uint uExitCode);
 
             /// <summary>
-            ///     The timeBeginPeriod function requests a minimum resolution for periodic timers.
+            ///     The timeBeginPeriod function requests a minimum resolution for periodic
+            ///     timers.
             /// </summary>
             /// <param name="uPeriod">
-            ///     Minimum timer resolution, in milliseconds, for the application or device driver. A lower value
-            ///     specifies a higher (more accurate) resolution.
+            ///     Minimum timer resolution, in milliseconds, for the application or device
+            ///     driver. A lower value specifies a higher (more accurate) resolution.
             /// </param>
             /// <returns>
-            ///     Returns TIMERR_NOERROR if successful or TIMERR_NOCANDO if the resolution specified in uPeriod
-            ///     is out of range.
+            ///     Returns TIMERR_NOERROR if successful or TIMERR_NOCANDO if the resolution
+            ///     specified in uPeriod is out of range.
             /// </returns>
             [DllImport(DllNames.Winmm, EntryPoint = "timeBeginPeriod", SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern uint TimeBeginPeriod(uint uPeriod);
 
             /// <summary>
-            ///     The timeEndPeriod function clears a previously set minimum timer resolution.
+            ///     The timeEndPeriod function clears a previously set minimum timer
+            ///     resolution.
             /// </summary>
             /// <param name="uPeriod">
-            ///     Minimum timer resolution specified in the previous call to the timeBeginPeriod function.
+            ///     Minimum timer resolution specified in the previous call to the
+            ///     timeBeginPeriod function.
             /// </param>
             /// <returns>
-            ///     Returns TIMERR_NOERROR if successful or TIMERR_NOCANDO if the resolution specified in uPeriod
-            ///     is out of range.
+            ///     Returns TIMERR_NOERROR if successful or TIMERR_NOCANDO if the resolution
+            ///     specified in uPeriod is out of range.
             /// </returns>
             [DllImport(DllNames.Winmm, EntryPoint = "timeEndPeriod", SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern uint TimeEndPeriod(uint uPeriod);
 
             /// <summary>
-            ///     Removes a hook procedure installed in a hook chain by the SetWindowsHookEx function.
+            ///     Removes a hook procedure installed in a hook chain by the SetWindowsHookEx
+            ///     function.
             /// </summary>
             /// <param name="hhk">
-            ///     A handle to the hook to be removed. This parameter is a hook handle obtained by a previous call
-            ///     SetWindowsHookEx.
+            ///     A handle to the hook to be removed. This parameter is a hook handle
+            ///     obtained by a previous call SetWindowsHookEx.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is nonzero. If the function fails, the return value
-            ///     is zero.
+            ///     If the function succeeds, the return value is nonzero. If the function
+            ///     fails, the return value is zero.
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern int UnhookWindowsHookEx(IntPtr hhk);
 
             /// <summary>
-            ///     The UpdateWindow function updates the client area of the specified window by sending a WM_PAINT message to the
-            ///     window if the window's update region is not empty. The function sends a WM_PAINT message directly to the window
-            ///     procedure of the specified window, bypassing the application queue. If the update region is empty, no message
-            ///     is sent.
+            ///     The UpdateWindow function updates the client area of the specified window
+            ///     by sending a WM_PAINT message to the window if the window's update region
+            ///     is not empty. The function sends a WM_PAINT message directly to the window
+            ///     procedure of the specified window, bypassing the application queue. If the
+            ///     update region is empty, no message is sent.
             /// </summary>
             /// <param name="hWnd">
             ///     Handle to the window to be updated.
@@ -8293,70 +8920,75 @@ namespace SilDev
             internal static extern bool UpdateWindow(IntPtr hWnd);
 
             /// <summary>
-            ///     Reserves, commits, or changes the state of a region of memory within the virtual address space
-            ///     of a specified process. The function initializes the memory it allocates to zero.
+            ///     Reserves, commits, or changes the state of a region of memory within the
+            ///     virtual address space of a specified process. The function initializes the
+            ///     memory it allocates to zero.
             /// </summary>
             /// <param name="hProcess">
-            ///     The handle to a process. The function allocates memory within the virtual address
-            ///     space of this process.
+            ///     The handle to a process. The function allocates memory within the virtual
+            ///     address space of this process.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/> access
-            ///         right.
+            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="lpAddress">
-            ///     The pointer that specifies a desired starting address for the region of pages
-            ///     that you want to allocate.
+            ///     The pointer that specifies a desired starting address for the region of
+            ///     pages that you want to allocate.
             /// </param>
             /// <param name="dwSize">
             ///     The size of the region of memory to allocate, in bytes.
             /// </param>
             /// <param name="flAllocationType">
-            ///     The type of memory allocation. This parameter must contain one of the following values.
+            ///     The type of memory allocation. This parameter must contain one of the
+            ///     following values.
             /// </param>
             /// <param name="flProtect">
             ///     The memory protection for the region of pages to be allocated.
             /// </param>
             /// <returns>
-            ///     If the function succeeds, the return value is the base address of the allocated region
-            ///     of pages.
+            ///     If the function succeeds, the return value is the base address of the
+            ///     allocated region of pages.
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, MemAllocTypes flAllocationType, MemProtectFlags flProtect);
 
             /// <summary>
-            ///     Releases, decommits, or releases and decommits a region of memory within the virtual address
-            ///     space of a specified process.
+            ///     Releases, decommits, or releases and decommits a region of memory within
+            ///     the virtual address space of a specified process.
             /// </summary>
             /// <param name="hProcess">
-            ///     The handle to a process. The function allocates memory within the virtual address space of this
-            ///     process.
+            ///     The handle to a process. The function allocates memory within the virtual
+            ///     address space of this process.
             ///     <para>
-            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/> access
-            ///         right.
+            ///         The handle must have the <see cref="AccessRights.ProcessVmOperation"/>
+            ///         access right.
             ///     </para>
             /// </param>
             /// <param name="lpAddress">
             ///     A pointer to the starting address of the region of memory to be freed.
             ///     <para>
-            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>, lpAddress must be
-            ///         the base address returned by the VirtualAllocEx function when the region is reserved.
+            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>,
+            ///         lpAddress must be the base address returned by the VirtualAllocEx
+            ///         function when the region is reserved.
             ///     </para>
             /// </param>
             /// <param name="dwSize">
             ///     The size of the region of memory to free, in bytes.
             ///     <para>
-            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>, dwSize must
-            ///         be 0 (zero). The function frees the entire region that is reserved in the initial
-            ///         allocation call to VirtualAllocEx.
+            ///         If the dwFreeType parameter is <see cref="MemAllocTypes.Release"/>,
+            ///         dwSize must be 0 (zero). The function frees the entire region that is
+            ///         reserved in the initial allocation call to VirtualAllocEx.
             ///     </para>
             ///     <para>
-            ///         If dwFreeType is <see cref="MemAllocTypes.Decommit"/>, the function decommits all memory
-            ///         pages that contain one or more bytes in the range from the lpAddress parameter to
-            ///         (lpAddress+dwSize). This means, for example, that a 2-byte region of memory that straddles a
-            ///         page boundary causes both pages to be decommitted. If lpAddress is the base address returned by
-            ///         VirtualAllocEx and dwSize is 0 (zero), the function decommits the entire region that is
-            ///         allocated by VirtualAllocEx. After that, the entire region is in the reserved state.
+            ///         If dwFreeType is <see cref="MemAllocTypes.Decommit"/>, the function
+            ///         decommits all memory pages that contain one or more bytes in the range
+            ///         from the lpAddress parameter to (lpAddress+dwSize). This means, for
+            ///         example, that a 2-byte region of memory that straddles a page boundary
+            ///         causes both pages to be decommitted. If lpAddress is the base address
+            ///         returned by VirtualAllocEx and dwSize is 0 (zero), the function
+            ///         decommits the entire region that is allocated by VirtualAllocEx. After
+            ///         that, the entire region is in the reserved state.
             ///     </para>
             /// </param>
             /// <param name="dwFreeType">
@@ -8369,16 +9001,18 @@ namespace SilDev
             internal static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, MemFreeType dwFreeType);
 
             /// <summary>
-            ///     The waveOutGetVolume function retrieves the current volume level of the specified waveform-audio
-            ///     output device.
+            ///     The waveOutGetVolume function retrieves the current volume level of the
+            ///     specified waveform-audio output device.
             /// </summary>
             /// <param name="hwo">
-            ///     Handle to an open waveform-audio output device. This parameter can also be a device identifier.
+            ///     Handle to an open waveform-audio output device. This parameter can also be
+            ///     a device identifier.
             /// </param>
             /// <param name="dwVolume">
-            ///     Pointer to a variable to be filled with the current volume setting. The low-order word of
-            ///     this location contains the left-channel volume setting, and the high-order word contains the
-            ///     right-channel setting. A value of 0xFFFF represents full volume, and a value of 0x0 is silence.
+            ///     Pointer to a variable to be filled with the current volume setting. The
+            ///     low-order word of this location contains the left-channel volume setting,
+            ///     and the high-order word contains the right-channel setting. A value of
+            ///     0xFFFF represents full volume, and a value of 0x0 is silence.
             /// </param>
             /// <returns>
             ///     Returns MMSYSERR_NOERROR if successful or an error otherwise.
@@ -8387,15 +9021,17 @@ namespace SilDev
             internal static extern int WaveOutGetVolume(IntPtr hwo, out uint dwVolume);
 
             /// <summary>
-            ///     The waveOutSetVolume function sets the volume level of the specified waveform-audio output device.
+            ///     The waveOutSetVolume function sets the volume level of the specified
+            ///     waveform-audio output device.
             /// </summary>
             /// <param name="hwo">
-            ///     Handle to an open waveform-audio output device. This parameter can also be a device identifier.
+            ///     Handle to an open waveform-audio output device. This parameter can also be
+            ///     a device identifier.
             /// </param>
             /// <param name="dwVolume">
-            ///     New volume setting. The low-order word contains the left-channel volume setting, and the high-order
-            ///     word contains the right-channel setting. A value of 0xFFFF represents full volume, and a value of
-            ///     0x0 is silence.
+            ///     New volume setting. The low-order word contains the left-channel volume
+            ///     setting, and the high-order word contains the right-channel setting. A
+            ///     value of 0xFFFF represents full volume, and a value of 0x0 is silence.
             /// </param>
             /// <returns>
             ///     Returns MMSYSERR_NOERROR if successful or an error otherwise.
@@ -8407,18 +9043,20 @@ namespace SilDev
             ///     Copies a string into the specified section of an initialization file.
             /// </summary>
             /// <param name="lpAppName">
-            ///     The name of the section to which the string will be copied. If the section does not exist, it is
-            ///     created. The name of the section is case-independent; the string can be any combination of uppercase
-            ///     and lowercase letters.
+            ///     The name of the section to which the string will be copied. If the section
+            ///     does not exist, it is created. The name of the section is case-independent;
+            ///     the string can be any combination of uppercase and lowercase letters.
             /// </param>
             /// <param name="lpKeyName">
-            ///     The name of the key to be associated with a string. If the key does not exist in the specified section,
-            ///     it is created. If this parameter is NULL, the entire section, including all entries within the section,
-            ///     is deleted.
+            ///     The name of the key to be associated with a string. If the key does not
+            ///     exist in the specified section, it is created. If this parameter is
+            ///     <see langword="null"/>, the entire section, including all entries within
+            ///     the section, is deleted.
             /// </param>
             /// <param name="lpString">
-            ///     A null-terminated string to be written to the file. If this parameter is NULL, the key pointed to by the
-            ///     lpKeyName parameter is deleted.
+            ///     A null-terminated string to be written to the file. If this parameter is
+            ///     <see langword="null"/>, the key pointed to by the lpKeyName parameter is
+            ///     deleted.
             /// </param>
             /// <param name="lpFileName">
             ///     The name of the initialization file.
@@ -8430,8 +9068,8 @@ namespace SilDev
             internal static extern int WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
 
             /// <summary>
-            ///     Writes data to an area of memory in a specified process. The entire area to be written to must be
-            ///     accessible or the operation fails.
+            ///     Writes data to an area of memory in a specified process. The entire area to
+            ///     be written to must be accessible or the operation fails.
             /// </summary>
             /// <param name="hProcess">
             ///     A handle to the process memory to be modified. The handle must have
@@ -8439,19 +9077,22 @@ namespace SilDev
             ///     <see cref="AccessRights.ProcessVmOperation"/> access to the process.
             /// </param>
             /// <param name="lpBaseAddress">
-            ///     A pointer to the base address in the specified process to which data is written. Before data transfer
-            ///     occurs, the system verifies that all data in the base address and memory of the specified size is
-            ///     accessible for write access, and if it is not accessible, the function fails.
+            ///     A pointer to the base address in the specified process to which data is
+            ///     written. Before data transfer occurs, the system verifies that all data in
+            ///     the base address and memory of the specified size is accessible for write
+            ///     access, and if it is not accessible, the function fails.
             /// </param>
             /// <param name="lpBuffer">
-            ///     A pointer to the buffer that contains data to be written in the address space of the specified process.
+            ///     A pointer to the buffer that contains data to be written in the address
+            ///     space of the specified process.
             /// </param>
             /// <param name="nSize">
             ///     The number of bytes to be written to the specified process.
             /// </param>
             /// <param name="lpNumberOfBytesWritten">
-            ///     A pointer to a variable that receives the number of bytes transferred into the specified process. This
-            ///     parameter is optional. If lpNumberOfBytesWritten is NULL, the parameter is ignored.
+            ///     A pointer to a variable that receives the number of bytes transferred into
+            ///     the specified process. This parameter is optional. If
+            ///     lpNumberOfBytesWritten is <see langword="null"/>, the parameter is ignored.
             /// </param>
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
@@ -8467,36 +9108,38 @@ namespace SilDev
         internal struct ProcessInformation
         {
             /// <summary>
-            ///     A handle to the newly created process. The handle is used to specify the process in all functions
-            ///     that perform operations on the process object.
+            ///     A handle to the newly created process. The handle is used to specify the
+            ///     process in all functions that perform operations on the process object.
             /// </summary>
             internal IntPtr hProcess;
 
             /// <summary>
-            ///     A handle to the primary thread of the newly created process. The handle is used to specify the
-            ///     thread in all functions that perform operations on the thread object.
+            ///     A handle to the primary thread of the newly created process. The handle is
+            ///     used to specify the thread in all functions that perform operations on the
+            ///     thread object.
             /// </summary>
             internal IntPtr hThread;
 
             /// <summary>
-            ///     A value that can be used to identify a process. The value is valid from the time the process is
-            ///     created until all handles to the process are closed and the process object is freed; at this
-            ///     point, the identifier may be reused.
+            ///     A value that can be used to identify a process. The value is valid from the
+            ///     time the process is created until all handles to the process are closed and
+            ///     the process object is freed; at this point, the identifier may be reused.
             /// </summary>
             internal int dwProcessId;
 
             /// <summary>
-            ///     A value that can be used to identify a thread. The value is valid from the time the thread is
-            ///     created until all handles to the thread are closed and the thread object is freed; at this point,
-            ///     the identifier may be reused.
+            ///     A value that can be used to identify a thread. The value is valid from the
+            ///     time the thread is created until all handles to the thread are closed and
+            ///     the thread object is freed; at this point, the identifier may be reused.
             /// </summary>
             internal int dwThreadId;
         }
 
         /// <summary>
-        ///     Contains the security descriptor for an object and specifies whether the handle retrieved
-        ///     by specifying this structure is inheritable. This structure provides security settings for
-        ///     objects created by various functions.
+        ///     Contains the security descriptor for an object and specifies whether the
+        ///     handle retrieved by specifying this structure is inheritable. This
+        ///     structure provides security settings for objects created by various
+        ///     functions.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         internal struct SecurityAttributes
@@ -8508,18 +9151,20 @@ namespace SilDev
             internal int nLength;
 
             /// <summary>
-            ///     A pointer to a security descriptor structure that controls access to the object. If the
-            ///     value of this member is NULL, the object is assigned the default security descriptor
-            ///     associated with the access token of the calling process. This is not the same as granting
-            ///     access to everyone by assigning a NULL discretionary access control list (DACL). By default,
-            ///     the default DACL in the access token of a process allows access only to the user represented
-            ///     by the access token.
+            ///     A pointer to a security descriptor structure that controls access to the
+            ///     object. If the value of this member is <see langword="null"/>, the object
+            ///     is assigned the default security descriptor associated with the access
+            ///     token of the calling process. This is not the same as granting access to
+            ///     everyone by assigning a <see langword="null"/> discretionary access control
+            ///     list (DACL). By default, the default DACL in the access token of a process
+            ///     allows access only to the user represented by the access token.
             /// </summary>
             internal IntPtr lpSecurityDescriptor;
 
             /// <summary>
-            ///     A value that specifies whether the returned handle is inherited when a new process is created.
-            ///     If this member is TRUE, the new process inherits the handle.
+            ///     A value that specifies whether the returned handle is inherited when a new
+            ///     process is created. If this member is <see langword="true"/>, the new
+            ///     process inherits the handle.
             /// </summary>
             internal int bInheritHandle;
         }
@@ -8531,21 +9176,24 @@ namespace SilDev
         internal class ServiceStatus
         {
             /// <summary>
-            ///     The check-point value the service increments periodically to report its progress during a
-            ///     lengthy start, stop, pause, or continue operation. For example, the service should increment
-            ///     this value as it completes each step of its initialization when it is starting up. The user
-            ///     interface program that invoked the operation on the service uses this value to track the
-            ///     progress of the service during a lengthy operation. This value is not valid and should be
-            ///     zero when the service does not have a start, stop, pause, or continue operation pending.
+            ///     The check-point value the service increments periodically to report its
+            ///     progress during a lengthy start, stop, pause, or continue operation. For
+            ///     example, the service should increment this value as it completes each step
+            ///     of its initialization when it is starting up. The user interface program
+            ///     that invoked the operation on the service uses this value to track the
+            ///     progress of the service during a lengthy operation. This value is not valid
+            ///     and should be zero when the service does not have a start, stop, pause, or
+            ///     continue operation pending.
             /// </summary>
             internal int dwCheckPoint;
 
             /// <summary>
-            ///     The control codes the service accepts and processes in its handler function (see
-            ///     Handler and HandlerEx). A user interface process can control a service by specifying
-            ///     a control command in the ControlService or ControlServiceEx function. By default, all
-            ///     services accept the  value. To accept the SERVICE_CONTROL_DEVICEEVENT value, the service
-            ///     must register to receive device events by using the RegisterDeviceNotification function.
+            ///     The control codes the service accepts and processes in its handler function
+            ///     (see Handler and HandlerEx). A user interface process can control a service
+            ///     by specifying a control command in the ControlService or ControlServiceEx
+            ///     function. By default, all services accept the  value. To accept the
+            ///     SERVICE_CONTROL_DEVICEEVENT value, the service must register to receive
+            ///     device events by using the RegisterDeviceNotification function.
             /// </summary>
             internal ServiceControlTypes dwControlsAccepted;
 
@@ -8555,9 +9203,9 @@ namespace SilDev
             internal ServiceStateTypes dwCurrentState;
 
             /// <summary>
-            ///     A service-specific error code that the service returns when an error occurs while the
-            ///     service is starting or stopping. This value is ignored unless the dwWin32ExitCode member
-            ///     is set to ERROR_SERVICE_SPECIFIC_ERROR.
+            ///     A service-specific error code that the service returns when an error occurs
+            ///     while the service is starting or stopping. This value is ignored unless the
+            ///     dwWin32ExitCode member is set to ERROR_SERVICE_SPECIFIC_ERROR.
             /// </summary>
             internal int dwServiceSpecificExitCode;
 
@@ -8567,31 +9215,34 @@ namespace SilDev
             internal ServiceTypes dwServiceType;
 
             /// <summary>
-            ///     The estimated time required for a pending start, stop, pause, or continue operation, in
-            ///     milliseconds. Before the specified amount of time has elapsed, the service should make its
-            ///     next call to the SetServiceStatus function with either an incremented dwCheckPoint value or
-            ///     a change in dwCurrentState. If the amount of time specified by dwWaitHint passes, and
-            ///     dwCheckPoint has not been incremented or dwCurrentState has not changed, the service control
-            ///     manager or service control program can assume that an error has occurred and the service
-            ///     should be stopped. However, if the service shares a process with other services, the service
-            ///     control manager cannot terminate the service application because it would have to terminate
+            ///     The estimated time required for a pending start, stop, pause, or continue
+            ///     operation, in milliseconds. Before the specified amount of time has
+            ///     elapsed, the service should make its next call to the SetServiceStatus
+            ///     function with either an incremented dwCheckPoint value or a change in
+            ///     dwCurrentState. If the amount of time specified by dwWaitHint passes, and
+            ///     dwCheckPoint has not been incremented or dwCurrentState has not changed,
+            ///     the service control manager or service control program can assume that an
+            ///     error has occurred and the service should be stopped. However, if the
+            ///     service shares a process with other services, the service control manager
+            ///     cannot terminate the service application because it would have to terminate
             ///     the other services sharing the process as well.
             /// </summary>
             internal int dwWaitHint;
 
             /// <summary>
-            ///     The error code the service uses to report an error that occurs when it is starting or
-            ///     stopping. To return an error code specific to the service, the service must set this
-            ///     value to ERROR_SERVICE_SPECIFIC_ERROR to indicate that the dwServiceSpecificExitCode
-            ///     member contains the error code. The service should set this value to NO_ERROR when it
-            ///     is running and on normal termination.
+            ///     The error code the service uses to report an error that occurs when it is
+            ///     starting or stopping. To return an error code specific to the service, the
+            ///     service must set this value to ERROR_SERVICE_SPECIFIC_ERROR to indicate
+            ///     that the dwServiceSpecificExitCode member contains the error code. The
+            ///     service should set this value to NO_ERROR when it is running and on normal
+            ///     termination.
             /// </summary>
             internal int dwWin32ExitCode;
         }
 
         /// <summary>
-        ///     Specifies the window station, desktop, standard handles, and appearance of the main window for
-        ///     a process at creation time.
+        ///     Specifies the window station, desktop, standard handles, and appearance of
+        ///     the main window for a process at creation time.
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         internal struct StartupInfo
@@ -8602,74 +9253,79 @@ namespace SilDev
             internal int cb;
 
             /// <summary>
-            ///     Reserved; must be NULL.
+            ///     Reserved; must be <see langword="null"/>.
             /// </summary>
             internal string lpReserved;
 
             /// <summary>
-            ///     The name of the desktop, or the name of both the desktop and window station for this process.
-            ///     A backslash in the string indicates that the string includes both the desktop and window station
-            ///     names.
+            ///     The name of the desktop, or the name of both the desktop and window station
+            ///     for this process. A backslash in the string indicates that the string
+            ///     includes both the desktop and window station names.
             /// </summary>
             internal string lpDesktop;
 
             /// <summary>
-            ///     For console processes, this is the title displayed in the title bar if a new console window is
-            ///     created. If NULL, the name of the executable file is used as the window title instead. This
-            ///     parameter must be NULL for GUI or console processes that do not create a new console window.
+            ///     For console processes, this is the title displayed in the title bar if a
+            ///     new console window is created. If <see langword="null"/>, the name of the
+            ///     executable file is used as the window title instead. This parameter must be
+            ///     <see langword="null"/> for GUI or console processes that do not create a
+            ///     new console window.
             /// </summary>
             internal string lpTitle;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UsePosition"/>, this member is the x offset of the
-            ///     upper left corner of a window if a new window is created, in pixels. Otherwise, this member is
-            ///     ignored.
+            ///     If dwFlags specifies <see cref="StartFlags.UsePosition"/>, this member is
+            ///     the x offset of the upper left corner of a window if a new window is
+            ///     created, in pixels. Otherwise, this member is ignored.
             /// </summary>
             internal int dwX;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UsePosition"/>, this member is the y offset of the
-            ///     upper left corner of a window if a new window is created, in pixels. Otherwise, this member is
-            ///     ignored.
+            ///     If dwFlags specifies <see cref="StartFlags.UsePosition"/>, this member is
+            ///     the y offset of the upper left corner of a window if a new window is
+            ///     created, in pixels. Otherwise, this member is ignored.
             /// </summary>
             internal int dwY;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseSize"/>, this member is the width of the window
-            ///     if a new window is created, in pixels. Otherwise, this member is ignored.
+            ///     If dwFlags specifies <see cref="StartFlags.UseSize"/>, this member is the
+            ///     width of the window if a new window is created, in pixels. Otherwise, this
+            ///     member is ignored.
             /// </summary>
             internal int dwXSize;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseSize"/>, this member is the height of the window
-            ///     if a new window is created, in pixels. Otherwise, this member is ignored.
+            ///     If dwFlags specifies <see cref="StartFlags.UseSize"/>, this member is the
+            ///     height of the window if a new window is created, in pixels. Otherwise, this
+            ///     member is ignored.
             /// </summary>
             internal int dwYSize;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseCountChars"/>, if a new console window is created
-            ///     in a console process, this member specifies the screen buffer width, in character columns.
-            ///     Otherwise, this member is ignored.
+            ///     If dwFlags specifies <see cref="StartFlags.UseCountChars"/>, if a new
+            ///     console window is created in a console process, this member specifies the
+            ///     screen buffer width, in character columns. Otherwise, this member is
+            ///     ignored.
             /// </summary>
             internal int dwXCountChars;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseCountChars"/>, if a new console window is created
-            ///     in a console process, this member specifies the screen buffer height, in character rows.
-            ///     Otherwise, this member is ignored.
+            ///     If dwFlags specifies <see cref="StartFlags.UseCountChars"/>, if a new
+            ///     console window is created in a console process, this member specifies the
+            ///     screen buffer height, in character rows. Otherwise, this member is ignored.
             /// </summary>
             internal int dwYCountChars;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseFillAttribute"/>, this member is the initial text
-            ///     and background colors if a new console window is created in a console application. Otherwise,
-            ///     this member is ignored.
+            ///     If dwFlags specifies <see cref="StartFlags.UseFillAttribute"/>, this member
+            ///     is the initial text and background colors if a new console window is
+            ///     created in a console application. Otherwise, this member is ignored.
             /// </summary>
             internal int dwFillAttribute;
 
             /// <summary>
-            ///     A bitfield that determines whether certain <see cref="StartupInfo"/> members are used when the
-            ///     process creates a window.
+            ///     A bitfield that determines whether certain <see cref="StartupInfo"/>
+            ///     members are used when the process creates a window.
             /// </summary>
             internal StartFlags dwFlags;
 
@@ -8689,23 +9345,24 @@ namespace SilDev
             internal IntPtr lpReserved2;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is the standard input
-            ///     handle for the process. If <see cref="StartFlags.UseStdHandles"/> is not specified, the default
-            ///     for standard input is the keyboard buffer.
+            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is
+            ///     the standard input handle for the process. If
+            ///     <see cref="StartFlags.UseStdHandles"/> is not specified, the default for
+            ///     standard input is the keyboard buffer.
             /// </summary>
             internal IntPtr hStdInput;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is the standard output
-            ///     handle for the process. Otherwise, this member is ignored and the default for standard output
-            ///     is the console window's buffer.
+            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is
+            ///     the standard output handle for the process. Otherwise, this member is
+            ///     ignored and the default for standard output is the console window's buffer.
             /// </summary>
             internal IntPtr hStdOutput;
 
             /// <summary>
-            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is the standard error
-            ///     handle for the process. Otherwise, this member is ignored and the default for standard error is
-            ///     the console window's buffer.
+            ///     If dwFlags specifies <see cref="StartFlags.UseStdHandles"/>, this member is
+            ///     the standard error handle for the process. Otherwise, this member is
+            ///     ignored and the default for standard error is the console window's buffer.
             /// </summary>
             internal IntPtr hStdError;
         }
@@ -8714,25 +9371,25 @@ namespace SilDev
         ///     Contains information about a system appbar message.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public struct AppBarData : IDisposable
+        public struct AppBarData : IDisposable, IEquatable<AppBarData>
         {
             /// <summary>
             ///     The size of the structure, in bytes.
             /// </summary>
-            public uint cbSize;
+            public uint CbSize { get; internal set; }
 
             /// <summary>
-            ///     The handle to the appbar window. Not all messages use this member. See the individual message
-            ///     page to see if you need to provide an hWind value.
+            ///     The handle to the appbar window. Not all messages use this member. See the
+            ///     individual message page to see if you need to provide an hWind value.
             /// </summary>
-            public IntPtr hWnd { get; internal set; }
+            public IntPtr HWnd { get; internal set; }
 
             /// <summary>
-            ///     An application-defined message identifier. The application uses the specified identifier for
-            ///     notification messages that it sends to the appbar identified by the hWnd member.
+            ///     An application-defined message identifier. The application uses the
+            ///     specified identifier for notification messages that it sends to the appbar
+            ///     identified by the hWnd member.
             /// </summary>
-            public uint uCallbackMessag;
+            public uint UCallbackMessage { get; internal set; }
 
             /// <summary>
             ///     A value that specifies an edge of the screen.
@@ -8746,138 +9403,340 @@ namespace SilDev
             ///         <see cref="AppBarMessageOption.SetPos"/>.
             ///     </para>
             /// </summary>
-            public uint uEdge;
+            public uint UEdge { get; internal set; }
 
             /// <summary>
-            ///     A <see cref="Rectangle"/> structure whose use varies depending on the message:
+            ///     A <see cref="Rectangle"/> structure whose use varies depending on the
+            ///     message:
             ///     <para>
             ///         <see cref="AppBarMessageOption.GetTaskBarPos"/>,
             ///         <see cref="AppBarMessageOption.QueryPos"/>,
-            ///         <see cref="AppBarMessageOption.SetPos"/>: The bounding rectangle, in screen
-            ///         coordinates, of an appbar or the Windows taskbar.
+            ///         <see cref="AppBarMessageOption.SetPos"/>: The bounding rectangle, in
+            ///         screen coordinates, of an appbar or the Windows taskbar.
             ///     </para>
             ///     <para>
             ///         <see cref="AppBarMessageOption.GetAutoHideBarEx"/>,
             ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>,
-            ///         <see cref="AppBarMessageOption.SetPos"/>: The monitor on which the operation
-            ///         is being performed.
+            ///         <see cref="AppBarMessageOption.SetPos"/>: The monitor on which the
+            ///         operation is being performed.
             ///     </para>
             /// </summary>
-            public Rectangle rc;
+            public Rectangle Rect { get; internal set; }
 
             /// <summary>
             ///     A message-dependent value. This member is used with these messages:
             ///     <para>
-            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>: Registers or unregisters an
-            ///         autohide appbar for a given edge of the screen. If the system has multiple monitors,
-            ///         the monitor that contains the primary taskbar is used.
+            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>: Registers or
+            ///         unregisters an autohide appbar for a given edge of the screen. If the
+            ///         system has multiple monitors, the monitor that contains the primary
+            ///         taskbar is used.
             ///     </para>
             ///     <para>
-            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>: Registers or unregisters an
-            ///         autohide appbar for a given edge of the screen. This message extends
-            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/> by enabling you to specify a
-            ///         particular monitor, for use in multiple monitor situations.
+            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>: Registers or
+            ///         unregisters an autohide appbar for a given edge of the screen. This
+            ///         message extends <see cref="AppBarMessageOption.SetAutoHideBar"/> by
+            ///         enabling you to specify a particular monitor, for use in multiple
+            ///         monitor situations.
             ///     </para>
             ///     <para>
-            ///         <see cref="AppBarMessageOption.SetState"/>: Sets the autohide and always-on-top
-            ///         states of the Windows taskbar.
+            ///         <see cref="AppBarMessageOption.SetState"/>: Sets the autohide and
+            ///         always-on-top states of the Windows taskbar.
             ///     </para>
             /// </summary>
-            public int lParam;
+            public int LParam { get; internal set; }
 
             /// <summary>
             ///     Releases all resources used by this <see cref="AppBarData"/>.
             /// </summary>
             public void Dispose()
             {
-                if (hWnd == IntPtr.Zero)
+                if (HWnd == IntPtr.Zero)
                     return;
-                NativeMethods.LocalFree(hWnd);
-                hWnd = IntPtr.Zero;
+                NativeMethods.LocalFree(HWnd);
+                HWnd = IntPtr.Zero;
             }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="AppBarData"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            public bool Equals(AppBarData other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is AppBarData item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="AppBarData"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            public static bool operator ==(AppBarData left, AppBarData right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="AppBarData"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            public static bool operator !=(AppBarData left, AppBarData right) =>
+                !(left == right);
         }
 
         /// <summary>
-        ///     Defines the message parameters passed to a <see cref="Win32HookFlags.WhCallWndProcRet"/>
-        ///     hook procedure.
+        ///     Defines the message parameters passed to a
+        ///     <see cref="Win32HookFlags.WhCallWndProcRet"/> hook procedure.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         [StructLayout(LayoutKind.Sequential)]
-        public struct CallWndProcRet
+        public struct CallWndProcRet : IEquatable<CallWndProcRet>
         {
             /// <summary>
-            ///     The return value of the window procedure that processed the message specified by
-            ///     the message value.
+            ///     The return value of the window procedure that processed the message
+            ///     specified by the message value.
             /// </summary>
-            public IntPtr lResult { get; internal set; }
+            public IntPtr LResult { get; internal set; }
 
             /// <summary>
-            ///     Additional information about the message. The exact meaning depends on the message
+            ///     Additional information about the message. The exact meaning depends on the
+            ///     message value.
+            /// </summary>
+            public IntPtr LParam { get; internal set; }
+
+            /// <summary>
+            ///     Additional information about the message. The exact meaning depends on the
+            ///     message value.
+            /// </summary>
+            public IntPtr WParam { get; internal set; }
+
+            /// <summary>
+            ///     The message value.
+            /// </summary>
+            public uint Message { get; internal set; }
+
+            /// <summary>
+            ///     A handle to the window that processed the message specified by the message
             ///     value.
             /// </summary>
-            public IntPtr lParam { get; internal set; }
+            public IntPtr HWnd { get; internal set; }
 
             /// <summary>
-            ///     Additional information about the message. The exact meaning depends on the message
-            ///     value.
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="CallWndProcRet"/> instance.
             /// </summary>
-            public IntPtr wParam { get; internal set; }
+            /// <param name="other">
+            ///     The <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            public bool Equals(CallWndProcRet other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
 
             /// <summary>
-            ///     The message.
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
             /// </summary>
-            public uint message;
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is CallWndProcRet item))
+                    return false;
+                return Equals(item);
+            }
 
             /// <summary>
-            ///     A handle to the window that processed the message specified by the message value.
+            ///     Returns the hash code for this instance.
             /// </summary>
-            public IntPtr hwnd { get; internal set; }
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CallWndProcRet"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            public static bool operator ==(CallWndProcRet left, CallWndProcRet right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CallWndProcRet"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            public static bool operator !=(CallWndProcRet left, CallWndProcRet right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Contains data to be passed to another application by the
         ///     <see cref="WindowMenuFlags.WmCopyData"/> message.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         [StructLayout(LayoutKind.Sequential)]
-        public struct CopyData : IDisposable
+        public struct CopyData : IDisposable, IEquatable<CopyData>
         {
             /// <summary>
             ///     The data to be passed to the receiving application.
             /// </summary>
-            public IntPtr dwData { get; internal set; }
+            public IntPtr DwData { get; internal set; }
 
             /// <summary>
             ///     The size, in bytes, of the data pointed to by the lpData member.
             /// </summary>
-            public int cbData;
+            public int CbData { get; set; }
 
             /// <summary>
-            ///     The data to be passed to the receiving application. This member can be NULL.
+            ///     The data to be passed to the receiving application. This member can be
+            ///     <see langword="null"/>.
             /// </summary>
-            public IntPtr lpData { get; internal set; }
+            public IntPtr LpData { get; internal set; }
 
             /// <summary>
             ///     Releases all resources used by this <see cref="CopyData"/>.
             /// </summary>
             public void Dispose()
             {
-                if (lpData == IntPtr.Zero)
+                if (LpData == IntPtr.Zero)
                     return;
-                NativeMethods.LocalFree(lpData);
-                lpData = IntPtr.Zero;
+                NativeMethods.LocalFree(LpData);
+                LpData = IntPtr.Zero;
             }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="CopyData"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="CopyData"/> instance to compare.
+            /// </param>
+            public bool Equals(CopyData other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is CopyData item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CopyData"/> instances have same
+            ///     values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CopyData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CopyData"/> instance to compare.
+            /// </param>
+            public static bool operator ==(CopyData left, CopyData right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CopyData"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CopyData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CopyData"/> instance to compare.
+            /// </param>
+            public static bool operator !=(CopyData left, CopyData right) =>
+                !(left == right);
         }
 
         /// <summary>
-        ///     Used by <see cref="NativeMethods.SendInput(uint, DeviceInput[], int)"/> to store
-        ///     information for synthesizing input events such as keystrokes, mouse movement, and
-        ///     mouse clicks.
+        ///     Used by <see cref="NativeMethods.SendInput(uint, DeviceInput[], int)"/> to
+        ///     store information for synthesizing input events such as keystrokes, mouse
+        ///     movement, and mouse clicks.
         /// </summary>
-        public struct DeviceInput
+        public struct DeviceInput : IEquatable<DeviceInput>
         {
             /// <summary>
-            ///     The type of the input event. This member can be one of the following values.
+            ///     The type of the input event. This member can be one of the following
+            ///     values.
             ///     <para>
             ///         0: The event is a mouse event. Use the mi structure of the union.
             ///     </para>
@@ -8888,19 +9747,116 @@ namespace SilDev
             ///         2: The event is a hardware event. Use the hi structure of the union.
             ///     </para>
             /// </summary>
-            public uint Type;
+            public uint Type { get; set; }
 
             /// <summary>
             ///     The information about a simulated mouse, keyboard or hardware event.
             /// </summary>
-            public MouseKeyboardHardwareInput Data;
+            public MouseKeyboardHardwareInput Data { get; set; }
+
+            /// <summary>
+            ///     Gets the size of the <see cref="DeviceInput"/> structure in bytes.
+            /// </summary>
+            public static int Size => Marshal.SizeOf(typeof(DeviceInput));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="DeviceInput"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            public bool Equals(DeviceInput other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is DeviceInput item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="DeviceInput"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            public static bool operator ==(DeviceInput left, DeviceInput right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="DeviceInput"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            public static bool operator !=(DeviceInput left, DeviceInput right) =>
+                !(left == right);
         }
 
         /// <summary>
-        ///     Contains the names of the used Windows dynamic-link library (DLL) files.
+        ///     Contains file name constants of the used Windows dynamic-link library (DLL)
+        ///     files.
         /// </summary>
-        public struct DllNames
+        public static class DllNames
         {
+            /// <summary>
+            ///     The Windows NT BASE API Client DLL file name.
+            /// </summary>
+            public const string Kernel32 = "kernel32.dll";
+
+            /// <summary>
+            ///     The NT Layer DLL file name.
+            /// </summary>
+            public const string Ntdll = "ntdll.dll";
+
+            /// <summary>
+            ///     The Process Status Helper file name.
+            /// </summary>
+            public const string Psapi = "psapi.dll";
+
+            /// <summary>
+            ///     The Windows Shell Common DLL file name.
+            /// </summary>
+            public const string Shell32 = "shell32.dll";
+
+            /// <summary>
+            ///     The Multi-User Windows USER API Client DLL file name.
+            /// </summary>
+            public const string User32 = "user32.dll";
+
             internal const string Advapi32 = "advapi32.dll";
             internal const string Dwmapi = "dwmapi.dll";
             internal const string Msi = "msi.dll";
@@ -8908,199 +9864,693 @@ namespace SilDev
             internal const string Urlmon = "urlmon.dll";
             internal const string Uxtheme = "uxtheme.dll";
             internal const string Winmm = "winmm.dll";
-            public const string Kernel32 = "kernel32.dll";
-            public const string Ntdll = "ntdll.dll";
-            public const string Psapi = "psapi.dll";
-            public const string Shell32 = "shell32.dll";
-            public const string User32 = "user32.dll";
         }
 
         /// <summary>
         ///     Contains the locally unique identifier (LUID).
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct LuId
+        public struct LuId : IEquatable<LuId>
         {
             /// <summary>
             ///     Low-order bits.
             /// </summary>
-            public uint LowPart;
+            public uint LowPart { get; set; }
 
             /// <summary>
             ///     High-order bits.
             /// </summary>
-            public int HighPart;
+            public int HighPart { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="LuId"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="LuId"/> instance to compare.
+            /// </param>
+            public bool Equals(LuId other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is LuId item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuId"/> instances have same
+            ///     values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuId"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuId"/> instance to compare.
+            /// </param>
+            public static bool operator ==(LuId left, LuId right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuId"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuId"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuId"/> instance to compare.
+            /// </param>
+            public static bool operator !=(LuId left, LuId right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Represents a locally unique identifier (LUID) and its attributes.
         /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct LuIdAndAttributes
+        public struct LuIdAndAttributes : IEquatable<LuIdAndAttributes>
         {
             /// <summary>
             ///     Specifies an <see cref="LuId"/> value.
             /// </summary>
-            public LuId Luid;
+            public LuId Luid { get; set; }
 
             /// <summary>
-            ///     Specifies attributes of the <see cref="LuId"/>. This value contains up to 32 one-bit flags.
-            ///     Its meaning is dependent on the definition and use of the <see cref="LuId"/>.
+            ///     Specifies attributes of the <see cref="LuId"/>. This value contains up to
+            ///     32 one-bit flags. Its meaning is dependent on the definition and use of the
+            ///     <see cref="LuId"/>.
             /// </summary>
-            public uint Attributes;
+            public uint Attributes { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="LuIdAndAttributes"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            public bool Equals(LuIdAndAttributes other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is LuIdAndAttributes item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuIdAndAttributes"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            public static bool operator ==(LuIdAndAttributes left, LuIdAndAttributes right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuIdAndAttributes"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            public static bool operator !=(LuIdAndAttributes left, LuIdAndAttributes right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Stores information about a simulated mouse event.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct MouseInput
+        public struct MouseInput : IEquatable<MouseInput>
         {
             /// <summary>
-            ///     The absolute position of the mouse, or the amount of motion since the last mouse event
-            ///     was generated, depending on the value of the dwFlags member. Absolute data is specified
-            ///     as the x coordinate of the mouse; relative data is specified as the number of pixels moved.
+            ///     The absolute position of the mouse, or the amount of motion since the last
+            ///     mouse event was generated, depending on the value of the dwFlags member.
+            ///     Absolute data is specified as the x coordinate of the mouse; relative data
+            ///     is specified as the number of pixels moved.
             /// </summary>
-            public int X;
+            public int X { get; set; }
 
             /// <summary>
-            ///     The absolute position of the mouse, or the amount of motion since the last mouse event
-            ///     was generated, depending on the value of the dwFlags member. Absolute data is specified as
-            ///     the y coordinate of the mouse; relative data is specified as the number of pixels moved.
+            ///     The absolute position of the mouse, or the amount of motion since the last
+            ///     mouse event was generated, depending on the value of the dwFlags member.
+            ///     Absolute data is specified as the y coordinate of the mouse; relative data
+            ///     is specified as the number of pixels moved.
             /// </summary>
-            public int Y;
+            public int Y { get; set; }
 
             /// <summary>
-            ///     If dwFlags contains MOUSEEVENTF_WHEEL, then mouseData specifies the amount of wheel movement.
-            ///     A positive value indicates that the wheel was rotated forward, away from the user; a negative
-            ///     value indicates that the wheel was rotated backward, toward the user. One wheel click is
-            ///     defined as WHEEL_DELTA, which is 120.
+            ///     If dwFlags contains MOUSEEVENTF_WHEEL, then mouseData specifies the amount
+            ///     of wheel movement. A positive value indicates that the wheel was rotated
+            ///     forward, away from the user; a negative value indicates that the wheel was
+            ///     rotated backward, toward the user. One wheel click is defined as
+            ///     WHEEL_DELTA, which is 120.
             /// </summary>
-            public uint MouseData;
+            public uint MouseData { get; set; }
 
             /// <summary>
-            ///     A set of bit flags that specify various aspects of mouse motion and button clicks. The bits
-            ///     in this member can be any reasonable combination of the following values.
+            ///     A set of bit flags that specify various aspects of mouse motion and button
+            ///     clicks. The bits in this member can be any reasonable combination of the
+            ///     following values.
             /// </summary>
-            public uint Flags;
+            public uint Flags { get; set; }
 
             /// <summary>
-            ///     The time stamp for the event, in milliseconds. If this parameter is 0, the system will provide
-            ///     its own time stamp.
+            ///     The time stamp for the event, in milliseconds. If this parameter is 0, the
+            ///     system will provide its own time stamp.
             /// </summary>
-            public uint Time;
+            public uint Time { get; set; }
 
             /// <summary>
-            ///     An additional value associated with the mouse event. An application calls GetMessageExtraInfo
-            ///     to obtain this extra information.
+            ///     An additional value associated with the mouse event. An application calls
+            ///     GetMessageExtraInfo to obtain this extra information.
             /// </summary>
             public IntPtr ExtraInfo { get; internal set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="MouseInput"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            public bool Equals(MouseInput other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is MouseInput item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseInput"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            public static bool operator ==(MouseInput left, MouseInput right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseInput"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            public static bool operator !=(MouseInput left, MouseInput right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Stores information about a simulated mouse, keyboard or hardware event.
         /// </summary>
         [StructLayout(LayoutKind.Explicit)]
-        public struct MouseKeyboardHardwareInput
+        public struct MouseKeyboardHardwareInput : IEquatable<MouseKeyboardHardwareInput>
         {
-            [FieldOffset(0)]
-            public MouseInput Mouse;
+            /* IMPORTANT: Not completly implemented yet.
 
-            /*
             [FieldOffset(1)]
-            public KeyboardInput Keyboard;
+            private KeyboardInput _keyboard;
+
             [FieldOffset(2)]
-            public HardwareInput Hardware;
+            private HardwareInput _hardware;
+
             */
+
+            /// <summary>
+            ///     Gets or sets the mouse input events.
+            /// </summary>
+            [field: FieldOffset(0)]
+            public MouseInput Mouse { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="MouseKeyboardHardwareInput"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            public bool Equals(MouseKeyboardHardwareInput other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is MouseKeyboardHardwareInput item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseKeyboardHardwareInput"/>
+            ///     instances have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            public static bool operator ==(MouseKeyboardHardwareInput left, MouseKeyboardHardwareInput right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseKeyboardHardwareInput"/>
+            ///     instances have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            public static bool operator !=(MouseKeyboardHardwareInput left, MouseKeyboardHardwareInput right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Contains basic information about a process.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct ProcessBasicInformation
+        public struct ProcessBasicInformation : IEquatable<ProcessBasicInformation>
         {
+            /// <summary>
+            ///     Gets the exit status.
+            /// </summary>
             public IntPtr ExitStatus { get; internal set; }
 
+            /// <summary>
+            ///     Gets the member points to a PEB structure.
+            /// </summary>
             public IntPtr PebBaseAddress { get; internal set; }
 
+            /// <summary>
+            ///     Gets the affinity mask.
+            /// </summary>
             public IntPtr AffinityMask { get; internal set; }
 
+            /// <summary>
+            ///     Gets the base priority.
+            /// </summary>
             public IntPtr BasePriority { get; internal set; }
 
+            /// <summary>
+            ///     Gets the unique process identifier.
+            /// </summary>
             public UIntPtr UniqueProcessId { get; internal set; }
 
+            /// <summary>
+            ///     Gets the ID inherited from the process.
+            /// </summary>
             public IntPtr InheritedFromUniqueProcessId { get; internal set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="ProcessBasicInformation"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            public bool Equals(ProcessBasicInformation other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is ProcessBasicInformation item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ProcessBasicInformation"/>
+            ///     instances have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            public static bool operator ==(ProcessBasicInformation left, ProcessBasicInformation right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ProcessBasicInformation"/>
+            ///     instances have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            public static bool operator !=(ProcessBasicInformation left, ProcessBasicInformation right) =>
+                !(left == right);
         }
 
         /// <summary>
-        ///     Returned by the GetThemeMargins function to define the margins of windows that have visual
-        ///     styles applied.
+        ///     Returned by the GetThemeMargins function to define the margins of windows
+        ///     that have visual styles applied.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct ThemeMargins
+        public struct ThemeMargins : IEquatable<ThemeMargins>
         {
             /// <summary>
             ///     Width of the left border that retains its size.
             /// </summary>
-            public int cxLeftWidth;
+            public int CxLeftWidth { get; set; }
 
             /// <summary>
             ///     Width of the right border that retains its size.
             /// </summary>
-            public int cxRightWidth;
+            public int CxRightWidth { get; set; }
 
             /// <summary>
             ///     Height of the top border that retains its size.
             /// </summary>
-            public int cyTopHeight;
+            public int CyTopHeight { get; set; }
 
             /// <summary>
             ///     Height of the bottom border that retains its size.
             /// </summary>
-            public int cyBottomHeight;
+            public int CyBottomHeight { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="ThemeMargins"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            public bool Equals(ThemeMargins other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is ThemeMargins item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ThemeMargins"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            public static bool operator ==(ThemeMargins left, ThemeMargins right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ThemeMargins"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            public static bool operator !=(ThemeMargins left, ThemeMargins right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Contains information about a set of privileges for an access token.
         /// </summary>
-        public struct TokenPrivileges
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TokenPrivileges : IEquatable<TokenPrivileges>
         {
-            /// <summary>
-            ///     This must be set to the number of entries in the Privileges array.
-            /// </summary>
-            public uint PrivilegeCount;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+            private LuIdAndAttributes[] _privileges;
 
             /// <summary>
-            ///     Specifies an array of <see cref="LuIdAndAttributes"/> structures. Each structure
-            ///     contains the <see cref="LuId"/> and attributes of a privilege. To get the name of
-            ///     the privilege associated with a <see cref="LuId"/>, call the
-            ///     <see cref="NativeHelper.LookupPrivilegeName"/> function, passing the address of
-            ///     the <see cref="LuId"/> as the value of the lpLuid parameter.
+            ///     Gets the number of entries in the Privileges collection.
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
-            public LuIdAndAttributes[] Privileges;
+            public int PrivilegeCount => Privileges?.Count ?? 0;
+
+            /// <summary>
+            ///     Specifies an array of <see cref="LuIdAndAttributes"/> structures. Each
+            ///     structure contains the <see cref="LuId"/> and attributes of a privilege. To
+            ///     get the name of the privilege associated with a <see cref="LuId"/>, call
+            ///     the <see cref="NativeHelper.LookupPrivilegeName"/> function, passing the
+            ///     address of the <see cref="LuId"/> as the value of the lpLuid parameter.
+            /// </summary>
+            public IReadOnlyList<LuIdAndAttributes> Privileges
+            {
+                get => _privileges;
+                internal set => _privileges = value as LuIdAndAttributes[];
+            }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="TokenPrivileges"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            public bool Equals(TokenPrivileges other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is TokenPrivileges item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="TokenPrivileges"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            public static bool operator ==(TokenPrivileges left, TokenPrivileges right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="TokenPrivileges"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            public static bool operator !=(TokenPrivileges left, TokenPrivileges right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Contains information about the placement of a window on the screen.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct WindowPlacement
+        public struct WindowPlacement : IEquatable<WindowPlacement>
         {
             /// <summary>
             ///     The length of the structure, in bytes.
             /// </summary>
-            public int length;
+            public int Length { get; set; }
 
             /// <summary>
-            ///     The flags that control the position of the minimized window and the method by which
-            ///     the window is restored.
+            ///     The flags that control the position of the minimized window and the method
+            ///     by which the window is restored.
             ///     <para>
-            ///         This member can be one or more of the <see cref="WindowPlacementFlags"/> values.
+            ///         This member can be one or more of the
+            ///         <see cref="WindowPlacementFlags"/> values.
             ///     </para>
             /// </summary>
-            public int flags;
+            public int Flags { get; set; }
 
             /// <summary>
             ///     The current show state of the window.
@@ -9108,41 +10558,175 @@ namespace SilDev
             ///         This member can be one of the <see cref="ShowWindowFlags"/> values.
             ///     </para>
             /// </summary>
-            public int showCmd;
+            public int ShowCmd { get; set; }
 
             /// <summary>
-            ///     The coordinates of the window's upper-left corner when the window is minimized.
+            ///     The coordinates of the window's upper-left corner when the window is
+            ///     minimized.
             /// </summary>
-            public Point ptMinPosition;
+            public Point PtMinPosition { get; set; }
 
             /// <summary>
-            ///     The coordinates of the window's upper-left corner when the window is maximized.
+            ///     The coordinates of the window's upper-left corner when the window is
+            ///     maximized.
             /// </summary>
-            public Point ptMaxPosition;
+            public Point PtMaxPosition { get; set; }
 
             /// <summary>
             ///     The window's coordinates when the window is in the restored position.
             /// </summary>
-            public Rectangle rcNormalPosition;
+            public Rectangle RcNormalPosition { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="WindowPlacement"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            public bool Equals(WindowPlacement other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is WindowPlacement item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowPlacement"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            public static bool operator ==(WindowPlacement left, WindowPlacement right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowPlacement"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            public static bool operator !=(WindowPlacement left, WindowPlacement right) =>
+                !(left == right);
         }
 
         /// <summary>
         ///     Contains information about the placement of a window on the screen.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct WindowThemeAttributeOptions
+        public struct WindowThemeAttributeOptions : IEquatable<WindowThemeAttributeOptions>
         {
             /// <summary>
             ///     A combination of flags that modify window visual style attributes.
             /// </summary>
-            public WindowThemeAttributeFlags Flags;
+            public WindowThemeAttributeFlags Flags { get; set; }
 
             /// <summary>
-            ///     A bitmask that describes how the values specified in dwFlags should be applied. If
-            ///     the bit corresponding to a value in <see cref="Flags"/> is 0, that flag will be
-            ///     removed. If the bit is 1, the flag will be added.
+            ///     A bitmask that describes how the values specified in dwFlags should be
+            ///     applied. If the bit corresponding to a value in <see cref="Flags"/> is 0,
+            ///     that flag will be removed. If the bit is 1, the flag will be added.
             /// </summary>
-            public uint Mask;
+            public uint Mask { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="WindowThemeAttributeOptions"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            public bool Equals(WindowThemeAttributeOptions other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is WindowThemeAttributeOptions item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowThemeAttributeOptions"/>
+            ///     instances have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            public static bool operator ==(WindowThemeAttributeOptions left, WindowThemeAttributeOptions right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowThemeAttributeOptions"/>
+            ///     instances have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            public static bool operator !=(WindowThemeAttributeOptions left, WindowThemeAttributeOptions right) =>
+                !(left == right);
         }
 
         /// <summary>
@@ -9167,60 +10751,65 @@ namespace SilDev
         internal struct RmProcessInfo
         {
             /// <summary>
-            ///     Contains an RM_UNIQUE_PROCESS structure that uniquely identifies the application
-            ///     by its PID and the time the process began.
+            ///     Contains an RM_UNIQUE_PROCESS structure that uniquely identifies the
+            ///     application by its PID and the time the process began.
             /// </summary>
             public RmUniqueProcess Process;
 
             /// <summary>
-            ///     If the process is a service, this parameter returns the long name for the service. If
-            ///     the process is not a service, this parameter returns the user-friendly name for the
-            ///     application. If the process is a critical process, and the installer is run with
-            ///     elevated privileges, this parameter returns the name of the executable file of the
-            ///     critical process. If the process is a critical process, and the installer is run as a
-            ///     service, this parameter returns the long name of the critical process.
+            ///     If the process is a service, this parameter returns the long name for the
+            ///     service. If the process is not a service, this parameter returns the
+            ///     user-friendly name for the application. If the process is a critical
+            ///     process, and the installer is run with elevated privileges, this parameter
+            ///     returns the name of the executable file of the critical process. If the
+            ///     process is a critical process, and the installer is run as a service, this
+            ///     parameter returns the long name of the critical process.
             /// </summary>
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             public string strAppName;
 
             /// <summary>
-            ///     If the process is a service, this is the short name for the service. This member is
-            ///     not used if the process is not a service.
+            ///     If the process is a service, this is the short name for the service. This
+            ///     member is not used if the process is not a service.
             /// </summary>
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
             public string strServiceShortName;
 
             /// <summary>
-            ///     Contains an RM_APP_TYPE enumeration value that specifies the type of application as
-            ///     RmUnknownApp, RmMainWindow, RmOtherWindow, RmService, RmExplorer or RmCritical.
+            ///     Contains an RM_APP_TYPE enumeration value that specifies the type of
+            ///     application as RmUnknownApp, RmMainWindow, RmOtherWindow, RmService,
+            ///     RmExplorer or RmCritical.
             /// </summary>
             public RmAppTypes ApplicationType;
 
             /// <summary>
-            ///     Contains a bit mask that describes the current status of the application. See the
-            ///     RM_APP_STATUS enumeration.
+            ///     Contains a bit mask that describes the current status of the application.
+            ///     See the RM_APP_STATUS enumeration.
             /// </summary>
             public uint AppStatus;
 
             /// <summary>
-            ///     Contains the Terminal Services session ID of the process. If the terminal session of
-            ///     the process cannot be determined, the value of this member is set to RM_INVALID_SESSION
-            ///     (-1). This member is not used if the process is a service or a system critical process.
+            ///     Contains the Terminal Services session ID of the process. If the terminal
+            ///     session of the process cannot be determined, the value of this member is
+            ///     set to RM_INVALID_SESSION (-1). This member is not used if the process is a
+            ///     service or a system critical process.
             /// </summary>
             public uint TSSessionId;
 
             /// <summary>
-            ///     TRUE if the application can be restarted by the Restart Manager; otherwise, FALSE. This
-            ///     member is always TRUE if the process is a service. This member is always FALSE if the
-            ///     process is a critical system process.
+            ///     <see langword="true"/> if the application can be restarted by the Restart
+            ///     Manager; otherwise, <see langword="false"/>. This member is always
+            ///     <see langword="true"/> if the process is a service. This member is always
+            ///     <see langword="false"/> if the process is a critical system process.
             /// </summary>
             [MarshalAs(UnmanagedType.Bool)]
             public bool bRestartable;
         }
 
         /// <summary>
-        ///     Uniquely identifies a process by its PID and the time the process began. An array of
-        ///     RM_UNIQUE_PROCESS structures can be passed to the RmRegisterResources function.
+        ///     Uniquely identifies a process by its PID and the time the process began. An
+        ///     array of RM_UNIQUE_PROCESS structures can be passed to the
+        ///     RmRegisterResources function.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         internal struct RmUniqueProcess
@@ -9231,8 +10820,9 @@ namespace SilDev
             public int dwProcessId;
 
             /// <summary>
-            ///     The creation time of the process. The time is provided as a FILETIME structure that is
-            ///     returned by the lpCreationTime parameter of the GetProcessTimes function.
+            ///     The creation time of the process. The time is provided as a FILETIME
+            ///     structure that is returned by the lpCreationTime parameter of the
+            ///     GetProcessTimes function.
             /// </summary>
             public FileTime ProcessStartTime;
         }
@@ -9244,8 +10834,8 @@ namespace SilDev
         internal struct ShFileInfo
         {
             /// <summary>
-            ///     A handle to the icon that represents the file. You are responsible for destroying this handle
-            ///     with DestroyIcon when you no longer need it.
+            ///     A handle to the icon that represents the file. You are responsible for
+            ///     destroying this handle with DestroyIcon when you no longer need it.
             /// </summary>
             public IntPtr hIcon;
 
@@ -9255,14 +10845,16 @@ namespace SilDev
             public int iIcon;
 
             /// <summary>
-            ///     An array of values that indicates the attributes of the file object. For information about these
-            ///     values, see the IShellFolder::GetAttributesOf method.
+            ///     An array of values that indicates the attributes of the file object. For
+            ///     information about these values, see the IShellFolder::GetAttributesOf
+            ///     method.
             /// </summary>
             internal uint dwAttributes;
 
             /// <summary>
-            ///     A string that contains the name of the file as it appears in the Windows Shell, or the path and
-            ///     file name of the file that contains the icon representing the file.
+            ///     A string that contains the name of the file as it appears in the Windows
+            ///     Shell, or the path and file name of the file that contains the icon
+            ///     representing the file.
             /// </summary>
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
             internal string szDisplayName;

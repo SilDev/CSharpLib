@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2019-10-31 22:26
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -27,11 +27,12 @@ namespace SilDev
         ///     Refreshes the desktop.
         /// </summary>
         /// <param name="explorer">
-        ///     true to refresh all open explorer windows; otherwise, false.
+        ///     <see langword="true"/> to refresh all open explorer windows; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="extended">
-        ///     true to wait for a window to refresh, if there is no window available;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to wait for a window to refresh, if there is no
+        ///     window available; otherwise, <see langword="false"/>.
         /// </param>
         public static void Refresh(bool explorer = true, bool extended = false)
         {
@@ -53,8 +54,8 @@ namespace SilDev
         ///     Refreshes all open explorer windows.
         /// </summary>
         /// <param name="extended">
-        ///     true to wait for a window to refresh, if there is no window available;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to wait for a window to refresh, if there is no
+        ///     window available; otherwise, <see langword="false"/>.
         /// </param>
         public static void RefreshExplorer(bool extended = false)
         {

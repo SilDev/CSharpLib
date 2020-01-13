@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2020-01-03 12:53
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -28,7 +28,8 @@ namespace SilDev.Investment
     /// <typeparam name="TKey">
     ///     The enumeration type of the key.
     ///     <para>
-    ///         It is strongly recommended to avoid using multiple keys with the same values.
+    ///         It is strongly recommended to avoid using multiple keys with the same
+    ///         values.
     ///     </para>
     /// </typeparam>
     [Serializable]
@@ -44,8 +45,8 @@ namespace SilDev.Investment
             ItemDictionary = new Dictionary<string, object>(StringComparer.InvariantCulture);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ValueItemHost{TKey}"/> class with
-        ///     serialized data.
+        ///     Initializes a new instance of the <see cref="ValueItemHost{TKey}"/> class
+        ///     with serialized data.
         /// </summary>
         /// <param name="info">
         ///     The object that holds the serialized object data.
@@ -109,7 +110,8 @@ namespace SilDev.Investment
         ///     The default value.
         /// </param>
         /// <param name="merge">
-        ///     true to merge the current elements with the new ones; otherwise, false.
+        ///     <see langword="true"/> to merge the current elements with the new ones;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void Load(string path, ValueItemHost<TKey> defValue = default, bool merge = true)
         {
@@ -149,14 +151,15 @@ namespace SilDev.Investment
         ///     The file to create.
         /// </param>
         /// <param name="overwrite">
-        ///     true to allow an existing file to be overwritten; otherwise, false.
+        ///     <see langword="true"/> to allow an existing file to be overwritten;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void Save(string path, bool overwrite = true) =>
             FileEx.Serialize(path, this, true, overwrite);
 
         /// <summary>
-        ///     Adds the specified item to this instance that is addressed to the
-        ///     specified key.
+        ///     Adds the specified item to this instance that is addressed to the specified
+        ///     key.
         /// </summary>
         /// <typeparam name="TValue">
         ///     The type of values stored in the item.
@@ -198,15 +201,19 @@ namespace SilDev.Investment
         ///     The maximum value. Must be larger than the minimum value.
         /// </param>
         /// <param name="getValidationFunc">
-        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is get.
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is
+        ///     get.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         /// <param name="setValidationFunc">
-        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is set.
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is
+        ///     set.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         public void AddItem<TValue>(TKey key, TValue value, TValue defValue, TValue minValue, TValue maxValue, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default) where TValue : IEquatable<TValue>
@@ -234,15 +241,19 @@ namespace SilDev.Investment
         ///     The value used as default.
         /// </param>
         /// <param name="getValidationFunc">
-        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is get.
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is
+        ///     get.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         /// <param name="setValidationFunc">
-        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is set.
+        ///     The method that is called when <see cref="ValueItem{TValue}.Value"/> is
+        ///     set.
         ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be serialized.
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
         ///     </para>
         /// </param>
         public void AddItem<TValue>(TKey key, TValue value, TValue defValue = default, Func<TValue, TValue> getValidationFunc = default, Func<TValue, TValue> setValidationFunc = default) where TValue : IEquatable<TValue> =>
@@ -252,10 +263,11 @@ namespace SilDev.Investment
         ///     Removes all keys and values from this instance.
         /// </summary>
         /// <param name="removeOnlyInvalidElements">
-        ///     true to remove only invalid elements; otherwise, false.
+        ///     <see langword="true"/> to remove only invalid elements; otherwise,
+        ///     <see langword="false"/>.
         ///     <para>
-        ///         Please note that elements can become invalid if the associated key
-        ///         has been deleted.
+        ///         Please note that elements can become invalid if the associated key has
+        ///         been deleted.
         ///     </para>
         /// </param>
         public void Clear(bool removeOnlyInvalidElements = false)
@@ -421,7 +433,8 @@ namespace SilDev.Investment
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <param name="nonReadOnly">
-        ///     true to include the hashes of non-readonly properties; otherwise, false.
+        ///     <see langword="true"/> to include the hashes of non-readonly properties;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public int GetHashCode(bool nonReadOnly) =>
             Crypto.GetClassHashCode(this, nonReadOnly);
@@ -457,8 +470,8 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Determines whether two specified <see cref="ValueItemHost{TKey}"/> instances
-        ///     have same values.
+        ///     Determines whether two specified <see cref="ValueItemHost{TKey}"/>
+        ///     instances have same values.
         /// </summary>
         /// <param name="left">
         ///     The first <see cref="ValueItemHost{TKey}"/> instance to compare.
@@ -476,8 +489,8 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Determines whether two specified <see cref="ValueItemHost{TKey}"/> instances
-        ///     have different values.
+        ///     Determines whether two specified <see cref="ValueItemHost{TKey}"/>
+        ///     instances have different values.
         /// </summary>
         /// <param name="left">
         ///     The first <see cref="ValueItemHost{TKey}"/> instance to compare.

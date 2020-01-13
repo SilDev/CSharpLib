@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconEx.cs
-// Version:  2020-01-03 12:27
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -42,16 +42,14 @@ namespace SilDev.Drawing
                 if (image == null)
                     throw new ArgumentNullException(nameof(image));
                 img = (Image)image.Clone();
-                using (var ms = new MemoryStream())
+                using var ms = new MemoryStream();
+                var images = new[]
                 {
-                    var images = new[]
-                    {
-                        img.Width != size || img.Height != size ? img.Redraw(size, size) : img
-                    };
-                    IconFactory.Save(images, ms);
-                    ms.Position = 0;
-                    ico = new Icon(ms);
-                }
+                    img.Width != size || img.Height != size ? img.Redraw(size, size) : img
+                };
+                IconFactory.Save(images, ms);
+                ms.Position = 0;
+                ico = new Icon(ms);
             }
             catch (Exception ex) when (ex.IsCaught())
             {

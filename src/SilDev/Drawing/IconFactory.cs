@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconFactory.cs
-// Version:  2020-01-03 12:27
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -29,14 +29,14 @@ namespace SilDev.Drawing
     public enum IconFactorySizeOption
     {
         /// <summary>
-        ///     The full set includes 8x8, 10x10, 14x14, 16x16, 20x20, 22x22, 24x24,
-        ///     32x32, 40x40, 48x48, 64x64, 96x96, 128x128, and 256x256.
+        ///     The full set includes 8x8, 10x10, 14x14, 16x16, 20x20, 22x22, 24x24, 32x32,
+        ///     40x40, 48x48, 64x64, 96x96, 128x128, and 256x256.
         /// </summary>
         Additional,
 
         /// <summary>
-        ///     The minimal set includes 16x16, 24x24, 32x32, 48x48, 64x64, 128x128,
-        ///     and 256x256.
+        ///     The minimal set includes 16x16, 24x24, 32x32, 48x48, 64x64, 128x128, and
+        ///     256x256.
         /// </summary>
         Application
     }
@@ -136,9 +136,9 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Ensures that all <see cref="Image"/> objects has the correct format
-        ///     and the size dimensions are equal and in range of
-        ///     <see cref="MinSize"/> and <see cref="MaxSize"/>.
+        ///     Ensures that all <see cref="Image"/> objects has the correct format and the
+        ///     size dimensions are equal and in range of <see cref="MinSize"/> and
+        ///     <see cref="MaxSize"/>.
         /// </summary>
         /// <param name="images">
         ///     The <see cref="Image"/> objects to be processed.
@@ -147,9 +147,9 @@ namespace SilDev.Drawing
             images.Select(ImageCorrection).Where(Comparison.IsNotEmpty);
 
         /// <summary>
-        ///     Ensures that the <see cref="Image"/> object has the correct format
-        ///     and the size dimensions are equal and in range of
-        ///     <see cref="MinSize"/> and <see cref="MaxSize"/>.
+        ///     Ensures that the <see cref="Image"/> object has the correct format and the
+        ///     size dimensions are equal and in range of <see cref="MinSize"/> and
+        ///     <see cref="MaxSize"/>.
         /// </summary>
         /// <param name="image">
         ///     The <see cref="Image"/> object to be processed.
@@ -229,10 +229,10 @@ namespace SilDev.Drawing
                     throw new PathNotFoundException(file);
                 var dir = Path.GetDirectoryName(file);
                 if (string.IsNullOrEmpty(dir))
-                    throw new ArgumentNullException(nameof(dir));
+                    throw new NullReferenceException();
                 var name = Path.GetFileNameWithoutExtension(file);
                 if (string.IsNullOrEmpty(name))
-                    throw new ArgumentNullException(nameof(name));
+                    throw new NullReferenceException();
                 dir = Path.Combine(dir, $"{name} sources");
                 if (Directory.Exists(dir))
                     DirectoryEx.EnumerateFiles(dir, "*.png")?.ForEach(x => FileEx.Delete(x));
@@ -259,16 +259,12 @@ namespace SilDev.Drawing
                     try
                     {
                         ms = new MemoryStream();
-                        using (var bw = new BinaryWriter(ms))
-                        {
-                            bw.Write(buffer, offset, formatSize);
-                            ms.Seek(0, SeekOrigin.Begin);
-                            using (var bmp = new Bitmap(ms))
-                            {
-                                ms = null;
-                                bmp.Save(imagePath);
-                            }
-                        }
+                        using var bw = new BinaryWriter(ms);
+                        bw.Write(buffer, offset, formatSize);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        using var bmp = new Bitmap(ms);
+                        ms = null;
+                        bmp.Save(imagePath);
                     }
                     finally
                     {
@@ -283,8 +279,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Saves the specified sequence of <see cref="Image"/>'s as a single icon
-        ///     into the output stream.
+        ///     Saves the specified sequence of <see cref="Image"/>'s as a single icon into
+        ///     the output stream.
         /// </summary>
         /// <param name="images">
         ///     The images to be converted into a single icon.
@@ -293,8 +289,8 @@ namespace SilDev.Drawing
         ///     The output stream.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Stream"/> after writing;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Stream"/> after writing; otherwise, <see langword="false"/>.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     images or stream is null.
@@ -362,8 +358,8 @@ namespace SilDev.Drawing
         ///     The option for determining automatic resizing.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Stream"/> after
-        ///     writing; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Stream"/> after writing; otherwise, <see langword="false"/>.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     image or stream is null.
@@ -404,7 +400,7 @@ namespace SilDev.Drawing
         /// <exception cref="ArgumentNullException">
         ///     images or path is null.
         /// </exception>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentInvalidException">
         ///     path is invalid.
         /// </exception>
         public static void Save(IEnumerable<Image> images, string path)
@@ -415,15 +411,16 @@ namespace SilDev.Drawing
                 throw new ArgumentNullException(nameof(path));
             var file = PathEx.Combine(path);
             if (!PathEx.IsValidPath(file))
-                throw new ArgumentException();
+                throw new ArgumentInvalidException(nameof(path));
             if (!FileEx.TryDelete(file))
                 return;
-            using (var fs = new FileStream(file, FileMode.Create))
-                Save(images, fs, true);
+            using var fs = new FileStream(file, FileMode.Create);
+            Save(images, fs, true);
         }
 
         /// <summary>
-        ///     Saves multiple sizes of the specified <see cref="Image"/> to a single <see cref="Icon"/> file.
+        ///     Saves multiple sizes of the specified <see cref="Image"/> to a single
+        ///     <see cref="Icon"/> file.
         /// </summary>
         /// <param name="image">
         ///     The images to be converted into a single icon.
@@ -437,7 +434,7 @@ namespace SilDev.Drawing
         /// <exception cref="ArgumentNullException">
         ///     image or path is null.
         /// </exception>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentInvalidException">
         ///     path is invalid.
         /// </exception>
         public static void Save(Image image, string path, IconFactorySizeOption option = IconFactorySizeOption.Application)
@@ -448,11 +445,11 @@ namespace SilDev.Drawing
                 throw new ArgumentNullException(nameof(path));
             var file = PathEx.Combine(path);
             if (!PathEx.IsValidPath(file))
-                throw new ArgumentException();
+                throw new ArgumentInvalidException(nameof(path));
             if (!FileEx.TryDelete(file))
                 return;
-            using (var fs = new FileStream(file, FileMode.Create))
-                Save(image, fs, option, true);
+            using var fs = new FileStream(file, FileMode.Create);
+            Save(image, fs, option, true);
         }
     }
 }

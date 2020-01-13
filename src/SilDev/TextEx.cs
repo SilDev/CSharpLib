@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2019-12-24 09:13
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -46,8 +46,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Indicates whether the specified character is categorized as a line separator
-        ///     character.
+        ///     Indicates whether the specified character is categorized as a line
+        ///     separator character.
         /// </summary>
         /// <param name="ch">
         ///     The character to evaluate.
@@ -70,7 +70,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Indicates whether the specified character is categorized as an ASCII character.
+        ///     Indicates whether the specified character is categorized as an ASCII
+        ///     character.
         /// </summary>
         /// <param name="ch">
         ///     The character to evaluate.
@@ -79,7 +80,7 @@ namespace SilDev
             ch <= sbyte.MaxValue;
 
         /// <summary>
-        ///     Converts the current <see cref="NewLineFormats"/> of the specified
+        ///     Converts the current <see cref="StringNewLineFormats"/> of the specified
         ///     <see cref="string"/> to another format.
         /// </summary>
         /// <param name="text">
@@ -88,11 +89,11 @@ namespace SilDev
         /// <param name="newLineFormat">
         ///     The new format to be applied.
         /// </param>
-        public static string FormatNewLine(string text, string newLineFormat = NewLineFormats.WindowsDefault)
+        public static string FormatNewLine(string text, string newLineFormat = StringNewLineFormats.WindowsDefault)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
-            var newText = text.Replace(NewLineFormats.WindowsDefault, NewLineFormats.LineFeed);
+            var newText = text.Replace(StringNewLineFormats.WindowsDefault, StringNewLineFormats.LineFeed);
             var current = text.Where(IsLineSeparator).Distinct().ToArray();
             newText = newText.Split(current, StringSplitOptions.None).Join(newLineFormat);
             return newText;
@@ -125,8 +126,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Changes the character encoding of the specified file. This function supports
-        ///     big files as well.
+        ///     Changes the character encoding of the specified file. This function
+        ///     supports big files as well.
         /// </summary>
         /// <param name="file">
         ///     The file to change.
@@ -153,13 +154,11 @@ namespace SilDev
                 File.Create(newFile).Close();
                 using (var sr = new StreamReader(srcFile))
                 {
+                    using var sw = new StreamWriter(newFile, true, encoding);
+                    int i;
                     var ca = new char[4096];
-                    using (var sw = new StreamWriter(newFile, true, encoding))
-                    {
-                        int i;
-                        while ((i = sr.Read(ca, 0, ca.Length)) > 0)
-                            sw.Write(ca, 0, i);
-                    }
+                    while ((i = sr.Read(ca, 0, ca.Length)) > 0)
+                        sw.Write(ca, 0, i);
                 }
                 if (!FileEx.ContentIsEqual(srcFile, newFile))
                     return FileEx.Move(newFile, srcFile, true);
@@ -171,66 +170,6 @@ namespace SilDev
                 Log.Write(ex);
                 return false;
             }
-        }
-
-        /// <summary>
-        ///     Provides <see cref="string"/> values of line separator characters.
-        /// </summary>
-        public static class NewLineFormats
-        {
-            /// <summary>
-            ///     Carriage Return.
-            /// </summary>
-            public const string CarriageReturn = "\u000d";
-
-            /// <summary>
-            ///     Form Feed.
-            /// </summary>
-            public const string FormFeed = "\u000c";
-
-            /// <summary>
-            ///     Line Feed.
-            /// </summary>
-            public const string LineFeed = "\u000a";
-
-            /// <summary>
-            ///     Line Separator.
-            /// </summary>
-            public const string LineSeparator = "\u2028";
-
-            /// <summary>
-            ///     Next Line.
-            /// </summary>
-            public const string NextLine = "\u0085";
-
-            /// <summary>
-            ///     Paragraph Separator.
-            /// </summary>
-            public const string ParagraphSeparator = "\u2029";
-
-            /// <summary>
-            ///     Vertical Tab.
-            /// </summary>
-            public const string VerticalTab = "\u000b";
-
-            /// <summary>
-            ///     Carriage Return &amp; Line Feed.
-            /// </summary>
-            public const string WindowsDefault = "\u000d\u000a";
-
-            /// <summary>
-            ///     Returns a sequence of all line separator characters.
-            /// </summary>
-            public static readonly char[] All =
-            {
-                '\u000d',
-                '\u000c',
-                '\u000a',
-                '\u2028',
-                '\u0085',
-                '\u2029',
-                '\u000b'
-            };
         }
     }
 }

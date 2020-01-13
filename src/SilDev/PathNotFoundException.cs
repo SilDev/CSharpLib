@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathNotFoundException.cs
-// Version:  2020-01-06 07:59
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -27,7 +27,8 @@ namespace SilDev
     public class PathNotFoundException : Exception
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="PathNotFoundException"/> class.
+        ///     Initializes a new instance of the <see cref="PathNotFoundException"/>
+        ///     class.
         /// </summary>
         public PathNotFoundException() { }
 
@@ -50,7 +51,8 @@ namespace SilDev
         ///     The target that caused the exception.
         /// </param>
         /// <param name="innerException">
-        ///     The exception that is the cause of the current exception, or a null reference.
+        ///     The exception that is the cause of the current exception, or a null
+        ///     reference.
         /// </param>
         public PathNotFoundException(string target, Exception innerException) : base(target, innerException) =>
             Message = ExceptionMessages.PathNotFoundTarget.FormatCurrent(target);
@@ -73,8 +75,8 @@ namespace SilDev
         public sealed override string Message { get; } = ExceptionMessages.PathNotFound;
 
         /// <summary>
-        ///     Sets the <see cref="SerializationInfo"/> object with the target and additional
-        ///     exception information.
+        ///     Sets the <see cref="SerializationInfo"/> object with the target and
+        ///     additional exception information.
         /// </summary>
         /// <param name="info">
         ///     The object that holds the serialized object data.

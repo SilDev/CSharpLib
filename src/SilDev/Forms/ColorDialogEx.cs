@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ColorDialogEx.cs
-// Version:  2017-10-31 07:52
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2017, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -77,9 +77,7 @@ namespace SilDev.Forms
             _title = title;
         }
 
-#pragma warning disable 1591
         protected override IntPtr HookProc(IntPtr hWnd, int msg, IntPtr wparam, IntPtr lparam)
-#pragma warning restore 1591
         {
             var hookProc = base.HookProc(hWnd, msg, wparam, lparam);
             if (msg != (int)WinApi.WindowMenuFlags.WmInitDialog)

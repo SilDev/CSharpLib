@@ -5,15 +5,15 @@
 // ==============================================
 // 
 // Filename: WebClientEx.cs
-// Version:  2020-01-04 14:09
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
 #endregion
 
-namespace SilDev
+namespace SilDev.Network
 {
     using System;
     using System.Net;
@@ -28,8 +28,8 @@ namespace SilDev
         ///     Initializes a new instance of the <see cref="WebClientEx"/> class.
         /// </summary>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.

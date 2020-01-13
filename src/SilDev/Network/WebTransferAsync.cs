@@ -5,15 +5,15 @@
 // ==============================================
 // 
 // Filename: WebTransferAsync.cs
-// Version:  2020-01-04 14:26
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
 #endregion
 
-namespace SilDev
+namespace SilDev.Network
 {
     using System;
     using System.ComponentModel;
@@ -64,8 +64,8 @@ namespace SilDev
         public long TotalBytesToReceive { get; private set; }
 
         /// <summary>
-        ///     Gets the total number of <see cref="BytesReceived"/> and <see cref="BytesReceived"/>
-        ///     received in megabyte.
+        ///     Gets the total number of <see cref="BytesReceived"/> and
+        ///     <see cref="BytesReceived"/> received in megabyte.
         /// </summary>
         public string DataReceived
         {
@@ -145,8 +145,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -158,7 +158,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(Uri srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true)
         {
@@ -217,8 +218,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -227,7 +228,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(Uri srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri, destPath, userName, password, allowAutoRedirect, null, timeout, userAgent, checkExists);
@@ -257,7 +259,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(Uri srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri, destPath, userName, password, true, cookieContainer, timeout, userAgent, checkExists);
@@ -284,7 +287,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(Uri srcUri, string destPath, string userName, string password, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri, destPath, userName, password, true, null, timeout, userAgent, checkExists);
@@ -299,8 +303,8 @@ namespace SilDev
         ///     The local destination path of the file.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -312,7 +316,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(Uri srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri, destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
@@ -336,7 +341,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(Uri srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri, destPath, null, null, true, cookieContainer, timeout, userAgent, checkExists);
@@ -357,7 +363,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(Uri srcUri, string destPath, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri, destPath, null, null, true, null, timeout, userAgent, checkExists);
@@ -378,8 +385,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -391,7 +398,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, string userName = null, string password = null, bool allowAutoRedirect = true, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
@@ -412,8 +420,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -422,7 +430,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, string userName, string password, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, allowAutoRedirect, null, timeout, userAgent, checkExists);
@@ -452,7 +461,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, string userName, string password, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, cookieContainer, timeout, userAgent, checkExists);
@@ -479,7 +489,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, string userName, string password, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, userName, password, true, null, timeout, userAgent, checkExists);
@@ -494,8 +505,8 @@ namespace SilDev
         ///     The local destination path of the file.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -507,7 +518,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, CookieContainer cookieContainer = null, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, cookieContainer, timeout, userAgent, checkExists);
@@ -522,8 +534,8 @@ namespace SilDev
         ///     The local destination path of the file.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -532,7 +544,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, bool allowAutoRedirect, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, null, null, allowAutoRedirect, null, timeout, userAgent, checkExists);
@@ -556,7 +569,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, CookieContainer cookieContainer, int timeout = 60000, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, cookieContainer, timeout, userAgent, checkExists);
@@ -577,7 +591,8 @@ namespace SilDev
         ///     The value of the User-agent HTTP header.
         /// </param>
         /// <param name="checkExists">
-        ///     true to check the file availability before downloading; otherwise, false.
+        ///     <see langword="true"/> to check the file availability before downloading;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public void DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent, checkExists);

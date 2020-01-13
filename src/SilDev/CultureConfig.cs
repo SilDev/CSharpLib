@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: CultureConfig.cs
-// Version:  2019-10-31 21:53
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,8 +20,8 @@ namespace SilDev
     using System.Threading;
 
     /// <summary>
-    ///     Provides information about a specific culture (called a locale for unmanaged
-    ///     code development) that is used in all related library functions.
+    ///     Provides information about a specific culture (called a locale for
+    ///     unmanaged code development) that is used in all related library functions.
     /// </summary>
     public static class CultureConfig
     {
@@ -89,8 +89,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets or sets the default <see cref="StringComparison"/> value. (Please note that
-        ///     the "ignore case" statement is always used.)
+        ///     Gets or sets the default <see cref="StringComparison"/> value. (Please note
+        ///     that the "ignore case" statement is always used.)
         ///     <para>
         ///         Default: <see cref="StringComparison.OrdinalIgnoreCase"/>
         ///     </para>

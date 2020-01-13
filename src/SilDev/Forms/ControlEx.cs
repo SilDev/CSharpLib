@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2019-10-22 15:29
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -58,7 +58,7 @@ namespace SilDev.Forms
         /// </param>
         public static Control GetAncestor(this Control control)
         {
-            if (!(control is Control ctrl))
+            if (!(control is { } ctrl))
                 return default;
             var c = ctrl;
             while (c.Parent != null)
@@ -67,14 +67,15 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Determines whether the layout logic for this control has been temporarily suspended.
+        ///     Determines whether the layout logic for this control has been temporarily
+        ///     suspended.
         /// </summary>
         /// <param name="control">
         ///     The control to check.
         /// </param>
         public static bool LayoutIsSuspended(this Control control)
         {
-            if (!(control is Control c))
+            if (!(control is { } c))
                 return false;
             try
             {
@@ -90,18 +91,20 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Enables a window to be dragged by a mouse with its left button down over this <see cref="Control"/>.
+        ///     Enables a window to be dragged by a mouse with its left button down over
+        ///     this <see cref="Control"/>.
         /// </summary>
         /// <param name="control">
         ///     The control to change.
         /// </param>
         /// <param name="cursor">
-        ///     true to change <see cref="Control"/>.Cursor to <see cref="Cursors.SizeAll"/> while dragging;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to change <see cref="Control"/>.Cursor to
+        ///     <see cref="Cursors.SizeAll"/> while dragging; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static void EnableDragMove(Control control, bool cursor = true)
         {
-            if (!(control is Control ctrl))
+            if (!(control is { } ctrl))
                 return;
             ctrl.MouseDown += (sender, args) =>
             {
@@ -121,18 +124,19 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Enables or disables the double buffering for this <see cref="Control"/>, even it is not directly
-        ///     supported.
+        ///     Enables or disables the double buffering for this <see cref="Control"/>,
+        ///     even it is not directly supported.
         /// </summary>
         /// <param name="control">
         ///     The control to change.
         /// </param>
         /// <param name="enable">
-        ///     true to enable double buffering; otherwise, false to disable double buffering.
+        ///     <see langword="true"/> to enable double buffering; otherwise,
+        ///     <see langword="false"/> to disable double buffering.
         /// </param>
         public static void SetDoubleBuffer(this Control control, bool enable = true)
         {
-            if (!(control is Control c))
+            if (!(control is { } c))
                 return;
             try
             {
@@ -162,8 +166,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Enables or disables the specified <see cref="ControlStyles"/> for this <see cref="Control"/>,
-        ///     even it is not directly supported.
+        ///     Enables or disables the specified <see cref="ControlStyles"/> for this
+        ///     <see cref="Control"/>, even it is not directly supported.
         /// </summary>
         /// <param name="control">
         ///     The control to change.
@@ -172,11 +176,12 @@ namespace SilDev.Forms
         ///     The new styles to enable or disable.
         /// </param>
         /// <param name="enable">
-        ///     true to enable the specified styles; otherwise, false to disable the specified styles.
+        ///     <see langword="true"/> to enable the specified styles; otherwise,
+        ///     <see langword="false"/> to disable the specified styles.
         /// </param>
         public static void SetControlStyle(this Control control, ControlStyles controlStyles, bool enable = true)
         {
-            if (!(control is Control c))
+            if (!(control is { } c))
                 return;
             try
             {
@@ -226,20 +231,22 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Sets a value indicating whether all child controls of this control are displayed.
+        ///     Sets a value indicating whether all child controls of this control are
+        ///     displayed.
         /// </summary>
         /// <param name="control">
         ///     The control with the child controls to change.
         /// </param>
         /// <param name="visibility">
-        ///     true if all child controls are displayed; otherwise, false.
+        ///     <see langword="true"/> if all child controls are displayed; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         /// <param name="exempt">
         ///     A sequence of child controls that remain visible.
         /// </param>
         public static void SetChildVisibility(this Control control, bool visibility, params Control[] exempt)
         {
-            if (!(control is Control ctrl))
+            if (!(control is { } ctrl))
                 return;
             var ctrls = ctrl.Controls.OfType<Control>().Where(c => !exempt.Contains(c));
             ctrls.Aggregate(visibility, (v, c) => c.Visible = v);
@@ -255,11 +262,12 @@ namespace SilDev.Forms
         ///     The <see cref="Color"/> of the border.
         /// </param>
         /// <param name="style">
-        ///     One of the <see cref="ControlExBorderStyle"/> values that specifies the style of the border.
+        ///     One of the <see cref="ControlExBorderStyle"/> values that specifies the
+        ///     style of the border.
         /// </param>
         public static void DrawBorder(Control control, Color color, ControlExBorderStyle style = ControlExBorderStyle.Solid)
         {
-            if (!(control is Control ctrl))
+            if (!(control is { } ctrl))
                 return;
             ctrl.Paint += (sender, e) =>
             {
@@ -279,30 +287,32 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Draws a 12px large size grip <see cref="Image"/> in this <see cref="Control"/>.
+        ///     Draws a 12px large size grip <see cref="Image"/> in this
+        ///     <see cref="Control"/>.
         /// </summary>
         /// <param name="control">
         ///     The control that receives the size grip <see cref="Image"/>.
         /// </param>
         /// <param name="color">
-        ///     The color for the size grip <see cref="Image"/>; <see cref="Color.White"/> is used
-        ///     by default.
+        ///     The color for the size grip <see cref="Image"/>; <see cref="Color.White"/>
+        ///     is used by default.
         /// </param>
         /// <param name="mouseDownEvent">
-        ///     Occurs when the mouse pointer is over the control and a mouse button is pressed.
+        ///     Occurs when the mouse pointer is over the control and a mouse button is
+        ///     pressed.
         /// </param>
         /// <param name="mouseEnterEvent">
         ///     Occurs when the mouse pointer enters the control.
         /// </param>
         public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null)
         {
-            if (!(control is Control c) || !(Resources.SizeGripImage is Image i))
+            if (!(control is { } c) || !(Resources.SizeGripImage is Image i))
                 return;
-            if (color is Color cr && cr != Color.White)
-                i = i.RecolorPixels(Color.White, cr);
+            if (color.HasValue && color != Color.White)
+                i = i.RecolorPixels(Color.White, (Color)color);
             var meh = mouseDownEvent;
             var mev = mouseEnterEvent;
-            var pb = new PictureBoxEx.NonClickable(meh != null && mev != null)
+            var pb = new PictureBoxNonClickable(meh != null && mev != null)
             {
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
                 BackColor = Color.Transparent,

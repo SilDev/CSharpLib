@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2020-01-06 08:02
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -32,8 +32,8 @@ namespace SilDev.Drawing
         private static RandomInvestor _randomInvestor;
 
         /// <summary>
-        ///     Returns the range value between two colors based on their <see cref="Color.GetHue"/>
-        ///     value.
+        ///     Returns the range value between two colors based on their
+        ///     <see cref="Color.GetHue"/> value.
         /// </summary>
         /// <param name="colorA">
         ///     The first color to compare.
@@ -119,8 +119,8 @@ namespace SilDev.Drawing
             color.ToRgbArray().Sum() >= byte.MaxValue * 2 + sbyte.MaxValue;
 
         /// <summary>
-        ///     Decreases the brightness of the specified color if it is too bright based on
-        ///     <see cref="IsDark"/>.
+        ///     Decreases the brightness of the specified color if it is too bright based
+        ///     on <see cref="IsDark"/>.
         /// </summary>
         /// <param name="color">
         ///     The color to be adjusted.
@@ -134,8 +134,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Decreases the brightness of the specified color if it is too bright based on
-        ///     <see cref="IsDarkDark"/>.
+        ///     Decreases the brightness of the specified color if it is too bright based
+        ///     on <see cref="IsDarkDark"/>.
         /// </summary>
         /// <param name="color">
         ///     The color to be adjusted.
@@ -149,8 +149,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Decreases the brightness of the specified color if it is too bright based on
-        ///     <see cref="IsDarkDarkDark"/>.
+        ///     Decreases the brightness of the specified color if it is too bright based
+        ///     on <see cref="IsDarkDarkDark"/>.
         /// </summary>
         /// <param name="color">
         ///     The color to be adjusted.
@@ -238,7 +238,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Translates an HTML color representation to a GDI+ <see cref="Color"/> structure.
+        ///     Translates an HTML color representation to a GDI+ <see cref="Color"/>
+        ///     structure.
         /// </summary>
         /// <param name="htmlColor">
         ///     The string representation of the HTML color to translate.
@@ -286,7 +287,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Translates an HTML color representation to a GDI+ <see cref="Color"/> structure.
+        ///     Translates an HTML color representation to a GDI+ <see cref="Color"/>
+        ///     structure.
         /// </summary>
         /// <param name="htmlColor">
         ///     The string representation of the HTML color to translate.
@@ -304,7 +306,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Translates an HTML color representation to a GDI+ <see cref="Color"/> structure.
+        ///     Translates an HTML color representation to a GDI+ <see cref="Color"/>
+        ///     structure.
         /// </summary>
         /// <param name="htmlColor">
         ///     The string representation of the HTML color to translate.
@@ -323,7 +326,8 @@ namespace SilDev.Drawing
         ///     A value specifying the 32-bit (A)RGB value.
         /// </param>
         /// <param name="alpha">
-        ///     true to translate also the alpha value; otherwise, false.
+        ///     <see langword="true"/> to translate also the alpha value; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string ToHtml(uint argb, bool alpha = false) =>
             $"#{new string(argb.ToString("X", CultureInfo.InvariantCulture).TakeLast(alpha ? 8 : 6).ToArray()).PadLeft(alpha ? 8 : 6, '0')}";
@@ -336,27 +340,29 @@ namespace SilDev.Drawing
         ///     A value specifying the 32-bit (A)RGB value.
         /// </param>
         /// <param name="alpha">
-        ///     true to translate also the alpha value; otherwise, false.
+        ///     <see langword="true"/> to translate also the alpha value; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string ToHtml(long argb, bool alpha = false) =>
             ToHtml((uint)Math.Abs(argb), alpha);
 
         /// <summary>
-        ///     Translates the specified <see cref="Color"/> structure to an HTML string color
-        ///     representation.
+        ///     Translates the specified <see cref="Color"/> structure to an HTML string
+        ///     color representation.
         /// </summary>
         /// <param name="color">
         ///     The <see cref="Color"/> structure to translate.
         /// </param>
         /// <param name="alpha">
-        ///     true to translate also the alpha value; otherwise, false.
+        ///     <see langword="true"/> to translate also the alpha value; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static string ToHtml(Color color, bool alpha = false) =>
             color == default ? null : ToHtml(alpha ? color.ToArgb() : color.ToRgb(), alpha);
 
         /// <summary>
-        ///     Translates the specified <see cref="Color"/> structure to an HTML string color
-        ///     representation.
+        ///     Translates the specified <see cref="Color"/> structure to an HTML string
+        ///     color representation.
         /// </summary>
         /// <param name="color">
         ///     The <see cref="Color"/> structure to translate.
@@ -386,8 +392,8 @@ namespace SilDev.Drawing
             (int)(((color.R << 16) | (color.G << 8) | color.B | (0 << 24)) & 0xffffffL);
 
         /// <summary>
-        ///     Copies the elements of the 32-bit ARGB value of this <see cref="Color"/> structure
-        ///     to a new array.
+        ///     Copies the elements of the 32-bit ARGB value of this <see cref="Color"/>
+        ///     structure to a new array.
         /// </summary>
         /// <param name="color">
         ///     The <see cref="Color"/> structure to translate.
@@ -396,8 +402,8 @@ namespace SilDev.Drawing
             new int[] { color.A, color.R, color.G, color.B };
 
         /// <summary>
-        ///     Copies the elements of the 32-bit RGB value of this <see cref="Color"/> structure
-        ///     to a new array.
+        ///     Copies the elements of the 32-bit RGB value of this <see cref="Color"/>
+        ///     structure to a new array.
         /// </summary>
         /// <param name="color">
         ///     The <see cref="Color"/> structure to translate.
@@ -443,22 +449,20 @@ namespace SilDev.Drawing
         ///     The input image.
         /// </param>
         /// <param name="disposeImage">
-        ///     true to release all resources used by the specified <see cref="Image"/>;
-        ///     otherwise false.
+        ///     <see langword="true"/> to release all resources used by the specified
+        ///     <see cref="Image"/>; otherwise, <see langword="false"/>.
         /// </param>
         public static Color GetAverageColor(this Image image, bool disposeImage = false)
         {
-            if (!(image is Image img))
+            if (!(image is { } img))
                 return Color.Empty;
             Color c;
             using (var bmp = new Bitmap(1, 1))
             {
-                using (var g = Graphics.FromImage(bmp))
-                {
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    using (var b = new Bitmap(img))
-                        g.DrawImage(b, 0, 0, 1, 1);
-                }
+                using var g = Graphics.FromImage(bmp);
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                using var b = new Bitmap(img);
+                g.DrawImage(b, 0, 0, 1, 1);
                 c = bmp.GetPixel(0, 0);
             }
             c = Color.FromArgb(c.R, c.G, c.B);

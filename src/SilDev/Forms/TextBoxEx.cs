@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2019-10-20 17:14
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -32,11 +32,12 @@ namespace SilDev.Forms
         ///     The <see cref="TextBox"/> control to change.
         /// </param>
         /// <param name="color">
-        ///     The search symbol color, <see cref="TextBox"/>.ForeColor is used by default.
+        ///     The search symbol color, <see cref="TextBox"/>.ForeColor is used by
+        ///     default.
         /// </param>
         public static void DrawSearchSymbol(this TextBox textBox, Color? color = null)
         {
-            if (!(textBox is TextBox tb))
+            if (!(textBox is { } tb))
                 return;
             var img = ImageEx.DefaultSearchSymbol;
             if (img == null)
@@ -93,7 +94,7 @@ namespace SilDev.Forms
         /// </param>
         public static void AutoVerticalScrollBar(this TextBox textBox)
         {
-            if (!(textBox is TextBox tb))
+            if (!(textBox is { } tb))
                 return;
             tb.SizeChanged -= SetVerticalScrollBars;
             tb.SizeChanged += SetVerticalScrollBars;

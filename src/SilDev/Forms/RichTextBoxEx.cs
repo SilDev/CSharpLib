@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2019-10-31 21:55
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -46,7 +46,7 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkText(this RichTextBox richTextBox, string text, Color foreColor, Color? backColor = null, Font font = null)
         {
-            if (!(richTextBox is RichTextBox rtb) || string.IsNullOrWhiteSpace(text))
+            if (!(richTextBox is { } rtb) || string.IsNullOrWhiteSpace(text))
                 return;
             var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
             int start, startIndex = 0, end = rtb.Text.Length - 1, length = text.Length;
@@ -70,7 +70,8 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Marks the text depending on two specified keywords in this <see cref="RichTextBox"/> control.
+        ///     Marks the text depending on two specified keywords in this
+        ///     <see cref="RichTextBox"/> control.
         /// </summary>
         /// <param name="richTextBox">
         ///     The <see cref="RichTextBox"/> control to change.
@@ -92,7 +93,7 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkLine(this RichTextBox richTextBox, string startKeyword, string endKeyword, Color foreColor, Color? backColor = null, Font font = null)
         {
-            if (!(richTextBox is RichTextBox rtb) || string.IsNullOrWhiteSpace(startKeyword))
+            if (!(richTextBox is { } rtb) || string.IsNullOrWhiteSpace(startKeyword))
                 return;
             var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
             var lines = rtb.Lines;
@@ -141,7 +142,7 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkInLine(this RichTextBox richTextBox, string keyword, int count, Color foreColor, Color? backColor = null, Font font = null)
         {
-            if (!(richTextBox is RichTextBox rtb) || string.IsNullOrWhiteSpace(keyword))
+            if (!(richTextBox is { } rtb) || string.IsNullOrWhiteSpace(keyword))
                 return;
             var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
             var lines = rtb.Lines;
@@ -179,18 +180,21 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Sets a default <see cref="ContextMenuStrip"/> to this <see cref="RichTextBox"/> with cut,
-        ///     copy, paste, select all, load file, save file and undo.
+        ///     Sets a default <see cref="ContextMenuStrip"/> to this
+        ///     <see cref="RichTextBox"/> with cut, copy, paste, select all, load file,
+        ///     save file and undo.
         /// </summary>
         /// <param name="richTextBox">
-        ///     The <see cref="RichTextBox"/> control to add the <see cref="ContextMenuStrip"/>.
+        ///     The <see cref="RichTextBox"/> control to add the
+        ///     <see cref="ContextMenuStrip"/>.
         /// </param>
         /// <param name="owner">
-        ///     An implementation of <see cref="IWin32Window"/> that will own modal dialog boxes.
+        ///     An implementation of <see cref="IWin32Window"/> that will own modal dialog
+        ///     boxes.
         /// </param>
         public static void SetDefaultContextMenuStrip(this RichTextBox richTextBox, IWin32Window owner = null)
         {
-            if (!(richTextBox is RichTextBox rtb))
+            if (!(richTextBox is { } rtb))
                 return;
             var cms = new ContextMenuStrip
             {
@@ -212,7 +216,7 @@ namespace SilDev.Forms
 
         private static void AddToolStripItem(this IDisposable toolStrip, ToolStripItem toolStripItem, FileDialogHandler action, Control control, IWin32Window owner = null)
         {
-            if (!(toolStripItem is ToolStripItem tsi) || !(toolStrip is ToolStrip ts))
+            if (!(toolStripItem is { } tsi) || !(toolStrip is ToolStrip ts))
                 return;
             tsi.Click += (s, e) => action(control, owner);
             ts.Items.Add(toolStripItem);
@@ -220,7 +224,7 @@ namespace SilDev.Forms
 
         private static void AddToolStripItem(this IDisposable toolStrip, ToolStripItem toolStripItem, Action action)
         {
-            if (!(toolStripItem is ToolStripItem tsi) || !(toolStrip is ToolStrip ts))
+            if (!(toolStripItem is { } tsi) || !(toolStrip is ToolStrip ts))
                 return;
             tsi.Click += (s, e) => action();
             ts.Items.Add(toolStripItem);
@@ -228,54 +232,52 @@ namespace SilDev.Forms
 
         private static void LoadTextFile(Control control, IWin32Window owner = null)
         {
-            if (!(control is Control c))
+            if (!(control is { } c))
                 return;
-            using (var dialog = new OpenFileDialog())
+            using var dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() != DialogResult.OK)
             {
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        c.Text = File.ReadAllText(dialog.FileName);
-                        MessageBoxEx.Show(owner, UIStrings.FileSuccessfullyLoaded, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    }
-                    catch (Exception ex) when (ex.IsCaught())
-                    {
-                        MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    return;
-                }
                 MessageBoxEx.Show(owner, UIStrings.OperationCanceled, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
+            try
+            {
+                c.Text = File.ReadAllText(dialog.FileName);
+                MessageBoxEx.Show(owner, UIStrings.FileSuccessfullyLoaded, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private static void SaveTextFile(Control control, IWin32Window owner = null)
         {
-            if (!(control is Control c))
+            if (!(control is { } c))
                 return;
             if (string.IsNullOrEmpty(c.Text))
             {
                 MessageBoxEx.Show(owner, UIStrings.TextCanNotBeEmpty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            using (var dialog = new SaveFileDialog())
+            using var dialog = new SaveFileDialog
             {
-                dialog.Filter = $@"{UIStrings.TextFiles}|*.txt";
-                dialog.FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt";
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        File.WriteAllText(dialog.FileName, TextEx.FormatNewLine(c.Text));
-                        MessageBoxEx.Show(owner, UIStrings.FileSuccessfullySaved, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    }
-                    catch (Exception ex) when (ex.IsCaught())
-                    {
-                        MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    return;
-                }
+                Filter = $@"{UIStrings.TextFiles}|*.txt",
+                FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt"
+            };
+            if (dialog.ShowDialog() != DialogResult.OK)
+            {
                 MessageBoxEx.Show(owner, UIStrings.OperationCanceled, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
+            try
+            {
+                File.WriteAllText(dialog.FileName, TextEx.FormatNewLine(c.Text));
+                MessageBoxEx.Show(owner, UIStrings.FileSuccessfullySaved, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

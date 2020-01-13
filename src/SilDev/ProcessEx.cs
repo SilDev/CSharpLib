@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-06 07:59
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -21,17 +21,13 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Management;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Text.RegularExpressions;
     using System.Threading;
-    using Intern;
     using Microsoft.Win32.SafeHandles;
     using Properties;
 
     /// <summary>
-    ///     Provides static methods based on the <see cref="Process"/> class to enable you to start
-    ///     local system processes.
+    ///     Provides static methods based on the <see cref="Process"/> class to enable
+    ///     you to start local system processes.
     /// </summary>
     public static class ProcessEx
     {
@@ -94,12 +90,12 @@ namespace SilDev
                 for (var i = 0; i < processes.Length; i++)
                 {
                     parentName = i == 0 ? childName : $"{childName}#{i}";
-                    using (var tmpId = new PerformanceCounter("Process", "ID Process", parentName))
-                        if ((int)tmpId.NextValue() == childId)
-                            break;
+                    using var tmpId = new PerformanceCounter("Process", "ID Process", parentName);
+                    if ((int)tmpId.NextValue() == childId)
+                        break;
                 }
-                using (var parentId = new PerformanceCounter("Process", "Creating Process ID", parentName))
-                    return Process.GetProcessById((int)parentId.NextValue());
+                using var parentId = new PerformanceCounter("Process", "Creating Process ID", parentName);
+                return Process.GetProcessById((int)parentId.NextValue());
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -146,16 +142,18 @@ namespace SilDev
 
         /// <summary>
         ///     Gets all active instances associated with the specified application. If the
-        ///     specified name/path is null, all running processes are returned.
+        ///     specified name/path is <see langword="null"/>, all running processes are
+        ///     returned.
         /// </summary>
         /// <param name="nameOrPath">
         ///     The filename or the full path to the application to check.
         /// </param>
         /// <param name="doubleTap">
-        ///     true to try to get firstly by the path, then by name; otherwise, false.
+        ///     <see langword="true"/> to try to get firstly by the path, then by name;
+        ///     otherwise, <see langword="false"/>.
         ///     <para>
-        ///         Please note that this option has no effect if the first parameter contains
-        ///         only a name.
+        ///         Please note that this option has no effect if the first parameter
+        ///         contains only a name.
         ///     </para>
         /// </param>
         public static IEnumerable<Process> GetInstances(string nameOrPath, bool doubleTap = false)
@@ -201,17 +199,18 @@ namespace SilDev
 
         /// <summary>
         ///     Returns the number of all active instances associated with the specified
-        ///     application. If the specified name/path is null, the number of all running
-        ///     processes is returned.
+        ///     application. If the specified name/path is <see langword="null"/>, the
+        ///     number of all running processes is returned.
         /// </summary>
         /// <param name="nameOrPath">
         ///     The filename or the full path to the application to check.
         /// </param>
         /// <param name="doubleTap">
-        ///     true to try to check firstly by the path, then by name; otherwise, false.
+        ///     <see langword="true"/> to try to check firstly by the path, then by name;
+        ///     otherwise, <see langword="false"/>.
         ///     <para>
-        ///         Please note that this option has no effect if the first parameter contains
-        ///         only a name.
+        ///         Please note that this option has no effect if the first parameter
+        ///         contains only a name.
         ///     </para>
         /// </param>
         public static int InstancesCount(string nameOrPath, bool doubleTap = false) =>
@@ -224,10 +223,11 @@ namespace SilDev
         ///     The filename or the full path to the application to check.
         /// </param>
         /// <param name="doubleTap">
-        ///     true to try to check firstly by the path, then by name; otherwise, false.
+        ///     <see langword="true"/> to try to check firstly by the path, then by name;
+        ///     otherwise, <see langword="false"/>.
         ///     <para>
-        ///         Please note that this option has no effect if the first parameter contains
-        ///         only a name.
+        ///         Please note that this option has no effect if the first parameter
+        ///         contains only a name.
         ///     </para>
         /// </param>
         public static bool IsRunning(string nameOrPath, bool doubleTap = false) =>
@@ -300,19 +300,21 @@ namespace SilDev
 
         /// <summary>
         ///     Starts (or reuses) the process resource that is specified by the current
-        ///     <see cref="Process"/>.StartInfo property of this <see cref="Process"/> and associates
-        ///     it with the component.
+        ///     <see cref="Process"/>.StartInfo property of this <see cref="Process"/> and
+        ///     associates it with the component.
         ///     <para>
-        ///         If the <see cref="Process"/>.StartInfo.WorkingDirectory parameter is undefined,
-        ///         it is created by <see cref="Process"/>.StartInfo.FileName parameter.
+        ///         If the <see cref="Process"/>.StartInfo.WorkingDirectory parameter is
+        ///         undefined, it is created by <see cref="Process"/>.StartInfo.FileName
+        ///         parameter.
         ///     </para>
         /// </summary>
         /// <param name="process">
         ///     The <see cref="Process"/> component to start.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component, if the process has been started;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static Process Start(Process process, bool dispose = true)
         {
@@ -322,7 +324,7 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(process));
                 process.StartInfo.FileName = PathEx.Combine(process.StartInfo.FileName);
                 if (string.IsNullOrEmpty(process.StartInfo.FileName))
-                    throw new ArgumentNullException(nameof(process.StartInfo.FileName));
+                    throw new NullReferenceException();
                 if (!File.Exists(process.StartInfo.FileName))
                     throw new PathNotFoundException(process.StartInfo.FileName);
                 if (process.StartInfo.FileName.EndsWithEx(".lnk"))
@@ -334,7 +336,7 @@ namespace SilDev
                     {
                         var workingDirectory = Path.GetDirectoryName(process.StartInfo.FileName);
                         if (string.IsNullOrEmpty(workingDirectory))
-                            throw new ArgumentNullException(nameof(workingDirectory));
+                            throw new NullReferenceException();
                         process.StartInfo.WorkingDirectory = workingDirectory;
                     }
                     if (!process.StartInfo.UseShellExecute && !process.StartInfo.CreateNoWindow && process.StartInfo.WindowStyle == ProcessWindowStyle.Hidden)
@@ -356,14 +358,20 @@ namespace SilDev
                                     WinApi.ThrowLastError(ExceptionMessages.PseudoHandleNotFound);
                                 if (!WinApi.NativeMethods.OpenProcessToken(pseudoHandle, 0x20, out tokenHandle))
                                     WinApi.ThrowLastError(ExceptionMessages.PseudoHandleTokenAccess);
+                                var newLuId = new WinApi.LuId();
+                                if (!WinApi.NativeMethods.LookupPrivilegeValue(null, "SeIncreaseQuotaPrivilege", ref newLuId))
+                                    WinApi.ThrowLastError(ExceptionMessages.PrivilegeValueAccess);
                                 var newState = new WinApi.TokenPrivileges
                                 {
-                                    PrivilegeCount = 1,
-                                    Privileges = new WinApi.LuIdAndAttributes[1]
+                                    Privileges = new[]
+                                    {
+                                        new WinApi.LuIdAndAttributes
+                                        {
+                                            Attributes = 0x2,
+                                            Luid = newLuId
+                                        }
+                                    }
                                 };
-                                if (!WinApi.NativeMethods.LookupPrivilegeValue(null, "SeIncreaseQuotaPrivilege", ref newState.Privileges[0].Luid))
-                                    WinApi.ThrowLastError(ExceptionMessages.PrivilegeValueAccess);
-                                newState.Privileges[0].Attributes = 0x2;
                                 if (!WinApi.NativeHelper.AdjustTokenPrivileges(tokenHandle, false, ref newState))
                                     WinApi.ThrowLastError(ExceptionMessages.TokenPrivilegesAdjustment);
                             }
@@ -373,7 +381,7 @@ namespace SilDev
                             }
                             var shellWindow = WinApi.NativeMethods.GetShellWindow();
                             if (shellWindow == IntPtr.Zero)
-                                throw new ArgumentNullException(nameof(shellWindow));
+                                throw new NullReferenceException();
                             var shellHandle = IntPtr.Zero;
                             var shellToken = IntPtr.Zero;
                             var primaryToken = IntPtr.Zero;
@@ -426,18 +434,22 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///     <see cref="ProcessStartInfo"/> and starts (or reuses) the process component.
+        ///     Initializes a new instance of the <see cref="Process"/> class from the
+        ///     specified <see cref="ProcessStartInfo"/> and starts (or reuses) the process
+        ///     component.
         ///     <para>
-        ///         If WorkingDirectory parameter is undefined, it is created by the FileName parameter.
+        ///         If WorkingDirectory parameter is undefined, it is created by the
+        ///         FileName parameter.
         ///     </para>
         /// </summary>
         /// <param name="processStartInfo">
-        ///     The <see cref="ProcessStartInfo"/> component to initialize a new <see cref="Process"/>.
+        ///     The <see cref="ProcessStartInfo"/> component to initialize a new
+        ///     <see cref="Process"/>.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component, if the process has been started;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static Process Start(ProcessStartInfo processStartInfo, bool dispose = true)
         {
@@ -446,8 +458,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///     parameters and starts (or reuses) the process component.
+        ///     Initializes a new instance of the <see cref="Process"/> class from the
+        ///     specified parameters and starts (or reuses) the process component.
         /// </summary>
         /// <param name="fileName">
         ///     The application to start.
@@ -459,14 +471,16 @@ namespace SilDev
         ///     The command-line arguments to use when starting the application.
         /// </param>
         /// <param name="verbRunAs">
-        ///     true to start the application with administrator privileges; otherwise, false.
+        ///     <see langword="true"/> to start the application with administrator
+        ///     privileges; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="processWindowStyle">
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component, if the process has been started;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static Process Start(string fileName, string workingDirectory, string arguments, bool verbRunAs = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true)
         {
@@ -485,8 +499,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///     parameters and starts (or reuses) the process component.
+        ///     Initializes a new instance of the <see cref="Process"/> class from the
+        ///     specified parameters and starts (or reuses) the process component.
         /// </summary>
         /// <param name="fileName">
         ///     The application to start.
@@ -498,18 +512,20 @@ namespace SilDev
         ///     The command-line arguments to use when starting the application.
         /// </param>
         /// <param name="verbRunAs">
-        ///     true to start the application with administrator privileges; otherwise, false.
+        ///     <see langword="true"/> to start the application with administrator
+        ///     privileges; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component, if the process has been started;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static Process Start(string fileName, string workingDirectory, string arguments, bool verbRunAs, bool dispose) =>
             Start(fileName, workingDirectory, arguments, verbRunAs, ProcessWindowStyle.Normal, dispose);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///     parameters and starts (or reuses) the process component.
+        ///     Initializes a new instance of the <see cref="Process"/> class from the
+        ///     specified parameters and starts (or reuses) the process component.
         /// </summary>
         /// <param name="fileName">
         ///     The application to start.
@@ -518,21 +534,23 @@ namespace SilDev
         ///     The command-line arguments to use when starting the application.
         /// </param>
         /// <param name="verbRunAs">
-        ///     true to start the application with administrator privileges; otherwise, false.
+        ///     <see langword="true"/> to start the application with administrator
+        ///     privileges; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="processWindowStyle">
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component if the process has been started; otherwise,
+        ///     <see langword="false"/>.
         /// </param>
         public static Process Start(string fileName, string arguments = null, bool verbRunAs = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true) =>
             Start(fileName, null, arguments, verbRunAs, processWindowStyle, dispose);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///     parameters and starts (or reuses) the process component.
+        ///     Initializes a new instance of the <see cref="Process"/> class from the
+        ///     specified parameters and starts (or reuses) the process component.
         /// </summary>
         /// <param name="fileName">
         ///     The application to start.
@@ -541,48 +559,54 @@ namespace SilDev
         ///     The command-line arguments to use when starting the application.
         /// </param>
         /// <param name="verbRunAs">
-        ///     true to start the application with administrator privileges; otherwise, false.
+        ///     <see langword="true"/> to start the application with administrator
+        ///     privileges; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component, if the process has been started;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static Process Start(string fileName, string arguments, bool verbRunAs, bool dispose) =>
             Start(fileName, null, arguments, verbRunAs, ProcessWindowStyle.Normal, dispose);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///     parameters and starts (or reuses) the process component.
+        ///     Initializes a new instance of the <see cref="Process"/> class from the
+        ///     specified parameters and starts (or reuses) the process component.
         /// </summary>
         /// <param name="fileName">
         ///     The application to start.
         /// </param>
         /// <param name="verbRunAs">
-        ///     true to start the application with administrator privileges; otherwise, false.
+        ///     <see langword="true"/> to start the application with administrator
+        ///     privileges; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="processWindowStyle">
         ///     The window state to use when the process is started.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component, if the process has been started;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static Process Start(string fileName, bool verbRunAs, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Normal, bool dispose = true) =>
             Start(fileName, null, null, verbRunAs, processWindowStyle, dispose);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class from the specified
-        ///     parameters to starts (or reuses) the process component.
+        ///     Initializes a new instance of the <see cref="Process"/> class from the
+        ///     specified parameters to starts (or reuses) the process component.
         /// </summary>
         /// <param name="fileName">
         ///     The application to start.
         /// </param>
         /// <param name="verbRunAs">
-        ///     true to start the application with administrator privileges; otherwise, false.
+        ///     <see langword="true"/> to start the application with administrator
+        ///     privileges; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component, if the process has been started;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         public static Process Start(string fileName, bool verbRunAs, bool dispose) =>
             Start(fileName, null, null, verbRunAs, dispose);
@@ -632,8 +656,11 @@ namespace SilDev
                             WinApi.NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
                             if (!waitOnHandle)
                                 continue;
-                            using (var wh = new ManualResetEvent(false) { SafeWaitHandle = new SafeWaitHandle(h, false) })
-                                wh.WaitOne(100);
+                            using var wh = new ManualResetEvent(false)
+                            {
+                                SafeWaitHandle = new SafeWaitHandle(h, false)
+                            };
+                            wh.WaitOne(100);
                         }
                         if (p?.HasExited ?? false)
                             count++;
@@ -658,8 +685,9 @@ namespace SilDev
         /// <summary>
         ///     Immediately stops all specified processes.
         ///     <para>
-        ///         If the current process doesn't have enough privileges to stop a specified process
-        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///         If the current process doesn't have enough privileges to stop a
+        ///         specified process it starts an invisible elevated instance of the
+        ///         command prompt to run taskkill.
         ///     </para>
         /// </summary>
         /// <param name="processes">
@@ -692,13 +720,13 @@ namespace SilDev
                 {
                     Log.Write(ex);
                 }
-                if (string.IsNullOrEmpty(name) || list.ContainsEx(name))
+                if (string.IsNullOrEmpty(name) || list.ContainsItem(name))
                     continue;
                 list.Add(name);
             }
             if (list.Count == 0)
                 return count > 0;
-            using (var p = SendHelper.KillAllTasks(list, true, false))
+            using (var p = CmdExec.KillAllTasks(list, true, false))
                 if (p?.HasExited ?? false)
                     p.WaitForExit();
             Tray.RefreshAsync(16);
@@ -708,8 +736,9 @@ namespace SilDev
         /// <summary>
         ///     Immediately stops all specified processes.
         ///     <para>
-        ///         If the current process doesn't have enough privileges to stop a specified process
-        ///         it starts an invisible elevated instance of the command prompt to run taskkill.
+        ///         If the current process doesn't have enough privileges to stop a
+        ///         specified process it starts an invisible elevated instance of the
+        ///         command prompt to run taskkill.
         ///     </para>
         /// </summary>
         /// <param name="processes">
@@ -717,715 +746,5 @@ namespace SilDev
         /// </param>
         public static bool Terminate(params Process[] processes) =>
             Terminate(processes.ToList());
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class to execute system
-        ///     commands using the system command prompt ("cmd.exe").
-        ///     <para>
-        ///         This can be useful for an unprivileged application as a simple way to execute a
-        ///         command with the highest user permissions, for example.
-        ///     </para>
-        /// </summary>
-        /// <param name="command">
-        ///     The command to execute.
-        /// </param>
-        /// <param name="runAsAdmin">
-        ///     true to start the application with administrator privileges; otherwise, false.
-        /// </param>
-        /// <param name="processWindowStyle">
-        ///     The window state to use when the process is started.
-        /// </param>
-        /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
-        /// </param>
-        public static Process Send(string command, bool runAsAdmin = false, ProcessWindowStyle processWindowStyle = ProcessWindowStyle.Hidden, bool dispose = true)
-        {
-            try
-            {
-                var trimChars = new[]
-                {
-                    '\t', '\n', '\r', ' ', '&', '|'
-                };
-                var cmd = command?.Trim(trimChars) ?? throw new ArgumentNullException(nameof(command));
-                if (processWindowStyle == ProcessWindowStyle.Hidden && cmd.StartsWithEx("/K "))
-                    cmd = cmd.Substring(3).TrimStart();
-                if (!cmd.StartsWithEx("/C ", "/K "))
-                    cmd = $"/C {cmd}";
-                if (cmd.Length < 16)
-                    throw new ArgumentNullException(nameof(cmd));
-#if any || x86
-                var path = ComSpec.SysNativePath;
-#else
-                var path = ComSpec.DefaultPath;
-#endif
-                var anyLineSeparator = cmd.Any(TextEx.IsLineSeparator);
-                if (anyLineSeparator || (path + cmd).Length + 4 > 8192)
-                {
-                    var sb = new StringBuilder();
-                    var file = FileEx.GetUniqueTempPath("tmp", ".cmd");
-                    var content = cmd.Substring(2).TrimStart(trimChars);
-                    if (content.StartsWithEx("@ECHO ON", "@ECHO OFF"))
-                    {
-                        var start = content.StartsWithEx("@ECHO ON") ? 8 : 9;
-                        content = content.Substring(start).TrimStart(trimChars);
-                        sb.AppendLine(processWindowStyle == ProcessWindowStyle.Hidden || start == 9 ? "@ECHO OFF" : "@ECHO ON");
-                    }
-                    var loopVars = Regex.Matches(content, @"((\s|\""|\'|\=)(?<var>(%[A-Za-z]{1,32}))(\s|\""|\'|\)))").Cast<Match>().ToArray();
-                    if (loopVars.Any())
-                    {
-                        var indicator = 0;
-                        content = loopVars.Select(m => m.Groups["var"].Index + ++indicator)
-                                          .Aggregate(content, (s, i) => $"{s.Substring(0, i)}%{s.Substring(i)}");
-                    }
-                    var exit = content.EndsWithEx("EXIT /B %ERRORLEVEL%",
-                                                  "EXIT /B !ERRORLEVEL!",
-                                                  "EXIT /B",
-                                                  "EXIT %ERRORLEVEL%",
-                                                  "EXIT !ERRORLEVEL!",
-                                                  "EXIT");
-                    if (exit)
-                    {
-                        if (content.EndsWithEx("%ERRORLEVEL%", "!ERRORLEVEL!"))
-                            content = content.Substring(0, content.Length - 12).TrimEnd(trimChars);
-                        content = content.Substring(0, content.Length - (content.EndsWithEx("EXIT") ? 4 : 7)).TrimEnd(trimChars);
-                    }
-                    sb.AppendLine(content);
-                    sb.AppendFormat(CultureConfig.GlobalCultureInfo, "DEL /F /Q \"{0}\"", file);
-                    File.WriteAllText(file, sb.ToStringThenClear());
-                    cmd = $"/C CALL \"{file}\" & EXIT";
-                }
-                var psi = new ProcessStartInfo
-                {
-                    Arguments = cmd,
-                    FileName = path,
-                    UseShellExecute = runAsAdmin,
-                    Verb = runAsAdmin ? "runas" : string.Empty,
-                    WindowStyle = processWindowStyle
-                };
-                var p = Start(psi, dispose);
-                if (Log.DebugMode > 1)
-                    Log.Write($"COMMAND EXECUTED: {cmd.Substring(3)}");
-                return p;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class to execute system
-        ///     commands using the system command prompt ("cmd.exe").
-        ///     <para>
-        ///         This can be useful for an unprivileged application as a simple way to execute a
-        ///         command with the highest user permissions, for example.
-        ///     </para>
-        /// </summary>
-        /// <param name="command">
-        ///     The command to execute.
-        /// </param>
-        /// <param name="runAsAdmin">
-        ///     true to start the application with administrator privileges; otherwise, false.
-        /// </param>
-        /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
-        /// </param>
-        public static Process Send(string command, bool runAsAdmin, bool dispose) =>
-            Send(command, runAsAdmin, ProcessWindowStyle.Hidden, dispose);
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class to execute system
-        ///     commands using the system command prompt ("cmd.exe").
-        ///     <para>
-        ///         This can be useful for an unprivileged application as a simple way to execute a
-        ///         command with the highest user permissions, for example.
-        ///     </para>
-        /// </summary>
-        /// <param name="command">
-        ///     The command to execute.
-        /// </param>
-        /// <param name="processWindowStyle">
-        ///     The window state to use when the process is started.
-        /// </param>
-        /// <param name="dispose">
-        ///     true to release all resources used by the <see cref="Process"/> component, if the
-        ///     process has been started; otherwise, false.
-        /// </param>
-        public static Process Send(string command, ProcessWindowStyle processWindowStyle, bool dispose = true) =>
-            Send(command, false, processWindowStyle, dispose);
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Process"/> class to execute system commands
-        ///     using the system command prompt ("cmd.exe") and stream its output to a console, if
-        ///     available.
-        /// </summary>
-        /// <param name="commands">
-        ///     The commands to execute.
-        /// </param>
-        public static bool SendEx(params string[] commands)
-        {
-            try
-            {
-                if (commands == null)
-                    throw new ArgumentNullException(nameof(commands));
-#if any || x86
-                var path = ComSpec.SysNativePath;
-#else
-                var path = ComSpec.DefaultPath;
-#endif
-                using (var p = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        CreateNoWindow = true,
-                        FileName = path,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        UseShellExecute = false,
-                        Verb = Elevation.IsAdministrator ? "runas" : string.Empty
-                    }
-                })
-                {
-                    p.Start();
-                    foreach (var s in commands)
-                        p.StandardInput.WriteLine(s);
-                    p.StandardInput.Flush();
-                    p.StandardInput.Close();
-                    Console.WriteLine(p.StandardOutput.ReadToEnd());
-                }
-                return true;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return false;
-            }
-        }
-
-        /// <summary>
-        ///     Provides the functionality to handle the current principal name.
-        /// </summary>
-        public static class CurrentPrincipal
-        {
-            /// <summary>
-            ///     Gets the original name of the current principal.
-            ///     <para>
-            ///         This variable is only set if <see cref="GetOriginalName"/> was
-            ///         previously called.
-            ///     </para>
-            /// </summary>
-            public static string Name { get; private set; }
-
-            private static void GetPointers(out IntPtr offset, out IntPtr buffer)
-            {
-                var curHandle = Process.GetCurrentProcess().Handle;
-                var pebBaseAddress = WinApi.NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
-                var processParameters = Marshal.ReadIntPtr(pebBaseAddress, 4 * IntPtr.Size);
-                var unicodeSize = IntPtr.Size * 2;
-                offset = processParameters.Increment(new IntPtr(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));
-                buffer = Marshal.ReadIntPtr(offset, IntPtr.Size);
-            }
-
-            /// <summary>
-            ///     Retrieves the original name of the current principal.
-            /// </summary>
-            public static string GetOriginalName()
-            {
-                if (!string.IsNullOrEmpty(Name))
-                    return Name;
-                try
-                {
-                    GetPointers(out var offset, out var buffer);
-                    var len = Marshal.ReadInt16(offset);
-                    if (string.IsNullOrEmpty(Name))
-                        Name = Marshal.PtrToStringUni(buffer, len / 2);
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                }
-                return Name;
-            }
-
-            /// <summary>
-            ///     Changes the name of the current principal.
-            /// </summary>
-            /// <param name="newName">
-            ///     The new name for the current principal, which cannot be longer than
-            ///     the original one.
-            /// </param>
-            public static void ChangeName(string newName)
-            {
-                try
-                {
-                    if (string.IsNullOrWhiteSpace(newName))
-                        throw new ArgumentNullException(nameof(newName));
-                    GetPointers(out var offset, out var buffer);
-                    var len = Marshal.ReadInt16(offset);
-                    if (string.IsNullOrEmpty(Name))
-                        Name = Marshal.PtrToStringUni(buffer, len / 2);
-                    var principalDir = Path.GetDirectoryName(Name);
-                    if (string.IsNullOrEmpty(principalDir))
-                        throw new PathNotFoundException(principalDir);
-                    var newPrincipalName = Path.Combine(principalDir, newName);
-                    if (newPrincipalName.Length > Name.Length)
-                        throw new ArgumentException(ExceptionMessages.NewPrincipalNameTooLong);
-                    var ptr = buffer;
-                    foreach (var c in newPrincipalName)
-                    {
-                        Marshal.WriteInt16(ptr, c);
-                        ptr = ptr.Increment(new IntPtr(2));
-                    }
-                    Marshal.WriteInt16(ptr, 0);
-                    Marshal.WriteInt16(offset, (short)(newPrincipalName.Length * 2));
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                }
-            }
-
-            /// <summary>
-            ///     Restores the name of the current principal.
-            /// </summary>
-            public static void RestoreName()
-            {
-                try
-                {
-                    if (string.IsNullOrEmpty(Name))
-                        throw new InvalidOperationException();
-                    GetPointers(out var offset, out var buffer);
-                    foreach (var c in Name)
-                    {
-                        Marshal.WriteInt16(buffer, c);
-                        buffer = buffer.Increment(new IntPtr(2));
-                    }
-                    Marshal.WriteInt16(buffer, 0);
-                    Marshal.WriteInt16(offset, (short)(Name.Length * 2));
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Provides basic functionality based on <see cref="Send(string,bool,bool)"/>.
-        /// </summary>
-        public static class SendHelper
-        {
-            /// <summary>
-            ///     Copies an existing file or directory to a new location.
-            /// </summary>
-            /// <param name="srcPath">
-            ///     The path to the file or directory to copy.
-            /// </param>
-            /// <param name="destPath">
-            ///     The name of the destination file or directory.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="wait">
-            ///     true to wait indefinitely for the associated process to exit; otherwise, false.
-            /// </param>
-            public static bool Copy(string srcPath, string destPath, bool runAsAdmin = false, bool wait = true)
-            {
-                if (string.IsNullOrWhiteSpace(srcPath) || string.IsNullOrWhiteSpace(destPath))
-                    return false;
-                var src = PathEx.Combine(srcPath);
-                if (!PathEx.DirOrFileExists(src))
-                    return false;
-                var dest = PathEx.Combine(destPath);
-                int exitCode;
-                using (var p = Send($"COPY /Y \"{src}\" \"{dest}\"", runAsAdmin, false))
-                {
-                    if (!wait)
-                        return true;
-                    if (p?.HasExited ?? false)
-                        p.WaitForExit();
-                    exitCode = p?.ExitCode ?? 1;
-                }
-                return exitCode == 0;
-            }
-
-            /// <summary>
-            ///     Deletes an existing file or directory.
-            /// </summary>
-            /// <param name="path">
-            ///     The path to the file or directory to be deleted.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="wait">
-            ///     true to wait indefinitely for the associated process to exit; otherwise, false.
-            /// </param>
-            public static bool Delete(string path, bool runAsAdmin = false, bool wait = true)
-            {
-                if (string.IsNullOrWhiteSpace(path))
-                    return false;
-                var src = PathEx.Combine(path);
-                if (!PathEx.DirOrFileExists(src))
-                    return true;
-                int exitCode;
-                using (var p = Send((PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src), runAsAdmin, false))
-                {
-                    if (!wait)
-                        return true;
-                    if (p?.HasExited ?? false)
-                        p.WaitForExit();
-                    exitCode = p?.ExitCode ?? 1;
-                }
-                return exitCode == 0;
-            }
-
-            /// <summary>
-            ///     Waits for the specified seconds to execute the specified command.
-            /// </summary>
-            /// <param name="command">
-            ///     The command to execute.
-            /// </param>
-            /// <param name="seconds">
-            ///     The time to wait in seconds.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitThenCmd(string command, int seconds = 5, bool runAsAdmin = false, bool dispose = true)
-            {
-                if (string.IsNullOrWhiteSpace(command))
-                    return null;
-                var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                return Send($"PING LOCALHOST -n {time} > NUL && {command}", runAsAdmin, dispose);
-            }
-
-            /// <summary>
-            ///     Waits for the specified seconds to execute the specified command.
-            /// </summary>
-            /// <param name="command">
-            ///     The command to execute.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitThenCmd(string command, bool runAsAdmin, bool dispose = true) =>
-                WaitThenCmd(command, 5, runAsAdmin, dispose);
-
-            /// <summary>
-            ///     Waits for the specified seconds to delete the target at the specified path.
-            /// </summary>
-            /// <param name="path">
-            ///     The path to the file or directory to be deleted.
-            /// </param>
-            /// <param name="seconds">
-            ///     The time to wait in seconds.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitThenDelete(string path, int seconds = 5, bool runAsAdmin = false, bool dispose = true)
-            {
-                if (string.IsNullOrWhiteSpace(path))
-                    return null;
-                var src = PathEx.Combine(path);
-                if (!PathEx.DirOrFileExists(src))
-                    return null;
-                var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-                var command = (PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src);
-                return WaitThenCmd(command, time, runAsAdmin, dispose);
-            }
-
-            /// <summary>
-            ///     Waits for the specified seconds to delete the target at the specified path.
-            /// </summary>
-            /// <param name="path">
-            ///     The path to the file or directory to be deleted.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitThenDelete(string path, bool runAsAdmin, bool dispose = true) =>
-                WaitThenDelete(path, 5, runAsAdmin, dispose);
-
-            /// <summary>
-            ///     Executes the specified command if there is no process running that is matched with the
-            ///     specified process name.
-            ///     <para>
-            ///         If a matched process is still running, the task will wait until all matched
-            ///         processes has been closed.
-            ///     </para>
-            /// </summary>
-            /// <param name="command">
-            ///     The command to execute.
-            /// </param>
-            /// <param name="processName">
-            ///     The name of the process to be waited.
-            /// </param>
-            /// <param name="extension">
-            ///     The file extension of the specified process.
-            /// </param>
-            /// <param name="seconds">
-            ///     The amount of time, in seconds, to wait for the associated process to exit.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitForExitThenCmd(string command, string processName, string extension, int seconds = 0, bool runAsAdmin = false, bool dispose = true)
-            {
-                if (string.IsNullOrWhiteSpace(command) || string.IsNullOrWhiteSpace(processName))
-                    return null;
-                var name = processName;
-                if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
-                    name += extension;
-                return Send($"(FOR /L %X in (1,{(seconds < 1 ? "0,2" : $"1,{seconds}")}) DO (PING -n 2 LOCALHOST >NUL & TASKLIST | FIND /I \"{name}\" || ({command} & EXIT /B))) & EXIT /B", runAsAdmin, dispose);
-            }
-
-            /// <summary>
-            ///     Executes the specified command if there is no process running that is matched with the
-            ///     specified process name.
-            ///     <para>
-            ///         If a matched process is still running, the task will wait until all matched
-            ///         processes has been closed.
-            ///     </para>
-            /// </summary>
-            /// <param name="command">
-            ///     The command to execute.
-            /// </param>
-            /// <param name="processName">
-            ///     The name of the process to be waited.
-            /// </param>
-            /// <param name="seconds">
-            ///     The amount of time, in seconds, to wait for the associated process to exit.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitForExitThenCmd(string command, string processName, int seconds = 0, bool runAsAdmin = false, bool dispose = true) =>
-                WaitForExitThenCmd(command, processName, ".exe", seconds, runAsAdmin, dispose);
-
-            /// <summary>
-            ///     Executes the specified command if there is no process running that is matched with the
-            ///     specified process name.
-            ///     <para>
-            ///         If a matched process is still running, the task will wait until all matched
-            ///         processes has been closed.
-            ///     </para>
-            /// </summary>
-            /// <param name="command">
-            ///     The command to execute.
-            /// </param>
-            /// <param name="processName">
-            ///     The name of the process to be waited.
-            /// </param>
-            /// <param name="extension">
-            ///     The file extension of the specified process.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitForExitThenCmd(string command, string processName, string extension, bool runAsAdmin, bool dispose = true) =>
-                WaitForExitThenCmd(command, processName, extension, 0, runAsAdmin, dispose);
-
-            /// <summary>
-            ///     Executes the specified command if there is no process running that is matched with the
-            ///     specified process name.
-            ///     <para>
-            ///         If a matched process is still running, the task will wait until all matched
-            ///         processes has been closed.
-            ///     </para>
-            /// </summary>
-            /// <param name="command">
-            ///     The command to execute.
-            /// </param>
-            /// <param name="processName">
-            ///     The name of the process to be waited.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitForExitThenCmd(string command, string processName, bool runAsAdmin, bool dispose = true) =>
-                WaitForExitThenCmd(command, processName, ".exe", 0, runAsAdmin, dispose);
-
-            /// <summary>
-            ///     Deletes the target at the specified path if there is no process running that is
-            ///     matched with the specified process name.
-            ///     <para>
-            ///         If a matched process is still running, the task will wait until all matched
-            ///         processes has been closed.
-            ///     </para>
-            /// </summary>
-            /// <param name="path">
-            ///     The path to the file or directory to be deleted.
-            /// </param>
-            /// <param name="processName">
-            ///     The name of the process to be waited.
-            /// </param>
-            /// <param name="extension">
-            ///     The file extension of the specified process.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitForExitThenDelete(string path, string processName, string extension, bool runAsAdmin = false, bool dispose = true)
-            {
-                if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(processName))
-                    return null;
-                var src = PathEx.Combine(path);
-                if (!PathEx.DirOrFileExists(src))
-                    return null;
-                var command = (PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src);
-                return WaitForExitThenCmd(command, processName, extension, 0, runAsAdmin, dispose);
-            }
-
-            /// <summary>
-            ///     Deletes the target at the specified path if there is no process running that is
-            ///     matched with the specified process name.
-            ///     <para>
-            ///         If a matched process is still running, the task will wait until all matched
-            ///         processes has been closed.
-            ///     </para>
-            /// </summary>
-            /// <param name="path">
-            ///     The path to the file or directory to be deleted.
-            /// </param>
-            /// <param name="processName">
-            ///     The name of the process to be waited.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process WaitForExitThenDelete(string path, string processName, bool runAsAdmin = false, bool dispose = true) =>
-                WaitForExitThenDelete(path, processName, ".exe", runAsAdmin, dispose);
-
-            /// <summary>
-            ///     Ends all processes matched by the specified process name.
-            /// </summary>
-            /// <param name="processName">
-            ///     The name of the process to be killed.
-            /// </param>
-            /// <param name="extension">
-            ///     The file extension of the specified process.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process KillTask(string processName, string extension, bool runAsAdmin = false, bool dispose = true)
-            {
-                if (string.IsNullOrWhiteSpace(processName))
-                    return null;
-                var name = processName;
-                if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
-                    name += extension;
-                return Send($"TASKKILL /F /IM \"{name}\"", runAsAdmin, dispose);
-            }
-
-            /// <summary>
-            ///     Ends all processes matched by the specified process name.
-            /// </summary>
-            /// <param name="processName">
-            ///     The name of the process to be killed.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process KillTask(string processName, bool runAsAdmin = false, bool dispose = true) =>
-                KillTask(processName, ".exe", runAsAdmin, dispose);
-
-            /// <summary>
-            ///     Ends all processes matched by all the specified process names.
-            /// </summary>
-            /// <param name="processNames">
-            ///     A list of the process names to be killed.
-            /// </param>
-            /// <param name="extension">
-            ///     The file extension of the specified processes.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process KillAllTasks(IEnumerable<string> processNames, string extension, bool runAsAdmin = false, bool dispose = true)
-            {
-                if (processNames == null)
-                    return null;
-                var names = processNames.Where(Comparison.IsNotEmpty);
-                if (!string.IsNullOrWhiteSpace(extension))
-                    names = names.Select(x => !x.EndsWithEx(extension) ? x + extension : x);
-                var command = $"TASKKILL /F /IM \"{names.Join("\" && TASKKILL /F /IM \"")}\"";
-                return Send(command, runAsAdmin, dispose);
-            }
-
-            /// <summary>
-            ///     Ends all processes matched by all the specified process names.
-            /// </summary>
-            /// <param name="processNames">
-            ///     A list of the process names to be killed.
-            /// </param>
-            /// <param name="runAsAdmin">
-            ///     true to run this task with administrator privileges; otherwise, false.
-            /// </param>
-            /// <param name="dispose">
-            ///     true to release all resources used by the <see cref="Process"/> component, if this
-            ///     task has been started; otherwise, false.
-            /// </param>
-            public static Process KillAllTasks(IEnumerable<string> processNames, bool runAsAdmin = false, bool dispose = true) =>
-                KillAllTasks(processNames, ".exe", runAsAdmin, dispose);
-        }
     }
 }

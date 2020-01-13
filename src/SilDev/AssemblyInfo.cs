@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: AssemblyInfo.cs
-// Version:  2020-01-06 06:45
+// Version:  2020-01-13 13:02
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 

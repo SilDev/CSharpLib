@@ -5,17 +5,18 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2020-01-04 14:26
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2020, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
 #endregion
 
-namespace SilDev
+namespace SilDev.Network
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Net;
@@ -34,25 +35,29 @@ namespace SilDev
         public enum DnsOption
         {
             /// <summary>
-            ///     Partnership between Cloudflare and APNIC. Cloudflare runs one of the world’s largest,
-            ///     fastest networks. APNIC is a non-profit organization managing IP address allocation
-            ///     for the Asia Pacific and Oceania regions. Cloudflare had the network. APNIC had the
-            ///     IP address (1.1.1.1). Both were motivated by a mission to help build a better Internet.
+            ///     Partnership between Cloudflare and APNIC. Cloudflare runs one of the
+            ///     world’s largest, fastest networks. APNIC is a non-profit organization
+            ///     managing IP address allocation for the Asia Pacific and Oceania regions.
+            ///     Cloudflare had the network. APNIC had the IP address (1.1.1.1). Both were
+            ///     motivated by a mission to help build a better Internet.
             /// </summary>
             Cloudflare,
 
             /// <summary>
-            ///     A free, global DNS resolution service that you can use as an alternative to your current
-            ///     DNS provider. In addition to traditional DNS over UDP or TCP, Google also provide
-            ///     DNS-over-HTTPS API.
+            ///     A free, global DNS resolution service that you can use as an alternative to
+            ///     your current DNS provider. In addition to traditional DNS over UDP or TCP,
+            ///     Google also provide DNS-over-HTTPS API.
             /// </summary>
             Google
         }
 
+        private static bool _defSecurityProtocolIsEnabled;
+        private static bool? _ipv4IsAvalaible, _ipv6IsAvalaible;
+
         /// <summary>
         ///     Gets internal download mirrors.
         /// </summary>
-        public static string[] InternalDownloadMirrors =
+        public static IReadOnlyList<string> InternalDownloadMirrors { get; } = new[]
         {
             "https://dl.si13n7.com",
             "https://dl.si13n7.de",
@@ -63,9 +68,6 @@ namespace SilDev
             "http://dl-4.de",
             "http://dl-5.de"
         };
-
-        private static bool _defSecurityProtocolIsEnabled;
-        private static bool? _ipv4IsAvalaible, _ipv6IsAvalaible;
 
         /// <summary>
         ///     Determines whether the current IPv4 connection is available.
@@ -96,7 +98,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the last result defined in the previous call to the <see cref="Ping(Uri, int)"/> function.
+        ///     Gets the last result defined in the previous call to the
+        ///     <see cref="Ping(Uri, int)"/> function.
         /// </summary>
         public static PingReply LastPingReply { get; private set; }
 
@@ -160,7 +163,7 @@ namespace SilDev
         {
             try
             {
-                return uri.Host.ToLowerInvariant();
+                return uri?.Host.ToLowerInvariant();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -225,14 +228,16 @@ namespace SilDev
         ///     Checks the current network connection.
         /// </summary>
         /// <param name="iPv6">
-        ///     true to check only the IPv6 protocol; otherwise, false to check only the IPv4 protocol.
+        ///     <see langword="true"/> to check only the IPv6 protocol; otherwise,
+        ///     <see langword="false"/> to check only the IPv4 protocol.
         /// </param>
         /// <param name="dnsOptions">
         ///     The DNS servers to be used for the checks.
         /// </param>
         /// <param name="maxRoundtripTime">
-        ///     The maximal number of milliseconds taken to send an Internet Control Message Protocol
-        ///     (ICMP) echo request and receive the corresponding ICMP echo reply message.
+        ///     The maximal number of milliseconds taken to send an Internet Control
+        ///     Message Protocol (ICMP) echo request and receive the corresponding ICMP
+        ///     echo reply message.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
         ///     maxRoundtripTime is zero -or- negative.
@@ -246,7 +251,7 @@ namespace SilDev
             {
                 var interfaces = NetworkInterface.GetAllNetworkInterfaces();
                 if (!interfaces.Any())
-                    throw new ArgumentNullException(nameof(interfaces));
+                    throw new NetworkInformationException();
                 if (interfaces.All(x => x.OperationalStatus != OperationalStatus.Up))
                     throw new ArgumentException(ExceptionMessages.NetworkInterfacesNotFound);
             }
@@ -261,16 +266,17 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified
-        ///     computer, and receive a corresponding ICMP echo replay message from that computer and
-        ///     returns the number of milliseconds taken for this task.
+        ///     Attempts to send an Internet Control Message Protocol (ICMP) echo message
+        ///     to the specified computer, and receive a corresponding ICMP echo replay
+        ///     message from that computer and returns the number of milliseconds taken for
+        ///     this task.
         /// </summary>
         /// <param name="uri">
         ///     The address of the server to call.
         /// </param>
         /// <param name="timeout">
-        ///     The maximum number of milliseconds (after sending the echo message) to wait for the ICMP
-        ///     echo reply message.
+        ///     The maximum number of milliseconds (after sending the echo message) to wait
+        ///     for the ICMP echo reply message.
         /// </param>
         public static long Ping(Uri uri, int timeout = 3000)
         {
@@ -280,12 +286,10 @@ namespace SilDev
             {
                 if (uri == null)
                     throw new ArgumentNullException(nameof(uri));
-                using (var ping = new Ping())
-                {
-                    LastPingReply = ping.Send(uri.Host, timeout);
-                    if (LastPingReply?.Status == IPStatus.Success)
-                        roundtripTime = LastPingReply.RoundtripTime;
-                }
+                using var ping = new Ping();
+                LastPingReply = ping.Send(uri.Host, timeout);
+                if (LastPingReply?.Status == IPStatus.Success)
+                    roundtripTime = LastPingReply.RoundtripTime;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -295,16 +299,17 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified
-        ///     computer, and receive a corresponding ICMP echo replay message from that computer and
-        ///     returns the number of milliseconds taken for this task.
+        ///     Attempts to send an Internet Control Message Protocol (ICMP) echo message
+        ///     to the specified computer, and receive a corresponding ICMP echo replay
+        ///     message from that computer and returns the number of milliseconds taken for
+        ///     this task.
         /// </summary>
         /// <param name="host">
         ///     The address of the server to call.
         /// </param>
         /// <param name="timeout">
-        ///     The maximum number of milliseconds (after sending the echo message) to wait for the ICMP
-        ///     echo reply message.
+        ///     The maximum number of milliseconds (after sending the echo message) to wait
+        ///     for the ICMP echo reply message.
         /// </param>
         public static long Ping(string host, int timeout = 3000) =>
             Ping(host.ToHttpUri(), timeout);
@@ -371,8 +376,8 @@ namespace SilDev
         ///     The address to check.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -417,8 +422,8 @@ namespace SilDev
         ///     The address to check.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -475,8 +480,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -503,8 +508,8 @@ namespace SilDev
                     request.Timeout = timeout;
                 if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                     request.Credentials = new NetworkCredential(userName, password);
-                using (var response = (HttpWebResponse)request.GetResponse())
-                    contentLength = response.ContentLength;
+                using var response = (HttpWebResponse)request.GetResponse();
+                contentLength = response.ContentLength;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -526,8 +531,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -590,8 +595,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -612,8 +617,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -670,8 +675,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -698,8 +703,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -762,8 +767,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -784,8 +789,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -842,8 +847,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -870,8 +875,8 @@ namespace SilDev
                     request.Timeout = timeout;
                 if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
                     request.Credentials = new NetworkCredential(userName, password);
-                using (var response = (HttpWebResponse)request.GetResponse())
-                    lastModified = response.LastModified;
+                using var response = (HttpWebResponse)request.GetResponse();
+                lastModified = response.LastModified;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -893,8 +898,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -957,8 +962,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -979,8 +984,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -1037,8 +1042,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -1065,8 +1070,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -1129,8 +1134,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -1151,8 +1156,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -1209,8 +1214,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -1226,21 +1231,19 @@ namespace SilDev
             var name = string.Empty;
             try
             {
-                using (var wc = new WebClientEx(allowAutoRedirect, cookieContainer, timeout))
+                using var wc = new WebClientEx(allowAutoRedirect, cookieContainer, timeout);
+                if (!string.IsNullOrEmpty(userAgent))
+                    wc.Headers.Add("User-Agent", userAgent);
+                if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
+                    wc.Credentials = new NetworkCredential(userName, password);
+                using (wc.OpenRead(srcUri))
                 {
-                    if (!string.IsNullOrEmpty(userAgent))
-                        wc.Headers.Add("User-Agent", userAgent);
-                    if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
-                        wc.Credentials = new NetworkCredential(userName, password);
-                    using (wc.OpenRead(srcUri))
+                    var cd = wc.ResponseHeaders["content-disposition"];
+                    if (!string.IsNullOrWhiteSpace(cd))
                     {
-                        var cd = wc.ResponseHeaders["content-disposition"];
-                        if (!string.IsNullOrWhiteSpace(cd))
-                        {
-                            var i = cd.IndexOf("filename=", StringComparison.OrdinalIgnoreCase);
-                            if (i >= 0)
-                                name = cd.Substring(i + 0xa);
-                        }
+                        var i = cd.IndexOf("filename=", StringComparison.OrdinalIgnoreCase);
+                        if (i >= 0)
+                            name = cd.Substring(i + 0xa);
                     }
                 }
             }
@@ -1264,8 +1267,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -1328,8 +1331,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -1350,8 +1353,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -1408,8 +1411,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -1436,8 +1439,8 @@ namespace SilDev
         ///     The password associated with the credential.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.
@@ -1500,8 +1503,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="cookieContainer">
         ///     The cookies associated with the request.
@@ -1522,8 +1525,8 @@ namespace SilDev
         ///     The full path of the resource to access.
         /// </param>
         /// <param name="allowAutoRedirect">
-        ///     true to indicate that the request should follow redirection responses;
-        ///     otherwise, false.
+        ///     <see langword="true"/> to indicate that the request should follow
+        ///     redirection responses; otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="timeout">
         ///     The time-out value in milliseconds.

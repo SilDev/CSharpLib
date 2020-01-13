@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: RandomInvestor.cs
-// Version:  2018-06-14 22:14
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2018, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -35,7 +35,8 @@ namespace SilDev.Investment
         ///     Gets the <see cref="Random"/> instance associated with the specified seed.
         /// </summary>
         /// <param name="seed">
-        ///     A number used to calculate a starting value for the pseudo-random number sequence.
+        ///     A number used to calculate a starting value for the pseudo-random number
+        ///     sequence.
         /// </param>
         public Random GetGenerator(int seed = -1)
         {

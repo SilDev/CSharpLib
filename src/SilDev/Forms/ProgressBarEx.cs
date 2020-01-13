@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProgressBarEx.cs
-// Version:  2019-10-20 17:09
+// Version:  2020-01-13 13:04
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -23,14 +23,15 @@ namespace SilDev.Forms
     public static class ProgressBarEx
     {
         /// <summary>
-        ///     Skips the very long animation and jumps directly to the <see cref="ProgressBar.Maximum"/>.
+        ///     Skips the very long animation and jumps directly to the
+        ///     <see cref="ProgressBar.Maximum"/>.
         /// </summary>
         /// <param name="progressBar">
         ///     The <see cref="ProgressBar"/> to progress.
         /// </param>
         public static void JumpToEnd(this ProgressBar progressBar)
         {
-            if (!(progressBar is ProgressBar pb))
+            if (!(progressBar is { } pb))
                 return;
             var max = pb.Maximum;
             pb.Maximum = int.MaxValue;

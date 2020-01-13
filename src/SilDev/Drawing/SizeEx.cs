@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: SizeEx.cs
-// Version:  2019-12-11 13:26
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -24,7 +24,8 @@ namespace SilDev.Drawing
     public static class SizeEx
     {
         /// <summary>
-        ///     Scales the specified width or height dimension based on the specified DPI values.
+        ///     Scales the specified width or height dimension based on the specified DPI
+        ///     values.
         /// </summary>
         /// <param name="value">
         ///     The width or height dimension.
@@ -45,7 +46,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Scales the specified width and height dimensions based on the specified DPI values.
+        ///     Scales the specified width and height dimensions based on the specified DPI
+        ///     values.
         /// </summary>
         /// <param name="width">
         ///     The width dimension.
@@ -70,7 +72,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Scales the specified width and height dimensions based on the specified handle to a window.
+        ///     Scales the specified width and height dimensions based on the specified
+        ///     handle to a window.
         /// </summary>
         /// <param name="width">
         ///     The width dimension.
@@ -81,18 +84,20 @@ namespace SilDev.Drawing
         /// <param name="hWnd">
         ///     Handle to a window.
         ///     <para>
-        ///         If this value is set to default, the handle of the current desktop will be used.
+        ///         If this value is set to default, the handle of the current desktop will
+        ///         be used.
         ///     </para>
         /// </param>
         public static Size ScaleDimensions(int width, int height, IntPtr hWnd = default)
         {
             var handle = hWnd == default ? WinApi.NativeMethods.GetDesktopWindow() : hWnd;
-            using (var graphics = Graphics.FromHwnd(handle))
-                return ScaleDimensions(width, height, 96f, Math.Max(graphics.DpiX, graphics.DpiY));
+            using var graphics = Graphics.FromHwnd(handle);
+            return ScaleDimensions(width, height, 96f, Math.Max(graphics.DpiX, graphics.DpiY));
         }
 
         /// <summary>
-        ///     Scales the width and height dimensions of this <see cref="Size"/> object based on the specified DPI values.
+        ///     Scales the width and height dimensions of this <see cref="Size"/> object
+        ///     based on the specified DPI values.
         /// </summary>
         /// <param name="size">
         ///     This <see cref="Size"/> object.
@@ -107,7 +112,8 @@ namespace SilDev.Drawing
             ScaleDimensions(size.Width, size.Height, oldDpi, newDpi);
 
         /// <summary>
-        ///     Scales the width and height dimensions of this <see cref="Size"/> object based on the specified handle to a window.
+        ///     Scales the width and height dimensions of this <see cref="Size"/> object
+        ///     based on the specified handle to a window.
         /// </summary>
         /// <param name="size">
         ///     This <see cref="Size"/> object.
@@ -115,7 +121,8 @@ namespace SilDev.Drawing
         /// <param name="hWnd">
         ///     Handle to a window.
         ///     <para>
-        ///         If this value is set to default, the handle of the current desktop will be used.
+        ///         If this value is set to default, the handle of the current desktop will
+        ///         be used.
         ///     </para>
         /// </param>
         public static Size ScaleDimensions(this Size size, IntPtr hWnd = default) =>

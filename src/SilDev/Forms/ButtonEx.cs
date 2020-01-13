@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2019-10-20 16:26
+// Version:  2020-01-13 13:03
 // 
-// Copyright (c) 2019, Si13n7 Developments (r)
+// Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -25,22 +25,24 @@ namespace SilDev.Forms
     public static class ButtonEx
     {
         /// <summary>
-        ///     Creates a small split button on the right side of this <see cref="Button"/> which is mostly
-        ///     used for drop down menu controls.
+        ///     Creates a small split button on the right side of this <see cref="Button"/>
+        ///     which is mostly used for drop down menu controls.
         ///     <para>
-        ///         Please note that the <see cref="FlatStyle"/> is overwritten to <see cref="FlatStyle.Flat"/>
-        ///         which is required to apply highlight effects.
+        ///         Please note that the <see cref="FlatStyle"/> is overwritten to
+        ///         <see cref="FlatStyle.Flat"/> which is required to apply highlight
+        ///         effects.
         ///     </para>
         /// </summary>
         /// <param name="button">
         ///     The button to split.
         /// </param>
         /// <param name="buttonText">
-        ///     The button text color, <see cref="SystemColors.ControlText"/> is used by default.
+        ///     The button text color, <see cref="SystemColors.ControlText"/> is used by
+        ///     default.
         /// </param>
         public static void Split(this Button button, Color? buttonText = null)
         {
-            if (!(button is Button b))
+            if (!(button is { } b))
                 return;
             if (b.Width < 48 || b.Height < 16)
                 throw new NotSupportedException();
@@ -78,19 +80,21 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Represents the method that is used for the <see cref="Button"/> click <see cref="EventHandler"/>
-        ///     that determines whether the split area of this <see cref="Button"/>, which opens the
-        ///     specified <see cref="ContextMenuStrip"/> control, is clicked.
+        ///     Represents the method that is used for the <see cref="Button"/> click
+        ///     <see cref="EventHandler"/> that determines whether the split area of this
+        ///     <see cref="Button"/>, which opens the specified
+        ///     <see cref="ContextMenuStrip"/> control, is clicked.
         /// </summary>
         /// <param name="button">
-        ///     The button that contains a split area, which is created by <see cref="Split(Button, Color?)"/>.
+        ///     The button that contains a split area, which is created by
+        ///     <see cref="Split(Button, Color?)"/>.
         /// </param>
         /// <param name="contextMenuStrip">
         ///     The drop down menu that opens for the split area.
         /// </param>
         public static bool SplitClickHandler(this Button button, ContextMenuStrip contextMenuStrip)
         {
-            if (!(button is Button b) || !(contextMenuStrip is ContextMenuStrip cms) || b.PointToClient(Cursor.Position).X < b.Right - 16)
+            if (!(button is { } b) || !(contextMenuStrip is { } cms) || b.PointToClient(Cursor.Position).X < b.Right - 16)
                 return false;
             cms.Show(b, new Point(0, b.Height), ToolStripDropDownDirection.BelowRight);
             return true;
@@ -110,18 +114,18 @@ namespace SilDev.Forms
                     return;
                 b.BackgroundImage = new Bitmap(b.Width, b.Height);
                 var w = b.Right - 16 - b.FlatAppearance.BorderSize;
-                using (var g = Graphics.FromImage(b.BackgroundImage))
-                    using (var sb = new SolidBrush(b.BackColor))
-                        g.FillRectangle(sb, 0, 0, w, b.BackgroundImage.Height);
+                using var g = Graphics.FromImage(b.BackgroundImage);
+                using var sb = new SolidBrush(b.BackColor);
+                g.FillRectangle(sb, 0, 0, w, b.BackgroundImage.Height);
             }
             else
             {
                 b.BackgroundImage = new Bitmap(b.Width, b.Height);
                 var x = b.BackgroundImage.Width - 15 - b.FlatAppearance.BorderSize;
                 var w = 15 + b.FlatAppearance.BorderSize;
-                using (var g = Graphics.FromImage(b.BackgroundImage))
-                    using (var sb = new SolidBrush(b.BackColor))
-                        g.FillRectangle(sb, x, 0, w, b.BackgroundImage.Height);
+                using var g = Graphics.FromImage(b.BackgroundImage);
+                using var sb = new SolidBrush(b.BackColor);
+                g.FillRectangle(sb, x, 0, w, b.BackgroundImage.Height);
             }
             if (!lis)
                 b.ResumeLayout();
