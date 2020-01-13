@@ -5525,6 +5525,8 @@
             <summary>
                 Retrieves the sound volume of the current application.
             </summary>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
         </member>
         <member name="M:SilDev.Media.WindowsPlayer.SetSoundVolume(System.Int32)">
             <summary>
@@ -5533,6 +5535,8 @@
             <param name="value">
                 The sound volume value, in percent.
             </param>
+            <exception cref="T:System.ComponentModel.Win32Exception">
+            </exception>
         </member>
         <member name="M:SilDev.Media.WindowsPlayer.Play(System.String,System.Boolean,System.Int32)">
             <summary>
@@ -6477,7 +6481,7 @@
         <member name="M:SilDev.Comparison.ContainsItem``1(System.Collections.Generic.IEnumerable{``0},``0)">
             <summary>
                 Determines whether the specified element occurs within this sequence of
-                element.
+                elements.
             </summary>
             <typeparam name="TElement">
                 The type of the element.
@@ -6530,9 +6534,8 @@
         </member>
         <member name="M:SilDev.Comparison.ContainsItem``1(System.Collections.Generic.IEnumerable{``0},``0[])">
             <summary>
-                Determines whether one of specified strings occurs within this sequence of
-                strings. A parameter specifies the culture, case, and sort rules used in
-                the comparison.
+                Determines whether one of specified elements occurs within this sequence of
+                elements.
             </summary>
             <typeparam name="TElement">
                 The type of the element.
@@ -6546,9 +6549,8 @@
         </member>
         <member name="M:SilDev.Comparison.ContainsItem(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String)">
             <summary>
-                Determines whether the specified string occurs within this sequence of
-                strings. A parameter specifies the culture, case, and sort rules used in
-                the comparison.
+                Determines whether the specified element occurs within this sequence of
+                elements.
             </summary>
             <param name="source">
                 The sequence to browse.
@@ -6562,9 +6564,8 @@
         </member>
         <member name="M:SilDev.Comparison.ContainsItem(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String,System.String)">
             <summary>
-                Determines whether one of specified strings occurs within this sequence of
-                strings. A parameter specifies the culture, case, and sort rules used in
-                the comparison.
+                Determines whether one of specified elements occurs within this sequence of
+                elements.
             </summary>
             <param name="source">
                 The sequence to browse.
@@ -6581,9 +6582,8 @@
         </member>
         <member name="M:SilDev.Comparison.ContainsItem(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String,System.String,System.String)">
             <summary>
-                Determines whether one of specified strings occurs within this sequence of
-                strings. A parameter specifies the culture, case, and sort rules used in
-                the comparison.
+                Determines whether one of specified elements occurs within this sequence of
+                elements.
             </summary>
             <param name="source">
                 The sequence to browse.
@@ -6603,9 +6603,8 @@
         </member>
         <member name="M:SilDev.Comparison.ContainsItem(System.Collections.Generic.IEnumerable{System.String},System.StringComparison,System.String[])">
             <summary>
-                Determines whether one of specified strings occurs within this sequence of
-                strings. A parameter specifies the culture, case, and sort rules used in
-                the comparison.
+                Determines whether one of specified elements occurs within this sequence of
+                elements.
             </summary>
             <param name="source">
                 The sequence to browse.
@@ -7728,33 +7727,17 @@
                 otherwise, <see langword="false"/>.
             </param>
         </member>
-        <member name="M:SilDev.Crypto.GetGuid(System.Byte[],System.Boolean,SilDev.ChecksumAlgorithm,SilDev.ChecksumAlgorithm)">
+        <member name="M:SilDev.Crypto.GetGuid``1(``0,System.Boolean,SilDev.ChecksumAlgorithm,SilDev.ChecksumAlgorithm)">
             <summary>
-                Encrypts this sequence of bytes with the specified
+                Encrypts this <typeparamref name="TSource"/> object with the specified
                 <see cref="T:SilDev.ChecksumAlgorithm"/> and combines both hashes into a unique
                 GUID.
             </summary>
-            <param name="bytes">
-                The sequence of bytes to encrypt.
-            </param>
-            <param name="braces">
-                <see langword="true"/> to place the GUID between braces; otherwise,
-                <see langword="false"/>.
-            </param>
-            <param name="algorithm1">
-                The first algorithm to use.
-            </param>
-            <param name="algorithm2">
-                The second algorithm to use.
-            </param>
-        </member>
-        <member name="M:SilDev.Crypto.GetGuid(System.String,System.Boolean,SilDev.ChecksumAlgorithm,SilDev.ChecksumAlgorithm)">
-            <summary>
-                Encrypts this string with the specified <see cref="T:SilDev.ChecksumAlgorithm"/> and
-                combines both hashes into a unique GUID.
-            </summary>
-            <param name="text">
-                The string to encrypt.
+            <typeparam name="TSource">
+                The type of source.
+            </typeparam>
+            <param name="source">
+                The object to encrypt.
             </param>
             <param name="braces">
                 <see langword="true"/> to place the GUID between braces; otherwise,
@@ -8017,7 +8000,8 @@
         </member>
         <member name="M:SilDev.Crypto.Encrypt``1(``0,SilDev.ChecksumAlgorithm)">
             <summary>
-                Encrypts this object with the specified algorithm.
+                Encrypts this <typeparamref name="TSource"/> object with the specified
+                algorithm.
             </summary>
             <typeparam name="TSource">
                 The type of source.
@@ -11370,6 +11354,9 @@
             <param name="secondFile">
                 The second file to compare.
             </param>
+            <exception cref="T:SilDev.ArgumentInvalidException">
+                firstFile or secondFile is invalid.
+            </exception>
         </member>
         <member name="M:SilDev.FileEx.ReadAllBytes(System.String)">
             <summary>
@@ -26134,6 +26121,37 @@
                 lpNumberOfBytesWritten is <see langword="null"/>, the parameter is ignored.
             </param>
         </member>
+        <member name="T:SilDev.WinApi.DllNames">
+            <summary>
+                Contains file name constants of the used Windows dynamic-link library (DLL)
+                files.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DllNames.Kernel32">
+            <summary>
+                The Windows NT BASE API Client DLL file name.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DllNames.Ntdll">
+            <summary>
+                The NT Layer DLL file name.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DllNames.Psapi">
+            <summary>
+                The Process Status Helper DLL file name.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DllNames.Shell32">
+            <summary>
+                The Windows Shell Common DLL file name.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DllNames.User32">
+            <summary>
+                The Multi-User Windows USER API Client DLL file name.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.NativeMethods">
             <summary>
                 Represents native methods.
@@ -29934,37 +29952,6 @@
             <param name="right">
                 The second <see cref="T:SilDev.WinApi.DeviceInput"/> instance to compare.
             </param>
-        </member>
-        <member name="T:SilDev.WinApi.DllNames">
-            <summary>
-                Contains file name constants of the used Windows dynamic-link library (DLL)
-                files.
-            </summary>
-        </member>
-        <member name="F:SilDev.WinApi.DllNames.Kernel32">
-            <summary>
-                The Windows NT BASE API Client DLL file name.
-            </summary>
-        </member>
-        <member name="F:SilDev.WinApi.DllNames.Ntdll">
-            <summary>
-                The NT Layer DLL file name.
-            </summary>
-        </member>
-        <member name="F:SilDev.WinApi.DllNames.Psapi">
-            <summary>
-                The Process Status Helper file name.
-            </summary>
-        </member>
-        <member name="F:SilDev.WinApi.DllNames.Shell32">
-            <summary>
-                The Windows Shell Common DLL file name.
-            </summary>
-        </member>
-        <member name="F:SilDev.WinApi.DllNames.User32">
-            <summary>
-                The Multi-User Windows USER API Client DLL file name.
-            </summary>
         </member>
         <member name="T:SilDev.WinApi.LuId">
             <summary>
