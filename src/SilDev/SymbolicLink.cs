@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: SymbolicLink.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-13 15:17
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -166,7 +166,7 @@ namespace SilDev
                 if (!DirectoryEx.IsLink(link))
                 {
                     var prior = Resources.BackupFormat.FormatCurrent(link, EnvironmentEx.MachineId);
-                    sb.AppendFormat(CultureConfig.GlobalCultureInfo, "MOVE /Y \"{0}\" \"{1}\"", link, prior);
+                    sb.AppendFormatCurrent("MOVE /Y \"{0}\" \"{1}\"", link, prior);
                 }
                 else
                     Destroy(link, true, true, elevated);
@@ -175,7 +175,7 @@ namespace SilDev
             {
                 if (sb.Length > 0)
                     sb.Append(" & ");
-                sb.AppendFormat(CultureConfig.GlobalCultureInfo, destIsDir ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", link);
+                sb.AppendFormatCurrent(destIsDir ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"", link);
             }
 
             if (PathEx.DirOrFileExists(dest))
@@ -185,7 +185,7 @@ namespace SilDev
                 sb.Append("MKLINK");
                 if (destIsDir)
                     sb.Append(" /J");
-                sb.AppendFormat(CultureConfig.GlobalCultureInfo, " \"{0}\" \"{1}\" && ATTRIB +H \"{0}\" /L", link, dest);
+                sb.AppendFormatCurrent(" \"{0}\" \"{1}\" && ATTRIB +H \"{0}\" /L", link, dest);
             }
 
             if (sb.Length <= 0)
@@ -227,11 +227,11 @@ namespace SilDev
             var isLink = PathEx.DirOrFileIsLink(link);
 
             var sb = new StringBuilder();
-            sb.AppendFormat(CultureConfig.GlobalCultureInfo, pathIsDir ? "RMDIR /Q \"{0}\"" : isLink ? "DEL /F /Q /A:L \"{0}\"" : "DEL /F /Q \"{0}\"", link);
+            sb.AppendFormatCurrent(pathIsDir ? "RMDIR /Q \"{0}\"" : isLink ? "DEL /F /Q /A:L \"{0}\"" : "DEL /F /Q \"{0}\"", link);
 
             var prior = Resources.BackupFormat.FormatCurrent(link, EnvironmentEx.MachineId);
             if (backup && PathEx.DirOrFileExists(prior))
-                sb.AppendFormat(CultureConfig.GlobalCultureInfo, " && MOVE /Y \"{0}\" \"{1}\"", prior, link);
+                sb.AppendFormatCurrent(" && MOVE /Y \"{0}\" \"{1}\"", prior, link);
 
             if (sb.Length <= 0)
                 return false;

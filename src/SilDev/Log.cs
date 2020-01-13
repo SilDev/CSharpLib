@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-13 15:17
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -448,7 +448,7 @@ namespace SilDev
                 {
                     Builder.Append(ProcessEx.CurrentId);
                     Builder.Append(" ");
-                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureConfig.GlobalCultureInfo));
+                    Builder.Append(DateTime.Now.ToStringDefault(DateTimeFormat));
                     Builder.Append(" | ");
                 }
                 else
@@ -457,7 +457,7 @@ namespace SilDev
                     var separator = new string('=', 65);
 
                     Builder.Append("New Process ");
-                    Builder.Append(DateTime.Now.ToString(DateTimeFormat, CultureConfig.GlobalCultureInfo));
+                    Builder.Append(DateTime.Now.ToStringDefault(DateTimeFormat));
                     Builder.Append(" ");
 
                     var front = Builder.ToString();

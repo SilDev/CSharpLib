@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: CmdExec.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-13 15:17
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -104,7 +104,7 @@ namespace SilDev
                         content = content.Substring(0, content.Length - (content.EndsWithEx("EXIT") ? 4 : 7)).TrimEnd(trimChars);
                     }
                     sb.AppendLine(content);
-                    sb.AppendFormat(CultureConfig.GlobalCultureInfo, "DEL /F /Q \"{0}\"", file);
+                    sb.AppendFormatCurrent("DEL /F /Q \"{0}\"", file);
                     File.WriteAllText(file, sb.ToStringThenClear());
                     cmd = $"/C CALL \"{file}\" & EXIT";
                 }
