@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-13 14:00
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -73,29 +73,13 @@ namespace SilDev.Network
         ///     Determines whether the current IPv4 connection is available.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static bool IPv4IsAvalaible
-        {
-            get
-            {
-                if (!_ipv4IsAvalaible.HasValue)
-                    _ipv4IsAvalaible = InternetIsAvailable();
-                return (bool)_ipv4IsAvalaible;
-            }
-        }
+        public static bool IPv4IsAvalaible => _ipv4IsAvalaible ??= InternetIsAvailable();
 
         /// <summary>
         ///     Determines whether the current IPv6 connection is available.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static bool IPv6IsAvalaible
-        {
-            get
-            {
-                if (!_ipv6IsAvalaible.HasValue)
-                    _ipv6IsAvalaible = InternetIsAvailable(true);
-                return (bool)_ipv6IsAvalaible;
-            }
-        }
+        public static bool IPv6IsAvalaible => _ipv6IsAvalaible ??= InternetIsAvailable(true);
 
         /// <summary>
         ///     Gets the last result defined in the previous call to the
