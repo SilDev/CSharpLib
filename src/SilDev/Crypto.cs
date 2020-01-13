@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-13 14:29
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -257,12 +257,15 @@ namespace SilDev
             GetHashCode(source, nonReadOnly);
 
         /// <summary>
-        ///     Encrypts this sequence of bytes with the specified
+        ///     Encrypts this <typeparamref name="TSource"/> object with the specified
         ///     <see cref="ChecksumAlgorithm"/> and combines both hashes into a unique
         ///     GUID.
         /// </summary>
-        /// <param name="bytes">
-        ///     The sequence of bytes to encrypt.
+        /// <typeparam name="TSource">
+        ///     The type of source.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The object to encrypt.
         /// </param>
         /// <param name="braces">
         ///     <see langword="true"/> to place the GUID between braces; otherwise,
@@ -274,34 +277,10 @@ namespace SilDev
         /// <param name="algorithm2">
         ///     The second algorithm to use.
         /// </param>
-        public static string GetGuid(this byte[] bytes, bool braces = false, ChecksumAlgorithm algorithm1 = ChecksumAlgorithm.Crc32, ChecksumAlgorithm algorithm2 = ChecksumAlgorithm.Sha1)
+        public static string GetGuid<TSource>(this TSource source, bool braces = false, ChecksumAlgorithm algorithm1 = ChecksumAlgorithm.Crc32, ChecksumAlgorithm algorithm2 = ChecksumAlgorithm.Crc64)
         {
             var guid = new StringBuilder(braces ? 38 : 36);
-            CombineHashes(guid, bytes?.Encrypt(algorithm1), bytes?.Encrypt(algorithm2), braces);
-            return guid.ToStringThenClear();
-        }
-
-        /// <summary>
-        ///     Encrypts this string with the specified <see cref="ChecksumAlgorithm"/> and
-        ///     combines both hashes into a unique GUID.
-        /// </summary>
-        /// <param name="text">
-        ///     The string to encrypt.
-        /// </param>
-        /// <param name="braces">
-        ///     <see langword="true"/> to place the GUID between braces; otherwise,
-        ///     <see langword="false"/>.
-        /// </param>
-        /// <param name="algorithm1">
-        ///     The first algorithm to use.
-        /// </param>
-        /// <param name="algorithm2">
-        ///     The second algorithm to use.
-        /// </param>
-        public static string GetGuid(this string text, bool braces = false, ChecksumAlgorithm algorithm1 = ChecksumAlgorithm.Crc32, ChecksumAlgorithm algorithm2 = ChecksumAlgorithm.Sha1)
-        {
-            var guid = new StringBuilder(braces ? 38 : 36);
-            CombineHashes(guid, text?.Encrypt(algorithm1), text?.Encrypt(algorithm2), braces);
+            CombineHashes(guid, source?.Encrypt(algorithm1), source?.Encrypt(algorithm2), braces);
             return guid.ToStringThenClear();
         }
 
@@ -804,7 +783,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Encrypts this object with the specified algorithm.
+        ///     Encrypts this <typeparamref name="TSource"/> object with the specified
+        ///     algorithm.
         /// </summary>
         /// <typeparam name="TSource">
         ///     The type of source.
