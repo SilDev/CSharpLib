@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-14 19:26
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -197,7 +197,7 @@ namespace SilDev
                 var dir = PathEx.Combine(path);
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(dir);
-                return Directory.EnumerateDirectories(path, searchPattern, searchOption);
+                return Directory.EnumerateDirectories(dir, searchPattern, searchOption);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -306,7 +306,7 @@ namespace SilDev
                 var dir = PathEx.Combine(path);
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(dir);
-                return Directory.EnumerateFiles(path, searchPattern, searchOption);
+                return Directory.EnumerateFiles(dir, searchPattern, searchOption);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
