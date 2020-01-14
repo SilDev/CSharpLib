@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2020-01-13 15:58
+// Version:  2020-01-14 14:16
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1457,7 +1457,7 @@ namespace SilDev
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
-                v = Version.Parse("0.0.0.0");
+                return new Version("0.0.0.0");
             }
             return v;
         }
@@ -1480,21 +1480,19 @@ namespace SilDev
         /// </param>
         public static Version GetFileVersion(string path)
         {
-            Version v;
             try
             {
                 var s = PathEx.Combine(path);
                 if (!File.Exists(s))
                     throw new PathNotFoundException(s);
                 var fvi = FileVersionInfo.GetVersionInfo(s);
-                v = Version.Parse(fvi.FileVersion.VersionFilter());
+                return fvi.FileVersion.ToVersion();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
-                v = Version.Parse("0.0.0.0");
+                return new Version("0.0.0.0");
             }
-            return v;
         }
 
         /// <summary>
@@ -1515,37 +1513,19 @@ namespace SilDev
         /// </param>
         public static Version GetProductVersion(string path)
         {
-            Version v;
             try
             {
                 var s = PathEx.Combine(path);
                 if (!File.Exists(s))
                     throw new PathNotFoundException(s);
                 var fvi = FileVersionInfo.GetVersionInfo(s);
-                v = Version.Parse(fvi.ProductVersion.VersionFilter());
+                return fvi.ProductVersion.ToVersion();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
-                v = Version.Parse("0.0.0.0");
+                return new Version("0.0.0.0");
             }
-            return v;
-        }
-
-        private static string VersionFilter(this string str)
-        {
-            var s = str;
-            if (!s.Any(x => char.IsDigit(x) || x == '.') && s.Any(x => x == '.'))
-                return s;
-            var sa = s.Split('.').ToList();
-            for (var i = 0; i < sa.Count; i++)
-                sa[i] = new string(sa[i].Where(char.IsDigit).ToArray());
-            while (sa.Count < 4)
-                sa.Add("0");
-            if (sa.Count > 4)
-                sa = sa.Take(4).ToList();
-            s = sa.Join(".");
-            return s;
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
