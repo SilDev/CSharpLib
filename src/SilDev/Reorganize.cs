@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-14 14:11
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1300,7 +1300,38 @@ namespace SilDev
         public static string ToStringDefault(this byte[] bytes) =>
             bytes.ToString(TextEx.DefaultEncoding);
 
-        private static object ConvertToSpecifiedType<TConverter>(string source) where TConverter : TypeConverter
+        /// <summary>
+        ///     Converts the string representation of a version number to an equivalent
+        ///     <see cref="Version"/> object.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to convert.
+        /// </param>
+        public static Version ToVersion(this string str)
+        {
+            if (string.IsNullOrEmpty(str) || !str.Any(char.IsDigit) || !str.Contains('.'))
+                return new Version("0.0.0.0");
+            var ca = EnumerableEx.Range('0', '9').ToArray();
+            var sa = new string[4];
+            var i = 0;
+            foreach (var e in str.Split('.'))
+            {
+                if (!e.Any() || !e.StartsWithEx(ca))
+                    continue;
+                if (e.All(char.IsDigit))
+                {
+                    sa[i++] = e.TrimStart('0');
+                    continue;
+                }
+                sa[i++] = new string(e.Where(char.IsDigit).ToArray()).TrimStart('0');
+            }
+            for (var j = 0; j < sa.Length; j++)
+                if (string.IsNullOrEmpty(sa[j]))
+                    sa[j] = "0";
+            return new Version(sa.Join('.'));
+        }
+
+        private static object ConvertStringToSpecifiedType<TConverter>(string source) where TConverter : TypeConverter
         {
             var item = source ?? throw new ArgumentNullException(nameof(source));
             if (string.IsNullOrWhiteSpace(source))
@@ -1315,8 +1346,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified string, which stores a set of four integers that
-        ///     represent the location and size of a rectangle, to <see cref="Rectangle"/>.
+        ///     Converts the string representation of a rectangle to an equivalent
+        ///     <see cref="Rectangle"/> object.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
@@ -1328,7 +1359,7 @@ namespace SilDev
                 var item = str ?? throw new ArgumentNullException(nameof(str));
                 if (string.IsNullOrWhiteSpace(str))
                     throw new ArgumentInvalidException(nameof(str));
-                return (Rectangle)ConvertToSpecifiedType<RectangleConverter>(item);
+                return (Rectangle)ConvertStringToSpecifiedType<RectangleConverter>(item);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -1338,8 +1369,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified string, which stores an ordered pair of integer x-
-        ///     and y-coordinates, to <see cref="Point"/>.
+        ///     Converts the string representation of a pair of integers for x- and
+        ///     y-coordinate into a corresponding <see cref="Point"/> object.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
@@ -1351,7 +1382,7 @@ namespace SilDev
                 var item = str ?? throw new ArgumentNullException(nameof(str));
                 if (string.IsNullOrWhiteSpace(str))
                     throw new ArgumentInvalidException(nameof(str));
-                return (Point)ConvertToSpecifiedType<PointConverter>(item);
+                return (Point)ConvertStringToSpecifiedType<PointConverter>(item);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -1361,8 +1392,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified string, which stores an ordered pair of integers, to
-        ///     <see cref="Size"/>.
+        ///     Converts the string representation of a pair of integers for width and
+        ///     height into a corresponding <see cref="Size"/> object.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
@@ -1374,7 +1405,7 @@ namespace SilDev
                 var item = str ?? throw new ArgumentNullException(nameof(str));
                 if (string.IsNullOrWhiteSpace(str))
                     throw new ArgumentInvalidException(nameof(str));
-                return (Size)ConvertToSpecifiedType<SizeConverter>(item);
+                return (Size)ConvertStringToSpecifiedType<SizeConverter>(item);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -1391,17 +1422,8 @@ namespace SilDev
         /// <param name="str">
         ///     The <see cref="string"/> to convert.
         /// </param>
-        public static bool ToBoolean(this string str)
-        {
-            try
-            {
-                return bool.Parse(str);
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                return false;
-            }
-        }
+        public static bool ToBoolean(this string str) =>
+            bool.TryParse(str, out var b) && b;
 
         /// <summary>
         ///     Converts the specified value to an equivalent <see cref="bool"/> value.
