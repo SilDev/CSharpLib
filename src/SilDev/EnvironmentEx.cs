@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-14 16:42
+// Version:  2020-01-14 20:38
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -331,8 +331,7 @@ namespace SilDev
                 var current = path;
                 if (current.StartsWith("%", StringComparison.Ordinal) && (current.ContainsEx($"%{Path.DirectorySeparatorChar}", $"%{Path.AltDirectorySeparatorChar}") || current.EndsWith("%", StringComparison.Ordinal)))
                 {
-                    length = current.IndexOf('%', current.IndexOf('%') + 1);
-                    length = current.IndexOf('%', ++length);
+                    length = current.IndexOf('%', 1);
                     return current.Substring(1, --length);
                 }
                 if (!PathEx.IsValidPath(path))

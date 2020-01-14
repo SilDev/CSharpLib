@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2020-01-14 20:05
+// Version:  2020-01-14 20:38
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -320,10 +320,10 @@ namespace SilDev
                 var num = default(byte);
                 if (path.StartsWith("%", StringComparison.Ordinal) && (path.Contains($"%{Path.DirectorySeparatorChar}") || path.EndsWith("%", StringComparison.Ordinal)))
                 {
-                    var regex = Regex.Match(path, "%(.+?)%", RegexOptions.IgnoreCase);
-                    if (regex.Groups.Count > 1)
+                    var length = path.IndexOf('%', 1);
+                    var variable1 = path.Substring(1, --length);
+                    if (!string.IsNullOrEmpty(variable1))
                     {
-                        var variable1 = regex.Groups[1].Value;
                         var variable2 = variable1;
                         EnvironmentEx.VariableFilter(ref variable2, out key, out num);
                         if (!string.IsNullOrEmpty(variable2))
