@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-14 14:11
+// Version:  2020-01-14 20:04
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1316,6 +1316,8 @@ namespace SilDev
             var i = 0;
             foreach (var e in str.Split('.'))
             {
+                if (i > 3)
+                    break;
                 if (!e.Any() || !e.StartsWithEx(ca))
                     continue;
                 if (e.All(char.IsDigit))
@@ -1326,8 +1328,11 @@ namespace SilDev
                 sa[i++] = new string(e.Where(char.IsDigit).ToArray()).TrimStart('0');
             }
             for (var j = 0; j < sa.Length; j++)
-                if (string.IsNullOrEmpty(sa[j]))
-                    sa[j] = "0";
+            {
+                if (!string.IsNullOrEmpty(sa[j]))
+                    continue;
+                sa[j] = "0";
+            }
             return new Version(sa.Join('.'));
         }
 
