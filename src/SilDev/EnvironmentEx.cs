@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-14 16:35
+// Version:  2020-01-14 16:42
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -62,67 +62,32 @@ namespace SilDev
             {
                 if (_version != default)
                     return _version;
-                try
-                {
-#if x86
-                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", "Framework");
-#elif x64
-                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", "Framework64");
-#else
-                    var envDir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET", Environment.Is64BitProcess ? "Framework64" : "Framework");
-#endif
-                    foreach (var dir in Directory.EnumerateDirectories(envDir).Reverse())
-                    {
-                        var path = Path.Combine(dir, "System.dll");
-                        if (!File.Exists(path))
-                            continue;
-                        _version = FileEx.GetVersion(path);
-                        break;
-                    }
-                    if (_version > Environment.Version)
-                        return _version;
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    if (Log.DebugMode > 1)
-                        Log.Write(ex);
-                }
                 const string keyPath = "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full";
-                var version = Reg.Read(Registry.LocalMachine, keyPath, "Version", string.Empty);
-                if (!string.IsNullOrWhiteSpace(version))
-                    try
-                    {
-                        _version = new Version(version.Split('.').Select(s => s.Length > 1 ? s.TrimStart('0') : s).Join('.'));
-                        if (_version > Environment.Version)
-                            return _version;
-                    }
-                    catch (Exception ex) when (ex.IsCaught())
-                    {
-                        if (Log.DebugMode > 1)
-                            Log.Write(ex);
-                    }
+                var version = Reg.Read<string>(Registry.LocalMachine, keyPath, "Version").ToVersion();
+                if (version.Major >= 4)
+                    return _version = version;
                 var release = Reg.Read(Registry.LocalMachine, keyPath, "Release", 0);
+                if (release >= 528040)
+                    return _version = new Version(4, 8);
+                if (release >= 461808)
+                    return _version = new Version(4, 7, 2);
                 if (release >= 461308)
-                    _version = new Version(4, 7, 2);
-                else if (release >= 460805)
-                    _version = new Version(4, 7, 1);
-                else if (release >= 460798)
-                    _version = new Version(4, 7);
-                else if (release >= 394802)
-                    _version = new Version(4, 6, 2);
-                else if (release >= 394254)
-                    _version = new Version(4, 6, 1);
-                else if (release >= 393295)
-                    _version = new Version(4, 6);
-                else if (release >= 379893)
-                    _version = new Version(4, 5, 2);
-                else if (release >= 378675)
-                    _version = new Version(4, 5, 1);
-                else if (release >= 378389)
-                    _version = new Version(4, 5);
-                else
-                    _version = Environment.Version;
-                return _version;
+                    return _version = new Version(4, 7, 1);
+                if (release >= 460798)
+                    return _version = new Version(4, 7);
+                if (release >= 394802)
+                    return _version = new Version(4, 6, 2);
+                if (release >= 394254)
+                    return _version = new Version(4, 6, 1);
+                if (release >= 393295)
+                    return _version = new Version(4, 6);
+                if (release >= 379893)
+                    return _version = new Version(4, 5, 2);
+                if (release >= 378675)
+                    return _version = new Version(4, 5, 1);
+                if (release >= 378389)
+                    return _version = new Version(4, 5);
+                return _version = Environment.Version;
             }
         }
 
