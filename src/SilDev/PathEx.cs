@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-14 20:05
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -311,7 +311,7 @@ namespace SilDev
             try
             {
                 if (!(path0?.Split(PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries) is IEnumerable<string> plains))
-                    throw new ArgumentInvalidException(nameof(path0));
+                    throw new ArgumentNullException(nameof(path0));
                 if (invalidPathChars?.Any() ?? false)
                     plains = plains.Select(x => x.RemoveChar(invalidPathChars));
                 path = !string.IsNullOrEmpty(path) ? Path.Combine(path, plains.Join(Path.DirectorySeparatorChar)) : plains.Join(Path.DirectorySeparatorChar);
