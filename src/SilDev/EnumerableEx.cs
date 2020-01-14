@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-14 14:08
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,6 +27,28 @@ namespace SilDev
     /// </summary>
     public static class EnumerableEx
     {
+        /// <summary>
+        ///     Generates a sequence of elements within a specified range.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements.
+        /// </typeparam>
+        /// <param name="from">
+        ///     The first element in the sequence.
+        /// </param>
+        /// <param name="to">
+        ///     The last element in the sequence.
+        /// </param>
+        public static IEnumerable<TSource> Range<TSource>(TSource from, TSource to) where TSource : IComparable, IConvertible, IComparable<TSource>, IEquatable<TSource>
+        {
+            var c = Comparer<TSource>.Default;
+            var a = c.Compare(from, to) < 0;
+            var i = a ? 1 : -1;
+            dynamic x = from;
+            while (c.Compare(x, to) != i)
+                yield return a ? x++ : x--;
+        }
+
         /// <summary>
         ///     Performs the specified <see cref="Action{T}"/> on each element of the
         ///     <see cref="IEnumerable{T}"/> collection.
@@ -744,13 +766,8 @@ namespace SilDev
         /// <param name="separator">
         ///     The string to use as a separator.
         /// </param>
-        public static string Join(this IEnumerable<string> values, string separator = null)
-        {
-            if (values == null)
-                return null;
-            var s = string.Join(separator, values);
-            return s;
-        }
+        public static string Join(this IEnumerable<string> values, string separator = null) =>
+            values == null ? null : string.Join(separator, values);
 
         /// <summary>
         ///     Concatenates the members of a constructed <see cref="IEnumerable{T}"/>
