@@ -10434,6 +10434,20 @@
                 Provides static methods based on the <see cref="T:System.Linq.Enumerable"/> class.
             </summary>
         </member>
+        <member name="M:SilDev.EnumerableEx.Range``1(``0,``0)">
+            <summary>
+                Generates a sequence of elements within a specified range.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements.
+            </typeparam>
+            <param name="from">
+                The first element in the sequence.
+            </param>
+            <param name="to">
+                The last element in the sequence.
+            </param>
+        </member>
         <member name="M:SilDev.EnumerableEx.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
             <summary>
                 Performs the specified <see cref="T:System.Action`1"/> on each element of the
@@ -11162,9 +11176,10 @@
             <summary>
                 Retrieves the value of an environment variable from the current process.
                 <para>
-                    Hint: Allows <see cref="T:System.Environment.SpecialFolder"/> names including a
-                    keyword "CurDir" to get the current code base location based on
-                    <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase.
+                    Allows <see cref="T:System.Environment.SpecialFolder"/> names to get its
+                    <see cref="M:System.Environment.GetFolderPath(System.Environment.SpecialFolder)"/>
+                    value and also supports the keyword "CurDir" to get the
+                    <see cref="P:SilDev.PathEx.LocalDir"/> value.
                 </para>
             </summary>
             <param name="variable">
@@ -11175,18 +11190,18 @@
                 <see langword="false"/>.
             </param>
         </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariablePath(System.String,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.EnvironmentEx.GetVariableFromPath(System.String,System.Boolean,System.Boolean)">
             <summary>
-                Converts the specified path to an existing environment variable, if
-                possible.
+                Returns an environment variable if the specified path contains an
+                environment variable or if elements of the specified path match a value of
+                an environment variable.
             </summary>
             <param name="path">
-                The path to convert.
+                The path to check.
             </param>
             <param name="curDir">
-                <see langword="true"/> to consider the
-                <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value; otherwise,
-                <see langword="false"/>.
+                <see langword="true"/> to consider the <see cref="P:SilDev.PathEx.LocalDir"/> value;
+                otherwise, <see langword="false"/>.
             </param>
             <param name="special">
                 <see langword="true"/> to consider the
@@ -11194,18 +11209,16 @@
                 <see langword="false"/>.
             </param>
         </member>
-        <member name="M:SilDev.EnvironmentEx.GetVariablePathFull(System.String,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.EnvironmentEx.GetVariableWithPath(System.String,System.Boolean,System.Boolean)">
             <summary>
-                Returns a new string in which all occurrences in this instance are replaced
-                with a valid environment variable.
+                Converts the beginning of the specified path to an environment variable.
             </summary>
             <param name="path">
                 The path to convert.
             </param>
             <param name="curDir">
-                <see langword="true"/> to consider the
-                <see cref="M:System.Reflection.Assembly.GetEntryAssembly"/>.CodeBase value; otherwise,
-                <see langword="false"/>.
+                <see langword="true"/> to consider the <see cref="P:SilDev.PathEx.LocalDir"/> value;
+                otherwise, <see langword="false"/>.
             </param>
             <param name="special">
                 <see langword="true"/> to consider the
@@ -19764,10 +19777,19 @@
                 The sequence of bytes to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToVersion(System.String)">
+            <summary>
+                Converts the string representation of a version number to an equivalent
+                <see cref="T:System.Version"/> object.
+            </summary>
+            <param name="str">
+                The string to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToRectangle(System.String)">
             <summary>
-                Converts the specified string, which stores a set of four integers that
-                represent the location and size of a rectangle, to <see cref="T:System.Drawing.Rectangle"/>.
+                Converts the string representation of a rectangle to an equivalent
+                <see cref="T:System.Drawing.Rectangle"/> object.
             </summary>
             <param name="str">
                 The string to convert.
@@ -19775,8 +19797,8 @@
         </member>
         <member name="M:SilDev.Reorganize.ToPoint(System.String)">
             <summary>
-                Converts the specified string, which stores an ordered pair of integer x-
-                and y-coordinates, to <see cref="T:System.Drawing.Point"/>.
+                Converts the string representation of a pair of integers for x- and
+                y-coordinate into a corresponding <see cref="T:System.Drawing.Point"/> object.
             </summary>
             <param name="str">
                 The string to convert.
@@ -19784,8 +19806,8 @@
         </member>
         <member name="M:SilDev.Reorganize.ToSize(System.String)">
             <summary>
-                Converts the specified string, which stores an ordered pair of integers, to
-                <see cref="T:System.Drawing.Size"/>.
+                Converts the string representation of a pair of integers for width and
+                height into a corresponding <see cref="T:System.Drawing.Size"/> object.
             </summary>
             <param name="str">
                 The string to convert.
