@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-14 16:35
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -20,7 +20,6 @@ namespace SilDev
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using Microsoft.Win32;
     using QuickWmi;
 
@@ -293,9 +292,10 @@ namespace SilDev
         /// <summary>
         ///     Retrieves the value of an environment variable from the current process.
         ///     <para>
-        ///         Hint: Allows <see cref="Environment.SpecialFolder"/> names including a
-        ///         keyword "CurDir" to get the current code base location based on
-        ///         <see cref="Assembly.GetEntryAssembly()"/>.CodeBase.
+        ///         Allows <see cref="Environment.SpecialFolder"/> names to get its
+        ///         <see cref="Environment.GetFolderPath(Environment.SpecialFolder)"/>
+        ///         value and also supports the keyword "CurDir" to get the
+        ///         <see cref="PathEx.LocalDir"/> value.
         ///     </para>
         /// </summary>
         /// <param name="variable">
@@ -314,23 +314,29 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(variable));
                 variable = variable.RemoveChar('%');
                 VariableFilter(ref variable, out var key, out var num);
-                if (variable.EqualsEx("CurrentDir", "CurDir"))
+                if (variable.EqualsEx("CurDir", "CurrentDir"))
                     output = PathEx.LocalDir;
                 else
-                    try
+                {
+                    var type = typeof(Environment.SpecialFolder);
+                    var match = Enum.GetNames(type).FirstOrDefault(s => s.EqualsEx(variable));
+                    if (string.IsNullOrEmpty(match))
                     {
-                        var match = Enum.GetNames(typeof(Environment.SpecialFolder)).First(s => variable.EqualsEx(s));
-                        if (!Enum.TryParse(match, out Environment.SpecialFolder specialFolder))
-                            throw new NullReferenceException();
-                        output = Environment.GetFolderPath(specialFolder);
+                        var table = (Hashtable)Environment.GetEnvironmentVariables();
+                        foreach (var varKey in table.Keys)
+                        {
+                            if (!((string)varKey).EqualsEx(variable))
+                                continue;
+                            output = (string)table[varKey];
+                            break;
+                        }
                     }
-                    catch (Exception ex) when (ex.IsCaught())
+                    else
                     {
-                        if (Log.DebugMode > 1)
-                            Log.Write(ex);
-                        output = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
-                                            .First(x => variable.EqualsEx(x.Key.ToString())).Value.ToString();
+                        var folder = (Environment.SpecialFolder)Enum.Parse(type, match);
+                        output = Environment.GetFolderPath(folder);
                     }
+                }
                 if (lower)
                     output = output?.ToLowerInvariant();
                 if (!string.IsNullOrEmpty(output) && (!string.IsNullOrEmpty(key) || num > 1))
@@ -351,56 +357,58 @@ namespace SilDev
             return output;
         }
 
-        /// <summary>
-        ///     Converts the specified path to an existing environment variable, if
-        ///     possible.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to convert.
-        /// </param>
-        /// <param name="curDir">
-        ///     <see langword="true"/> to consider the
-        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value; otherwise,
-        ///     <see langword="false"/>.
-        /// </param>
-        /// <param name="special">
-        ///     <see langword="true"/> to consider the
-        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
-        ///     <see langword="false"/>.
-        /// </param>
-        public static string GetVariablePath(string path, bool curDir = true, bool special = true)
+        private static string GetVariableFromPathIntern(string path, bool curDir, bool special, out int length)
         {
-            var output = string.Empty;
             try
             {
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(path));
-                var current = path.TrimEnd(Path.DirectorySeparatorChar);
-                for (var i = 0; i < 2; i++)
+                var current = path;
+                if (current.StartsWith("%", StringComparison.Ordinal) && (current.ContainsEx($"%{Path.DirectorySeparatorChar}", $"%{Path.AltDirectorySeparatorChar}") || current.EndsWith("%", StringComparison.Ordinal)))
                 {
-                    if (curDir && current.EqualsEx(GetVariableValue("CurDir")))
-                        output = "CurDir";
-                    else
-                        try
-                        {
-                            if (!special)
-                                throw new NotSupportedException();
-                            output = Enum.GetValues(typeof(Environment.SpecialFolder)).Cast<Environment.SpecialFolder>()
-                                         .First(s => current.EqualsEx(Environment.GetFolderPath(s))).ToString();
-                        }
-                        catch (Exception ex) when (ex.IsCaught())
-                        {
-                            if (Log.DebugMode > 1)
-                                Log.Write(ex);
-                            output = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
-                                                .First(x => current.EqualsEx(x.Value.ToString())).Key.ToString();
-                        }
-                    if (!string.IsNullOrWhiteSpace(output))
-                        break;
-                    current += Path.DirectorySeparatorChar;
+                    length = current.IndexOf('%', current.IndexOf('%') + 1);
+                    length = current.IndexOf('%', ++length);
+                    return current.Substring(1, --length);
                 }
-                if (!string.IsNullOrWhiteSpace(output))
-                    output = $"%{output}%";
+                if (!PathEx.IsValidPath(path))
+                    throw new ArgumentInvalidException(nameof(path));
+                if (curDir)
+                {
+                    var localDir = PathEx.LocalDir;
+                    if (current.StartsWithEx(localDir))
+                    {
+                        length = localDir.Length;
+                        return "CurDir";
+                    }
+                }
+                var table = (Hashtable)Environment.GetEnvironmentVariables();
+                foreach (var varKey in table.Keys)
+                {
+                    var varValue = (string)table[varKey];
+                    if (varValue.Length < 3 || !PathEx.IsValidPath(varValue) || !current.StartsWithEx(varValue))
+                        continue;
+                    length = varValue.Length;
+                    return (string)varKey;
+                }
+                if (special)
+                {
+                    var type = typeof(Environment.SpecialFolder);
+                    foreach (var item in Enum.GetValues(type).Cast<Environment.SpecialFolder>())
+                    {
+                        var folder = Environment.GetFolderPath(item);
+                        if (folder.Length < 3 || !current.StartsWithEx(folder))
+                            continue;
+                        var name = Enum.GetName(type, item);
+                        length = folder.Length;
+                        return name;
+                    }
+                }
+                var sysDrive = Environment.GetEnvironmentVariable("SystemDrive");
+                if (!string.IsNullOrEmpty(sysDrive) && current.StartsWithEx(sysDrive))
+                {
+                    length = sysDrive.Length;
+                    return "SystemDrive";
+                }
             }
             catch (InvalidOperationException ex)
             {
@@ -411,53 +419,51 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
-            return output;
+            length = 0;
+            return string.Empty;
         }
 
         /// <summary>
-        ///     Returns a new string in which all occurrences in this instance are replaced
-        ///     with a valid environment variable.
+        ///     Returns an environment variable if the specified path contains an
+        ///     environment variable or if elements of the specified path match a value of
+        ///     an environment variable.
         /// </summary>
         /// <param name="path">
-        ///     The path to convert.
+        ///     The path to check.
         /// </param>
         /// <param name="curDir">
-        ///     <see langword="true"/> to consider the
-        ///     <see cref="Assembly.GetEntryAssembly()"/>.CodeBase value; otherwise,
-        ///     <see langword="false"/>.
+        ///     <see langword="true"/> to consider the <see cref="PathEx.LocalDir"/> value;
+        ///     otherwise, <see langword="false"/>.
         /// </param>
         /// <param name="special">
         ///     <see langword="true"/> to consider the
         ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static string GetVariablePathFull(string path, bool curDir = true, bool special = true)
+        public static string GetVariableFromPath(string path, bool curDir = true, bool special = true) =>
+            GetVariableFromPathIntern(path, curDir, special, out _);
+
+        /// <summary>
+        ///     Converts the beginning of the specified path to an environment variable.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to convert.
+        /// </param>
+        /// <param name="curDir">
+        ///     <see langword="true"/> to consider the <see cref="PathEx.LocalDir"/> value;
+        ///     otherwise, <see langword="false"/>.
+        /// </param>
+        /// <param name="special">
+        ///     <see langword="true"/> to consider the
+        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static string GetVariableWithPath(string path, bool curDir = true, bool special = true)
         {
-            var output = string.Empty;
-            try
-            {
-                if (string.IsNullOrWhiteSpace(path))
-                    throw new ArgumentNullException(nameof(path));
-                var levels = path.Count(c => c == Path.DirectorySeparatorChar) + 1;
-                var current = PathEx.Combine(path);
-                for (var i = 0; i < levels; i++)
-                {
-                    output = GetVariablePath(current, curDir, special);
-                    if (!string.IsNullOrEmpty(output))
-                        break;
-                    current = PathEx.Combine(current, "..").Trim(Path.DirectorySeparatorChar);
-                }
-                if (string.IsNullOrWhiteSpace(output))
-                    throw new NullReferenceException();
-                var sub = path.Substring(current.Length).Trim(Path.DirectorySeparatorChar);
-                output = output.Trim(Path.DirectorySeparatorChar);
-                output = Path.Combine(output, sub);
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-            }
-            return !string.IsNullOrWhiteSpace(output) ? output : path;
+            var variable = GetVariableFromPathIntern(path, curDir, special, out var length);
+            if (string.IsNullOrEmpty(variable) || length <= 0)
+                return path;
+            return $"%{variable}%{path.Substring(length)}";
         }
     }
 }

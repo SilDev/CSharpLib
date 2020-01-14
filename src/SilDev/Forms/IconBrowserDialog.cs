@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-14 16:36
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -438,7 +438,7 @@ namespace SilDev.Forms
                     return;
                 if (int.TryParse(_button.Text, out var index))
                 {
-                    var path = EnvironmentEx.GetVariablePathFull(FilePath, false, false);
+                    var path = EnvironmentEx.GetVariableWithPath(FilePath, false, false);
                     dialog.IconPath = path;
                     if (path.Any(char.IsSeparator))
                         path = $"\"{path}\"";

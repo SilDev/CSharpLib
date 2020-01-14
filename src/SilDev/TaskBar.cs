@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-14 16:36
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -336,7 +336,7 @@ namespace SilDev
                 if (!File.Exists(curLink))
                     return false;
                 var target = ShellLink.GetTarget(curLink);
-                var envVar = EnvironmentEx.GetVariablePathFull(target, false, false);
+                var envVar = EnvironmentEx.GetVariableWithPath(target, false, false);
                 if (!target.EqualsEx(envVar))
                     FileEx.CreateShellLink(file, curLink);
                 return true;

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-14 16:36
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -195,11 +195,11 @@ namespace SilDev
                 var workDir = PathEx.Combine(shellLinkInfo.WorkingDirectory);
                 if (Directory.Exists(workDir))
                 {
-                    workDir = EnvironmentEx.GetVariablePathFull(workDir, false, false);
+                    workDir = EnvironmentEx.GetVariableWithPath(workDir, false, false);
                     shell.SetWorkingDirectory(workDir);
                 }
 
-                targetPath = EnvironmentEx.GetVariablePathFull(targetPath, false, false);
+                targetPath = EnvironmentEx.GetVariableWithPath(targetPath, false, false);
                 shell.SetPath(targetPath);
 
                 var arguments = shellLinkInfo.Arguments;
@@ -209,7 +209,7 @@ namespace SilDev
                 var iconPath = PathEx.Combine(shellLinkInfo.IconLocation.Item1);
                 var iconId = shellLinkInfo.IconLocation.Item2;
                 if (File.Exists(iconPath))
-                    iconPath = EnvironmentEx.GetVariablePathFull(iconPath, false, false);
+                    iconPath = EnvironmentEx.GetVariableWithPath(iconPath, false, false);
                 else
                 {
                     if (PathEx.IsDir(targetPath))
