@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PowerShellReference.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-14 19:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -19,22 +19,35 @@ namespace SilDev.Intern
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
 
     internal static class PowerShellReference
     {
-        private static Assembly _assembly;
-        private static bool _assemblyChecked;
-        private static readonly object Locker = new object();
+        private static volatile Assembly _assembly;
+        private static volatile bool _assemblyChecked;
+        private static volatile object _syncObject;
+
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
+            }
+        }
 
         internal static Assembly Assembly
         {
             get
             {
-                lock (Locker)
+                lock (SyncObject)
                 {
                     if (_assemblyChecked)
                         return _assembly;
-                    var dir = PathEx.Combine(Environment.SpecialFolder.Windows, "Microsoft.NET\\assembly\\GAC_MSIL", "System.Management.Automation");
+                    var dir = "%WinDir%\\Microsoft.NET\\assembly\\GAC_MSIL\\System.Management.Automation";
                     var path = DirectoryEx.EnumerateFiles(dir, "System.Management.Automation.dll", SearchOption.AllDirectories)?.FirstOrDefault();
                     try
                     {
