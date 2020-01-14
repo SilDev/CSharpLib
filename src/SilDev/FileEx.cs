@@ -1447,19 +1447,17 @@ namespace SilDev
         /// </param>
         public static Version GetVersion(string path)
         {
-            Version v;
             try
             {
                 var v1 = GetFileVersion(path);
                 var v2 = GetProductVersion(path);
-                v = v1 > v2 ? v1 : v2;
+                return v1 > v2 ? v1 : v2;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
                 return new Version("0.0.0.0");
             }
-            return v;
         }
 
         /// <summary>
