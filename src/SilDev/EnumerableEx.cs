@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2020-01-15 10:43
+// Version:  2020-01-15 10:54
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -39,6 +39,16 @@ namespace SilDev
         /// </param>
         public static TSource[] AsArray<TSource>(this IEnumerable<TSource> source) =>
             source as TSource[] ?? source?.ToArray();
+
+        /// <summary>
+        ///     Retrieve the string of this <see cref="IEnumerable{T}"/> character
+        ///     collection or create it.
+        /// </summary>
+        /// <param name="source">
+        ///     The <see cref="IEnumerable{T}"/> collection.
+        /// </param>
+        public static string AsString(this IEnumerable<char> source) =>
+            source == null ? null : source as string ?? new string(source.ToArray());
 
         /// <summary>
         ///     Generates a sequence of elements within a specified range.

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-15 10:43
+// Version:  2020-01-15 10:54
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -777,7 +777,7 @@ namespace SilDev
                 case IEnumerable<byte> bytes:
                     return new Crc32(bytes.AsArray()).RawHash;
                 case IEnumerable<char> chars:
-                    return new Crc32(chars is string text ? text : new string(chars.AsArray())).RawHash;
+                    return new Crc32(chars.AsString()).RawHash;
             }
             return new Crc32(source.SerializeObject()).RawHash;
         }
@@ -822,8 +822,7 @@ namespace SilDev
                             return new Md5(stream).Hash;
                     }
                 case IEnumerable<byte> bytes:
-                    if (!(bytes is byte[] ba))
-                        ba = bytes.ToArray();
+                    var ba = bytes.AsArray();
                     switch (algorithm)
                     {
                         case ChecksumAlgorithm.Adler32:
@@ -846,8 +845,7 @@ namespace SilDev
                             return new Md5(ba).Hash;
                     }
                 case IEnumerable<char> chars:
-                    if (!(chars is string text))
-                        text = new string(chars.ToArray());
+                    var text = chars.AsString();
                     switch (algorithm)
                     {
                         case ChecksumAlgorithm.Adler32:
