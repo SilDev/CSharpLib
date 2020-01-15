@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-13 14:40
+// Version:  2020-01-15 10:43
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -775,9 +775,9 @@ namespace SilDev
                 case Stream stream:
                     return new Crc32(stream).RawHash;
                 case IEnumerable<byte> bytes:
-                    return new Crc32(bytes as byte[] ?? bytes.ToArray()).RawHash;
+                    return new Crc32(bytes.AsArray()).RawHash;
                 case IEnumerable<char> chars:
-                    return new Crc32(chars is string text ? text : new string(chars.ToArray())).RawHash;
+                    return new Crc32(chars is string text ? text : new string(chars.AsArray())).RawHash;
             }
             return new Crc32(source.SerializeObject()).RawHash;
         }

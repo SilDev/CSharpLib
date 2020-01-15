@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2020-01-13 15:31
+// Version:  2020-01-15 10:43
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -482,7 +482,7 @@ namespace SilDev
         {
             if (source == null || target0 == null && target1 == null)
                 return false;
-            var elements = source as TElement[] ?? source.ToArray();
+            var elements = source.AsArray();
             return target0 != null && elements.Contains(target0) ||
                    target1 != null && elements.Contains(target1);
         }
@@ -510,7 +510,7 @@ namespace SilDev
         {
             if (source == null || target0 == null && target1 == null && target2 == null)
                 return false;
-            var elements = source as TElement[] ?? source.ToArray();
+            var elements = source.AsArray();
             return target0 != null && elements.Contains(target0) ||
                    target1 != null && elements.Contains(target1) ||
                    target2 != null && elements.Contains(target2);
@@ -533,7 +533,7 @@ namespace SilDev
         {
             if (source == null || targets == null)
                 return false;
-            var elements = source as TElement[] ?? source.ToArray();
+            var elements = source.AsArray();
             for (var i = 0; i < targets.Length; i++)
             {
                 if (targets[i] == null || !elements.Contains(targets[i]))
@@ -560,7 +560,7 @@ namespace SilDev
         {
             if (source == null || target0 == null)
                 return false;
-            var sa = source as string[] ?? source.ToArray();
+            var sa = source.AsArray();
             for (var i = 0; i < sa.Length; i++)
             {
                 if (sa[i] == null || !string.Equals(sa[i], target0, comparisonType))
@@ -590,7 +590,7 @@ namespace SilDev
         {
             if (source == null || target0 == null && target1 == null)
                 return false;
-            var sa = source as string[] ?? source.ToArray();
+            var sa = source.AsArray();
             for (var i = 0; i < sa.Length; i++)
             {
                 if (sa[i] == null)
@@ -625,7 +625,7 @@ namespace SilDev
         {
             if (source == null || target0 == null && target1 == null && target2 == null)
                 return false;
-            var sa = source as string[] ?? source.ToArray();
+            var sa = source.AsArray();
             for (var i = 0; i < sa.Length; i++)
             {
                 if (sa[i] == null)
@@ -655,7 +655,7 @@ namespace SilDev
         {
             if (source == null || targets == null)
                 return false;
-            var sa = source as string[] ?? source.ToArray();
+            var sa = source.AsArray();
             for (var i = 0; i < sa.Length; i++)
             {
                 if (sa[i] == null)
@@ -1591,7 +1591,7 @@ namespace SilDev
         {
             if (source == null || target == null)
                 return false;
-            var ba = source as byte[] ?? source.ToArray();
+            var ba = source.AsArray();
             if (ba.Length < target.Length)
                 return false;
             for (var i = 0; i < target.Length; i++)
@@ -1614,7 +1614,7 @@ namespace SilDev
         ///     The sequence of bytes to compare with the first.
         /// </param>
         public static bool SequenceStartsWith(this IEnumerable<byte> source, IEnumerable<byte> target) =>
-            source?.SequenceStartsWith(target as byte[] ?? target?.ToArray()) ?? false;
+            source?.SequenceStartsWith(target?.AsArray()) ?? false;
 
         /// <summary>
         ///     Determines whether the beginning of this sequence of bytes matches one of
@@ -1633,7 +1633,7 @@ namespace SilDev
         {
             if (source == null || target0 == null || target1 == null)
                 return false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             return bytes.SequenceStartsWith(target0) || bytes.SequenceStartsWith(target1);
         }
 
@@ -1657,7 +1657,7 @@ namespace SilDev
         {
             if (source == null || target0 == null || target1 == null || target2 == null)
                 return false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             return bytes.SequenceStartsWith(target0) || bytes.SequenceStartsWith(target1) || bytes.SequenceStartsWith(target2);
         }
 
@@ -1676,10 +1676,10 @@ namespace SilDev
             if (source == null || targets == null)
                 return false;
             var result = false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             for (var i = 0; i < targets.Length; i++)
             {
-                var target = targets[i] as byte[] ?? targets[i]?.ToArray();
+                var target = targets[i]?.AsArray();
                 if (target == null || bytes.Length < target.Length)
                     continue;
                 var equal = true;
@@ -1787,8 +1787,8 @@ namespace SilDev
         {
             if (source == null || target == null)
                 return false;
-            var ba1 = source as byte[] ?? source.ToArray();
-            var ba2 = target as byte[] ?? target.ToArray();
+            var ba1 = source.AsArray();
+            var ba2 = target.AsArray();
             var len1 = ba1.Length;
             var len2 = ba2.Length;
             if (len1 < len2)
@@ -1819,7 +1819,7 @@ namespace SilDev
         {
             if (source == null || target0 == null || target1 == null)
                 return false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             return bytes.SequenceEndsWith(target0) || bytes.SequenceEndsWith(target1);
         }
 
@@ -1843,7 +1843,7 @@ namespace SilDev
         {
             if (source == null || target0 == null || target1 == null || target2 == null)
                 return false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             return bytes.SequenceEndsWith(target0) || bytes.SequenceEndsWith(target1) || bytes.SequenceEndsWith(target2);
         }
 
@@ -1862,11 +1862,11 @@ namespace SilDev
             if (source == null || targets == null)
                 return false;
             var result = false;
-            var ba1 = source as byte[] ?? source.ToArray();
+            var ba1 = source.AsArray();
             var len1 = ba1.Length;
             for (var i = 0; i < targets.Length; i++)
             {
-                var ba2 = targets[i] as byte[] ?? targets[i]?.ToArray();
+                var ba2 = targets[i]?.AsArray();
                 if (ba2 == null)
                     continue;
                 var len2 = ba2.Length;
@@ -1908,8 +1908,8 @@ namespace SilDev
                 return target0 == null;
             if (target0 == null)
                 return false;
-            var bytes = source as byte[] ?? source.ToArray();
-            var target = target0 as byte[] ?? target0.ToArray();
+            var bytes = source.AsArray();
+            var target = target0.AsArray();
             if (bytes.Length != target.Length)
                 return false;
             for (var i = 0; i < target.Length; i++)
@@ -1940,7 +1940,7 @@ namespace SilDev
                 return target0 == null || target1 == null;
             if (target0 == null && target1 == null)
                 return false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             return bytes.SequenceEqualEx(target0) || bytes.SequenceEqualEx(target1);
         }
 
@@ -1966,7 +1966,7 @@ namespace SilDev
                 return target0 == null || target1 == null;
             if (target0 == null && target1 == null)
                 return false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             return bytes.SequenceEqualEx(target0) || bytes.SequenceEqualEx(target1) || bytes.SequenceEqualEx(target2);
         }
 
@@ -1987,10 +1987,10 @@ namespace SilDev
             if (targets == null)
                 return false;
             var result = false;
-            var bytes = source as byte[] ?? source.ToArray();
+            var bytes = source.AsArray();
             for (var i = 0; i < targets.Length; i++)
             {
-                var target = targets[i] as byte[] ?? targets[i]?.ToArray();
+                var target = targets[i]?.AsArray();
                 if (target == null || bytes.Length != target.Length)
                     continue;
                 var equal = true;
