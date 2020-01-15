@@ -10434,6 +10434,27 @@
                 Provides static methods based on the <see cref="T:System.Linq.Enumerable"/> class.
             </summary>
         </member>
+        <member name="M:SilDev.EnumerableEx.AsArray``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+                Retrieve the array of this <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection or
+                create it.
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumerableEx.AsString(System.Collections.Generic.IEnumerable{System.Char})">
+            <summary>
+                Retrieve the string of this <see cref="T:System.Collections.Generic.IEnumerable`1"/> character
+                collection or create it.
+            </summary>
+            <param name="source">
+                The <see cref="T:System.Collections.Generic.IEnumerable`1"/> collection.
+            </param>
+        </member>
         <member name="M:SilDev.EnumerableEx.Range``1(``0,``0)">
             <summary>
                 Generates a sequence of elements within a specified range.
