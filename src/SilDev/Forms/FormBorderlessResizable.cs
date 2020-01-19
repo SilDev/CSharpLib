@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormBorderlessResizable.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 14:57
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -17,6 +17,7 @@ namespace SilDev.Forms
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Windows.Forms;
@@ -85,16 +86,107 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="FormBorderlessResizable"/>
-        ///     form class.
+        ///     Provides enumerated Windows <see cref="Message"/>'s, used within a
+        ///     <see cref="WndProc"/> override.
         /// </summary>
-        [SuppressMessage("ReSharper", "EmptyConstructor")]
-        public FormBorderlessResizable() { }
+        protected enum WindowsMessage
+        {
+            /// <summary>
+            ///     Specify the first mouse message.
+            /// </summary>
+            MouseFirst = 0x200,
+
+            /// <summary>
+            ///     Sent to a window in order to determine what part of the window corresponds
+            ///     to a particular screen coordinate. This can happen, for example, when the
+            ///     cursor moves, when a mouse button is pressed or released, or in response to
+            ///     a call to a function such as WindowFromPoint. If the mouse is not captured,
+            ///     the message is sent to the window beneath the cursor. Otherwise, the
+            ///     message is sent to the window that has captured the mouse.
+            /// </summary>
+            NcHitTest = 0x84
+        }
+
+        private IReadOnlyDictionary<ResizingBorderFlags, (IntPtr, Rectangle)> _allBorderAreas;
+        private int _borderThickness;
+
+        /// <summary>
+        ///     Gets all border areas.
+        /// </summary>
+        protected IReadOnlyDictionary<ResizingBorderFlags, (IntPtr, Rectangle)> AllBorderAreas
+        {
+            get
+            {
+                if (_allBorderAreas != default)
+                    return _allBorderAreas;
+                var width = Size.Width;
+                var height = Size.Height;
+                var thickness = BorderThickness;
+                var areas = new Dictionary<ResizingBorderFlags, (IntPtr, Rectangle)>
+                {
+                    {
+                        ResizingBorderFlags.Left,
+                        (new IntPtr(10), new Rectangle(0, thickness, thickness, height - 2 * thickness))
+                    },
+                    {
+                        ResizingBorderFlags.Right,
+                        (new IntPtr(11), new Rectangle(width - thickness, thickness, thickness, height - 2 * thickness))
+                    },
+                    {
+                        ResizingBorderFlags.Top,
+                        (new IntPtr(12), new Rectangle(thickness, 0, width - 2 * thickness, thickness))
+                    },
+                    {
+                        ResizingBorderFlags.TopLeft,
+                        (new IntPtr(13), new Rectangle(0, 0, thickness, thickness))
+                    },
+                    {
+                        ResizingBorderFlags.TopRight,
+                        (new IntPtr(14), new Rectangle(width - thickness, 0, thickness, thickness))
+                    },
+                    {
+                        ResizingBorderFlags.Bottom,
+                        (new IntPtr(15), new Rectangle(thickness, height - thickness, width - 2 * thickness, thickness))
+                    },
+                    {
+                        ResizingBorderFlags.BottomLeft,
+                        (new IntPtr(16), new Rectangle(0, height - thickness, thickness, thickness))
+                    },
+                    {
+                        ResizingBorderFlags.BottomRight,
+                        (new IntPtr(17), new Rectangle(width - thickness, height - thickness, thickness, thickness))
+                    }
+                };
+                return _allBorderAreas = new ReadOnlyDictionary<ResizingBorderFlags, (IntPtr, Rectangle)>(areas);
+            }
+        }
 
         /// <summary>
         ///     The <see cref="ResizingBorderFlags"/> flags for resizing.
         /// </summary>
         protected ResizingBorderFlags ResizingBorders { get; set; } = ResizingBorderFlags.All;
+
+        /// <summary>
+        ///     Gets the border thickness.
+        /// </summary>
+        protected int BorderThickness
+        {
+            get => _borderThickness;
+            set
+            {
+                var thickness = Math.Min(Math.Max(1, value), 32);
+                if (_borderThickness == thickness)
+                    return;
+                _borderThickness = thickness;
+                _allBorderAreas = default;
+            }
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FormBorderlessResizable"/>
+        ///     form class.
+        /// </summary>
+        public FormBorderlessResizable() => BorderThickness = 6;
 
         /// <summary>
         ///     Get the border areas depending on the specified
@@ -118,31 +210,28 @@ namespace SilDev.Forms
         ///     key; and a <see cref="Rectangle"/> with the border coordinates as value.
         /// </returns>
         [SuppressMessage("ReSharper", "CommentTypo")]
-        protected Dictionary<IntPtr, Rectangle> GetResizingBorderAreas(ResizingBorderFlags flags, int thickness = 6)
+        protected IEnumerable<(IntPtr, Rectangle)> GetResizingBorderAreas(ResizingBorderFlags flags, int thickness = 6)
         {
             if (flags.HasFlag(ResizingBorderFlags.None))
-                return default;
-            var d = new Dictionary<IntPtr, Rectangle>();
-            var s = Size;
-            var t = Math.Max(1, thickness);
-            t = Math.Min(t, 32);
+                yield break;
+            if (BorderThickness != thickness)
+                BorderThickness = thickness;
             if (flags.HasFlag(ResizingBorderFlags.Left))
-                d.Add(new IntPtr(10), new Rectangle(0, t, t, s.Height - 2 * t));
+                yield return AllBorderAreas[ResizingBorderFlags.Left];
             if (flags.HasFlag(ResizingBorderFlags.Right))
-                d.Add(new IntPtr(11), new Rectangle(s.Width - t, t, t, s.Height - 2 * t));
+                yield return AllBorderAreas[ResizingBorderFlags.Right];
             if (flags.HasFlag(ResizingBorderFlags.Top))
-                d.Add(new IntPtr(12), new Rectangle(t, 0, s.Width - 2 * t, t));
+                yield return AllBorderAreas[ResizingBorderFlags.Top];
             if (flags.HasFlag(ResizingBorderFlags.TopLeft))
-                d.Add(new IntPtr(13), new Rectangle(0, 0, t, t));
+                yield return AllBorderAreas[ResizingBorderFlags.TopLeft];
             if (flags.HasFlag(ResizingBorderFlags.TopRight))
-                d.Add(new IntPtr(14), new Rectangle(s.Width - t, 0, t, t));
+                yield return AllBorderAreas[ResizingBorderFlags.TopRight];
             if (flags.HasFlag(ResizingBorderFlags.Bottom))
-                d.Add(new IntPtr(15), new Rectangle(t, s.Height - t, s.Width - 2 * t, t));
+                yield return AllBorderAreas[ResizingBorderFlags.Bottom];
             if (flags.HasFlag(ResizingBorderFlags.BottomLeft))
-                d.Add(new IntPtr(16), new Rectangle(0, s.Height - t, t, t));
+                yield return AllBorderAreas[ResizingBorderFlags.BottomLeft];
             if (flags.HasFlag(ResizingBorderFlags.BottomRight))
-                d.Add(new IntPtr(17), new Rectangle(s.Width - t, s.Height - t, t, t));
-            return d;
+                yield return AllBorderAreas[ResizingBorderFlags.BottomRight];
         }
 
         /// <summary>
@@ -171,20 +260,18 @@ namespace SilDev.Forms
         [SuppressMessage("ReSharper", "CommentTypo")]
         protected IntPtr GetActiveResizingBorderMessage(ResizingBorderFlags flags, IntPtr lParam, int thickness = 6)
         {
-            var result = IntPtr.Zero;
             var borderArea = GetResizingBorderAreas(flags, thickness);
-            if (borderArea == default(Dictionary<IntPtr, Rectangle>))
-                return result;
+            if (borderArea == null)
+                return IntPtr.Zero;
             var screenPoint = new Point(lParam.ToInt32());
             var clientPoint = PointToClient(screenPoint);
-            foreach (var entry in borderArea)
+            foreach (var (result, rect) in borderArea)
             {
-                if (!entry.Value.Contains(clientPoint))
+                if (!rect.Contains(clientPoint))
                     continue;
-                result = entry.Key;
-                break;
+                return result;
             }
-            return result;
+            return IntPtr.Zero;
         }
 
         /// <summary>
@@ -286,28 +373,6 @@ namespace SilDev.Forms
                 }
             }
             base.WndProc(ref m);
-        }
-
-        /// <summary>
-        ///     Provides enumerated Windows <see cref="Message"/>'s, used within a
-        ///     <see cref="WndProc"/> override.
-        /// </summary>
-        protected enum WindowsMessage
-        {
-            /// <summary>
-            ///     Specify the first mouse message.
-            /// </summary>
-            MouseFirst = 0x200,
-
-            /// <summary>
-            ///     Sent to a window in order to determine what part of the window corresponds
-            ///     to a particular screen coordinate. This can happen, for example, when the
-            ///     cursor moves, when a mouse button is pressed or released, or in response to
-            ///     a call to a function such as WindowFromPoint. If the mouse is not captured,
-            ///     the message is sent to the window beneath the cursor. Otherwise, the
-            ///     message is sent to the window that has captured the mouse.
-            /// </summary>
-            NcHitTest = 0x84
         }
     }
 }
