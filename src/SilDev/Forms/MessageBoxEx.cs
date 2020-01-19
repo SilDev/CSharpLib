@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -45,7 +45,6 @@ namespace SilDev.Forms
         private static IWin32Window _owner;
         private static readonly WinApi.EnumChildProc EnumProc = MessageBoxEnumProc;
         private static readonly WinApi.HookProc HookProc = MessageBoxHookProc;
-        static MessageBoxEx() => _hHook = IntPtr.Zero;
 
         /// <summary>
         ///     Specifies that the mouse pointer moves once to a new dialog box.
@@ -73,6 +72,8 @@ namespace SilDev.Forms
         ///     </para>
         /// </summary>
         public static bool TopMost { get; set; }
+
+        static MessageBoxEx() => _hHook = IntPtr.Zero;
 
         /// <summary>
         ///     Displays a message box with the specified text, caption, buttons, icon,

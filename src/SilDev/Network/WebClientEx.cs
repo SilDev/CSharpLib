@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WebClientEx.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,6 +24,24 @@ namespace SilDev.Network
     /// </summary>
     public class WebClientEx : WebClient
     {
+        /// <summary>
+        ///     Gets or sets a value that indicates whether the request should follow
+        ///     redirection responses.
+        /// </summary>
+        public bool AllowAutoRedirect { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the cookies associated with the request.
+        /// </summary>
+        public CookieContainer CookieContainer { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the time-out value in milliseconds for the
+        ///     <see cref="HttpWebRequest.GetResponse()"/> and
+        ///     <see cref="HttpWebRequest.GetRequestStream()"/> methods.
+        /// </summary>
+        public int Timeout { get; set; }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="WebClientEx"/> class.
         /// </summary>
@@ -69,24 +87,6 @@ namespace SilDev.Network
         ///     <see cref="HttpWebRequest.GetRequestStream()"/> methods.
         /// </param>
         public WebClientEx(int timeout) : this(true, null, timeout) { }
-
-        /// <summary>
-        ///     Gets or sets a value that indicates whether the request should follow
-        ///     redirection responses.
-        /// </summary>
-        public bool AllowAutoRedirect { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the cookies associated with the request.
-        /// </summary>
-        public CookieContainer CookieContainer { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the time-out value in milliseconds for the
-        ///     <see cref="HttpWebRequest.GetResponse()"/> and
-        ///     <see cref="HttpWebRequest.GetRequestStream()"/> methods.
-        /// </summary>
-        public int Timeout { get; set; }
 
         /// <summary>
         ///     Returns a <see cref="WebRequest"/> object for the specified resource.

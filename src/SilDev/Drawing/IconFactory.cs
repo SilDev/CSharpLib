@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconFactory.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -196,23 +196,6 @@ namespace SilDev.Drawing
                     image?.Dispose();
             }
         }
-
-        private static byte[] CreateBuffer(Image image)
-        {
-            byte[] ba;
-            using (var ms = new MemoryStream())
-            {
-                image.Save(ms, image.RawFormat);
-                ba = ms.ToArray();
-            }
-            return ba;
-        }
-
-        private static byte GetHeight(Image image) =>
-            image.Height >= MaxHeight ? byte.MinValue : (byte)image.Height;
-
-        private static byte GetWidth(Image image) =>
-            image.Width >= MaxWidth ? byte.MinValue : (byte)image.Width;
 
         /// <summary>
         ///     Extracts all the <see cref="Image"/>'s from a valid icon file.
@@ -451,5 +434,22 @@ namespace SilDev.Drawing
             using var fs = new FileStream(file, FileMode.Create);
             Save(image, fs, option, true);
         }
+
+        private static byte[] CreateBuffer(Image image)
+        {
+            byte[] ba;
+            using (var ms = new MemoryStream())
+            {
+                image.Save(ms, image.RawFormat);
+                ba = ms.ToArray();
+            }
+            return ba;
+        }
+
+        private static byte GetHeight(Image image) =>
+            image.Height >= MaxHeight ? byte.MinValue : (byte)image.Height;
+
+        private static byte GetWidth(Image image) =>
+            image.Width >= MaxWidth ? byte.MinValue : (byte)image.Width;
     }
 }

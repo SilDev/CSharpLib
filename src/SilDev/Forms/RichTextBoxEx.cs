@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -26,6 +26,8 @@ namespace SilDev.Forms
     /// </summary>
     public static class RichTextBoxEx
     {
+        private delegate void FileDialogHandler(Control control, IWin32Window owner = null);
+
         /// <summary>
         ///     Marks the specified text in this <see cref="RichTextBox"/> control.
         /// </summary>
@@ -280,7 +282,5 @@ namespace SilDev.Forms
                 MessageBoxEx.Show(owner, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        private delegate void FileDialogHandler(Control control, IWin32Window owner = null);
     }
 }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: CultureConfig.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -29,18 +29,6 @@ namespace SilDev
         private static volatile StringComparison _globalStringComparison = StringComparison.Ordinal;
         private static volatile StringComparison _globalStringComparisonIgnoreCase = StringComparison.OrdinalIgnoreCase;
         private static volatile object _syncObject;
-
-        private static object SyncObject
-        {
-            get
-            {
-                if (_syncObject != null)
-                    return _syncObject;
-                var obj = new object();
-                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
-                return _syncObject;
-            }
-        }
 
         /// <summary>
         ///     Gets or sets the default <see cref="CultureInfo"/> object value.
@@ -115,6 +103,18 @@ namespace SilDev
                             _globalStringComparisonIgnoreCase = StringComparison.CurrentCultureIgnoreCase;
                             break;
                     }
+            }
+        }
+
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
             }
         }
     }

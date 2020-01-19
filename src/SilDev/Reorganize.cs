@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-14 20:04
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1336,20 +1336,6 @@ namespace SilDev
             return new Version(sa.Join('.'));
         }
 
-        private static object ConvertStringToSpecifiedType<TConverter>(string source) where TConverter : TypeConverter
-        {
-            var item = source ?? throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrWhiteSpace(source))
-                throw new ArgumentInvalidException(nameof(source));
-            if (item.StartsWith("{", StringComparison.Ordinal) && item.EndsWith("}", StringComparison.Ordinal))
-                item = new string(item.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
-            var instance = (TConverter)Activator.CreateInstance(typeof(TConverter));
-            var result = instance.ConvertFrom(item);
-            if (result == null)
-                throw new NullReferenceException();
-            return result;
-        }
-
         /// <summary>
         ///     Converts the string representation of a rectangle to an equivalent
         ///     <see cref="Rectangle"/> object.
@@ -1723,6 +1709,20 @@ namespace SilDev
                 return;
             }
             source.Add(key, value);
+        }
+
+        private static object ConvertStringToSpecifiedType<TConverter>(string source) where TConverter : TypeConverter
+        {
+            var item = source ?? throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrWhiteSpace(source))
+                throw new ArgumentInvalidException(nameof(source));
+            if (item.StartsWith("{", StringComparison.Ordinal) && item.EndsWith("}", StringComparison.Ordinal))
+                item = new string(item.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
+            var instance = (TConverter)Activator.CreateInstance(typeof(TConverter));
+            var result = instance.ConvertFrom(item);
+            if (result == null)
+                throw new NullReferenceException();
+            return result;
         }
     }
 }

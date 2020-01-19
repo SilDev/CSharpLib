@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-15 10:54
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -148,82 +148,6 @@ namespace SilDev
     /// </summary>
     public static class Crypto
     {
-        private static void CombineHashes(StringBuilder builder, string hash1, string hash2, bool braces)
-        {
-            if (braces)
-                builder.Append('{');
-            var first = hash1 ?? new string('0', 8);
-            if (first.Length < 8)
-                first = first.PadLeft(8, '0');
-            if (first.Length > 8)
-                first = first.Substring(0, 8);
-            builder.Append(first);
-            var second = hash2 ?? new string('0', 12);
-            if (second.Length < 12)
-                second = first.PadRight(12, '0');
-            for (var i = 0; i < 3; i++)
-            {
-                builder.Append('-');
-                builder.Append(second.Substring(i * 4, 4));
-            }
-            builder.Append('-');
-            builder.Append(second.Substring(second.Length - 12));
-            if (braces)
-                builder.Append('}');
-        }
-
-        private static int GetHashCode(object source, bool nonReadOnly)
-        {
-            try
-            {
-                var current = source;
-                var hashCode = 17011;
-                foreach (var pi in current.GetType().GetProperties())
-                {
-                    hashCode += pi.Name.GetHashCode();
-                    if (nonReadOnly || pi.GetSetMethod() == null)
-                    {
-                        var value = pi.GetValue(source);
-                        if (value != null)
-                        {
-                            hashCode += value.GetHashCode();
-                            switch (value)
-                            {
-                                case IDictionary dict:
-                                {
-                                    var enu = dict.GetEnumerator();
-                                    while (enu.MoveNext())
-                                    {
-                                        var key = enu.Key;
-                                        if (key == null)
-                                            continue;
-                                        hashCode += key.GetHashCode();
-                                        var val = enu.Value;
-                                        if (val == null)
-                                            continue;
-                                        hashCode += val.GetHashCode();
-                                    }
-                                    break;
-                                }
-                                case IList list:
-                                {
-                                    hashCode += list.Cast<object>().Where(o => o != null).Select(o => o.GetHashCode()).Sum();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    hashCode *= 23011;
-                }
-                return hashCode;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return 0;
-            }
-        }
-
         /// <summary>
         ///     Creates a unique hash code for the specified instance.
         /// </summary>
@@ -924,6 +848,82 @@ namespace SilDev
                     return new Sha512(path, true).Hash;
                 default:
                     return new Md5(path, true).Hash;
+            }
+        }
+
+        private static void CombineHashes(StringBuilder builder, string hash1, string hash2, bool braces)
+        {
+            if (braces)
+                builder.Append('{');
+            var first = hash1 ?? new string('0', 8);
+            if (first.Length < 8)
+                first = first.PadLeft(8, '0');
+            if (first.Length > 8)
+                first = first.Substring(0, 8);
+            builder.Append(first);
+            var second = hash2 ?? new string('0', 12);
+            if (second.Length < 12)
+                second = first.PadRight(12, '0');
+            for (var i = 0; i < 3; i++)
+            {
+                builder.Append('-');
+                builder.Append(second.Substring(i * 4, 4));
+            }
+            builder.Append('-');
+            builder.Append(second.Substring(second.Length - 12));
+            if (braces)
+                builder.Append('}');
+        }
+
+        private static int GetHashCode(object source, bool nonReadOnly)
+        {
+            try
+            {
+                var current = source;
+                var hashCode = 17011;
+                foreach (var pi in current.GetType().GetProperties())
+                {
+                    hashCode += pi.Name.GetHashCode();
+                    if (nonReadOnly || pi.GetSetMethod() == null)
+                    {
+                        var value = pi.GetValue(source);
+                        if (value != null)
+                        {
+                            hashCode += value.GetHashCode();
+                            switch (value)
+                            {
+                                case IDictionary dict:
+                                {
+                                    var enu = dict.GetEnumerator();
+                                    while (enu.MoveNext())
+                                    {
+                                        var key = enu.Key;
+                                        if (key == null)
+                                            continue;
+                                        hashCode += key.GetHashCode();
+                                        var val = enu.Value;
+                                        if (val == null)
+                                            continue;
+                                        hashCode += val.GetHashCode();
+                                    }
+                                    break;
+                                }
+                                case IList list:
+                                {
+                                    hashCode += list.Cast<object>().Where(o => o != null).Select(o => o.GetHashCode()).Sum();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    hashCode *= 23011;
+                }
+                return hashCode;
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+                return 0;
             }
         }
 
@@ -2761,30 +2761,6 @@ namespace SilDev
             public string Hash => ToString();
 
             /// <summary>
-            ///     Encrypts the specified stream with the specified
-            ///     <see cref="HashAlgorithm"/>.
-            /// </summary>
-            /// <typeparam name="THashAlgorithm">
-            ///     The type of the algorithm.
-            /// </typeparam>
-            /// <param name="stream">
-            ///     The stream to encrypt.
-            /// </param>
-            /// <param name="algorithm">
-            ///     The algorithm to encrypt.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     algorithm is null.
-            /// </exception>
-            protected void Encrypt<THashAlgorithm>(Stream stream, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
-            {
-                using var csp = algorithm;
-                if (csp == null)
-                    throw new ArgumentNullException(nameof(algorithm));
-                RawHash = csp.ComputeHash(stream);
-            }
-
-            /// <summary>
             ///     Encrypts the specified stream.
             /// </summary>
             /// <param name="stream">
@@ -2804,33 +2780,6 @@ namespace SilDev
                     return;
                 using var ms = new MemoryStream(bytes);
                 Encrypt(ms);
-            }
-
-            /// <summary>
-            ///     Encrypts the specified string with the specified
-            ///     <see cref="HashAlgorithm"/>.
-            /// </summary>
-            /// <typeparam name="THashAlgorithm">
-            ///     The type of the algorithm.
-            /// </typeparam>
-            /// <param name="text">
-            ///     The string to encrypt.
-            /// </param>
-            /// <param name="algorithm">
-            ///     The algorithm to encrypt.
-            /// </param>
-            /// <exception cref="ArgumentNullException">
-            ///     algorithm is null.
-            /// </exception>
-            protected void Encrypt<THashAlgorithm>(string text, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
-            {
-                if (string.IsNullOrEmpty(text))
-                    return;
-                var ba = text.ToBytes();
-                using var csp = algorithm;
-                if (csp == null)
-                    throw new ArgumentNullException(nameof(algorithm));
-                RawHash = csp.ComputeHash(ba);
             }
 
             /// <summary>
@@ -2958,6 +2907,57 @@ namespace SilDev
             /// </param>
             public static bool operator !=(Checksum left, Checksum right) =>
                 !(left == right);
+
+            /// <summary>
+            ///     Encrypts the specified stream with the specified
+            ///     <see cref="HashAlgorithm"/>.
+            /// </summary>
+            /// <typeparam name="THashAlgorithm">
+            ///     The type of the algorithm.
+            /// </typeparam>
+            /// <param name="stream">
+            ///     The stream to encrypt.
+            /// </param>
+            /// <param name="algorithm">
+            ///     The algorithm to encrypt.
+            /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     algorithm is null.
+            /// </exception>
+            protected void Encrypt<THashAlgorithm>(Stream stream, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
+            {
+                using var csp = algorithm;
+                if (csp == null)
+                    throw new ArgumentNullException(nameof(algorithm));
+                RawHash = csp.ComputeHash(stream);
+            }
+
+            /// <summary>
+            ///     Encrypts the specified string with the specified
+            ///     <see cref="HashAlgorithm"/>.
+            /// </summary>
+            /// <typeparam name="THashAlgorithm">
+            ///     The type of the algorithm.
+            /// </typeparam>
+            /// <param name="text">
+            ///     The string to encrypt.
+            /// </param>
+            /// <param name="algorithm">
+            ///     The algorithm to encrypt.
+            /// </param>
+            /// <exception cref="ArgumentNullException">
+            ///     algorithm is null.
+            /// </exception>
+            protected void Encrypt<THashAlgorithm>(string text, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
+            {
+                if (string.IsNullOrEmpty(text))
+                    return;
+                var ba = text.ToBytes();
+                using var csp = algorithm;
+                if (csp == null)
+                    throw new ArgumentNullException(nameof(algorithm));
+                RawHash = csp.ComputeHash(ba);
+            }
         }
 
         /// <summary>
@@ -2969,6 +2969,11 @@ namespace SilDev
             ///     Gets the required hash length.
             /// </summary>
             public const int HashLength = 8;
+
+            /// <summary>
+            ///     Gets the computed hash code value.
+            /// </summary>
+            public new uint RawHash { get; private set; }
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="Adler32"/> class.
@@ -3025,11 +3030,6 @@ namespace SilDev
             /// </param>
             public Adler32(string str) =>
                 Encrypt(str);
-
-            /// <summary>
-            ///     Gets the computed hash code value.
-            /// </summary>
-            public new uint RawHash { get; private set; }
 
             /// <summary>
             ///     Encrypts the specified stream.
@@ -3103,6 +3103,11 @@ namespace SilDev
             private const ushort Seed = ushort.MaxValue;
 
             /// <summary>
+            ///     Gets the raw data of computed hash.
+            /// </summary>
+            public new ushort RawHash { get; private set; }
+
+            /// <summary>
             ///     Initializes a new instance of the <see cref="Crc16"/> class.
             /// </summary>
             public Crc16() { }
@@ -3157,11 +3162,6 @@ namespace SilDev
             /// </param>
             public Crc16(string str) =>
                 Encrypt(str);
-
-            /// <summary>
-            ///     Gets the raw data of computed hash.
-            /// </summary>
-            public new ushort RawHash { get; private set; }
 
             /// <summary>
             ///     Encrypts the specified stream.
@@ -3229,6 +3229,30 @@ namespace SilDev
             private static IReadOnlyList<uint> _crcTable;
 
             /// <summary>
+            ///     Gets the raw data of computed hash.
+            /// </summary>
+            public new uint RawHash { get; private set; }
+
+            private static IReadOnlyList<uint> CrcTable
+            {
+                get
+                {
+                    if (_crcTable != null)
+                        return _crcTable;
+                    var table = new uint[256];
+                    for (var i = 0; i < 256; i++)
+                    {
+                        var ui = (uint)i;
+                        for (var j = 0; j < 8; j++)
+                            ui = (ui & 1) == 1 ? (ui >> 1) ^ Polynomial : ui >> 1;
+                        table[i] = ui;
+                    }
+                    _crcTable = table;
+                    return _crcTable;
+                }
+            }
+
+            /// <summary>
             ///     Initializes a new instance of the <see cref="Crc32"/> class.
             /// </summary>
             public Crc32() { }
@@ -3283,30 +3307,6 @@ namespace SilDev
             /// </param>
             public Crc32(string str) =>
                 Encrypt(str);
-
-            /// <summary>
-            ///     Gets the raw data of computed hash.
-            /// </summary>
-            public new uint RawHash { get; private set; }
-
-            private static IReadOnlyList<uint> CrcTable
-            {
-                get
-                {
-                    if (_crcTable != null)
-                        return _crcTable;
-                    var table = new uint[256];
-                    for (var i = 0; i < 256; i++)
-                    {
-                        var ui = (uint)i;
-                        for (var j = 0; j < 8; j++)
-                            ui = (ui & 1) == 1 ? (ui >> 1) ^ Polynomial : ui >> 1;
-                        table[i] = ui;
-                    }
-                    _crcTable = table;
-                    return _crcTable;
-                }
-            }
 
             /// <summary>
             ///     Encrypts the specified stream.
@@ -3384,6 +3384,30 @@ namespace SilDev
             private static IReadOnlyList<ulong> _crcTable;
 
             /// <summary>
+            ///     Gets the raw data of computed hash.
+            /// </summary>
+            public new ulong RawHash { get; private set; }
+
+            private static IReadOnlyList<ulong> CrcTable
+            {
+                get
+                {
+                    if (_crcTable != null)
+                        return _crcTable;
+                    var table = new ulong[256];
+                    for (var i = 0; i < 256; i++)
+                    {
+                        var ul = (ulong)i;
+                        for (var j = 0; j < 8; j++)
+                            ul = (ul & 1) == 1 ? (ul >> 1) ^ Polynomial : ul >> 1;
+                        table[i] = ul;
+                    }
+                    _crcTable = table;
+                    return _crcTable;
+                }
+            }
+
+            /// <summary>
             ///     Initializes a new instance of the <see cref="Crc64"/> class.
             /// </summary>
             public Crc64() { }
@@ -3438,30 +3462,6 @@ namespace SilDev
             /// </param>
             public Crc64(string str) =>
                 Encrypt(str);
-
-            /// <summary>
-            ///     Gets the raw data of computed hash.
-            /// </summary>
-            public new ulong RawHash { get; private set; }
-
-            private static IReadOnlyList<ulong> CrcTable
-            {
-                get
-                {
-                    if (_crcTable != null)
-                        return _crcTable;
-                    var table = new ulong[256];
-                    for (var i = 0; i < 256; i++)
-                    {
-                        var ul = (ulong)i;
-                        for (var j = 0; j < 8; j++)
-                            ul = (ul & 1) == 1 ? (ul >> 1) ^ Polynomial : ul >> 1;
-                        table[i] = ul;
-                    }
-                    _crcTable = table;
-                    return _crcTable;
-                }
-            }
 
             /// <summary>
             ///     Encrypts the specified stream.

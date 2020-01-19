@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2020-01-13 15:17
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -32,6 +32,60 @@ namespace SilDev.Investment
     {
         [NonSerialized]
         private TValue _value;
+
+        /// <summary>
+        ///     Gets the value that determines whether <see cref="Value"/> is validated by
+        ///     <see cref="MinValue"/> and <see cref="MaxValue"/>.
+        /// </summary>
+        public bool MinMaxValidation { get; }
+
+        /// <summary>
+        ///     Gets the minimum value, if available; otherwise, the default value is
+        ///     returned.
+        /// </summary>
+        public TValue MinValue { get; }
+
+        /// <summary>
+        ///     Gets the maximum value, if available; otherwise, the default value is
+        ///     returned.
+        /// </summary>
+        public TValue MaxValue { get; }
+
+        /// <summary>
+        ///     Gets the default value.
+        /// </summary>
+        public TValue DefValue { get; }
+
+        /// <summary>
+        ///     Gets or sets the value.
+        /// </summary>
+        public TValue Value
+        {
+            get => ValidateGetValue(_value);
+            set => _value = ValidateSetValue(value);
+        }
+
+        /// <summary>
+        ///     Gets the method that is called when <see cref="Value"/> is get, if
+        ///     available; otherwise, the default value is returned.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
+        ///     </para>
+        /// </summary>
+        [ScriptIgnore]
+        public Func<TValue, TValue> ValueGetValidationFunc { get; set; }
+
+        /// <summary>
+        ///     Gets the method that is called when <see cref="Value"/> is set, if
+        ///     available; otherwise, the default value is returned.
+        ///     <para>
+        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
+        ///         serialized.
+        ///     </para>
+        /// </summary>
+        [ScriptIgnore]
+        public Func<TValue, TValue> ValueSetValidationFunc { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValueItem{TValue}"/> with the
@@ -139,163 +193,6 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Gets the value that determines whether <see cref="Value"/> is validated by
-        ///     <see cref="MinValue"/> and <see cref="MaxValue"/>.
-        /// </summary>
-        public bool MinMaxValidation { get; }
-
-        /// <summary>
-        ///     Gets the minimum value, if available; otherwise, the default value is
-        ///     returned.
-        /// </summary>
-        public TValue MinValue { get; }
-
-        /// <summary>
-        ///     Gets the maximum value, if available; otherwise, the default value is
-        ///     returned.
-        /// </summary>
-        public TValue MaxValue { get; }
-
-        /// <summary>
-        ///     Gets the default value.
-        /// </summary>
-        public TValue DefValue { get; }
-
-        /// <summary>
-        ///     Gets or sets the value.
-        /// </summary>
-        public TValue Value
-        {
-            get => ValidateGetValue(_value);
-            set => _value = ValidateSetValue(value);
-        }
-
-        /// <summary>
-        ///     Gets the method that is called when <see cref="Value"/> is get, if
-        ///     available; otherwise, the default value is returned.
-        ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
-        ///         serialized.
-        ///     </para>
-        /// </summary>
-        [ScriptIgnore]
-        public Func<TValue, TValue> ValueGetValidationFunc { get; set; }
-
-        /// <summary>
-        ///     Gets the method that is called when <see cref="Value"/> is set, if
-        ///     available; otherwise, the default value is returned.
-        ///     <para>
-        ///         Please note that <see cref="Func{T, TResult}"/> methods cannot be
-        ///         serialized.
-        ///     </para>
-        /// </summary>
-        [ScriptIgnore]
-        public Func<TValue, TValue> ValueSetValidationFunc { get; set; }
-
-        /// <summary>
-        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
-        /// </summary>
-        /// <param name="info">
-        ///     The object that holds the serialized object data.
-        /// </param>
-        /// <param name="context">
-        ///     The contextual information about the source or destination.
-        /// </param>
-        [SecurityCritical]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            if (Log.DebugMode > 1)
-                Log.Write($"{nameof(ValueItem<TValue>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-
-            info.AddValue(nameof(MinMaxValidation), MinMaxValidation);
-            info.AddValue(nameof(MinValue), MinValue);
-            info.AddValue(nameof(MaxValue), MaxValue);
-            info.AddValue(nameof(DefValue), DefValue);
-            info.AddValue(nameof(Value), Value);
-        }
-
-        private static bool IsMinMaxValidationType(Type type) =>
-            ((int)Type.GetTypeCode(type)).IsBetween(4, 16);
-
-        private static TValue GetMinValue(Type type)
-        {
-            if (!IsMinMaxValidationType(type))
-                return default;
-            if (Type.GetTypeCode(type) == TypeCode.DateTime)
-                return (TValue)(object)DateTime.MinValue;
-            return (TValue)type.GetField(nameof(MinValue)).GetRawConstantValue();
-        }
-
-        private static TValue GetMaxValue(Type type)
-        {
-            if (!IsMinMaxValidationType(type))
-                return default;
-            if (Type.GetTypeCode(type) == TypeCode.DateTime)
-                return (TValue)(object)DateTime.MaxValue;
-            return (TValue)type.GetField(nameof(MaxValue)).GetRawConstantValue();
-        }
-
-        /// <summary>
-        ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
-        ///     <see cref="MaxValue"/> have been set and are valid, the specified value is
-        ///     calibrated if it is not between <see cref="MinValue"/> and
-        ///     <see cref="MaxValue"/>. If the value is default, it also ensures that
-        ///     <see cref="DefValue"/> is returned instead.
-        ///     <para>
-        ///         Please note that this method is automatically used for the
-        ///         <see cref="Value"/> setter and overwriting can lead to an unexpected
-        ///         result when setting values.
-        ///     </para>
-        /// </summary>
-        /// <param name="value">
-        ///     The value to validate.
-        /// </param>
-        protected virtual TValue ValidateGetValue(TValue value)
-        {
-            var newValue = value;
-            if (ValueGetValidationFunc != default)
-                newValue = ValueGetValidationFunc(newValue);
-            if ((dynamic)newValue == default(TValue))
-                newValue = DefValue;
-            return newValue;
-        }
-
-        /// <summary>
-        ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
-        ///     <see cref="MaxValue"/> have been set and are valid, the specified value is
-        ///     calibrated if it is not between <see cref="MinValue"/> and
-        ///     <see cref="MaxValue"/>. If the value is default, it also ensures that
-        ///     <see cref="DefValue"/> is returned instead.
-        ///     <para>
-        ///         Please note that this method is automatically used for the
-        ///         <see cref="Value"/> setter and overwriting can lead to an unexpected
-        ///         result when setting values.
-        ///     </para>
-        /// </summary>
-        /// <param name="value">
-        ///     The value to validate.
-        /// </param>
-        protected virtual TValue ValidateSetValue(TValue value)
-        {
-            var newValue = value;
-            if (MinMaxValidation)
-            {
-                if ((dynamic)newValue < MinValue)
-                    newValue = MinValue;
-                if ((dynamic)newValue > MaxValue)
-                    newValue = MaxValue;
-            }
-            if (ValueSetValidationFunc != default)
-                newValue = ValueSetValidationFunc(newValue);
-            if ((dynamic)newValue == default(TValue))
-                newValue = DefValue;
-            return newValue;
-        }
-
-        /// <summary>
         ///     Determines whether this instance has the same values as another.
         /// </summary>
         /// <param name="other">
@@ -393,5 +290,108 @@ namespace SilDev.Investment
         /// </param>
         public static bool operator !=(ValueItem<TValue> left, ValueItem<TValue> right) =>
             !(left == right);
+
+        /// <summary>
+        ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/> have been set and are valid, the specified value is
+        ///     calibrated if it is not between <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/>. If the value is default, it also ensures that
+        ///     <see cref="DefValue"/> is returned instead.
+        ///     <para>
+        ///         Please note that this method is automatically used for the
+        ///         <see cref="Value"/> setter and overwriting can lead to an unexpected
+        ///         result when setting values.
+        ///     </para>
+        /// </summary>
+        /// <param name="value">
+        ///     The value to validate.
+        /// </param>
+        protected virtual TValue ValidateGetValue(TValue value)
+        {
+            var newValue = value;
+            if (ValueGetValidationFunc != default)
+                newValue = ValueGetValidationFunc(newValue);
+            if ((dynamic)newValue == default(TValue))
+                newValue = DefValue;
+            return newValue;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/> have been set and are valid, the specified value is
+        ///     calibrated if it is not between <see cref="MinValue"/> and
+        ///     <see cref="MaxValue"/>. If the value is default, it also ensures that
+        ///     <see cref="DefValue"/> is returned instead.
+        ///     <para>
+        ///         Please note that this method is automatically used for the
+        ///         <see cref="Value"/> setter and overwriting can lead to an unexpected
+        ///         result when setting values.
+        ///     </para>
+        /// </summary>
+        /// <param name="value">
+        ///     The value to validate.
+        /// </param>
+        protected virtual TValue ValidateSetValue(TValue value)
+        {
+            var newValue = value;
+            if (MinMaxValidation)
+            {
+                if ((dynamic)newValue < MinValue)
+                    newValue = MinValue;
+                if ((dynamic)newValue > MaxValue)
+                    newValue = MaxValue;
+            }
+            if (ValueSetValidationFunc != default)
+                newValue = ValueSetValidationFunc(newValue);
+            if ((dynamic)newValue == default(TValue))
+                newValue = DefValue;
+            return newValue;
+        }
+
+        private static bool IsMinMaxValidationType(Type type) =>
+            ((int)Type.GetTypeCode(type)).IsBetween(4, 16);
+
+        private static TValue GetMinValue(Type type)
+        {
+            if (!IsMinMaxValidationType(type))
+                return default;
+            if (Type.GetTypeCode(type) == TypeCode.DateTime)
+                return (TValue)(object)DateTime.MinValue;
+            return (TValue)type.GetField(nameof(MinValue)).GetRawConstantValue();
+        }
+
+        private static TValue GetMaxValue(Type type)
+        {
+            if (!IsMinMaxValidationType(type))
+                return default;
+            if (Type.GetTypeCode(type) == TypeCode.DateTime)
+                return (TValue)(object)DateTime.MaxValue;
+            return (TValue)type.GetField(nameof(MaxValue)).GetRawConstantValue();
+        }
+
+        /// <summary>
+        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
+        /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        [SecurityCritical]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            if (Log.DebugMode > 1)
+                Log.Write($"{nameof(ValueItem<TValue>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+
+            info.AddValue(nameof(MinMaxValidation), MinMaxValidation);
+            info.AddValue(nameof(MinValue), MinValue);
+            info.AddValue(nameof(MaxValue), MaxValue);
+            info.AddValue(nameof(DefValue), DefValue);
+            info.AddValue(nameof(Value), Value);
+        }
     }
 }

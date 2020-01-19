@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2020-01-13 14:00
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -86,15 +86,6 @@ namespace SilDev.Network
         ///     <see cref="Ping(Uri, int)"/> function.
         /// </summary>
         public static PingReply LastPingReply { get; private set; }
-
-        internal static void EnsureDefaultSecurityProtocol()
-        {
-            if (_defSecurityProtocolIsEnabled)
-                return;
-            _defSecurityProtocolIsEnabled = true;
-            foreach (var type in Enum.GetValues(typeof(SecurityProtocolType)).Cast<SecurityProtocolType>().Where(type => type != SecurityProtocolType.SystemDefault))
-                ServicePointManager.SecurityProtocol |= type;
-        }
 
         /// <summary>
         ///     Returns the specified Domain Name System server addresses.
@@ -1553,5 +1544,14 @@ namespace SilDev.Network
         /// </param>
         public static string GetFileName(string srcUri, int timeout, string userAgent = null) =>
             srcUri.ToHttpUri().GetFileName(null, null, true, null, timeout, userAgent);
+
+        internal static void EnsureDefaultSecurityProtocol()
+        {
+            if (_defSecurityProtocolIsEnabled)
+                return;
+            _defSecurityProtocolIsEnabled = true;
+            foreach (var type in Enum.GetValues(typeof(SecurityProtocolType)).Cast<SecurityProtocolType>().Where(type => type != SecurityProtocolType.SystemDefault))
+                ServicePointManager.SecurityProtocol |= type;
+        }
     }
 }

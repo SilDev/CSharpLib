@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -37,8 +37,6 @@ namespace SilDev
         private const string ObjectSuffix = "\u0003";
         private static string _filePath, _tmpFileGuid;
 
-        private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles { get; set; }
-
         /// <summary>
         ///     Gets or sets the maximum number of cached files.
         /// </summary>
@@ -48,17 +46,6 @@ namespace SilDev
         ///     Specifies a sequence of section names to be sorted first.
         /// </summary>
         public static IEnumerable<string> SortBySections { get; set; }
-
-        private static string TmpFileGuid
-        {
-            get
-            {
-                if (_tmpFileGuid != default)
-                    return _tmpFileGuid;
-                _tmpFileGuid = Guid.NewGuid().ToString();
-                return _tmpFileGuid;
-            }
-        }
 
         /// <summary>
         ///     Gets or sets a default INI file.
@@ -87,23 +74,17 @@ namespace SilDev
             }
         }
 
-        private static void InitializeCache(int code, string section = null, string key = null)
+        private static Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>> CachedFiles { get; set; }
+
+        private static string TmpFileGuid
         {
-            if (CachedFiles == null)
-                CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
-
-            if (!CachedFiles.ContainsKey(code))
-                CachedFiles[code] = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
-
-            if (string.IsNullOrEmpty(section))
-                return;
-            if (!CachedFiles[code].ContainsKey(section))
-                CachedFiles[code][section] = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-
-            if (string.IsNullOrEmpty(key))
-                return;
-            if (!CachedFiles[code][section].ContainsKey(key))
-                CachedFiles[code][section][key] = new List<string>();
+            get
+            {
+                if (_tmpFileGuid != default)
+                    return _tmpFileGuid;
+                _tmpFileGuid = Guid.NewGuid().ToString();
+                return _tmpFileGuid;
+            }
         }
 
         /// <summary>
@@ -186,29 +167,6 @@ namespace SilDev
             }
         }
 
-        private static Dictionary<string, Dictionary<string, List<string>>> SortHelper(this Dictionary<string, Dictionary<string, List<string>>> source)
-        {
-            var comparer = new AlphaNumericComparer();
-            var sorted = source.OrderBy(x => !x.Key.Equals(NonSectionId, StringComparison.Ordinal))
-                               .ThenBy(x => !SortBySections.ContainsItem(x.Key))
-                               .ThenBy(x => x.Key, comparer).ToDictionary(x => x.Key, x => x.Value.SortHelper());
-            return sorted;
-        }
-
-        private static Dictionary<string, List<string>> SortHelper(this Dictionary<string, List<string>> source)
-        {
-            var comparer = new AlphaNumericComparer();
-            var sorted = source.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
-            return sorted;
-        }
-
-        private static List<string> SortHelper(this IEnumerable<string> source)
-        {
-            var comparer = new AlphaNumericComparer();
-            var sorted = source.OrderBy(x => x, comparer).ToList();
-            return sorted;
-        }
-
         /// <summary>
         ///     Gets the regular expression to convert the INI data into an accessible
         ///     format.
@@ -241,21 +199,6 @@ namespace SilDev
         public static bool SetFile(params string[] paths) =>
             File.Exists(FilePath = PathEx.Combine(paths));
 
-        private static bool CodeExists(int code) =>
-            code != -1 && (CachedFiles?.ContainsKey(code) ?? false) && (CachedFiles[code]?.Any() ?? false);
-
-        private static int GetCode(string fileOrContent)
-        {
-            var source = fileOrContent ?? GetFile();
-            if (string.IsNullOrWhiteSpace(source))
-                throw new ArgumentNullException(nameof(fileOrContent));
-            var path = PathEx.Combine(source);
-            if (!File.Exists(path))
-                path = TmpFileGuid;
-            var code = path?.ToUpperInvariant().GetHashCode() ?? -1;
-            return code;
-        }
-
         /// <summary>
         ///     Removes the read content of an INI file from cache.
         /// </summary>
@@ -279,9 +222,6 @@ namespace SilDev
             }
             return false;
         }
-
-        private static bool SectionExists(int code, string section) =>
-            !string.IsNullOrEmpty(section) && CodeExists(code) && (CachedFiles[code]?.ContainsKey(section) ?? false) && (CachedFiles[code][section]?.Any() ?? false);
 
         /// <summary>
         ///     Retrieves all section names of an INI file or an INI file formatted string
@@ -331,14 +271,6 @@ namespace SilDev
         public static List<string> GetSections(bool sorted) =>
             GetSections(null, sorted);
 
-        private static bool RemoveSection(int code, string section)
-        {
-            if (!CodeExists(code) || !CachedFiles[code].ContainsKey(section))
-                return true;
-            CachedFiles[code].Remove(section);
-            return true;
-        }
-
         /// <summary>
         ///     Removes the specified section including all associated keys of an INI file
         ///     or an INI file formatted string value.
@@ -366,9 +298,6 @@ namespace SilDev
                 return false;
             }
         }
-
-        private static bool KeyExists(int code, string section, string key) =>
-            !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && (CachedFiles[code][section][key]?.Any() ?? false);
 
         /// <summary>
         ///     Retrieves all key names of an INI file or an INI file formatted string
@@ -423,14 +352,6 @@ namespace SilDev
         /// </param>
         public static List<string> GetKeys(string section, bool sorted) =>
             GetKeys(section, null, sorted);
-
-        private static bool RemoveKey(int code, string section, string key)
-        {
-            if (!KeyExists(code, section, key))
-                return true;
-            CachedFiles[code][section].Remove(key);
-            return true;
-        }
 
         /// <summary>
         ///     Removes the specified key from the specified section, of an INI file or an
@@ -536,43 +457,6 @@ namespace SilDev
                 Log.Write(ex);
             }
             return output;
-        }
-
-        private static bool LineIsValid(string str)
-        {
-            var s = str;
-            if (string.IsNullOrWhiteSpace(s) || s.Length < 3)
-                return false;
-            if (s.StartsWith("[", StringComparison.Ordinal) && s.EndsWith("]", StringComparison.Ordinal) && s.Count(x => x == '[') == 1 && s.Count(x => x == ']') == 1 && s.Any(char.IsLetterOrDigit))
-                return true;
-            var c = s.First();
-            if (!char.IsLetterOrDigit(c) && !c.IsBetween('$', '/') && !c.IsBetween('<', '@') && !c.IsBetween('{', '~') && c != '!' && c != '"' && c != ':' && c != '^' && c != '_')
-                return false;
-            var i = s.IndexOf('=');
-            return i > 0 && s.Substring(0, i).Any(char.IsLetterOrDigit) && i + 1 < s.Length;
-        }
-
-        private static string ForceFormat(string str)
-        {
-            var builder = new StringBuilder();
-            foreach (var text in str.TrimStart().Split(StringNewLineFormats.All))
-            {
-                var line = text.Trim();
-                if (line.StartsWith("[", StringComparison.Ordinal) && !line.EndsWith("]", StringComparison.Ordinal) && line.Contains(']') && line.IndexOf(']') > 1)
-                    line = line.Substring(0, line.IndexOf(']') + 1);
-                if (LineIsValid(line))
-                    builder.AppendLine(line);
-            }
-            if (builder.Length < 1)
-                throw new NullReferenceException();
-            var first = builder.ToString(0, 1).First();
-            if (first.Equals('['))
-                return builder.ToString();
-            builder.Insert(0, Environment.NewLine);
-            builder.Insert(0, ']');
-            builder.Insert(0, NonSectionId);
-            builder.Insert(0, '[');
-            return builder.ToStringThenClear();
         }
 
         /// <summary>
@@ -1166,6 +1050,122 @@ namespace SilDev
                 Log.Write(ex);
                 return false;
             }
+        }
+
+        private static void InitializeCache(int code, string section = null, string key = null)
+        {
+            if (CachedFiles == null)
+                CachedFiles = new Dictionary<int, Dictionary<string, Dictionary<string, List<string>>>>();
+
+            if (!CachedFiles.ContainsKey(code))
+                CachedFiles[code] = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
+
+            if (string.IsNullOrEmpty(section))
+                return;
+            if (!CachedFiles[code].ContainsKey(section))
+                CachedFiles[code][section] = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+
+            if (string.IsNullOrEmpty(key))
+                return;
+            if (!CachedFiles[code][section].ContainsKey(key))
+                CachedFiles[code][section][key] = new List<string>();
+        }
+
+        private static Dictionary<string, Dictionary<string, List<string>>> SortHelper(this Dictionary<string, Dictionary<string, List<string>>> source)
+        {
+            var comparer = new AlphaNumericComparer();
+            var sorted = source.OrderBy(x => !x.Key.Equals(NonSectionId, StringComparison.Ordinal))
+                               .ThenBy(x => !SortBySections.ContainsItem(x.Key))
+                               .ThenBy(x => x.Key, comparer).ToDictionary(x => x.Key, x => x.Value.SortHelper());
+            return sorted;
+        }
+
+        private static Dictionary<string, List<string>> SortHelper(this Dictionary<string, List<string>> source)
+        {
+            var comparer = new AlphaNumericComparer();
+            var sorted = source.OrderBy(d => d.Key, comparer).ToDictionary(d => d.Key, d => d.Value);
+            return sorted;
+        }
+
+        private static List<string> SortHelper(this IEnumerable<string> source)
+        {
+            var comparer = new AlphaNumericComparer();
+            var sorted = source.OrderBy(x => x, comparer).ToList();
+            return sorted;
+        }
+
+        private static bool CodeExists(int code) =>
+            code != -1 && (CachedFiles?.ContainsKey(code) ?? false) && (CachedFiles[code]?.Any() ?? false);
+
+        private static int GetCode(string fileOrContent)
+        {
+            var source = fileOrContent ?? GetFile();
+            if (string.IsNullOrWhiteSpace(source))
+                throw new ArgumentNullException(nameof(fileOrContent));
+            var path = PathEx.Combine(source);
+            if (!File.Exists(path))
+                path = TmpFileGuid;
+            var code = path?.ToUpperInvariant().GetHashCode() ?? -1;
+            return code;
+        }
+
+        private static bool SectionExists(int code, string section) =>
+            !string.IsNullOrEmpty(section) && CodeExists(code) && (CachedFiles[code]?.ContainsKey(section) ?? false) && (CachedFiles[code][section]?.Any() ?? false);
+
+        private static bool RemoveSection(int code, string section)
+        {
+            if (!CodeExists(code) || !CachedFiles[code].ContainsKey(section))
+                return true;
+            CachedFiles[code].Remove(section);
+            return true;
+        }
+
+        private static bool KeyExists(int code, string section, string key) =>
+            !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && (CachedFiles[code][section][key]?.Any() ?? false);
+
+        private static bool RemoveKey(int code, string section, string key)
+        {
+            if (!KeyExists(code, section, key))
+                return true;
+            CachedFiles[code][section].Remove(key);
+            return true;
+        }
+
+        private static bool LineIsValid(string str)
+        {
+            var s = str;
+            if (string.IsNullOrWhiteSpace(s) || s.Length < 3)
+                return false;
+            if (s.StartsWith("[", StringComparison.Ordinal) && s.EndsWith("]", StringComparison.Ordinal) && s.Count(x => x == '[') == 1 && s.Count(x => x == ']') == 1 && s.Any(char.IsLetterOrDigit))
+                return true;
+            var c = s.First();
+            if (!char.IsLetterOrDigit(c) && !c.IsBetween('$', '/') && !c.IsBetween('<', '@') && !c.IsBetween('{', '~') && c != '!' && c != '"' && c != ':' && c != '^' && c != '_')
+                return false;
+            var i = s.IndexOf('=');
+            return i > 0 && s.Substring(0, i).Any(char.IsLetterOrDigit) && i + 1 < s.Length;
+        }
+
+        private static string ForceFormat(string str)
+        {
+            var builder = new StringBuilder();
+            foreach (var text in str.TrimStart().Split(StringNewLineFormats.All))
+            {
+                var line = text.Trim();
+                if (line.StartsWith("[", StringComparison.Ordinal) && !line.EndsWith("]", StringComparison.Ordinal) && line.Contains(']') && line.IndexOf(']') > 1)
+                    line = line.Substring(0, line.IndexOf(']') + 1);
+                if (LineIsValid(line))
+                    builder.AppendLine(line);
+            }
+            if (builder.Length < 1)
+                throw new NullReferenceException();
+            var first = builder.ToString(0, 1).First();
+            if (first.Equals('['))
+                return builder.ToString();
+            builder.Insert(0, Environment.NewLine);
+            builder.Insert(0, ']');
+            builder.Insert(0, NonSectionId);
+            builder.Insert(0, '[');
+            return builder.ToStringThenClear();
         }
     }
 }

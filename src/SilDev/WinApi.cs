@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-13 16:15
+// Version:  2020-01-19 15:30
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -2124,64 +2124,6 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Throws the specified error code if it is not specified as a handled error.
-        /// </summary>
-        /// <param name="error">
-        ///     The Win32 error code associated with this exception.
-        /// </param>
-        /// <param name="handledError">
-        ///     A handled Win32 error code.
-        /// </param>
-        /// <exception cref="Win32Exception">
-        /// </exception>
-        public static int ThrowError(int error, int handledError = 0)
-        {
-            if (error != handledError)
-                throw new Win32Exception(error);
-            return error;
-        }
-
-        /// <summary>
-        ///     Throws the specified error code if it is not specified as a handled error.
-        /// </summary>
-        /// <param name="error">
-        ///     The Win32 error code associated with this exception.
-        /// </param>
-        /// <param name="handledErrors">
-        ///     A sequence of handled Win32 error codes.
-        /// </param>
-        /// <exception cref="Win32Exception">
-        /// </exception>
-        public static int ThrowError(int error, params int[] handledErrors)
-        {
-            if (handledErrors?.Any(i => i == error) ?? false)
-                return error;
-            throw new Win32Exception(error);
-        }
-
-        /// <summary>
-        ///     Throws the last error code returned by the last unmanaged function.
-        /// </summary>
-        /// <param name="forceMessage">
-        ///     A detailed description of the error that is thrown if no Win32 error code
-        ///     was found.
-        ///     <para>
-        ///         If this parameter is <see langword="null"/>, no exception is thrown in
-        ///         this case.
-        ///     </para>
-        /// </param>
-        /// <exception cref="Win32Exception">
-        /// </exception>
-        public static void ThrowLastError(string forceMessage = null)
-        {
-            var code = Marshal.GetLastWin32Error();
-            if (code != 0)
-                throw new Win32Exception(code);
-            if (!string.IsNullOrWhiteSpace(forceMessage))
-                throw new Win32Exception(forceMessage);
-        }
-
-        /// <summary>
         ///     Provides enumerated values of token access rights.
         /// </summary>
         [Flags]
@@ -3096,6 +3038,64 @@ namespace SilDev
             ///     Non-client area window attributes will be set.
             /// </summary>
             NonClient = 1
+        }
+
+        /// <summary>
+        ///     Throws the specified error code if it is not specified as a handled error.
+        /// </summary>
+        /// <param name="error">
+        ///     The Win32 error code associated with this exception.
+        /// </param>
+        /// <param name="handledError">
+        ///     A handled Win32 error code.
+        /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static int ThrowError(int error, int handledError = 0)
+        {
+            if (error != handledError)
+                throw new Win32Exception(error);
+            return error;
+        }
+
+        /// <summary>
+        ///     Throws the specified error code if it is not specified as a handled error.
+        /// </summary>
+        /// <param name="error">
+        ///     The Win32 error code associated with this exception.
+        /// </param>
+        /// <param name="handledErrors">
+        ///     A sequence of handled Win32 error codes.
+        /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static int ThrowError(int error, params int[] handledErrors)
+        {
+            if (handledErrors?.Any(i => i == error) ?? false)
+                return error;
+            throw new Win32Exception(error);
+        }
+
+        /// <summary>
+        ///     Throws the last error code returned by the last unmanaged function.
+        /// </summary>
+        /// <param name="forceMessage">
+        ///     A detailed description of the error that is thrown if no Win32 error code
+        ///     was found.
+        ///     <para>
+        ///         If this parameter is <see langword="null"/>, no exception is thrown in
+        ///         this case.
+        ///     </para>
+        /// </param>
+        /// <exception cref="Win32Exception">
+        /// </exception>
+        public static void ThrowLastError(string forceMessage = null)
+        {
+            var code = Marshal.GetLastWin32Error();
+            if (code != 0)
+                throw new Win32Exception(code);
+            if (!string.IsNullOrWhiteSpace(forceMessage))
+                throw new Win32Exception(forceMessage);
         }
 
         /// <summary>
@@ -5853,6 +5853,1328 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Contains information about a system appbar message.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct AppBarData : IDisposable, IEquatable<AppBarData>
+        {
+            /// <summary>
+            ///     The size of the structure, in bytes.
+            /// </summary>
+            public uint CbSize { get; internal set; }
+
+            /// <summary>
+            ///     The handle to the appbar window. Not all messages use this member. See the
+            ///     individual message page to see if you need to provide an hWind value.
+            /// </summary>
+            public IntPtr HWnd { get; internal set; }
+
+            /// <summary>
+            ///     An application-defined message identifier. The application uses the
+            ///     specified identifier for notification messages that it sends to the appbar
+            ///     identified by the hWnd member.
+            /// </summary>
+            public uint UCallbackMessage { get; internal set; }
+
+            /// <summary>
+            ///     A value that specifies an edge of the screen.
+            ///     <para>
+            ///         This member is used when sending one of these messages:
+            ///         <see cref="AppBarMessageOption.GetAutoHideBar"/>
+            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>
+            ///         <see cref="AppBarMessageOption.GetAutoHideBarEx"/>
+            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>
+            ///         <see cref="AppBarMessageOption.QueryPos"/>
+            ///         <see cref="AppBarMessageOption.SetPos"/>.
+            ///     </para>
+            /// </summary>
+            public uint UEdge { get; internal set; }
+
+            /// <summary>
+            ///     A <see cref="Rectangle"/> structure whose use varies depending on the
+            ///     message:
+            ///     <para>
+            ///         <see cref="AppBarMessageOption.GetTaskBarPos"/>,
+            ///         <see cref="AppBarMessageOption.QueryPos"/>,
+            ///         <see cref="AppBarMessageOption.SetPos"/>: The bounding rectangle, in
+            ///         screen coordinates, of an appbar or the Windows taskbar.
+            ///     </para>
+            ///     <para>
+            ///         <see cref="AppBarMessageOption.GetAutoHideBarEx"/>,
+            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>,
+            ///         <see cref="AppBarMessageOption.SetPos"/>: The monitor on which the
+            ///         operation is being performed.
+            ///     </para>
+            /// </summary>
+            public Rectangle Rect { get; internal set; }
+
+            /// <summary>
+            ///     A message-dependent value. This member is used with these messages:
+            ///     <para>
+            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>: Registers or
+            ///         unregisters an autohide appbar for a given edge of the screen. If the
+            ///         system has multiple monitors, the monitor that contains the primary
+            ///         taskbar is used.
+            ///     </para>
+            ///     <para>
+            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>: Registers or
+            ///         unregisters an autohide appbar for a given edge of the screen. This
+            ///         message extends <see cref="AppBarMessageOption.SetAutoHideBar"/> by
+            ///         enabling you to specify a particular monitor, for use in multiple
+            ///         monitor situations.
+            ///     </para>
+            ///     <para>
+            ///         <see cref="AppBarMessageOption.SetState"/>: Sets the autohide and
+            ///         always-on-top states of the Windows taskbar.
+            ///     </para>
+            /// </summary>
+            public int LParam { get; internal set; }
+
+            /// <summary>
+            ///     Releases all resources used by this <see cref="AppBarData"/>.
+            /// </summary>
+            public void Dispose()
+            {
+                if (HWnd == IntPtr.Zero)
+                    return;
+                NativeMethods.LocalFree(HWnd);
+                HWnd = IntPtr.Zero;
+            }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="AppBarData"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            public bool Equals(AppBarData other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is AppBarData item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="AppBarData"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            public static bool operator ==(AppBarData left, AppBarData right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="AppBarData"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="AppBarData"/> instance to compare.
+            /// </param>
+            public static bool operator !=(AppBarData left, AppBarData right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Defines the message parameters passed to a
+        ///     <see cref="Win32HookFlags.WhCallWndProcRet"/> hook procedure.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CallWndProcRet : IEquatable<CallWndProcRet>
+        {
+            /// <summary>
+            ///     The return value of the window procedure that processed the message
+            ///     specified by the message value.
+            /// </summary>
+            public IntPtr LResult { get; internal set; }
+
+            /// <summary>
+            ///     Additional information about the message. The exact meaning depends on the
+            ///     message value.
+            /// </summary>
+            public IntPtr LParam { get; internal set; }
+
+            /// <summary>
+            ///     Additional information about the message. The exact meaning depends on the
+            ///     message value.
+            /// </summary>
+            public IntPtr WParam { get; internal set; }
+
+            /// <summary>
+            ///     The message value.
+            /// </summary>
+            public uint Message { get; internal set; }
+
+            /// <summary>
+            ///     A handle to the window that processed the message specified by the message
+            ///     value.
+            /// </summary>
+            public IntPtr HWnd { get; internal set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="CallWndProcRet"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            public bool Equals(CallWndProcRet other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is CallWndProcRet item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CallWndProcRet"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            public static bool operator ==(CallWndProcRet left, CallWndProcRet right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CallWndProcRet"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CallWndProcRet"/> instance to compare.
+            /// </param>
+            public static bool operator !=(CallWndProcRet left, CallWndProcRet right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Contains data to be passed to another application by the
+        ///     <see cref="WindowMenuFlags.WmCopyData"/> message.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CopyData : IDisposable, IEquatable<CopyData>
+        {
+            /// <summary>
+            ///     The data to be passed to the receiving application.
+            /// </summary>
+            public IntPtr DwData { get; internal set; }
+
+            /// <summary>
+            ///     The size, in bytes, of the data pointed to by the lpData member.
+            /// </summary>
+            public int CbData { get; set; }
+
+            /// <summary>
+            ///     The data to be passed to the receiving application. This member can be
+            ///     <see langword="null"/>.
+            /// </summary>
+            public IntPtr LpData { get; internal set; }
+
+            /// <summary>
+            ///     Releases all resources used by this <see cref="CopyData"/>.
+            /// </summary>
+            public void Dispose()
+            {
+                if (LpData == IntPtr.Zero)
+                    return;
+                NativeMethods.LocalFree(LpData);
+                LpData = IntPtr.Zero;
+            }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="CopyData"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="CopyData"/> instance to compare.
+            /// </param>
+            public bool Equals(CopyData other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is CopyData item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CopyData"/> instances have same
+            ///     values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CopyData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CopyData"/> instance to compare.
+            /// </param>
+            public static bool operator ==(CopyData left, CopyData right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="CopyData"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="CopyData"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="CopyData"/> instance to compare.
+            /// </param>
+            public static bool operator !=(CopyData left, CopyData right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Used by <see cref="NativeMethods.SendInput(uint, DeviceInput[], int)"/> to
+        ///     store information for synthesizing input events such as keystrokes, mouse
+        ///     movement, and mouse clicks.
+        /// </summary>
+        public struct DeviceInput : IEquatable<DeviceInput>
+        {
+            /// <summary>
+            ///     The type of the input event. This member can be one of the following
+            ///     values.
+            ///     <para>
+            ///         0: The event is a mouse event. Use the mi structure of the union.
+            ///     </para>
+            ///     <para>
+            ///         1: The event is a keyboard event. Use the ki structure of the union.
+            ///     </para>
+            ///     <para>
+            ///         2: The event is a hardware event. Use the hi structure of the union.
+            ///     </para>
+            /// </summary>
+            public uint Type { get; set; }
+
+            /// <summary>
+            ///     The information about a simulated mouse, keyboard or hardware event.
+            /// </summary>
+            public MouseKeyboardHardwareInput Data { get; set; }
+
+            /// <summary>
+            ///     Gets the size of the <see cref="DeviceInput"/> structure in bytes.
+            /// </summary>
+            public static int Size => Marshal.SizeOf(typeof(DeviceInput));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="DeviceInput"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            public bool Equals(DeviceInput other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is DeviceInput item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="DeviceInput"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            public static bool operator ==(DeviceInput left, DeviceInput right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="DeviceInput"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="DeviceInput"/> instance to compare.
+            /// </param>
+            public static bool operator !=(DeviceInput left, DeviceInput right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Contains the locally unique identifier (LUID).
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LuId : IEquatable<LuId>
+        {
+            /// <summary>
+            ///     Low-order bits.
+            /// </summary>
+            public uint LowPart { get; set; }
+
+            /// <summary>
+            ///     High-order bits.
+            /// </summary>
+            public int HighPart { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="LuId"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="LuId"/> instance to compare.
+            /// </param>
+            public bool Equals(LuId other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is LuId item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuId"/> instances have same
+            ///     values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuId"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuId"/> instance to compare.
+            /// </param>
+            public static bool operator ==(LuId left, LuId right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuId"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuId"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuId"/> instance to compare.
+            /// </param>
+            public static bool operator !=(LuId left, LuId right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Represents a locally unique identifier (LUID) and its attributes.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct LuIdAndAttributes : IEquatable<LuIdAndAttributes>
+        {
+            /// <summary>
+            ///     Specifies an <see cref="LuId"/> value.
+            /// </summary>
+            public LuId Luid { get; set; }
+
+            /// <summary>
+            ///     Specifies attributes of the <see cref="LuId"/>. This value contains up to
+            ///     32 one-bit flags. Its meaning is dependent on the definition and use of the
+            ///     <see cref="LuId"/>.
+            /// </summary>
+            public uint Attributes { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="LuIdAndAttributes"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            public bool Equals(LuIdAndAttributes other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is LuIdAndAttributes item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuIdAndAttributes"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            public static bool operator ==(LuIdAndAttributes left, LuIdAndAttributes right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="LuIdAndAttributes"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="LuIdAndAttributes"/> instance to compare.
+            /// </param>
+            public static bool operator !=(LuIdAndAttributes left, LuIdAndAttributes right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Stores information about a simulated mouse event.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MouseInput : IEquatable<MouseInput>
+        {
+            /// <summary>
+            ///     The absolute position of the mouse, or the amount of motion since the last
+            ///     mouse event was generated, depending on the value of the dwFlags member.
+            ///     Absolute data is specified as the x coordinate of the mouse; relative data
+            ///     is specified as the number of pixels moved.
+            /// </summary>
+            public int X { get; set; }
+
+            /// <summary>
+            ///     The absolute position of the mouse, or the amount of motion since the last
+            ///     mouse event was generated, depending on the value of the dwFlags member.
+            ///     Absolute data is specified as the y coordinate of the mouse; relative data
+            ///     is specified as the number of pixels moved.
+            /// </summary>
+            public int Y { get; set; }
+
+            /// <summary>
+            ///     If dwFlags contains MOUSEEVENTF_WHEEL, then mouseData specifies the amount
+            ///     of wheel movement. A positive value indicates that the wheel was rotated
+            ///     forward, away from the user; a negative value indicates that the wheel was
+            ///     rotated backward, toward the user. One wheel click is defined as
+            ///     WHEEL_DELTA, which is 120.
+            /// </summary>
+            public uint MouseData { get; set; }
+
+            /// <summary>
+            ///     A set of bit flags that specify various aspects of mouse motion and button
+            ///     clicks. The bits in this member can be any reasonable combination of the
+            ///     following values.
+            /// </summary>
+            public uint Flags { get; set; }
+
+            /// <summary>
+            ///     The time stamp for the event, in milliseconds. If this parameter is 0, the
+            ///     system will provide its own time stamp.
+            /// </summary>
+            public uint Time { get; set; }
+
+            /// <summary>
+            ///     An additional value associated with the mouse event. An application calls
+            ///     GetMessageExtraInfo to obtain this extra information.
+            /// </summary>
+            public IntPtr ExtraInfo { get; internal set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="MouseInput"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            public bool Equals(MouseInput other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is MouseInput item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseInput"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            public static bool operator ==(MouseInput left, MouseInput right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseInput"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseInput"/> instance to compare.
+            /// </param>
+            public static bool operator !=(MouseInput left, MouseInput right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Stores information about a simulated mouse, keyboard or hardware event.
+        /// </summary>
+        [StructLayout(LayoutKind.Explicit)]
+        public struct MouseKeyboardHardwareInput : IEquatable<MouseKeyboardHardwareInput>
+        {
+            /* IMPORTANT: Not completly implemented yet.
+
+            [FieldOffset(1)]
+            private KeyboardInput _keyboard;
+
+            [FieldOffset(2)]
+            private HardwareInput _hardware;
+
+            */
+
+            /// <summary>
+            ///     Gets or sets the mouse input events.
+            /// </summary>
+            [field: FieldOffset(0)]
+            public MouseInput Mouse { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="MouseKeyboardHardwareInput"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            public bool Equals(MouseKeyboardHardwareInput other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is MouseKeyboardHardwareInput item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseKeyboardHardwareInput"/>
+            ///     instances have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            public static bool operator ==(MouseKeyboardHardwareInput left, MouseKeyboardHardwareInput right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="MouseKeyboardHardwareInput"/>
+            ///     instances have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="MouseKeyboardHardwareInput"/> instance to compare.
+            /// </param>
+            public static bool operator !=(MouseKeyboardHardwareInput left, MouseKeyboardHardwareInput right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Contains basic information about a process.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct ProcessBasicInformation : IEquatable<ProcessBasicInformation>
+        {
+            /// <summary>
+            ///     Gets the exit status.
+            /// </summary>
+            public IntPtr ExitStatus { get; internal set; }
+
+            /// <summary>
+            ///     Gets the member points to a PEB structure.
+            /// </summary>
+            public IntPtr PebBaseAddress { get; internal set; }
+
+            /// <summary>
+            ///     Gets the affinity mask.
+            /// </summary>
+            public IntPtr AffinityMask { get; internal set; }
+
+            /// <summary>
+            ///     Gets the base priority.
+            /// </summary>
+            public IntPtr BasePriority { get; internal set; }
+
+            /// <summary>
+            ///     Gets the unique process identifier.
+            /// </summary>
+            public UIntPtr UniqueProcessId { get; internal set; }
+
+            /// <summary>
+            ///     Gets the ID inherited from the process.
+            /// </summary>
+            public IntPtr InheritedFromUniqueProcessId { get; internal set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="ProcessBasicInformation"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            public bool Equals(ProcessBasicInformation other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is ProcessBasicInformation item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ProcessBasicInformation"/>
+            ///     instances have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            public static bool operator ==(ProcessBasicInformation left, ProcessBasicInformation right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ProcessBasicInformation"/>
+            ///     instances have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ProcessBasicInformation"/> instance to compare.
+            /// </param>
+            public static bool operator !=(ProcessBasicInformation left, ProcessBasicInformation right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Returned by the GetThemeMargins function to define the margins of windows
+        ///     that have visual styles applied.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct ThemeMargins : IEquatable<ThemeMargins>
+        {
+            /// <summary>
+            ///     Width of the left border that retains its size.
+            /// </summary>
+            public int CxLeftWidth { get; set; }
+
+            /// <summary>
+            ///     Width of the right border that retains its size.
+            /// </summary>
+            public int CxRightWidth { get; set; }
+
+            /// <summary>
+            ///     Height of the top border that retains its size.
+            /// </summary>
+            public int CyTopHeight { get; set; }
+
+            /// <summary>
+            ///     Height of the bottom border that retains its size.
+            /// </summary>
+            public int CyBottomHeight { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="ThemeMargins"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            public bool Equals(ThemeMargins other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is ThemeMargins item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ThemeMargins"/> instances have
+            ///     same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            public static bool operator ==(ThemeMargins left, ThemeMargins right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="ThemeMargins"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="ThemeMargins"/> instance to compare.
+            /// </param>
+            public static bool operator !=(ThemeMargins left, ThemeMargins right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Contains information about a set of privileges for an access token.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TokenPrivileges : IEquatable<TokenPrivileges>
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+            private LuIdAndAttributes[] _privileges;
+
+            /// <summary>
+            ///     Gets the number of entries in the Privileges collection.
+            /// </summary>
+            public int PrivilegeCount => Privileges?.Count ?? 0;
+
+            /// <summary>
+            ///     Specifies an array of <see cref="LuIdAndAttributes"/> structures. Each
+            ///     structure contains the <see cref="LuId"/> and attributes of a privilege. To
+            ///     get the name of the privilege associated with a <see cref="LuId"/>, call
+            ///     the <see cref="NativeHelper.LookupPrivilegeName"/> function, passing the
+            ///     address of the <see cref="LuId"/> as the value of the lpLuid parameter.
+            /// </summary>
+            public IReadOnlyList<LuIdAndAttributes> Privileges
+            {
+                get => _privileges;
+                internal set => _privileges = value as LuIdAndAttributes[];
+            }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="TokenPrivileges"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            public bool Equals(TokenPrivileges other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is TokenPrivileges item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="TokenPrivileges"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            public static bool operator ==(TokenPrivileges left, TokenPrivileges right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="TokenPrivileges"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="TokenPrivileges"/> instance to compare.
+            /// </param>
+            public static bool operator !=(TokenPrivileges left, TokenPrivileges right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Contains information about the placement of a window on the screen.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WindowPlacement : IEquatable<WindowPlacement>
+        {
+            /// <summary>
+            ///     The length of the structure, in bytes.
+            /// </summary>
+            public int Length { get; set; }
+
+            /// <summary>
+            ///     The flags that control the position of the minimized window and the method
+            ///     by which the window is restored.
+            ///     <para>
+            ///         This member can be one or more of the
+            ///         <see cref="WindowPlacementFlags"/> values.
+            ///     </para>
+            /// </summary>
+            public int Flags { get; set; }
+
+            /// <summary>
+            ///     The current show state of the window.
+            ///     <para>
+            ///         This member can be one of the <see cref="ShowWindowFlags"/> values.
+            ///     </para>
+            /// </summary>
+            public int ShowCmd { get; set; }
+
+            /// <summary>
+            ///     The coordinates of the window's upper-left corner when the window is
+            ///     minimized.
+            /// </summary>
+            public Point PtMinPosition { get; set; }
+
+            /// <summary>
+            ///     The coordinates of the window's upper-left corner when the window is
+            ///     maximized.
+            /// </summary>
+            public Point PtMaxPosition { get; set; }
+
+            /// <summary>
+            ///     The window's coordinates when the window is in the restored position.
+            /// </summary>
+            public Rectangle RcNormalPosition { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="WindowPlacement"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            public bool Equals(WindowPlacement other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is WindowPlacement item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowPlacement"/> instances
+            ///     have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            public static bool operator ==(WindowPlacement left, WindowPlacement right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowPlacement"/> instances
+            ///     have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowPlacement"/> instance to compare.
+            /// </param>
+            public static bool operator !=(WindowPlacement left, WindowPlacement right) =>
+                !(left == right);
+        }
+
+        /// <summary>
+        ///     Contains information about the placement of a window on the screen.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WindowThemeAttributeOptions : IEquatable<WindowThemeAttributeOptions>
+        {
+            /// <summary>
+            ///     A combination of flags that modify window visual style attributes.
+            /// </summary>
+            public WindowThemeAttributeFlags Flags { get; set; }
+
+            /// <summary>
+            ///     A bitmask that describes how the values specified in dwFlags should be
+            ///     applied. If the bit corresponding to a value in <see cref="Flags"/> is 0,
+            ///     that flag will be removed. If the bit is 1, the flag will be added.
+            /// </summary>
+            public uint Mask { get; set; }
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="WindowThemeAttributeOptions"/> instance.
+            /// </summary>
+            /// <param name="other">
+            ///     The <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            public bool Equals(WindowThemeAttributeOptions other) =>
+                Equals(GetHashCode(true), other.GetHashCode(true));
+
+            /// <summary>
+            ///     Determines whether this instance have same values as the specified
+            ///     <see cref="object"/>.
+            /// </summary>
+            /// <param name="other">
+            ///     The  <see cref="object"/> to compare.
+            /// </param>
+            public override bool Equals(object other)
+            {
+                if (!(other is WindowThemeAttributeOptions item))
+                    return false;
+                return Equals(item);
+            }
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            /// <param name="nonReadOnly">
+            ///     <see langword="true"/> to include the hashes of non-readonly properties;
+            ///     otherwise, <see langword="false"/>.
+            /// </param>
+            public int GetHashCode(bool nonReadOnly) =>
+                Crypto.GetStructHashCode(this, nonReadOnly);
+
+            /// <summary>
+            ///     Returns the hash code for this instance.
+            /// </summary>
+            public override int GetHashCode() =>
+                Crypto.GetStructHashCode(this);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowThemeAttributeOptions"/>
+            ///     instances have same values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            public static bool operator ==(WindowThemeAttributeOptions left, WindowThemeAttributeOptions right) =>
+                left.Equals(right);
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="WindowThemeAttributeOptions"/>
+            ///     instances have different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="WindowThemeAttributeOptions"/> instance to compare.
+            /// </param>
+            public static bool operator !=(WindowThemeAttributeOptions left, WindowThemeAttributeOptions right) =>
+                !(left == right);
+        }
+
+        /// <summary>
         ///     Represents native methods.
         /// </summary>
         [SuppressUnmanagedCodeSecurity]
@@ -8485,12 +9807,6 @@ namespace SilDev
             internal static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong) =>
                 IntPtr.Size == 4 ? SetWindowLongPtr32(hWnd, nIndex, dwNewLong) : SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
 
-            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLong")]
-            private static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
-            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLongPtr")]
-            private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
             /// <summary>
             ///     Sets the show state and the restored, minimized, and maximized positions of
             ///     the specified window.
@@ -9139,6 +10455,12 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, [MarshalAs(UnmanagedType.SysInt)] int nSize, out IntPtr lpNumberOfBytesWritten);
+
+            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLong")]
+            private static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+            [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLongPtr")]
+            private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
         }
 
         /// <summary>
@@ -9405,1328 +10727,6 @@ namespace SilDev
             ///     ignored and the default for standard error is the console window's buffer.
             /// </summary>
             internal IntPtr hStdError;
-        }
-
-        /// <summary>
-        ///     Contains information about a system appbar message.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct AppBarData : IDisposable, IEquatable<AppBarData>
-        {
-            /// <summary>
-            ///     The size of the structure, in bytes.
-            /// </summary>
-            public uint CbSize { get; internal set; }
-
-            /// <summary>
-            ///     The handle to the appbar window. Not all messages use this member. See the
-            ///     individual message page to see if you need to provide an hWind value.
-            /// </summary>
-            public IntPtr HWnd { get; internal set; }
-
-            /// <summary>
-            ///     An application-defined message identifier. The application uses the
-            ///     specified identifier for notification messages that it sends to the appbar
-            ///     identified by the hWnd member.
-            /// </summary>
-            public uint UCallbackMessage { get; internal set; }
-
-            /// <summary>
-            ///     A value that specifies an edge of the screen.
-            ///     <para>
-            ///         This member is used when sending one of these messages:
-            ///         <see cref="AppBarMessageOption.GetAutoHideBar"/>
-            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>
-            ///         <see cref="AppBarMessageOption.GetAutoHideBarEx"/>
-            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>
-            ///         <see cref="AppBarMessageOption.QueryPos"/>
-            ///         <see cref="AppBarMessageOption.SetPos"/>.
-            ///     </para>
-            /// </summary>
-            public uint UEdge { get; internal set; }
-
-            /// <summary>
-            ///     A <see cref="Rectangle"/> structure whose use varies depending on the
-            ///     message:
-            ///     <para>
-            ///         <see cref="AppBarMessageOption.GetTaskBarPos"/>,
-            ///         <see cref="AppBarMessageOption.QueryPos"/>,
-            ///         <see cref="AppBarMessageOption.SetPos"/>: The bounding rectangle, in
-            ///         screen coordinates, of an appbar or the Windows taskbar.
-            ///     </para>
-            ///     <para>
-            ///         <see cref="AppBarMessageOption.GetAutoHideBarEx"/>,
-            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>,
-            ///         <see cref="AppBarMessageOption.SetPos"/>: The monitor on which the
-            ///         operation is being performed.
-            ///     </para>
-            /// </summary>
-            public Rectangle Rect { get; internal set; }
-
-            /// <summary>
-            ///     A message-dependent value. This member is used with these messages:
-            ///     <para>
-            ///         <see cref="AppBarMessageOption.SetAutoHideBar"/>: Registers or
-            ///         unregisters an autohide appbar for a given edge of the screen. If the
-            ///         system has multiple monitors, the monitor that contains the primary
-            ///         taskbar is used.
-            ///     </para>
-            ///     <para>
-            ///         <see cref="AppBarMessageOption.SetAutoHideBarEx"/>: Registers or
-            ///         unregisters an autohide appbar for a given edge of the screen. This
-            ///         message extends <see cref="AppBarMessageOption.SetAutoHideBar"/> by
-            ///         enabling you to specify a particular monitor, for use in multiple
-            ///         monitor situations.
-            ///     </para>
-            ///     <para>
-            ///         <see cref="AppBarMessageOption.SetState"/>: Sets the autohide and
-            ///         always-on-top states of the Windows taskbar.
-            ///     </para>
-            /// </summary>
-            public int LParam { get; internal set; }
-
-            /// <summary>
-            ///     Releases all resources used by this <see cref="AppBarData"/>.
-            /// </summary>
-            public void Dispose()
-            {
-                if (HWnd == IntPtr.Zero)
-                    return;
-                NativeMethods.LocalFree(HWnd);
-                HWnd = IntPtr.Zero;
-            }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="AppBarData"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="AppBarData"/> instance to compare.
-            /// </param>
-            public bool Equals(AppBarData other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is AppBarData item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="AppBarData"/> instances have
-            ///     same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="AppBarData"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="AppBarData"/> instance to compare.
-            /// </param>
-            public static bool operator ==(AppBarData left, AppBarData right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="AppBarData"/> instances have
-            ///     different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="AppBarData"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="AppBarData"/> instance to compare.
-            /// </param>
-            public static bool operator !=(AppBarData left, AppBarData right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Defines the message parameters passed to a
-        ///     <see cref="Win32HookFlags.WhCallWndProcRet"/> hook procedure.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct CallWndProcRet : IEquatable<CallWndProcRet>
-        {
-            /// <summary>
-            ///     The return value of the window procedure that processed the message
-            ///     specified by the message value.
-            /// </summary>
-            public IntPtr LResult { get; internal set; }
-
-            /// <summary>
-            ///     Additional information about the message. The exact meaning depends on the
-            ///     message value.
-            /// </summary>
-            public IntPtr LParam { get; internal set; }
-
-            /// <summary>
-            ///     Additional information about the message. The exact meaning depends on the
-            ///     message value.
-            /// </summary>
-            public IntPtr WParam { get; internal set; }
-
-            /// <summary>
-            ///     The message value.
-            /// </summary>
-            public uint Message { get; internal set; }
-
-            /// <summary>
-            ///     A handle to the window that processed the message specified by the message
-            ///     value.
-            /// </summary>
-            public IntPtr HWnd { get; internal set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="CallWndProcRet"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="CallWndProcRet"/> instance to compare.
-            /// </param>
-            public bool Equals(CallWndProcRet other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is CallWndProcRet item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="CallWndProcRet"/> instances
-            ///     have same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="CallWndProcRet"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="CallWndProcRet"/> instance to compare.
-            /// </param>
-            public static bool operator ==(CallWndProcRet left, CallWndProcRet right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="CallWndProcRet"/> instances
-            ///     have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="CallWndProcRet"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="CallWndProcRet"/> instance to compare.
-            /// </param>
-            public static bool operator !=(CallWndProcRet left, CallWndProcRet right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Contains data to be passed to another application by the
-        ///     <see cref="WindowMenuFlags.WmCopyData"/> message.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct CopyData : IDisposable, IEquatable<CopyData>
-        {
-            /// <summary>
-            ///     The data to be passed to the receiving application.
-            /// </summary>
-            public IntPtr DwData { get; internal set; }
-
-            /// <summary>
-            ///     The size, in bytes, of the data pointed to by the lpData member.
-            /// </summary>
-            public int CbData { get; set; }
-
-            /// <summary>
-            ///     The data to be passed to the receiving application. This member can be
-            ///     <see langword="null"/>.
-            /// </summary>
-            public IntPtr LpData { get; internal set; }
-
-            /// <summary>
-            ///     Releases all resources used by this <see cref="CopyData"/>.
-            /// </summary>
-            public void Dispose()
-            {
-                if (LpData == IntPtr.Zero)
-                    return;
-                NativeMethods.LocalFree(LpData);
-                LpData = IntPtr.Zero;
-            }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="CopyData"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="CopyData"/> instance to compare.
-            /// </param>
-            public bool Equals(CopyData other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is CopyData item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="CopyData"/> instances have same
-            ///     values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="CopyData"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="CopyData"/> instance to compare.
-            /// </param>
-            public static bool operator ==(CopyData left, CopyData right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="CopyData"/> instances have
-            ///     different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="CopyData"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="CopyData"/> instance to compare.
-            /// </param>
-            public static bool operator !=(CopyData left, CopyData right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Used by <see cref="NativeMethods.SendInput(uint, DeviceInput[], int)"/> to
-        ///     store information for synthesizing input events such as keystrokes, mouse
-        ///     movement, and mouse clicks.
-        /// </summary>
-        public struct DeviceInput : IEquatable<DeviceInput>
-        {
-            /// <summary>
-            ///     The type of the input event. This member can be one of the following
-            ///     values.
-            ///     <para>
-            ///         0: The event is a mouse event. Use the mi structure of the union.
-            ///     </para>
-            ///     <para>
-            ///         1: The event is a keyboard event. Use the ki structure of the union.
-            ///     </para>
-            ///     <para>
-            ///         2: The event is a hardware event. Use the hi structure of the union.
-            ///     </para>
-            /// </summary>
-            public uint Type { get; set; }
-
-            /// <summary>
-            ///     The information about a simulated mouse, keyboard or hardware event.
-            /// </summary>
-            public MouseKeyboardHardwareInput Data { get; set; }
-
-            /// <summary>
-            ///     Gets the size of the <see cref="DeviceInput"/> structure in bytes.
-            /// </summary>
-            public static int Size => Marshal.SizeOf(typeof(DeviceInput));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="DeviceInput"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="DeviceInput"/> instance to compare.
-            /// </param>
-            public bool Equals(DeviceInput other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is DeviceInput item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="DeviceInput"/> instances have
-            ///     same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="DeviceInput"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="DeviceInput"/> instance to compare.
-            /// </param>
-            public static bool operator ==(DeviceInput left, DeviceInput right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="DeviceInput"/> instances have
-            ///     different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="DeviceInput"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="DeviceInput"/> instance to compare.
-            /// </param>
-            public static bool operator !=(DeviceInput left, DeviceInput right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Contains the locally unique identifier (LUID).
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct LuId : IEquatable<LuId>
-        {
-            /// <summary>
-            ///     Low-order bits.
-            /// </summary>
-            public uint LowPart { get; set; }
-
-            /// <summary>
-            ///     High-order bits.
-            /// </summary>
-            public int HighPart { get; set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="LuId"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="LuId"/> instance to compare.
-            /// </param>
-            public bool Equals(LuId other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is LuId item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="LuId"/> instances have same
-            ///     values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="LuId"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="LuId"/> instance to compare.
-            /// </param>
-            public static bool operator ==(LuId left, LuId right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="LuId"/> instances have
-            ///     different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="LuId"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="LuId"/> instance to compare.
-            /// </param>
-            public static bool operator !=(LuId left, LuId right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Represents a locally unique identifier (LUID) and its attributes.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct LuIdAndAttributes : IEquatable<LuIdAndAttributes>
-        {
-            /// <summary>
-            ///     Specifies an <see cref="LuId"/> value.
-            /// </summary>
-            public LuId Luid { get; set; }
-
-            /// <summary>
-            ///     Specifies attributes of the <see cref="LuId"/>. This value contains up to
-            ///     32 one-bit flags. Its meaning is dependent on the definition and use of the
-            ///     <see cref="LuId"/>.
-            /// </summary>
-            public uint Attributes { get; set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="LuIdAndAttributes"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="LuIdAndAttributes"/> instance to compare.
-            /// </param>
-            public bool Equals(LuIdAndAttributes other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is LuIdAndAttributes item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="LuIdAndAttributes"/> instances
-            ///     have same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="LuIdAndAttributes"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="LuIdAndAttributes"/> instance to compare.
-            /// </param>
-            public static bool operator ==(LuIdAndAttributes left, LuIdAndAttributes right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="LuIdAndAttributes"/> instances
-            ///     have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="LuIdAndAttributes"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="LuIdAndAttributes"/> instance to compare.
-            /// </param>
-            public static bool operator !=(LuIdAndAttributes left, LuIdAndAttributes right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Stores information about a simulated mouse event.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MouseInput : IEquatable<MouseInput>
-        {
-            /// <summary>
-            ///     The absolute position of the mouse, or the amount of motion since the last
-            ///     mouse event was generated, depending on the value of the dwFlags member.
-            ///     Absolute data is specified as the x coordinate of the mouse; relative data
-            ///     is specified as the number of pixels moved.
-            /// </summary>
-            public int X { get; set; }
-
-            /// <summary>
-            ///     The absolute position of the mouse, or the amount of motion since the last
-            ///     mouse event was generated, depending on the value of the dwFlags member.
-            ///     Absolute data is specified as the y coordinate of the mouse; relative data
-            ///     is specified as the number of pixels moved.
-            /// </summary>
-            public int Y { get; set; }
-
-            /// <summary>
-            ///     If dwFlags contains MOUSEEVENTF_WHEEL, then mouseData specifies the amount
-            ///     of wheel movement. A positive value indicates that the wheel was rotated
-            ///     forward, away from the user; a negative value indicates that the wheel was
-            ///     rotated backward, toward the user. One wheel click is defined as
-            ///     WHEEL_DELTA, which is 120.
-            /// </summary>
-            public uint MouseData { get; set; }
-
-            /// <summary>
-            ///     A set of bit flags that specify various aspects of mouse motion and button
-            ///     clicks. The bits in this member can be any reasonable combination of the
-            ///     following values.
-            /// </summary>
-            public uint Flags { get; set; }
-
-            /// <summary>
-            ///     The time stamp for the event, in milliseconds. If this parameter is 0, the
-            ///     system will provide its own time stamp.
-            /// </summary>
-            public uint Time { get; set; }
-
-            /// <summary>
-            ///     An additional value associated with the mouse event. An application calls
-            ///     GetMessageExtraInfo to obtain this extra information.
-            /// </summary>
-            public IntPtr ExtraInfo { get; internal set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="MouseInput"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="MouseInput"/> instance to compare.
-            /// </param>
-            public bool Equals(MouseInput other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is MouseInput item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="MouseInput"/> instances have
-            ///     same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="MouseInput"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="MouseInput"/> instance to compare.
-            /// </param>
-            public static bool operator ==(MouseInput left, MouseInput right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="MouseInput"/> instances have
-            ///     different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="MouseInput"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="MouseInput"/> instance to compare.
-            /// </param>
-            public static bool operator !=(MouseInput left, MouseInput right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Stores information about a simulated mouse, keyboard or hardware event.
-        /// </summary>
-        [StructLayout(LayoutKind.Explicit)]
-        public struct MouseKeyboardHardwareInput : IEquatable<MouseKeyboardHardwareInput>
-        {
-            /* IMPORTANT: Not completly implemented yet.
-
-            [FieldOffset(1)]
-            private KeyboardInput _keyboard;
-
-            [FieldOffset(2)]
-            private HardwareInput _hardware;
-
-            */
-
-            /// <summary>
-            ///     Gets or sets the mouse input events.
-            /// </summary>
-            [field: FieldOffset(0)]
-            public MouseInput Mouse { get; set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="MouseKeyboardHardwareInput"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="MouseKeyboardHardwareInput"/> instance to compare.
-            /// </param>
-            public bool Equals(MouseKeyboardHardwareInput other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is MouseKeyboardHardwareInput item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="MouseKeyboardHardwareInput"/>
-            ///     instances have same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="MouseKeyboardHardwareInput"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="MouseKeyboardHardwareInput"/> instance to compare.
-            /// </param>
-            public static bool operator ==(MouseKeyboardHardwareInput left, MouseKeyboardHardwareInput right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="MouseKeyboardHardwareInput"/>
-            ///     instances have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="MouseKeyboardHardwareInput"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="MouseKeyboardHardwareInput"/> instance to compare.
-            /// </param>
-            public static bool operator !=(MouseKeyboardHardwareInput left, MouseKeyboardHardwareInput right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Contains basic information about a process.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct ProcessBasicInformation : IEquatable<ProcessBasicInformation>
-        {
-            /// <summary>
-            ///     Gets the exit status.
-            /// </summary>
-            public IntPtr ExitStatus { get; internal set; }
-
-            /// <summary>
-            ///     Gets the member points to a PEB structure.
-            /// </summary>
-            public IntPtr PebBaseAddress { get; internal set; }
-
-            /// <summary>
-            ///     Gets the affinity mask.
-            /// </summary>
-            public IntPtr AffinityMask { get; internal set; }
-
-            /// <summary>
-            ///     Gets the base priority.
-            /// </summary>
-            public IntPtr BasePriority { get; internal set; }
-
-            /// <summary>
-            ///     Gets the unique process identifier.
-            /// </summary>
-            public UIntPtr UniqueProcessId { get; internal set; }
-
-            /// <summary>
-            ///     Gets the ID inherited from the process.
-            /// </summary>
-            public IntPtr InheritedFromUniqueProcessId { get; internal set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="ProcessBasicInformation"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="ProcessBasicInformation"/> instance to compare.
-            /// </param>
-            public bool Equals(ProcessBasicInformation other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is ProcessBasicInformation item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="ProcessBasicInformation"/>
-            ///     instances have same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="ProcessBasicInformation"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="ProcessBasicInformation"/> instance to compare.
-            /// </param>
-            public static bool operator ==(ProcessBasicInformation left, ProcessBasicInformation right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="ProcessBasicInformation"/>
-            ///     instances have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="ProcessBasicInformation"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="ProcessBasicInformation"/> instance to compare.
-            /// </param>
-            public static bool operator !=(ProcessBasicInformation left, ProcessBasicInformation right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Returned by the GetThemeMargins function to define the margins of windows
-        ///     that have visual styles applied.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct ThemeMargins : IEquatable<ThemeMargins>
-        {
-            /// <summary>
-            ///     Width of the left border that retains its size.
-            /// </summary>
-            public int CxLeftWidth { get; set; }
-
-            /// <summary>
-            ///     Width of the right border that retains its size.
-            /// </summary>
-            public int CxRightWidth { get; set; }
-
-            /// <summary>
-            ///     Height of the top border that retains its size.
-            /// </summary>
-            public int CyTopHeight { get; set; }
-
-            /// <summary>
-            ///     Height of the bottom border that retains its size.
-            /// </summary>
-            public int CyBottomHeight { get; set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="ThemeMargins"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="ThemeMargins"/> instance to compare.
-            /// </param>
-            public bool Equals(ThemeMargins other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is ThemeMargins item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="ThemeMargins"/> instances have
-            ///     same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="ThemeMargins"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="ThemeMargins"/> instance to compare.
-            /// </param>
-            public static bool operator ==(ThemeMargins left, ThemeMargins right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="ThemeMargins"/> instances have
-            ///     different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="ThemeMargins"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="ThemeMargins"/> instance to compare.
-            /// </param>
-            public static bool operator !=(ThemeMargins left, ThemeMargins right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Contains information about a set of privileges for an access token.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct TokenPrivileges : IEquatable<TokenPrivileges>
-        {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
-            private LuIdAndAttributes[] _privileges;
-
-            /// <summary>
-            ///     Gets the number of entries in the Privileges collection.
-            /// </summary>
-            public int PrivilegeCount => Privileges?.Count ?? 0;
-
-            /// <summary>
-            ///     Specifies an array of <see cref="LuIdAndAttributes"/> structures. Each
-            ///     structure contains the <see cref="LuId"/> and attributes of a privilege. To
-            ///     get the name of the privilege associated with a <see cref="LuId"/>, call
-            ///     the <see cref="NativeHelper.LookupPrivilegeName"/> function, passing the
-            ///     address of the <see cref="LuId"/> as the value of the lpLuid parameter.
-            /// </summary>
-            public IReadOnlyList<LuIdAndAttributes> Privileges
-            {
-                get => _privileges;
-                internal set => _privileges = value as LuIdAndAttributes[];
-            }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="TokenPrivileges"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="TokenPrivileges"/> instance to compare.
-            /// </param>
-            public bool Equals(TokenPrivileges other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is TokenPrivileges item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="TokenPrivileges"/> instances
-            ///     have same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="TokenPrivileges"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="TokenPrivileges"/> instance to compare.
-            /// </param>
-            public static bool operator ==(TokenPrivileges left, TokenPrivileges right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="TokenPrivileges"/> instances
-            ///     have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="TokenPrivileges"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="TokenPrivileges"/> instance to compare.
-            /// </param>
-            public static bool operator !=(TokenPrivileges left, TokenPrivileges right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Contains information about the placement of a window on the screen.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct WindowPlacement : IEquatable<WindowPlacement>
-        {
-            /// <summary>
-            ///     The length of the structure, in bytes.
-            /// </summary>
-            public int Length { get; set; }
-
-            /// <summary>
-            ///     The flags that control the position of the minimized window and the method
-            ///     by which the window is restored.
-            ///     <para>
-            ///         This member can be one or more of the
-            ///         <see cref="WindowPlacementFlags"/> values.
-            ///     </para>
-            /// </summary>
-            public int Flags { get; set; }
-
-            /// <summary>
-            ///     The current show state of the window.
-            ///     <para>
-            ///         This member can be one of the <see cref="ShowWindowFlags"/> values.
-            ///     </para>
-            /// </summary>
-            public int ShowCmd { get; set; }
-
-            /// <summary>
-            ///     The coordinates of the window's upper-left corner when the window is
-            ///     minimized.
-            /// </summary>
-            public Point PtMinPosition { get; set; }
-
-            /// <summary>
-            ///     The coordinates of the window's upper-left corner when the window is
-            ///     maximized.
-            /// </summary>
-            public Point PtMaxPosition { get; set; }
-
-            /// <summary>
-            ///     The window's coordinates when the window is in the restored position.
-            /// </summary>
-            public Rectangle RcNormalPosition { get; set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="WindowPlacement"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="WindowPlacement"/> instance to compare.
-            /// </param>
-            public bool Equals(WindowPlacement other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is WindowPlacement item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="WindowPlacement"/> instances
-            ///     have same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="WindowPlacement"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="WindowPlacement"/> instance to compare.
-            /// </param>
-            public static bool operator ==(WindowPlacement left, WindowPlacement right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="WindowPlacement"/> instances
-            ///     have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="WindowPlacement"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="WindowPlacement"/> instance to compare.
-            /// </param>
-            public static bool operator !=(WindowPlacement left, WindowPlacement right) =>
-                !(left == right);
-        }
-
-        /// <summary>
-        ///     Contains information about the placement of a window on the screen.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct WindowThemeAttributeOptions : IEquatable<WindowThemeAttributeOptions>
-        {
-            /// <summary>
-            ///     A combination of flags that modify window visual style attributes.
-            /// </summary>
-            public WindowThemeAttributeFlags Flags { get; set; }
-
-            /// <summary>
-            ///     A bitmask that describes how the values specified in dwFlags should be
-            ///     applied. If the bit corresponding to a value in <see cref="Flags"/> is 0,
-            ///     that flag will be removed. If the bit is 1, the flag will be added.
-            /// </summary>
-            public uint Mask { get; set; }
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="WindowThemeAttributeOptions"/> instance.
-            /// </summary>
-            /// <param name="other">
-            ///     The <see cref="WindowThemeAttributeOptions"/> instance to compare.
-            /// </param>
-            public bool Equals(WindowThemeAttributeOptions other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
-
-            /// <summary>
-            ///     Determines whether this instance have same values as the specified
-            ///     <see cref="object"/>.
-            /// </summary>
-            /// <param name="other">
-            ///     The  <see cref="object"/> to compare.
-            /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is WindowThemeAttributeOptions item))
-                    return false;
-                return Equals(item);
-            }
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
-            public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="WindowThemeAttributeOptions"/>
-            ///     instances have same values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="WindowThemeAttributeOptions"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="WindowThemeAttributeOptions"/> instance to compare.
-            /// </param>
-            public static bool operator ==(WindowThemeAttributeOptions left, WindowThemeAttributeOptions right) =>
-                left.Equals(right);
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="WindowThemeAttributeOptions"/>
-            ///     instances have different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="WindowThemeAttributeOptions"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="WindowThemeAttributeOptions"/> instance to compare.
-            /// </param>
-            public static bool operator !=(WindowThemeAttributeOptions left, WindowThemeAttributeOptions right) =>
-                !(left == right);
         }
 
         /// <summary>

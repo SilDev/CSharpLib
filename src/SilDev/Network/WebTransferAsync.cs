@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WebTransferAsync.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -31,12 +31,6 @@ namespace SilDev.Network
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private WebClient _webClient;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="WebTransferAsync"/> class.
-        /// </summary>
-        [SuppressMessage("ReSharper", "EmptyConstructor")]
-        public WebTransferAsync() { }
 
         /// <summary>
         ///     Gets the address to the resource.
@@ -121,13 +115,10 @@ namespace SilDev.Network
         }
 
         /// <summary>
-        ///     Releases all resources used by this <see cref="WebTransferAsync"/>.
+        ///     Initializes a new instance of the <see cref="WebTransferAsync"/> class.
         /// </summary>
-        public void Dispose()
-        {
-            CancelAsync();
-            _webClient?.Dispose();
-        }
+        [SuppressMessage("ReSharper", "EmptyConstructor")]
+        public WebTransferAsync() { }
 
         /// <summary>
         ///     Downloads the specified internet resource to a local file.
@@ -597,6 +588,15 @@ namespace SilDev.Network
         public void DownloadFile(string srcUri, string destPath, int timeout, string userAgent = null, bool checkExists = true) =>
             DownloadFile(srcUri.ToHttpUri(), destPath, null, null, true, null, timeout, userAgent, checkExists);
 
+        /// <summary>
+        ///     Cancels a pending asynchronous transfer.
+        /// </summary>
+        public void CancelAsync()
+        {
+            if (IsBusy)
+                _webClient?.CancelAsync();
+        }
+
         private void DownloadFile_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             try
@@ -650,12 +650,12 @@ namespace SilDev.Network
         }
 
         /// <summary>
-        ///     Cancels a pending asynchronous transfer.
+        ///     Releases all resources used by this <see cref="WebTransferAsync"/>.
         /// </summary>
-        public void CancelAsync()
+        public void Dispose()
         {
-            if (IsBusy)
-                _webClient?.CancelAsync();
+            CancelAsync();
+            _webClient?.Dispose();
         }
     }
 }

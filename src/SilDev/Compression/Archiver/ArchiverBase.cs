@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ArchiverBase.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,6 +27,114 @@ namespace SilDev.Compression.Archiver
     public abstract class ArchiverBase
     {
         private string _location;
+
+        /// <summary>
+        ///     The location of the executables.
+        /// </summary>
+        public string Location
+        {
+            get
+            {
+                if (_location != default)
+                    return _location;
+                foreach (var location in GetDefaultLocations())
+                {
+                    var dir = location;
+                    if (!ValidateFilePaths(ref dir, out var path1, out var path2))
+                        continue;
+                    _location = dir;
+                    CreateExePath = path1;
+                    ExtractExePath = path2;
+                    return _location;
+                }
+                return _location ??= string.Empty;
+            }
+            set
+            {
+                var dir = value;
+                if (!ValidateFilePaths(ref dir, out var path1, out var path2))
+                    return;
+                _location = dir;
+                CreateExePath = path1;
+                ExtractExePath = path2;
+            }
+        }
+
+        /// <summary>
+        ///     The path of the executable used to create archives.
+        /// </summary>
+        public string CreateExePath { get; private set; }
+
+        /// <summary>
+        ///     The path of the executable used to extract archives.
+        /// </summary>
+        public string ExtractExePath { get; private set; }
+
+        /// <summary>
+        ///     The command line arguments format string that is used to create archives
+        ///     from directories.
+        ///     <para>
+        ///         Please note that two formation keys must be defined; {0} is the source
+        ///         directory path and {1} is the destination archive path.
+        ///     </para>
+        ///     <para/>
+        ///     <example>
+        ///         <strong>
+        ///             Example:
+        ///         </strong>
+        ///         <c>
+        ///             "a -t7z \"{1}\\*\" \"{0}\""
+        ///         </c>
+        ///     </example>
+        /// </summary>
+        protected string CreateDirArgs { get; set; }
+
+        /// <summary>
+        ///     The command line arguments format string that is used to create archives
+        ///     from files.
+        ///     <para>
+        ///         Please note that two formation keys must be defined; {0} is the source
+        ///         file path and {1} is the destination archive path.
+        ///     </para>
+        ///     <para/>
+        ///     <example>
+        ///         <strong>
+        ///             Example:
+        ///         </strong>
+        ///         <c>
+        ///             "a -t7z \"{1}\" \"{0}\""
+        ///         </c>
+        ///     </example>
+        /// </summary>
+        protected string CreateFileArgs { get; set; }
+
+        /// <summary>
+        ///     The command line arguments format string that is used to extract archives.
+        ///     <para>
+        ///         Please note that two formation keys must be defined; {0} is the source
+        ///         archive path and {1} is the destination directory path.
+        ///     </para>
+        ///     <para/>
+        ///     <example>
+        ///         <strong>
+        ///             Example:
+        ///         </strong>
+        ///         <c>
+        ///             "x \"{0}\" -o\"{1}\" -y"
+        ///         </c>
+        ///     </example>
+        /// </summary>
+        protected string ExtractArgs { get; set; }
+
+        private string AppName { get; }
+
+        private string AltAppName { get; }
+
+        private IReadOnlyList<string> CreateExeNames { get; }
+
+        private IReadOnlyList<string> ExtractExeNames { get; }
+
+        private IReadOnlyList<string> Depencies { get; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ArchiverBase"/> class.
@@ -164,113 +272,52 @@ namespace SilDev.Compression.Archiver
             ExtractArgs = extractArgs;
         }
 
-        private string AppName { get; }
-
-        private string AltAppName { get; }
-
-        private IReadOnlyList<string> CreateExeNames { get; }
-
-        private IReadOnlyList<string> ExtractExeNames { get; }
-
-        private IReadOnlyList<string> Depencies { get; }
-
         /// <summary>
-        ///     The command line arguments format string that is used to create archives
-        ///     from directories.
-        ///     <para>
-        ///         Please note that two formation keys must be defined; {0} is the source
-        ///         directory path and {1} is the destination archive path.
-        ///     </para>
-        ///     <para/>
-        ///     <example>
-        ///         <strong>
-        ///             Example:
-        ///         </strong>
-        ///         <c>
-        ///             "a -t7z \"{1}\\*\" \"{0}\""
-        ///         </c>
-        ///     </example>
+        ///     Compress the specified file, or all files of the specified directory, to
+        ///     the specified file on the file system.
         /// </summary>
-        protected string CreateDirArgs { get; set; }
-
-        /// <summary>
-        ///     The command line arguments format string that is used to create archives
-        ///     from files.
-        ///     <para>
-        ///         Please note that two formation keys must be defined; {0} is the source
-        ///         file path and {1} is the destination archive path.
-        ///     </para>
-        ///     <para/>
-        ///     <example>
-        ///         <strong>
-        ///             Example:
-        ///         </strong>
-        ///         <c>
-        ///             "a -t7z \"{1}\" \"{0}\""
-        ///         </c>
-        ///     </example>
-        /// </summary>
-        protected string CreateFileArgs { get; set; }
-
-        /// <summary>
-        ///     The command line arguments format string that is used to extract archives.
-        ///     <para>
-        ///         Please note that two formation keys must be defined; {0} is the source
-        ///         archive path and {1} is the destination directory path.
-        ///     </para>
-        ///     <para/>
-        ///     <example>
-        ///         <strong>
-        ///             Example:
-        ///         </strong>
-        ///         <c>
-        ///             "x \"{0}\" -o\"{1}\" -y"
-        ///         </c>
-        ///     </example>
-        /// </summary>
-        protected string ExtractArgs { get; set; }
-
-        /// <summary>
-        ///     The location of the executables.
-        /// </summary>
-        public string Location
+        /// <param name="srcDirOrFile">
+        ///     The path of the file or directory to compress.
+        /// </param>
+        /// <param name="destFile">
+        ///     The path of the archive.
+        /// </param>
+        /// <param name="windowStyle">
+        ///     The window state to use when the process is started.
+        /// </param>
+        /// <param name="dispose">
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component; otherwise, <see langword="false"/>.
+        /// </param>
+        public Process Create(string srcDirOrFile, string destFile, ProcessWindowStyle windowStyle = ProcessWindowStyle.Minimized, bool dispose = false)
         {
-            get
-            {
-                if (_location != default)
-                    return _location;
-                foreach (var location in GetDefaultLocations())
-                {
-                    var dir = location;
-                    if (!ValidateFilePaths(ref dir, out var path1, out var path2))
-                        continue;
-                    _location = dir;
-                    CreateExePath = path1;
-                    ExtractExePath = path2;
-                    return _location;
-                }
-                return _location ??= string.Empty;
-            }
-            set
-            {
-                var dir = value;
-                if (!ValidateFilePaths(ref dir, out var path1, out var path2))
-                    return;
-                _location = dir;
-                CreateExePath = path1;
-                ExtractExePath = path2;
-            }
+            if (!File.Exists(CreateExePath))
+                return null;
+            var src = PathEx.Combine(srcDirOrFile);
+            var dest = PathEx.Combine(destFile);
+            var args = PathEx.IsDir(src) ? CreateDirArgs : CreateFileArgs;
+            return ProcessEx.Start(CreateExePath, args.FormatCurrent(src, dest), false, windowStyle, dispose);
         }
 
         /// <summary>
-        ///     The path of the executable used to create archives.
+        ///     Extracts all the files in the specified archive to the specified directory
+        ///     on the file system.
         /// </summary>
-        public string CreateExePath { get; private set; }
-
-        /// <summary>
-        ///     The path of the executable used to extract archives.
-        /// </summary>
-        public string ExtractExePath { get; private set; }
+        /// <param name="srcFile">
+        ///     The path of the archive to extract.
+        /// </param>
+        /// <param name="destDir">
+        ///     The path to the directory to place the extracted files in.
+        /// </param>
+        /// <param name="windowStyle">
+        ///     The window state to use when the process is started.
+        /// </param>
+        /// <param name="dispose">
+        ///     <see langword="true"/> to release all resources used by the
+        ///     <see cref="Process"/> component; otherwise, <see langword="false"/>.
+        /// </param>
+        public Process Extract(string srcFile, string destDir, ProcessWindowStyle windowStyle = ProcessWindowStyle.Minimized, bool dispose = false) =>
+            !File.Exists(ExtractExePath) ? null : ProcessEx.Start(ExtractExePath, ExtractArgs.FormatCurrent(srcFile, destDir), false, windowStyle, dispose);
 
         private IEnumerable<string> GetDefaultLocations()
         {
@@ -344,52 +391,5 @@ namespace SilDev.Compression.Archiver
             path2 = string.Empty;
             return false;
         }
-
-        /// <summary>
-        ///     Compress the specified file, or all files of the specified directory, to
-        ///     the specified file on the file system.
-        /// </summary>
-        /// <param name="srcDirOrFile">
-        ///     The path of the file or directory to compress.
-        /// </param>
-        /// <param name="destFile">
-        ///     The path of the archive.
-        /// </param>
-        /// <param name="windowStyle">
-        ///     The window state to use when the process is started.
-        /// </param>
-        /// <param name="dispose">
-        ///     <see langword="true"/> to release all resources used by the
-        ///     <see cref="Process"/> component; otherwise, <see langword="false"/>.
-        /// </param>
-        public Process Create(string srcDirOrFile, string destFile, ProcessWindowStyle windowStyle = ProcessWindowStyle.Minimized, bool dispose = false)
-        {
-            if (!File.Exists(CreateExePath))
-                return null;
-            var src = PathEx.Combine(srcDirOrFile);
-            var dest = PathEx.Combine(destFile);
-            var args = PathEx.IsDir(src) ? CreateDirArgs : CreateFileArgs;
-            return ProcessEx.Start(CreateExePath, args.FormatCurrent(src, dest), false, windowStyle, dispose);
-        }
-
-        /// <summary>
-        ///     Extracts all the files in the specified archive to the specified directory
-        ///     on the file system.
-        /// </summary>
-        /// <param name="srcFile">
-        ///     The path of the archive to extract.
-        /// </param>
-        /// <param name="destDir">
-        ///     The path to the directory to place the extracted files in.
-        /// </param>
-        /// <param name="windowStyle">
-        ///     The window state to use when the process is started.
-        /// </param>
-        /// <param name="dispose">
-        ///     <see langword="true"/> to release all resources used by the
-        ///     <see cref="Process"/> component; otherwise, <see langword="false"/>.
-        /// </param>
-        public Process Extract(string srcFile, string destDir, ProcessWindowStyle windowStyle = ProcessWindowStyle.Minimized, bool dispose = false) =>
-            !File.Exists(ExtractExePath) ? null : ProcessEx.Start(ExtractExePath, ExtractArgs.FormatCurrent(srcFile, destDir), false, windowStyle, dispose);
     }
 }

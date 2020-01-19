@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Service.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -77,21 +77,6 @@ namespace SilDev
     /// </summary>
     public static class Service
     {
-        private static IntPtr OpenServiceControlManager(WinApi.ServiceManagerAccessRights serviceRights)
-        {
-            var scman = WinApi.NativeMethods.OpenSCManager(null, null, serviceRights);
-            try
-            {
-                if (scman == IntPtr.Zero)
-                    throw new OperationCanceledException(ExceptionMessages.SCManagerConnectionCanceled);
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-            }
-            return scman;
-        }
-
         /// <summary>
         ///     Creates a service object.
         /// </summary>
@@ -272,19 +257,6 @@ namespace SilDev
             }
         }
 
-        private static void Start(IntPtr hService)
-        {
-            _ = WinApi.NativeMethods.StartService(hService, 0, 0);
-            WaitForStatus(hService, WinApi.ServiceStateTypes.StartPending, WinApi.ServiceStateTypes.Running);
-        }
-
-        private static void Stop(IntPtr hService)
-        {
-            var status = new WinApi.ServiceStatus();
-            _ = WinApi.NativeMethods.ControlService(hService, WinApi.ServiceControlOptions.Stop, status);
-            WaitForStatus(hService, WinApi.ServiceStateTypes.StopPending, WinApi.ServiceStateTypes.Stopped);
-        }
-
         /// <summary>
         ///     Returns the current <see cref="ServiceState"/> of an existing service.
         /// </summary>
@@ -317,6 +289,34 @@ namespace SilDev
                 _ = WinApi.NativeMethods.CloseServiceHandle(scman);
             }
             return ServiceState.NotFound;
+        }
+
+        private static IntPtr OpenServiceControlManager(WinApi.ServiceManagerAccessRights serviceRights)
+        {
+            var scman = WinApi.NativeMethods.OpenSCManager(null, null, serviceRights);
+            try
+            {
+                if (scman == IntPtr.Zero)
+                    throw new OperationCanceledException(ExceptionMessages.SCManagerConnectionCanceled);
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+            }
+            return scman;
+        }
+
+        private static void Start(IntPtr hService)
+        {
+            _ = WinApi.NativeMethods.StartService(hService, 0, 0);
+            WaitForStatus(hService, WinApi.ServiceStateTypes.StartPending, WinApi.ServiceStateTypes.Running);
+        }
+
+        private static void Stop(IntPtr hService)
+        {
+            var status = new WinApi.ServiceStatus();
+            _ = WinApi.NativeMethods.ControlService(hService, WinApi.ServiceControlOptions.Stop, status);
+            WaitForStatus(hService, WinApi.ServiceStateTypes.StopPending, WinApi.ServiceStateTypes.Stopped);
         }
 
         private static ServiceState GetStatus(IntPtr hService)

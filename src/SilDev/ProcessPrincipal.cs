@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessPrincipal.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -34,16 +34,6 @@ namespace SilDev
         ///     </para>
         /// </summary>
         public static string Name { get; private set; }
-
-        private static void GetPointers(out IntPtr offset, out IntPtr buffer)
-        {
-            var curHandle = Process.GetCurrentProcess().Handle;
-            var pebBaseAddress = WinApi.NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
-            var processParameters = Marshal.ReadIntPtr(pebBaseAddress, 4 * IntPtr.Size);
-            var unicodeSize = IntPtr.Size * 2;
-            offset = processParameters.Increment(new IntPtr(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));
-            buffer = Marshal.ReadIntPtr(offset, IntPtr.Size);
-        }
 
         /// <summary>
         ///     Retrieves the original name of the current principal.
@@ -126,6 +116,16 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
+        }
+
+        private static void GetPointers(out IntPtr offset, out IntPtr buffer)
+        {
+            var curHandle = Process.GetCurrentProcess().Handle;
+            var pebBaseAddress = WinApi.NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
+            var processParameters = Marshal.ReadIntPtr(pebBaseAddress, 4 * IntPtr.Size);
+            var unicodeSize = IntPtr.Size * 2;
+            offset = processParameters.Increment(new IntPtr(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));
+            buffer = Marshal.ReadIntPtr(offset, IntPtr.Size);
         }
     }
 }

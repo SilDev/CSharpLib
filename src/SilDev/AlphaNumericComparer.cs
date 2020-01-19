@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AlphaNumericComparer.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,6 +27,11 @@ namespace SilDev
     [Serializable]
     public class AlphaNumericComparer : IComparer, IComparer<object>
     {
+        /// <summary>
+        ///     Gets the value that determines whether the order is descended.
+        /// </summary>
+        protected bool Descendant { get; }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlphaNumericComparer"/> class.
         ///     A parameter specifies whether the order is descended.
@@ -63,9 +68,32 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the value that determines whether the order is descended.
+        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
         /// </summary>
-        protected bool Descendant { get; }
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        [SecurityCritical]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+            if (Log.DebugMode > 1)
+                Log.Write($"{nameof(AlphaNumericComparer)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+            info.AddValue(nameof(Descendant), Descendant);
+        }
+
+        /// <summary>
+        ///     Gets the string of the object that is used for comparison.
+        /// </summary>
+        /// <param name="value">
+        ///     The object to compare.
+        /// </param>
+        protected virtual string GetString(object value) =>
+            value as string;
 
         /// <summary>
         ///     Compare two specified objects and returns an integer that indicates their
@@ -135,34 +163,6 @@ namespace SilDev
             {
                 return string.Compare(s1, s2, StringComparison.InvariantCulture);
             }
-        }
-
-        /// <summary>
-        ///     Gets the string of the object that is used for comparison.
-        /// </summary>
-        /// <param name="value">
-        ///     The object to compare.
-        /// </param>
-        protected virtual string GetString(object value) =>
-            value as string;
-
-        /// <summary>
-        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
-        /// </summary>
-        /// <param name="info">
-        ///     The object that holds the serialized object data.
-        /// </param>
-        /// <param name="context">
-        ///     The contextual information about the source or destination.
-        /// </param>
-        [SecurityCritical]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-            if (Log.DebugMode > 1)
-                Log.Write($"{nameof(AlphaNumericComparer)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-            info.AddValue(nameof(Descendant), Descendant);
         }
     }
 }

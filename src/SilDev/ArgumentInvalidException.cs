@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ArgumentInvalidException.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,6 +27,11 @@ namespace SilDev
     [Serializable]
     public class ArgumentInvalidException : Exception
     {
+        /// <summary>
+        ///     Gets a message that describes the current exception.
+        /// </summary>
+        public sealed override string Message { get; } = ExceptionMessages.ArgumentInvalid;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ArgumentInvalidException"/>
         ///     class.
@@ -69,11 +74,6 @@ namespace SilDev
         ///     The contextual information about the source or destination.
         /// </param>
         protected ArgumentInvalidException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        /// <summary>
-        ///     Gets a message that describes the current exception.
-        /// </summary>
-        public sealed override string Message { get; } = ExceptionMessages.ArgumentInvalid;
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object with the parameter name and

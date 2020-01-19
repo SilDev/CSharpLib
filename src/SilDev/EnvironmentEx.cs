@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-14 20:38
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -108,7 +108,7 @@ namespace SilDev
         ///     <see langword="true"/> to store the arguments in quotation marks which
         ///     containing spaces; otherwise, <see langword="false"/>.
         /// </param>
-        public static List<string> CommandLineArgs(bool sort = true, int skip = 1, bool quotes = true)
+        public static IList<string> CommandLineArgs(bool sort = true, int skip = 1, bool quotes = true)
         {
             if (_cmdLineArgs?.Count == Environment.GetCommandLineArgs().Length - skip && quotes == _cmdLineArgsQuotes)
                 return _cmdLineArgs;
@@ -129,8 +129,7 @@ namespace SilDev
                 defaultArgs = defaultArgs.Skip(skip).ToList();
             if (sort)
                 defaultArgs = defaultArgs.OrderBy(x => x, new AlphaNumericComparer()).ToList();
-            _cmdLineArgs = quotes ? defaultArgs.Select(x => x.Any(char.IsWhiteSpace) ? $"\"{x}\"" : x).ToList() : defaultArgs;
-            return _cmdLineArgs;
+            return _cmdLineArgs = quotes ? defaultArgs.Select(x => x.Any(char.IsWhiteSpace) ? $"\"{x}\"" : x).ToList() : defaultArgs;
         }
 
         /// <summary>
@@ -147,7 +146,7 @@ namespace SilDev
         ///     <see langword="true"/> to store the arguments in quotation marks which
         ///     containing spaces; otherwise, <see langword="false"/>.
         /// </param>
-        public static List<string> CommandLineArgs(bool sort, bool quotes) =>
+        public static IList<string> CommandLineArgs(bool sort, bool quotes) =>
             CommandLineArgs(sort, 1, quotes);
 
         /// <summary>
@@ -158,7 +157,7 @@ namespace SilDev
         /// <param name="skip">
         ///     The number of arguments to skip before returning the remaining arguments.
         /// </param>
-        public static List<string> CommandLineArgs(int skip) =>
+        public static IList<string> CommandLineArgs(int skip) =>
             CommandLineArgs(true, skip);
 
         /// <summary>
@@ -322,6 +321,49 @@ namespace SilDev
             return output;
         }
 
+        /// <summary>
+        ///     Returns an environment variable if the specified path contains an
+        ///     environment variable or if elements of the specified path match a value of
+        ///     an environment variable.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to check.
+        /// </param>
+        /// <param name="curDir">
+        ///     <see langword="true"/> to consider the <see cref="PathEx.LocalDir"/> value;
+        ///     otherwise, <see langword="false"/>.
+        /// </param>
+        /// <param name="special">
+        ///     <see langword="true"/> to consider the
+        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static string GetVariableFromPath(string path, bool curDir = true, bool special = true) =>
+            GetVariableFromPathIntern(path, curDir, special, out _);
+
+        /// <summary>
+        ///     Converts the beginning of the specified path to an environment variable.
+        /// </summary>
+        /// <param name="path">
+        ///     The path to convert.
+        /// </param>
+        /// <param name="curDir">
+        ///     <see langword="true"/> to consider the <see cref="PathEx.LocalDir"/> value;
+        ///     otherwise, <see langword="false"/>.
+        /// </param>
+        /// <param name="special">
+        ///     <see langword="true"/> to consider the
+        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static string GetVariableWithPath(string path, bool curDir = true, bool special = true)
+        {
+            var variable = GetVariableFromPathIntern(path, curDir, special, out var length);
+            if (string.IsNullOrEmpty(variable) || length <= 0)
+                return path;
+            return $"%{variable}%{path.Substring(length)}";
+        }
+
         private static string GetVariableFromPathIntern(string path, bool curDir, bool special, out int length)
         {
             try
@@ -385,49 +427,6 @@ namespace SilDev
             }
             length = 0;
             return string.Empty;
-        }
-
-        /// <summary>
-        ///     Returns an environment variable if the specified path contains an
-        ///     environment variable or if elements of the specified path match a value of
-        ///     an environment variable.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to check.
-        /// </param>
-        /// <param name="curDir">
-        ///     <see langword="true"/> to consider the <see cref="PathEx.LocalDir"/> value;
-        ///     otherwise, <see langword="false"/>.
-        /// </param>
-        /// <param name="special">
-        ///     <see langword="true"/> to consider the
-        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
-        ///     <see langword="false"/>.
-        /// </param>
-        public static string GetVariableFromPath(string path, bool curDir = true, bool special = true) =>
-            GetVariableFromPathIntern(path, curDir, special, out _);
-
-        /// <summary>
-        ///     Converts the beginning of the specified path to an environment variable.
-        /// </summary>
-        /// <param name="path">
-        ///     The path to convert.
-        /// </param>
-        /// <param name="curDir">
-        ///     <see langword="true"/> to consider the <see cref="PathEx.LocalDir"/> value;
-        ///     otherwise, <see langword="false"/>.
-        /// </param>
-        /// <param name="special">
-        ///     <see langword="true"/> to consider the
-        ///     <see cref="Environment.SpecialFolder"/> values; otherwise,
-        ///     <see langword="false"/>.
-        /// </param>
-        public static string GetVariableWithPath(string path, bool curDir = true, bool special = true)
-        {
-            var variable = GetVariableFromPathIntern(path, curDir, special, out var length);
-            if (string.IsNullOrEmpty(variable) || length <= 0)
-                return path;
-            return $"%{variable}%{path.Substring(length)}";
         }
     }
 }

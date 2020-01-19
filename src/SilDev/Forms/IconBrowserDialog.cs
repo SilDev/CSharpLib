@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2020-01-14 16:36
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -47,6 +47,52 @@ namespace SilDev.Forms
         private int _count;
         private bool _isResizing;
         private string _path;
+
+        /// <summary>
+        ///     Gets the icon resource path.
+        /// </summary>
+        public string IconPath { get; private set; }
+
+        /// <summary>
+        ///     Gets the icon resource identifier.
+        /// </summary>
+        public int IconId { get; private set; }
+
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
+            }
+        }
+
+        private static string FilePath
+        {
+            get => _filePath;
+            set
+            {
+                lock (SyncObject)
+                    _filePath = value;
+            }
+        }
+
+        private static IntPtr[] IconPointers
+        {
+            get => _iconPointers;
+            set
+            {
+                lock (SyncObject)
+                {
+                    if (value == null)
+                        _iconPointers?.Where(x => x != IntPtr.Zero).ForEach(x => WinApi.NativeMethods.DestroyIcon(x));
+                    _iconPointers = value;
+                }
+            }
+        }
 
         /// <summary>
         ///     Initializes an instance of the <see cref="IconBrowserDialog"/> class.
@@ -193,52 +239,6 @@ namespace SilDev.Forms
                 return;
             _textBox.Text = curPath;
         }
-
-        private static object SyncObject
-        {
-            get
-            {
-                if (_syncObject != null)
-                    return _syncObject;
-                var obj = new object();
-                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
-                return _syncObject;
-            }
-        }
-
-        private static string FilePath
-        {
-            get => _filePath;
-            set
-            {
-                lock (SyncObject)
-                    _filePath = value;
-            }
-        }
-
-        private static IntPtr[] IconPointers
-        {
-            get => _iconPointers;
-            set
-            {
-                lock (SyncObject)
-                {
-                    if (value == null)
-                        _iconPointers?.Where(x => x != IntPtr.Zero).ForEach(x => WinApi.NativeMethods.DestroyIcon(x));
-                    _iconPointers = value;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Gets the icon resource path.
-        /// </summary>
-        public string IconPath { get; private set; }
-
-        /// <summary>
-        ///     Gets the icon resource identifier.
-        /// </summary>
-        public int IconId { get; private set; }
 
         /// <summary>
         ///     Disposes of the resources (other than memory) used by the

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PowerShellReference.cs
-// Version:  2020-01-14 19:33
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -26,18 +26,6 @@ namespace SilDev.Intern
         private static volatile Assembly _assembly;
         private static volatile bool _assemblyChecked;
         private static volatile object _syncObject;
-
-        private static object SyncObject
-        {
-            get
-            {
-                if (_syncObject != null)
-                    return _syncObject;
-                var obj = new object();
-                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
-                return _syncObject;
-            }
-        }
 
         internal static Assembly Assembly
         {
@@ -74,5 +62,17 @@ namespace SilDev.Intern
         }
 
         internal static string Location { get; private set; }
+
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
+            }
+        }
     }
 }

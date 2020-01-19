@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ComImports.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -22,6 +22,26 @@ namespace SilDev.Intern
 
     internal static class ComImports
     {
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        internal enum EDataFlow
+        {
+            eRender,
+            eCapture,
+            eAll,
+            EDataFlow_enum_count
+        }
+
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        internal enum ERole
+        {
+            eConsole,
+            eMultimedia,
+            eCommunications,
+            ERole_enum_count
+        }
+
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         internal static ISimpleAudioVolume GetVolumeObject(string name)
         {
@@ -54,26 +74,6 @@ namespace SilDev.Intern
         [ComImport]
         [Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
         internal class MMDeviceEnumerator { }
-
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        internal enum EDataFlow
-        {
-            eRender,
-            eCapture,
-            eAll,
-            EDataFlow_enum_count
-        }
-
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        internal enum ERole
-        {
-            eConsole,
-            eMultimedia,
-            eCommunications,
-            ERole_enum_count
-        }
 
         [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

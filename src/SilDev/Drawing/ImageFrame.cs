@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageFrame.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,6 +27,16 @@ namespace SilDev.Drawing
     [Serializable]
     public class ImageFrame : IDisposable, ISerializable, IEquatable<ImageFrame>
     {
+        /// <summary>
+        ///     Gets the image of this <see cref="ImageFrame"/>.
+        /// </summary>
+        public Image Image { get; }
+
+        /// <summary>
+        ///     Gets the duration time, in milliseconds, of this <see cref="ImageFrame"/>.
+        /// </summary>
+        public int Duration { get; }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ImageFrame"/> class from the
         ///     specified existing image and duration time of a single frame.
@@ -74,79 +84,6 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Gets the image of this <see cref="ImageFrame"/>.
-        /// </summary>
-        public Image Image { get; }
-
-        /// <summary>
-        ///     Gets the duration time, in milliseconds, of this <see cref="ImageFrame"/>.
-        /// </summary>
-        public int Duration { get; }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ImageFrame"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        ///     Determines whether the specified frame is equal to the current frame.
-        /// </summary>
-        /// <param name="other">
-        ///     The frame to compare with the current frame.
-        /// </param>
-        public virtual bool Equals(ImageFrame other) =>
-            Duration == other?.Duration && Image.GetHashCodeEx() == other.Image.GetHashCodeEx();
-
-        /// <summary>
-        ///     Populates a <see cref="SerializationInfo"/> with the data needed to
-        ///     serialize the target object.
-        /// </summary>
-        /// <param name="info">
-        ///     The object that holds the serialized object data.
-        /// </param>
-        /// <param name="context">
-        ///     The contextual information about the source or destination.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     info is null.
-        /// </exception>
-        [SecurityCritical]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-            if (Log.DebugMode > 1)
-                Log.Write($"{nameof(ImageFrame)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-            info.AddValue(nameof(Image), Image);
-            info.AddValue(nameof(Duration), Duration);
-        }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ImageFrame"/>.
-        /// </summary>
-        /// <param name="disposing">
-        ///     <see langword="true"/> to release both managed and unmanaged resources;
-        ///     otherwise, <see langword="false"/> to release only unmanaged resources.
-        ///     <para>
-        ///         Please note that this parameter is ignored for the
-        ///         <see cref="ImageFrame"/> class.
-        ///     </para>
-        /// </param>
-        protected virtual void Dispose(bool disposing) =>
-            Image?.Dispose();
-
-        /// <summary>
-        ///     Allows an object to try to free resources and perform other cleanup
-        ///     operations before it is reclaimed by garbage collection.
-        /// </summary>
-        ~ImageFrame() =>
-            Dispose(false);
-
-        /// <summary>
         ///     Determines whether the specified object is equal to the current object.
         /// </summary>
         /// <param name="other">
@@ -190,5 +127,68 @@ namespace SilDev.Drawing
         /// </param>
         public static bool operator !=(ImageFrame left, ImageFrame right) =>
             !(left == right);
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ImageFrame"/>.
+        /// </summary>
+        /// <param name="disposing">
+        ///     <see langword="true"/> to release both managed and unmanaged resources;
+        ///     otherwise, <see langword="false"/> to release only unmanaged resources.
+        ///     <para>
+        ///         Please note that this parameter is ignored for the
+        ///         <see cref="ImageFrame"/> class.
+        ///     </para>
+        /// </param>
+        protected virtual void Dispose(bool disposing) =>
+            Image?.Dispose();
+
+        /// <summary>
+        ///     Allows an object to try to free resources and perform other cleanup
+        ///     operations before it is reclaimed by garbage collection.
+        /// </summary>
+        ~ImageFrame() =>
+            Dispose(false);
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ImageFrame"/>.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        ///     Determines whether the specified frame is equal to the current frame.
+        /// </summary>
+        /// <param name="other">
+        ///     The frame to compare with the current frame.
+        /// </param>
+        public virtual bool Equals(ImageFrame other) =>
+            Duration == other?.Duration && Image.GetHashCodeEx() == other.Image.GetHashCodeEx();
+
+        /// <summary>
+        ///     Populates a <see cref="SerializationInfo"/> with the data needed to
+        ///     serialize the target object.
+        /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     info is null.
+        /// </exception>
+        [SecurityCritical]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+            if (Log.DebugMode > 1)
+                Log.Write($"{nameof(ImageFrame)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+            info.AddValue(nameof(Image), Image);
+            info.AddValue(nameof(Duration), Duration);
+        }
     }
 }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IrrKlangPlayer.cs
-// Version:  2020-01-13 13:33
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -34,40 +34,6 @@ namespace SilDev.Media
     public static class IrrKlangPlayer
     {
         private static bool _assemblyFinalizer;
-
-        private static void PlayIntern<TSource>(TSource source, bool loop, int volume)
-        {
-            try
-            {
-                if (IrrKlangReference.Assembly == null)
-                    throw new NotSupportedException(ExceptionMessages.AssemblyNotFound);
-                switch (source)
-                {
-                    case null:
-                        throw new ArgumentNullException(nameof(source));
-                    case string file when !File.Exists(file):
-                        throw new PathNotFoundException(file);
-                }
-                string curDir = null;
-                if (!_assemblyFinalizer)
-                {
-                    curDir = Directory.GetCurrentDirectory();
-                    if (!curDir.EqualsEx(IrrKlangReference.Location))
-                        Directory.SetCurrentDirectory(IrrKlangReference.Location);
-                    else
-                        curDir = null;
-                }
-                Player.Play(source, loop, volume / 100f);
-                if (curDir == null)
-                    return;
-                _assemblyFinalizer = true;
-                Directory.SetCurrentDirectory(curDir);
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-            }
-        }
 
         /// <summary>
         ///     Plays the sound data from the specified stream.
@@ -163,6 +129,40 @@ namespace SilDev.Media
                 if (IrrKlangReference.Assembly == null)
                     throw new NotSupportedException(ExceptionMessages.AssemblyNotFound);
                 Player.Stop();
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+            }
+        }
+
+        private static void PlayIntern<TSource>(TSource source, bool loop, int volume)
+        {
+            try
+            {
+                if (IrrKlangReference.Assembly == null)
+                    throw new NotSupportedException(ExceptionMessages.AssemblyNotFound);
+                switch (source)
+                {
+                    case null:
+                        throw new ArgumentNullException(nameof(source));
+                    case string file when !File.Exists(file):
+                        throw new PathNotFoundException(file);
+                }
+                string curDir = null;
+                if (!_assemblyFinalizer)
+                {
+                    curDir = Directory.GetCurrentDirectory();
+                    if (!curDir.EqualsEx(IrrKlangReference.Location))
+                        Directory.SetCurrentDirectory(IrrKlangReference.Location);
+                    else
+                        curDir = null;
+                }
+                Player.Play(source, loop, volume / 100f);
+                if (curDir == null)
+                    return;
+                _assemblyFinalizer = true;
+                Directory.SetCurrentDirectory(curDir);
             }
             catch (Exception ex) when (ex.IsCaught())
             {

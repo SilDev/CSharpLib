@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -62,6 +62,62 @@ namespace SilDev.Forms
         private double _opacity = .90d;
 
         /// <summary>
+        ///     Gets or sets the opacity level for the notify box.
+        /// </summary>
+        public double Opacity
+        {
+            get => _opacity;
+            set => _opacity = value < .2d ? .2d : value > 1d ? 1d : value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the background color for the notify box.
+        /// </summary>
+        public Color BackColor { get; set; } = SystemColors.Menu;
+
+        /// <summary>
+        ///     Gets or sets the border color for the notify box.
+        /// </summary>
+        public Color BorderColor { get; set; } = SystemColors.MenuHighlight;
+
+        /// <summary>
+        ///     Gets or sets the caption color for the notify box.
+        /// </summary>
+        public Color CaptionColor { get; set; } = SystemColors.MenuHighlight;
+
+        /// <summary>
+        ///     Gets or sets the text color for the notify box.
+        /// </summary>
+        public Color TextColor { get; set; } = SystemColors.MenuText;
+
+        /// <summary>
+        ///     Specifies that the notify box is placed above all non-topmost windows.
+        /// </summary>
+        public bool TopMost { get; set; }
+
+        /// <summary>
+        ///     Gets a value indicating the execution status of the current notify box.
+        /// </summary>
+        public bool IsAlive
+        {
+            get
+            {
+                try
+                {
+                    return NotifyThread.IsAlive;
+                }
+                catch (Exception ex) when (ex.IsCaught())
+                {
+                    return false;
+                }
+            }
+        }
+
+        private NotifyBoxForm NotifyWindow { get; set; }
+
+        private Thread NotifyThread { get; set; }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
         /// </summary>
         /// <param name="opacity">
@@ -106,62 +162,6 @@ namespace SilDev.Forms
         ///     Initializes a new instance of the <see cref="NotifyBox"/> class.
         /// </summary>
         public NotifyBox(bool topMost) : this(.90d, default, default, default, default, topMost) { }
-
-        /// <summary>
-        ///     Gets or sets the opacity level for the notify box.
-        /// </summary>
-        public double Opacity
-        {
-            get => _opacity;
-            set => _opacity = value < .2d ? .2d : value > 1d ? 1d : value;
-        }
-
-        /// <summary>
-        ///     Gets or sets the background color for the notify box.
-        /// </summary>
-        public Color BackColor { get; set; } = SystemColors.Menu;
-
-        /// <summary>
-        ///     Gets or sets the border color for the notify box.
-        /// </summary>
-        public Color BorderColor { get; set; } = SystemColors.MenuHighlight;
-
-        /// <summary>
-        ///     Gets or sets the caption color for the notify box.
-        /// </summary>
-        public Color CaptionColor { get; set; } = SystemColors.MenuHighlight;
-
-        /// <summary>
-        ///     Gets or sets the text color for the notify box.
-        /// </summary>
-        public Color TextColor { get; set; } = SystemColors.MenuText;
-
-        /// <summary>
-        ///     Specifies that the notify box is placed above all non-topmost windows.
-        /// </summary>
-        public bool TopMost { get; set; }
-
-        private NotifyBoxForm NotifyWindow { get; set; }
-
-        private Thread NotifyThread { get; set; }
-
-        /// <summary>
-        ///     Gets a value indicating the execution status of the current notify box.
-        /// </summary>
-        public bool IsAlive
-        {
-            get
-            {
-                try
-                {
-                    return NotifyThread.IsAlive;
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    return false;
-                }
-            }
-        }
 
         /// <summary>
         ///     Displays a notify box with the specified text, caption, position, sound,

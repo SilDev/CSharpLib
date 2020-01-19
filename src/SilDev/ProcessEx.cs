@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -621,7 +621,7 @@ namespace SilDev
         {
             if (process == null)
                 return default;
-            var handles = new List<IntPtr>();
+            var handles = new HashSet<IntPtr>();
             var threads = new WinApi.EnumThreadWndProc((hWnd, lParam) =>
             {
                 handles.Add(hWnd);
@@ -698,7 +698,7 @@ namespace SilDev
             if (processes == null)
                 return false;
             var count = 0;
-            var list = new List<string>();
+            var items = new HashSet<string>();
             foreach (var p in processes)
             {
                 string name = null;
@@ -720,13 +720,13 @@ namespace SilDev
                 {
                     Log.Write(ex);
                 }
-                if (string.IsNullOrEmpty(name) || list.ContainsItem(name))
+                if (string.IsNullOrEmpty(name))
                     continue;
-                list.Add(name);
+                items.Add(name);
             }
-            if (list.Count == 0)
+            if (!items.Any())
                 return count > 0;
-            using (var p = CmdExec.KillAllTasks(list, true, false))
+            using (var p = CmdExec.KillAllTasks(items, true, false))
                 if (p?.HasExited ?? false)
                     p.WaitForExit();
             Tray.RefreshAsync(16);

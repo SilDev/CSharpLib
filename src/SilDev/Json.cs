@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -30,21 +30,6 @@ namespace SilDev
     {
         private static JavaScriptSerializer _jsonSerializer;
         private static int _maxLength, _recursionLimit;
-
-        private static JavaScriptSerializer JsonSerializer
-        {
-            get
-            {
-                if (_jsonSerializer != default)
-                    return _jsonSerializer;
-                _jsonSerializer = new JavaScriptSerializer
-                {
-                    MaxJsonLength = MaxLength,
-                    RecursionLimit = RecursionLimit
-                };
-                return _jsonSerializer;
-            }
-        }
 
         /// <summary>
         ///     Gets or sets the maximum length of JSON strings that are accepted by the
@@ -86,115 +71,19 @@ namespace SilDev
             }
         }
 
-        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
-        private static void Format(Stream stream, char[] buffer, int count, char spacer, ref int depth, ref bool isEscape, ref bool isValue)
+        private static JavaScriptSerializer JsonSerializer
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (count < 0 || count > buffer.Length)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            int width;
-            switch (spacer)
+            get
             {
-                case '\t':
-                    width = 1;
-                    break;
-                case ' ':
-                    width = 3;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(spacer));
+                if (_jsonSerializer != default)
+                    return _jsonSerializer;
+                _jsonSerializer = new JavaScriptSerializer
+                {
+                    MaxJsonLength = MaxLength,
+                    RecursionLimit = RecursionLimit
+                };
+                return _jsonSerializer;
             }
-            for (var i = 0; i < count; i++)
-            {
-                var c = buffer[i];
-                if (isEscape)
-                {
-                    isEscape = false;
-                    stream.WriteByte(c);
-                    continue;
-                }
-                switch (c)
-                {
-                    case '\\':
-                        isEscape = true;
-                        stream.WriteByte(c);
-                        continue;
-                    case '"':
-                        isValue = !isValue;
-                        stream.WriteByte(c);
-                        continue;
-                    default:
-                        if (isValue)
-                        {
-                            stream.WriteByte(c);
-                            continue;
-                        }
-                        break;
-                }
-                switch (c)
-                {
-                    case ',':
-                        stream.WriteByte(c);
-                        stream.WriteBytes(Environment.NewLine);
-                        if (depth > 0)
-                            stream.WriteByte(spacer, depth * width);
-                        break;
-                    case '[':
-                    case '{':
-                    {
-                        stream.WriteByte(c);
-                        var ni = i + 1;
-                        var hasValue = ni >= count;
-                        if (!hasValue)
-                        {
-                            var nc = buffer[ni];
-                            hasValue = nc != ']' && nc != '}';
-                        }
-                        if (hasValue)
-                            stream.WriteBytes(Environment.NewLine);
-                        if (++depth > 0 && hasValue)
-                            stream.WriteByte(spacer, depth * width);
-                        break;
-                    }
-                    case ']':
-                    case '}':
-                    {
-                        var pi = i - 1;
-                        var hasValue = pi < 0;
-                        if (!hasValue)
-                        {
-                            var pc = buffer[pi];
-                            hasValue = pc != '[' && pc != '{';
-                        }
-                        if (hasValue)
-                            stream.WriteBytes(Environment.NewLine);
-                        if (--depth > 0 && hasValue)
-                            stream.WriteByte(spacer, depth * width);
-                        stream.WriteByte(c);
-                        break;
-                    }
-                    case ':':
-                        stream.WriteByte(c);
-                        stream.WriteByte(' ');
-                        break;
-                    default:
-                        if (!char.IsWhiteSpace(c))
-                            stream.WriteByte(c);
-                        break;
-                }
-            }
-        }
-
-        private static void Format(Stream stream, IEnumerable<char> source)
-        {
-            if (stream == null || source == null)
-                return;
-            var depth = 0;
-            var isEscape = false;
-            var isValue = false;
-            var buffer = source.ToArray();
-            Format(stream, buffer, buffer.Length, ' ', ref depth, ref isEscape, ref isValue);
         }
 
         /// <summary>
@@ -427,6 +316,117 @@ namespace SilDev
                 Log.Write(ex);
                 return string.Empty;
             }
+        }
+
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+        private static void Format(Stream stream, char[] buffer, int count, char spacer, ref int depth, ref bool isEscape, ref bool isValue)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (count < 0 || count > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            int width;
+            switch (spacer)
+            {
+                case '\t':
+                    width = 1;
+                    break;
+                case ' ':
+                    width = 3;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(spacer));
+            }
+            for (var i = 0; i < count; i++)
+            {
+                var c = buffer[i];
+                if (isEscape)
+                {
+                    isEscape = false;
+                    stream.WriteByte(c);
+                    continue;
+                }
+                switch (c)
+                {
+                    case '\\':
+                        isEscape = true;
+                        stream.WriteByte(c);
+                        continue;
+                    case '"':
+                        isValue = !isValue;
+                        stream.WriteByte(c);
+                        continue;
+                    default:
+                        if (isValue)
+                        {
+                            stream.WriteByte(c);
+                            continue;
+                        }
+                        break;
+                }
+                switch (c)
+                {
+                    case ',':
+                        stream.WriteByte(c);
+                        stream.WriteBytes(Environment.NewLine);
+                        if (depth > 0)
+                            stream.WriteByte(spacer, depth * width);
+                        break;
+                    case '[':
+                    case '{':
+                    {
+                        stream.WriteByte(c);
+                        var ni = i + 1;
+                        var hasValue = ni >= count;
+                        if (!hasValue)
+                        {
+                            var nc = buffer[ni];
+                            hasValue = nc != ']' && nc != '}';
+                        }
+                        if (hasValue)
+                            stream.WriteBytes(Environment.NewLine);
+                        if (++depth > 0 && hasValue)
+                            stream.WriteByte(spacer, depth * width);
+                        break;
+                    }
+                    case ']':
+                    case '}':
+                    {
+                        var pi = i - 1;
+                        var hasValue = pi < 0;
+                        if (!hasValue)
+                        {
+                            var pc = buffer[pi];
+                            hasValue = pc != '[' && pc != '{';
+                        }
+                        if (hasValue)
+                            stream.WriteBytes(Environment.NewLine);
+                        if (--depth > 0 && hasValue)
+                            stream.WriteByte(spacer, depth * width);
+                        stream.WriteByte(c);
+                        break;
+                    }
+                    case ':':
+                        stream.WriteByte(c);
+                        stream.WriteByte(' ');
+                        break;
+                    default:
+                        if (!char.IsWhiteSpace(c))
+                            stream.WriteByte(c);
+                        break;
+                }
+            }
+        }
+
+        private static void Format(Stream stream, IEnumerable<char> source)
+        {
+            if (stream == null || source == null)
+                return;
+            var depth = 0;
+            var isEscape = false;
+            var isValue = false;
+            var buffer = source.ToArray();
+            Format(stream, buffer, buffer.Length, ' ', ref depth, ref isEscape, ref isValue);
         }
     }
 }

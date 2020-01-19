@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2020-01-13 16:15
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -39,6 +39,20 @@ namespace SilDev.Investment
         private IDictionary<string, object> _itemDictionary;
 
         /// <summary>
+        ///     Gets the collection of keys and values.
+        /// </summary>
+        public IReadOnlyDictionary<string, object> ItemDictionary
+        {
+            get
+            {
+                if (_itemDictionary == default)
+                    _itemDictionary = new Dictionary<string, object>(StringComparer.InvariantCulture);
+                return (IReadOnlyDictionary<string, object>)_itemDictionary;
+            }
+            private set => _itemDictionary = value as Dictionary<string, object>;
+        }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="ValueItemHost{TKey}"/>.
         /// </summary>
         public ValueItemHost() =>
@@ -63,41 +77,6 @@ namespace SilDev.Investment
                 Log.Write($"{nameof(ValueItemHost<TKey>)}.ctor({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
 
             ItemDictionary = (Dictionary<string, object>)info.GetValue(nameof(ItemDictionary), typeof(Dictionary<string, object>));
-        }
-
-        /// <summary>
-        ///     Gets the collection of keys and values.
-        /// </summary>
-        public IReadOnlyDictionary<string, object> ItemDictionary
-        {
-            get
-            {
-                if (_itemDictionary == default)
-                    _itemDictionary = new Dictionary<string, object>(StringComparer.InvariantCulture);
-                return (IReadOnlyDictionary<string, object>)_itemDictionary;
-            }
-            private set => _itemDictionary = value as Dictionary<string, object>;
-        }
-
-        /// <summary>
-        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
-        /// </summary>
-        /// <param name="info">
-        ///     The object that holds the serialized object data.
-        /// </param>
-        /// <param name="context">
-        ///     The contextual information about the source or destination.
-        /// </param>
-        [SecurityCritical]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            if (Log.DebugMode > 1)
-                Log.Write($"{nameof(ValueItemHost<TKey>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-
-            info.AddValue(nameof(ItemDictionary), ItemDictionary);
         }
 
         /// <summary>
@@ -500,5 +479,26 @@ namespace SilDev.Investment
         /// </param>
         public static bool operator !=(ValueItemHost<TKey> left, ValueItemHost<TKey> right) =>
             !(left == right);
+
+        /// <summary>
+        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
+        /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        [SecurityCritical]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            if (Log.DebugMode > 1)
+                Log.Write($"{nameof(ValueItemHost<TKey>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+
+            info.AddValue(nameof(ItemDictionary), ItemDictionary);
+        }
     }
 }

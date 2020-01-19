@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IrrKlangReference.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -32,18 +32,6 @@ namespace SilDev.Intern
         private static volatile string _location;
         private static volatile object _syncObject;
 
-        private static object SyncObject
-        {
-            get
-            {
-                if (_syncObject != null)
-                    return _syncObject;
-                var obj = new object();
-                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
-                return _syncObject;
-            }
-        }
-
         internal static Assembly Assembly
         {
             get
@@ -54,7 +42,7 @@ namespace SilDev.Intern
                         return _assembly;
 
                     var workingDir = Directory.GetCurrentDirectory();
-                    var refDirs = new List<string>
+                    var refDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                     {
                         PathEx.Combine(PathEx.LocalDir),
                         PathEx.Combine(PathEx.LocalDir, "bin"),
@@ -68,9 +56,9 @@ namespace SilDev.Intern
                     };
 
                     var isValid = false;
-                    foreach (var entry in refDirs.Distinct())
+                    foreach (var entry in refDirs)
                     {
-                        var dirs = new List<string>
+                        var dirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                         {
                             entry,
 #if x86
@@ -138,6 +126,18 @@ namespace SilDev.Intern
             {
                 lock (SyncObject)
                     _location = value;
+            }
+        }
+
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
             }
         }
 

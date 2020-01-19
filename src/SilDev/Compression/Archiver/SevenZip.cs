@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: SevenZip.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -23,6 +23,15 @@ namespace SilDev.Compression.Archiver
     public sealed class SevenZip : ArchiverBase
     {
         private static SevenZip _defaultArchiver;
+
+        /// <summary>
+        ///     Gets or sets a static default <see cref="SevenZip"/> instance.
+        /// </summary>
+        public static SevenZip DefaultArchiver
+        {
+            get => _defaultArchiver ??= new SevenZip();
+            set => _defaultArchiver = value;
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SevenZip"/> class.
@@ -102,15 +111,6 @@ namespace SilDev.Compression.Archiver
                 CreateFileArgs = createFileArgs;
             if (!string.IsNullOrWhiteSpace(extractArgs))
                 ExtractArgs = extractArgs;
-        }
-
-        /// <summary>
-        ///     Gets or sets a static default <see cref="SevenZip"/> instance.
-        /// </summary>
-        public static SevenZip DefaultArchiver
-        {
-            get => _defaultArchiver ??= new SevenZip();
-            set => _defaultArchiver = value;
         }
     }
 }

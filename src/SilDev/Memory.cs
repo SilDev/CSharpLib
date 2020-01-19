@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -30,6 +30,11 @@ namespace SilDev
         private GCHandle _handle;
 
         /// <summary>
+        ///     Returns the pointer to the pinned object.
+        /// </summary>
+        public IntPtr PointerHandle { get; private set; }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryPinner"/> class with the
         ///     specified object to pin.
         /// </summary>
@@ -43,20 +48,6 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Returns the pointer to the pinned object.
-        /// </summary>
-        public IntPtr PointerHandle { get; private set; }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="MemoryPinner"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
         ///     Releases all resources used by this <see cref="MemoryPinner"/>.
         /// </summary>
         protected virtual void Dispose(bool disposing)
@@ -66,6 +57,15 @@ namespace SilDev
             if (_handle.IsAllocated)
                 _handle.Free();
             PointerHandle = IntPtr.Zero;
+        }
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="MemoryPinner"/>.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -90,30 +90,6 @@ namespace SilDev
             _ = WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out var ownerProcessId);
             _hProcess = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessVmOperation | WinApi.AccessRights.ProcessVmRead | WinApi.AccessRights.ProcessVmWrite | WinApi.AccessRights.ProcessQueryInformation, false, ownerProcessId);
         }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
-        /// </summary>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing || _hProcess == IntPtr.Zero)
-                return;
-            foreach (var ptr in _allocations.Cast<IntPtr>())
-                _ = WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeType.Release);
-            WinApi.NativeMethods.CloseHandle(_hProcess);
-        }
-
-        ~ProcessMemory() =>
-            Dispose(false);
 
         /// <summary>
         ///     Gets the file name of the process image.
@@ -217,6 +193,30 @@ namespace SilDev
             {
                 Log.Write(ex);
             }
+        }
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _hProcess == IntPtr.Zero)
+                return;
+            foreach (var ptr in _allocations.Cast<IntPtr>())
+                _ = WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeType.Release);
+            WinApi.NativeMethods.CloseHandle(_hProcess);
+        }
+
+        ~ProcessMemory() =>
+            Dispose(false);
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ProcessMemory"/>.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

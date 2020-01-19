@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -32,6 +32,18 @@ namespace SilDev.Drawing
         private static volatile Dictionary<int, Tuple<Image, Image>> _imagePairCache;
         private static volatile object _syncObject;
 
+        /// <summary>
+        ///     Gets an <see cref="Image"/> object which consists of a semi-transparent
+        ///     black color.
+        /// </summary>
+        public static Image DimEmpty => Resources.DimEmptyImage;
+
+        /// <summary>
+        ///     Gets an <see cref="Image"/> object that contains a white 16px large search
+        ///     symbol.
+        /// </summary>
+        public static Image DefaultSearchSymbol => Resources.SearchImage;
+
         private static object SyncObject
         {
             get
@@ -52,18 +64,6 @@ namespace SilDev.Drawing
                     return _imagePairCache ??= new Dictionary<int, Tuple<Image, Image>>();
             }
         }
-
-        /// <summary>
-        ///     Gets an <see cref="Image"/> object which consists of a semi-transparent
-        ///     black color.
-        /// </summary>
-        public static Image DimEmpty => Resources.DimEmptyImage;
-
-        /// <summary>
-        ///     Gets an <see cref="Image"/> object that contains a white 16px large search
-        ///     symbol.
-        /// </summary>
-        public static Image DefaultSearchSymbol => Resources.SearchImage;
 
         /// <summary>
         ///     Determines whether the specified pixel size indicator is within the allowed

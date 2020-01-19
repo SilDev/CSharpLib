@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WindowsPlayer.cs
-// Version:  2020-01-13 13:55
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -87,33 +87,6 @@ namespace SilDev.Media
             WinApi.ThrowError(WinApi.NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels));
         }
 
-        private static string SndStatus()
-        {
-            var sb = new StringBuilder(128);
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero));
-            return sb.ToStringThenClear();
-        }
-
-        private static void SndOpen(string path)
-        {
-            if (!string.IsNullOrEmpty(SndStatus()))
-                SndClose();
-            var arg = $"open \"{path}\" alias {Alias}";
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
-        }
-
-        private static void SndClose()
-        {
-            var arg = $"close {Alias}";
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
-        }
-
-        private static void SndPlay(bool loop = false)
-        {
-            var arg = $"play {Alias}{(loop ? " repeat" : string.Empty)}";
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
-        }
-
         /// <summary>
         ///     Plays the specified sound file.
         /// </summary>
@@ -170,6 +143,33 @@ namespace SilDev.Media
             {
                 Log.Write(ex);
             }
+        }
+
+        private static string SndStatus()
+        {
+            var sb = new StringBuilder(128);
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero));
+            return sb.ToStringThenClear();
+        }
+
+        private static void SndOpen(string path)
+        {
+            if (!string.IsNullOrEmpty(SndStatus()))
+                SndClose();
+            var arg = $"open \"{path}\" alias {Alias}";
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
+        }
+
+        private static void SndClose()
+        {
+            var arg = $"close {Alias}";
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
+        }
+
+        private static void SndPlay(bool loop = false)
+        {
+            var arg = $"play {Alias}{(loop ? " repeat" : string.Empty)}";
+            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
         }
     }
 }

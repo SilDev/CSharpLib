@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Win32_OperatingSystem.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev.QuickWmi
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Management;
@@ -294,7 +295,7 @@ namespace SilDev.QuickWmi
         ///     an MUI Pack is installed, you can can change the user interface language to
         ///     one of 33 supported languages.
         /// </summary>
-        public static ReadOnlyCollection<string> MUILanguages => GetValue<string>(nameof(MUILanguages), typeof(ReadOnlyCollection<string>));
+        public static IReadOnlyCollection<string> MUILanguages => GetValue<string>(nameof(MUILanguages), typeof(IReadOnlyCollection<string>));
 
         /// <summary>
         ///     Gets the name of the operating system instance within a computer system.
@@ -506,7 +507,7 @@ namespace SilDev.QuickWmi
             try
             {
                 var d = GetValue(name);
-                if (type == typeof(ReadOnlyCollection<T>))
+                if (type == typeof(IReadOnlyCollection<T>))
                     d = new ReadOnlyCollection<T>(d);
                 else
                 {

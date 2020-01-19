@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MemoryException.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,6 +27,11 @@ namespace SilDev
     [Serializable]
     public class MemoryException : Exception
     {
+        /// <summary>
+        ///     Gets a message that describes the current exception.
+        /// </summary>
+        public sealed override string Message { get; } = ExceptionMessages.MemoryAccess;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryException"/> class.
         /// </summary>
@@ -66,11 +71,6 @@ namespace SilDev
         ///     The contextual information about the source or destination.
         /// </param>
         protected MemoryException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-        /// <summary>
-        ///     Gets a message that describes the current exception.
-        /// </summary>
-        public sealed override string Message { get; } = ExceptionMessages.MemoryAccess;
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object with the additional

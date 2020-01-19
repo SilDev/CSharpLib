@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2020-01-13 15:17
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -55,99 +55,6 @@ namespace SilDev
         private static volatile IntPtr _stdHandle = IntPtr.Zero;
         private static volatile StreamWriter _sw;
         private static volatile object _syncObject;
-
-        private static object SyncObject
-        {
-            get
-            {
-                if (_syncObject != null)
-                    return _syncObject;
-                var obj = new object();
-                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
-                return _syncObject;
-            }
-        }
-
-        internal static string DebugKey
-        {
-            get
-            {
-                if (_debugKey != null)
-                    return _debugKey;
-                lock (SyncObject)
-                {
-                    _debugKey = @"Debug";
-                    return _debugKey;
-                }
-            }
-            set
-            {
-                lock (SyncObject)
-                    _debugKey = value;
-            }
-        }
-
-        private static AssemblyName AssemblyEntryName
-        {
-            get
-            {
-                if (_assemblyEntryName != null)
-                    return _assemblyEntryName;
-                lock (SyncObject)
-                {
-                    _assemblyEntryName = Assembly.GetEntryAssembly()?.GetName();
-                    return _assemblyEntryName;
-                }
-            }
-        }
-
-        private static string AssemblyName => AssemblyEntryName.Name;
-
-        private static Version AssemblyVersion => AssemblyEntryName.Version;
-
-        private static StringBuilder Builder
-        {
-            get
-            {
-                if (_builder != null)
-                    return _builder;
-                lock (SyncObject)
-                {
-                    _builder = new StringBuilder();
-                    return _builder;
-                }
-            }
-        }
-
-        private static bool ConIsOpen
-        {
-            get => _conIsOpen;
-            set
-            {
-                lock (SyncObject)
-                    _conIsOpen = value;
-            }
-        }
-
-        private static bool FirstCall
-        {
-            get => _firstCall;
-            set
-            {
-                lock (SyncObject)
-                    _firstCall = value;
-            }
-        }
-
-        private static bool FirstEntry
-        {
-            get => _firstEntry;
-            set
-            {
-                lock (SyncObject)
-                    _firstEntry = value;
-            }
-        }
 
         /// <summary>
         ///     <see langword="true"/> to enable the catching of unhandled
@@ -247,6 +154,99 @@ namespace SilDev
                     _filePath = Path.Combine(FileDir, FileName);
                     return _filePath;
                 }
+            }
+        }
+
+        internal static string DebugKey
+        {
+            get
+            {
+                if (_debugKey != null)
+                    return _debugKey;
+                lock (SyncObject)
+                {
+                    _debugKey = @"Debug";
+                    return _debugKey;
+                }
+            }
+            set
+            {
+                lock (SyncObject)
+                    _debugKey = value;
+            }
+        }
+
+        private static object SyncObject
+        {
+            get
+            {
+                if (_syncObject != null)
+                    return _syncObject;
+                var obj = new object();
+                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
+                return _syncObject;
+            }
+        }
+
+        private static AssemblyName AssemblyEntryName
+        {
+            get
+            {
+                if (_assemblyEntryName != null)
+                    return _assemblyEntryName;
+                lock (SyncObject)
+                {
+                    _assemblyEntryName = Assembly.GetEntryAssembly()?.GetName();
+                    return _assemblyEntryName;
+                }
+            }
+        }
+
+        private static string AssemblyName => AssemblyEntryName.Name;
+
+        private static Version AssemblyVersion => AssemblyEntryName.Version;
+
+        private static StringBuilder Builder
+        {
+            get
+            {
+                if (_builder != null)
+                    return _builder;
+                lock (SyncObject)
+                {
+                    _builder = new StringBuilder();
+                    return _builder;
+                }
+            }
+        }
+
+        private static bool ConIsOpen
+        {
+            get => _conIsOpen;
+            set
+            {
+                lock (SyncObject)
+                    _conIsOpen = value;
+            }
+        }
+
+        private static bool FirstCall
+        {
+            get => _firstCall;
+            set
+            {
+                lock (SyncObject)
+                    _firstCall = value;
+            }
+        }
+
+        private static bool FirstEntry
+        {
+            get => _firstEntry;
+            set
+            {
+                lock (SyncObject)
+                    _firstEntry = value;
             }
         }
 

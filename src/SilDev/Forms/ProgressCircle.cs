@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -36,25 +36,6 @@ namespace SilDev.Forms
         private int _progressValue;
         private int _spokes = 9;
         private int _thickness = 4;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ProgressCircle"/> class.
-        /// </summary>
-        public ProgressCircle()
-        {
-            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
-
-            GenerateColorsPallet();
-            GetSpokesAngles();
-            GetControlCenterPoint();
-
-            _timer = new Timer();
-            _timer.Tick += Timer_Tick;
-            Disposed += OnDisposed;
-            ActiveTimer();
-
-            Resize += ProgressCircle_Resize;
-        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether this <see cref="ProgressCircle"/>
@@ -173,6 +154,25 @@ namespace SilDev.Forms
         }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="ProgressCircle"/> class.
+        /// </summary>
+        public ProgressCircle()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
+
+            GenerateColorsPallet();
+            GetSpokesAngles();
+            GetControlCenterPoint();
+
+            _timer = new Timer();
+            _timer.Tick += Timer_Tick;
+            Disposed += OnDisposed;
+            ActiveTimer();
+
+            Resize += ProgressCircle_Resize;
+        }
+
+        /// <summary>
         ///     Sets the circle appearance.
         /// </summary>
         /// <param name="spokes">
@@ -196,9 +196,6 @@ namespace SilDev.Forms
             Invalidate();
         }
 
-        private void ProgressCircle_Resize(object sender, EventArgs e) =>
-            GetControlCenterPoint();
-
         /// <summary>
         ///     Retrieves the size of a rectangular area into which a control can be
         ///     fitted.
@@ -208,18 +205,6 @@ namespace SilDev.Forms
         /// </param>
         public override Size GetPreferredSize(Size size) =>
             new Size(size.Width = (_outerRadius + _thickness) * 2, size.Height);
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            _progressValue = ++_progressValue % _spokes;
-            Invalidate();
-        }
-
-        private void OnDisposed(object s, EventArgs e)
-        {
-            if (Disposing)
-                _timer?.Dispose();
-        }
 
         /// <summary>
         ///     Raises the <see cref="Control"/>.Paint event.
@@ -254,6 +239,21 @@ namespace SilDev.Forms
                 }
             }
             base.OnPaint(e);
+        }
+
+        private void ProgressCircle_Resize(object sender, EventArgs e) =>
+            GetControlCenterPoint();
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            _progressValue = ++_progressValue % _spokes;
+            Invalidate();
+        }
+
+        private void OnDisposed(object s, EventArgs e)
+        {
+            if (Disposing)
+                _timer?.Dispose();
         }
 
         private void GenerateColorsPallet()

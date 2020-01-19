@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2020-01-14 14:16
+// Version:  2020-01-19 15:32
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -36,6 +36,27 @@ namespace SilDev
     /// </summary>
     public static class FileEx
     {
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        private enum DatHeaderKey
+        {
+            VersionNumber1,
+            VersionNumber2,
+            VersionNumber3,
+            VersionNumber4,
+            IdentifierChar1,
+            IdentifierChar2,
+            IdentifierChar3,
+            IdentifierChar4,
+            IdentifierChar5,
+            CompressionMode,
+            Reserved1,
+            Reserved2,
+            Reserved3,
+            Reserved4,
+            Reserved5,
+            Reserved6
+        }
+
         private const int DatHeaderSize = 16;
 
         private static byte[] DefDatHeader =>
@@ -58,32 +79,6 @@ namespace SilDev
                 0, 0, 0,
                 0, 0, 0
             };
-
-        private static bool DatHeaderIsValid(IReadOnlyList<byte> header)
-        {
-            if (header.Count != DatHeaderSize)
-                return false;
-            var defHeader = DefDatHeader;
-            for (var i = 0; i < DatHeaderSize; i++)
-                switch ((DatHeaderKey)i)
-                {
-                    case DatHeaderKey.CompressionMode:
-                    {
-                        var value = header[i];
-                        if (!value.IsBetween((byte)0, (byte)1))
-                            return false;
-                        break;
-                    }
-                    default:
-                    {
-                        var value = header[i];
-                        if (value != defHeader[i])
-                            return false;
-                        break;
-                    }
-                }
-            return true;
-        }
 
         /// <summary>
         ///     Creates a new file, writes the specified object graph into to the file, and
@@ -545,9 +540,9 @@ namespace SilDev
         /// <param name="offsets">
         ///     A list with all positions where bytes were overwritten.
         /// </param>
-        public static bool BinaryReplace(string file, byte[] oldValue, byte[] newValue, bool backup, out List<long[]> offsets)
+        public static bool BinaryReplace(string file, byte[] oldValue, byte[] newValue, bool backup, out IList<ISet<long>> offsets)
         {
-            offsets = new List<long[]>();
+            offsets = new List<ISet<long>>();
 
             try
             {
@@ -611,10 +606,10 @@ namespace SilDev
                         {
                             var offsetStart = targetStream.Length;
                             var offsetEnd = offsetStart + newValue.Length;
-                            var offsetList = new List<long>();
+                            var offsetList = new HashSet<long>();
                             for (var i = offsetStart; i < offsetEnd; i++)
                                 offsetList.Add(i);
-                            offsets.Add(offsetList.ToArray());
+                            offsets.Add(offsetList);
 
                             targetStream.Write(newValue, 0, newValue.Length);
                             offset = -1;
@@ -672,8 +667,8 @@ namespace SilDev
                 {
                     if (File.Exists(backupPath) && File.Exists(targetPath))
                     {
-                        var backupHash = new Crypto.Md5(backupPath, true);
-                        var targetHash = new Crypto.Md5(targetPath, true);
+                        var backupHash = new Crypto.Crc64(backupPath, true);
+                        var targetHash = new Crypto.Crc64(targetPath, true);
                         if (backupHash == targetHash)
                             File.Delete(backupPath);
                     }
@@ -1526,25 +1521,30 @@ namespace SilDev
             }
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        private enum DatHeaderKey
+        private static bool DatHeaderIsValid(IReadOnlyList<byte> header)
         {
-            VersionNumber1,
-            VersionNumber2,
-            VersionNumber3,
-            VersionNumber4,
-            IdentifierChar1,
-            IdentifierChar2,
-            IdentifierChar3,
-            IdentifierChar4,
-            IdentifierChar5,
-            CompressionMode,
-            Reserved1,
-            Reserved2,
-            Reserved3,
-            Reserved4,
-            Reserved5,
-            Reserved6
+            if (header.Count != DatHeaderSize)
+                return false;
+            var defHeader = DefDatHeader;
+            for (var i = 0; i < DatHeaderSize; i++)
+                switch ((DatHeaderKey)i)
+                {
+                    case DatHeaderKey.CompressionMode:
+                    {
+                        var value = header[i];
+                        if (!value.IsBetween((byte)0, (byte)1))
+                            return false;
+                        break;
+                    }
+                    default:
+                    {
+                        var value = header[i];
+                        if (value != defHeader[i])
+                            return false;
+                        break;
+                    }
+                }
+            return true;
         }
     }
 }

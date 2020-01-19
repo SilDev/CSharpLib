@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2020-01-14 16:36
+// Version:  2020-01-19 15:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -266,6 +266,24 @@ namespace SilDev
         public static bool IsPinned(string path) =>
             File.Exists(GetPinLink(path));
 
+        /// <summary>
+        ///     Pin the specified file to taskbar.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to be pinned.
+        /// </param>
+        public static bool Pin(string path) =>
+            PinUnpin(path, true);
+
+        /// <summary>
+        ///     Unpin the specified file to taskbar.
+        /// </summary>
+        /// <param name="path">
+        ///     The file to be unpinned.
+        /// </param>
+        public static bool Unpin(string path) =>
+            PinUnpin(path, false);
+
         private static bool PinUnpin(string path, bool pin)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -356,24 +374,6 @@ namespace SilDev
                     Reg.RemoveSubKey(Registry.CurrentUser, shellKeyPath);
             }
         }
-
-        /// <summary>
-        ///     Pin the specified file to taskbar.
-        /// </summary>
-        /// <param name="path">
-        ///     The file to be pinned.
-        /// </param>
-        public static bool Pin(string path) =>
-            PinUnpin(path, true);
-
-        /// <summary>
-        ///     Unpin the specified file to taskbar.
-        /// </summary>
-        /// <param name="path">
-        ///     The file to be unpinned.
-        /// </param>
-        public static bool Unpin(string path) =>
-            PinUnpin(path, false);
     }
 
     /// <summary>
