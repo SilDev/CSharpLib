@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-20 20:35
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,9 +27,14 @@ namespace SilDev.Forms
     public enum FormExPlusSettings
     {
         /// <summary>
-        ///     Logs the loading time of the specified <see cref="Form"/>.
+        ///     Activates fade-in effect.
         /// </summary>
-        LogLoadingTime = 0x10
+        FadeIn = 4,
+
+        /// <summary>
+        ///     Logs the loading time.
+        /// </summary>
+        LogLoadingTime = 16
     }
 
     /// <summary>
@@ -61,7 +66,61 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Determines special settings for the specified <see cref="Form"/>.
+        ///     Applies a fade-in effect to the specified form.
+        /// </summary>
+        /// <param name="form">
+        ///     The form to fade-in.
+        /// </param>
+        /// <param name="effectDuration">
+        ///     The effect duration. Must be in range of 25 to 750.
+        /// </param>
+        /// <param name="maxOpacity">
+        ///     The maximal opacity of the form.
+        /// </param>
+        /// <param name="setForeground">
+        ///     <see langword="true"/> to bring the form into the foreground; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static void FadeIn(Form form, int effectDuration = 25, double maxOpacity = 1d, bool setForeground = true)
+        {
+            if (form == null || form.Opacity > 0d)
+                return;
+
+            maxOpacity = Math.Min(Math.Max(effectDuration, .25d), 1d);
+            if (form.Opacity >= maxOpacity)
+                return;
+            effectDuration = Math.Min(Math.Max(effectDuration, 25), 750);
+
+            var timer = new Timer
+            {
+                Interval = 1,
+                Enabled = true
+            };
+            timer.Tick += OnTick;
+
+            void OnTick(object sender, EventArgs e)
+            {
+                if (!(sender is Timer owner))
+                    return;
+                if (form.Opacity < maxOpacity)
+                {
+                    var opacity = maxOpacity / (effectDuration / 10d) + form.Opacity;
+                    if (opacity < maxOpacity)
+                    {
+                        form.Opacity = opacity;
+                        return;
+                    }
+                }
+                owner.Enabled = false;
+                form.Opacity = maxOpacity;
+                if (setForeground)
+                    WinApi.NativeHelper.SetForegroundWindow(form.Handle);
+                owner.Dispose();
+            }
+        }
+
+        /// <summary>
+        ///     Determines special settings for this <see cref="Form"/>.
         ///     <para>
         ///         Hint: This function should be called before the <see cref="Form"/> is
         ///         created.
@@ -80,24 +139,23 @@ namespace SilDev.Forms
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
-            if (Log.DebugMode <= 0 || !settings.HasFlag(FormExPlusSettings.LogLoadingTime))
+            if (Application.OpenForms.OfType<Form>().Any(f => f == form))
                 return form;
-            try
+            if (Log.DebugMode > 0 && settings.HasFlag(FormExPlusSettings.LogLoadingTime))
             {
-                if (Application.OpenForms.OfType<Form>().Any(x => x == form))
-                    return form;
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                form.Shown += OnShown;
+
+                void OnShown(object sender, EventArgs e)
+                {
+                    stopwatch.Stop();
+                    Log.Write($"Stopwatch: {form.Name} loaded in {stopwatch.ElapsedMilliseconds}ms.");
+                }
             }
-            catch (Exception ex) when (ex.IsCaught())
-            {
+            if (!settings.HasFlag(FormExPlusSettings.FadeIn))
                 return form;
-            }
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            form.Shown += delegate
-            {
-                stopwatch.Stop();
-                Log.Write($"Stopwatch: {form.Name} loaded in {stopwatch.ElapsedMilliseconds}ms.");
-            };
+            form.Shown += (sender, e) => FadeIn(form);
             return form;
         }
     }
