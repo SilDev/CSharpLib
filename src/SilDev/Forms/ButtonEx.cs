@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-20 15:45
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev.Forms
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
 
@@ -24,6 +25,8 @@ namespace SilDev.Forms
     /// </summary>
     public static class ButtonEx
     {
+        private static HashSet<IntPtr> HashList { get; } = new HashSet<IntPtr>();
+
         /// <summary>
         ///     Creates a small split button on the right side of this <see cref="Button"/>
         ///     which is mostly used for drop down menu controls.
@@ -42,10 +45,12 @@ namespace SilDev.Forms
         /// </param>
         public static void Split(this Button button, Color? buttonText = null)
         {
-            if (!(button is { } b))
+            if (!(button is { } b) || b.Width < 48 || b.Height < 16)
                 return;
-            if (b.Width < 48 || b.Height < 16)
-                throw new NotSupportedException();
+            var hWnd = b.Handle;
+            if (HashList.Contains(hWnd))
+                return;
+            HashList.Add(hWnd);
             var lis = b.LayoutIsSuspended();
             if (!lis)
                 b.SuspendLayout();
@@ -73,10 +78,48 @@ namespace SilDev.Forms
                 g?.Dispose();
                 p?.Dispose();
             }
-            b.MouseMove += Split_MouseMove;
-            b.MouseLeave += Split_MouseLeave;
+            b.MouseMove += SplitOnMouseMove;
+            b.MouseLeave += SplitOnMouseLeave;
             if (!lis)
                 b.ResumeLayout();
+        }
+
+        /// <summary>
+        ///     Creates or removes the small split button on the right side of this
+        ///     <see cref="Button"/> which is mostly used for drop down menu controls.
+        ///     <para>
+        ///         Please note that the <see cref="FlatStyle"/> is overwritten to
+        ///         <see cref="FlatStyle.Flat"/> which is required to apply highlight
+        ///         effects.
+        ///     </para>
+        /// </summary>
+        /// <param name="button">
+        ///     The button to split.
+        /// </param>
+        /// <param name="enabled">
+        ///     <see langword="true"/> to create a split button; otherwise,
+        ///     <see langword="true"/> to remove a existing split button.
+        /// </param>
+        /// <param name="buttonText">
+        ///     The button text color, <see cref="SystemColors.ControlText"/> is used by
+        ///     default.
+        /// </param>
+        public static void Split(this Button button, bool enabled, Color? buttonText = null)
+        {
+            if (!(button is { } b))
+                return;
+            if (enabled)
+            {
+                b.Split(buttonText);
+                return;
+            }
+            var hWnd = b.Handle;
+            if (!HashList.Contains(hWnd))
+                return;
+            b.Image = default;
+            b.MouseMove -= SplitOnMouseMove;
+            b.MouseLeave -= SplitOnMouseLeave;
+            HashList.Remove(hWnd);
         }
 
         /// <summary>
@@ -100,14 +143,14 @@ namespace SilDev.Forms
             return true;
         }
 
-        private static void Split_MouseMove(object sender, MouseEventArgs e)
+        private static void SplitOnMouseMove(object sender, MouseEventArgs e)
         {
             if (!(sender is Button b))
                 return;
             var lis = b.LayoutIsSuspended();
             if (!lis)
                 b.SuspendLayout();
-            Split_MouseLeave(b, null);
+            SplitOnMouseLeave(b, null);
             if (b.PointToClient(Cursor.Position).X >= b.Right - 16)
             {
                 if (b.BackgroundImage != null)
@@ -131,7 +174,7 @@ namespace SilDev.Forms
                 b.ResumeLayout();
         }
 
-        private static void Split_MouseLeave(object sender, EventArgs e)
+        private static void SplitOnMouseLeave(object sender, EventArgs e)
         {
             var b = sender as Button;
             if (b?.BackgroundImage == null)
