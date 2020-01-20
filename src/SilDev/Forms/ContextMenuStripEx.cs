@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-20 20:30
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -15,7 +15,9 @@
 
 namespace SilDev.Forms
 {
+    using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Linq;
@@ -67,8 +69,7 @@ namespace SilDev.Forms
     /// </summary>
     public static class ContextMenuStripEx
     {
-        private static Color _menuBorder = SystemColors.ControlDark;
-        private static readonly Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>> EnabledAnimation = new Dictionary<ContextMenuStrip, KeyValuePair<int, WinApi.AnimateWindowFlags>>();
+        private static HashSet<int> HashList { get; } = new HashSet<int>();
 
         /// <summary>
         ///     Closes this <see cref="ContextMenuStrip"/> when the mouse cursor leaves it.
@@ -83,25 +84,39 @@ namespace SilDev.Forms
         {
             if (!(contextMenuStrip is { } cms))
                 return;
+
+            var hash = cms.GetHashCode() + nameof(CloseOnMouseLeave).GetHashCode();
+            if (HashList.Contains(hash))
+                return;
+            HashList.Add(hash);
+
             if (toleration < 0)
                 toleration = 0;
-            cms.Opened += (sender, args) =>
+
+            var timer = new Timer
             {
-                var timer = new Timer
-                {
-                    Interval = 1,
-                    Enabled = true
-                };
-                timer.Tick += (s, a) =>
-                {
-                    var rect = cms.ClientRectangle;
-                    rect = new Rectangle(rect.X - toleration, rect.Y - toleration, rect.Width + toleration * 2, rect.Height + toleration * 2);
-                    if (rect.Contains(cms.PointToClient(Control.MousePosition)))
-                        return;
-                    cms.Close();
-                    timer.Dispose();
-                };
+                Interval = 1,
+                Enabled = false
             };
+            timer.Tick += OnTick;
+            cms.Opened += OnOpened;
+            cms.Closed += OnClosed;
+            cms.Disposed += OnDisposed;
+
+            void OnTick(object sender, EventArgs e)
+            {
+                var rect = cms.ClientRectangle;
+                rect = new Rectangle(rect.X - toleration, rect.Y - toleration, rect.Width + toleration * 2, rect.Height + toleration * 2);
+                if (rect.Contains(cms.PointToClient(Control.MousePosition)))
+                    return;
+                cms.Close();
+            }
+
+            void OnOpened(object sender, EventArgs e) => timer.Enabled = true;
+
+            void OnClosed(object sender, EventArgs e) => timer.Enabled = false;
+
+            void OnDisposed(object sender, EventArgs e) => timer.Dispose();
         }
 
         /// <summary>
@@ -125,41 +140,53 @@ namespace SilDev.Forms
         {
             if (!(contextMenuStrip is { } cms))
                 return;
-            var settings = new KeyValuePair<int, WinApi.AnimateWindowFlags>(time, (WinApi.AnimateWindowFlags)animation);
-            if (EnabledAnimation.ContainsKey(cms))
-            {
-                EnabledAnimation[cms] = settings;
+
+            var hash = cms.GetHashCode() + nameof(EnableAnimation).GetHashCode();
+            if (HashList.Contains(hash))
                 return;
-            }
-            EnabledAnimation.Add(cms, settings);
+            HashList.Add(hash);
+
             var loaded = false;
-            cms.Opening += (sender, args) =>
+            var timer = new Timer
             {
+                Interval = 1,
+                Enabled = false
+            };
+            timer.Tick += OnTick;
+            cms.Opening += OnOpening;
+            cms.Disposed += OnDisposed;
+
+            void OnTick(object sender, EventArgs e)
+            {
+                if (!(sender is Timer owner))
+                    return;
+                if (cms.Opacity < 1d)
+                {
+                    cms.Opacity += .1d;
+                    return;
+                }
+                owner.Enabled = false;
+                cms.Opacity = 1d;
+            }
+
+            void OnOpening(object sender, CancelEventArgs e)
+            {
+                if (!(sender is ContextMenuStrip owner) || e.Cancel)
+                    return;
                 if (animation != ContextMenuStripExAnimation.Default)
                 {
-                    WinApi.NativeMethods.AnimateWindow(cms.Handle, EnabledAnimation[cms].Key, EnabledAnimation[cms].Value);
+                    WinApi.NativeMethods.AnimateWindow(owner.Handle, time, (WinApi.AnimateWindowFlags)animation);
                     if (loaded)
                         return;
                     loaded = true;
-                    cms.Refresh();
+                    owner.Refresh();
                     return;
                 }
-                cms.Opacity = 0d;
-                var timer = new Timer
-                {
-                    Interval = 1,
-                    Enabled = true
-                };
-                timer.Tick += (s, a) =>
-                {
-                    if (cms.Opacity < 1d)
-                    {
-                        cms.Opacity += .1d;
-                        return;
-                    }
-                    timer.Dispose();
-                };
-            };
+                owner.Opacity = 0d;
+                timer.Enabled = true;
+            }
+
+            void OnDisposed(object sender, EventArgs e) => timer.Dispose();
         }
 
         /// <summary>
@@ -175,9 +202,16 @@ namespace SilDev.Forms
         {
             if (!(contextMenuStrip is { } cms))
                 return;
-            _menuBorder = borderColor ?? SystemColors.ControlDark;
-            cms.Renderer = new Renderer();
-            cms.Paint += (sender, args) =>
+
+            var hash = cms.GetHashCode() + nameof(SetFixedSingle).GetHashCode();
+            if (HashList.Contains(hash))
+                return;
+            HashList.Add(hash);
+
+            cms.Renderer = new Renderer(borderColor ?? SystemColors.ControlDark);
+            cms.Paint += OnPaint;
+
+            void OnPaint(object sender, PaintEventArgs args)
             {
                 using var gp = new GraphicsPath();
                 var rects = new RectangleF[2];
@@ -189,19 +223,21 @@ namespace SilDev.Forms
                     args.Graphics.FillPath(b, gp);
                 using var p = new Pen(borderColor ?? SystemColors.ControlDark, 1);
                 args.Graphics.DrawPath(p, gp);
-            };
+            }
         }
 
         private class Renderer : ToolStripProfessionalRenderer
         {
-            public Renderer() : base(new ColorTable()) { }
+            public Renderer(Color menuItemBorder) : base(new ColorTable(menuItemBorder)) { }
         }
 
         private class ColorTable : ProfessionalColorTable
         {
-            public override Color MenuItemBorder => _menuBorder;
+            public override Color MenuItemBorder { get; }
 
             public override Color MenuItemSelected => ProfessionalColors.ButtonSelectedHighlight;
+
+            public ColorTable(Color menuItemBorder) => MenuItemBorder = menuItemBorder;
         }
     }
 }

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-20 20:30
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -58,12 +58,12 @@ namespace SilDev.Forms
         /// </param>
         public static Control GetAncestor(this Control control)
         {
-            if (!(control is { } ctrl))
+            if (!(control is { } c))
                 return default;
-            var c = ctrl;
-            while (c.Parent != null)
-                c = c.Parent;
-            return c;
+            var cur = c;
+            while (cur.Parent != null)
+                cur = cur.Parent;
+            return cur;
         }
 
         /// <summary>
@@ -80,8 +80,7 @@ namespace SilDev.Forms
             try
             {
                 var fi = typeof(Control).GetField("layoutSuspendCount", BindingFlags.Instance | BindingFlags.NonPublic);
-                var b = (byte?)fi?.GetValue(c) ?? 0;
-                return b > 0;
+                return ((byte?)fi?.GetValue(c) ?? 0) > 0;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -104,23 +103,25 @@ namespace SilDev.Forms
         /// </param>
         public static void EnableDragMove(Control control, bool cursor = true)
         {
-            if (!(control is { } ctrl))
+            if (!(control is { } c))
                 return;
-            ctrl.MouseDown += (sender, args) =>
+            c.MouseDown += OnMouseDown;
+
+            void OnMouseDown(object sender, MouseEventArgs e)
             {
-                if (!(sender is Control c) || args == null || args.Button != MouseButtons.Left)
+                if (!(sender is Control owner) || e == null || e.Button != MouseButtons.Left)
                     return;
-                var ca = c.GetAncestor();
-                if (ca == null)
+                var ancestor = owner.GetAncestor();
+                if (ancestor == null)
                     return;
-                var cc = c.Cursor;
+                var curCursor = owner.Cursor;
                 if (cursor)
-                    c.Cursor = Cursors.SizeAll;
+                    owner.Cursor = Cursors.SizeAll;
                 WinApi.NativeMethods.ReleaseCapture();
-                WinApi.NativeMethods.SendMessage(ca.Handle, 0xa1, new IntPtr(0x2), IntPtr.Zero);
-                if (c.Cursor != cc)
-                    c.Cursor = cc;
-            };
+                WinApi.NativeMethods.SendMessage(ancestor.Handle, 0xa1, new IntPtr(0x2), IntPtr.Zero);
+                if (owner.Cursor != curCursor)
+                    owner.Cursor = curCursor;
+            }
         }
 
         /// <summary>
@@ -241,15 +242,15 @@ namespace SilDev.Forms
         ///     <see langword="true"/> if all child controls are displayed; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        /// <param name="exempt">
-        ///     A sequence of child controls that remain visible.
+        /// <param name="excludes">
+        ///     Child controls that remain visible.
         /// </param>
-        public static void SetChildVisibility(this Control control, bool visibility, params Control[] exempt)
+        public static void SetChildVisibility(this Control control, bool visibility, params Control[] excludes)
         {
-            if (!(control is { } ctrl))
+            if (!(control is { } c))
                 return;
-            var ctrls = ctrl.Controls.OfType<Control>().Where(c => !exempt.Contains(c));
-            ctrls.Aggregate(visibility, (v, c) => c.Visible = v);
+            var ctrls = c.Controls.OfType<Control>().Where(x => !excludes.Contains(x));
+            ctrls.Aggregate(visibility, (r, x) => x.Visible = r);
         }
 
         /// <summary>
@@ -267,23 +268,27 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawBorder(Control control, Color color, ControlExBorderStyle style = ControlExBorderStyle.Solid)
         {
-            if (!(control is { } ctrl))
+            if (!(control is { } c))
                 return;
-            ctrl.Paint += (sender, e) =>
+            c.Paint += OnPaint;
+            c.Resize += OnResize;
+
+            void OnPaint(object sender, PaintEventArgs e)
             {
-                if (!(sender is Control c) || e == null)
+                if (!(sender is Control owner) || e == null)
                     return;
-                ControlPaint.DrawBorder(e.Graphics, c.ClientRectangle, color, (ButtonBorderStyle)style);
-            };
-            ctrl.Resize += (sender, e) =>
+                ControlPaint.DrawBorder(e.Graphics, owner.ClientRectangle, color, (ButtonBorderStyle)style);
+            }
+
+            static void OnResize(object sender, EventArgs e)
             {
                 if (e == null)
                     return;
-                var c = (sender as Control)?.GetAncestor();
-                if (c == null || c.LayoutIsSuspended())
+                var ancestor = (sender as Control)?.GetAncestor();
+                if (ancestor == null || ancestor.LayoutIsSuspended())
                     return;
-                c.Invalidate();
-            };
+                ancestor.Invalidate();
+            }
         }
 
         /// <summary>
