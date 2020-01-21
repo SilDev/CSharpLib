@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-21 20:23
+// Version:  2020-01-21 20:42
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -400,7 +400,7 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the content of an INI file or an INI file formatted string value
-        ///     to <see cref="IDictionary{TKey, TValue}"/> object.
+        ///     to a <see cref="IDictionary{TKey, TValue}"/> object.
         /// </summary>
         /// <param name="fileOrContent">
         ///     The path or content of an INI file.
@@ -459,7 +459,7 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the content of an INI file or an INI file formatted string value
-        ///     to <see cref="IDictionary{TKey, TValue}"/> object.
+        ///     to a <see cref="IDictionary{TKey, TValue}"/> object.
         /// </summary>
         /// <param name="fileOrContent">
         ///     The path or content of an INI file.
@@ -489,7 +489,7 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the content of an INI file or an INI file formatted string value
-        ///     to <see cref="IDictionary{TKey, TValue}"/> object.
+        ///     to a <see cref="IDictionary{TKey, TValue}"/> object.
         /// </summary>
         /// <param name="fileOrContent">
         ///     The path or content of an INI file.
@@ -503,7 +503,7 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the content of an INI file or an INI file formatted string value
-        ///     to <see cref="IDictionary{TKey, TValue}"/> object.
+        ///     to a <see cref="IDictionary{TKey, TValue}"/> object.
         /// </summary>
         /// <param name="fileOrContent">
         ///     The path or content of an INI file.
@@ -512,41 +512,7 @@ namespace SilDev
             TryParse(fileOrContent, true, true, out value);
 
         /// <summary>
-        ///     Retrieves the value from the specified section in an INI file.
-        ///     <para>
-        ///         The Win32-API without file caching is used for reading in this case.
-        ///     </para>
-        /// </summary>
-        /// <param name="section">
-        ///     The name of the section containing the key name.
-        /// </param>
-        /// <param name="key">
-        ///     The name of the key whose associated value is to be retrieved.
-        /// </param>
-        /// <param name="file">
-        ///     The file path of an INI file.
-        /// </param>
-        public static string ReadDirect(string section, string key, string file)
-        {
-            var output = string.Empty;
-            try
-            {
-                var path = PathEx.Combine(file);
-                if (!File.Exists(path))
-                    throw new PathNotFoundException(path);
-                var sb = new StringBuilder(short.MaxValue);
-                if (WinApi.NativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
-                    output = sb.ToStringThenClear();
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-            }
-            return output;
-        }
-
-        /// <summary>
-        ///     Writes the specified content to an INI file on the disk.
+        ///     Writes the specified content to an file on the disk.
         /// </summary>
         /// <param name="content">
         ///     The content based on <see cref="Parse(string, bool, bool)"/>.
@@ -630,6 +596,41 @@ namespace SilDev
                 Log.Write(ex);
             }
             return false;
+        }
+
+        /// <summary>
+        ///     Retrieves the value from the specified section in an INI file.
+        ///     <para>
+        ///         The Win32-API without file caching is used for reading in this case.
+        ///         Please note that empty sections are not permitted.
+        ///     </para>
+        /// </summary>
+        /// <param name="section">
+        ///     The name of the section containing the key name.
+        /// </param>
+        /// <param name="key">
+        ///     The name of the key whose associated value is to be retrieved.
+        /// </param>
+        /// <param name="file">
+        ///     The file path of an INI file.
+        /// </param>
+        public static string ReadDirect(string section, string key, string file)
+        {
+            var output = string.Empty;
+            try
+            {
+                var path = PathEx.Combine(file);
+                if (!File.Exists(path))
+                    throw new PathNotFoundException(path);
+                var sb = new StringBuilder(short.MaxValue);
+                if (WinApi.NativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
+                    output = sb.ToStringThenClear();
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+            }
+            return output;
         }
 
         /// <summary>
