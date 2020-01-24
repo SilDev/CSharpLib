@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-24 20:49
+// Version:  2020-01-24 21:29
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -737,7 +737,7 @@ namespace SilDev
         ///     Copies everything of the specified <see cref="Ini"/> instance to this
         ///     instance.
         ///     <para>
-        ///         Please note that all existing values will be overwritten.
+        ///         Please note that existing values will be overwritten.
         ///     </para>
         /// </summary>
         /// <param name="ini">
@@ -777,14 +777,14 @@ namespace SilDev
         /// <param name="index">
         ///     The zero-based index of the value.
         ///     <para>
-        ///         If <see langword="null"/>, the entire key is removed.
-        ///     </para>
-        ///     <para>
-        ///         If out of range, a new value is added to the list of values.
+        ///         If higher than available, a new value is added to the list of values.
         ///     </para>
         /// </param>
         /// <param name="value">
         ///     The value to be set.
+        ///     <para>
+        ///         If <see langword="null"/>, the entire key is removed.
+        ///     </para>
         /// </param>
         /// <exception cref="ArgumentInvalidException">
         ///     section or key contains invalid characters.
@@ -832,9 +832,15 @@ namespace SilDev
         /// </param>
         /// <param name="key">
         ///     The name of the key in the section.
+        ///     <para>
+        ///         If <see langword="null"/>, the entire section is removed.
+        ///     </para>
         /// </param>
         /// <param name="value">
         ///     The value to be set.
+        ///     <para>
+        ///         If <see langword="null"/>, the entire key is removed.
+        ///     </para>
         /// </param>
         /// <exception cref="ArgumentInvalidException">
         ///     section or key contains invalid characters.
