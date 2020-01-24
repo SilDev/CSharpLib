@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:58
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -241,6 +241,12 @@ namespace SilDev.Forms
             base.OnPaint(e);
         }
 
+        private static PointF GetCoordinate(PointF circleCenter, int radius, double angle)
+        {
+            var d = Math.PI * angle / 180d;
+            return new PointF(circleCenter.X + radius * (float)Math.Cos(d), circleCenter.Y + radius * (float)Math.Sin(d));
+        }
+
         private void ProgressCircle_Resize(object sender, EventArgs e) =>
             GetControlCenterPoint();
 
@@ -277,12 +283,6 @@ namespace SilDev.Forms
 
         private void GetControlCenterPoint() =>
             _centerPoint = new PointF(Width / 2f, Height / 2f - 1);
-
-        private static PointF GetCoordinate(PointF circleCenter, int radius, double angle)
-        {
-            var d = Math.PI * angle / 180d;
-            return new PointF(circleCenter.X + radius * (float)Math.Cos(d), circleCenter.Y + radius * (float)Math.Sin(d));
-        }
 
         private void GetSpokesAngles()
         {

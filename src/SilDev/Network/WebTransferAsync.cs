@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WebTransferAsync.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:58
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -597,6 +597,15 @@ namespace SilDev.Network
                 _webClient?.CancelAsync();
         }
 
+        /// <summary>
+        ///     Releases all resources used by this <see cref="WebTransferAsync"/>.
+        /// </summary>
+        public void Dispose()
+        {
+            CancelAsync();
+            _webClient?.Dispose();
+        }
+
         private void DownloadFile_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             try
@@ -647,15 +656,6 @@ namespace SilDev.Network
                     BytesReceived = new FileInfo(FilePath).Length;
                 HasCanceled = !(File.Exists(FilePath) && BytesReceived == TotalBytesToReceive);
             }
-        }
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="WebTransferAsync"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            CancelAsync();
-            _webClient?.Dispose();
         }
     }
 }

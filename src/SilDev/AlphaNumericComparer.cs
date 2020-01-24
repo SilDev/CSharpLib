@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AlphaNumericComparer.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:58
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -87,15 +87,6 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the string of the object that is used for comparison.
-        /// </summary>
-        /// <param name="value">
-        ///     The object to compare.
-        /// </param>
-        protected virtual string GetString(object value) =>
-            value as string;
-
-        /// <summary>
         ///     Compare two specified objects and returns an integer that indicates their
         ///     relative position in the sort order.
         /// </summary>
@@ -164,5 +155,14 @@ namespace SilDev
                 return string.Compare(s1, s2, StringComparison.InvariantCulture);
             }
         }
+
+        /// <summary>
+        ///     Gets the string of the object that is used for comparison.
+        /// </summary>
+        /// <param name="value">
+        ///     The object to compare.
+        /// </param>
+        protected virtual string GetString(object value) =>
+            value as string;
     }
 }

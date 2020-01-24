@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Player.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-24 20:58
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -22,19 +22,6 @@ namespace SilDev.Intern.IrrKlangEngine
     {
         protected static dynamic AudioPlayer;
         protected static dynamic SoundEngine;
-
-        protected static bool InitializeComponent()
-        {
-            if (SoundEngine != null)
-                return true;
-            if (IrrKlangReference.Assembly == null)
-                return false;
-            var engine = IrrKlangReference.Assembly.GetType("IrrKlang.ISoundEngine", false);
-            if (engine == null)
-                return false;
-            SoundEngine = Activator.CreateInstance(engine);
-            return true;
-        }
 
         internal static void Play(dynamic source, bool loop, float volume)
         {
@@ -71,6 +58,19 @@ namespace SilDev.Intern.IrrKlangEngine
         {
             AudioPlayer?.Stop();
             SoundEngine?.RemoveAllSoundSources();
+        }
+
+        protected static bool InitializeComponent()
+        {
+            if (SoundEngine != null)
+                return true;
+            if (IrrKlangReference.Assembly == null)
+                return false;
+            var engine = IrrKlangReference.Assembly.GetType("IrrKlang.ISoundEngine", false);
+            if (engine == null)
+                return false;
+            SoundEngine = Activator.CreateInstance(engine);
+            return true;
         }
     }
 }

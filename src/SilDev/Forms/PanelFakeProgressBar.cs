@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PanelFakeProgressBar.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-24 20:58
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -40,18 +40,6 @@ namespace SilDev.Forms
         /// <summary>
         ///     Sets the current position of the fake progress bar.
         /// </summary>
-        /// <param name="value">
-        ///     The position to be set.
-        /// </param>
-        /// <param name="maxValue">
-        ///     The maximum range.
-        /// </param>
-        public Color SetProgress(int value, int maxValue = 100) =>
-            SetProgress(this, value, maxValue);
-
-        /// <summary>
-        ///     Sets the current position of the fake progress bar.
-        /// </summary>
         /// <param name="panel">
         ///     The fake progress bar <see cref="Panel"/> control.
         /// </param>
@@ -82,5 +70,17 @@ namespace SilDev.Forms
             }
             return color;
         }
+
+        /// <summary>
+        ///     Sets the current position of the fake progress bar.
+        /// </summary>
+        /// <param name="value">
+        ///     The position to be set.
+        /// </param>
+        /// <param name="maxValue">
+        ///     The maximum range.
+        /// </param>
+        public Color SetProgress(int value, int maxValue = 100) =>
+            SetProgress(this, value, maxValue);
     }
 }

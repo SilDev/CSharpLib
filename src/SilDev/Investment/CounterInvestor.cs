@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: CounterInvestor.cs
-// Version:  2020-01-13 13:04
+// Version:  2020-01-24 20:58
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -77,23 +77,6 @@ namespace SilDev.Investment
         public TCounter GetValue(int index) =>
             Handler(index, null);
 
-        private TCounter Handler(int index, bool? state)
-        {
-            if (!_counter.ContainsKey(index))
-                _counter.Add(index, default);
-            switch (state)
-            {
-                case true:
-                    if (IsAddable(_counter[index]))
-                        _counter[index] = (dynamic)_counter[index] + 1;
-                    break;
-                case false:
-                    _counter[index] = default;
-                    break;
-            }
-            return _counter[index];
-        }
-
         private static bool IsValid(Type type)
         {
             switch (Type.GetTypeCode(type))
@@ -119,6 +102,23 @@ namespace SilDev.Investment
             var type = typeof(TCounter);
             var maxValue = IsValid(type) ? (TCounter)type.GetField(nameof(int.MaxValue)).GetRawConstantValue() : default;
             return (dynamic)source < maxValue;
+        }
+
+        private TCounter Handler(int index, bool? state)
+        {
+            if (!_counter.ContainsKey(index))
+                _counter.Add(index, default);
+            switch (state)
+            {
+                case true:
+                    if (IsAddable(_counter[index]))
+                        _counter[index] = (dynamic)_counter[index] + 1;
+                    break;
+                case false:
+                    _counter[index] = default;
+                    break;
+            }
+            return _counter[index];
         }
     }
 }
