@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-24 21:29
+// Version:  2020-01-24 21:44
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -39,20 +39,24 @@ namespace SilDev
         /// <summary>
         ///     The default pattern for parsing an INI document that allows blank sections.
         /// </summary>
+        [NonSerialized]
         [ScriptIgnore]
         public const string ParsePatternDefault = @"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))*";
 
         /// <summary>
         ///     The pattern for parsing an INI document that does not allow blank sections.
         /// </summary>
+        [NonSerialized]
         [ScriptIgnore]
         public const string ParsePatternStrict = @"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))+";
 
-        [ScriptIgnore]
+        [NonSerialized]
         private const string EncodeTagOpen = "<base64 reason=\"LineSeparator\">",
                              EncodeTagClose = "</base64>";
 
+        [NonSerialized]
         private readonly object _identifier = new object();
+
         private IDocumentDictionary _document;
 
         /// <summary>
