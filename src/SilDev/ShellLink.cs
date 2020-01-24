@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2020-01-14 16:36
+// Version:  2020-01-24 20:10
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -90,7 +90,12 @@ namespace SilDev
         ///     The <see cref="ShellLinkInfo"/> instance to compare.
         /// </param>
         public bool Equals(ShellLinkInfo other) =>
-            GetHashCode(true) == other.GetHashCode(true);
+            Description == other.Description &&
+            Arguments == other.Arguments &&
+            TargetPath == other.TargetPath &&
+            IconLocation == other.IconLocation &&
+            ShowState == other.ShowState &&
+            LinkPath == other.LinkPath;
 
         /// <summary>
         ///     Determines whether this instance have same values as the specified
@@ -109,18 +114,8 @@ namespace SilDev
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        /// <param name="nonReadOnly">
-        ///     <see langword="true"/> to include the hashes of non-readonly properties;
-        ///     otherwise, <see langword="false"/>.
-        /// </param>
-        public int GetHashCode(bool nonReadOnly) =>
-            Crypto.GetStructHashCode(this, nonReadOnly);
-
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
         public override int GetHashCode() =>
-            Crypto.GetStructHashCode(this);
+            typeof(ShellLinkInfo).GetHashCode();
 
         /// <summary>
         ///     Determines whether two specified <see cref="ShellLinkInfo"/> instances have

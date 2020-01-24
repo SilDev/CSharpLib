@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:10
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -193,6 +193,31 @@ namespace SilDev.Investment
         }
 
         /// <summary>
+        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
+        /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        [SecurityCritical]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            if (Log.DebugMode > 1)
+                Log.Write($"{nameof(ValueItem<TValue>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+
+            info.AddValue(nameof(MinMaxValidation), MinMaxValidation);
+            info.AddValue(nameof(MinValue), MinValue);
+            info.AddValue(nameof(MaxValue), MaxValue);
+            info.AddValue(nameof(DefValue), DefValue);
+            info.AddValue(nameof(Value), Value);
+        }
+
+        /// <summary>
         ///     Determines whether this instance has the same values as another.
         /// </summary>
         /// <param name="other">
@@ -203,7 +228,7 @@ namespace SilDev.Investment
             var obj = (object)other;
             if (obj == null)
                 return false;
-            return GetHashCode(true) == other.GetHashCode(true);
+            return this.EncryptRaw() == other.EncryptRaw();
         }
 
         /// <summary>
@@ -218,18 +243,8 @@ namespace SilDev.Investment
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        /// <param name="nonReadOnly">
-        ///     <see langword="true"/> to include the hashes of non-readonly properties;
-        ///     otherwise, <see langword="false"/>.
-        /// </param>
-        public int GetHashCode(bool nonReadOnly) =>
-            Crypto.GetClassHashCode(this, nonReadOnly);
-
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
         public override int GetHashCode() =>
-            Crypto.GetClassHashCode(this);
+            Crypto.CombineHashCodes(GetType(), MinMaxValidation, MinValue, MaxValue, DefValue);
 
         /// <summary>
         ///     Returns the string representation of this instance.
@@ -258,38 +273,6 @@ namespace SilDev.Investment
             builder.Append("}");
             return builder.ToStringThenClear();
         }
-
-        /// <summary>
-        ///     Determines whether two specified <see cref="ValueItem{TValue}"/> instances
-        ///     have same values.
-        /// </summary>
-        /// <param name="left">
-        ///     The first <see cref="ValueItem{TValue}"/> instance to compare.
-        /// </param>
-        /// <param name="right">
-        ///     The second <see cref="ValueItem{TValue}"/> instance to compare.
-        /// </param>
-        public static bool operator ==(ValueItem<TValue> left, ValueItem<TValue> right)
-        {
-            var obj = (object)left;
-            if (obj != null)
-                return left.Equals(right);
-            obj = right;
-            return obj == null;
-        }
-
-        /// <summary>
-        ///     Determines whether two specified <see cref="ValueItem{TValue}"/> instances
-        ///     have different values.
-        /// </summary>
-        /// <param name="left">
-        ///     The first <see cref="ValueItem{TValue}"/> instance to compare.
-        /// </param>
-        /// <param name="right">
-        ///     The second <see cref="ValueItem{TValue}"/> instance to compare.
-        /// </param>
-        public static bool operator !=(ValueItem<TValue> left, ValueItem<TValue> right) =>
-            !(left == right);
 
         /// <summary>
         ///     Ensures that the specified value is valid. If <see cref="MinValue"/> and
@@ -370,28 +353,29 @@ namespace SilDev.Investment
         }
 
         /// <summary>
-        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
+        ///     Determines whether two specified <see cref="ValueItem{TValue}"/> instances
+        ///     have same values.
         /// </summary>
-        /// <param name="info">
-        ///     The object that holds the serialized object data.
+        /// <param name="left">
+        ///     The first <see cref="ValueItem{TValue}"/> instance to compare.
         /// </param>
-        /// <param name="context">
-        ///     The contextual information about the source or destination.
+        /// <param name="right">
+        ///     The second <see cref="ValueItem{TValue}"/> instance to compare.
         /// </param>
-        [SecurityCritical]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
+        public static bool operator ==(ValueItem<TValue> left, ValueItem<TValue> right) =>
+            left?.Equals(right) ?? right is null;
 
-            if (Log.DebugMode > 1)
-                Log.Write($"{nameof(ValueItem<TValue>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-
-            info.AddValue(nameof(MinMaxValidation), MinMaxValidation);
-            info.AddValue(nameof(MinValue), MinValue);
-            info.AddValue(nameof(MaxValue), MaxValue);
-            info.AddValue(nameof(DefValue), DefValue);
-            info.AddValue(nameof(Value), Value);
-        }
+        /// <summary>
+        ///     Determines whether two specified <see cref="ValueItem{TValue}"/> instances
+        ///     have different values.
+        /// </summary>
+        /// <param name="left">
+        ///     The first <see cref="ValueItem{TValue}"/> instance to compare.
+        /// </param>
+        /// <param name="right">
+        ///     The second <see cref="ValueItem{TValue}"/> instance to compare.
+        /// </param>
+        public static bool operator !=(ValueItem<TValue> left, ValueItem<TValue> right) =>
+            !(left == right);
     }
 }

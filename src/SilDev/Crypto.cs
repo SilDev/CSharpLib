@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:10
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,10 +16,11 @@
 namespace SilDev
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Security.Cryptography;
     using System.Text;
     using Intern;
@@ -149,36 +150,112 @@ namespace SilDev
     public static class Crypto
     {
         /// <summary>
-        ///     Creates a unique hash code for the specified instance.
+        ///     Combines the specified hash codes.
         /// </summary>
-        /// <typeparam name="TSource">
-        ///     The type of the source.
-        /// </typeparam>
-        /// <param name="source">
-        ///     The instance value.
+        /// <param name="hash1">
+        ///     The first hash code.
         /// </param>
-        /// <param name="nonReadOnly">
-        ///     <see langword="true"/> to include the hashes of non-readonly properties;
-        ///     otherwise, <see langword="false"/>.
+        /// <param name="hash2">
+        ///     The second hash code.
         /// </param>
-        public static int GetClassHashCode<TSource>(TSource source, bool nonReadOnly = false) where TSource : class =>
-            source == null ? 0 : GetHashCode(source, nonReadOnly);
+        public static int CombineHashCodes(int hash1, int hash2) =>
+            (hash1 << (5 + hash1)) ^ hash2;
 
         /// <summary>
-        ///     Creates a unique hash code for the specified instance.
+        ///     Combines the hash codes of the specified objects.
         /// </summary>
-        /// <typeparam name="TSource">
-        ///     The type of the source.
-        /// </typeparam>
-        /// <param name="source">
-        ///     The instance value.
+        /// <param name="obj1">
+        ///     The first object.
         /// </param>
-        /// <param name="nonReadOnly">
-        ///     <see langword="true"/> to include the hashes of non-readonly properties;
-        ///     otherwise, <see langword="false"/>.
+        /// <param name="obj2">
+        ///     The second object.
         /// </param>
-        public static int GetStructHashCode<TSource>(TSource source, bool nonReadOnly = false) where TSource : struct =>
-            GetHashCode(source, nonReadOnly);
+        public static int CombineHashCodes(object obj1, object obj2) =>
+            CombineHashCodes(obj1?.GetHashCode() ?? 17011, obj2?.GetHashCode() ?? 23011);
+
+        /// <summary>
+        ///     Combines the specified hash codes.
+        /// </summary>
+        /// <param name="hash1">
+        ///     The first hash code.
+        /// </param>
+        /// <param name="hash2">
+        ///     The second hash code.
+        /// </param>
+        /// <param name="hash3">
+        ///     The third hash code.
+        /// </param>
+        public static int CombineHashCodes(int hash1, int hash2, int hash3) =>
+            CombineHashCodes(CombineHashCodes(hash1, hash2), hash3);
+
+        /// <summary>
+        ///     Combines the hash codes of the specified objects.
+        /// </summary>
+        /// <param name="obj1">
+        ///     The first object.
+        /// </param>
+        /// <param name="obj2">
+        ///     The second object.
+        /// </param>
+        /// <param name="obj3">
+        ///     The third object.
+        /// </param>
+        public static int CombineHashCodes(object obj1, object obj2, object obj3) =>
+            CombineHashCodes(CombineHashCodes(obj1, obj2), obj3);
+
+        /// <summary>
+        ///     Combines the specified hash codes.
+        /// </summary>
+        /// <param name="hashes">
+        ///     A sequence of hash codes.
+        /// </param>
+        public static int CombineHashCodes(params int[] hashes)
+        {
+            switch (hashes?.Length)
+            {
+                case null:
+                case 0:
+                    return 0;
+                case 1:
+                    return hashes[0];
+                case 2:
+                    return CombineHashCodes(hashes[0], hashes[1]);
+                case 3:
+                    return CombineHashCodes(hashes[0], hashes[1], hashes[2]);
+                default:
+                    var hash = hashes[0];
+                    for (var i = 1; i < hashes.Length; i++)
+                        hash = CombineHashCodes(hash, hashes[i]);
+                    return hash;
+            }
+        }
+
+        /// <summary>
+        ///     Combines the hash codes of the specified objects.
+        /// </summary>
+        /// <param name="objects">
+        ///     A sequence of hash codes.
+        /// </param>
+        public static int CombineHashCodes(params object[] objects)
+        {
+            switch (objects?.Length)
+            {
+                case null:
+                case 0:
+                    return 0;
+                case 1:
+                    return CombineHashCodes(objects[0], null);
+                case 2:
+                    return CombineHashCodes(objects[0], objects[1]);
+                case 3:
+                    return CombineHashCodes(objects[0], objects[1], objects[2]);
+                default:
+                    var hash = objects[0]?.GetHashCode() ?? 17011;
+                    for (var i = 1; i < objects.Length; i++)
+                        hash = CombineHashCodes(hash, objects[i]?.GetHashCode() ?? 23011);
+                    return hash;
+            }
+        }
 
         /// <summary>
         ///     Encrypts this <typeparamref name="TSource"/> object with the specified
@@ -695,7 +772,7 @@ namespace SilDev
             switch (source)
             {
                 case null:
-                    return 0;
+                    return 0u;
                 case Stream stream:
                     return new Crc32(stream).RawHash;
                 case IEnumerable<byte> bytes:
@@ -703,7 +780,19 @@ namespace SilDev
                 case IEnumerable<char> chars:
                     return new Crc32(chars.AsString()).RawHash;
             }
-            return new Crc32(source.SerializeObject()).RawHash;
+            try
+            {
+                using var ms = new MemoryStream();
+                var bf = new BinaryFormatter();
+                bf.Serialize(ms, source);
+                ms.Position = 0L;
+                return new Crc32(ms).RawHash;
+            }
+            catch (SerializationException ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+                return 0u;
+            }
         }
 
         /// <summary>
@@ -873,58 +962,6 @@ namespace SilDev
             builder.Append(second.Substring(second.Length - 12));
             if (braces)
                 builder.Append('}');
-        }
-
-        private static int GetHashCode(object source, bool nonReadOnly)
-        {
-            try
-            {
-                var current = source;
-                var hashCode = 17011;
-                foreach (var pi in current.GetType().GetProperties())
-                {
-                    hashCode += pi.Name.GetHashCode();
-                    if (nonReadOnly || pi.GetSetMethod() == null)
-                    {
-                        var value = pi.GetValue(source);
-                        if (value != null)
-                        {
-                            hashCode += value.GetHashCode();
-                            switch (value)
-                            {
-                                case IDictionary dict:
-                                {
-                                    var enu = dict.GetEnumerator();
-                                    while (enu.MoveNext())
-                                    {
-                                        var key = enu.Key;
-                                        if (key == null)
-                                            continue;
-                                        hashCode += key.GetHashCode();
-                                        var val = enu.Value;
-                                        if (val == null)
-                                            continue;
-                                        hashCode += val.GetHashCode();
-                                    }
-                                    break;
-                                }
-                                case IList list:
-                                {
-                                    hashCode += list.Cast<object>().Where(o => o != null).Select(o => o.GetHashCode()).Sum();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    hashCode *= 23011;
-                }
-                return hashCode;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return 0;
-            }
         }
 
         #region Asymmetric-key Algorithms
@@ -2811,20 +2848,6 @@ namespace SilDev
             }
 
             /// <summary>
-            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
-            ///     string representation.
-            /// </summary>
-            public override string ToString()
-            {
-                if (!(RawHash is byte[] ba))
-                    return string.Empty;
-                var sb = new StringBuilder(ba.Length * 2);
-                foreach (var b in ba)
-                    sb.Append(b.ToStringDefault("x2"));
-                return sb.ToStringThenClear();
-            }
-
-            /// <summary>
             ///     Determines whether this instance have same values as the specified
             ///     <see cref="Checksum"/> instance.
             /// </summary>
@@ -2863,50 +2886,22 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                GetClassHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                GetClassHashCode(this);
+                GetType().GetHashCode();
 
             /// <summary>
-            ///     Determines whether two specified <see cref="Checksum"/> instances have same
-            ///     values.
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
             /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="Checksum"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="Checksum"/> instance to compare.
-            /// </param>
-            public static bool operator ==(Checksum left, Checksum right)
+            public override string ToString()
             {
-                var obj = (object)left;
-                if (obj != null)
-                    return left.Equals(right);
-                obj = right;
-                return obj == null;
+                if (!(RawHash is byte[] ba))
+                    return string.Empty;
+                var sb = new StringBuilder(ba.Length * 2);
+                foreach (var b in ba)
+                    sb.Append(b.ToStringDefault("x2"));
+                return sb.ToStringThenClear();
             }
-
-            /// <summary>
-            ///     Determines whether two specified <see cref="Checksum"/> instances have
-            ///     different values.
-            /// </summary>
-            /// <param name="left">
-            ///     The first <see cref="Checksum"/> instance to compare.
-            /// </param>
-            /// <param name="right">
-            ///     The second <see cref="Checksum"/> instance to compare.
-            /// </param>
-            public static bool operator !=(Checksum left, Checksum right) =>
-                !(left == right);
 
             /// <summary>
             ///     Encrypts the specified stream with the specified
@@ -2958,6 +2953,32 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(algorithm));
                 RawHash = csp.ComputeHash(ba);
             }
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="Checksum"/> instances have same
+            ///     values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="Checksum"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public static bool operator ==(Checksum left, Checksum right) =>
+                left?.Equals(right) ?? right is null;
+
+            /// <summary>
+            ///     Determines whether two specified <see cref="Checksum"/> instances have
+            ///     different values.
+            /// </summary>
+            /// <param name="left">
+            ///     The first <see cref="Checksum"/> instance to compare.
+            /// </param>
+            /// <param name="right">
+            ///     The second <see cref="Checksum"/> instance to compare.
+            /// </param>
+            public static bool operator !=(Checksum left, Checksum right) =>
+                !(left == right);
         }
 
         /// <summary>
@@ -3068,13 +3089,6 @@ namespace SilDev
                 Encrypt(text?.ToBytes());
 
             /// <summary>
-            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
-            ///     string representation.
-            /// </summary>
-            public override string ToString() =>
-                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
-
-            /// <summary>
             ///     Determines whether this instance have same values as the specified
             ///     <see cref="Checksum"/> instance.
             /// </summary>
@@ -3087,6 +3101,13 @@ namespace SilDev
                     return false;
                 return RawHash == adler32.RawHash;
             }
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
         }
 
         /// <summary>
@@ -3193,13 +3214,6 @@ namespace SilDev
                 Encrypt(text?.ToBytes());
 
             /// <summary>
-            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
-            ///     string representation.
-            /// </summary>
-            public override string ToString() =>
-                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
-
-            /// <summary>
             ///     Determines whether this instance have same values as the specified
             ///     <see cref="Checksum"/> instance.
             /// </summary>
@@ -3212,6 +3226,13 @@ namespace SilDev
                     return false;
                 return RawHash == crc16.RawHash;
             }
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
         }
 
         /// <summary>
@@ -3348,13 +3369,6 @@ namespace SilDev
                 Encrypt(text?.ToBytes());
 
             /// <summary>
-            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
-            ///     string representation.
-            /// </summary>
-            public override string ToString() =>
-                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
-
-            /// <summary>
             ///     Determines whether this instance have same values as the specified
             ///     <see cref="Checksum"/> instance.
             /// </summary>
@@ -3367,6 +3381,13 @@ namespace SilDev
                     return false;
                 return RawHash == crc32.RawHash;
             }
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
         }
 
         /// <summary>
@@ -3490,13 +3511,6 @@ namespace SilDev
                 Encrypt(text?.ToBytes());
 
             /// <summary>
-            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
-            ///     string representation.
-            /// </summary>
-            public override string ToString() =>
-                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
-
-            /// <summary>
             ///     Determines whether this instance have same values as the specified
             ///     <see cref="Checksum"/> instance.
             /// </summary>
@@ -3509,6 +3523,13 @@ namespace SilDev
                     return false;
                 return RawHash == crc64.RawHash;
             }
+
+            /// <summary>
+            ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
+            ///     string representation.
+            /// </summary>
+            public override string ToString() =>
+                RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
         }
 
         /// <summary>

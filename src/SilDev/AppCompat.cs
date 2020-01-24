@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AppCompat.cs
-// Version:  2020-01-13 13:02
+// Version:  2020-01-24 20:10
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -205,7 +205,13 @@ namespace SilDev
         ///     The <see cref="AppCompatLayers"/> instance to compare.
         /// </param>
         public bool Equals(AppCompatLayers other) =>
-            GetHashCode(true) == other.GetHashCode(true);
+            ColorMode == other.ColorMode &&
+            DpiScalingBehavior == other.DpiScalingBehavior &&
+            DpiScalingSystem == other.DpiScalingSystem &&
+            OperatingSystem == other.OperatingSystem &&
+            DisableFullscreenOptimizations == other.DisableFullscreenOptimizations &&
+            RunIn640x480ScreenResolution == other.RunIn640x480ScreenResolution &&
+            RunAsAdministrator == other.RunAsAdministrator;
 
         /// <summary>
         ///     Determines whether this instance have same values as the specified
@@ -224,18 +230,8 @@ namespace SilDev
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        /// <param name="nonReadOnly">
-        ///     <see langword="true"/> to include the hashes of non-readonly properties;
-        ///     otherwise, <see langword="false"/>.
-        /// </param>
-        public int GetHashCode(bool nonReadOnly) =>
-            Crypto.GetStructHashCode(this, nonReadOnly);
-
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
         public override int GetHashCode() =>
-            Crypto.GetStructHashCode(this);
+            typeof(AppCompatLayers).GetHashCode();
 
         /// <summary>
         ///     Determines whether two specified <see cref="AppCompatLayers"/> instances

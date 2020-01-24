@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-19 15:30
+// Version:  2020-01-24 20:10
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -5949,7 +5949,12 @@ namespace SilDev
             ///     The <see cref="AppBarData"/> instance to compare.
             /// </param>
             public bool Equals(AppBarData other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                CbSize == other.CbSize &&
+                HWnd == other.HWnd &&
+                UCallbackMessage == other.UCallbackMessage &&
+                UEdge == other.UEdge &&
+                Rect == other.Rect &&
+                LParam == other.LParam;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -5968,18 +5973,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(AppBarData).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="AppBarData"/> instances have
@@ -6052,7 +6047,11 @@ namespace SilDev
             ///     The <see cref="CallWndProcRet"/> instance to compare.
             /// </param>
             public bool Equals(CallWndProcRet other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                LResult == other.LResult &&
+                LParam == other.LParam &&
+                WParam == other.WParam &&
+                Message == other.Message &&
+                HWnd == other.HWnd;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6071,18 +6070,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(CallWndProcRet).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="CallWndProcRet"/> instances
@@ -6153,7 +6142,9 @@ namespace SilDev
             ///     The <see cref="CopyData"/> instance to compare.
             /// </param>
             public bool Equals(CopyData other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                DwData == other.DwData &&
+                CbData == other.CbData &&
+                LpData == other.LpData;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6172,18 +6163,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(CopyData).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="CopyData"/> instances have same
@@ -6252,7 +6233,8 @@ namespace SilDev
             ///     The <see cref="DeviceInput"/> instance to compare.
             /// </param>
             public bool Equals(DeviceInput other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                Type == other.Type &&
+                Data == other.Data;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6271,18 +6253,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(DeviceInput).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="DeviceInput"/> instances have
@@ -6335,7 +6307,8 @@ namespace SilDev
             ///     The <see cref="LuId"/> instance to compare.
             /// </param>
             public bool Equals(LuId other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                LowPart == other.LowPart &&
+                HighPart == other.HighPart;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6354,18 +6327,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(LuId).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="LuId"/> instances have same
@@ -6420,7 +6383,8 @@ namespace SilDev
             ///     The <see cref="LuIdAndAttributes"/> instance to compare.
             /// </param>
             public bool Equals(LuIdAndAttributes other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                Luid == other.Luid &&
+                Attributes == other.Attributes;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6439,18 +6403,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(LuIdAndAttributes).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="LuIdAndAttributes"/> instances
@@ -6537,7 +6491,12 @@ namespace SilDev
             ///     The <see cref="MouseInput"/> instance to compare.
             /// </param>
             public bool Equals(MouseInput other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                X == other.X &&
+                Y == other.Y &&
+                MouseData == other.MouseData &&
+                Flags == other.Flags &&
+                Time == other.Time &&
+                ExtraInfo == other.ExtraInfo;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6556,18 +6515,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(MouseInput).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="MouseInput"/> instances have
@@ -6626,7 +6575,7 @@ namespace SilDev
             ///     The <see cref="MouseKeyboardHardwareInput"/> instance to compare.
             /// </param>
             public bool Equals(MouseKeyboardHardwareInput other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                Mouse == other.Mouse;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6645,18 +6594,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(MouseKeyboardHardwareInput).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="MouseKeyboardHardwareInput"/>
@@ -6729,7 +6668,11 @@ namespace SilDev
             ///     The <see cref="ProcessBasicInformation"/> instance to compare.
             /// </param>
             public bool Equals(ProcessBasicInformation other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                ExitStatus == other.ExitStatus &&
+                PebBaseAddress == other.PebBaseAddress &&
+                AffinityMask == other.AffinityMask &&
+                UniqueProcessId == other.UniqueProcessId &&
+                InheritedFromUniqueProcessId == other.InheritedFromUniqueProcessId;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6748,18 +6691,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(ProcessBasicInformation).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="ProcessBasicInformation"/>
@@ -6823,7 +6756,10 @@ namespace SilDev
             ///     The <see cref="ThemeMargins"/> instance to compare.
             /// </param>
             public bool Equals(ThemeMargins other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                CxLeftWidth == other.CxLeftWidth &&
+                CxRightWidth == other.CxRightWidth &&
+                CyTopHeight == other.CyTopHeight &&
+                CyBottomHeight == other.CyBottomHeight;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6842,18 +6778,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(ThemeMargins).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="ThemeMargins"/> instances have
@@ -6916,8 +6842,14 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="TokenPrivileges"/> instance to compare.
             /// </param>
-            public bool Equals(TokenPrivileges other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+            public bool Equals(TokenPrivileges other)
+            {
+                if (PrivilegeCount != other.PrivilegeCount)
+                    return false;
+                if (Privileges == null)
+                    return other.Privileges == null;
+                return other.Privileges != null && Privileges.SequenceEqual(other.Privileges);
+            }
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -6936,18 +6868,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(TokenPrivileges).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="TokenPrivileges"/> instances
@@ -7030,7 +6952,12 @@ namespace SilDev
             ///     The <see cref="WindowPlacement"/> instance to compare.
             /// </param>
             public bool Equals(WindowPlacement other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                Length == other.Length &&
+                Flags == other.Flags &&
+                ShowCmd == other.ShowCmd &&
+                PtMinPosition == other.PtMinPosition &&
+                PtMaxPosition == other.PtMaxPosition &&
+                RcNormalPosition == other.RcNormalPosition;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -7049,18 +6976,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(WindowPlacement).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="WindowPlacement"/> instances
@@ -7115,7 +7032,7 @@ namespace SilDev
             ///     The <see cref="WindowThemeAttributeOptions"/> instance to compare.
             /// </param>
             public bool Equals(WindowThemeAttributeOptions other) =>
-                Equals(GetHashCode(true), other.GetHashCode(true));
+                Flags == other.Flags && Mask == other.Mask;
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -7134,18 +7051,8 @@ namespace SilDev
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            /// <param name="nonReadOnly">
-            ///     <see langword="true"/> to include the hashes of non-readonly properties;
-            ///     otherwise, <see langword="false"/>.
-            /// </param>
-            public int GetHashCode(bool nonReadOnly) =>
-                Crypto.GetStructHashCode(this, nonReadOnly);
-
-            /// <summary>
-            ///     Returns the hash code for this instance.
-            /// </summary>
             public override int GetHashCode() =>
-                Crypto.GetStructHashCode(this);
+                typeof(WindowThemeAttributeOptions).GetHashCode();
 
             /// <summary>
             ///     Determines whether two specified <see cref="WindowThemeAttributeOptions"/>
@@ -9789,25 +9696,6 @@ namespace SilDev
             internal static extern UIntPtr SetTimer(IntPtr hWnd, UIntPtr nIdEvent, uint uElapse, TimerProc lpTimerFunc);
 
             /// <summary>
-            ///     Changes an attribute of the specified window. The function also sets the
-            ///     32-bit (long) value at the specified offset into the extra window memory.
-            /// </summary>
-            /// <param name="hWnd">
-            ///     A handle to the window and, indirectly, the class to which the window
-            ///     belongs.
-            /// </param>
-            /// <param name="nIndex">
-            ///     The zero-based offset to the value to be set. Valid values are in the range
-            ///     zero through the number of bytes of extra window memory, minus the size of
-            ///     an integer.
-            /// </param>
-            /// <param name="dwNewLong">
-            ///     The replacement value.
-            /// </param>
-            internal static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong) =>
-                IntPtr.Size == 4 ? SetWindowLongPtr32(hWnd, nIndex, dwNewLong) : SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
-
-            /// <summary>
             ///     Sets the show state and the restored, minimized, and maximized positions of
             ///     the specified window.
             /// </summary>
@@ -10455,6 +10343,25 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32, SetLastError = true)]
             internal static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, [MarshalAs(UnmanagedType.SysInt)] int nSize, out IntPtr lpNumberOfBytesWritten);
+
+            /// <summary>
+            ///     Changes an attribute of the specified window. The function also sets the
+            ///     32-bit (long) value at the specified offset into the extra window memory.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window and, indirectly, the class to which the window
+            ///     belongs.
+            /// </param>
+            /// <param name="nIndex">
+            ///     The zero-based offset to the value to be set. Valid values are in the range
+            ///     zero through the number of bytes of extra window memory, minus the size of
+            ///     an integer.
+            /// </param>
+            /// <param name="dwNewLong">
+            ///     The replacement value.
+            /// </param>
+            internal static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong) =>
+                IntPtr.Size == 4 ? SetWindowLongPtr32(hWnd, nIndex, dwNewLong) : SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
 
             [DllImport(DllNames.User32, SetLastError = true, EntryPoint = "SetWindowLong")]
             private static extern IntPtr SetWindowLongPtr32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);

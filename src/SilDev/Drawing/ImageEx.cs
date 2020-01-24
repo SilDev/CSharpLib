@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:11
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -506,33 +506,9 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Returns the hash code for this <see cref="Bitmap"/> based on its sequence
-        ///     of bytes.
-        /// </summary>
-        /// <param name="bitmap">
-        ///     The <see cref="Bitmap"/> to get the hash code.
-        /// </param>
-        public static int GetHashCodeEx(this Bitmap bitmap)
-        {
-            var bytes = bitmap?.ToBytes();
-            var hasher = new Crypto.Sha256(bytes);
-            return hasher.GetHashCode(true);
-        }
-
-        /// <summary>
-        ///     Returns the hash code for this <see cref="Image"/> based on its sequence of
-        ///     bytes.
-        /// </summary>
-        /// <param name="image">
-        ///     The <see cref="Image"/> to get the hash code.
-        /// </param>
-        public static int GetHashCodeEx(this Image image) =>
-            (image as Bitmap).GetHashCodeEx();
-
-        /// <summary>
         ///     Determines whether this <see cref="Bitmap"/> has the same value as the
         ///     specified <see cref="Bitmap"/> based on its <see cref="PixelFormat"/>,
-        ///     <see cref="ImageFormat"/>, and <see cref="GetHashCodeEx(Bitmap)"/>.
+        ///     <see cref="ImageFormat"/>, and <see cref="ToBytes(Image)"/>.
         /// </summary>
         /// <param name="source">
         ///     The <see cref="Bitmap"/> to check.
@@ -550,15 +526,15 @@ namespace SilDev.Drawing
                 return false;
             if (!source.RawFormat.Equals(target.RawFormat))
                 return false;
-            var hash1 = source.GetHashCodeEx();
-            var hash2 = target.GetHashCodeEx();
-            return hash1.Equals(hash2);
+            var hash1 = source.ToBytes().EncryptRaw();
+            var hash2 = target.ToBytes().EncryptRaw();
+            return hash1 == hash2;
         }
 
         /// <summary>
         ///     Determines whether this <see cref="Image"/> has the same value as the
         ///     specified <see cref="Image"/> based on its <see cref="PixelFormat"/>,
-        ///     <see cref="ImageFormat"/>, and <see cref="GetHashCodeEx(Image)"/>.
+        ///     <see cref="ImageFormat"/>, and <see cref="ToBytes(Image)"/>.
         /// </summary>
         /// <param name="source">
         ///     The <see cref="Image"/> to check.

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageFrame.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:11
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -84,6 +84,22 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
+        ///     Allows an object to try to free resources and perform other cleanup
+        ///     operations before it is reclaimed by garbage collection.
+        /// </summary>
+        ~ImageFrame() =>
+            Dispose(false);
+
+        /// <summary>
+        ///     Determines whether the specified frame is equal to the current frame.
+        /// </summary>
+        /// <param name="other">
+        ///     The frame to compare with the current frame.
+        /// </param>
+        public virtual bool Equals(ImageFrame other) =>
+            Duration == other?.Duration && Image.EqualsEx(other.Image);
+
+        /// <summary>
         ///     Determines whether the specified object is equal to the current object.
         /// </summary>
         /// <param name="other">
@@ -96,58 +112,7 @@ namespace SilDev.Drawing
         ///     Returns the hash code for the current image pair.
         /// </summary>
         public override int GetHashCode() =>
-            Crypto.GetClassHashCode(this);
-
-        /// <summary>
-        ///     Determines whether two specified frames have the same value.
-        /// </summary>
-        /// <param name="left">
-        ///     The first frame to compare, or null.
-        /// </param>
-        /// <param name="right">
-        ///     The second frame to compare, or null.
-        /// </param>
-        public static bool operator ==(ImageFrame left, ImageFrame right)
-        {
-            var obj = (object)left;
-            if (obj != null)
-                return left.Equals(right);
-            obj = right;
-            return obj == null;
-        }
-
-        /// <summary>
-        ///     Determines whether two specified frames have different values.
-        /// </summary>
-        /// <param name="left">
-        ///     The first frame to compare, or null.
-        /// </param>
-        /// <param name="right">
-        ///     The second frame to compare, or null.
-        /// </param>
-        public static bool operator !=(ImageFrame left, ImageFrame right) =>
-            !(left == right);
-
-        /// <summary>
-        ///     Releases all resources used by this <see cref="ImageFrame"/>.
-        /// </summary>
-        /// <param name="disposing">
-        ///     <see langword="true"/> to release both managed and unmanaged resources;
-        ///     otherwise, <see langword="false"/> to release only unmanaged resources.
-        ///     <para>
-        ///         Please note that this parameter is ignored for the
-        ///         <see cref="ImageFrame"/> class.
-        ///     </para>
-        /// </param>
-        protected virtual void Dispose(bool disposing) =>
-            Image?.Dispose();
-
-        /// <summary>
-        ///     Allows an object to try to free resources and perform other cleanup
-        ///     operations before it is reclaimed by garbage collection.
-        /// </summary>
-        ~ImageFrame() =>
-            Dispose(false);
+            Crypto.CombineHashCodes(Image, Duration);
 
         /// <summary>
         ///     Releases all resources used by this <see cref="ImageFrame"/>.
@@ -157,15 +122,6 @@ namespace SilDev.Drawing
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        /// <summary>
-        ///     Determines whether the specified frame is equal to the current frame.
-        /// </summary>
-        /// <param name="other">
-        ///     The frame to compare with the current frame.
-        /// </param>
-        public virtual bool Equals(ImageFrame other) =>
-            Duration == other?.Duration && Image.GetHashCodeEx() == other.Image.GetHashCodeEx();
 
         /// <summary>
         ///     Populates a <see cref="SerializationInfo"/> with the data needed to
@@ -190,5 +146,43 @@ namespace SilDev.Drawing
             info.AddValue(nameof(Image), Image);
             info.AddValue(nameof(Duration), Duration);
         }
+
+        /// <summary>
+        ///     Releases all resources used by this <see cref="ImageFrame"/>.
+        /// </summary>
+        /// <param name="disposing">
+        ///     <see langword="true"/> to release both managed and unmanaged resources;
+        ///     otherwise, <see langword="false"/> to release only unmanaged resources.
+        ///     <para>
+        ///         Please note that this parameter is ignored for the
+        ///         <see cref="ImageFrame"/> class.
+        ///     </para>
+        /// </param>
+        protected virtual void Dispose(bool disposing) =>
+            Image?.Dispose();
+
+        /// <summary>
+        ///     Determines whether two specified frames have the same value.
+        /// </summary>
+        /// <param name="left">
+        ///     The first frame to compare, or null.
+        /// </param>
+        /// <param name="right">
+        ///     The second frame to compare, or null.
+        /// </param>
+        public static bool operator ==(ImageFrame left, ImageFrame right) =>
+            left?.Equals(right) ?? right is null;
+
+        /// <summary>
+        ///     Determines whether two specified frames have different values.
+        /// </summary>
+        /// <param name="left">
+        ///     The first frame to compare, or null.
+        /// </param>
+        /// <param name="right">
+        ///     The second frame to compare, or null.
+        /// </param>
+        public static bool operator !=(ImageFrame left, ImageFrame right) =>
+            !(left == right);
     }
 }

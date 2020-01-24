@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-24 20:10
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -274,6 +274,27 @@ namespace SilDev.Investment
         }
 
         /// <summary>
+        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
+        /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        [SecurityCritical]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            if (Log.DebugMode > 1)
+                Log.Write($"{nameof(ValueItemHost<TKey>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
+
+            info.AddValue(nameof(ItemDictionary), ItemDictionary);
+        }
+
+        /// <summary>
         ///     Retrieves the name associated with the specified key.
         /// </summary>
         /// <param name="key">
@@ -396,7 +417,7 @@ namespace SilDev.Investment
             var obj = (object)other;
             if (obj == null)
                 return false;
-            return GetHashCode(true) == other.GetHashCode(true);
+            return this.EncryptRaw() == other.EncryptRaw();
         }
 
         /// <summary>
@@ -411,18 +432,8 @@ namespace SilDev.Investment
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        /// <param name="nonReadOnly">
-        ///     <see langword="true"/> to include the hashes of non-readonly properties;
-        ///     otherwise, <see langword="false"/>.
-        /// </param>
-        public int GetHashCode(bool nonReadOnly) =>
-            Crypto.GetClassHashCode(this, nonReadOnly);
-
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
         public override int GetHashCode() =>
-            Crypto.GetClassHashCode(this);
+            ItemDictionary.GetHashCode();
 
         /// <summary>
         ///     Returns the string representation of this instance.
@@ -458,14 +469,8 @@ namespace SilDev.Investment
         /// <param name="right">
         ///     The second <see cref="ValueItemHost{TKey}"/> instance to compare.
         /// </param>
-        public static bool operator ==(ValueItemHost<TKey> left, ValueItemHost<TKey> right)
-        {
-            var obj = (object)left;
-            if (obj != null)
-                return left.Equals(right);
-            obj = right;
-            return obj == null;
-        }
+        public static bool operator ==(ValueItemHost<TKey> left, ValueItemHost<TKey> right) =>
+            left?.Equals(right) ?? right is null;
 
         /// <summary>
         ///     Determines whether two specified <see cref="ValueItemHost{TKey}"/>
@@ -479,26 +484,5 @@ namespace SilDev.Investment
         /// </param>
         public static bool operator !=(ValueItemHost<TKey> left, ValueItemHost<TKey> right) =>
             !(left == right);
-
-        /// <summary>
-        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
-        /// </summary>
-        /// <param name="info">
-        ///     The object that holds the serialized object data.
-        /// </param>
-        /// <param name="context">
-        ///     The contextual information about the source or destination.
-        /// </param>
-        [SecurityCritical]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            if (Log.DebugMode > 1)
-                Log.Write($"{nameof(ValueItemHost<TKey>)}.get({nameof(SerializationInfo)}, {nameof(StreamingContext)}) => info: {Json.Serialize(info)}, context: {Json.Serialize(context)}");
-
-            info.AddValue(nameof(ItemDictionary), ItemDictionary);
-        }
     }
 }

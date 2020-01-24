@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxButtonText.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-24 20:11
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -26,27 +26,6 @@ namespace SilDev.Forms
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct MessageBoxButtonText : IEquatable<MessageBoxButtonText>
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MessageBoxButtonText"/>
-        ///     structure.
-        /// </summary>
-        /// <param name="enableDefaultText">
-        ///     <see langword="true"/> to give each property a default value; otherwise,
-        ///     <see langword="false"/>.
-        /// </param>
-        public MessageBoxButtonText(bool enableDefaultText) : this()
-        {
-            if (!enableDefaultText)
-                return;
-            Ok = UIStrings.Ok;
-            Cancel = UIStrings.Cancel;
-            Abort = UIStrings.Abort;
-            Retry = UIStrings.Retry;
-            Ignore = UIStrings.Ignore;
-            Yes = UIStrings.Yes;
-            No = UIStrings.No;
-        }
-
         /// <summary>
         ///     The OK button.
         /// </summary>
@@ -83,6 +62,27 @@ namespace SilDev.Forms
         public string No { get; set; }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="MessageBoxButtonText"/>
+        ///     structure.
+        /// </summary>
+        /// <param name="enableDefaultText">
+        ///     <see langword="true"/> to give each property a default value; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public MessageBoxButtonText(bool enableDefaultText) : this()
+        {
+            if (!enableDefaultText)
+                return;
+            Ok = UIStrings.Ok;
+            Cancel = UIStrings.Cancel;
+            Abort = UIStrings.Abort;
+            Retry = UIStrings.Retry;
+            Ignore = UIStrings.Ignore;
+            Yes = UIStrings.Yes;
+            No = UIStrings.No;
+        }
+
+        /// <summary>
         ///     Determines whether this instance have same values as the specified
         ///     <see cref="MessageBoxButtonText"/> instance.
         /// </summary>
@@ -90,7 +90,13 @@ namespace SilDev.Forms
         ///     The <see cref="MessageBoxButtonText"/> instance to compare.
         /// </param>
         public bool Equals(MessageBoxButtonText other) =>
-            Equals(GetHashCode(true), other.GetHashCode(true));
+            Ok == other.Ok &&
+            Cancel == other.Cancel &&
+            Abort == other.Abort &&
+            Retry == other.Retry &&
+            Ignore == other.Ignore &&
+            Yes == other.Yes &&
+            No == other.No;
 
         /// <summary>
         ///     Determines whether this instance have same values as the specified
@@ -109,18 +115,8 @@ namespace SilDev.Forms
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        /// <param name="nonReadOnly">
-        ///     <see langword="true"/> to include the hashes of non-readonly properties;
-        ///     otherwise, <see langword="false"/>.
-        /// </param>
-        public int GetHashCode(bool nonReadOnly) =>
-            Crypto.GetStructHashCode(this, nonReadOnly);
-
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
         public override int GetHashCode() =>
-            Crypto.GetStructHashCode(this);
+            typeof(MessageBoxButtonText).GetHashCode();
 
         /// <summary>
         ///     Determines whether two specified <see cref="MessageBoxButtonText"/>
