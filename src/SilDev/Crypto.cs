@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-24 20:10
+// Version:  2020-01-25 14:13
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -158,8 +158,11 @@ namespace SilDev
         /// <param name="hash2">
         ///     The second hash code.
         /// </param>
-        public static int CombineHashCodes(int hash1, int hash2) =>
-            (hash1 << (5 + hash1)) ^ hash2;
+        public static int CombineHashCodes(int hash1, int hash2)
+        {
+            var hash = (uint)((hash1 << 5) | (int)((uint)hash1 >> 27));
+            return ((int)hash + hash1) ^ hash2;
+        }
 
         /// <summary>
         ///     Combines the hash codes of the specified objects.
