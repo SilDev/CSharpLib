@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-24 21:44
+// Version:  2020-01-25 14:23
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -83,6 +84,24 @@ namespace SilDev
         ///     sections and keys.
         /// </summary>
         public bool Sorted { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets a sequence of section names to always be at the top.
+        ///     <para>
+        ///         This option is only available if <see cref="Sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </summary>
+        public static IReadOnlyList<string> AlwaysOnTopSections { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets a sequence of key names to always be at the top.
+        ///     <para>
+        ///         This option is only available if <see cref="Sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </summary>
+        public static IReadOnlyList<string> AlwaysOnTopKeys { get; private set; }
 
         /// <summary>
         ///     Gets or sets the file path of this instance.
@@ -175,8 +194,6 @@ namespace SilDev
             set => AddOrUpdate(section, key, value?.ToString());
         }
 
-        private static string NonSectionKey { get; } = Guid.NewGuid().Encrypt();
-
         private static AlphaNumericComparer SortComparer { get; } = new AlphaNumericComparer();
 
         /// <summary>
@@ -194,8 +211,22 @@ namespace SilDev
         ///     <see langword="true"/> to sort the sections and keys; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public Ini(string fileOrContent, bool ignoreCase = true, bool sorted = true) =>
-            Load(fileOrContent, ignoreCase, sorted);
+        /// <param name="alwaysOnTopSections">
+        ///     A sequence of section names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        /// <param name="alwaysOnTopKeys">
+        ///     A sequence of key names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        public Ini(string fileOrContent, bool ignoreCase = true, bool sorted = true, IEnumerable<string> alwaysOnTopSections = null, IEnumerable<string> alwaysOnTopKeys = null) =>
+            Load(fileOrContent, ignoreCase, sorted, alwaysOnTopSections, alwaysOnTopKeys);
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Ini"/> class.
@@ -213,6 +244,8 @@ namespace SilDev
             _document = (IDocumentDictionary)info.GetValue(nameof(Document), typeof(IDocumentDictionary));
             Comparer = (StringComparer)info.GetValue(nameof(Comparer), typeof(StringComparer));
             Sorted = info.GetBoolean(nameof(Sorted));
+            AlwaysOnTopSections = (IReadOnlyList<string>)info.GetValue(nameof(AlwaysOnTopSections), typeof(IReadOnlyList<string>));
+            AlwaysOnTopKeys = (IReadOnlyList<string>)info.GetValue(nameof(AlwaysOnTopKeys), typeof(IReadOnlyList<string>));
             FilePath = info.GetString(nameof(FilePath));
         }
 
@@ -245,7 +278,21 @@ namespace SilDev
         ///     <see langword="true"/> to sort the sections and keys; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static IDocumentDictionary Parse(string fileOrContent, bool ignoreCase = true, bool sorted = true)
+        /// <param name="alwaysOnTopSections">
+        ///     A sequence of section names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        /// <param name="alwaysOnTopKeys">
+        ///     A sequence of key names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        public static IDocumentDictionary Parse(string fileOrContent, bool ignoreCase = true, bool sorted = true, IEnumerable<string> alwaysOnTopSections = null, IEnumerable<string> alwaysOnTopKeys = null)
         {
             var source = fileOrContent;
             if (string.IsNullOrEmpty(source))
@@ -262,7 +309,7 @@ namespace SilDev
                 var section = match.Groups["Section"]?.Value.Trim();
                 if (string.IsNullOrEmpty(section))
                     continue;
-                if (section == NonSectionKey)
+                if (section == "\0\0\0")
                     section = string.Empty;
                 if (!content.ContainsKey(section))
                     content.Add(section, new Dictionary<string, IList<string>>(comparer));
@@ -286,7 +333,7 @@ namespace SilDev
                 content[section] = keys;
             }
 
-            return sorted ? SortHelper(content) : content;
+            return sorted ? SortHelper(content, alwaysOnTopSections, alwaysOnTopKeys) : content;
         }
 
         /// <summary>
@@ -357,10 +404,24 @@ namespace SilDev
         ///     <see langword="true"/> to sort the sections and keys; otherwise,
         ///     <see langword="false"/>.
         /// </param>
+        /// <param name="alwaysOnTopSections">
+        ///     A sequence of section names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        /// <param name="alwaysOnTopKeys">
+        ///     A sequence of key names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     source or destination is null.
         /// </exception>
-        public static void WriteToStream(IDocumentDictionary source, Stream destination, bool sorted = true)
+        public static void WriteToStream(IDocumentDictionary source, Stream destination, bool sorted = true, IEnumerable<string> alwaysOnTopSections = null, IEnumerable<string> alwaysOnTopKeys = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -368,7 +429,7 @@ namespace SilDev
                 throw new ArgumentNullException(nameof(destination));
             var document = source;
             if (sorted)
-                document = SortHelper(document);
+                document = SortHelper(document, alwaysOnTopSections, alwaysOnTopKeys);
             using var sw = new StreamWriter(destination, new UTF8Encoding(false, true), 4096, true);
             foreach (var dict in document)
             {
@@ -420,7 +481,21 @@ namespace SilDev
         ///     <see langword="true"/> to sort the sections and keys; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static bool WriteToFile(IDocumentDictionary source, string destination, bool sorted = true)
+        /// <param name="alwaysOnTopSections">
+        ///     A sequence of section names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        /// <param name="alwaysOnTopKeys">
+        ///     A sequence of key names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        public static bool WriteToFile(IDocumentDictionary source, string destination, bool sorted = true, IEnumerable<string> alwaysOnTopSections = null, IEnumerable<string> alwaysOnTopKeys = null)
         {
             try
             {
@@ -436,7 +511,7 @@ namespace SilDev
                 var hash = File.Exists(path) ? path.EncryptFile(ChecksumAlgorithm.Crc32) : null;
                 var temp = FileEx.GetUniqueTempPath("tmp", ".ini");
                 using (var fs = new FileStream(temp, FileMode.Create))
-                    WriteToStream(source, fs, sorted);
+                    WriteToStream(source, fs, sorted, alwaysOnTopSections, alwaysOnTopKeys);
                 if (hash == temp.EncryptFile(ChecksumAlgorithm.Crc32))
                 {
                     File.Delete(temp);
@@ -468,10 +543,24 @@ namespace SilDev
         ///     <see langword="true"/> to sort the sections and keys; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static bool WriteToFile(IReadOnlyDocumentDictionary source, string destination, bool sorted = true)
+        /// <param name="alwaysOnTopSections">
+        ///     A sequence of section names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        /// <param name="alwaysOnTopKeys">
+        ///     A sequence of key names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        public static bool WriteToFile(IReadOnlyDocumentDictionary source, string destination, bool sorted = true, IEnumerable<string> alwaysOnTopSections = null, IEnumerable<string> alwaysOnTopKeys = null)
         {
             var document = source?.ToDictionary(d => d.Key, d => d.Value?.ToDictionary(p => p.Key, p => p.Value?.ToList() as IList<string>) as IKeyValueDictionary);
-            return WriteToFile(document, destination, sorted);
+            return WriteToFile(document, destination, sorted, alwaysOnTopSections, alwaysOnTopKeys);
         }
 
         /// <summary>
@@ -603,13 +692,29 @@ namespace SilDev
         ///     <see langword="true"/> to sort the sections and keys; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public void Load(string fileOrContent, bool ignoreCase = true, bool sorted = true)
+        /// <param name="alwaysOnTopSections">
+        ///     A sequence of section names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        /// <param name="alwaysOnTopKeys">
+        ///     A sequence of key names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        public void Load(string fileOrContent, bool ignoreCase = true, bool sorted = true, IEnumerable<string> alwaysOnTopSections = null, IEnumerable<string> alwaysOnTopKeys = null)
         {
+            Comparer = ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+            Sorted = sorted;
+            AlwaysOnTopSections = alwaysOnTopSections?.AsArray();
+            AlwaysOnTopKeys = alwaysOnTopKeys?.AsArray();
             if (!string.IsNullOrEmpty(fileOrContent))
             {
                 FilePath = FileEx.Exists(fileOrContent) ? fileOrContent : FileEx.GetUniqueTempPath("tmp", ".ini");
-                Comparer = ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
-                Sorted = sorted;
                 if (TryParse(fileOrContent, ignoreCase, sorted, out var document))
                 {
                     _document = document;
@@ -630,8 +735,22 @@ namespace SilDev
         ///     <see langword="true"/> to sort the sections and keys; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public void Load(bool ignoreCase = true, bool sorted = true) =>
-            Load(FilePath, ignoreCase, sorted);
+        /// <param name="alwaysOnTopSections">
+        ///     A sequence of section names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        /// <param name="alwaysOnTopKeys">
+        ///     A sequence of key names that should always stay on top.
+        ///     <para>
+        ///         This option is only available if <paramref name="sorted"/> is
+        ///         <see langword="true"/>.
+        ///     </para>
+        /// </param>
+        public void Load(bool ignoreCase = true, bool sorted = true, IEnumerable<string> alwaysOnTopSections = null, IEnumerable<string> alwaysOnTopKeys = null) =>
+            Load(FilePath, ignoreCase, sorted, alwaysOnTopSections, alwaysOnTopKeys);
 
         /// <summary>
         ///     Saves the string representation of this instance to the specified path.
@@ -647,14 +766,14 @@ namespace SilDev
         {
             if (setNewFilePath)
                 FilePath = path;
-            WriteToFile(_document, path, Sorted);
+            WriteToFile(_document, path, Sorted, AlwaysOnTopSections, AlwaysOnTopKeys);
         }
 
         /// <summary>
         ///     Saves the string representation of this instance to <see cref="FilePath"/>.
         /// </summary>
         public void Save() =>
-            WriteToFile(_document, FilePath, Sorted);
+            WriteToFile(_document, FilePath, Sorted, AlwaysOnTopSections, AlwaysOnTopKeys);
 
         /// <summary>
         ///     Sets the <see cref="SerializationInfo"/> object for this instance.
@@ -677,6 +796,8 @@ namespace SilDev
             info.AddValue(nameof(Document), _document);
             info.AddValue(nameof(Comparer), Comparer);
             info.AddValue(nameof(Sorted), Sorted);
+            info.AddValue(nameof(AlwaysOnTopSections), AlwaysOnTopSections);
+            info.AddValue(nameof(AlwaysOnTopKeys), AlwaysOnTopKeys);
             info.AddValue(nameof(FilePath), FilePath);
         }
 
@@ -687,7 +808,7 @@ namespace SilDev
         {
             var sections = _document.Keys;
             if (Sorted && sections.Count > 1)
-                return sections.OrderBy(s => !string.IsNullOrEmpty(s)).ThenBy(s => s, SortComparer).ToList();
+                return SortHelper(sections, AlwaysOnTopSections);
             return sections;
         }
 
@@ -702,7 +823,7 @@ namespace SilDev
         {
             var keys = _document.ContainsKey(section ??= string.Empty) ? _document[section].Keys : new Collection<string>();
             if (Sorted && keys.Count > 1)
-                return keys.OrderBy(s => s, SortComparer).ToList();
+                return SortHelper(keys, AlwaysOnTopKeys);
             return keys;
         }
 
@@ -952,16 +1073,31 @@ namespace SilDev
         public override string ToString()
         {
             using var ms = new MemoryStream();
-            WriteToStream(_document, ms, Sorted);
+            WriteToStream(_document, ms, Sorted, AlwaysOnTopSections, AlwaysOnTopKeys);
             ms.Position = 0;
             return ms.ToArray().ToStringDefault();
         }
 
-        private static IDocumentDictionary SortHelper(IDocumentDictionary source) =>
-            source.OrderBy(p => !string.IsNullOrEmpty(p.Key)).ThenBy(p => p.Key, SortComparer).ToDictionary(p => p.Key, p => SortHelper(p.Value));
+        private static IDocumentDictionary SortHelper(IDocumentDictionary source, IEnumerable<string> topSections, IEnumerable<string> topKeys)
+        {
+            if (topSections == null)
+                topSections = Array.Empty<string>();
+            return source.OrderBy(p => !string.IsNullOrEmpty(p.Key)).ThenBy(p => !topSections.ContainsItem(p.Key)).ThenBy(p => p.Key, SortComparer).ToDictionary(p => p.Key, p => SortHelper(p.Value, topKeys));
+        }
 
-        private static IKeyValueDictionary SortHelper(IKeyValueDictionary source) =>
-            source.OrderBy(p => p.Key, SortComparer).ToDictionary(p => p.Key, p => p.Value);
+        private static IKeyValueDictionary SortHelper(IKeyValueDictionary source, IEnumerable<string> topKeys)
+        {
+            if (topKeys == null)
+                topKeys = Array.Empty<string>();
+            return source.OrderBy(p => !topKeys.ContainsItem(p.Key)).ThenBy(p => p.Key, SortComparer).ToDictionary(p => p.Key, p => p.Value);
+        }
+
+        private static IList<string> SortHelper(IEnumerable<string> source, IEnumerable<string> topItems)
+        {
+            if (topItems == null)
+                topItems = Array.Empty<string>();
+            return source.OrderBy(s => !string.IsNullOrEmpty(s)).ThenBy(s => !topItems.ContainsItem(s)).ThenBy(s => s, SortComparer).ToList();
+        }
 
         private static bool LineIsValid(string str)
         {
@@ -995,7 +1131,7 @@ namespace SilDev
                 return builder.ToString();
             builder.Insert(0, Environment.NewLine);
             builder.Insert(0, ']');
-            builder.Insert(0, NonSectionKey);
+            builder.Insert(0, "\0\0\0");
             builder.Insert(0, '[');
             return builder.ToStringThenClear();
         }
