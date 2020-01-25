@@ -12004,6 +12004,24 @@
                 sections and keys.
             </summary>
         </member>
+        <member name="P:SilDev.Ini.AlwaysOnTopSections">
+            <summary>
+                Gets or sets a sequence of section names to always be at the top.
+                <para>
+                    This option is only available if <see cref="P:SilDev.Ini.Sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SilDev.Ini.AlwaysOnTopKeys">
+            <summary>
+                Gets or sets a sequence of key names to always be at the top.
+                <para>
+                    This option is only available if <see cref="P:SilDev.Ini.Sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </summary>
+        </member>
         <member name="P:SilDev.Ini.FilePath">
             <summary>
                 Gets or sets the file path of this instance.
@@ -12025,10 +12043,23 @@
                 The index of the key whose the value is associated.
             </param>
         </member>
-        <member name="P:SilDev.Ini.Item(System.String,System.String)">
+        <member name="P:SilDev.Ini.Item(System.String,System.Int32)">
             <summary>
-                Gets or sets the value under the first index of the specified key in the
-                specified section of this instance.
+                Gets or sets the section-less value under the specified index of the
+                specified key of this instance.
+            </summary>
+            <param name="key">
+                The name of the key in the section.
+            </param>
+            <param name="index">
+                The index of the key whose the value is associated.
+            </param>
+        </member>
+        <member name="P:SilDev.Ini.Item(System.String,System.String,System.Int32,System.Type)">
+            <summary>
+                Gets or sets the value under the specified index of the specified key in
+                the specified section of this instance. The return value is converted to
+                the specified type if possible.
             </summary>
             <param name="section">
                 The name of the section. Must be <see langword="null"/> to handle values of
@@ -12037,11 +12068,75 @@
             <param name="key">
                 The name of the key in the section.
             </param>
+            <param name="index">
+                The index of the key whose the value is associated.
+            </param>
+            <param name="returnType">
+                The type to which the return value should be converted.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The conversion cannot be performed.
+            </exception>
+        </member>
+        <member name="P:SilDev.Ini.Item(System.String,System.String,System.Type)">
+            <summary>
+                Gets or sets the first value of the specified key in the specified section
+                of this instance. The return value is converted to the specified type if
+                possible.
+            </summary>
+            <param name="section">
+                The name of the section. Must be <see langword="null"/> to handle values of
+                a non-section key.
+            </param>
+            <param name="key">
+                The name of the key in the section.
+            </param>
+            <param name="returnType">
+                The type to which the return value should be converted.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The conversion cannot be performed.
+            </exception>
+        </member>
+        <member name="P:SilDev.Ini.Item(System.String,System.Int32,System.Type)">
+            <summary>
+                Gets or sets the section-less value under the specified index of the
+                specified key in the specified section of this instance. The return value
+                is converted to the specified type if possible.
+            </summary>
+            <param name="key">
+                The name of the key in the section.
+            </param>
+            <param name="index">
+                The index of the key whose the value is associated.
+            </param>
+            <param name="returnType">
+                The type to which the return value should be converted.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The conversion cannot be performed.
+            </exception>
+        </member>
+        <member name="P:SilDev.Ini.Item(System.String,System.Type)">
+            <summary>
+                Gets or sets the first section-less value of the specified key in the
+                specified section of this instance. The return value is converted to the
+                specified type if possible.
+            </summary>
+            <param name="key">
+                The name of the key in the section.
+            </param>
+            <param name="returnType">
+                The type to which the return value should be converted.
+            </param>
+            <exception cref="T:System.NotSupportedException">
+                The conversion cannot be performed.
+            </exception>
         </member>
         <member name="P:SilDev.Ini.Item(System.String,System.String,System.Int32,System.Object)">
             <summary>
-                Gets or sets the object value under the specified index of the specified
-                key in the specified section of this instance.
+                Gets or sets the value under the specified index of the specified key in
+                the specified section of this instance.
             </summary>
             <param name="section">
                 The name of the section. Must be <see langword="null"/> to handle values of
@@ -12062,8 +12157,8 @@
         </member>
         <member name="P:SilDev.Ini.Item(System.String,System.String,System.Object)">
             <summary>
-                Gets or sets the object value under the first index of the specified key in
-                the specified section of this instance.
+                Gets or sets the first value of the specified key in the specified section
+                of this instance.
             </summary>
             <param name="section">
                 The name of the section. Must be <see langword="null"/> to handle values of
@@ -12079,7 +12174,40 @@
                 </para>
             </param>
         </member>
-        <member name="M:SilDev.Ini.#ctor(System.String,System.Boolean,System.Boolean)">
+        <member name="P:SilDev.Ini.Item(System.String,System.Int32,System.Object)">
+            <summary>
+                Gets or sets the section-less value under the specified index of the
+                specified key of this instance.
+            </summary>
+            <param name="key">
+                The name of the key in the section.
+            </param>
+            <param name="index">
+                The index of the key whose the value is associated.
+            </param>
+            <param name="defValue">
+                The default value that is returned if no value is found.
+                <para>
+                    Should be <see langword="null"/> if a new object value is to be set.
+                </para>
+            </param>
+        </member>
+        <member name="P:SilDev.Ini.Item(System.String,System.Object)">
+            <summary>
+                Gets or sets the first section-less value under the specified index of the
+                specified key of this instance.
+            </summary>
+            <param name="key">
+                The name of the key.
+            </param>
+            <param name="defValue">
+                The default value that is returned if no value is found.
+                <para>
+                    Should be <see langword="null"/> if a new object value is to be set.
+                </para>
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.#ctor(System.String,System.Boolean,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Initializes a new instance of the <see cref="T:SilDev.Ini"/> class with the
                 specified parameters.
@@ -12094,6 +12222,20 @@
             <param name="sorted">
                 <see langword="true"/> to sort the sections and keys; otherwise,
                 <see langword="false"/>.
+            </param>
+            <param name="alwaysOnTopSections">
+                A sequence of section names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
+            <param name="alwaysOnTopKeys">
+                A sequence of key names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
             </param>
         </member>
         <member name="M:SilDev.Ini.#ctor">
@@ -12111,7 +12253,7 @@
                 <see langword="false"/>.
             </param>
         </member>
-        <member name="M:SilDev.Ini.Parse(System.String,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.Ini.Parse(System.String,System.Boolean,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Converts the content of an INI file or an INI file formatted string value
                 to a <see cref="T:System.Collections.Generic.IDictionary`2"/> object.
@@ -12126,6 +12268,20 @@
             <param name="sorted">
                 <see langword="true"/> to sort the sections and keys; otherwise,
                 <see langword="false"/>.
+            </param>
+            <param name="alwaysOnTopSections">
+                A sequence of section names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
+            <param name="alwaysOnTopKeys">
+                A sequence of key names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
             </param>
         </member>
         <member name="M:SilDev.Ini.TryParse(System.String,System.Boolean,System.Boolean,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IList{System.String}}}@)">
@@ -12167,7 +12323,7 @@
                 The path or content of an INI file.
             </param>
         </member>
-        <member name="M:SilDev.Ini.WriteToStream(System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IList{System.String}}},System.IO.Stream,System.Boolean)">
+        <member name="M:SilDev.Ini.WriteToStream(System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IList{System.String}}},System.IO.Stream,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Writes the specified dictionary representation of an INI file to the
                 specified stream.
@@ -12182,11 +12338,25 @@
                 <see langword="true"/> to sort the sections and keys; otherwise,
                 <see langword="false"/>.
             </param>
+            <param name="alwaysOnTopSections">
+                A sequence of section names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
+            <param name="alwaysOnTopKeys">
+                A sequence of key names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
             <exception cref="T:System.ArgumentNullException">
                 source or destination is null.
             </exception>
         </member>
-        <member name="M:SilDev.Ini.WriteToFile(System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IList{System.String}}},System.String,System.Boolean)">
+        <member name="M:SilDev.Ini.WriteToFile(System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IDictionary{System.String,System.Collections.Generic.IList{System.String}}},System.String,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Writes the specified dictionary representation of an INI file to the
                 specified destination file.
@@ -12201,8 +12371,22 @@
                 <see langword="true"/> to sort the sections and keys; otherwise,
                 <see langword="false"/>.
             </param>
+            <param name="alwaysOnTopSections">
+                A sequence of section names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
+            <param name="alwaysOnTopKeys">
+                A sequence of key names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
         </member>
-        <member name="M:SilDev.Ini.WriteToFile(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IReadOnlyList{System.String}}},System.String,System.Boolean)">
+        <member name="M:SilDev.Ini.WriteToFile(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Collections.Generic.IReadOnlyList{System.String}}},System.String,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Writes the specified read-only dictionary representation of an INI file to
                 the specified file.
@@ -12216,6 +12400,20 @@
             <param name="sorted">
                 <see langword="true"/> to sort the sections and keys; otherwise,
                 <see langword="false"/>.
+            </param>
+            <param name="alwaysOnTopSections">
+                A sequence of section names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
+            <param name="alwaysOnTopKeys">
+                A sequence of key names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
             </param>
         </member>
         <member name="M:SilDev.Ini.ReadDirect(System.String,System.String,System.String)">
@@ -12277,7 +12475,7 @@
                 value as specified; otherwise, <see langword="false"/>.
             </param>
         </member>
-        <member name="M:SilDev.Ini.Load(System.String,System.Boolean,System.Boolean)">
+        <member name="M:SilDev.Ini.Load(System.String,System.Boolean,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Loads the full content of an INI file or an INI file formatted string value
                 into this instance.
@@ -12293,8 +12491,22 @@
                 <see langword="true"/> to sort the sections and keys; otherwise,
                 <see langword="false"/>.
             </param>
+            <param name="alwaysOnTopSections">
+                A sequence of section names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
+            <param name="alwaysOnTopKeys">
+                A sequence of key names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
         </member>
-        <member name="M:SilDev.Ini.Load(System.Boolean,System.Boolean)">
+        <member name="M:SilDev.Ini.Load(System.Boolean,System.Boolean,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Loads the content of the file at <see cref="P:SilDev.Ini.FilePath"/> into this instance.
             </summary>
@@ -12305,6 +12517,20 @@
             <param name="sorted">
                 <see langword="true"/> to sort the sections and keys; otherwise,
                 <see langword="false"/>.
+            </param>
+            <param name="alwaysOnTopSections">
+                A sequence of section names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
+            </param>
+            <param name="alwaysOnTopKeys">
+                A sequence of key names that should always stay on top.
+                <para>
+                    This option is only available if <paramref name="sorted"/> is
+                    <see langword="true"/>.
+                </para>
             </param>
         </member>
         <member name="M:SilDev.Ini.Save(System.String,System.Boolean)">
