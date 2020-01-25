@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-25 14:23
+// Version:  2020-01-25 14:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -122,15 +122,32 @@ namespace SilDev
         /// <param name="index">
         ///     The index of the key whose the value is associated.
         /// </param>
-        public string this[string section, string key, int index]
+        public string this[string section, string key, int index = 0]
         {
             get => GetValue(section, key, index);
             set => AddOrUpdate(section, key, index, value);
         }
 
         /// <summary>
-        ///     Gets or sets the value under the first index of the specified key in the
-        ///     specified section of this instance.
+        ///     Gets or sets the section-less value under the specified index of the
+        ///     specified key of this instance.
+        /// </summary>
+        /// <param name="key">
+        ///     The name of the key in the section.
+        /// </param>
+        /// <param name="index">
+        ///     The index of the key whose the value is associated.
+        /// </param>
+        public string this[string key, int index = 0]
+        {
+            get => this[null, key, index];
+            set => this[null, key, index] = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the value under the specified index of the specified key in
+        ///     the specified section of this instance. The return value is converted to
+        ///     the specified type if possible.
         /// </summary>
         /// <param name="section">
         ///     The name of the section. Must be <see langword="null"/> to handle values of
@@ -139,15 +156,107 @@ namespace SilDev
         /// <param name="key">
         ///     The name of the key in the section.
         /// </param>
-        public string this[string section, string key]
+        /// <param name="index">
+        ///     The index of the key whose the value is associated.
+        /// </param>
+        /// <param name="returnType">
+        ///     The type to which the return value should be converted.
+        /// </param>
+        /// <exception cref="NotSupportedException">
+        ///     The conversion cannot be performed.
+        /// </exception>
+        public object this[string section, string key, int index, Type returnType]
         {
-            get => GetValue(section, key);
-            set => AddOrUpdate(section, key, value);
+            get
+            {
+                var value = this[section, key, index];
+                if (string.IsNullOrEmpty(value))
+                    return null;
+                if (returnType == null)
+                    return value;
+                try
+                {
+                    return TypeDescriptor.GetConverter(returnType).ConvertFrom(value);
+                }
+                catch (NotSupportedException ex) when (ex.IsCaught())
+                {
+                    Log.Write(ex);
+                    return value;
+                }
+            }
+            set => this[section, key, index] = value?.ToString();
         }
 
         /// <summary>
-        ///     Gets or sets the object value under the specified index of the specified
-        ///     key in the specified section of this instance.
+        ///     Gets or sets the first value of the specified key in the specified section
+        ///     of this instance. The return value is converted to the specified type if
+        ///     possible.
+        /// </summary>
+        /// <param name="section">
+        ///     The name of the section. Must be <see langword="null"/> to handle values of
+        ///     a non-section key.
+        /// </param>
+        /// <param name="key">
+        ///     The name of the key in the section.
+        /// </param>
+        /// <param name="returnType">
+        ///     The type to which the return value should be converted.
+        /// </param>
+        /// <exception cref="NotSupportedException">
+        ///     The conversion cannot be performed.
+        /// </exception>
+        public object this[string section, string key, Type returnType]
+        {
+            get => this[section, key, 0, returnType];
+            set => this[section, key, 0, returnType] = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the section-less value under the specified index of the
+        ///     specified key in the specified section of this instance. The return value
+        ///     is converted to the specified type if possible.
+        /// </summary>
+        /// <param name="key">
+        ///     The name of the key in the section.
+        /// </param>
+        /// <param name="index">
+        ///     The index of the key whose the value is associated.
+        /// </param>
+        /// <param name="returnType">
+        ///     The type to which the return value should be converted.
+        /// </param>
+        /// <exception cref="NotSupportedException">
+        ///     The conversion cannot be performed.
+        /// </exception>
+        public object this[string key, int index, Type returnType]
+        {
+            get => this[null, key, index, returnType];
+            set => this[null, key, index, returnType] = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the first section-less value of the specified key in the
+        ///     specified section of this instance. The return value is converted to the
+        ///     specified type if possible.
+        /// </summary>
+        /// <param name="key">
+        ///     The name of the key in the section.
+        /// </param>
+        /// <param name="returnType">
+        ///     The type to which the return value should be converted.
+        /// </param>
+        /// <exception cref="NotSupportedException">
+        ///     The conversion cannot be performed.
+        /// </exception>
+        public object this[string key, Type returnType]
+        {
+            get => this[null, key, 0, returnType];
+            set => this[null, key, 0, returnType] = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the value under the specified index of the specified key in
+        ///     the specified section of this instance.
         /// </summary>
         /// <param name="section">
         ///     The name of the section. Must be <see langword="null"/> to handle values of
@@ -167,13 +276,13 @@ namespace SilDev
         /// </param>
         public object this[string section, string key, int index, object defValue]
         {
-            get => GetValue(section, key, index) ?? defValue;
-            set => AddOrUpdate(section, key, index, value?.ToString());
+            get => this[section, key, index, defValue?.GetType()] ?? defValue;
+            set => this[section, key, index, defValue?.GetType()] = value;
         }
 
         /// <summary>
-        ///     Gets or sets the object value under the first index of the specified key in
-        ///     the specified section of this instance.
+        ///     Gets or sets the first value of the specified key in the specified section
+        ///     of this instance.
         /// </summary>
         /// <param name="section">
         ///     The name of the section. Must be <see langword="null"/> to handle values of
@@ -190,8 +299,49 @@ namespace SilDev
         /// </param>
         public object this[string section, string key, object defValue]
         {
-            get => GetValue(section, key) ?? defValue;
-            set => AddOrUpdate(section, key, value?.ToString());
+            get => this[section, key, 0, defValue?.GetType()] ?? defValue;
+            set => this[section, key, 0, defValue?.GetType()] = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the section-less value under the specified index of the
+        ///     specified key of this instance.
+        /// </summary>
+        /// <param name="key">
+        ///     The name of the key in the section.
+        /// </param>
+        /// <param name="index">
+        ///     The index of the key whose the value is associated.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value that is returned if no value is found.
+        ///     <para>
+        ///         Should be <see langword="null"/> if a new object value is to be set.
+        ///     </para>
+        /// </param>
+        public object this[string key, int index, object defValue]
+        {
+            get => this[null, key, index, defValue?.GetType()] ?? defValue;
+            set => this[null, key, index, defValue?.GetType()] = value;
+        }
+
+        /// <summary>
+        ///     Gets or sets the first section-less value under the specified index of the
+        ///     specified key of this instance.
+        /// </summary>
+        /// <param name="key">
+        ///     The name of the key.
+        /// </param>
+        /// <param name="defValue">
+        ///     The default value that is returned if no value is found.
+        ///     <para>
+        ///         Should be <see langword="null"/> if a new object value is to be set.
+        ///     </para>
+        /// </param>
+        public object this[string key, object defValue]
+        {
+            get => this[null, key, 0, defValue?.GetType()] ?? defValue;
+            set => this[null, key, 0, defValue?.GetType()] = value;
         }
 
         private static AlphaNumericComparer SortComparer { get; } = new AlphaNumericComparer();
