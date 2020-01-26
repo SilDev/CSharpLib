@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-26 11:02
+// Version:  2020-01-26 12:17
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -966,67 +966,72 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the specified <see cref="string"/> to an equivalent
-        ///     <see cref="bool"/> value, which returns always <see langword="false"/> for
-        ///     unsupported <see cref="string"/> values.
+        ///     Converts the value of this element to an equivalent <see cref="bool"/>
+        ///     value.
         /// </summary>
-        /// <param name="str">
-        ///     The <see cref="string"/> to convert.
-        /// </param>
-        public static bool ToBoolean(this string str) =>
-            bool.TryParse(str, out var b) && b;
-
-        /// <summary>
-        ///     Converts the specified value to an equivalent <see cref="bool"/> value.
-        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
         /// <param name="src">
-        ///     The value to convert.
+        ///     The source to convert.
         /// </param>
-        public static bool ToBoolean<TSource>(this TSource src) where TSource : struct, IComparable<TSource>
-        {
-            switch (src)
-            {
-                case bool b:
-                    return b;
-                default:
-                    try
-                    {
-                        var c = Comparer<TSource>.Default;
-                        return c.Compare(src, (TSource)(object)default(int)) > 0;
-                    }
-                    catch (Exception ex) when (ex.IsCaught())
-                    {
-                        return false;
-                    }
-            }
-        }
-
-        /// <summary>
-        ///     Converts the specified <see cref="Nullable"/> value to an equivalent
-        ///     <see cref="bool"/> value, which returns always <see langword="false"/> on
-        ///     <see langword="null"/>.
-        /// </summary>
-        /// <param name="src">
-        ///     The <see cref="Nullable"/> value to convert.
-        /// </param>
-        public static bool ToBoolean<TSource>(this TSource? src) where TSource : struct, IComparable<TSource>
+        public static bool ToBoolean<TSource>(this TSource src) where TSource : IComparable, IConvertible
         {
             switch (src)
             {
                 case null:
-                    return false;
-                case bool b:
-                    return b;
+                    return default;
+                case string str when bool.TryParse(str, out var result):
+                    return result;
+                case string str when int.TryParse(str, out var result):
+                    return result > 0;
+                case string str when long.TryParse(str, out var result):
+                    return result > 0L;
+                case string str when decimal.TryParse(str, out var result):
+                    return result > 0m;
+                case string _:
+                    return default;
                 default:
-                    try
-                    {
-                        var c = Comparer<TSource>.Default;
-                        return c.Compare((TSource)src, (TSource)(object)0) > 0;
-                    }
-                    catch (Exception ex) when (ex.IsCaught())
-                    {
-                        return false;
-                    }
+                    var comparer = Comparer<TSource>.Default;
+                    return comparer.Compare(src, (TSource)(object)0) > 0;
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to an equivalent <see cref="bool"/>
+        ///     value.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static bool ToBoolean<TSource>(this TSource? src) where TSource : struct, IComparable, IConvertible =>
+            src == null ? default : ToBoolean((TSource)src);
+
+        /// <summary>
+        ///     Converts the value of this element to its equivalent Unicode character.
+        ///     using the <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static char ToChar<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when char.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToChar(src, CultureInfo.CurrentCulture);
             }
         }
 
@@ -1040,8 +1045,8 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static char ToChar<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToChar(src, CultureInfo.CurrentCulture);
+        public static char ToChar<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToChar((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 8-bit signed integer, using the
@@ -1053,8 +1058,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static sbyte ToSByte<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToSByte(src, CultureInfo.CurrentCulture);
+        public static sbyte ToSByte<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when sbyte.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToSByte(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 8-bit signed integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static sbyte ToSByte<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToSByte((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 8-bit unsigned integer, using the
@@ -1066,8 +1096,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static byte ToByte<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToByte(src, CultureInfo.CurrentCulture);
+        public static byte ToByte<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when byte.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToByte(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 8-bit unsigned integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static byte ToByte<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToByte((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 16-bit signed integer, using the
@@ -1079,8 +1134,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static short ToInt16<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToInt16(src, CultureInfo.CurrentCulture);
+        public static short ToInt16<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when short.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToInt16(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 16-bit signed integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static short ToInt16<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToInt16((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 16-bit unsigned integer, using the
@@ -1092,8 +1172,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static ushort ToUInt16<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToUInt16(src, CultureInfo.CurrentCulture);
+        public static ushort ToUInt16<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when ushort.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToUInt16(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 16-bit unsigned integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static ushort ToUInt16<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToUInt16((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 32-bit signed integer, using the
@@ -1105,8 +1210,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static int ToInt32<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToInt32(src, CultureInfo.CurrentCulture);
+        public static int ToInt32<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when int.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToInt32(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 32-bit signed integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static int ToInt32<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToInt32((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 32-bit unsigned integer, using the
@@ -1118,8 +1248,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static uint ToUInt32<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToUInt32(src, CultureInfo.CurrentCulture);
+        public static uint ToUInt32<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when uint.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToUInt32(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 32-bit unsigned integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static uint ToUInt32<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToUInt32((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 64-bit signed integer, using the
@@ -1131,8 +1286,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static long ToInt64<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToInt64(src, CultureInfo.CurrentCulture);
+        public static long ToInt64<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when long.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToInt64(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 64-bit signed integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static long ToInt64<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToInt64((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to a 64-bit unsigned integer, using the
@@ -1144,8 +1324,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static ulong ToUInt64<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToUInt64(src, CultureInfo.CurrentCulture);
+        public static ulong ToUInt64<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when ulong.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToUInt64(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to a 64-bit unsigned integer, using the
+        ///     <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static ulong ToUInt64<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToUInt64((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to an single-precision floating-point
@@ -1158,8 +1363,34 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static float ToSingle<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToSingle(src, CultureInfo.CurrentCulture);
+        public static float ToSingle<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when float.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToSingle(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to an single-precision floating-point
+        ///     number, using the <see cref="CultureInfo.CurrentCulture"/> format
+        ///     information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static float ToSingle<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToSingle((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to an double-precision floating-point
@@ -1172,8 +1403,34 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static double ToDouble<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToDouble(src, CultureInfo.CurrentCulture);
+        public static double ToDouble<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when double.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToDouble(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to an double-precision floating-point
+        ///     number, using the <see cref="CultureInfo.CurrentCulture"/> format
+        ///     information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static double ToDouble<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToDouble((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to an equivalent decimal number, using
@@ -1185,8 +1442,33 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static decimal ToDecimal<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToDecimal(src, CultureInfo.CurrentCulture);
+        public static decimal ToDecimal<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when decimal.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToDecimal(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to an equivalent decimal number, using
+        ///     the <see cref="CultureInfo.CurrentCulture"/> format information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static decimal ToDecimal<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToDecimal((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to an equivalent <see cref="DateTime"/>
@@ -1199,8 +1481,34 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static DateTime ToDateTime<TSource>(this TSource src) where TSource : IConvertible =>
-            src == null ? default : Convert.ToDateTime(src, CultureInfo.CurrentCulture);
+        public static DateTime ToDateTime<TSource>(this TSource src) where TSource : IConvertible
+        {
+            switch (src)
+            {
+                case null:
+                    return default;
+                case string str when DateTime.TryParse(str, out var result):
+                    return result;
+                case string _:
+                    return default;
+                default:
+                    return Convert.ToDateTime(src, CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        ///     Converts the value of this element to an equivalent <see cref="DateTime"/>
+        ///     object, using the <see cref="CultureInfo.CurrentCulture"/> format
+        ///     information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static DateTime ToDateTime<TSource>(this TSource? src) where TSource : struct, IConvertible =>
+            src == null ? default : ToDateTime((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to its equivalent string representation
