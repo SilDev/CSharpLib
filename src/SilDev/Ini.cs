@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-25 14:33
+// Version:  2020-01-26 17:06
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,9 +16,11 @@
 namespace SilDev
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -52,10 +54,6 @@ namespace SilDev
         public const string ParsePatternStrict = @"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))+";
 
         [NonSerialized]
-        private const string EncodeTagOpen = "<base64 reason=\"LineSeparator\">",
-                             EncodeTagClose = "</base64>";
-
-        [NonSerialized]
         private readonly object _identifier = new object();
 
         private IDocumentDictionary _document;
@@ -86,7 +84,7 @@ namespace SilDev
         public bool Sorted { get; private set; }
 
         /// <summary>
-        ///     Gets or sets a sequence of section names to always be at the top.
+        ///     Gets a sequence of section names that always stay on top.
         ///     <para>
         ///         This option is only available if <see cref="Sorted"/> is
         ///         <see langword="true"/>.
@@ -95,7 +93,7 @@ namespace SilDev
         public static IReadOnlyList<string> AlwaysOnTopSections { get; private set; }
 
         /// <summary>
-        ///     Gets or sets a sequence of key names to always be at the top.
+        ///     Gets a sequence of key names that always stay on top.
         ///     <para>
         ///         This option is only available if <see cref="Sorted"/> is
         ///         <see langword="true"/>.
@@ -146,8 +144,11 @@ namespace SilDev
 
         /// <summary>
         ///     Gets or sets the value under the specified index of the specified key in
-        ///     the specified section of this instance. The return value is converted to
-        ///     the specified type if possible.
+        ///     the specified section of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the specified type;
+        ///         otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="section">
         ///     The name of the section. Must be <see langword="null"/> to handle values of
@@ -162,9 +163,6 @@ namespace SilDev
         /// <param name="returnType">
         ///     The type to which the return value should be converted.
         /// </param>
-        /// <exception cref="NotSupportedException">
-        ///     The conversion cannot be performed.
-        /// </exception>
         public object this[string section, string key, int index, Type returnType]
         {
             get
@@ -172,25 +170,110 @@ namespace SilDev
                 var value = this[section, key, index];
                 if (string.IsNullOrEmpty(value))
                     return null;
-                if (returnType == null)
-                    return value;
-                try
+                var type = returnType;
+                switch (Type.GetTypeCode(type))
                 {
-                    return TypeDescriptor.GetConverter(returnType).ConvertFrom(value);
-                }
-                catch (NotSupportedException ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                    return value;
+                    case TypeCode.Empty:
+                    case TypeCode.DBNull:
+                        return null;
+                    case TypeCode.String:
+                        return value;
+                    case TypeCode.Boolean:
+                        return value.ToBoolean();
+                    case TypeCode.Char:
+                        return value.ToChar();
+                    case TypeCode.SByte:
+                        return value.ToSByte();
+                    case TypeCode.Byte:
+                        return value.ToByte();
+                    case TypeCode.Int16:
+                        return value.ToInt16();
+                    case TypeCode.UInt16:
+                        return value.ToUInt16();
+                    case TypeCode.Int32:
+                        return value.ToInt32();
+                    case TypeCode.UInt32:
+                        return value.ToUInt32();
+                    case TypeCode.Int64:
+                        return value.ToInt64();
+                    case TypeCode.UInt64:
+                        return value.ToUInt64();
+                    case TypeCode.Single:
+                        return value.ToSingle();
+                    case TypeCode.Double:
+                        return value.ToDouble();
+                    case TypeCode.Decimal:
+                        return value.ToDecimal();
+                    case TypeCode.DateTime:
+                        return value.ToDateTime();
+                    default:
+                        if (type == typeof(Rectangle) ||
+                            type == typeof(Rectangle?))
+                            return value.ToRectangle();
+                        if (type == typeof(Point) ||
+                            type == typeof(Point?))
+                            return value.ToPoint();
+                        if (type == typeof(Size) ||
+                            type == typeof(Size?))
+                            return value.ToSize();
+                        if (type == typeof(Version))
+                            return value.ToVersion();
+                        if (type == typeof(IEnumerable<char>))
+                            return value.ToCharArray();
+                        if (type.GetInterfaces().FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) != null)
+                        {
+                            var method = typeof(Json).GetMethod("Deserialize")?.MakeGenericMethod(type);
+                            if (method != null)
+                                return method.Invoke(null, new object[]
+                                {
+                                    value,
+                                    null
+                                });
+                        }
+                        try
+                        {
+                            var converter = TypeDescriptor.GetConverter(type);
+                            if (converter.CanConvertFrom(typeof(string)))
+                                return converter.ConvertFrom(value);
+                        }
+                        catch (Exception ex) when (ex.IsCaught())
+                        {
+                            Log.Write(ex);
+                        }
+                        return null;
                 }
             }
-            set => this[section, key, index] = value?.ToString();
+            set
+            {
+                switch (value)
+                {
+                    case null:
+                        this[section, key, index] = null;
+                        return;
+                    case string str:
+                        this[section, key, index] = str;
+                        return;
+                    case IEnumerable<char> chars:
+                        this[section, key, index] = new string(chars.ToArray());
+                        return;
+                    case IDictionary dictionary:
+                        this[section, key, index] = Json.Serialize(dictionary);
+                        return;
+                    case IEnumerable<object> sequence:
+                        this[section, key, index] = Json.Serialize(sequence);
+                        return;
+                }
+                this[section, key, index] = value.ToString();
+            }
         }
 
         /// <summary>
         ///     Gets or sets the first value of the specified key in the specified section
-        ///     of this instance. The return value is converted to the specified type if
-        ///     possible.
+        ///     of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the specified type;
+        ///         otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="section">
         ///     The name of the section. Must be <see langword="null"/> to handle values of
@@ -202,9 +285,6 @@ namespace SilDev
         /// <param name="returnType">
         ///     The type to which the return value should be converted.
         /// </param>
-        /// <exception cref="NotSupportedException">
-        ///     The conversion cannot be performed.
-        /// </exception>
         public object this[string section, string key, Type returnType]
         {
             get => this[section, key, 0, returnType];
@@ -213,8 +293,11 @@ namespace SilDev
 
         /// <summary>
         ///     Gets or sets the section-less value under the specified index of the
-        ///     specified key in the specified section of this instance. The return value
-        ///     is converted to the specified type if possible.
+        ///     specified key in the specified section of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the specified type;
+        ///         otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="key">
         ///     The name of the key in the section.
@@ -225,9 +308,6 @@ namespace SilDev
         /// <param name="returnType">
         ///     The type to which the return value should be converted.
         /// </param>
-        /// <exception cref="NotSupportedException">
-        ///     The conversion cannot be performed.
-        /// </exception>
         public object this[string key, int index, Type returnType]
         {
             get => this[null, key, index, returnType];
@@ -236,8 +316,11 @@ namespace SilDev
 
         /// <summary>
         ///     Gets or sets the first section-less value of the specified key in the
-        ///     specified section of this instance. The return value is converted to the
-        ///     specified type if possible.
+        ///     specified section of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the specified type;
+        ///         otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="key">
         ///     The name of the key in the section.
@@ -245,9 +328,6 @@ namespace SilDev
         /// <param name="returnType">
         ///     The type to which the return value should be converted.
         /// </param>
-        /// <exception cref="NotSupportedException">
-        ///     The conversion cannot be performed.
-        /// </exception>
         public object this[string key, Type returnType]
         {
             get => this[null, key, 0, returnType];
@@ -257,6 +337,10 @@ namespace SilDev
         /// <summary>
         ///     Gets or sets the value under the specified index of the specified key in
         ///     the specified section of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the type of the specified
+        ///         default object; otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="section">
         ///     The name of the section. Must be <see langword="null"/> to handle values of
@@ -276,13 +360,32 @@ namespace SilDev
         /// </param>
         public object this[string section, string key, int index, object defValue]
         {
-            get => this[section, key, index, defValue?.GetType()] ?? defValue;
+            get
+            {
+                var type = defValue?.GetType();
+                var value = this[section, key, index, type];
+                if (type == null || type.ContainsGenericParameters || !type.IsValueType || Nullable.GetUnderlyingType(type) != null)
+                    return value ?? defValue;
+                try
+                {
+                    return value == Activator.CreateInstance(type) ? defValue : value;
+                }
+                catch (Exception ex) when (ex.IsCaught())
+                {
+                    Log.Write(ex);
+                    return value ?? defValue;
+                }
+            }
             set => this[section, key, index, defValue?.GetType()] = value;
         }
 
         /// <summary>
         ///     Gets or sets the first value of the specified key in the specified section
         ///     of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the type of the specified
+        ///         default object; otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="section">
         ///     The name of the section. Must be <see langword="null"/> to handle values of
@@ -299,13 +402,17 @@ namespace SilDev
         /// </param>
         public object this[string section, string key, object defValue]
         {
-            get => this[section, key, 0, defValue?.GetType()] ?? defValue;
-            set => this[section, key, 0, defValue?.GetType()] = value;
+            get => this[section, key, 0, defValue];
+            set => this[section, key, 0, defValue] = value;
         }
 
         /// <summary>
         ///     Gets or sets the section-less value under the specified index of the
         ///     specified key of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the type of the specified
+        ///         default object; otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="key">
         ///     The name of the key in the section.
@@ -321,13 +428,17 @@ namespace SilDev
         /// </param>
         public object this[string key, int index, object defValue]
         {
-            get => this[null, key, index, defValue?.GetType()] ?? defValue;
-            set => this[null, key, index, defValue?.GetType()] = value;
+            get => this[null, key, index, defValue];
+            set => this[null, key, index, defValue] = value;
         }
 
         /// <summary>
         ///     Gets or sets the first section-less value under the specified index of the
         ///     specified key of this instance.
+        ///     <para>
+        ///         If possible, the return value is converted to the type of the specified
+        ///         default object; otherwise, <see langword="null"/> is returned.
+        ///     </para>
         /// </summary>
         /// <param name="key">
         ///     The name of the key.
@@ -340,8 +451,8 @@ namespace SilDev
         /// </param>
         public object this[string key, object defValue]
         {
-            get => this[null, key, 0, defValue?.GetType()] ?? defValue;
-            set => this[null, key, 0, defValue?.GetType()] = value;
+            get => this[null, key, 0, defValue];
+            set => this[null, key, 0, defValue] = value;
         }
 
         private static AlphaNumericComparer SortComparer { get; } = new AlphaNumericComparer();
@@ -474,8 +585,6 @@ namespace SilDev
                         continue;
                     if (!keys.ContainsKey(key))
                         keys.Add(key, new List<string>());
-                    if (value.Length > EncodeTagOpen.Length + EncodeTagClose.Length && value.StartsWithEx(EncodeTagOpen) && value.EndsWithEx(EncodeTagClose))
-                        value = value.Substring(EncodeTagOpen.Length, value.Length - EncodeTagClose.Length).DecodeString();
                     keys[key].Add(value);
                 }
                 if (keys.Values.All(x => x?.Any() != true))
@@ -598,18 +707,11 @@ namespace SilDev
                         continue;
                     foreach (var value in pair.Value)
                     {
-                        if (string.IsNullOrWhiteSpace(value))
+                        if (string.IsNullOrWhiteSpace(value) || value.Any(TextEx.IsLineSeparator))
                             continue;
                         sw.Write(pair.Key.Trim());
                         sw.Write('=');
-                        if (!value.Any(TextEx.IsLineSeparator))
-                            sw.Write(value.Trim());
-                        else
-                        {
-                            sw.Write(EncodeTagOpen);
-                            sw.Write(value.Encode());
-                            sw.Write(EncodeTagClose);
-                        }
+                        sw.Write(value.Trim());
                         sw.WriteLine();
                     }
                 }
@@ -1089,7 +1191,7 @@ namespace SilDev
                 _document.Add(section, new Dictionary<string, IList<string>>(Comparer));
             if (!_document[section].ContainsKey(key))
                 _document[section].Add(key, new List<string>());
-            if (!_document[section][key].Any() || _document[section][key].Count < index)
+            if (!_document[section][key].Any() || _document[section][key].Count <= index)
             {
                 _document[section][key].Add(value);
                 return;
