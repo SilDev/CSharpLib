@@ -876,17 +876,6 @@
                 The contextual information about the source or destination.
             </param>
         </member>
-        <member name="M:SilDev.AlphaNumericComparer.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object for this instance.
-            </summary>
-            <param name="info">
-                The object that holds the serialized object data.
-            </param>
-            <param name="context">
-                The contextual information about the source or destination.
-            </param>
-        </member>
         <member name="M:SilDev.AlphaNumericComparer.Compare(System.Object,System.Object)">
             <summary>
                 Compare two specified objects and returns an integer that indicates their
@@ -897,6 +886,17 @@
             </param>
             <param name="b">
                 The second object to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object for this instance.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
             </param>
         </member>
         <member name="M:SilDev.AlphaNumericComparer.GetString(System.Object)">
@@ -12006,7 +12006,7 @@
         </member>
         <member name="P:SilDev.Ini.AlwaysOnTopSections">
             <summary>
-                Gets or sets a sequence of section names to always be at the top.
+                Gets a sequence of section names that always stay on top.
                 <para>
                     This option is only available if <see cref="P:SilDev.Ini.Sorted"/> is
                     <see langword="true"/>.
@@ -12015,7 +12015,7 @@
         </member>
         <member name="P:SilDev.Ini.AlwaysOnTopKeys">
             <summary>
-                Gets or sets a sequence of key names to always be at the top.
+                Gets a sequence of key names that always stay on top.
                 <para>
                     This option is only available if <see cref="P:SilDev.Ini.Sorted"/> is
                     <see langword="true"/>.
@@ -12058,8 +12058,11 @@
         <member name="P:SilDev.Ini.Item(System.String,System.String,System.Int32,System.Type)">
             <summary>
                 Gets or sets the value under the specified index of the specified key in
-                the specified section of this instance. The return value is converted to
-                the specified type if possible.
+                the specified section of this instance.
+                <para>
+                    If possible, the return value is converted to the specified type;
+                    otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="section">
                 The name of the section. Must be <see langword="null"/> to handle values of
@@ -12074,15 +12077,15 @@
             <param name="returnType">
                 The type to which the return value should be converted.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The conversion cannot be performed.
-            </exception>
         </member>
         <member name="P:SilDev.Ini.Item(System.String,System.String,System.Type)">
             <summary>
                 Gets or sets the first value of the specified key in the specified section
-                of this instance. The return value is converted to the specified type if
-                possible.
+                of this instance.
+                <para>
+                    If possible, the return value is converted to the specified type;
+                    otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="section">
                 The name of the section. Must be <see langword="null"/> to handle values of
@@ -12094,15 +12097,15 @@
             <param name="returnType">
                 The type to which the return value should be converted.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The conversion cannot be performed.
-            </exception>
         </member>
         <member name="P:SilDev.Ini.Item(System.String,System.Int32,System.Type)">
             <summary>
                 Gets or sets the section-less value under the specified index of the
-                specified key in the specified section of this instance. The return value
-                is converted to the specified type if possible.
+                specified key in the specified section of this instance.
+                <para>
+                    If possible, the return value is converted to the specified type;
+                    otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="key">
                 The name of the key in the section.
@@ -12113,15 +12116,15 @@
             <param name="returnType">
                 The type to which the return value should be converted.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The conversion cannot be performed.
-            </exception>
         </member>
         <member name="P:SilDev.Ini.Item(System.String,System.Type)">
             <summary>
                 Gets or sets the first section-less value of the specified key in the
-                specified section of this instance. The return value is converted to the
-                specified type if possible.
+                specified section of this instance.
+                <para>
+                    If possible, the return value is converted to the specified type;
+                    otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="key">
                 The name of the key in the section.
@@ -12129,14 +12132,15 @@
             <param name="returnType">
                 The type to which the return value should be converted.
             </param>
-            <exception cref="T:System.NotSupportedException">
-                The conversion cannot be performed.
-            </exception>
         </member>
         <member name="P:SilDev.Ini.Item(System.String,System.String,System.Int32,System.Object)">
             <summary>
                 Gets or sets the value under the specified index of the specified key in
                 the specified section of this instance.
+                <para>
+                    If possible, the return value is converted to the type of the specified
+                    default object; otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="section">
                 The name of the section. Must be <see langword="null"/> to handle values of
@@ -12159,6 +12163,10 @@
             <summary>
                 Gets or sets the first value of the specified key in the specified section
                 of this instance.
+                <para>
+                    If possible, the return value is converted to the type of the specified
+                    default object; otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="section">
                 The name of the section. Must be <see langword="null"/> to handle values of
@@ -12178,6 +12186,10 @@
             <summary>
                 Gets or sets the section-less value under the specified index of the
                 specified key of this instance.
+                <para>
+                    If possible, the return value is converted to the type of the specified
+                    default object; otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="key">
                 The name of the key in the section.
@@ -12196,6 +12208,10 @@
             <summary>
                 Gets or sets the first section-less value under the specified index of the
                 specified key of this instance.
+                <para>
+                    If possible, the return value is converted to the type of the specified
+                    default object; otherwise, <see langword="null"/> is returned.
+                </para>
             </summary>
             <param name="key">
                 The name of the key.
@@ -19916,35 +19932,43 @@
                 The maximum width in pixel.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToBoolean(System.String)">
-            <summary>
-                Converts the specified <see cref="T:System.String"/> to an equivalent
-                <see cref="T:System.Boolean"/> value, which returns always <see langword="false"/> for
-                unsupported <see cref="T:System.String"/> values.
-            </summary>
-            <param name="str">
-                The <see cref="T:System.String"/> to convert.
-            </param>
-        </member>
         <member name="M:SilDev.Reorganize.ToBoolean``1(``0)">
             <summary>
-                Converts the specified value to an equivalent <see cref="T:System.Boolean"/> value.
+                Converts the value of this element to an equivalent <see cref="T:System.Boolean"/>
+                value.
             </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
             <param name="src">
-                The value to convert.
+                The source to convert.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.ToBoolean``1(System.Nullable{``0})">
             <summary>
-                Converts the specified <see cref="T:System.Nullable"/> value to an equivalent
-                <see cref="T:System.Boolean"/> value, which returns always <see langword="false"/> on
-                <see langword="null"/>.
+                Converts the value of this element to an equivalent <see cref="T:System.Boolean"/>
+                value.
             </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
             <param name="src">
-                The <see cref="T:System.Nullable"/> value to convert.
+                The source to convert.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.ToChar``1(``0)">
+            <summary>
+                Converts the value of this element to its equivalent Unicode character.
+                using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToChar``1(System.Nullable{``0})">
             <summary>
                 Converts the value of this element to its equivalent Unicode character.
                 using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
@@ -19968,7 +19992,31 @@
                 The source to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToSByte``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to a 8-bit signed integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToByte``1(``0)">
+            <summary>
+                Converts the value of this element to a 8-bit unsigned integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToByte``1(System.Nullable{``0})">
             <summary>
                 Converts the value of this element to a 8-bit unsigned integer, using the
                 <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
@@ -19992,7 +20040,31 @@
                 The source to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToInt16``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to a 16-bit signed integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToUInt16``1(``0)">
+            <summary>
+                Converts the value of this element to a 16-bit unsigned integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToUInt16``1(System.Nullable{``0})">
             <summary>
                 Converts the value of this element to a 16-bit unsigned integer, using the
                 <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
@@ -20016,7 +20088,31 @@
                 The source to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToInt32``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to a 32-bit signed integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToUInt32``1(``0)">
+            <summary>
+                Converts the value of this element to a 32-bit unsigned integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToUInt32``1(System.Nullable{``0})">
             <summary>
                 Converts the value of this element to a 32-bit unsigned integer, using the
                 <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
@@ -20040,6 +20136,18 @@
                 The source to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToInt64``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to a 64-bit signed integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToUInt64``1(``0)">
             <summary>
                 Converts the value of this element to a 64-bit unsigned integer, using the
@@ -20052,7 +20160,32 @@
                 The source to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToUInt64``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to a 64-bit unsigned integer, using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToSingle``1(``0)">
+            <summary>
+                Converts the value of this element to an single-precision floating-point
+                number, using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format
+                information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToSingle``1(System.Nullable{``0})">
             <summary>
                 Converts the value of this element to an single-precision floating-point
                 number, using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format
@@ -20078,10 +20211,61 @@
                 The source to convert.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.ToDouble``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to an double-precision floating-point
+                number, using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format
+                information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.ToDecimal``1(``0)">
             <summary>
                 Converts the value of this element to an equivalent decimal number, using
                 the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToDecimal``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to an equivalent decimal number, using
+                the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToDateTime``1(``0)">
+            <summary>
+                Converts the value of this element to an equivalent <see cref="T:System.DateTime"/>
+                object, using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format
+                information.
+            </summary>
+            <typeparam name="TSource">
+                The type of the source element.
+            </typeparam>
+            <param name="src">
+                The source to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.ToDateTime``1(System.Nullable{``0})">
+            <summary>
+                Converts the value of this element to an equivalent <see cref="T:System.DateTime"/>
+                object, using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format
+                information.
             </summary>
             <typeparam name="TSource">
                 The type of the source element.
