@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-24 20:17
+// Version:  2020-01-26 11:02
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1187,6 +1187,20 @@ namespace SilDev
         /// </param>
         public static decimal ToDecimal<TSource>(this TSource src) where TSource : IConvertible =>
             src == null ? default : Convert.ToDecimal(src, CultureInfo.CurrentCulture);
+
+        /// <summary>
+        ///     Converts the value of this element to an equivalent <see cref="DateTime"/>
+        ///     object, using the <see cref="CultureInfo.CurrentCulture"/> format
+        ///     information.
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the source element.
+        /// </typeparam>
+        /// <param name="src">
+        ///     The source to convert.
+        /// </param>
+        public static DateTime ToDateTime<TSource>(this TSource src) where TSource : IConvertible =>
+            src == null ? default : Convert.ToDateTime(src, CultureInfo.CurrentCulture);
 
         /// <summary>
         ///     Converts the value of this element to its equivalent string representation
