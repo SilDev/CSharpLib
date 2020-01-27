@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlAlphaNumericComparer.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-27 23:28
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -20,7 +20,7 @@ namespace SilDev.Forms
     /// <summary>
     ///     Provides a base class for comparison.
     /// </summary>
-    public class ControlAlphaNumericComparer : AlphaNumericComparer
+    public sealed class ControlAlphaNumericComparer : AlphaNumericComparer
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ControlAlphaNumericComparer"/>
@@ -44,7 +44,7 @@ namespace SilDev.Forms
         /// <param name="value">
         ///     The object to compare.
         /// </param>
-        protected override string GetString(object value)
+        public override string GetString(object value)
         {
             if (!(value is Control ctrl))
                 return null;

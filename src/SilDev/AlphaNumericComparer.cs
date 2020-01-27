@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: AlphaNumericComparer.cs
-// Version:  2020-01-26 11:01
+// Version:  2020-01-27 23:27
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -23,10 +23,22 @@ namespace SilDev
     using System.Security;
 
     /// <summary>
-    ///     Provides a base class for comparison.
+    ///     Defines a method that performs the string transformation for the comparer.
+    /// </summary>
+    public interface IStringComparer
+    {
+        /// <summary>
+        ///     When overridden in a derived class, performs the string transformation of
+        ///     the object for the comparer.
+        /// </summary>
+        string GetString(object value);
+    }
+
+    /// <summary>
+    ///     Provides a base class for alphanumeric comparison.
     /// </summary>
     [Serializable]
-    public class AlphaNumericComparer : IComparer, IComparer<object>
+    public class AlphaNumericComparer : IComparer, IStringComparer
     {
         /// <summary>
         ///     Gets the value that determines whether the order is descended.
@@ -134,13 +146,33 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Gets the string of the object that is used for comparison.
+        ///     Retrieves the string of the object that is used for comparison.
         /// </summary>
         /// <param name="value">
         ///     The object to compare.
         /// </param>
-        protected virtual string GetString(object value) =>
+        public virtual string GetString(object value) =>
             value as string;
+
+        /// <summary>
+        ///     Determines whether this instance have same values as the specified
+        ///     <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">
+        ///     The  <see cref="object"/> to compare.
+        /// </param>
+        public new virtual bool Equals(object other)
+        {
+            if (!(other is AlphaNumericComparer comparer))
+                return false;
+            return Descendant != comparer.Descendant;
+        }
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        public new virtual int GetHashCode() =>
+            typeof(AlphaNumericComparer).Name.GetHashCode();
 
         private static string GetChunk(string str, ref int i)
         {
@@ -151,5 +183,84 @@ namespace SilDev
             while (++i < len && char.IsDigit(str[i]) == char.IsDigit(ca[0]));
             return new string(ca);
         }
+    }
+
+    /// <summary>
+    ///     Provides a base class for alphanumeric comparison.
+    /// </summary>
+    [Serializable]
+    public class AlphaNumericComparer<T> : AlphaNumericComparer, IComparer<T>
+    {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlphaNumericComparer{T}"/>
+        ///     class. A parameter specifies whether the order is descended.
+        /// </summary>
+        /// <param name="descendant">
+        ///     <see langword="true"/> to enable the descending order; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public AlphaNumericComparer(bool descendant) : base(descendant) { }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlphaNumericComparer{T}"/>
+        ///     class.
+        /// </summary>
+        public AlphaNumericComparer() : base(false) { }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlphaNumericComparer{T}"/>
+        ///     class with serialized data.
+        /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        protected AlphaNumericComparer(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        /// <summary>
+        ///     Compare two specified objects and returns an integer that indicates their
+        ///     relative position in the sort order.
+        /// </summary>
+        /// <param name="a">
+        ///     The first object to compare.
+        /// </param>
+        /// <param name="b">
+        ///     The second object to compare.
+        /// </param>
+        public int Compare(T a, T b) => base.Compare(a, b);
+
+        /// <summary>
+        ///     Sets the <see cref="SerializationInfo"/> object for this instance.
+        /// </summary>
+        /// <param name="info">
+        ///     The object that holds the serialized object data.
+        /// </param>
+        /// <param name="context">
+        ///     The contextual information about the source or destination.
+        /// </param>
+        [SecurityCritical]
+        public new virtual void GetObjectData(SerializationInfo info, StreamingContext context) => base.GetObjectData(info, context);
+
+        /// <summary>
+        ///     Determines whether this instance have same values as the specified
+        ///     <see cref="object"/>.
+        /// </summary>
+        /// <param name="other">
+        ///     The  <see cref="object"/> to compare.
+        /// </param>
+        public new virtual bool Equals(object other)
+        {
+            if (!(other is AlphaNumericComparer<T> comparer))
+                return false;
+            return Descendant != comparer.Descendant;
+        }
+
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        public new virtual int GetHashCode() =>
+            Crypto.CombineHashCodes(base.GetHashCode(), typeof(T).Name.GetHashCode());
     }
 }
