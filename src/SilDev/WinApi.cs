@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-27 21:17
+// Version:  2020-01-27 21:28
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -9703,6 +9703,22 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32)]
             internal static extern bool SetProcessWorkingSetSize(IntPtr hProcess, UIntPtr dwMinimumWorkingSetSize, UIntPtr dwMaximumWorkingSetSize);
+            
+            /// <summary>
+            ///     Sets the handle for the specified standard device (standard input, standard
+            ///     output, or standard error).
+            /// </summary>
+            /// <param name="nStdHandle">
+            ///     The standard device for which the handle is to be set.
+            /// </param>
+            /// <param name="hHandle">
+            ///     The handle for the standard device.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.Kernel32, EntryPoint = "SetStdHandle", SetLastError = true)]
+            internal static extern int SetStdHandle(int nStdHandle, IntPtr hHandle);
 
             /// <summary>
             ///     Creates a timer with the specified time-out value.
