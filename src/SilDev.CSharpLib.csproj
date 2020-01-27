@@ -150,6 +150,7 @@
     <Compile Include="SilDev\ArgumentInvalidException.cs" />
     <Compile Include="SilDev\AssemblyInfo.cs" />
     <Compile Include="SilDev\AlphaNumericComparer.cs" />
+    <Compile Include="SilDev\ConsoleWindow.cs" />
     <Compile Include="SilDev\CmdExec.cs" />
     <Compile Include="SilDev\Compression\Archiver\WinRar.cs" />
     <Compile Include="SilDev\Compression\Archiver\SevenZip.cs" />
@@ -169,6 +170,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SilDev\Forms\MessageBoxButtonText.cs" />
+    <Compile Include="SilDev\Investment\CacheInvestor.cs" />
     <Compile Include="SilDev\Investment\ValueItemHost.cs" />
     <Compile Include="SilDev\Investment\ValueItem.cs" />
     <Compile Include="SilDev\CultureConfig.cs" />
