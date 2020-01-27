@@ -839,9 +839,20 @@
                 The assembly element to get the information.
             </param>
         </member>
+        <member name="T:SilDev.IStringComparer">
+            <summary>
+                Defines a method that performs the string transformation for the comparer.
+            </summary>
+        </member>
+        <member name="M:SilDev.IStringComparer.GetString(System.Object)">
+            <summary>
+                When overridden in a derived class, performs the string transformation of
+                the object for the comparer.
+            </summary>
+        </member>
         <member name="T:SilDev.AlphaNumericComparer">
             <summary>
-                Provides a base class for comparison.
+                Provides a base class for alphanumeric comparison.
             </summary>
         </member>
         <member name="P:SilDev.AlphaNumericComparer.Descendant">
@@ -901,11 +912,109 @@
         </member>
         <member name="M:SilDev.AlphaNumericComparer.GetString(System.Object)">
             <summary>
-                Gets the string of the object that is used for comparison.
+                Retrieves the string of the object that is used for comparison.
             </summary>
             <param name="value">
                 The object to compare.
             </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer.Equals(System.Object)">
+            <summary>
+                Determines whether this instance have same values as the specified
+                <see cref="T:System.Object"/>.
+            </summary>
+            <param name="other">
+                The  <see cref="T:System.Object"/> to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+        </member>
+        <member name="T:SilDev.AlphaNumericComparer`1">
+            <summary>
+                Provides a base class for alphanumeric comparison.
+            </summary>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer`1.#ctor(System.Boolean)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.AlphaNumericComparer`1"/>
+                class. A parameter specifies whether the order is descended.
+            </summary>
+            <param name="descendant">
+                <see langword="true"/> to enable the descending order; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer`1.#ctor">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.AlphaNumericComparer`1"/>
+                class.
+            </summary>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Initializes a new instance of the <see cref="T:SilDev.AlphaNumericComparer`1"/>
+                class with serialized data.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer`1.Compare(`0,`0)">
+            <summary>
+                Compare two specified objects and returns an integer that indicates their
+                relative position in the sort order.
+            </summary>
+            <param name="a">
+                The first object to compare.
+            </param>
+            <param name="b">
+                The second object to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer`1.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object for this instance.
+            </summary>
+            <param name="info">
+                The object that holds the serialized object data.
+            </param>
+            <param name="context">
+                The contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer`1.Equals(System.Object)">
+            <summary>
+                Determines whether this instance have same values as the specified
+                <see cref="T:System.Object"/>.
+            </summary>
+            <param name="other">
+                The  <see cref="T:System.Object"/> to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.AlphaNumericComparer`1.GetHashCode">
+            <summary>
+                Returns the hash code for this instance.
+            </summary>
+        </member>
+        <member name="T:SilDev.ConsoleWindow">
+            <summary>
+                Provides the functionality to allocate a <see cref="T:System.Console"/> window.
+            </summary>
+        </member>
+        <member name="M:SilDev.ConsoleWindow.Allocate(System.Boolean)">
+            <summary>
+                Allocates a new <see cref="T:System.Console"/> for the current process.
+                <para>
+                    <see langword="true"/> to disable the close button of the windows;
+                    otherwise, <see langword="false"/>.
+                </para>
+            </summary>
         </member>
         <member name="T:SilDev.CmdExec">
             <summary>
@@ -4746,6 +4855,197 @@
             <param name="textColor">
                 The text color.
             </param>
+        </member>
+        <member name="T:SilDev.Investment.CacheInvestor">
+            <summary>
+                Provides simple global caching of elements.
+            </summary>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.GetId``1">
+            <summary>
+                Gets the default reference identifier of the provided type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.Add``1(System.Int32,``0)">
+            <summary>
+                Adds the specified element under the specified identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+            <param name="element">
+                The element to be added.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.Add``1(``0)">
+            <summary>
+                Adds the specified element under the default identifier of the provided
+                type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="element">
+                The value to be added.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.AddDefault``1(System.Int32)">
+            <summary>
+                Adds a default instance for the provided type under the specified
+                identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.AddDefault``1">
+            <summary>
+                Adds a default instance for the provided type under its default identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.AddOrUpdate``1(System.Int32,``0)">
+            <summary>
+                Adds or updates an element under the specified identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+            <param name="element">
+                The element to be added or updated.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.AddOrUpdate``1(``0)">
+            <summary>
+                Adds or updates an element under the default identifier of the provided
+                type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="element">
+                The element to be added or updated.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.Update``1(System.Int32,``0)">
+            <summary>
+                Updates an element under the specified identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+            <param name="element">
+                The element to be updated.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.Update``1(``0)">
+            <summary>
+                Updates an element under the default identifier of the provided type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="element">
+                The element to be updated.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.GetDefault``1">
+            <summary>
+                Gets the default element under the default identifier of the provided type.
+                <para>
+                    If it does not exist, it will be created.
+                </para>
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.GetItem``1(System.Int32)">
+            <summary>
+                Gets the element associated with the specified identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.GetItem``1">
+            <summary>
+                Gets the element associated with the default identifier of the provided
+                type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.TryGetItem``1(System.Int32,``0@)">
+            <summary>
+                Gets the element associated with the specified identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+            <param name="result">
+                When this method returns <see langword="true"/>, the value associated with
+                the specified identifier; otherwise, the default value for the provided
+                type.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.TryGetItem``1(``0@)">
+            <summary>
+                Gets the element associated with the default identifier of the provided
+                type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="result">
+                When this method returns <see langword="true"/>, the value associated with
+                the specified identifier; otherwise, the default value for the provided
+                type.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.RemoveItem``1(System.Int32)">
+            <summary>
+                Removes the element associated with the specified identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.RemoveItem``1">
+            <summary>
+                Removes the element associated with the default identifier of the provided
+                type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
         </member>
         <member name="T:SilDev.Investment.ValueItemHost`1">
             <summary>
@@ -14054,7 +14354,7 @@
                 <see cref="T:System.Exception"/>'s.
             </summary>
         </member>
-        <member name="P:SilDev.Log.CatchUnhandledExceptions">
+        <member name="P:SilDev.Log.CatchUnhandled">
             <summary>
                 <see langword="true"/> to enable the catching of unhandled
                 <see cref="T:System.Exception"/>'s; otherwise, <see langword="false"/>.
@@ -14104,7 +14404,7 @@
                 <see cref="P:SilDev.Log.DebugMode"/> options are available.
                 <para>
                     0: Logging is disabled. <see cref="T:System.Exception"/>'s are caught, and if
-                    <see cref="P:SilDev.Log.CatchUnhandledExceptions"/> is enabled, unhandled
+                    <see cref="P:SilDev.Log.CatchUnhandled"/> is enabled, unhandled
                     <see cref="T:System.Exception"/>'s are also discarded. This can be useful for
                     public releases to prevent any kind of <see cref="T:System.Exception"/>
                     notifications to the client. Please note that these functions may have
@@ -27984,6 +28284,17 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.AttachConsole(System.UInt32)">
+            <summary>
+                Attaches the calling process to the console of the specified process.
+            </summary>
+            <param name="dwProcessId">
+                The identifier of the process whose console is to be used.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.AnimateWindow(System.IntPtr,System.Int32,SilDev.WinApi.AnimateWindowFlags)">
             <summary>
                 Enables you to produce special effects when showing or hiding windows.
@@ -28088,6 +28399,59 @@
             <param name="lpServiceStatus">
             </param>
             <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.CreateFileW(System.String,System.UInt32,System.UInt32,System.IntPtr,System.UInt32,System.UInt32,System.IntPtr)">
+            <summary>
+                Creates or opens a file or I/O device. The most commonly used I/O devices
+                are as follows: file, file stream, directory, physical disk, volume,
+                console buffer, tape drive, communications resource, mailslot, and pipe.
+                The function returns a handle that can be used to access the file or device
+                for various types of I/O depending on the file or device and the flags and
+                attributes specified.
+            </summary>
+            <param name="lpFileName">
+                The name of the file or device to be created or opened. You may use either
+                forward slashes (/) or backslashes () in this name.
+            </param>
+            <param name="dwDesiredAccess">
+                The requested access to the file or device, which can be summarized as
+                read, write, both or neither zero). The most commonly used values are
+                GENERIC_READ (0x80000000), GENERIC_WRITE (0x40000000), or both. If this
+                parameter is zero, the application can query certain metadata such as file,
+                directory, or device attributes without accessing that file or device, even
+                if GENERIC_READ (0x80000000) access would have been denied.
+            </param>
+            <param name="dwShareMode">
+                The requested sharing mode of the file or device, which can be read, write,
+                both, delete, all of these, or none (refer to the following table). Access
+                requests to attributes or extended attributes are not affected by this
+                flag. If this parameter is zero and CreateFile succeeds, the file or device
+                cannot be shared and cannot be opened again until the handle to the file or
+                device is closed.
+            </param>
+            <param name="lpSecurityAttributes">
+                A pointer to a <see cref="T:SilDev.WinApi.SecurityAttributes"/> structure that contains two
+                separate but related data members: an optional security descriptor, and a
+                Boolean value that determines whether the returned handle can be inherited
+                by child processes.
+            </param>
+            <param name="dwCreationDisposition">
+                An action to take on a file or device that exists or does not exist.
+            </param>
+            <param name="dwFlagsAndAttributes">
+                The file or device attributes and flags, FILE_ATTRIBUTE_NORMAL (0x80) being
+                the most common default value for files.
+            </param>
+            <param name="hTemplateFile">
+                A valid handle to a template file with the GENERIC_READ (0x80000000) access
+                right. The template file supplies file attributes and extended attributes
+                for the file that is being created. This parameter can be
+                <see langword="null"/>.
+            </param>
+            <returns>
+                If the function succeeds, the return value is an open handle to the
+                specified file, device, named pipe, or mail slot.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.CreateProcessWithTokenW(System.IntPtr,SilDev.WinApi.LogonOptions,System.String,System.String,SilDev.WinApi.CreationFlags,System.IntPtr,System.String,SilDev.WinApi.StartupInfo@,SilDev.WinApi.ProcessInformation@)">
@@ -30368,6 +30732,21 @@
                     value (SIZE_T)–1, the function removes as many pages as possible from
                     the working set of the specified process.
                 </para>
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.SetStdHandle(System.Int32,System.IntPtr)">
+            <summary>
+                Sets the handle for the specified standard device (standard input, standard
+                output, or standard error).
+            </summary>
+            <param name="nStdHandle">
+                The standard device for which the handle is to be set.
+            </param>
+            <param name="hHandle">
+                The handle for the standard device.
             </param>
             <returns>
                 If the function succeeds, the return value is nonzero.
