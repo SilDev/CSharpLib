@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-27 21:28
+// Version:  2020-01-27 21:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -7156,6 +7156,18 @@ namespace SilDev
             internal static extern int AllocConsole();
 
             /// <summary>
+            ///     Attaches the calling process to the console of the specified process.
+            /// </summary>
+            /// <param name="dwProcessId">
+            ///     The identifier of the process whose console is to be used.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.Kernel32, EntryPoint = "AttachConsole", SetLastError = true)]
+            internal static extern uint AttachConsole(uint dwProcessId);
+
+            /// <summary>
             ///     Enables you to produce special effects when showing or hiding windows.
             ///     There are four types of animation: roll, slide, collapse or expand, and
             ///     alpha-blended fade.
@@ -9703,7 +9715,7 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Kernel32)]
             internal static extern bool SetProcessWorkingSetSize(IntPtr hProcess, UIntPtr dwMinimumWorkingSetSize, UIntPtr dwMaximumWorkingSetSize);
-            
+
             /// <summary>
             ///     Sets the handle for the specified standard device (standard input, standard
             ///     output, or standard error).
