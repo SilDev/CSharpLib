@@ -86,10 +86,6 @@ namespace SilDev
 
             _streamReader = new StreamReader(fsIn);
             Console.SetIn(_streamReader);
-
-            var title = $"Debug Console ('{AssemblyInfo.Title}')";
-            if (Console.Title != title)
-                Console.Title = title;
         }
 
         private static FileStream CreateFileStream(string name, uint win32DesiredAccess, uint win32ShareMode, FileAccess dotNetFileAccess)
