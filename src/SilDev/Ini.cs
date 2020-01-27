@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-26 17:06
+// Version:  2020-01-28 00:09
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -28,6 +28,7 @@ namespace SilDev
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web.Script.Serialization;
+    using Investment;
     using IDocumentDictionary = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<string>>>;
     using IKeyValueDictionary = System.Collections.Generic.IDictionary<string, System.Collections.Generic.IList<string>>;
     using IReadOnlyDocumentDictionary = System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IReadOnlyList<string>>>;
@@ -454,8 +455,6 @@ namespace SilDev
             get => this[null, key, 0, defValue];
             set => this[null, key, 0, defValue] = value;
         }
-
-        private static AlphaNumericComparer SortComparer { get; } = new AlphaNumericComparer();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Ini"/> class with the
@@ -1332,23 +1331,26 @@ namespace SilDev
 
         private static IDocumentDictionary SortHelper(IDocumentDictionary source, IEnumerable<string> topSections, IEnumerable<string> topKeys)
         {
+            var comparer = CacheInvestor.GetDefault<AlphaNumericComparer<string>>();
             if (topSections == null)
                 topSections = Array.Empty<string>();
-            return source.OrderBy(p => !string.IsNullOrEmpty(p.Key)).ThenBy(p => !topSections.ContainsItem(p.Key)).ThenBy(p => p.Key, SortComparer).ToDictionary(p => p.Key, p => SortHelper(p.Value, topKeys));
+            return source.OrderBy(p => !string.IsNullOrEmpty(p.Key)).ThenBy(p => !topSections.ContainsItem(p.Key)).ThenBy(p => p.Key, comparer).ToDictionary(p => p.Key, p => SortHelper(p.Value, topKeys));
         }
 
         private static IKeyValueDictionary SortHelper(IKeyValueDictionary source, IEnumerable<string> topKeys)
         {
+            var comparer = CacheInvestor.GetDefault<AlphaNumericComparer<string>>();
             if (topKeys == null)
                 topKeys = Array.Empty<string>();
-            return source.OrderBy(p => !topKeys.ContainsItem(p.Key)).ThenBy(p => p.Key, SortComparer).ToDictionary(p => p.Key, p => p.Value);
+            return source.OrderBy(p => !topKeys.ContainsItem(p.Key)).ThenBy(p => p.Key, comparer).ToDictionary(p => p.Key, p => p.Value);
         }
 
         private static IList<string> SortHelper(IEnumerable<string> source, IEnumerable<string> topItems)
         {
+            var comparer = CacheInvestor.GetDefault<AlphaNumericComparer<string>>();
             if (topItems == null)
                 topItems = Array.Empty<string>();
-            return source.OrderBy(s => !string.IsNullOrEmpty(s)).ThenBy(s => !topItems.ContainsItem(s)).ThenBy(s => s, SortComparer).ToList();
+            return source.OrderBy(s => !string.IsNullOrEmpty(s)).ThenBy(s => !topItems.ContainsItem(s)).ThenBy(s => s, comparer).ToList();
         }
 
         private static bool LineIsValid(string str)

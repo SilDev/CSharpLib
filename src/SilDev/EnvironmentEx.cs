@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-01-28 00:09
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -20,6 +20,7 @@ namespace SilDev
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Investment;
     using Microsoft.Win32;
     using QuickWmi;
 
@@ -128,7 +129,7 @@ namespace SilDev
             if (defaultArgs.Count > skip)
                 defaultArgs = defaultArgs.Skip(skip).ToList();
             if (sort)
-                defaultArgs = defaultArgs.OrderBy(x => x, new AlphaNumericComparer()).ToList();
+                defaultArgs = defaultArgs.OrderBy(x => x, CacheInvestor.GetDefault<AlphaNumericComparer<string>>()).ToList();
             return _cmdLineArgs = quotes ? defaultArgs.Select(x => x.Any(char.IsWhiteSpace) ? $"\"{x}\"" : x).ToList() : defaultArgs;
         }
 

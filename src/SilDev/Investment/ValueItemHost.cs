@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2020-01-24 20:10
+// Version:  2020-01-28 00:09
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -310,7 +310,7 @@ namespace SilDev.Investment
         {
             var names = Enum.GetNames(typeof(TKey)).AsEnumerable();
             if (sorted)
-                names = names.OrderBy(x => x, new AlphaNumericComparer());
+                names = names.OrderBy(x => x, CacheInvestor.GetDefault<AlphaNumericComparer<string>>());
             return names;
         }
 
@@ -403,7 +403,7 @@ namespace SilDev.Investment
         {
             var itemDict = ItemDictionary;
             if (itemDict.Count > 1)
-                ItemDictionary = itemDict.OrderBy(x => x.Key, new AlphaNumericComparer()).ToDictionary(x => x.Key, x => x.Value);
+                ItemDictionary = itemDict.OrderBy(x => x.Key, CacheInvestor.GetDefault<AlphaNumericComparer<string>>()).ToDictionary(x => x.Key, x => x.Value);
         }
 
         /// <summary>

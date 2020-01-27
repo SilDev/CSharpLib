@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Redist.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-01-28 00:09
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -18,6 +18,7 @@ namespace SilDev
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Investment;
     using Microsoft.Win32;
 
     /// <summary>
@@ -135,7 +136,7 @@ namespace SilDev
             {
                 if (!refresh && _displayNames != null)
                     return _displayNames;
-                var comparer = new AlphaNumericComparer();
+                var comparer = CacheInvestor.GetDefault<AlphaNumericComparer<string>>();
                 var entries = new[]
                 {
                     "DisplayName",

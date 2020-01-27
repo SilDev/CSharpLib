@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-25 14:13
+// Version:  2020-01-28 00:05
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev
     using System.Security.Cryptography;
     using System.Text;
     using Intern;
+    using Investment;
     using Properties;
 
     /// <summary>
@@ -577,28 +578,8 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encode(this byte[] bytes, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
-        {
-            switch (algorithm)
-            {
-                case BinaryToTextEncoding.Base2:
-                    return new Base2().EncodeBytes(bytes);
-                case BinaryToTextEncoding.Base8:
-                    return new Base8().EncodeBytes(bytes);
-                case BinaryToTextEncoding.Base10:
-                    return new Base10().EncodeBytes(bytes);
-                case BinaryToTextEncoding.Base16:
-                    return new Base16().EncodeBytes(bytes);
-                case BinaryToTextEncoding.Base32:
-                    return new Base32().EncodeBytes(bytes);
-                case BinaryToTextEncoding.Base85:
-                    return new Base85().EncodeBytes(bytes);
-                case BinaryToTextEncoding.Base91:
-                    return new Base91().EncodeBytes(bytes);
-                default:
-                    return new Base64().EncodeBytes(bytes);
-            }
-        }
+        public static string Encode(this byte[] bytes, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64) =>
+            GetDefaultInstance(algorithm).EncodeBytes(bytes);
 
         /// <summary>
         ///     Encodes this string with the specified algorithm.
@@ -609,28 +590,8 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encode(this string text, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
-        {
-            switch (algorithm)
-            {
-                case BinaryToTextEncoding.Base2:
-                    return new Base2().EncodeString(text);
-                case BinaryToTextEncoding.Base8:
-                    return new Base8().EncodeString(text);
-                case BinaryToTextEncoding.Base10:
-                    return new Base10().EncodeString(text);
-                case BinaryToTextEncoding.Base16:
-                    return new Base16().EncodeString(text);
-                case BinaryToTextEncoding.Base32:
-                    return new Base32().EncodeString(text);
-                case BinaryToTextEncoding.Base85:
-                    return new Base85().EncodeString(text);
-                case BinaryToTextEncoding.Base91:
-                    return new Base91().EncodeString(text);
-                default:
-                    return new Base64().EncodeString(text);
-            }
-        }
+        public static string Encode(this string text, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64) =>
+            GetDefaultInstance(algorithm).EncodeString(text);
 
         /// <summary>
         ///     Encodes this file into a sequence of bytes with the specified algorithm.
@@ -641,28 +602,8 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string EncodeFile(this string path, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
-        {
-            switch (algorithm)
-            {
-                case BinaryToTextEncoding.Base2:
-                    return new Base2().EncodeFile(path);
-                case BinaryToTextEncoding.Base8:
-                    return new Base8().EncodeFile(path);
-                case BinaryToTextEncoding.Base10:
-                    return new Base10().EncodeFile(path);
-                case BinaryToTextEncoding.Base16:
-                    return new Base16().EncodeFile(path);
-                case BinaryToTextEncoding.Base32:
-                    return new Base32().EncodeFile(path);
-                case BinaryToTextEncoding.Base85:
-                    return new Base85().EncodeFile(path);
-                case BinaryToTextEncoding.Base91:
-                    return new Base91().EncodeFile(path);
-                default:
-                    return new Base64().EncodeFile(path);
-            }
-        }
+        public static string EncodeFile(this string path, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64) =>
+            GetDefaultInstance(algorithm).EncodeFile(path);
 
         /// <summary>
         ///     Decodes this string into a sequence of bytes with the specified algorithm.
@@ -673,28 +614,8 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Decode(this string code, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
-        {
-            switch (algorithm)
-            {
-                case BinaryToTextEncoding.Base2:
-                    return new Base2().DecodeBytes(code);
-                case BinaryToTextEncoding.Base8:
-                    return new Base8().DecodeBytes(code);
-                case BinaryToTextEncoding.Base10:
-                    return new Base10().DecodeBytes(code);
-                case BinaryToTextEncoding.Base16:
-                    return new Base85().DecodeBytes(code);
-                case BinaryToTextEncoding.Base32:
-                    return new Base32().DecodeBytes(code);
-                case BinaryToTextEncoding.Base85:
-                    return new Base85().DecodeBytes(code);
-                case BinaryToTextEncoding.Base91:
-                    return new Base91().DecodeBytes(code);
-                default:
-                    return new Base64().DecodeBytes(code);
-            }
-        }
+        public static byte[] Decode(this string code, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64) =>
+            GetDefaultInstance(algorithm).DecodeBytes(code);
 
         /// <summary>
         ///     Decodes this string into a sequence of bytes with the specified algorithm.
@@ -705,28 +626,8 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string DecodeString(this string code, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
-        {
-            switch (algorithm)
-            {
-                case BinaryToTextEncoding.Base2:
-                    return new Base2().DecodeString(code);
-                case BinaryToTextEncoding.Base8:
-                    return new Base8().DecodeString(code);
-                case BinaryToTextEncoding.Base10:
-                    return new Base10().DecodeString(code);
-                case BinaryToTextEncoding.Base16:
-                    return new Base16().DecodeString(code);
-                case BinaryToTextEncoding.Base32:
-                    return new Base32().DecodeString(code);
-                case BinaryToTextEncoding.Base85:
-                    return new Base85().DecodeString(code);
-                case BinaryToTextEncoding.Base91:
-                    return new Base91().DecodeString(code);
-                default:
-                    return new Base64().DecodeString(code);
-            }
-        }
+        public static string DecodeString(this string code, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64) =>
+            GetDefaultInstance(algorithm).DecodeString(code);
 
         /// <summary>
         ///     Decodes this file into a sequence of bytes with the specified algorithm.
@@ -737,28 +638,8 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] DecodeFile(this string path, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64)
-        {
-            switch (algorithm)
-            {
-                case BinaryToTextEncoding.Base2:
-                    return new Base2().DecodeFile(path);
-                case BinaryToTextEncoding.Base8:
-                    return new Base8().DecodeFile(path);
-                case BinaryToTextEncoding.Base10:
-                    return new Base10().DecodeFile(path);
-                case BinaryToTextEncoding.Base16:
-                    return new Base16().DecodeFile(path);
-                case BinaryToTextEncoding.Base32:
-                    return new Base32().DecodeFile(path);
-                case BinaryToTextEncoding.Base85:
-                    return new Base85().DecodeFile(path);
-                case BinaryToTextEncoding.Base91:
-                    return new Base91().DecodeFile(path);
-                default:
-                    return new Base64().DecodeFile(path);
-            }
-        }
+        public static byte[] DecodeFile(this string path, BinaryToTextEncoding algorithm = BinaryToTextEncoding.Base64) =>
+            GetDefaultInstance(algorithm).DecodeFile(path);
 
         /// <summary>
         ///     Encrypts this <typeparamref name="TSource"/> object with the
@@ -772,30 +653,36 @@ namespace SilDev
         /// </param>
         public static uint EncryptRaw<TSource>(this TSource source)
         {
+            var instance = CacheInvestor.GetDefault<Crc32>();
             switch (source)
             {
                 case null:
                     return 0u;
                 case Stream stream:
-                    return new Crc32(stream).RawHash;
+                    instance.Encrypt(stream);
+                    break;
                 case IEnumerable<byte> bytes:
-                    return new Crc32(bytes.AsArray()).RawHash;
+                    instance.Encrypt(bytes.AsArray());
+                    break;
                 case IEnumerable<char> chars:
-                    return new Crc32(chars.AsString()).RawHash;
+                    instance.Encrypt(chars.AsString());
+                    break;
+                default:
+                    try
+                    {
+                        using var ms = new MemoryStream();
+                        var bf = new BinaryFormatter();
+                        bf.Serialize(ms, source);
+                        ms.Position = 0L;
+                        instance.Encrypt(ms);
+                    }
+                    catch (SerializationException ex) when (ex.IsCaught())
+                    {
+                        Log.Write(ex);
+                    }
+                    break;
             }
-            try
-            {
-                using var ms = new MemoryStream();
-                var bf = new BinaryFormatter();
-                bf.Serialize(ms, source);
-                ms.Position = 0L;
-                return new Crc32(ms).RawHash;
-            }
-            catch (SerializationException ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return 0u;
-            }
+            return instance.RawHash;
         }
 
         /// <summary>
@@ -813,100 +700,23 @@ namespace SilDev
         /// </param>
         public static string Encrypt<TSource>(this TSource source, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
         {
+            var instance = GetDefaultInstance(algorithm);
             switch (source)
             {
                 case Stream stream:
-                    switch (algorithm)
-                    {
-                        case ChecksumAlgorithm.Adler32:
-                            return new Adler32(stream).Hash;
-                        case ChecksumAlgorithm.Crc16:
-                            return new Crc16(stream).Hash;
-                        case ChecksumAlgorithm.Crc32:
-                            return new Crc32(stream).Hash;
-                        case ChecksumAlgorithm.Crc64:
-                            return new Crc64(stream).Hash;
-                        case ChecksumAlgorithm.Sha1:
-                            return new Sha1(stream).Hash;
-                        case ChecksumAlgorithm.Sha256:
-                            return new Sha256(stream).Hash;
-                        case ChecksumAlgorithm.Sha384:
-                            return new Sha384(stream).Hash;
-                        case ChecksumAlgorithm.Sha512:
-                            return new Sha512(stream).Hash;
-                        default:
-                            return new Md5(stream).Hash;
-                    }
+                    instance.Encrypt(stream);
+                    return instance.Hash;
                 case IEnumerable<byte> bytes:
-                    var ba = bytes.AsArray();
-                    switch (algorithm)
-                    {
-                        case ChecksumAlgorithm.Adler32:
-                            return new Adler32(ba).Hash;
-                        case ChecksumAlgorithm.Crc16:
-                            return new Crc16(ba).Hash;
-                        case ChecksumAlgorithm.Crc32:
-                            return new Crc32(ba).Hash;
-                        case ChecksumAlgorithm.Crc64:
-                            return new Crc64(ba).Hash;
-                        case ChecksumAlgorithm.Sha1:
-                            return new Sha1(ba).Hash;
-                        case ChecksumAlgorithm.Sha256:
-                            return new Sha256(ba).Hash;
-                        case ChecksumAlgorithm.Sha384:
-                            return new Sha384(ba).Hash;
-                        case ChecksumAlgorithm.Sha512:
-                            return new Sha512(ba).Hash;
-                        default:
-                            return new Md5(ba).Hash;
-                    }
+                    instance.Encrypt(bytes.AsArray());
+                    return instance.Hash;
                 case IEnumerable<char> chars:
-                    var text = chars.AsString();
-                    switch (algorithm)
-                    {
-                        case ChecksumAlgorithm.Adler32:
-                            return new Adler32(text).Hash;
-                        case ChecksumAlgorithm.Crc16:
-                            return new Crc16(text).Hash;
-                        case ChecksumAlgorithm.Crc32:
-                            return new Crc32(text).Hash;
-                        case ChecksumAlgorithm.Crc64:
-                            return new Crc64(text).Hash;
-                        case ChecksumAlgorithm.Sha1:
-                            return new Sha1(text).Hash;
-                        case ChecksumAlgorithm.Sha256:
-                            return new Sha256(text).Hash;
-                        case ChecksumAlgorithm.Sha384:
-                            return new Sha384(text).Hash;
-                        case ChecksumAlgorithm.Sha512:
-                            return new Sha512(text).Hash;
-                        default:
-                            return new Md5(text).Hash;
-                    }
+                    instance.Encrypt(chars.AsString());
+                    return instance.Hash;
             }
             if (!(source?.SerializeObject() is { } data))
                 return string.Empty;
-            switch (algorithm)
-            {
-                case ChecksumAlgorithm.Adler32:
-                    return new Adler32(data).Hash;
-                case ChecksumAlgorithm.Crc16:
-                    return new Crc16(data).Hash;
-                case ChecksumAlgorithm.Crc32:
-                    return new Crc32(data).Hash;
-                case ChecksumAlgorithm.Crc64:
-                    return new Crc64(data).Hash;
-                case ChecksumAlgorithm.Sha1:
-                    return new Sha1(data).Hash;
-                case ChecksumAlgorithm.Sha256:
-                    return new Sha256(data).Hash;
-                case ChecksumAlgorithm.Sha384:
-                    return new Sha384(data).Hash;
-                case ChecksumAlgorithm.Sha512:
-                    return new Sha512(data).Hash;
-                default:
-                    return new Md5(data).Hash;
-            }
+            instance.Encrypt(data);
+            return instance.Hash;
         }
 
         /// <summary>
@@ -920,27 +730,9 @@ namespace SilDev
         /// </param>
         public static string EncryptFile(this string path, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
         {
-            switch (algorithm)
-            {
-                case ChecksumAlgorithm.Adler32:
-                    return new Adler32(path, true).Hash;
-                case ChecksumAlgorithm.Crc16:
-                    return new Crc16(path, true).Hash;
-                case ChecksumAlgorithm.Crc32:
-                    return new Crc32(path, true).Hash;
-                case ChecksumAlgorithm.Crc64:
-                    return new Crc64(path, true).Hash;
-                case ChecksumAlgorithm.Sha1:
-                    return new Sha1(path, true).Hash;
-                case ChecksumAlgorithm.Sha256:
-                    return new Sha256(path, true).Hash;
-                case ChecksumAlgorithm.Sha384:
-                    return new Sha384(path, true).Hash;
-                case ChecksumAlgorithm.Sha512:
-                    return new Sha512(path, true).Hash;
-                default:
-                    return new Md5(path, true).Hash;
-            }
+            var instance = GetDefaultInstance(algorithm);
+            instance.EncryptFile(path);
+            return instance.Hash;
         }
 
         private static void CombineHashes(StringBuilder builder, string hash1, string hash2, bool braces)
@@ -965,6 +757,54 @@ namespace SilDev
             builder.Append(second.Substring(second.Length - 12));
             if (braces)
                 builder.Append('}');
+        }
+
+        private static BinaryToText GetDefaultInstance(BinaryToTextEncoding algorithm)
+        {
+            switch (algorithm)
+            {
+                case BinaryToTextEncoding.Base2:
+                    return CacheInvestor.GetDefault<Base2>();
+                case BinaryToTextEncoding.Base8:
+                    return CacheInvestor.GetDefault<Base8>();
+                case BinaryToTextEncoding.Base10:
+                    return CacheInvestor.GetDefault<Base10>();
+                case BinaryToTextEncoding.Base16:
+                    return CacheInvestor.GetDefault<Base16>();
+                case BinaryToTextEncoding.Base32:
+                    return CacheInvestor.GetDefault<Base32>();
+                case BinaryToTextEncoding.Base85:
+                    return CacheInvestor.GetDefault<Base85>();
+                case BinaryToTextEncoding.Base91:
+                    return CacheInvestor.GetDefault<Base91>();
+                default:
+                    return CacheInvestor.GetDefault<Base64>();
+            }
+        }
+
+        private static Checksum GetDefaultInstance(ChecksumAlgorithm algorithm)
+        {
+            switch (algorithm)
+            {
+                case ChecksumAlgorithm.Adler32:
+                    return CacheInvestor.GetDefault<Adler32>();
+                case ChecksumAlgorithm.Crc16:
+                    return CacheInvestor.GetDefault<Crc16>();
+                case ChecksumAlgorithm.Crc32:
+                    return CacheInvestor.GetDefault<Crc32>();
+                case ChecksumAlgorithm.Crc64:
+                    return CacheInvestor.GetDefault<Crc64>();
+                case ChecksumAlgorithm.Sha1:
+                    return CacheInvestor.GetDefault<Sha1>();
+                case ChecksumAlgorithm.Sha256:
+                    return CacheInvestor.GetDefault<Sha256>();
+                case ChecksumAlgorithm.Sha384:
+                    return CacheInvestor.GetDefault<Sha384>();
+                case ChecksumAlgorithm.Sha512:
+                    return CacheInvestor.GetDefault<Sha512>();
+                default:
+                    return CacheInvestor.GetDefault<Md5>();
+            }
         }
 
         #region Asymmetric-key Algorithms
