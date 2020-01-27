@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2020-01-19 15:31
+// Version:  2020-01-27 23:22
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -17,7 +17,6 @@ namespace SilDev
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -26,7 +25,6 @@ namespace SilDev
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
-    using Microsoft.Win32.SafeHandles;
 
     /// <summary>
     ///     Provides functionality for the catching and logging of handled or unhandled
@@ -35,11 +33,9 @@ namespace SilDev
     public static class Log
     {
         private const string DateTimeFormat = @"yyyy-MM-dd HH:mm:ss,fff zzz";
-        private static volatile AssemblyName _assemblyEntryName;
-        private static volatile StringBuilder _builder;
 
-        private static volatile bool _catchUnhandledExceptions = true,
-                                     _conIsOpen,
+        private static volatile bool _catchUnhandled = true,
+                                     _conIsAllocated,
                                      _firstCall,
                                      _firstEntry;
 
@@ -50,23 +46,24 @@ namespace SilDev
                                        _fileName,
                                        _filePath;
 
-        private static volatile FileStream _fs;
-        private static volatile SafeFileHandle _sfh;
-        private static volatile IntPtr _stdHandle = IntPtr.Zero;
-        private static volatile StreamWriter _sw;
+        private static volatile FileStream _fileStream;
+        private static volatile StreamWriter _streamWriter;
         private static volatile object _syncObject;
+        private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly()?.GetName();
+        private static readonly string AssemblyName = AssemblyEntryName?.Name;
+        private static readonly Version AssemblyVersion = AssemblyEntryName?.Version;
 
         /// <summary>
         ///     <see langword="true"/> to enable the catching of unhandled
         ///     <see cref="Exception"/>'s; otherwise, <see langword="false"/>.
         /// </summary>
-        public static bool CatchUnhandledExceptions
+        public static bool CatchUnhandled
         {
-            get => _catchUnhandledExceptions;
+            get => _catchUnhandled;
             set
             {
                 lock (SyncObject)
-                    _catchUnhandledExceptions = value;
+                    _catchUnhandled = value;
             }
         }
 
@@ -119,6 +116,8 @@ namespace SilDev
                 {
                     _fileDir = value;
                     _filePath = null;
+                    _streamWriter?.Dispose();
+                    _fileStream?.Dispose();
                 }
             }
         }
@@ -188,45 +187,31 @@ namespace SilDev
             }
         }
 
-        private static AssemblyName AssemblyEntryName
+        private static StreamWriter FileWriter
         {
             get
             {
-                if (_assemblyEntryName != null)
-                    return _assemblyEntryName;
+                if (_fileStream != null && _streamWriter != null)
+                    return _streamWriter;
                 lock (SyncObject)
                 {
-                    _assemblyEntryName = Assembly.GetEntryAssembly()?.GetName();
-                    return _assemblyEntryName;
+                    _fileStream = File.Open(FilePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                    _streamWriter = new StreamWriter(_fileStream)
+                    {
+                        AutoFlush = true
+                    };
+                    return _streamWriter;
                 }
             }
         }
 
-        private static string AssemblyName => AssemblyEntryName.Name;
-
-        private static Version AssemblyVersion => AssemblyEntryName.Version;
-
-        private static StringBuilder Builder
+        private static bool ConIsAllocated
         {
-            get
-            {
-                if (_builder != null)
-                    return _builder;
-                lock (SyncObject)
-                {
-                    _builder = new StringBuilder();
-                    return _builder;
-                }
-            }
-        }
-
-        private static bool ConIsOpen
-        {
-            get => _conIsOpen;
+            get => _conIsAllocated;
             set
             {
                 lock (SyncObject)
-                    _conIsOpen = value;
+                    _conIsAllocated = value;
             }
         }
 
@@ -258,7 +243,7 @@ namespace SilDev
         ///     <see cref="DebugMode"/> options are available.
         ///     <para>
         ///         0: Logging is disabled. <see cref="Exception"/>'s are caught, and if
-        ///         <see cref="CatchUnhandledExceptions"/> is enabled, unhandled
+        ///         <see cref="CatchUnhandled"/> is enabled, unhandled
         ///         <see cref="Exception"/>'s are also discarded. This can be useful for
         ///         public releases to prevent any kind of <see cref="Exception"/>
         ///         notifications to the client. Please note that these functions may have
@@ -284,7 +269,7 @@ namespace SilDev
             if (FirstCall)
                 return;
             FirstCall = true;
-            if (CatchUnhandledExceptions)
+            if (CatchUnhandled)
             {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 Application.ThreadException += (s, e) => Write(e.Exception, true, true);
@@ -298,7 +283,7 @@ namespace SilDev
                     builder.Append(';');
                     WriteUnhandled(new ApplicationException(builder.ToStringThenClear()));
                 };
-                AppDomain.CurrentDomain.ProcessExit += (s, e) => Close();
+                AppDomain.CurrentDomain.ProcessExit += (s, e) => OnProcessExit();
             }
             if (DebugMode < 1)
                 return;
@@ -347,7 +332,6 @@ namespace SilDev
                     }
                     catch (Exception ex) when (ex.IsCaught())
                     {
-                        Debug.WriteLine(ex);
                         goto Finalize;
                     }
                     if (!int.TryParse(option, out var i))
@@ -441,117 +425,76 @@ namespace SilDev
         {
             if (!FirstCall || DebugMode < 1 || FirstEntry && string.IsNullOrEmpty(logMessage))
                 return;
+
             lock (SyncObject)
             {
+                if (DebugMode > 1 && !ConIsAllocated)
+                {
+                    ConIsAllocated = true;
+                    ConsoleWindow.Allocate(true);
+                }
+
                 Build:
                 if (FirstEntry)
                 {
-                    Builder.Append(ProcessEx.CurrentId);
-                    Builder.Append(" ");
-                    Builder.Append(DateTime.Now.ToStringDefault(DateTimeFormat));
-                    Builder.Append(" | ");
+                    Append(ProcessEx.CurrentId.ToStringDefault());
+                    Append(" ");
+                    Append(DateTime.Now.ToStringDefault(DateTimeFormat));
+                    Append(" | ");
                 }
                 else
                 {
                     FirstEntry = true;
+
                     var separator = new string('=', 65);
+                    var front = $"New Process {DateTime.Now.ToStringDefault(DateTimeFormat)} ";
 
-                    Builder.Append("New Process ");
-                    Builder.Append(DateTime.Now.ToStringDefault(DateTimeFormat));
-                    Builder.Append(" ");
+                    Append(front);
+                    AppendLine(separator);
 
-                    var front = Builder.ToString();
-                    Builder.AppendLine(separator);
+                    Append(front);
+                    Append(" Operating System: '");
+                    Append(Environment.OSVersion.ToString());
+                    AppendLine("'");
 
-                    Builder.Append(front);
-                    Builder.Append(" Operating System: '");
-                    Builder.Append(Environment.OSVersion);
-                    Builder.AppendLine("'");
+                    Append(front);
+                    Append(" DotNET Runtime:   '");
+                    Append(EnvironmentEx.Version.ToString());
+                    AppendLine("'");
 
-                    Builder.Append(front);
-                    Builder.Append(" DotNET Runtime:   '");
-                    Builder.Append(EnvironmentEx.Version);
-                    Builder.AppendLine("'");
+                    Append(front);
+                    Append(" Process ID:       '");
+                    Append(ProcessEx.CurrentId.ToStringDefault());
+                    AppendLine("'");
 
-                    Builder.Append(front);
-                    Builder.Append(" Process ID:       '");
-                    Builder.Append(ProcessEx.CurrentId);
-                    Builder.AppendLine("'");
+                    Append(front);
+                    Append(" Process Name:     '");
+                    Append(ProcessEx.CurrentName);
+                    AppendLine("'");
 
-                    Builder.Append(front);
-                    Builder.Append(" Process Name:     '");
-                    Builder.Append(ProcessEx.CurrentName);
-                    Builder.AppendLine("'");
+                    Append(front);
+                    Append(" File Path:        '");
+                    Append(PathEx.LocalPath);
+                    AppendLine("'");
 
-                    Builder.Append(front);
-                    Builder.Append(" File Path:        '");
-                    Builder.Append(PathEx.LocalPath);
-                    Builder.AppendLine("'");
+                    Append(front);
+                    Append(" File Version:     '");
+                    Append(AssemblyVersion.ToString());
+                    AppendLine("'");
 
-                    Builder.Append(front);
-                    Builder.Append(" File Version:     '");
-                    Builder.Append(AssemblyVersion);
-                    Builder.AppendLine("'");
+                    Append(front);
+                    AppendLine(separator);
 
-                    Builder.Append(front);
-                    Builder.AppendLine(separator);
-
-                    Builder.AppendLine();
+                    AppendLine();
                     if (!string.IsNullOrEmpty(logMessage))
                         goto Build;
                 }
 
                 if (!string.IsNullOrEmpty(logMessage))
                 {
-                    Builder.AppendLine(logMessage);
-                    Builder.AppendLine();
+                    AppendLine(logMessage);
+                    AppendLine();
                 }
-
-                var content = AppendToFile();
-                if (DebugMode < 2)
-                {
-                    if (!exitProcess)
-                        return;
-                    Environment.ExitCode = 1;
-                    Environment.Exit(Environment.ExitCode);
-                }
-
-                if (!ConIsOpen)
-                {
-                    ConIsOpen = true;
-
-                    _ = WinApi.NativeMethods.AllocConsole();
-                    var hWnd = WinApi.NativeMethods.GetConsoleWindow();
-                    if (hWnd != IntPtr.Zero)
-                    {
-                        var hMenu = WinApi.NativeMethods.GetSystemMenu(hWnd, false);
-                        if (hMenu != IntPtr.Zero)
-                            _ = WinApi.NativeMethods.DeleteMenu(hMenu, 0xf060, 0x0);
-                    }
-
-                    _stdHandle = WinApi.NativeMethods.GetStdHandle(-0xb);
-                    _sfh = new SafeFileHandle(_stdHandle, true);
-                    _fs = new FileStream(_sfh, FileAccess.Write);
-
-                    var title = $"Debug Console ('{AssemblyName}')";
-                    if (Console.Title != title)
-                    {
-                        Console.Title = title;
-                        var parentName = ProcessEx.CurrentParent?.ProcessName;
-                        if (!parentName.EqualsEx("bash", "cmd", "powershell", "powershell_ise"))
-                        {
-                            Console.SetBufferSize(short.MaxValue - 1, Console.WindowWidth);
-                            Console.SetWindowSize(Math.Min(120, Console.LargestWindowWidth), Math.Min(55, Console.LargestWindowHeight));
-                        }
-                    }
-                }
-                Console.Write(content);
-
-                _sw = new StreamWriter(_fs, Encoding.ASCII)
-                {
-                    AutoFlush = true
-                };
-                Console.SetOut(_sw);
 
                 if (!exitProcess)
                     return;
@@ -593,28 +536,39 @@ namespace SilDev
             Write($"Unhandled {exception}", true);
         }
 
-        private static string AppendToFile()
+        private static void Append(string value)
         {
-            if (Builder.Length <= 0)
-                return string.Empty;
-            var content = Builder.ToStringThenClear();
-            if (Directory.Exists(FileDir))
-                File.AppendAllText(FilePath, content);
-            return content;
+            if (value == null)
+                return;
+            if (ConIsAllocated)
+                Console.Write(value);
+            FileWriter.Write(value);
         }
 
-        private static void Close()
+        private static void AppendLine(string value = null)
+        {
+            if (value == null)
+            {
+                if (ConIsAllocated)
+                    Console.WriteLine();
+                FileWriter.WriteLine();
+                return;
+            }
+            if (ConIsAllocated)
+                Console.WriteLine(value);
+            FileWriter.Write(value);
+            FileWriter.WriteLine();
+        }
+
+        private static void OnProcessExit()
         {
             lock (SyncObject)
             {
-                if (_sfh?.IsClosed ?? false)
-                    _sfh.Close();
+                _streamWriter?.Dispose();
+                _fileStream?.Dispose();
                 if (DebugMode < 1 || !Directory.Exists(FileDir))
                     return;
-                AppendToFile();
-                Directory.EnumerateFiles(FileDir, $"{AssemblyName}*.log", SearchOption.TopDirectoryOnly)
-                         .Where(file => !FilePath.EqualsEx(file) && (DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d)
-                         .ForEach(File.Delete);
+                DirectoryEx.EnumerateFiles(FileDir, $"{AssemblyName}*.log").Where(file => !FilePath.EqualsEx(file) && (DateTime.Now - File.GetLastWriteTime(file)).TotalDays >= 7d).ForEach(File.Delete);
             }
         }
     }
