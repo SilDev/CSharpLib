@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-24 20:10
+// Version:  2020-01-27 21:17
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -7266,6 +7266,60 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Advapi32, SetLastError = true, CharSet = CharSet.Ansi)]
             internal static extern int ControlService(IntPtr hService, ServiceControlOptions dwControl, ServiceStatus lpServiceStatus);
+
+            /// <summary>
+            ///     Creates or opens a file or I/O device. The most commonly used I/O devices
+            ///     are as follows: file, file stream, directory, physical disk, volume,
+            ///     console buffer, tape drive, communications resource, mailslot, and pipe.
+            ///     The function returns a handle that can be used to access the file or device
+            ///     for various types of I/O depending on the file or device and the flags and
+            ///     attributes specified.
+            /// </summary>
+            /// <param name="lpFileName">
+            ///     The name of the file or device to be created or opened. You may use either
+            ///     forward slashes (/) or backslashes () in this name.
+            /// </param>
+            /// <param name="dwDesiredAccess">
+            ///     The requested access to the file or device, which can be summarized as
+            ///     read, write, both or neither zero). The most commonly used values are
+            ///     GENERIC_READ (0x80000000), GENERIC_WRITE (0x40000000), or both. If this
+            ///     parameter is zero, the application can query certain metadata such as file,
+            ///     directory, or device attributes without accessing that file or device, even
+            ///     if GENERIC_READ (0x80000000) access would have been denied.
+            /// </param>
+            /// <param name="dwShareMode">
+            ///     The requested sharing mode of the file or device, which can be read, write,
+            ///     both, delete, all of these, or none (refer to the following table). Access
+            ///     requests to attributes or extended attributes are not affected by this
+            ///     flag. If this parameter is zero and CreateFile succeeds, the file or device
+            ///     cannot be shared and cannot be opened again until the handle to the file or
+            ///     device is closed.
+            /// </param>
+            /// <param name="lpSecurityAttributes">
+            ///     A pointer to a <see cref="SecurityAttributes"/> structure that contains two
+            ///     separate but related data members: an optional security descriptor, and a
+            ///     Boolean value that determines whether the returned handle can be inherited
+            ///     by child processes.
+            /// </param>
+            /// <param name="dwCreationDisposition">
+            ///     An action to take on a file or device that exists or does not exist.
+            /// </param>
+            /// <param name="dwFlagsAndAttributes">
+            ///     The file or device attributes and flags, FILE_ATTRIBUTE_NORMAL (0x80) being
+            ///     the most common default value for files.
+            /// </param>
+            /// <param name="hTemplateFile">
+            ///     A valid handle to a template file with the GENERIC_READ (0x80000000) access
+            ///     right. The template file supplies file attributes and extended attributes
+            ///     for the file that is being created. This parameter can be
+            ///     <see langword="null"/>.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is an open handle to the
+            ///     specified file, device, named pipe, or mail slot.
+            /// </returns>
+            [DllImport(DllNames.Kernel32, EntryPoint = "CreateFileW", SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern IntPtr CreateFileW([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, [MarshalAs(UnmanagedType.U4)] uint dwDesiredAccess, [MarshalAs(UnmanagedType.U4)] uint dwShareMode, IntPtr lpSecurityAttributes, [MarshalAs(UnmanagedType.U4)] uint dwCreationDisposition, [MarshalAs(UnmanagedType.U4)] uint dwFlagsAndAttributes, IntPtr hTemplateFile);
 
             /// <summary>
             ///     Creates a new process and its primary thread. The new process runs in the
