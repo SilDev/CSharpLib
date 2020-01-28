@@ -4869,32 +4869,6 @@
                 The type of the element.
             </typeparam>
         </member>
-        <member name="M:SilDev.Investment.CacheInvestor.Add``1(System.Int32,``0)">
-            <summary>
-                Adds the specified element under the specified identifier.
-            </summary>
-            <typeparam name="TElement">
-                The type of the element.
-            </typeparam>
-            <param name="id">
-                The reference identifier.
-            </param>
-            <param name="element">
-                The element to be added.
-            </param>
-        </member>
-        <member name="M:SilDev.Investment.CacheInvestor.Add``1(``0)">
-            <summary>
-                Adds the specified element under the default identifier of the provided
-                type.
-            </summary>
-            <typeparam name="TElement">
-                The type of the element.
-            </typeparam>
-            <param name="element">
-                The value to be added.
-            </param>
-        </member>
         <member name="M:SilDev.Investment.CacheInvestor.AddDefault``1(System.Int32)">
             <summary>
                 Adds a default instance for the provided type under the specified
@@ -4914,6 +4888,32 @@
             <typeparam name="TElement">
                 The type of the element.
             </typeparam>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.AddItem``1(System.Int32,``0)">
+            <summary>
+                Adds the specified element under the specified identifier.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="id">
+                The reference identifier.
+            </param>
+            <param name="element">
+                The element to be added.
+            </param>
+        </member>
+        <member name="M:SilDev.Investment.CacheInvestor.AddItem``1(``0)">
+            <summary>
+                Adds the specified element under the default identifier of the provided
+                type.
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="element">
+                The value to be added.
+            </param>
         </member>
         <member name="M:SilDev.Investment.CacheInvestor.AddOrUpdate``1(System.Int32,``0)">
             <summary>
@@ -14479,6 +14479,28 @@
             <param name="exitProcess">
                 <see langword="true"/> to terminate this process after logging; otherwise,
                 <see langword="false"/>.
+            </param>
+        </member>
+        <member name="T:SilDev.CurrentMemory">
+            <summary>
+                Provides static methods to reduce the memory usage of the current process.
+            </summary>
+        </member>
+        <member name="M:SilDev.CurrentMemory.Destroy``1(``0@)">
+            <summary>
+                Removes the specified element from current process memory.
+                <para>
+                    Note that the element is only removed if you set all references to
+                    <see langword="null"/>, except for the one with which you call this
+                    method; otherwise the element will remain in memory even if it appears
+                    to be removed.
+                </para>
+            </summary>
+            <typeparam name="TElement">
+                The type of the element.
+            </typeparam>
+            <param name="element">
+                The element to be removed.
             </param>
         </member>
         <member name="T:SilDev.MemoryPinner">
