@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2020-01-24 20:58
+// Version:  2020-01-28 20:16
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -21,6 +21,48 @@ namespace SilDev
     using System.Runtime.InteropServices;
     using System.Text;
     using Properties;
+
+    /// <summary>
+    ///     Provides static methods to reduce the memory usage of the current process.
+    /// </summary>
+    public static class CurrentMemory
+    {
+        /// <summary>
+        ///     Removes the specified element from current process memory.
+        ///     <para>
+        ///         Note that the element is only removed if you set all references to
+        ///         <see langword="null"/>, except for the one with which you call this
+        ///         method; otherwise the element will remain in memory even if it appears
+        ///         to be removed.
+        ///     </para>
+        /// </summary>
+        /// <typeparam name="TElement">
+        ///     The type of the element.
+        /// </typeparam>
+        /// <param name="element">
+        ///     The element to be removed.
+        /// </param>
+        public static void Destroy<TElement>(ref TElement element) where TElement : class
+        {
+            if (element == null)
+                return;
+            var isCollection = false;
+            switch (element)
+            {
+                case ICollection _:
+                    isCollection = !(element is Array);
+                    break;
+                case IDisposable disposable:
+                    disposable.Dispose();
+                    break;
+            }
+            var generation = GC.GetGeneration(element);
+            element = null;
+            GC.Collect(generation, GCCollectionMode.Forced);
+            if (isCollection)
+                GC.Collect();
+        }
+    }
 
     /// <summary>
     ///     Provides a way to pin a managed object from unmanaged memory.
