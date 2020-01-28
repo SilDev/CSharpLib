@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: CacheInvestor.cs
-// Version:  2020-01-28 00:11
+// Version:  2020-01-28 20:16
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,7 +24,7 @@ namespace SilDev.Investment
     /// </summary>
     public static class CacheInvestor
     {
-        private static object _syncObject;
+        private static volatile object _syncObject;
 
         private static object SyncObject
         {
@@ -51,6 +51,36 @@ namespace SilDev.Investment
         }
 
         /// <summary>
+        ///     Adds a default instance for the provided type under the specified
+        ///     identifier.
+        /// </summary>
+        /// <typeparam name="TElement">
+        ///     The type of the element.
+        /// </typeparam>
+        /// <param name="id">
+        ///     The reference identifier.
+        /// </param>
+        public static void AddDefault<TElement>(int id) where TElement : new()
+        {
+            if (CacheProvider<TElement>.Storage.ContainsKey(id))
+                return;
+            lock (SyncObject)
+            {
+                var item = new TElement();
+                CacheProvider<TElement>.Storage.Add(id, item);
+            }
+        }
+
+        /// <summary>
+        ///     Adds a default instance for the provided type under its default identifier.
+        /// </summary>
+        /// <typeparam name="TElement">
+        ///     The type of the element.
+        /// </typeparam>
+        public static void AddDefault<TElement>() where TElement : new() =>
+            AddDefault<TElement>(GetId<TElement>());
+
+        /// <summary>
         ///     Adds the specified element under the specified identifier.
         /// </summary>
         /// <typeparam name="TElement">
@@ -62,7 +92,7 @@ namespace SilDev.Investment
         /// <param name="element">
         ///     The element to be added.
         /// </param>
-        public static void Add<TElement>(int id, TElement element)
+        public static void AddItem<TElement>(int id, TElement element)
         {
             if (CacheProvider<TElement>.Storage.ContainsKey(id))
                 return;
@@ -80,47 +110,8 @@ namespace SilDev.Investment
         /// <param name="element">
         ///     The value to be added.
         /// </param>
-        public static void Add<TElement>(TElement element) =>
-            Add(GetId<TElement>(), element);
-
-        /// <summary>
-        ///     Adds a default instance for the provided type under the specified
-        ///     identifier.
-        /// </summary>
-        /// <typeparam name="TElement">
-        ///     The type of the element.
-        /// </typeparam>
-        /// <param name="id">
-        ///     The reference identifier.
-        /// </param>
-        public static void AddDefault<TElement>(int id) where TElement : new()
-        {
-            if (CacheProvider<TElement>.Storage.ContainsKey(id))
-                return;
-            lock (SyncObject)
-            {
-                TElement item;
-                try
-                {
-                    item = new TElement();
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                    return;
-                }
-                CacheProvider<TElement>.Storage.Add(id, item);
-            }
-        }
-
-        /// <summary>
-        ///     Adds a default instance for the provided type under its default identifier.
-        /// </summary>
-        /// <typeparam name="TElement">
-        ///     The type of the element.
-        /// </typeparam>
-        public static void AddDefault<TElement>() where TElement : new() =>
-            AddDefault<TElement>(GetId<TElement>());
+        public static void AddItem<TElement>(TElement element) =>
+            AddItem(GetId<TElement>(), element);
 
         /// <summary>
         ///     Adds or updates an element under the specified identifier.
@@ -138,13 +129,7 @@ namespace SilDev.Investment
         {
             lock (SyncObject)
             {
-                if (CacheProvider<TElement>.Storage.ContainsKey(id))
-                {
-                    if (CacheProvider<TElement>.Storage[id] is IDisposable disposable)
-                        disposable.Dispose();
-                    CacheProvider<TElement>.Storage[id] = element;
-                    return;
-                }
+                RemoveItem<TElement>(id);
                 CacheProvider<TElement>.Storage.Add(id, element);
             }
         }
@@ -285,9 +270,9 @@ namespace SilDev.Investment
                 return;
             lock (SyncObject)
             {
-                if (CacheProvider<TElement>.Storage[id] is IDisposable disposable)
-                    disposable.Dispose();
+                var item = (object)CacheProvider<TElement>.Storage[id];
                 CacheProvider<TElement>.Storage.Remove(id);
+                CurrentMemory.Destroy(ref item);
             }
         }
 
@@ -303,7 +288,7 @@ namespace SilDev.Investment
 
         private static class CacheProvider<T>
         {
-            internal static readonly IDictionary<int, T> Storage = new Dictionary<int, T>();
+            internal static volatile IDictionary<int, T> Storage = new Dictionary<int, T>();
         }
     }
 }
