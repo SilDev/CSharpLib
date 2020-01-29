@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2020-01-28 00:09
+// Version:  2020-01-29 12:44
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -19,8 +19,6 @@ namespace SilDev
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -169,80 +167,7 @@ namespace SilDev
             get
             {
                 var value = this[section, key, index];
-                if (string.IsNullOrEmpty(value))
-                    return null;
-                var type = returnType;
-                switch (Type.GetTypeCode(type))
-                {
-                    case TypeCode.Empty:
-                    case TypeCode.DBNull:
-                        return null;
-                    case TypeCode.String:
-                        return value;
-                    case TypeCode.Boolean:
-                        return value.ToBoolean();
-                    case TypeCode.Char:
-                        return value.ToChar();
-                    case TypeCode.SByte:
-                        return value.ToSByte();
-                    case TypeCode.Byte:
-                        return value.ToByte();
-                    case TypeCode.Int16:
-                        return value.ToInt16();
-                    case TypeCode.UInt16:
-                        return value.ToUInt16();
-                    case TypeCode.Int32:
-                        return value.ToInt32();
-                    case TypeCode.UInt32:
-                        return value.ToUInt32();
-                    case TypeCode.Int64:
-                        return value.ToInt64();
-                    case TypeCode.UInt64:
-                        return value.ToUInt64();
-                    case TypeCode.Single:
-                        return value.ToSingle();
-                    case TypeCode.Double:
-                        return value.ToDouble();
-                    case TypeCode.Decimal:
-                        return value.ToDecimal();
-                    case TypeCode.DateTime:
-                        return value.ToDateTime();
-                    default:
-                        if (type == typeof(Rectangle) ||
-                            type == typeof(Rectangle?))
-                            return value.ToRectangle();
-                        if (type == typeof(Point) ||
-                            type == typeof(Point?))
-                            return value.ToPoint();
-                        if (type == typeof(Size) ||
-                            type == typeof(Size?))
-                            return value.ToSize();
-                        if (type == typeof(Version))
-                            return value.ToVersion();
-                        if (type == typeof(IEnumerable<char>))
-                            return value.ToCharArray();
-                        if (type.GetInterfaces().FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) != null)
-                        {
-                            var method = typeof(Json).GetMethod("Deserialize")?.MakeGenericMethod(type);
-                            if (method != null)
-                                return method.Invoke(null, new object[]
-                                {
-                                    value,
-                                    null
-                                });
-                        }
-                        try
-                        {
-                            var converter = TypeDescriptor.GetConverter(type);
-                            if (converter.CanConvertFrom(typeof(string)))
-                                return converter.ConvertFrom(value);
-                        }
-                        catch (Exception ex) when (ex.IsCaught())
-                        {
-                            Log.Write(ex);
-                        }
-                        return null;
-                }
+                return value.TryParse(out var result, returnType) ? result : null;
             }
             set
             {
@@ -365,17 +290,7 @@ namespace SilDev
             {
                 var type = defValue?.GetType();
                 var value = this[section, key, index, type];
-                if (type == null || type.ContainsGenericParameters || !type.IsValueType || Nullable.GetUnderlyingType(type) != null)
-                    return value ?? defValue;
-                try
-                {
-                    return value == Activator.CreateInstance(type) ? defValue : value;
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    Log.Write(ex);
-                    return value ?? defValue;
-                }
+                return value ?? defValue;
             }
             set => this[section, key, index, defValue?.GetType()] = value;
         }

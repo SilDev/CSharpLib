@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-26 12:17
+// Version:  2020-01-29 12:44
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -2095,8 +2095,112 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Converts the given <see cref="object"/> value to the specified
-        ///     <see cref="Type"/>.
+        ///     Converts the specified string to the specified <see cref="Type"/>.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to convert.
+        /// </param>
+        /// <param name="returnType">
+        ///     The type to which the return value should be converted.
+        /// </param>
+        public static object Parse(this string value, Type returnType)
+        {
+            if (string.IsNullOrEmpty(value))
+                return null;
+            if (returnType == null)
+                return value;
+            var type = returnType;
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.DBNull:
+                    return null;
+                case TypeCode.String:
+                    return value;
+                case TypeCode.Boolean:
+                    return value.ToBoolean();
+                case TypeCode.Char:
+                    return value.ToChar();
+                case TypeCode.SByte:
+                    return value.ToSByte();
+                case TypeCode.Byte:
+                    return value.ToByte();
+                case TypeCode.Int16:
+                    return value.ToInt16();
+                case TypeCode.UInt16:
+                    return value.ToUInt16();
+                case TypeCode.Int32:
+                    return value.ToInt32();
+                case TypeCode.UInt32:
+                    return value.ToUInt32();
+                case TypeCode.Int64:
+                    return value.ToInt64();
+                case TypeCode.UInt64:
+                    return value.ToUInt64();
+                case TypeCode.Single:
+                    return value.ToSingle();
+                case TypeCode.Double:
+                    return value.ToDouble();
+                case TypeCode.Decimal:
+                    return value.ToDecimal();
+                case TypeCode.DateTime:
+                    return value.ToDateTime();
+                default:
+                    if (type == typeof(Rectangle) ||
+                        type == typeof(Rectangle?))
+                        return value.ToRectangle();
+                    if (type == typeof(Point) ||
+                        type == typeof(Point?))
+                        return value.ToPoint();
+                    if (type == typeof(Size) ||
+                        type == typeof(Size?))
+                        return value.ToSize();
+                    if (type == typeof(Version))
+                        return value.ToVersion();
+                    if (type == typeof(IEnumerable<char>))
+                        return value.ToCharArray();
+                    if (type.GetInterfaces().FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) != null)
+                    {
+                        var method = typeof(Json).GetMethod("Deserialize")?.MakeGenericMethod(type);
+                        if (method != null)
+                            return method.Invoke(null, new object[]
+                            {
+                                value,
+                                null
+                            });
+                    }
+                    var converter = TypeDescriptor.GetConverter(type);
+                    return converter.CanConvertFrom(typeof(string)) ? converter.ConvertFrom(value) : null;
+            }
+        }
+
+        /// <summary>
+        ///     Converts the specified string to the provided type.
+        /// </summary>
+        /// <param name="value">
+        ///     The value to convert.
+        /// </param>
+        /// <param name="result">
+        ///     The result value.
+        /// </param>
+        /// <param name="returnType">
+        ///     The type to which the return value should be converted.
+        /// </param>
+        public static bool TryParse(this string value, out object result, Type returnType)
+        {
+            try
+            {
+                result = value.Parse(returnType);
+                return true;
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Converts the specified object to the provided type.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
@@ -2109,14 +2213,19 @@ namespace SilDev
         /// </param>
         public static TResult Parse<TResult>(this object value, TResult defValue = default)
         {
+            if (value == null)
+                return defValue;
+            if (value is string str)
+                return str.TryParse(out var result, typeof(TResult)) && result != default ? (TResult)result : defValue;
             var converter = TypeDescriptor.GetConverter(typeof(TResult));
-            var result = (TResult)converter.ConvertFrom(value);
-            return Comparison.IsNotEmpty(result) ? result : defValue;
+            if (!converter.CanConvertFrom(value.GetType()))
+                return defValue;
+            var element = (TResult)converter.ConvertFrom(value);
+            return element == null || element.Equals(default(TResult)) ? defValue : element;
         }
 
         /// <summary>
-        ///     Try to convert the given <see cref="object"/> value to the specified
-        ///     <see cref="Type"/>.
+        ///     Converts the specified object to the provided type.
         /// </summary>
         /// <typeparam name="TResult">
         ///     The type of the result.
@@ -2130,12 +2239,11 @@ namespace SilDev
         /// <param name="defValue">
         ///     The default value.
         /// </param>
-        public static bool TryParse<TResult>(this object value, out dynamic result, TResult defValue = default)
+        public static bool TryParse<TResult>(this object value, out TResult result, TResult defValue = default)
         {
             try
             {
-                var converter = TypeDescriptor.GetConverter(typeof(TResult));
-                result = (TResult)converter.ConvertFrom(value);
+                result = value.Parse(defValue);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())
