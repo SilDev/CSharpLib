@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-01-28 00:05
+// Version:  2020-02-02 11:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -337,11 +337,11 @@ namespace SilDev
             switch (algorithm)
             {
                 case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                    return Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
                 case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                    return Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
                 default:
-                    return Aes.EncryptBytes(bytes, password.ToBytes(), salt);
+                    return Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt);
             }
         }
 
@@ -365,11 +365,11 @@ namespace SilDev
             switch (algorithm)
             {
                 case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptBytes(text.ToBytes(), password, salt, Aes.KeySize.Aes128);
+                    return Aes.EncryptBytes(text.ToBytesUtf8(), password, salt, Aes.KeySize.Aes128);
                 case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptBytes(text.ToBytes(), password, salt, Aes.KeySize.Aes192);
+                    return Aes.EncryptBytes(text.ToBytesUtf8(), password, salt, Aes.KeySize.Aes192);
                 default:
-                    return Aes.EncryptBytes(text.ToBytes(), password, salt);
+                    return Aes.EncryptBytes(text.ToBytesUtf8(), password, salt);
             }
         }
 
@@ -393,11 +393,11 @@ namespace SilDev
             switch (algorithm)
             {
                 case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt, Aes.KeySize.Aes128);
+                    return Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
                 case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt, Aes.KeySize.Aes192);
+                    return Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
                 default:
-                    return Aes.EncryptBytes(text.ToBytes(), password.ToBytes(), salt);
+                    return Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt);
             }
         }
 
@@ -449,11 +449,11 @@ namespace SilDev
             switch (algorithm)
             {
                 case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                    return Aes.EncryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
                 case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                    return Aes.EncryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
                 default:
-                    return Aes.EncryptFile(path, password.ToBytes(), salt);
+                    return Aes.EncryptFile(path, password.ToBytesUtf8(), salt);
             }
         }
 
@@ -505,11 +505,11 @@ namespace SilDev
             switch (algorithm)
             {
                 case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.DecryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                    return Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
                 case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.DecryptBytes(bytes, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                    return Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
                 default:
-                    return Aes.DecryptBytes(bytes, password.ToBytes(), salt);
+                    return Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt);
             }
         }
 
@@ -561,11 +561,11 @@ namespace SilDev
             switch (algorithm)
             {
                 case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.DecryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes128);
+                    return Aes.DecryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
                 case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.DecryptFile(path, password.ToBytes(), salt, Aes.KeySize.Aes192);
+                    return Aes.DecryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
                 default:
-                    return Aes.DecryptFile(path, password.ToBytes(), salt);
+                    return Aes.DecryptFile(path, password.ToBytesUtf8(), salt);
             }
         }
 
@@ -984,7 +984,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytes(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1060,7 +1060,7 @@ namespace SilDev
                     {
                         rm.BlockSize = 128;
                         rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytes(), 1000))
+                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
                         {
                             rm.Key = db.GetBytes(rm.KeySize / 8);
                             rm.IV = db.GetBytes(rm.BlockSize / 8);
@@ -1211,7 +1211,7 @@ namespace SilDev
             ///     The length of lines.
             /// </param>
             public string EncodeString(string text, int lineLength = 0) =>
-                EncodeBytes(text?.ToBytes(), lineLength);
+                EncodeBytes(text?.ToBytesUtf8(), lineLength);
 
             /// <summary>
             ///     Encodes the specified source file to the specified destination file.
@@ -1313,7 +1313,7 @@ namespace SilDev
                 {
                     if (string.IsNullOrEmpty(code))
                         throw new ArgumentNullException(nameof(code));
-                    using var msi = new MemoryStream(code.ToBytes());
+                    using var msi = new MemoryStream(code.ToBytesUtf8());
                     using var mso = new MemoryStream();
                     DecodeStream(msi, mso);
                     return mso.ToArray();
@@ -1460,7 +1460,7 @@ namespace SilDev
                     int i;
                     var p = 0;
                     while ((i = si.ReadByte()) != -1)
-                        foreach (var b in Convert.ToString(i, 2).PadLeft(8, '0').ToBytes())
+                        foreach (var b in Convert.ToString(i, 2).PadLeft(8, '0').ToBytesUtf8())
                             WriteLine(so, b, lineLength, ref p);
                 }
                 finally
@@ -1589,7 +1589,7 @@ namespace SilDev
                     int i;
                     var p = 0;
                     while ((i = si.ReadByte()) != -1)
-                        foreach (var b in Convert.ToString(i, 8).PadLeft(3, '0').ToBytes())
+                        foreach (var b in Convert.ToString(i, 8).PadLeft(3, '0').ToBytesUtf8())
                             WriteLine(so, b, lineLength, ref p);
                 }
                 finally
@@ -1718,7 +1718,7 @@ namespace SilDev
                     int i;
                     var p = 0;
                     while ((i = si.ReadByte()) != -1)
-                        foreach (var b in Convert.ToString(i, 10).PadLeft(3, '0').ToBytes())
+                        foreach (var b in Convert.ToString(i, 10).PadLeft(3, '0').ToBytesUtf8())
                             WriteLine(so, b, lineLength, ref p);
                 }
                 finally
@@ -1847,7 +1847,7 @@ namespace SilDev
                     int i;
                     var p = 0;
                     while ((i = si.ReadByte()) != -1)
-                        foreach (var b in i.ToStringDefault("x2").PadLeft(2, '0').ToBytes())
+                        foreach (var b in i.ToStringDefault("x2").PadLeft(2, '0').ToBytesUtf8())
                             WriteLine(so, b, lineLength, ref p);
                 }
                 finally
@@ -2790,7 +2790,7 @@ namespace SilDev
             {
                 if (string.IsNullOrEmpty(text))
                     return;
-                var ba = text.ToBytes();
+                var ba = text.ToBytesUtf8();
                 using var csp = algorithm;
                 if (csp == null)
                     throw new ArgumentNullException(nameof(algorithm));
@@ -2929,7 +2929,7 @@ namespace SilDev
             ///     The string to encrypt.
             /// </param>
             public override void Encrypt(string text) =>
-                Encrypt(text?.ToBytes());
+                Encrypt(text?.ToBytesUtf8());
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -3054,7 +3054,7 @@ namespace SilDev
             ///     The string to encrypt.
             /// </param>
             public override void Encrypt(string text) =>
-                Encrypt(text?.ToBytes());
+                Encrypt(text?.ToBytesUtf8());
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -3209,7 +3209,7 @@ namespace SilDev
             ///     The string to encrypt.
             /// </param>
             public override void Encrypt(string text) =>
-                Encrypt(text?.ToBytes());
+                Encrypt(text?.ToBytesUtf8());
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -3351,7 +3351,7 @@ namespace SilDev
             ///     The string to encrypt.
             /// </param>
             public override void Encrypt(string text) =>
-                Encrypt(text?.ToBytes());
+                Encrypt(text?.ToBytesUtf8());
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified

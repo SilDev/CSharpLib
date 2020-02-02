@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: GZip.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-02-02 11:34
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -90,7 +90,7 @@ namespace SilDev.Compression
         {
             if (string.IsNullOrEmpty(text))
                 return null;
-            var ba = TextEx.DefaultEncoding.GetBytes(text);
+            var ba = text.ToBytesUtf8();
             return Compress(ba);
         }
 
@@ -164,7 +164,7 @@ namespace SilDev.Compression
         public static string DecompressText(byte[] bytes)
         {
             var ba = Decompress(bytes);
-            return ba == null ? null : TextEx.DefaultEncoding.GetString(ba);
+            return ba == null ? null : bytes.ToStringUtf8();
         }
     }
 }

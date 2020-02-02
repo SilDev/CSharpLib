@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2020-01-19 15:31
+// Version:  2020-02-02 11:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -104,7 +104,7 @@ namespace SilDev
             {
                 Format(ms, source);
                 ms.Seek(0, SeekOrigin.Begin);
-                using var sr = new StreamReader(ms, TextEx.DefaultEncoding);
+                using var sr = new StreamReader(ms, EncodingEx.Utf8NoBom);
                 ms = null;
                 return sr.ReadToEnd();
             }

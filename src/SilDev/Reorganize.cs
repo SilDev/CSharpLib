@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-01-29 12:44
+// Version:  2020-02-02 11:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -492,7 +492,7 @@ namespace SilDev
                 return;
             }
             var str = chr.ToStringDefault();
-            stream.WriteBytes(str.ToBytes());
+            stream.WriteBytes(str.ToBytesUtf8());
         }
 
         /// <summary>
@@ -1706,7 +1706,7 @@ namespace SilDev
         /// <param name="splitOptions">
         ///     The split options.
         /// </param>
-        public static string[] Split(this string str, string separator = StringNewLineFormats.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None) =>
+        public static string[] Split(this string str, string separator = TextSeparatorString.WindowsDefault, StringSplitOptions splitOptions = StringSplitOptions.None) =>
             string.IsNullOrEmpty(str) ? null : str.Split(new[] { separator }, splitOptions);
 
         /// <summary>
@@ -1784,26 +1784,23 @@ namespace SilDev
 
         /// <summary>
         ///     Converts all the characters in the specified string into a sequence of
-        ///     bytes with the <see cref="TextEx.DefaultEncoding"/> format.
-        /// </summary>
-        /// <param name="str">
-        ///     The string to convert.
-        /// </param>
-        public static byte[] ToBytes(this string str) =>
-            str.ToBytes(TextEx.DefaultEncoding);
-
-        /// <summary>
-        ///     Converts all the characters in the specified string into a sequence of
-        ///     bytes with the Windows-1252 <see cref="Encoding"/> format.
-        ///     <para>
-        ///         This method is equal to <see cref="ToBytes"/>.
-        ///     </para>
+        ///     bytes with the <see cref="EncodingEx.Ansi"/> format.
         /// </summary>
         /// <param name="str">
         ///     The string to convert.
         /// </param>
         public static byte[] ToBytesDefault(this string str) =>
-            str.ToBytes();
+            str.ToBytes(EncodingEx.Ansi);
+
+        /// <summary>
+        ///     Converts all the characters in the specified string into a sequence of
+        ///     bytes with the <see cref="EncodingEx.Utf8NoBom"/> format.
+        /// </summary>
+        /// <param name="str">
+        ///     The string to convert.
+        /// </param>
+        public static byte[] ToBytesUtf8(this string str) =>
+            str.ToBytes(EncodingEx.Utf8NoBom);
 
         /// <summary>
         ///     Converts the specified sequence of bytes into a string with the specified
@@ -1837,13 +1834,23 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the specified sequence of bytes into a string with the specified
-        ///     <see cref="TextEx.DefaultEncoding"/> format.
+        ///     <see cref="EncodingEx.Ansi"/> format.
         /// </summary>
         /// <param name="bytes">
         ///     The sequence of bytes to convert.
         /// </param>
         public static string ToStringDefault(this byte[] bytes) =>
-            bytes.ToString(TextEx.DefaultEncoding);
+            bytes.ToString(EncodingEx.Ansi);
+
+        /// <summary>
+        ///     Converts the specified sequence of bytes into a string with the specified
+        ///     <see cref="EncodingEx.Utf8NoBom"/> format.
+        /// </summary>
+        /// <param name="bytes">
+        ///     The sequence of bytes to convert.
+        /// </param>
+        public static string ToStringUtf8(this byte[] bytes) =>
+            bytes.ToString(EncodingEx.Utf8NoBom);
 
         /// <summary>
         ///     Converts the string representation of a version number to an equivalent

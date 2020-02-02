@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2020-02-02 11:33
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,62 +16,15 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Linq;
-    using System.Text;
-    using QuickWmi;
 
     /// <summary>
-    ///     Provides static methods for converting or reorganizing of data.
+    ///     Provides static methods for converting text.
     /// </summary>
     public static class TextEx
     {
-        private static object _defaultEncoding;
-
         /// <summary>
-        ///     Gets the character encoding of the operating system.
-        /// </summary>
-        public static Encoding DefaultEncoding
-        {
-            get
-            {
-                if (_defaultEncoding != default)
-                    return (Encoding)_defaultEncoding;
-                if (!int.TryParse(Win32_OperatingSystem.CodeSet, out var codePage))
-                    codePage = 1252;
-                _defaultEncoding = Encoding.GetEncoding(codePage);
-                return (Encoding)_defaultEncoding;
-            }
-        }
-
-        /// <summary>
-        ///     Indicates whether the specified character is categorized as a line
-        ///     separator character.
-        /// </summary>
-        /// <param name="ch">
-        ///     The character to evaluate.
-        /// </param>
-        public static bool IsLineSeparator(this char ch)
-        {
-            switch (ch)
-            {
-                case '\u000d': // CarriageReturn
-                case '\u000c': // FormFeed
-                case '\u000a': // LineFeed
-                case '\u2028': // LineSeparator
-                case '\u0085': // NextLine
-                case '\u2029': // ParagraphSeparator
-                case '\u000b': // VerticalTab
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
-        ///     Indicates whether the specified character is categorized as an ASCII
-        ///     character.
+        ///     Indicates whether the this character is categorized as an ASCII character.
         /// </summary>
         /// <param name="ch">
         ///     The character to evaluate.
@@ -80,96 +33,122 @@ namespace SilDev
             ch <= sbyte.MaxValue;
 
         /// <summary>
-        ///     Converts the current <see cref="StringNewLineFormats"/> of the specified
-        ///     <see cref="string"/> to another format.
+        ///     Indicates whether the this character is categorized as an Latin-1
+        ///     (ISO-8859-1) character.
+        /// </summary>
+        /// <param name="ch">
+        ///     The character to evaluate.
+        /// </param>
+        public static bool IsLatin1(char ch) =>
+            ch <= byte.MaxValue;
+
+        /// <summary>
+        ///     Indicates whether the this character is categorized as a line separator
+        ///     character.
+        /// </summary>
+        /// <param name="ch">
+        ///     The character to evaluate.
+        /// </param>
+        public static bool IsLineSeparator(this char ch)
+        {
+            switch (ch)
+            {
+                case TextSeparatorChar.LineFeed:
+                case TextSeparatorChar.VerticalTab:
+                case TextSeparatorChar.FormFeed:
+                case TextSeparatorChar.CarriageReturn:
+                case TextSeparatorChar.NextLine:
+                case TextSeparatorChar.BoundaryNeutral:
+                case TextSeparatorChar.LineSeparator:
+                case TextSeparatorChar.ParagraphSeparator:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        ///     Strips multiple line separator characters.
+        /// </summary>
+        /// <param name="text">
+        ///     The text to change.
+        /// </param>
+        public static string StripNewLine(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+            var current = text.Where(IsLineSeparator).Distinct().ToArray();
+            var newText = text;
+            foreach (var ch in current)
+            {
+                if (!newText.Contains(ch))
+                    continue;
+                newText = newText.Split(new[] { ch }, StringSplitOptions.RemoveEmptyEntries).Join(ch);
+            }
+            return newText;
+        }
+
+        /// <summary>
+        ///     Strips multiple white-space characters.
+        /// </summary>
+        /// <param name="text">
+        ///     The text to change.
+        /// </param>
+        public static string StripWhiteSpace(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+            var current = text.Where(char.IsWhiteSpace).Distinct().ToArray();
+            var newText = text;
+            foreach (var ch in current)
+            {
+                if (!newText.Contains(ch))
+                    continue;
+                newText = newText.Split(new[] { ch }, StringSplitOptions.RemoveEmptyEntries).Join(ch);
+            }
+            return newText;
+        }
+
+        /// <summary>
+        ///     Converts the current line separator format of the specified format.
         /// </summary>
         /// <param name="text">
         ///     The text to change.
         /// </param>
         /// <param name="newLineFormat">
         ///     The new format to be applied.
+        ///     <para>
+        ///         For constant templates, see <see cref="TextSeparatorString"/>.
+        ///     </para>
         /// </param>
-        public static string FormatNewLine(string text, string newLineFormat = StringNewLineFormats.WindowsDefault)
+        public static string FormatNewLine(string text, string newLineFormat = TextSeparatorString.WindowsDefault)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
-            var newText = text.Replace(StringNewLineFormats.WindowsDefault, StringNewLineFormats.LineFeed);
+            var newText = text.Replace(TextSeparatorString.WindowsDefault, TextSeparatorString.LineFeed);
             var current = text.Where(IsLineSeparator).Distinct().ToArray();
-            newText = newText.Split(current, StringSplitOptions.None).Join(newLineFormat);
-            return newText;
+            return newText.Split(current, StringSplitOptions.None).Join(newLineFormat);
         }
 
         /// <summary>
-        ///     Gets the character encoding of the specified file.
+        ///     Converts the current line separator format of the specified format.
         /// </summary>
-        /// <param name="file">
-        ///     The file to check.
+        /// <param name="text">
+        ///     The text to change.
         /// </param>
-        /// <param name="defEncoding">
-        ///     The default character encoding, which is returned if no character encoding
-        ///     was found. If the value is NULL it returns the Windows-1252
-        ///     <see cref="Encoding"/> format.
+        /// <param name="newWhiteSpace">
+        ///     The new format to be applied.
+        ///     <para>
+        ///         For constant templates, see <see cref="TextSeparatorString"/>.
+        ///     </para>
         /// </param>
-        [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
-        public static Encoding GetEncoding(string file, Encoding defEncoding = default)
+        public static string FormatWhiteSpace(string text, string newWhiteSpace = TextSeparatorString.Space)
         {
-            var path = PathEx.Combine(file);
-            var encoding = defEncoding ?? DefaultEncoding;
-            if (!File.Exists(path))
-                return encoding;
-            using (var sr = new StreamReader(file, true))
-            {
-                sr.Peek();
-                encoding = sr.CurrentEncoding;
-            }
-            return encoding;
-        }
-
-        /// <summary>
-        ///     Changes the character encoding of the specified file. This function
-        ///     supports big files as well.
-        /// </summary>
-        /// <param name="file">
-        ///     The file to change.
-        /// </param>
-        /// <param name="encoding">
-        ///     The new character encoding. If the value is NULL it uses the Windows-1252
-        ///     <see cref="Encoding"/> format.
-        /// </param>
-        public static bool ChangeEncoding(string file, Encoding encoding = default)
-        {
-            if (string.IsNullOrEmpty(file))
-                return false;
-            var srcFile = PathEx.Combine(file);
-            if (!File.Exists(srcFile))
-                return false;
-            if (encoding == null)
-                encoding = DefaultEncoding;
-            if (encoding.Equals(GetEncoding(srcFile)))
-                return true;
-            try
-            {
-                var srcDir = Path.GetDirectoryName(srcFile);
-                var newFile = PathEx.Combine(srcDir, Path.GetRandomFileName());
-                File.Create(newFile).Close();
-                using (var sr = new StreamReader(srcFile))
-                {
-                    using var sw = new StreamWriter(newFile, true, encoding);
-                    int i;
-                    var ca = new char[4096];
-                    while ((i = sr.Read(ca, 0, ca.Length)) > 0)
-                        sw.Write(ca, 0, i);
-                }
-                if (!FileEx.ContentIsEqual(srcFile, newFile))
-                    return FileEx.Move(newFile, srcFile, true);
-                FileEx.TryDelete(newFile);
-                return false;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return false;
-            }
+            if (string.IsNullOrEmpty(text))
+                return text;
+            var newText = text.Replace(TextSeparatorString.WindowsDefault, TextSeparatorString.LineFeed);
+            var current = text.Where(char.IsWhiteSpace).Distinct().ToArray();
+            return newText.Split(current, StringSplitOptions.None).Join(newWhiteSpace);
         }
     }
 }
