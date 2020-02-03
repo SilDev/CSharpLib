@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2020-01-15 10:43
+// Version:  2020-02-03 20:26
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -17,7 +17,6 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -458,7 +457,6 @@ namespace SilDev
         /// <param name="target0">
         ///     The element to seek.
         /// </param>
-        [SuppressMessage("ReSharper", "RedundantCast")]
         public static bool ContainsItem<TElement>(this IEnumerable<TElement> source, TElement target0) where TElement : IEquatable<TElement> =>
             target0 != null && (source?.Contains(target0) ?? false);
 
