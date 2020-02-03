@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Win32_OperatingSystem.cs
-// Version:  2020-01-19 15:32
+// Version:  2020-02-03 21:37
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -98,9 +98,9 @@ namespace SilDev.QuickWmi
         public static string CSCreationClassName => GetValue(nameof(CSCreationClassName));
 
         /// <summary>
-        ///     Gets a NULL-terminated string that indicates the latest service pack
-        ///     installed on a computer. If no service pack is installed, the string is
-        ///     NULL.
+        ///     Gets a <see langword="null"/>-terminated string that indicates the latest
+        ///     service pack installed on a computer. If no service pack is installed, the
+        ///     string is <see langword="null"/>.
         /// </summary>
         public static string CSDVersion => GetValue(nameof(CSDVersion));
 
@@ -118,28 +118,29 @@ namespace SilDev.QuickWmi
         /// <summary>
         ///     Gets the Data Execution Prevention. When the Data Execution Prevention
         ///     hardware feature is available, this property indicates that the feature is
-        ///     set to work for 32-bit applications if True. On 64-bit computers, the Data
-        ///     Execution Prevention feature is configured in the Boot Configuration Data
-        ///     (BCD) store and the properties in <see cref="Win32_OperatingSystem"/> are
-        ///     set accordingly.
+        ///     set to work for 32-bit applications if <see langword="true"/>. On 64-bit
+        ///     computers, the Data Execution Prevention feature is configured in the Boot
+        ///     Configuration Data (BCD) store and the properties in
+        ///     <see cref="Win32_OperatingSystem"/> are set accordingly.
         /// </summary>
         public static bool? DataExecutionPrevention_32BitApplications => GetValue(nameof(DataExecutionPrevention_32BitApplications));
 
         /// <summary>
         ///     Gets the Data Execution Prevention that is a hardware feature to prevent
         ///     buffer overrun attacks by stopping the execution of code on data-type
-        ///     memory pages. If True, then this feature is available. On 64-bit computers,
-        ///     the Data Execution Prevention feature is configured in the BCD store and
-        ///     the properties in <see cref="Win32_OperatingSystem"/> are set accordingly.
+        ///     memory pages. If <see langword="true"/>, then this feature is available. On
+        ///     64-bit computers, the Data Execution Prevention feature is configured in
+        ///     the BCD store and the properties in <see cref="Win32_OperatingSystem"/> are
+        ///     set accordingly.
         /// </summary>
         public static bool? DataExecutionPrevention_Available => GetValue(nameof(DataExecutionPrevention_Available));
 
         /// <summary>
         ///     Gets the Data Execution Prevention. When the Data Execution Prevention
         ///     hardware feature is available, this property indicates that the feature is
-        ///     set to work for drivers if True. On 64-bit computers, the Data Execution
-        ///     Prevention feature is configured in the BCD store and the properties in
-        ///     <see cref="Win32_OperatingSystem"/> are set accordingly.
+        ///     set to work for drivers if <see langword="true"/>. On 64-bit computers, the
+        ///     Data Execution Prevention feature is configured in the BCD store and the
+        ///     properties in <see cref="Win32_OperatingSystem"/> are set accordingly.
         /// </summary>
         public static bool? DataExecutionPrevention_Drivers => GetValue(nameof(DataExecutionPrevention_Drivers));
 
@@ -174,12 +175,12 @@ namespace SilDev.QuickWmi
 
         /// <summary>
         ///     Gets the value indicating that the operating system is a checked (debug)
-        ///     build. If True, the debugging version is installed. Checked builds provide
-        ///     error checking, argument verification, and system debugging code.
-        ///     Additional code in a checked binary generates a kernel debugger error
-        ///     message and breaks into the debugger. This helps immediately determine the
-        ///     cause and location of the error. Performance may be affected in a checked
-        ///     build due to the additional code that is executed.
+        ///     build. If <see langword="true"/>, the debugging version is installed.
+        ///     Checked builds provide error checking, argument verification, and system
+        ///     debugging code. Additional code in a checked binary generates a kernel
+        ///     debugger error message and breaks into the debugger. This helps immediately
+        ///     determine the cause and location of the error. Performance may be affected
+        ///     in a checked build due to the additional code that is executed.
         /// </summary>
         public static bool? Debug => GetValue(nameof(Debug));
 

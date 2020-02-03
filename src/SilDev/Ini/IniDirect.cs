@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IniDirect.cs
-// Version:  2020-02-03 20:22
+// Version:  2020-02-03 21:37
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -80,8 +80,8 @@ namespace SilDev.Ini
         /// <param name="key">
         ///     The name of the key to be associated with a value.
         ///     <para>
-        ///         If this parameter is NULL, the entire section, including all entries
-        ///         within the section, is deleted.
+        ///         If this parameter is <see langword="null"/>, the entire section,
+        ///         including all entries within the section, is deleted.
         ///     </para>
         /// </param>
         /// <param name="value">
