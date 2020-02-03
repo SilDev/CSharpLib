@@ -159,6 +159,7 @@
     <Compile Include="SilDev\Compression\Archiver\ArchiverBase.cs" />
     <Compile Include="SilDev\Drawing\IconFactory.cs" />
     <Compile Include="SilDev\Drawing\ImageFrame.cs" />
+    <Compile Include="SilDev\EncodingEx.cs" />
     <Compile Include="SilDev\Forms\ControlAlphaNumericComparer.cs" />
     <Compile Include="SilDev\Forms\FormBorderlessResizable.cs">
       <SubType>Form</SubType>
@@ -170,6 +171,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SilDev\Forms\MessageBoxButtonText.cs" />
+    <Compile Include="SilDev\Ini\IniDirect.cs" />
+    <Compile Include="SilDev\Ini\IniDocument.cs" />
+    <Compile Include="SilDev\Ini\IniReader.cs" />
+    <Compile Include="SilDev\Ini\IniHelper.cs" />
+    <Compile Include="SilDev\Ini\IniWriter.cs" />
     <Compile Include="SilDev\Investment\CacheInvestor.cs" />
     <Compile Include="SilDev\Investment\ValueItemHost.cs" />
     <Compile Include="SilDev\Investment\ValueItem.cs" />
@@ -211,7 +217,6 @@
     <Compile Include="SilDev\Media\MediaDeviceManager.cs" />
     <Compile Include="SilDev\Media\WindowsPlayer.cs" />
     <Compile Include="SilDev\ProcessPrincipal.cs" />
-    <Compile Include="SilDev\StringNewLineFormats.cs" />
     <Compile Include="SilDev\QuickWmi\Win32_OperatingSystem.cs" />
     <Compile Include="SilDev\Comparison.cs" />
     <Compile Include="SilDev\Crypto.cs" />
@@ -221,7 +226,6 @@
     <Compile Include="SilDev\EnumerableEx.cs" />
     <Compile Include="SilDev\EnvironmentEx.cs" />
     <Compile Include="SilDev\FileEx.cs" />
-    <Compile Include="SilDev\Ini.cs" />
     <Compile Include="SilDev\Json.cs" />
     <Compile Include="SilDev\InputDevice.cs" />
     <Compile Include="SilDev\Log.cs" />
@@ -246,6 +250,7 @@
     <Compile Include="SilDev\TextEx.cs" />
     <Compile Include="SilDev\Network\WebTransfer.cs" />
     <Compile Include="SilDev\Network\WebTransferAsync.cs" />
+    <Compile Include="SilDev\TextSeparator.cs" />
     <Compile Include="SilDev\Tray.cs" />
     <Compile Include="SilDev\Network\WebClientEx.cs">
       <SubType>Component</SubType>
