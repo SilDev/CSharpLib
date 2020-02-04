@@ -14116,6 +14116,13 @@
             <summary>
                 Provides functionality for the catching and logging of handled or unhandled
                 <see cref="T:System.Exception"/>'s.
+                <para>
+                    This class is not intended to replace the Visual Studio debugging
+                    tools. It was primarily designed for final releases in which debugging
+                    is disabled. Exceptions can be caught entirely so that the end user
+                    doesn't get confused unnecessarily. All exceptions are logged and can
+                    still reliably help developers.
+                </para>
             </summary>
         </member>
         <member name="P:SilDev.Log.CatchUnhandled">
@@ -14132,7 +14139,7 @@
         <member name="P:SilDev.Log.DebugMode">
             <summary>
                 Gets the current <see cref="P:SilDev.Log.DebugMode"/> value that determines how
-                <see cref="T:System.Exception"/>'s are handled. For more information see
+                <see cref="T:System.Exception"/>'s are caught and logged. For more information see
                 <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
             </summary>
         </member>
@@ -14159,51 +14166,162 @@
                 Gets the full path of the current LOG file.
             </summary>
         </member>
-        <member name="M:SilDev.Log.ActivateLogging(System.Int32)">
+        <member name="P:SilDev.Log.DebugKey">
             <summary>
-                Specifies the <see cref="P:SilDev.Log.DebugMode"/> for the handling of
-                <see cref="T:System.Exception"/>'s. The <see cref="P:SilDev.Log.DebugMode"/> can also specified
-                over an command line argument or an config parameter in combination with
-                <see cref="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)"/>. The following
-                <see cref="P:SilDev.Log.DebugMode"/> options are available.
+                Gets or sets the key that is used to allow logging by command line
+                arguments or a configuration file. For more information see
+                <see cref="M:SilDev.Log.AllowLogging(System.String,System.String)"/>.
                 <para>
-                    0: Logging is disabled. <see cref="T:System.Exception"/>'s are caught, and if
-                    <see cref="P:SilDev.Log.CatchUnhandled"/> is enabled, unhandled
-                    <see cref="T:System.Exception"/>'s are also discarded. This can be useful for
-                    public releases to prevent any kind of <see cref="T:System.Exception"/>
-                    notifications to the client. Please note that these functions may have
-                    dangerous consequences if used incorrectly.
-                </para>
-                <para>
-                    1: Logging is enabled, <see cref="T:System.Exception"/>'s are caught, and all
-                    <see cref="T:System.Exception"/>'s are logged.
-                </para>
-                <para>
-                    2: Logging is enabled, <see cref="T:System.Exception"/>'s are caught, all
-                    <see cref="T:System.Exception"/>'s are logged, and a new <see cref="T:System.Console"/>
-                    window is allocated for the current process to display the current log
-                    in real time.
-                </para>
-                <para>
-                    3: Logging is enabled, but <see cref="T:System.Exception"/>'s are thrown.
+                    <strong>
+                        Default:
+                    </strong>
+                    'DebugMode'
                 </para>
             </summary>
         </member>
-        <member name="M:SilDev.Log.AllowLogging(System.String,System.String,System.Text.RegularExpressions.Regex)">
+        <member name="M:SilDev.Log.ActivateLogging(System.Int32)">
+            <summary>
+                Specifies the <see cref="P:SilDev.Log.DebugMode"/> for the handling of exceptions. This
+                variable can also be specified over an command line argument using
+                <see cref="M:SilDev.Log.AllowLogging(System.String,System.String)"/> method.
+                <para>
+                    <strong>
+                        The following modes are available:
+                    </strong>
+                </para>
+                <list type="number">
+                    <listheader>
+                        <term>
+                            Logging is disabled
+                        </term>
+                        <description>
+                            Exceptions are still caught.
+                            <para>
+                                If <see cref="P:SilDev.Log.CatchUnhandled"/> is <see langword="true"/>,
+                                unhandled exceptions are also discarded. This can be useful
+                                for public releases to prevent any kind of exception
+                                notifications to the end user. But the consequences are
+                                dangerous if used incorrectly because all exceptions are
+                                completely suppressed.
+                            </para>
+                        </description>
+                    </listheader>
+                    <item>
+                        <term>
+                            Logging is enabled
+                        </term>
+                        <description>
+                            Exceptions are caught and logged.
+                            <i>
+                                (Recommended)
+                            </i>
+                        </description>
+                    </item>
+                    <item>
+                        <term>
+                            Logging is enabled
+                        </term>
+                        <description>
+                            Exceptions are caught and logged. A console window is allocated
+                            to display logging in real time.
+                        </description>
+                    </item>
+                    <item>
+                        <term>
+                            Logging is enabled
+                        </term>
+                        <description>
+                            All exceptions are thrown.
+                        </description>
+                    </item>
+                </list>
+            </summary>
+            <param name="mode">
+                The logging mode to be set.
+            </param>
+        </member>
+        <member name="M:SilDev.Log.AllowLogging(System.String,System.String)">
             <summary>
                 Allows you to enable logging by command line arguments or a specified
-                configuration file. For more information see
-                <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
+                configuration file using the specified regular expression pattern. For more
+                information see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
+                <list type="bullet">
+                    <listheader>
+                        <para>
+                            <strong>
+                                There are several ways to make the regular expression
+                                pattern work:
+                            </strong>
+                        </para>
+                        <list type="number">
+                            <item>
+                                <description>
+                                    Use of the Key and Value groups, that are used to
+                                    search for the correct key within the file and sets its
+                                    value as logging mode.
+                                </description>
+                            </item>
+                            <item>
+                                <description>
+                                    It's also possible to define the Value group alone, or
+                                    even to use no groups at all. That will only check the
+                                    first matching value.
+                                </description>
+                            </item>
+                        </list>
+                    </listheader>
+                    <item>
+                        <para>
+                            <strong>
+                                Available regular expression groups:
+                            </strong>
+                        </para>
+                        <list type="number">
+                            <item>
+                                <term>
+                                    Key
+                                </term>
+                                <description>
+                                    Represents the key within the configuration file that
+                                    contains the value. Must be the value of the
+                                    <see cref="P:SilDev.Log.DebugKey"/> property.
+                                </description>
+                            </item>
+                            <item>
+                                <term>
+                                    Value
+                                </term>
+                                <description>
+                                    Represents the value passed to the
+                                    <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/> method. Must be
+                                    convertible to <see cref="T:System.Int32"/>.
+                                </description>
+                            </item>
+                        </list>
+                    </item>
+                </list>
             </summary>
             <param name="configPath">
-                The full path of the configuration file.
+                The path of the text file to look for the value that determines the logging
+                mode.
             </param>
-            <param name="key">
-                The key used to specify the <see cref="P:SilDev.Log.DebugMode"/>.
+            <param name="pattern">
+                The regular expression pattern to match in the specified configuration
+                file.
+                <para>
+                    <i>
+                        (The standard pattern has the INI file format, which searches for
+                        the appropriate key in all sections and uses it's value to
+                        determine the logging mode.)
+                    </i>
+                </para>
             </param>
-            <param name="regex">
-                The regular expression to match.
-            </param>
+        </member>
+        <member name="M:SilDev.Log.AllowLogging">
+            <summary>
+                Allows you to enable logging by command line arguments. For more
+                information see <see cref="M:SilDev.Log.ActivateLogging(System.Int32)"/>.
+            </summary>
         </member>
         <member name="M:SilDev.Log.IsCaught(System.Exception,System.Type[])">
             <summary>
