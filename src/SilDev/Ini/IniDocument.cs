@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IniDocument.cs
-// Version:  2020-02-03 20:22
+// Version:  2020-02-04 17:51
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -282,7 +282,7 @@ namespace SilDev.Ini
             Comparer = ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
             if (!string.IsNullOrEmpty(fileOrContent))
             {
-                FilePath = FileEx.Exists(fileOrContent) ? fileOrContent : FileEx.GetUniqueTempPath("tmp", ".ini");
+                FilePath = FileEx.Exists(fileOrContent) ? fileOrContent : null;
                 if (IniReader.TryParse(fileOrContent, ignoreCase, out var document, out var fileFormat))
                 {
                     _document = document;
