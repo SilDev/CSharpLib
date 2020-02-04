@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2020-02-02 11:25
+// Version:  2020-02-04 19:31
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -29,6 +29,13 @@ namespace SilDev
     /// <summary>
     ///     Provides functionality for the catching and logging of handled or unhandled
     ///     <see cref="Exception"/>'s.
+    ///     <para>
+    ///         This class is not intended to replace the Visual Studio debugging
+    ///         tools. It was primarily designed for final releases in which debugging
+    ///         is disabled. Exceptions can be caught entirely so that the end user
+    ///         doesn't get confused unnecessarily. All exceptions are logged and can
+    ///         still reliably help developers.
+    ///     </para>
     /// </summary>
     public static class Log
     {
@@ -74,7 +81,7 @@ namespace SilDev
 
         /// <summary>
         ///     Gets the current <see cref="DebugMode"/> value that determines how
-        ///     <see cref="Exception"/>'s are handled. For more information see
+        ///     <see cref="Exception"/>'s are caught and logged. For more information see
         ///     <see cref="ActivateLogging(int)"/>.
         /// </summary>
         public static int DebugMode
@@ -156,7 +163,18 @@ namespace SilDev
             }
         }
 
-        internal static string DebugKey
+        /// <summary>
+        ///     Gets or sets the key that is used to allow logging by command line
+        ///     arguments or a configuration file. For more information see
+        ///     <see cref="AllowLogging(string, string)"/>.
+        ///     <para>
+        ///         <strong>
+        ///             Default:
+        ///         </strong>
+        ///         'DebugMode'
+        ///     </para>
+        /// </summary>
+        public static string DebugKey
         {
             get
             {
@@ -164,7 +182,7 @@ namespace SilDev
                     return _debugKey;
                 lock (SyncObject)
                 {
-                    _debugKey = @"Debug";
+                    _debugKey = @"DebugMode";
                     return _debugKey;
                 }
             }
@@ -236,33 +254,64 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Specifies the <see cref="DebugMode"/> for the handling of
-        ///     <see cref="Exception"/>'s. The <see cref="DebugMode"/> can also specified
-        ///     over an command line argument or an config parameter in combination with
-        ///     <see cref="AllowLogging(string, string, Regex)"/>. The following
-        ///     <see cref="DebugMode"/> options are available.
+        ///     Specifies the <see cref="DebugMode"/> for the handling of exceptions. This
+        ///     variable can also be specified over an command line argument using
+        ///     <see cref="AllowLogging(string, string)"/> method.
         ///     <para>
-        ///         0: Logging is disabled. <see cref="Exception"/>'s are caught, and if
-        ///         <see cref="CatchUnhandled"/> is enabled, unhandled
-        ///         <see cref="Exception"/>'s are also discarded. This can be useful for
-        ///         public releases to prevent any kind of <see cref="Exception"/>
-        ///         notifications to the client. Please note that these functions may have
-        ///         dangerous consequences if used incorrectly.
+        ///         <strong>
+        ///             The following modes are available:
+        ///         </strong>
         ///     </para>
-        ///     <para>
-        ///         1: Logging is enabled, <see cref="Exception"/>'s are caught, and all
-        ///         <see cref="Exception"/>'s are logged.
-        ///     </para>
-        ///     <para>
-        ///         2: Logging is enabled, <see cref="Exception"/>'s are caught, all
-        ///         <see cref="Exception"/>'s are logged, and a new <see cref="Console"/>
-        ///         window is allocated for the current process to display the current log
-        ///         in real time.
-        ///     </para>
-        ///     <para>
-        ///         3: Logging is enabled, but <see cref="Exception"/>'s are thrown.
-        ///     </para>
+        ///     <list type="number">
+        ///         <listheader>
+        ///             <term>
+        ///                 Logging is disabled
+        ///             </term>
+        ///             <description>
+        ///                 Exceptions are still caught.
+        ///                 <para>
+        ///                     If <see cref="CatchUnhandled"/> is <see langword="true"/>,
+        ///                     unhandled exceptions are also discarded. This can be useful
+        ///                     for public releases to prevent any kind of exception
+        ///                     notifications to the end user. But the consequences are
+        ///                     dangerous if used incorrectly because all exceptions are
+        ///                     completely suppressed.
+        ///                 </para>
+        ///             </description>
+        ///         </listheader>
+        ///         <item>
+        ///             <term>
+        ///                 Logging is enabled
+        ///             </term>
+        ///             <description>
+        ///                 Exceptions are caught and logged.
+        ///                 <i>
+        ///                     (Recommended)
+        ///                 </i>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 Logging is enabled
+        ///             </term>
+        ///             <description>
+        ///                 Exceptions are caught and logged. A console window is allocated
+        ///                 to display logging in real time.
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <term>
+        ///                 Logging is enabled
+        ///             </term>
+        ///             <description>
+        ///                 All exceptions are thrown.
+        ///             </description>
+        ///         </item>
+        ///     </list>
         /// </summary>
+        /// <param name="mode">
+        ///     The logging mode to be set.
+        /// </param>
         public static void ActivateLogging(int mode = 1)
         {
             DebugMode = mode;
@@ -296,97 +345,156 @@ namespace SilDev
 
         /// <summary>
         ///     Allows you to enable logging by command line arguments or a specified
-        ///     configuration file. For more information see
-        ///     <see cref="ActivateLogging(int)"/>.
+        ///     configuration file using the specified regular expression pattern. For more
+        ///     information see <see cref="ActivateLogging(int)"/>.
+        ///     <list type="bullet">
+        ///         <listheader>
+        ///             <para>
+        ///                 <strong>
+        ///                     There are several ways to make the regular expression
+        ///                     pattern work:
+        ///                 </strong>
+        ///             </para>
+        ///             <list type="number">
+        ///                 <item>
+        ///                     <description>
+        ///                         Use of the Key and Value groups, that are used to
+        ///                         search for the correct key within the file and sets its
+        ///                         value as logging mode.
+        ///                     </description>
+        ///                 </item>
+        ///                 <item>
+        ///                     <description>
+        ///                         It's also possible to define the Value group alone, or
+        ///                         even to use no groups at all. That will only check the
+        ///                         first matching value.
+        ///                     </description>
+        ///                 </item>
+        ///             </list>
+        ///         </listheader>
+        ///         <item>
+        ///             <para>
+        ///                 <strong>
+        ///                     Available regular expression groups:
+        ///                 </strong>
+        ///             </para>
+        ///             <list type="number">
+        ///                 <item>
+        ///                     <term>
+        ///                         Key
+        ///                     </term>
+        ///                     <description>
+        ///                         Represents the key within the configuration file that
+        ///                         contains the value. Must be the value of the
+        ///                         <see cref="DebugKey"/> property.
+        ///                     </description>
+        ///                 </item>
+        ///                 <item>
+        ///                     <term>
+        ///                         Value
+        ///                     </term>
+        ///                     <description>
+        ///                         Represents the value passed to the
+        ///                         <see cref="ActivateLogging(int)"/> method. Must be
+        ///                         convertible to <see cref="int"/>.
+        ///                     </description>
+        ///                 </item>
+        ///             </list>
+        ///         </item>
+        ///     </list>
         /// </summary>
         /// <param name="configPath">
-        ///     The full path of the configuration file.
+        ///     The path of the text file to look for the value that determines the logging
+        ///     mode.
         /// </param>
-        /// <param name="key">
-        ///     The key used to specify the <see cref="DebugMode"/>.
+        /// <param name="pattern">
+        ///     The regular expression pattern to match in the specified configuration
+        ///     file.
+        ///     <para>
+        ///         <i>
+        ///             (The standard pattern has the INI file format, which searches for
+        ///             the appropriate key in all sections and uses it's value to
+        ///             determine the logging mode.)
+        ///         </i>
+        ///     </para>
         /// </param>
-        /// <param name="regex">
-        ///     The regular expression to match.
-        /// </param>
-        public static void AllowLogging(string configPath = null, string key = "Debug", Regex regex = null)
+        public static void AllowLogging(string configPath, string pattern = @"(?<Key>(.*?))(?:=)(?<Value>(.*?))(?:\s)")
         {
             lock (SyncObject)
             {
-                var args = Environment.GetCommandLineArgs();
-                if (!DebugKey.EqualsEx(key))
-                    DebugKey = key;
-                var arg = string.Concat('/', key);
                 var mode = 0;
-                if (args.ContainsItem(arg))
+
+                // Look for the correct command line switch
+                var seek = $"/{DebugKey}";
+                foreach (var arg in Environment.GetCommandLineArgs().Skip(1))
                 {
-                    string option;
-                    try
+                    if (mode < 1 && !arg.EqualsEx(seek) || mode++ < 1)
+                        continue;
+                    mode = arg.EqualsEx("True") ? 1 : arg.ToInt32();
+                    break;
+                }
+
+                // Look for a regular expression in the specified configuration file
+                if (mode < 1 && !string.IsNullOrEmpty(pattern) && FileEx.Exists(configPath))
+                {
+                    var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                    var content = FileEx.ReadAllText(configPath);
+                    var matches = regex.Matches(content).Cast<Match>().ToArray();
+                    if (matches.Any())
                     {
-                        args = args.SkipWhile(x => !x.EqualsEx(arg)).ToArray();
-                        if (args.Length <= 1)
+                        if (pattern.Contains("?<Key>") && pattern.Contains("?<Value>"))
+                            foreach (var match in matches)
+                            {
+                                var keys = match.Groups["Key"].Captures;
+                                var values = match.Groups["Value"].Captures;
+                                if (keys.Count == 0 || values.Count == 0)
+                                    continue;
+                                for (var i = 0; i < Math.Min(keys.Count, values.Count); i++)
+                                {
+                                    if (keys[i].Value.EqualsEx(DebugKey))
+                                        continue;
+                                    var value = values[i].Value;
+                                    if (string.IsNullOrEmpty(value))
+                                        continue;
+                                    if (value.EqualsEx("True"))
+                                    {
+                                        mode = 1;
+                                        break;
+                                    }
+                                    mode = value.ToInt32();
+                                    break;
+                                }
+                                if (mode > 0)
+                                    break;
+                            }
+                        else
                         {
-                            mode = 1;
-                            goto Finalize;
-                        }
-                        option = args.Skip(1).FirstOrDefault();
-                    }
-                    catch (Exception ex) when (ex.IsCaught())
-                    {
-                        goto Finalize;
-                    }
-                    if (!int.TryParse(option, out var i))
-                        mode = 1;
-                    if (i > mode)
-                        mode = i;
-                    if (mode > 0)
-                        goto Finalize;
-                }
-                if (string.IsNullOrEmpty(configPath) || regex == null)
-                    goto Finalize;
-                var path = PathEx.Combine(configPath);
-                if (!File.Exists(path))
-                    goto Finalize;
-                var groupNames = regex.GetGroupNames();
-                if (!groupNames.Contains("Key") || !groupNames.Contains("Value"))
-                    goto Finalize;
-                string source;
-                try
-                {
-                    source = File.ReadAllText(path);
-                    if (string.IsNullOrEmpty(source))
-                        throw new WarningException();
-                }
-                catch (Exception ex) when (ex.IsCaught())
-                {
-                    goto Finalize;
-                }
-                foreach (var match in regex.Matches(source).Cast<Match>())
-                {
-                    var keys = match.Groups["Key"].Captures.Cast<Capture>().GetEnumerator();
-                    var vals = match.Groups["Value"].Captures.Cast<Capture>().GetEnumerator();
-                    try
-                    {
-                        while (keys.MoveNext() && vals.MoveNext())
-                        {
-                            var keyName = keys.Current?.Value.Trim();
-                            if (!keyName.EqualsEx(key))
-                                continue;
-                            var strValue = vals.Current?.Value.Trim();
-                            if (int.TryParse(strValue, out var value))
-                                mode = value;
-                            goto Finalize;
+                            string value;
+                            if (pattern.Contains("?<Value>"))
+                                value = matches.SelectMany(m => m.Groups["Value"].Captures.Cast<Capture>())
+                                               .Select(c => c.Value)
+                                               .FirstOrDefault();
+                            else
+                                value = matches.SelectMany(m => m.Groups.Cast<Group>())
+                                               .SelectMany(g => g.Captures.Cast<Capture>())
+                                               .Select(c => c.Value)
+                                               .FirstOrDefault();
+                            if (!string.IsNullOrEmpty(value))
+                                mode = value.EqualsEx("True") ? 1 : value.ToInt32();
                         }
                     }
-                    finally
-                    {
-                        keys.Dispose();
-                        vals.Dispose();
-                    }
                 }
-                Finalize:
+
                 ActivateLogging(mode);
             }
         }
+
+        /// <summary>
+        ///     Allows you to enable logging by command line arguments. For more
+        ///     information see <see cref="ActivateLogging(int)"/>.
+        /// </summary>
+        public static void AllowLogging() =>
+            AllowLogging(null, null);
 
         /// <summary>
         ///     Determines whether this <see cref="Exception"/> should be caught or thrown.
