@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-02-25 10:29
+// Version:  2020-02-25 11:11
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,6 +27,7 @@ namespace SilDev
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Ini;
     using Properties;
 
     /// <summary>
@@ -2152,6 +2153,11 @@ namespace SilDev
                 case TypeCode.DateTime:
                     return value.ToDateTime();
                 default:
+                    if (IniHelper.HasHexPrefix(value) && IniHelper.IsHex(value) && type == typeof(byte[]))
+                    {
+                        var start = value.IndexOf(':') + 1;
+                        return value.Substring(start).Decode(BinaryToTextEncoding.Base16);
+                    }
                     if (type == typeof(Rectangle) ||
                         type == typeof(Rectangle?))
                         return value.ToRectangle();
