@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-02-25 11:10
+// Version:  2020-02-25 11:22
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -927,7 +927,7 @@ namespace SilDev
             ///     The cypher to decrypt.
             /// </param>
             public static string DecryptString(string privateKeyPath, string code) =>
-                DecryptBytes(privateKeyPath, code)?.ToStringDefault();
+                DecryptBytes(privateKeyPath, code)?.ToStringUtf8();
         }
 
         #endregion
@@ -1332,7 +1332,7 @@ namespace SilDev
             ///     The string to decode.
             /// </param>
             public string DecodeString(string code) =>
-                DecodeBytes(code)?.ToStringDefault();
+                DecodeBytes(code)?.ToStringUtf8();
 
             /// <summary>
             ///     Decodes the specified source file to the specified destination file.
