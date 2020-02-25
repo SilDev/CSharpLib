@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-02-02 11:33
+// Version:  2020-02-25 11:10
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1518,7 +1518,7 @@ namespace SilDev
                     var cl = new List<char>();
                     while ((i = si.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
+                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (i != 0x30 && i != 0x31)
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
@@ -1647,7 +1647,7 @@ namespace SilDev
                     var cl = new List<char>();
                     while ((i = si.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
+                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39))
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
@@ -1776,7 +1776,7 @@ namespace SilDev
                     var cl = new List<char>();
                     while ((i = si.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
+                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39))
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
@@ -1905,7 +1905,7 @@ namespace SilDev
                     var cl = new List<char>();
                     while ((i = si.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || Separator.Contains((byte)i))
+                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39) && !i.IsBetween(0x41, 0x46) && !i.IsBetween(0x61, 0x66))
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
