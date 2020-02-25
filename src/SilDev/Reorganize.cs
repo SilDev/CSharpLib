@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-02-02 11:33
+// Version:  2020-02-25 10:29
 // 
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
@@ -2165,7 +2165,13 @@ namespace SilDev
                         return value.ToVersion();
                     if (type == typeof(IEnumerable<char>))
                         return value.ToCharArray();
-                    if (type.GetInterfaces().FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) != null)
+                    if (value.Length > 4 &&
+                        value.StartsWithEx("{", "[") &&
+                        value.EndsWithEx("}", "]") &&
+                        type.GetInterfaces()
+                            .FirstOrDefault(t => t.IsGenericType &&
+                                                 t.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
+                                                 t == typeof(ISerializable)) != null)
                     {
                         var method = typeof(Json).GetMethod("Deserialize")?.MakeGenericMethod(type);
                         if (method != null)
