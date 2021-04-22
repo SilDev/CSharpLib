@@ -2885,19 +2885,6 @@
                 Gets the UTF-8 character encoding without BOM.
             </summary>
         </member>
-        <member name="M:SilDev.EncodingEx.GetEncoding(System.String,System.Text.Encoding)">
-            <summary>
-                Gets the character encoding of the specified file.
-            </summary>
-            <param name="file">
-                The file to check.
-            </param>
-            <param name="defEncoding">
-                The default character encoding, which is returned if no character encoding
-                was found. If <see langword="null"/>, <see cref="P:SilDev.EncodingEx.Ansi"/> is
-                used.
-            </param>
-        </member>
         <member name="M:SilDev.EncodingEx.ChangeEncoding(System.String,System.Text.Encoding)">
             <summary>
                 Changes the character encoding of the specified file. This function
@@ -2907,8 +2894,20 @@
                 The file to change.
             </param>
             <param name="encoding">
-                The new character encoding. If <see langword="null"/>,
-                <see cref="P:SilDev.EncodingEx.Ansi"/> is used.
+                The new character encoding. If <see langword="null"/>, <see cref="P:SilDev.EncodingEx.Ansi"/>
+                is used.
+            </param>
+        </member>
+        <member name="M:SilDev.EncodingEx.GetEncoding(System.String,System.Text.Encoding)">
+            <summary>
+                Gets the character encoding of the specified file.
+            </summary>
+            <param name="file">
+                The file to check.
+            </param>
+            <param name="defEncoding">
+                The default character encoding, which is returned if no character encoding
+                was found. If <see langword="null"/>, <see cref="P:SilDev.EncodingEx.Ansi"/> is used.
             </param>
         </member>
         <member name="T:SilDev.Forms.ControlAlphaNumericComparer">
@@ -9303,7 +9302,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9336,7 +9335,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9374,7 +9373,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9407,7 +9406,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9445,7 +9444,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9478,7 +9477,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9516,7 +9515,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9549,7 +9548,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9590,7 +9589,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9626,7 +9625,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9664,7 +9663,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9694,7 +9693,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9732,7 +9731,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9762,7 +9761,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9800,7 +9799,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -9830,7 +9829,7 @@
                 inputStream is not readable -or- outputStream is not writable.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.ObjectDisposedException">
                 Methods were called after the inputStream or outputStream was closed.
@@ -19807,7 +19806,7 @@
                 stream or bytes is null.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.NotSupportedException">
                 The stream does not support writing.
@@ -19831,7 +19830,7 @@
                 stream is null.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.NotSupportedException">
                 The stream does not support writing.
@@ -19862,7 +19861,7 @@
                 count is less than zero.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.NotSupportedException">
                 The stream does not support writing.
@@ -19886,7 +19885,7 @@
                 stream or str is null.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.NotSupportedException">
                 The stream does not support writing.
@@ -19910,7 +19909,7 @@
                 stream or bytes is null.
             </exception>
             <exception cref="T:System.IO.IOException">
-                An I/O error occured, such as the specified file cannot be found.
+                An I/O error occurred, such as the specified file cannot be found.
             </exception>
             <exception cref="T:System.NotSupportedException">
                 The stream does not support writing.
