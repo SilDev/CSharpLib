@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2020-02-02 11:33
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -212,11 +212,11 @@ namespace SilDev
                 if (output == null)
                     throw new NullReferenceException();
                 var dest = PathEx.Combine(path);
-                using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                    if (!formatted)
-                        fs.WriteBytes(output);
-                    else
-                        Format(fs, output);
+                using var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew);
+                if (!formatted)
+                    fs.WriteBytes(output);
+                else
+                    Format(fs, output);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -325,18 +325,12 @@ namespace SilDev
                 throw new ArgumentNullException(nameof(stream));
             if (count < 0 || count > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            int width;
-            switch (spacer)
+            var width = spacer switch
             {
-                case '\t':
-                    width = 1;
-                    break;
-                case ' ':
-                    width = 3;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(spacer));
-            }
+                '\t' => 1,
+                ' ' => 3,
+                _ => throw new ArgumentOutOfRangeException(nameof(spacer))
+            };
             for (var i = 0; i < count; i++)
             {
                 var c = buffer[i];

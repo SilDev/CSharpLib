@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -106,22 +106,20 @@ namespace SilDev
             try
             {
                 var dest = PathEx.Combine(path);
-                using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
+                using var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew);
+                var header = DefDatHeader;
+                header[(int)DatHeaderKey.CompressionMode] = Convert.ToByte(compress);
+                fs.WriteBytes(header);
+                var bf = new BinaryFormatter(null, new StreamingContext(StreamingContextStates.File));
+                if (compress)
                 {
-                    var header = DefDatHeader;
-                    header[(int)DatHeaderKey.CompressionMode] = Convert.ToByte(compress);
-                    fs.WriteBytes(header);
-                    var bf = new BinaryFormatter(null, new StreamingContext(StreamingContextStates.File));
-                    if (compress)
-                    {
-                        using var ms = new MemoryStream();
-                        bf.Serialize(ms, source);
-                        ms.Position = 0;
-                        GZip.Compress(ms, fs, false);
-                        return true;
-                    }
-                    bf.Serialize(fs, source);
+                    using var ms = new MemoryStream();
+                    bf.Serialize(ms, source);
+                    ms.Position = 0;
+                    GZip.Compress(ms, fs, false);
+                    return true;
                 }
+                bf.Serialize(fs, source);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())

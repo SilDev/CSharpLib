@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WebTransferAsync.cs
-// Version:  2020-01-24 20:58
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -29,7 +29,7 @@ namespace SilDev.Network
     /// </summary>
     public sealed class WebTransferAsync : IDisposable
     {
-        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private readonly Stopwatch _stopwatch = new();
         private WebClient _webClient;
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace SilDev.Network
                     _webClient.DownloadFileCompleted += DownloadFile_Completed;
                     _webClient.DownloadProgressChanged += DownloadFile_ProgressChanged;
                     Address = srcUri;
-                    FileName = path.Split('\\').Last() ?? string.Empty;
+                    FileName = path.Split('\\').Last();
                     FilePath = path;
                     if (checkExists && !Address.FileIsAvailable(userName, password, allowAutoRedirect, cookieContainer, timeout, userAgent))
                         throw new PathNotFoundException(srcUri.ToString());

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PowerShellReference.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -23,9 +23,9 @@ namespace SilDev.Intern
 
     internal static class PowerShellReference
     {
+        private static volatile object _syncObject;
         private static volatile Assembly _assembly;
         private static volatile bool _assemblyChecked;
-        private static volatile object _syncObject;
 
         internal static Assembly Assembly
         {

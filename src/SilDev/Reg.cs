@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2020-01-13 13:03
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -96,8 +96,7 @@ namespace SilDev
                 if (newSubKey.Contains(Path.DirectorySeparatorChar))
                     newSubKey = newSubKey.Split(Path.DirectorySeparatorChar).Where(s => !string.IsNullOrEmpty(s))
                                          .Select(s => s.Trim()).Join(Path.DirectorySeparatorChar);
-                if (CachedKeyFilters == null)
-                    CachedKeyFilters = new Dictionary<int, string>();
+                CachedKeyFilters ??= new Dictionary<int, string>();
                 if (CachedKeyFilters.Count > MaxCacheSize)
                     CachedKeyFilters.Remove(CachedKeyFilters.Keys.First());
                 CachedKeyFilters[hashCode] = newSubKey;
@@ -138,10 +137,8 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(key));
                 if (subKey == null)
                     throw new ArgumentNullException(nameof(subKey));
-                bool exists;
-                using (var rKey = key.OpenSubKey(subKey.KeyFilter()))
-                    exists = rKey != null;
-                return exists;
+                using var rKey = key.OpenSubKey(subKey.KeyFilter());
+                return rKey != null;
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -758,14 +755,13 @@ namespace SilDev
             try
             {
                 var objValue = Read<object>(key, subKey, entry, defValue);
-                if (objValue == null)
-                    throw new NullReferenceException();
-                if (objValue is string[] strs)
-                    value = strs.Join(Environment.NewLine);
-                else if (objValue is byte[] bytes)
-                    value = bytes.Encode(BinaryToTextEncoding.Base16);
-                else
-                    value = objValue.ToString();
+                value = objValue switch
+                {
+                    null => throw new NullReferenceException(),
+                    string[] strs => strs.Join(Environment.NewLine),
+                    byte[] bytes => bytes.Encode(BinaryToTextEncoding.Base16),
+                    _ => objValue.ToString()
+                };
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -1015,9 +1011,9 @@ namespace SilDev
                     throw new PathNotFoundException(filePath);
                 if (Log.DebugMode > 1)
                     Log.Write($"IMPORT: \"{filePath}\"");
-                using (var p = ProcessEx.Start(native ? RegNatEnvPath : RegLowEnvPath, $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false))
-                    if (p?.HasExited ?? false)
-                        p.WaitForExit(3000);
+                using var p = ProcessEx.Start(native ? RegNatEnvPath : RegLowEnvPath, $"IMPORT \"{filePath}\"", elevated, ProcessWindowStyle.Hidden, false);
+                if (p?.HasExited ?? false)
+                    p.WaitForExit(3000);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())

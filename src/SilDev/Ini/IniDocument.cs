@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IniDocument.cs
-// Version:  2020-02-04 17:51
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -52,7 +52,7 @@ namespace SilDev.Ini
     public sealed class IniDocument : IEquatable<IniDocument>, ISerializable
     {
         [NonSerialized]
-        private readonly object _identifier = new object();
+        private readonly object _identifier = new();
 
         private IDictionary<string, IDictionary<string, IList<string>>> _document;
 
@@ -661,12 +661,8 @@ namespace SilDev.Ini
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override bool Equals(object other)
-        {
-            if (!(other is IniDocument ini))
-                return false;
-            return Equals(ini);
-        }
+        public override bool Equals(object other) =>
+            other is IniDocument ini && Equals(ini);
 
         /// <summary>
         ///     Returns a string that represents the current <see cref="IniDocument"/>

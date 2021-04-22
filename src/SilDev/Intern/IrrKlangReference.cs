@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IrrKlangReference.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -27,10 +27,10 @@ namespace SilDev.Intern
         private const string CoreModuleName = "irrKlang.NET4.dll";
         private const string PluginModule1Name = "ikpFlac.dll";
         private const string PluginModule2Name = "ikpMP3.dll";
+        private static volatile object _syncObject;
         private static volatile Assembly _assembly;
         private static volatile bool _assemblyChecked;
         private static volatile string _location;
-        private static volatile object _syncObject;
 
         internal static Assembly Assembly
         {

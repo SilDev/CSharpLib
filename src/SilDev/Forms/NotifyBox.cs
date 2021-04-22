@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -357,8 +357,8 @@ namespace SilDev.Forms
                 };
                 if (_duration > 0)
                 {
-                    _bgWorker.DoWork += (sender, args) => Thread.Sleep(_duration - 20);
-                    _bgWorker.RunWorkerCompleted += (sender, args) => Close();
+                    _bgWorker.DoWork += (_, _) => Thread.Sleep(_duration - 20);
+                    _bgWorker.RunWorkerCompleted += (_, _) => Close();
                 }
                 _timer = new Timer(_components)
                 {
@@ -466,17 +466,16 @@ namespace SilDev.Forms
 
             private void FadeInOutTimer_Tick(object sender, EventArgs e)
             {
-                if (!(sender is Timer timer))
+                if (sender is not Timer timer)
                     return;
-                if (!_visible && Opacity < _opacity)
+                switch (_visible)
                 {
-                    Opacity += .025d;
-                    return;
-                }
-                if (_visible && Opacity > 0)
-                {
-                    Opacity -= .05d;
-                    return;
+                    case false when Opacity < _opacity:
+                        Opacity += .025d;
+                        return;
+                    case true when Opacity > 0:
+                        Opacity -= .05d;
+                        return;
                 }
                 _visible = !_visible;
                 if (!_visible)
@@ -486,7 +485,7 @@ namespace SilDev.Forms
 
             private void ProgressDotsTimer_Tick(object sender, EventArgs e)
             {
-                if (!(sender is Timer timer))
+                if (sender is not Timer timer)
                     return;
                 var s = _textLabel.Text;
                 if (!s.EndsWith(" .", StringComparison.Ordinal))

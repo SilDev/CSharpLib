@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProgressBarEx.cs
-// Version:  2020-01-13 13:04
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -31,7 +31,7 @@ namespace SilDev.Forms
         /// </param>
         public static void JumpToEnd(this ProgressBar progressBar)
         {
-            if (!(progressBar is { } pb))
+            if (progressBar is not { } pb)
                 return;
             var max = pb.Maximum;
             pb.Maximum = int.MaxValue;

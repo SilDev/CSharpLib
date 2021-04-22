@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -196,7 +196,7 @@ namespace SilDev.Forms
         /// </param>
         public static void SetDefaultContextMenuStrip(this RichTextBox richTextBox, IWin32Window owner = null)
         {
-            if (!(richTextBox is { } rtb))
+            if (richTextBox is not { } rtb)
                 return;
             var cms = new ContextMenuStrip
             {
@@ -218,23 +218,23 @@ namespace SilDev.Forms
 
         private static void AddToolStripItem(this IDisposable toolStrip, ToolStripItem toolStripItem, FileDialogHandler action, Control control, IWin32Window owner = null)
         {
-            if (!(toolStripItem is { } tsi) || !(toolStrip is ToolStrip ts))
+            if (toolStripItem is not { } tsi || toolStrip is not ToolStrip ts)
                 return;
-            tsi.Click += (s, e) => action(control, owner);
+            tsi.Click += (_, _) => action(control, owner);
             ts.Items.Add(toolStripItem);
         }
 
         private static void AddToolStripItem(this IDisposable toolStrip, ToolStripItem toolStripItem, Action action)
         {
-            if (!(toolStripItem is { } tsi) || !(toolStrip is ToolStrip ts))
+            if (toolStripItem is not { } tsi || toolStrip is not ToolStrip ts)
                 return;
-            tsi.Click += (s, e) => action();
+            tsi.Click += (_, _) => action();
             ts.Items.Add(toolStripItem);
         }
 
         private static void LoadTextFile(Control control, IWin32Window owner = null)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return;
             using var dialog = new OpenFileDialog();
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -255,7 +255,7 @@ namespace SilDev.Forms
 
         private static void SaveTextFile(Control control, IWin32Window owner = null)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return;
             if (string.IsNullOrEmpty(c.Text))
             {

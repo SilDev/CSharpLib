@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -33,7 +33,7 @@ namespace SilDev.Forms
         /// </param>
         public static ListViewItem ItemFromPoint(this ListView listView)
         {
-            if (!(listView is { } lv))
+            if (listView is not { } lv)
                 return null;
             var pos = lv.PointToClient(Cursor.Position);
             return lv.GetItemAt(pos.X, pos.Y);
@@ -51,7 +51,7 @@ namespace SilDev.Forms
         /// </param>
         public static void SetMouseOverCursor(this ListView listView, Cursor cursor = default)
         {
-            if (!(listView is { } lv))
+            if (listView is not { } lv)
                 return;
             if (cursor == default)
                 cursor = Cursors.Arrow;

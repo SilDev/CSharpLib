@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2020-01-19 15:31
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -250,7 +250,7 @@ namespace SilDev
                 if (process == null)
                     throw new ArgumentNullException(nameof(process));
                 var modules = process.Modules.Cast<ProcessModule>().ToList();
-                var path = modules.First(m => Path.GetFileName(m.FileName).EqualsEx("SbieDll.dll"))?.FileName;
+                var path = modules.First(m => Path.GetFileName(m.FileName).EqualsEx("SbieDll.dll")).FileName;
                 if (string.IsNullOrEmpty(path) || !File.Exists(path))
                     return false;
                 var info = FileVersionInfo.GetVersionInfo(path);
@@ -278,8 +278,8 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(process));
                 var list = new List<string>();
                 var query = $"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {process.Id}";
-                using (var objs = new ManagementObjectSearcher(query))
-                    list.AddRange(objs.Get().Cast<ManagementBaseObject>().Select(obj => obj["CommandLine"].ToString()));
+                using var objs = new ManagementObjectSearcher(query);
+                list.AddRange(objs.Get().Cast<ManagementBaseObject>().Select(obj => obj["CommandLine"].ToString()));
                 return list.ToArray();
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -622,7 +622,7 @@ namespace SilDev
             if (process == null)
                 return default;
             var handles = new HashSet<IntPtr>();
-            var threads = new WinApi.EnumThreadWndProc((hWnd, lParam) =>
+            var threads = new WinApi.EnumThreadWndProc((hWnd, _) =>
             {
                 handles.Add(hWnd);
                 return true;

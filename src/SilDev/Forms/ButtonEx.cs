@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2020-01-20 15:45
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -25,7 +25,7 @@ namespace SilDev.Forms
     /// </summary>
     public static class ButtonEx
     {
-        private static HashSet<IntPtr> HashList { get; } = new HashSet<IntPtr>();
+        private static HashSet<IntPtr> HashList { get; } = new();
 
         /// <summary>
         ///     Creates a small split button on the right side of this <see cref="Button"/>
@@ -45,7 +45,7 @@ namespace SilDev.Forms
         /// </param>
         public static void Split(this Button button, Color? buttonText = null)
         {
-            if (!(button is { } b) || b.Width < 48 || b.Height < 16)
+            if (button is not { } b || b.Width < 48 || b.Height < 16)
                 return;
             var hWnd = b.Handle;
             if (HashList.Contains(hWnd))
@@ -106,7 +106,7 @@ namespace SilDev.Forms
         /// </param>
         public static void Split(this Button button, bool enabled, Color? buttonText = null)
         {
-            if (!(button is { } b))
+            if (button is not { } b)
                 return;
             if (enabled)
             {
@@ -137,7 +137,7 @@ namespace SilDev.Forms
         /// </param>
         public static bool SplitClickHandler(this Button button, ContextMenuStrip contextMenuStrip)
         {
-            if (!(button is { } b) || !(contextMenuStrip is { } cms) || b.PointToClient(Cursor.Position).X < b.Right - 16)
+            if (button is not { } b || contextMenuStrip is not { } cms || b.PointToClient(Cursor.Position).X < b.Right - 16)
                 return false;
             cms.Show(b, new Point(0, b.Height), ToolStripDropDownDirection.BelowRight);
             return true;
@@ -145,7 +145,7 @@ namespace SilDev.Forms
 
         private static void SplitOnMouseMove(object sender, MouseEventArgs e)
         {
-            if (!(sender is Button b))
+            if (sender is not Button b)
                 return;
             var lis = b.LayoutIsSuspended();
             if (!lis)

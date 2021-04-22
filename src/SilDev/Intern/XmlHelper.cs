@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: XmlHelper.cs
-// Version:  2020-01-13 13:04
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -29,8 +29,8 @@ namespace SilDev.Intern
                 if (source == null)
                     throw new ArgumentNullException(nameof(source));
                 var dest = PathEx.Combine(path);
-                using (var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew))
-                    new XmlSerializer(typeof(TSource)).Serialize(fs, source);
+                using var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew);
+                new XmlSerializer(typeof(TSource)).Serialize(fs, source);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())

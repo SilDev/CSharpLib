@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2020-02-25 11:22
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -304,18 +305,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] Encrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.EncryptBytes(bytes, password, salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.EncryptBytes(bytes, password, salt, Aes.KeySize.Aes192),
+                _ => Aes.EncryptBytes(bytes, password, salt)
+            };
 
         /// <summary>
         ///     Encrypts this sequence of bytes with the specified algorithm.
@@ -332,18 +328,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] Encrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192),
+                _ => Aes.EncryptBytes(bytes, password.ToBytesUtf8(), salt)
+            };
 
         /// <summary>
         ///     Encrypts this string with the specified algorithm.
@@ -360,18 +351,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this string text, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] Encrypt(this string text, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptBytes(text.ToBytesUtf8(), password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptBytes(text.ToBytesUtf8(), password, salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.EncryptBytes(text.ToBytesUtf8(), password, salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.EncryptBytes(text.ToBytesUtf8(), password, salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.EncryptBytes(text.ToBytesUtf8(), password, salt, Aes.KeySize.Aes192),
+                _ => Aes.EncryptBytes(text.ToBytesUtf8(), password, salt)
+            };
 
         /// <summary>
         ///     Encrypts this string with the specified algorithm.
@@ -388,18 +374,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Encrypt(this string text, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] Encrypt(this string text, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt, Aes.KeySize.Aes192),
+                _ => Aes.EncryptBytes(text.ToBytesUtf8(), password.ToBytesUtf8(), salt)
+            };
 
         /// <summary>
         ///     Encrypts this file with the specified algorithm.
@@ -416,18 +397,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] EncryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] EncryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.EncryptFile(path, password, salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.EncryptFile(path, password, salt, Aes.KeySize.Aes192),
+                _ => Aes.EncryptFile(path, password, salt)
+            };
 
         /// <summary>
         ///     Encrypts this file with the specified algorithm.
@@ -444,18 +420,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] EncryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] EncryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.EncryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.EncryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.EncryptFile(path, password.ToBytesUtf8(), salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.EncryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.EncryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192),
+                _ => Aes.EncryptFile(path, password.ToBytesUtf8(), salt)
+            };
 
         /// <summary>
         ///     Decrypts this sequence of bytes with the specified algorithm.
@@ -472,18 +443,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Decrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] Decrypt(this byte[] bytes, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.DecryptBytes(bytes, password, salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.DecryptBytes(bytes, password, salt, Aes.KeySize.Aes192),
+                _ => Aes.DecryptBytes(bytes, password, salt)
+            };
 
         /// <summary>
         ///     Decrypts this sequence of bytes with the specified algorithm.
@@ -500,18 +466,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] Decrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] Decrypt(this byte[] bytes, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192),
+                _ => Aes.DecryptBytes(bytes, password.ToBytesUtf8(), salt)
+            };
 
         /// <summary>
         ///     Decrypts this sequence of bytes with the specified algorithm.
@@ -528,18 +489,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] DecryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] DecryptFile(this string path, byte[] password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.DecryptFile(path, password, salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.DecryptFile(path, password, salt, Aes.KeySize.Aes192),
+                _ => Aes.DecryptFile(path, password, salt)
+            };
 
         /// <summary>
         ///     Decrypts this sequence of bytes with the specified algorithm.
@@ -556,18 +512,13 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static byte[] DecryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256)
-        {
-            switch (algorithm)
+        public static byte[] DecryptFile(this string path, string password, byte[] salt = null, SymmetricKeyAlgorithm algorithm = SymmetricKeyAlgorithm.Aes256) =>
+            algorithm switch
             {
-                case SymmetricKeyAlgorithm.Aes128:
-                    return Aes.DecryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128);
-                case SymmetricKeyAlgorithm.Aes192:
-                    return Aes.DecryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192);
-                default:
-                    return Aes.DecryptFile(path, password.ToBytesUtf8(), salt);
-            }
-        }
+                SymmetricKeyAlgorithm.Aes128 => Aes.DecryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes128),
+                SymmetricKeyAlgorithm.Aes192 => Aes.DecryptFile(path, password.ToBytesUtf8(), salt, Aes.KeySize.Aes192),
+                _ => Aes.DecryptFile(path, password.ToBytesUtf8(), salt)
+            };
 
         /// <summary>
         ///     Encodes this sequence of bytes with the specified algorithm.
@@ -713,7 +664,7 @@ namespace SilDev
                     instance.Encrypt(chars.AsString());
                     return instance.Hash;
             }
-            if (!(source?.SerializeObject() is { } data))
+            if (source?.SerializeObject() is not { } data)
                 return string.Empty;
             instance.Encrypt(data);
             return instance.Hash;
@@ -759,53 +710,32 @@ namespace SilDev
                 builder.Append('}');
         }
 
-        private static BinaryToText GetDefaultInstance(BinaryToTextEncoding algorithm)
-        {
-            switch (algorithm)
+        private static BinaryToText GetDefaultInstance(BinaryToTextEncoding algorithm) =>
+            algorithm switch
             {
-                case BinaryToTextEncoding.Base2:
-                    return CacheInvestor.GetDefault<Base2>();
-                case BinaryToTextEncoding.Base8:
-                    return CacheInvestor.GetDefault<Base8>();
-                case BinaryToTextEncoding.Base10:
-                    return CacheInvestor.GetDefault<Base10>();
-                case BinaryToTextEncoding.Base16:
-                    return CacheInvestor.GetDefault<Base16>();
-                case BinaryToTextEncoding.Base32:
-                    return CacheInvestor.GetDefault<Base32>();
-                case BinaryToTextEncoding.Base85:
-                    return CacheInvestor.GetDefault<Base85>();
-                case BinaryToTextEncoding.Base91:
-                    return CacheInvestor.GetDefault<Base91>();
-                default:
-                    return CacheInvestor.GetDefault<Base64>();
-            }
-        }
+                BinaryToTextEncoding.Base2 => CacheInvestor.GetDefault<Base2>(),
+                BinaryToTextEncoding.Base8 => CacheInvestor.GetDefault<Base8>(),
+                BinaryToTextEncoding.Base10 => CacheInvestor.GetDefault<Base10>(),
+                BinaryToTextEncoding.Base16 => CacheInvestor.GetDefault<Base16>(),
+                BinaryToTextEncoding.Base32 => CacheInvestor.GetDefault<Base32>(),
+                BinaryToTextEncoding.Base85 => CacheInvestor.GetDefault<Base85>(),
+                BinaryToTextEncoding.Base91 => CacheInvestor.GetDefault<Base91>(),
+                _ => CacheInvestor.GetDefault<Base64>()
+            };
 
-        private static Checksum GetDefaultInstance(ChecksumAlgorithm algorithm)
-        {
-            switch (algorithm)
+        private static Checksum GetDefaultInstance(ChecksumAlgorithm algorithm) =>
+            algorithm switch
             {
-                case ChecksumAlgorithm.Adler32:
-                    return CacheInvestor.GetDefault<Adler32>();
-                case ChecksumAlgorithm.Crc16:
-                    return CacheInvestor.GetDefault<Crc16>();
-                case ChecksumAlgorithm.Crc32:
-                    return CacheInvestor.GetDefault<Crc32>();
-                case ChecksumAlgorithm.Crc64:
-                    return CacheInvestor.GetDefault<Crc64>();
-                case ChecksumAlgorithm.Sha1:
-                    return CacheInvestor.GetDefault<Sha1>();
-                case ChecksumAlgorithm.Sha256:
-                    return CacheInvestor.GetDefault<Sha256>();
-                case ChecksumAlgorithm.Sha384:
-                    return CacheInvestor.GetDefault<Sha384>();
-                case ChecksumAlgorithm.Sha512:
-                    return CacheInvestor.GetDefault<Sha512>();
-                default:
-                    return CacheInvestor.GetDefault<Md5>();
-            }
-        }
+                ChecksumAlgorithm.Adler32 => CacheInvestor.GetDefault<Adler32>(),
+                ChecksumAlgorithm.Crc16 => CacheInvestor.GetDefault<Crc16>(),
+                ChecksumAlgorithm.Crc32 => CacheInvestor.GetDefault<Crc32>(),
+                ChecksumAlgorithm.Crc64 => CacheInvestor.GetDefault<Crc64>(),
+                ChecksumAlgorithm.Sha1 => CacheInvestor.GetDefault<Sha1>(),
+                ChecksumAlgorithm.Sha256 => CacheInvestor.GetDefault<Sha256>(),
+                ChecksumAlgorithm.Sha384 => CacheInvestor.GetDefault<Sha384>(),
+                ChecksumAlgorithm.Sha512 => CacheInvestor.GetDefault<Sha512>(),
+                _ => CacheInvestor.GetDefault<Md5>()
+            };
 
         #region Asymmetric-key Algorithms
 
@@ -979,23 +909,21 @@ namespace SilDev
             {
                 try
                 {
-                    byte[] ba;
-                    using (var rm = new RijndaelManaged())
+                    using var rm = new RijndaelManaged
                     {
-                        rm.BlockSize = 128;
-                        rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
-                        {
-                            rm.Key = db.GetBytes(rm.KeySize / 8);
-                            rm.IV = db.GetBytes(rm.BlockSize / 8);
-                        }
-                        rm.Mode = CipherMode.CBC;
-                        var ms = new MemoryStream();
-                        using (var cs = new CryptoStream(ms, rm.CreateEncryptor(), CryptoStreamMode.Write))
-                            cs.WriteBytes(bytes);
-                        ba = ms.ToArray();
+                        BlockSize = 128,
+                        KeySize = (int)keySize
+                    };
+                    using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
+                    {
+                        rm.Key = db.GetBytes(rm.KeySize / 8);
+                        rm.IV = db.GetBytes(rm.BlockSize / 8);
                     }
-                    return ba;
+                    rm.Mode = CipherMode.CBC;
+                    var ms = new MemoryStream();
+                    using (var cs = new CryptoStream(ms, rm.CreateEncryptor(), CryptoStreamMode.Write))
+                        cs.WriteBytes(bytes);
+                    return ms.ToArray();
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
@@ -1055,23 +983,21 @@ namespace SilDev
             {
                 try
                 {
-                    byte[] ba;
-                    using (var rm = new RijndaelManaged())
+                    using var rm = new RijndaelManaged
                     {
-                        rm.BlockSize = 128;
-                        rm.KeySize = (int)keySize;
-                        using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
-                        {
-                            rm.Key = db.GetBytes(rm.KeySize / 8);
-                            rm.IV = db.GetBytes(rm.BlockSize / 8);
-                        }
-                        rm.Mode = CipherMode.CBC;
-                        var ms = new MemoryStream();
-                        using (var cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write))
-                            cs.WriteBytes(code);
-                        ba = ms.ToArray();
+                        BlockSize = 128,
+                        KeySize = (int)keySize
+                    };
+                    using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
+                    {
+                        rm.Key = db.GetBytes(rm.KeySize / 8);
+                        rm.IV = db.GetBytes(rm.BlockSize / 8);
                     }
-                    return ba;
+                    rm.Mode = CipherMode.CBC;
+                    var ms = new MemoryStream();
+                    using (var cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write))
+                        cs.WriteBytes(code);
+                    return ms.ToArray();
                 }
                 catch (Exception ex) when (ex.IsCaught())
                 {
@@ -1442,7 +1368,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1453,22 +1379,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                         foreach (var b in Convert.ToString(i, 2).PadLeft(8, '0').ToBytesUtf8())
-                            WriteLine(so, b, lineLength, ref p);
+                            WriteLine(outputStream, b, lineLength, ref p);
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1499,7 +1423,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1510,22 +1434,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
+                        if (i is <= 0 or 0x20 or 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (i != 0x30 && i != 0x31)
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 8 != 0)
                             continue;
-                        so.WriteByte(Convert.ToByte(new string(cl.ToArray()), 2));
+                        outputStream.WriteByte(Convert.ToByte(new string(cl.ToArray()), 2));
                         cl.Clear();
                     }
                 }
@@ -1533,8 +1455,8 @@ namespace SilDev
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1571,7 +1493,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1582,22 +1504,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                         foreach (var b in Convert.ToString(i, 8).PadLeft(3, '0').ToBytesUtf8())
-                            WriteLine(so, b, lineLength, ref p);
+                            WriteLine(outputStream, b, lineLength, ref p);
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1628,7 +1548,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1639,22 +1559,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
+                        if (i is <= 0 or 0x20 or 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39))
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 3 != 0)
                             continue;
-                        so.WriteByte(Convert.ToByte(new string(cl.ToArray()), 8));
+                        outputStream.WriteByte(Convert.ToByte(new string(cl.ToArray()), 8));
                         cl.Clear();
                     }
                 }
@@ -1662,8 +1580,8 @@ namespace SilDev
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1700,7 +1618,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1711,22 +1629,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                         foreach (var b in Convert.ToString(i, 10).PadLeft(3, '0').ToBytesUtf8())
-                            WriteLine(so, b, lineLength, ref p);
+                            WriteLine(outputStream, b, lineLength, ref p);
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1757,7 +1673,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1768,22 +1684,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
+                        if (i is <= 0 or 0x20 or 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39))
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 3 != 0)
                             continue;
-                        so.WriteByte(Convert.ToByte(new string(cl.ToArray()), 10));
+                        outputStream.WriteByte(Convert.ToByte(new string(cl.ToArray()), 10));
                         cl.Clear();
                     }
                 }
@@ -1791,8 +1705,8 @@ namespace SilDev
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1829,7 +1743,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1840,22 +1754,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var p = 0;
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                         foreach (var b in i.ToStringDefault("x2").PadLeft(2, '0').ToBytesUtf8())
-                            WriteLine(so, b, lineLength, ref p);
+                            WriteLine(outputStream, b, lineLength, ref p);
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1886,7 +1798,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1897,22 +1809,20 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
                     var cl = new List<char>();
-                    while ((i = si.ReadByte()) != -1)
+                    while ((i = inputStream.ReadByte()) != -1)
                     {
-                        if (i <= 0 || i == 0x20 || i == 0x2c || Separator.Contains((byte)i))
+                        if (i is <= 0 or 0x20 or 0x2c || Separator.Contains((byte)i))
                             continue;
                         if (!i.IsBetween(0x30, 0x39) && !i.IsBetween(0x41, 0x46) && !i.IsBetween(0x61, 0x66))
                             throw new DecoderFallbackException(ExceptionMessages.CharsInStreamAreInvalid);
                         cl.Add((char)i);
                         if (cl.Count % 2 != 0)
                             continue;
-                        so.WriteByte(Convert.ToByte(new string(cl.ToArray()), 16));
+                        outputStream.WriteByte(Convert.ToByte(new string(cl.ToArray()), 16));
                         cl.Clear();
                     }
                 }
@@ -1920,8 +1830,8 @@ namespace SilDev
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -1969,7 +1879,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -1982,14 +1892,12 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(outputStream));
                 if (inputStream.Length > 0x8000000)
                     throw new ArgumentOutOfRangeException(nameof(inputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
-                    var ba = new byte[si.Length];
+                    var ba = new byte[inputStream.Length];
                     var p = 0;
-                    while ((i = si.Read(ba, 0, ba.Length)) > 0)
+                    while ((i = inputStream.Read(ba, 0, ba.Length)) > 0)
                     {
                         var len = (i > ba.Length ? Math.Pow(ba.Length, Math.Max(Math.Floor((double)i / ba.Length), 1)) : i) * 8;
                         for (var j = 0; j < len; j += 5)
@@ -1998,7 +1906,7 @@ namespace SilDev
                             if (j / 8 + 1 < ba.Length)
                                 c |= ba[j / 8 + 1];
                             c = 31 & (c >> (16 - j % 8 - 5));
-                            WriteLine(so, CharacterTable32[c], lineLength, ref p);
+                            WriteLine(outputStream, CharacterTable32[c], lineLength, ref p);
                         }
                     }
                 }
@@ -2006,8 +1914,8 @@ namespace SilDev
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2041,7 +1949,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -2054,13 +1962,11 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(outputStream));
                 if (inputStream.Length > 0x8000000)
                     throw new ArgumentOutOfRangeException(nameof(inputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
-                    var ba1 = new byte[si.Length];
+                    var ba1 = new byte[inputStream.Length];
                     var a32 = Encoding.ASCII.GetString(CharacterTable32);
-                    while (si.Read(ba1, 0, ba1.Length) > 0)
+                    while (inputStream.Read(ba1, 0, ba1.Length) > 0)
                     {
                         var ba2 = ba1.Where(b => b > 0 && !Separator.Contains(b)).ToArray();
                         if (ba2.Any(x => !CharacterTable32.Contains(x)))
@@ -2083,7 +1989,7 @@ namespace SilDev
                             c = 255 & (c >> (15 - i % 5 - 8));
                             if (i + 5 > len && c <= 0)
                                 break;
-                            so.WriteByte((byte)c);
+                            outputStream.WriteByte((byte)c);
                         }
                     }
                 }
@@ -2091,8 +1997,8 @@ namespace SilDev
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2129,7 +2035,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -2140,27 +2046,25 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int i;
-                    var cs = new CryptoStream(si, new ToBase64Transform(), CryptoStreamMode.Read);
+                    var cs = new CryptoStream(inputStream, new ToBase64Transform(), CryptoStreamMode.Read);
                     var ba = new byte[lineLength < 1 ? 4096 : lineLength];
                     while ((i = cs.Read(ba, 0, ba.Length)) > 0)
                     {
-                        so.Write(ba, 0, i);
+                        outputStream.Write(ba, 0, i);
                         if (lineLength < 1 || i < ba.Length)
                             continue;
-                        so.WriteBytes(Separator);
+                        outputStream.WriteBytes(Separator);
                     }
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2188,7 +2092,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -2199,26 +2103,24 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     var bai = new byte[4096];
                     var bao = new byte[bai.Length];
                     using var fbt = new FromBase64Transform();
                     int i;
-                    while ((i = si.Read(bai, 0, bai.Length)) > 0)
+                    while ((i = inputStream.Read(bai, 0, bai.Length)) > 0)
                     {
                         i = fbt.TransformBlock(bai, 0, i, bao, 0);
-                        so.Write(bao, 0, i);
+                        outputStream.Write(bao, 0, i);
                     }
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2267,7 +2169,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -2278,15 +2180,13 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int b;
                     var n = 0;
                     var t = 0u;
                     var p = 0;
-                    while ((b = si.ReadByte()) != -1)
+                    while ((b = inputStream.ReadByte()) != -1)
                     {
                         if (n + 1 < DecodeBlock.Length)
                         {
@@ -2296,7 +2196,7 @@ namespace SilDev
                         }
                         t |= (uint)b;
                         if (t == 0)
-                            WriteLine(so, 0x7a, lineLength, ref p);
+                            WriteLine(outputStream, 0x7a, lineLength, ref p);
                         else
                         {
                             for (var i = EncodeBlock.Length - 1; i >= 0; i--)
@@ -2305,7 +2205,7 @@ namespace SilDev
                                 t /= 85;
                             }
                             foreach (var eb in EncodeBlock)
-                                WriteLine(so, eb, lineLength, ref p);
+                                WriteLine(outputStream, eb, lineLength, ref p);
                         }
                         t = 0;
                         n = 0;
@@ -2318,14 +2218,14 @@ namespace SilDev
                         t /= 85;
                     }
                     for (var i = 0; i <= n; i++)
-                        WriteLine(so, EncodeBlock[i], lineLength, ref p);
+                        WriteLine(outputStream, EncodeBlock[i], lineLength, ref p);
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2353,7 +2253,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -2364,14 +2264,12 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int b;
                     var n = 0;
                     var t = 0u;
-                    while ((b = si.ReadByte()) != -1)
+                    while ((b = inputStream.ReadByte()) != -1)
                     {
                         if (b == 0x7a)
                         {
@@ -2379,7 +2277,7 @@ namespace SilDev
                                 throw new DecoderFallbackException(ExceptionMessages.FollowingCharCodeIsInvalid + 0x7a);
                             for (var i = 0; i < 4; i++)
                                 DecodeBlock[i] = 0;
-                            so.Write(DecodeBlock, 0, DecodeBlock.Length);
+                            outputStream.Write(DecodeBlock, 0, DecodeBlock.Length);
                             continue;
                         }
                         switch (b)
@@ -2392,7 +2290,7 @@ namespace SilDev
                             case 0xd:
                                 continue;
                         }
-                        if (b < 0x21 || b > 0x75)
+                        if (b is < 0x21 or > 0x75)
                             throw new DecoderFallbackException(ExceptionMessages.FollowingCharCodeIsInvalid + b);
                         t += (uint)((b - 33) * Pow85[n]);
                         n++;
@@ -2400,7 +2298,7 @@ namespace SilDev
                             continue;
                         for (var i = 0; i < DecodeBlock.Length; i++)
                             DecodeBlock[i] = (byte)(t >> (24 - i * 8));
-                        so.Write(DecodeBlock, 0, DecodeBlock.Length);
+                        outputStream.Write(DecodeBlock, 0, DecodeBlock.Length);
                         t = 0;
                         n = 0;
                     }
@@ -2416,14 +2314,14 @@ namespace SilDev
                     for (var i = 0; i < n; i++)
                         DecodeBlock[i] = (byte)(t >> (24 - i * 8));
                     for (var i = 0; i < n; i++)
-                        so.WriteByte(DecodeBlock[i]);
+                        outputStream.WriteByte(DecodeBlock[i]);
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2475,7 +2373,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -2486,14 +2384,12 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int b;
                     int[] ia = { 0, 0, 0 };
                     var p = 0;
-                    while ((b = si.ReadByte()) != -1)
+                    while ((b = inputStream.ReadByte()) != -1)
                     {
                         ia[0] |= b << ia[1];
                         ia[1] += 8;
@@ -2511,21 +2407,21 @@ namespace SilDev
                             ia[1] -= 14;
                             ia[0] >>= 14;
                         }
-                        WriteLine(so, CharacterTable91[ia[2] % 91], lineLength, ref p);
-                        WriteLine(so, CharacterTable91[ia[2] / 91], lineLength, ref p);
+                        WriteLine(outputStream, CharacterTable91[ia[2] % 91], lineLength, ref p);
+                        WriteLine(outputStream, CharacterTable91[ia[2] / 91], lineLength, ref p);
                     }
                     if (ia[1] == 0)
                         return;
-                    WriteLine(so, CharacterTable91[ia[0] % 91], lineLength, ref p);
+                    WriteLine(outputStream, CharacterTable91[ia[0] % 91], lineLength, ref p);
                     if (ia[1] >= 8 || ia[0] >= 91)
-                        WriteLine(so, CharacterTable91[ia[0] / 91], lineLength, ref p);
+                        WriteLine(outputStream, CharacterTable91[ia[0] / 91], lineLength, ref p);
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2553,7 +2449,7 @@ namespace SilDev
             ///     inputStream is not readable -or- outputStream is not writable.
             /// </exception>
             /// <exception cref="IOException">
-            ///     An I/O error occured, such as the specified file cannot be found.
+            ///     An I/O error occurred, such as the specified file cannot be found.
             /// </exception>
             /// <exception cref="ObjectDisposedException">
             ///     Methods were called after the inputStream or outputStream was closed.
@@ -2564,8 +2460,6 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(inputStream));
                 if (outputStream == null)
                     throw new ArgumentNullException(nameof(outputStream));
-                var si = inputStream;
-                var so = outputStream;
                 try
                 {
                     int b;
@@ -2575,7 +2469,7 @@ namespace SilDev
                         a91[i] = -1;
                     for (var i = 0; i < CharacterTable91.Length; i++)
                         a91[CharacterTable91[i]] = i;
-                    while ((b = si.ReadByte()) != -1)
+                    while ((b = inputStream.ReadByte()) != -1)
                     {
                         switch (b)
                         {
@@ -2599,7 +2493,7 @@ namespace SilDev
                         ia[3] += (ia[1] & 8191) > 88 ? 13 : 14;
                         do
                         {
-                            so.WriteByte((byte)(ia[2] & byte.MaxValue));
+                            outputStream.WriteByte((byte)(ia[2] & byte.MaxValue));
                             ia[2] >>= 8;
                             ia[3] -= 8;
                         }
@@ -2607,14 +2501,14 @@ namespace SilDev
                         ia[1] = -1;
                     }
                     if (ia[1] != -1)
-                        so.WriteByte((byte)((ia[2] | (ia[1] << ia[3])) & byte.MaxValue));
+                        outputStream.WriteByte((byte)((ia[2] | (ia[1] << ia[3])) & byte.MaxValue));
                 }
                 finally
                 {
                     if (dispose)
                     {
-                        si.Dispose();
-                        so.Dispose();
+                        inputStream.Dispose();
+                        outputStream.Dispose();
                     }
                 }
             }
@@ -2699,17 +2593,11 @@ namespace SilDev
             /// </param>
             public virtual bool Equals(Checksum other)
             {
-                if (!(RawHash is byte[] ba1))
+                if (RawHash is not byte[] ba1)
                     return other?.RawHash == null;
-                if (!(other?.RawHash is byte[] ba2) || ba1.Length != ba2.Length)
+                if (other?.RawHash is not byte[] ba2 || ba1.Length != ba2.Length)
                     return false;
-                for (var i = 0; i < ba2.Length; i++)
-                {
-                    if (ba1[i] == ba2[i])
-                        continue;
-                    return false;
-                }
-                return true;
+                return !ba2.Where((b, i) => ba1[i] != b).Any();
             }
 
             /// <summary>
@@ -2719,12 +2607,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is Checksum item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is Checksum item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -2738,7 +2622,7 @@ namespace SilDev
             /// </summary>
             public override string ToString()
             {
-                if (!(RawHash is byte[] ba))
+                if (RawHash is not byte[] ba)
                     return string.Empty;
                 var sb = new StringBuilder(ba.Length * 2);
                 foreach (var b in ba)
@@ -2904,6 +2788,7 @@ namespace SilDev
             /// <exception cref="ArgumentNullException">
             ///     stream is null.
             /// </exception>
+            [SuppressMessage("ReSharper", "ShiftExpressionResultEqualsZero")]
             public override void Encrypt(Stream stream)
             {
                 if (stream == null)
@@ -2938,12 +2823,8 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="Checksum"/> instance to compare.
             /// </param>
-            public override bool Equals(Checksum other)
-            {
-                if (!(other is Adler32 adler32))
-                    return false;
-                return RawHash == adler32.RawHash;
-            }
+            public override bool Equals(Checksum other) =>
+                other is Adler32 adler32 && RawHash == adler32.RawHash;
 
             /// <summary>
             ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
@@ -3063,12 +2944,8 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="Checksum"/> instance to compare.
             /// </param>
-            public override bool Equals(Checksum other)
-            {
-                if (!(other is Crc16 crc16))
-                    return false;
-                return RawHash == crc16.RawHash;
-            }
+            public override bool Equals(Checksum other) =>
+                other is Crc16 crc16 && RawHash == crc16.RawHash;
 
             /// <summary>
             ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
@@ -3218,12 +3095,8 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="Checksum"/> instance to compare.
             /// </param>
-            public override bool Equals(Checksum other)
-            {
-                if (!(other is Crc32 crc32))
-                    return false;
-                return RawHash == crc32.RawHash;
-            }
+            public override bool Equals(Checksum other) =>
+                other is Crc32 crc32 && RawHash == crc32.RawHash;
 
             /// <summary>
             ///     Converts the <see cref="RawHash"/> of this instance to its equivalent
@@ -3360,12 +3233,8 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="Checksum"/> instance to compare.
             /// </param>
-            public override bool Equals(Checksum other)
-            {
-                if (!(other is Crc64 crc64))
-                    return false;
-                return RawHash == crc64.RawHash;
-            }
+            public override bool Equals(Checksum other) =>
+                other is Crc64 crc64 && RawHash == crc64.RawHash;
 
             /// <summary>
             ///     Converts the <see cref="RawHash"/> of this instance to its equivalent

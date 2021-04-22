@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2020-01-27 21:33
+// Version:  2021-04-22 19:47
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -5963,12 +5963,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is AppBarData item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is AppBarData item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6060,12 +6056,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is CallWndProcRet item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is CallWndProcRet item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6153,12 +6145,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is CopyData item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is CopyData item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6243,12 +6231,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is DeviceInput item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is DeviceInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6317,12 +6301,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is LuId item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is LuId item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6393,12 +6373,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is LuIdAndAttributes item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is LuIdAndAttributes item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6505,12 +6481,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is MouseInput item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is MouseInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6584,12 +6556,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is MouseKeyboardHardwareInput item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is MouseKeyboardHardwareInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6681,12 +6649,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is ProcessBasicInformation item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is ProcessBasicInformation item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6768,12 +6732,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is ThemeMargins item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is ThemeMargins item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6858,12 +6818,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is TokenPrivileges item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is TokenPrivileges item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -6966,12 +6922,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is WindowPlacement item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is WindowPlacement item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
@@ -7041,12 +6993,8 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other)
-            {
-                if (!(other is WindowThemeAttributeOptions item))
-                    return false;
-                return Equals(item);
-            }
+            public override bool Equals(object other) =>
+                other is WindowThemeAttributeOptions item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.

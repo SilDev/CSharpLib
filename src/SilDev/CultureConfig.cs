@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: CultureConfig.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -25,10 +25,10 @@ namespace SilDev
     /// </summary>
     public static class CultureConfig
     {
+        private static volatile object _syncObject;
         private static volatile CultureInfo _globalCultureInfo = CultureInfo.InvariantCulture;
         private static volatile StringComparison _globalStringComparison = StringComparison.Ordinal;
         private static volatile StringComparison _globalStringComparisonIgnoreCase = StringComparison.OrdinalIgnoreCase;
-        private static volatile object _syncObject;
 
         /// <summary>
         ///     Gets or sets the default <see cref="CultureInfo"/> object value.

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2020-01-20 20:30
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -69,7 +69,7 @@ namespace SilDev.Forms
     /// </summary>
     public static class ContextMenuStripEx
     {
-        private static HashSet<int> HashList { get; } = new HashSet<int>();
+        private static HashSet<int> HashList { get; } = new();
 
         /// <summary>
         ///     Closes this <see cref="ContextMenuStrip"/> when the mouse cursor leaves it.
@@ -82,7 +82,7 @@ namespace SilDev.Forms
         /// </param>
         public static void CloseOnMouseLeave(this ContextMenuStrip contextMenuStrip, int toleration = 0)
         {
-            if (!(contextMenuStrip is { } cms))
+            if (contextMenuStrip is not { } cms)
                 return;
 
             var hash = cms.GetHashCode() + nameof(CloseOnMouseLeave).GetHashCode();
@@ -138,7 +138,7 @@ namespace SilDev.Forms
         /// </param>
         public static void EnableAnimation(this ContextMenuStrip contextMenuStrip, ContextMenuStripExAnimation animation = ContextMenuStripExAnimation.Default, int time = 200)
         {
-            if (!(contextMenuStrip is { } cms))
+            if (contextMenuStrip is not { } cms)
                 return;
 
             var hash = cms.GetHashCode() + nameof(EnableAnimation).GetHashCode();
@@ -158,7 +158,7 @@ namespace SilDev.Forms
 
             void OnTick(object sender, EventArgs e)
             {
-                if (!(sender is Timer owner))
+                if (sender is not Timer owner)
                     return;
                 if (cms.Opacity < 1d)
                 {
@@ -171,7 +171,7 @@ namespace SilDev.Forms
 
             void OnOpening(object sender, CancelEventArgs e)
             {
-                if (!(sender is ContextMenuStrip owner) || e.Cancel)
+                if (sender is not ContextMenuStrip owner || e.Cancel)
                     return;
                 if (animation != ContextMenuStripExAnimation.Default)
                 {
@@ -200,7 +200,7 @@ namespace SilDev.Forms
         /// </param>
         public static void SetFixedSingle(this ContextMenuStrip contextMenuStrip, Color? borderColor = null)
         {
-            if (!(contextMenuStrip is { } cms))
+            if (contextMenuStrip is not { } cms)
                 return;
 
             var hash = cms.GetHashCode() + nameof(SetFixedSingle).GetHashCode();

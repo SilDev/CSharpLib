@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -380,14 +380,14 @@ namespace SilDev.Network
                     request.Timeout = timeout;
                 using (var response = (HttpWebResponse)request.GetResponse())
                     statusCode = (int)response.StatusCode;
-                if (statusCode >= 500 && statusCode <= 510)
+                if (statusCode is >= 500 and <= 510)
                     throw new HttpListenerException();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
             }
-            return statusCode >= 100 && statusCode < 400;
+            return statusCode is >= 100 and < 400;
         }
 
         /// <summary>

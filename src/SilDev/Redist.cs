@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Redist.cs
-// Version:  2020-01-28 00:09
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -143,7 +143,7 @@ namespace SilDev
                     "ProductName"
                 };
                 var names = Reg.GetSubKeyTree(Registry.LocalMachine, "SOFTWARE\\Classes\\Installer", 3000)
-                               .SelectMany(x => entries, (x, y) => Reg.ReadString(Registry.LocalMachine, x, y))
+                               .SelectMany(_ => entries, (x, y) => Reg.ReadString(Registry.LocalMachine, x, y))
                                .Where(x => x.StartsWithEx("Microsoft Visual C++"))
                                .OrderBy(x => x, comparer);
                 _displayNames = names.ToArray();
@@ -166,8 +166,10 @@ namespace SilDev
         {
             try
             {
-                keys = Enum.GetValues(typeof(RedistFlags)).Cast<RedistFlags>().SelectMany(item => keys, (item, key) => new { item, key })
-                           .Where(type => (type.item & type.key) != 0).Select(type => type.item).ToArray();
+                keys = Enum.GetValues(typeof(RedistFlags)).Cast<RedistFlags>()
+                           .SelectMany(_ => keys, (item, key) => (item, key))
+                           .Where(type => (type.item & type.key) != 0)
+                           .Select(type => type.item).ToArray();
                 var result = false;
                 var names = GetDisplayNames();
                 foreach (var key in keys.Select(x => x.ToString()))
@@ -175,19 +177,23 @@ namespace SilDev
                     var year = key.Substring(2, 4);
                     var arch = key.Substring(6);
                     Recheck:
-                    switch (year)
+                    result = year switch
                     {
-                        case "2005":
-                            result = names.Any(x => x.Contains(year) && (arch.EqualsEx("x64") && x.ContainsEx(arch) || !x.ContainsEx("x64")));
-                            break;
-                        default:
-                            result = names.Any(x => x.Contains(year) && x.ContainsEx(arch));
-                            break;
-                    }
+                        "2005" => names.Any(x => x.Contains(year) && (arch.EqualsEx("x64") && x.ContainsEx(arch) || !x.ContainsEx("x64"))),
+                        _ => names.Any(x => x.Contains(year) && x.ContainsEx(arch)),
+                    };
                     if (result)
                         continue;
                     switch (year)
                     {
+                        case "2005":
+                        case "2008":
+                        case "2010":
+                        case "2012":
+                        case "2013":
+                            break;
+
+                        // I know, I know... GOTO is evil shit! 
                         case "2015":
                             year = "2017";
                             goto Recheck;

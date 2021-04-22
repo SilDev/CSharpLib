@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconFactory.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -173,12 +173,12 @@ namespace SilDev.Drawing
                     img = bitmap;
                 }
                 if (!img.RawFormat.Guid.Equals(ImageFormat.Png.Guid))
-                    using (var ms = new MemoryStream())
-                    {
-                        img.Save(ms, ImageFormat.Png);
-                        ms.Position = 0;
-                        img = Image.FromStream(ms);
-                    }
+                {
+                    using var ms = new MemoryStream();
+                    img.Save(ms, ImageFormat.Png);
+                    ms.Position = 0;
+                    img = Image.FromStream(ms);
+                }
                 if (img.Width > MaxWidth || img.Height > MaxHeight)
                     img = img.Redraw(MaxWidth, MaxHeight);
                 else if (img.Width != img.Height)
@@ -354,10 +354,9 @@ namespace SilDev.Drawing
                 throw new ArgumentNullException(nameof(image));
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-            var img = default(Image);
+            var img = ImageCorrection(image);
             try
             {
-                img = ImageCorrection(image);
                 var size = Math.Max(img.Width, img.Height);
                 var sizes = GetSizes(option);
                 var images = sizes.Where(x => x <= size).Select(x => img.Redraw(x, x));
@@ -437,13 +436,9 @@ namespace SilDev.Drawing
 
         private static byte[] CreateBuffer(Image image)
         {
-            byte[] ba;
-            using (var ms = new MemoryStream())
-            {
-                image.Save(ms, image.RawFormat);
-                ba = ms.ToArray();
-            }
-            return ba;
+            using var ms = new MemoryStream();
+            image.Save(ms, image.RawFormat);
+            return ms.ToArray();
         }
 
         private static byte GetHeight(Image image) =>

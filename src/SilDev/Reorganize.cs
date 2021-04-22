@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2020-02-25 11:11
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -441,7 +441,7 @@ namespace SilDev
         ///     stream or bytes is null.
         /// </exception>
         /// <exception cref="IOException">
-        ///     An I/O error occured, such as the specified file cannot be found.
+        ///     An I/O error occurred, such as the specified file cannot be found.
         /// </exception>
         /// <exception cref="NotSupportedException">
         ///     The stream does not support writing.
@@ -475,7 +475,7 @@ namespace SilDev
         ///     stream is null.
         /// </exception>
         /// <exception cref="IOException">
-        ///     An I/O error occured, such as the specified file cannot be found.
+        ///     An I/O error occurred, such as the specified file cannot be found.
         /// </exception>
         /// <exception cref="NotSupportedException">
         ///     The stream does not support writing.
@@ -517,7 +517,7 @@ namespace SilDev
         ///     count is less than zero.
         /// </exception>
         /// <exception cref="IOException">
-        ///     An I/O error occured, such as the specified file cannot be found.
+        ///     An I/O error occurred, such as the specified file cannot be found.
         /// </exception>
         /// <exception cref="NotSupportedException">
         ///     The stream does not support writing.
@@ -551,7 +551,7 @@ namespace SilDev
         ///     stream or str is null.
         /// </exception>
         /// <exception cref="IOException">
-        ///     An I/O error occured, such as the specified file cannot be found.
+        ///     An I/O error occurred, such as the specified file cannot be found.
         /// </exception>
         /// <exception cref="NotSupportedException">
         ///     The stream does not support writing.
@@ -585,7 +585,7 @@ namespace SilDev
         ///     stream or bytes is null.
         /// </exception>
         /// <exception cref="IOException">
-        ///     An I/O error occured, such as the specified file cannot be found.
+        ///     An I/O error occurred, such as the specified file cannot be found.
         /// </exception>
         /// <exception cref="NotSupportedException">
         ///     The stream does not support writing.
@@ -619,14 +619,10 @@ namespace SilDev
         {
             try
             {
-                byte[] ba;
-                using (var ms = new MemoryStream())
-                {
-                    var bf = new BinaryFormatter(null, new StreamingContext(state));
-                    bf.Serialize(ms, src);
-                    ba = ms.ToArray();
-                }
-                return ba;
+                using var ms = new MemoryStream();
+                var bf = new BinaryFormatter(null, new StreamingContext(state));
+                bf.Serialize(ms, src);
+                return ms.ToArray();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -656,15 +652,11 @@ namespace SilDev
             {
                 if (bytes == null)
                     throw new ArgumentNullException(nameof(bytes));
-                object obj;
-                using (var ms = new MemoryStream())
-                {
-                    var bf = new BinaryFormatter(null, new StreamingContext(state));
-                    ms.Write(bytes, 0, bytes.Length);
-                    ms.Seek(0, SeekOrigin.Begin);
-                    obj = bf.Deserialize(ms);
-                }
-                return (TResult)obj;
+                using var ms = new MemoryStream();
+                var bf = new BinaryFormatter(null, new StreamingContext(state));
+                ms.Write(bytes, 0, bytes.Length);
+                ms.Seek(0, SeekOrigin.Begin);
+                return (TResult)bf.Deserialize(ms);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -852,8 +844,7 @@ namespace SilDev
                 return null;
             if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(oldValue))
                 return str;
-            if (newValue == null)
-                newValue = string.Empty;
+            newValue ??= string.Empty;
             string s;
             var q = new Queue<string>();
             q.Enqueue(str);
@@ -990,7 +981,7 @@ namespace SilDev
                     return result > 0L;
                 case string str when decimal.TryParse(str, out var result):
                     return result > 0m;
-                case string _:
+                case string:
                     return default;
                 default:
                     var comparer = Comparer<TSource>.Default;
@@ -1009,7 +1000,7 @@ namespace SilDev
         ///     The source to convert.
         /// </param>
         public static bool ToBoolean<TSource>(this TSource? src) where TSource : struct, IComparable, IConvertible =>
-            src == null ? default : ToBoolean((TSource)src);
+            src != null && ToBoolean((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to its equivalent Unicode character.
@@ -1021,20 +1012,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static char ToChar<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static char ToChar<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when char.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToChar(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when char.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToChar(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to its equivalent Unicode character.
@@ -1059,20 +1044,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static sbyte ToSByte<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static sbyte ToSByte<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when sbyte.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToSByte(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when sbyte.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToSByte(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 8-bit signed integer, using the
@@ -1097,20 +1076,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static byte ToByte<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static byte ToByte<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when byte.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToByte(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when byte.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToByte(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 8-bit unsigned integer, using the
@@ -1135,20 +1108,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static short ToInt16<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static short ToInt16<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when short.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToInt16(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when short.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToInt16(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 16-bit signed integer, using the
@@ -1173,20 +1140,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static ushort ToUInt16<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static ushort ToUInt16<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when ushort.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToUInt16(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when ushort.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToUInt16(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 16-bit unsigned integer, using the
@@ -1211,20 +1172,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static int ToInt32<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static int ToInt32<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when int.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToInt32(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when int.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToInt32(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 32-bit signed integer, using the
@@ -1249,20 +1204,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static uint ToUInt32<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static uint ToUInt32<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when uint.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToUInt32(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when uint.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToUInt32(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 32-bit unsigned integer, using the
@@ -1287,20 +1236,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static long ToInt64<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static long ToInt64<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when long.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToInt64(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when long.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToInt64(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 64-bit signed integer, using the
@@ -1325,20 +1268,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static ulong ToUInt64<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static ulong ToUInt64<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when ulong.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToUInt64(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when ulong.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToUInt64(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to a 64-bit unsigned integer, using the
@@ -1364,20 +1301,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static float ToSingle<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static float ToSingle<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when float.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToSingle(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when float.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToSingle(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to an single-precision floating-point
@@ -1404,20 +1335,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static double ToDouble<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static double ToDouble<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when double.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToDouble(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when double.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToDouble(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to an double-precision floating-point
@@ -1443,20 +1368,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static decimal ToDecimal<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static decimal ToDecimal<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when decimal.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToDecimal(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when decimal.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToDecimal(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to an equivalent decimal number, using
@@ -1482,20 +1401,14 @@ namespace SilDev
         /// <param name="src">
         ///     The source to convert.
         /// </param>
-        public static DateTime ToDateTime<TSource>(this TSource src) where TSource : IConvertible
-        {
-            switch (src)
+        public static DateTime ToDateTime<TSource>(this TSource src) where TSource : IConvertible =>
+            src switch
             {
-                case null:
-                    return default;
-                case string str when DateTime.TryParse(str, out var result):
-                    return result;
-                case string _:
-                    return default;
-                default:
-                    return Convert.ToDateTime(src, CultureInfo.CurrentCulture);
-            }
-        }
+                null => default,
+                string str when DateTime.TryParse(str, out var result) => result,
+                string => default,
+                _ => Convert.ToDateTime(src, CultureInfo.CurrentCulture)
+            };
 
         /// <summary>
         ///     Converts the value of this element to an equivalent <see cref="DateTime"/>
@@ -1674,7 +1587,7 @@ namespace SilDev
                 return new[] { str };
             var i = 0;
             var b = Math.Floor(Math.Log(str.Length));
-            return str.ToLookup(c => Math.Floor(i++ / b)).Select(e => new string(e.ToArray())).ToArray();
+            return str.ToLookup(_ => Math.Floor(i++ / b)).Select(e => new string(e.ToArray())).ToArray();
         }
 
         /// <summary>
@@ -2077,23 +1990,19 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(bytes));
                 if (oldValue == null || oldValue.Length == 0)
                     throw new ArgumentNullException(nameof(oldValue));
-                byte[] ba;
-                using (var ms = new MemoryStream())
-                {
-                    int i;
-                    for (i = 0; i <= bytes.Length - oldValue.Length; i++)
-                        if (!oldValue.Where((t, j) => bytes[i + j] != t).Any())
-                        {
-                            ms.WriteBytes(newValue);
-                            i += oldValue.Length - 1;
-                        }
-                        else
-                            ms.WriteByte(bytes[i]);
-                    for (; i < bytes.Length; i++)
+                using var ms = new MemoryStream();
+                int i;
+                for (i = 0; i <= bytes.Length - oldValue.Length; i++)
+                    if (!oldValue.Where((t, j) => bytes[i + j] != t).Any())
+                    {
+                        ms.WriteBytes(newValue);
+                        i += oldValue.Length - 1;
+                    }
+                    else
                         ms.WriteByte(bytes[i]);
-                    ba = ms.ToArray();
-                }
-                return ba;
+                for (; i < bytes.Length; i++)
+                    ms.WriteByte(bytes[i]);
+                return ms.ToArray();
             }
             catch (Exception ex) when (ex.IsCaught())
             {

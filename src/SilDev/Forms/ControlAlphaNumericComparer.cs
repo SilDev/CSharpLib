@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ControlAlphaNumericComparer.cs
-// Version:  2020-01-27 23:28
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -44,11 +44,7 @@ namespace SilDev.Forms
         /// <param name="value">
         ///     The object to compare.
         /// </param>
-        public override string GetString(object value)
-        {
-            if (!(value is Control ctrl))
-                return null;
-            return ctrl.Text;
-        }
+        public override string GetString(object value) =>
+            value is not Control ctrl ? null : ctrl.Text;
     }
 }

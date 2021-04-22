@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ValueItem.cs
-// Version:  2020-01-24 20:10
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -252,7 +252,7 @@ namespace SilDev.Investment
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append("{");
+            builder.Append('{');
             var current = this;
             var properties = current.GetType().GetProperties();
             var first = false;
@@ -270,7 +270,7 @@ namespace SilDev.Investment
                     first = true;
                 builder.AppendFormatCurrent("{0}={1}", name, value);
             }
-            builder.Append("}");
+            builder.Append('}');
             return builder.ToStringThenClear();
         }
 

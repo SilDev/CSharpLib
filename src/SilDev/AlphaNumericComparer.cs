@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: AlphaNumericComparer.cs
-// Version:  2020-01-27 23:27
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -163,7 +163,7 @@ namespace SilDev
         /// </param>
         public new virtual bool Equals(object other)
         {
-            if (!(other is AlphaNumericComparer comparer))
+            if (other is not AlphaNumericComparer comparer)
                 return false;
             return Descendant != comparer.Descendant;
         }
@@ -172,7 +172,7 @@ namespace SilDev
         ///     Returns the hash code for this instance.
         /// </summary>
         public new virtual int GetHashCode() =>
-            typeof(AlphaNumericComparer).Name.GetHashCode();
+            nameof(AlphaNumericComparer).GetHashCode();
 
         private static string GetChunk(string str, ref int i)
         {
@@ -252,7 +252,7 @@ namespace SilDev
         /// </param>
         public new virtual bool Equals(object other)
         {
-            if (!(other is AlphaNumericComparer<T> comparer))
+            if (other is not AlphaNumericComparer<T> comparer)
                 return false;
             return Descendant != comparer.Descendant;
         }

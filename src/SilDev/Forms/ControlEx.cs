@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2020-01-20 20:30
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -75,7 +75,7 @@ namespace SilDev.Forms
         /// </param>
         public static bool LayoutIsSuspended(this Control control)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return false;
             try
             {
@@ -103,13 +103,13 @@ namespace SilDev.Forms
         /// </param>
         public static void EnableDragMove(Control control, bool cursor = true)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return;
             c.MouseDown += OnMouseDown;
 
             void OnMouseDown(object sender, MouseEventArgs e)
             {
-                if (!(sender is Control owner) || e == null || e.Button != MouseButtons.Left)
+                if (sender is not Control owner || e is not { Button: MouseButtons.Left })
                     return;
                 var ancestor = owner.GetAncestor();
                 if (ancestor == null)
@@ -137,7 +137,7 @@ namespace SilDev.Forms
         /// </param>
         public static void SetDoubleBuffer(this Control control, bool enable = true)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return;
             try
             {
@@ -182,7 +182,7 @@ namespace SilDev.Forms
         /// </param>
         public static void SetControlStyle(this Control control, ControlStyles controlStyles, bool enable = true)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return;
             try
             {
@@ -216,7 +216,7 @@ namespace SilDev.Forms
                 var parent = queue.Dequeue();
                 foreach (var child in parent.Controls.OfType<Control>())
                     queue.Enqueue(child);
-                if (!(parent is TControl obj))
+                if (parent is not TControl obj)
                     continue;
                 try
                 {
@@ -247,10 +247,10 @@ namespace SilDev.Forms
         /// </param>
         public static void SetChildVisibility(this Control control, bool visibility, params Control[] excludes)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return;
             var ctrls = c.Controls.OfType<Control>().Where(x => !excludes.Contains(x));
-            ctrls.Aggregate(visibility, (r, x) => x.Visible = r);
+            _ = ctrls.Aggregate(visibility, (r, x) => x.Visible = r);
         }
 
         /// <summary>
@@ -268,14 +268,14 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawBorder(Control control, Color color, ControlExBorderStyle style = ControlExBorderStyle.Solid)
         {
-            if (!(control is { } c))
+            if (control is not { } c)
                 return;
             c.Paint += OnPaint;
             c.Resize += OnResize;
 
             void OnPaint(object sender, PaintEventArgs e)
             {
-                if (!(sender is Control owner) || e == null)
+                if (sender is not Control owner || e == null)
                     return;
                 ControlPaint.DrawBorder(e.Graphics, owner.ClientRectangle, color, (ButtonBorderStyle)style);
             }
@@ -311,13 +311,11 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawSizeGrip(Control control, Color? color = null, MouseEventHandler mouseDownEvent = null, EventHandler mouseEnterEvent = null)
         {
-            if (!(control is { } c) || !(Resources.SizeGripImage is Image i))
+            if (control is not { } c || Resources.SizeGripImage is not Image i)
                 return;
             if (color.HasValue && color != Color.White)
                 i = i.RecolorPixels(Color.White, (Color)color);
-            var meh = mouseDownEvent;
-            var mev = mouseEnterEvent;
-            var pb = new PictureBoxNonClickable(meh != null && mev != null)
+            var pb = new PictureBoxNonClickable(mouseDownEvent != null && mouseEnterEvent != null)
             {
                 Anchor = AnchorStyles.Bottom | AnchorStyles.Right,
                 BackColor = Color.Transparent,
@@ -326,10 +324,10 @@ namespace SilDev.Forms
                 Location = new Point(c.Right - 12, c.Bottom - 12),
                 Size = new Size(12, 12)
             };
-            if (meh != null)
-                pb.MouseDown += meh;
-            if (mev != null)
-                pb.MouseEnter += mev;
+            if (mouseDownEvent != null)
+                pb.MouseDown += mouseDownEvent;
+            if (mouseEnterEvent != null)
+                pb.MouseEnter += mouseEnterEvent;
             c.Controls.Add(pb);
             if (!c.LayoutIsSuspended())
                 c.Update();

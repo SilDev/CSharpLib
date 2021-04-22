@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2020-01-19 15:31
+// Version:  2021-04-22 19:47
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -130,7 +130,7 @@ namespace SilDev
     /// </summary>
     public static class TaskBar
     {
-        internal static ComImports.TaskbarInstance TaskBarInstance => new ComImports.TaskbarInstance();
+        internal static ComImports.TaskbarInstance TaskBarInstance => new();
 
         /// <summary>
         ///     Returns the current <see cref="TaskBarState"/> of the taskbar.

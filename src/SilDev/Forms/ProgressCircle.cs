@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProgressCircle.cs
-// Version:  2020-01-24 20:58
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -204,7 +204,7 @@ namespace SilDev.Forms
         ///     The custom-sized area for a control.
         /// </param>
         public override Size GetPreferredSize(Size size) =>
-            new Size(size.Width = (_outerRadius + _thickness) * 2, size.Height);
+            new(size.Width = (_outerRadius + _thickness) * 2, size.Height);
 
         /// <summary>
         ///     Raises the <see cref="Control"/>.Paint event.

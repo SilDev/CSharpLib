@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -215,8 +215,7 @@ namespace SilDev.Drawing
         /// </param>
         public static Color GetRandomColor(int seed = -1)
         {
-            if (_randomInvestor == default(RandomInvestor))
-                _randomInvestor = new RandomInvestor();
+            _randomInvestor ??= new RandomInvestor();
             var random = _randomInvestor.GetGenerator(seed);
             var buffer = new byte[3];
             random.NextBytes(buffer);
@@ -230,8 +229,7 @@ namespace SilDev.Drawing
         /// </param>
         public static Color GetRandomKnownColor(int seed = -1)
         {
-            if (_randomInvestor == default(RandomInvestor))
-                _randomInvestor = new RandomInvestor();
+            _randomInvestor ??= new RandomInvestor();
             var random = _randomInvestor.GetGenerator(seed);
             var names = Enum.GetValues(typeof(KnownColor)).Cast<KnownColor>().ToArray();
             return Color.FromKnownColor(names.Just(random.Next(names.Length)));
@@ -389,7 +387,7 @@ namespace SilDev.Drawing
         ///     The <see cref="Color"/> structure to translate.
         /// </param>
         public static int ToRgb(this Color color) =>
-            (int)(((color.R << 16) | (color.G << 8) | color.B | (0 << 24)) & 0xffffffL);
+            (int)(((color.R << 16) | (color.G << 8) | color.B | 0) & 0xffffffL);
 
         /// <summary>
         ///     Copies the elements of the 32-bit ARGB value of this <see cref="Color"/>

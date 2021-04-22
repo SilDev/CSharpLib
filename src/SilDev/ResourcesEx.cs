@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2021-04-22 19:47
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -86,7 +86,6 @@ namespace SilDev
         RichTextFile = 85,
         Error = 93,
         Help = 94,
-        Question = 94,
         Run = 95,
         Screensaver = 96,
         HelpShield = 99,

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MessageBoxButtonText.cs
-// Version:  2020-01-24 20:11
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -105,12 +105,8 @@ namespace SilDev.Forms
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override bool Equals(object other)
-        {
-            if (!(other is MessageBoxButtonText item))
-                return false;
-            return Equals(item);
-        }
+        public override bool Equals(object other) =>
+            other is MessageBoxButtonText item && Equals(item);
 
         /// <summary>
         ///     Returns the hash code for this instance.

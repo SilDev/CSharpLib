@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2020-01-28 20:16
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -49,8 +49,8 @@ namespace SilDev
             var isCollection = false;
             switch (element)
             {
-                case ICollection _:
-                    isCollection = !(element is Array);
+                case ICollection:
+                    isCollection = element is not Array;
                     break;
                 case IDisposable disposable:
                     disposable.Dispose();
@@ -117,7 +117,7 @@ namespace SilDev
     /// </summary>
     public class ProcessMemory : IDisposable
     {
-        private readonly ArrayList _allocations = new ArrayList();
+        private readonly ArrayList _allocations = new();
         private readonly IntPtr _hProcess;
 
         /// <summary>

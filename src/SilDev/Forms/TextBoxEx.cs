@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2020-01-13 13:04
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -37,13 +37,12 @@ namespace SilDev.Forms
         /// </param>
         public static void DrawSearchSymbol(this TextBox textBox, Color? color = null)
         {
-            if (!(textBox is { } tb))
+            if (textBox is not { } tb)
                 return;
             var img = ImageEx.DefaultSearchSymbol;
             if (img == null)
                 return;
-            if (color == null)
-                color = tb.ForeColor;
+            color ??= tb.ForeColor;
             if (color != Color.White)
                 img = img.RecolorPixels(Color.White, (Color)color);
             var panel = new Panel
@@ -94,7 +93,7 @@ namespace SilDev.Forms
         /// </param>
         public static void AutoVerticalScrollBar(this TextBox textBox)
         {
-            if (!(textBox is { } tb))
+            if (textBox is not { } tb)
                 return;
             tb.SizeChanged -= SetVerticalScrollBars;
             tb.SizeChanged += SetVerticalScrollBars;
@@ -106,7 +105,7 @@ namespace SilDev.Forms
 
         private static void SetVerticalScrollBars(object sender, EventArgs e)
         {
-            if (!(sender is TextBox tb) || !tb.Enabled || !tb.Visible || !tb.WordWrap || tb.Width < SystemInformation.VerticalScrollBarWidth * 2 || tb.Width < SystemInformation.HorizontalScrollBarHeight * 2)
+            if (sender is not TextBox { Enabled: true, Visible: true, WordWrap: true } tb || tb.Width < SystemInformation.VerticalScrollBarWidth * 2 || tb.Width < SystemInformation.HorizontalScrollBarHeight * 2)
                 return;
             var rect = TextRenderer.MeasureText(tb.Text, tb.Font, new Size(tb.Width, int.MaxValue), TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl);
             tb.ScrollBars = rect.Height > tb.Height - 8 ? ScrollBars.Vertical : ScrollBars.None;

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2020-02-04 19:31
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -40,6 +40,7 @@ namespace SilDev
     public static class Log
     {
         private const string DateTimeFormat = @"yyyy-MM-dd HH:mm:ss,fff zzz";
+        private static volatile object _syncObject;
 
         private static volatile bool _catchUnhandled = true,
                                      _conIsAllocated,
@@ -55,7 +56,6 @@ namespace SilDev
 
         private static volatile FileStream _fileStream;
         private static volatile StreamWriter _streamWriter;
-        private static volatile object _syncObject;
         private static readonly AssemblyName AssemblyEntryName = Assembly.GetEntryAssembly()?.GetName();
         private static readonly string AssemblyName = AssemblyEntryName?.Name;
         private static readonly Version AssemblyVersion = AssemblyEntryName?.Version;
@@ -321,7 +321,7 @@ namespace SilDev
             if (CatchUnhandled)
             {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-                Application.ThreadException += (s, e) => Write(e.Exception, true, true);
+                Application.ThreadException += (_, e) => Write(e.Exception, true, true);
                 AppDomain.CurrentDomain.UnhandledException += (s, e) =>
                 {
                     var builder = new StringBuilder();
@@ -332,7 +332,7 @@ namespace SilDev
                     builder.Append(';');
                     WriteUnhandled(new ApplicationException(builder.ToStringThenClear()));
                 };
-                AppDomain.CurrentDomain.ProcessExit += (s, e) => OnProcessExit();
+                AppDomain.CurrentDomain.ProcessExit += (_, _) => OnProcessExit();
             }
             if (DebugMode < 1)
                 return;

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -32,9 +32,9 @@ namespace SilDev.Forms
     /// </summary>
     public sealed class IconBrowserDialog : Form
     {
+        private static object _syncObject;
         private static string _filePath;
         private static IntPtr[] _iconPointers;
-        private static object _syncObject;
         private readonly Button _button;
         private readonly Panel _buttonPanel;
         private readonly IContainer _components;
@@ -162,7 +162,7 @@ namespace SilDev.Forms
                 Name = "panel",
                 TabIndex = 0
             };
-            _panel.Scroll += (s, e) => (s as Panel)?.Update();
+            _panel.Scroll += (s, _) => (s as Panel)?.Update();
             _tableLayoutPanel.Controls.Add(_panel, 0, 0);
             _innerTableLayoutPanel = new TableLayoutPanel
             {
@@ -227,9 +227,9 @@ namespace SilDev.Forms
                 Interval = 1
             };
             _timer.Tick += Timer_Tick;
-            ResizeBegin += (sender, args) => _isResizing = true;
-            ResizeEnd += (sender, args) => _isResizing = false;
-            Shown += (sender, args) => TaskBarProgress.SetState(Handle, TaskBarProgressState.Indeterminate);
+            ResizeBegin += (_, _) => _isResizing = true;
+            ResizeEnd += (_, _) => _isResizing = false;
+            Shown += (_, _) => TaskBarProgress.SetState(Handle, TaskBarProgressState.Indeterminate);
             ResumeLayout(false);
             PerformLayout();
             var curPath = PathEx.Combine(path);
@@ -275,7 +275,7 @@ namespace SilDev.Forms
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!(sender is TextBox textBox))
+            if (sender is not TextBox textBox)
                 return;
             var path = PathEx.Combine(textBox.Text);
             if (string.IsNullOrWhiteSpace(path) || _path == path || !File.Exists(path) || ResourcesEx.GetIconFromFile(path, 0, true) == null)
@@ -309,7 +309,7 @@ namespace SilDev.Forms
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (_isResizing || !(sender is Timer timer))
+            if (_isResizing || sender is not Timer timer)
                 return;
             lock (SyncObject)
             {
@@ -434,7 +434,7 @@ namespace SilDev.Forms
 
             private void Button_Click(object sender, EventArgs e)
             {
-                if (!(ParentForm is IconBrowserDialog dialog))
+                if (ParentForm is not IconBrowserDialog dialog)
                     return;
                 if (int.TryParse(_button.Text, out var index))
                 {

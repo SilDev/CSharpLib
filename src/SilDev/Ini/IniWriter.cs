@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IniWriter.cs
-// Version:  2020-02-03 20:22
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -127,8 +127,8 @@ namespace SilDev.Ini
                     throw new ArgumentNullException(nameof(destFile));
                 if (!PathEx.IsValidPath(path))
                     throw new ArgumentInvalidException(nameof(destFile));
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
-                    WriteTo(source, fs);
+                using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read);
+                WriteTo(source, fs);
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())

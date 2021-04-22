@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2020-01-20 20:35
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -56,9 +56,9 @@ namespace SilDev.Forms
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
-            form.ResizeEnd += (sender, e) =>
+            form.ResizeEnd += (sender, _) =>
             {
-                if (!(sender is Form f))
+                if (sender is not Form f)
                     return;
                 WinApi.NativeHelper.MoveWindowToVisibleScreenArea(f.Handle);
                 f.Update();
@@ -100,7 +100,7 @@ namespace SilDev.Forms
 
             void OnTick(object sender, EventArgs e)
             {
-                if (!(sender is Timer owner))
+                if (sender is not Timer owner)
                     return;
                 if (form.Opacity < maxOpacity)
                 {
@@ -155,7 +155,7 @@ namespace SilDev.Forms
             }
             if (!settings.HasFlag(FormExPlusSettings.FadeIn))
                 return form;
-            form.Shown += (sender, e) => FadeIn(form);
+            form.Shown += (_, _) => FadeIn(form);
             return form;
         }
     }

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2020-01-28 00:09
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -45,8 +45,7 @@ namespace SilDev.Investment
         {
             get
             {
-                if (_itemDictionary == default)
-                    _itemDictionary = new Dictionary<string, object>(StringComparer.InvariantCulture);
+                _itemDictionary ??= new Dictionary<string, object>(StringComparer.InvariantCulture);
                 return (IReadOnlyDictionary<string, object>)_itemDictionary;
             }
             private set => _itemDictionary = value as Dictionary<string, object>;

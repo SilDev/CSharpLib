@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PanelFakeProgressBar.cs
-// Version:  2020-01-24 20:58
+// Version:  2021-04-22 19:45
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -62,12 +62,10 @@ namespace SilDev.Forms
             var color = CompleteForeColor;
             if (CompleteForeColor == default)
                 color = Color.FromArgb(byte.MaxValue - (byte)(value * (byte.MaxValue / (float)maxValue)), byte.MaxValue, value);
-            using (var g = panel.CreateGraphics())
-            {
-                var width = value > 0 && value < maxValue ? (int)Math.Round(panel.Width / (double)maxValue * value, MidpointRounding.AwayFromZero) : panel.Width;
-                using var b = new SolidBrush(value > 0 ? color : panel.BackColor);
-                g.FillRectangle(b, 0, 0, width, panel.Height);
-            }
+            using var g = panel.CreateGraphics();
+            var width = value > 0 && value < maxValue ? (int)Math.Round(panel.Width / (double)maxValue * value, MidpointRounding.AwayFromZero) : panel.Width;
+            using var b = new SolidBrush(value > 0 ? color : panel.BackColor);
+            g.FillRectangle(b, 0, 0, width, panel.Height);
             return color;
         }
 

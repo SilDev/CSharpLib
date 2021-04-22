@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: CmdExec.cs
-// Version:  2020-01-13 15:17
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -192,7 +192,7 @@ namespace SilDev
 #else
                 var path = ComSpec.DefaultPath;
 #endif
-                using (var p = new Process
+                using var p = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
@@ -203,15 +203,13 @@ namespace SilDev
                         UseShellExecute = false,
                         Verb = Elevation.IsAdministrator ? "runas" : string.Empty
                     }
-                })
-                {
-                    p.Start();
-                    foreach (var s in commands)
-                        p.StandardInput.WriteLine(s);
-                    p.StandardInput.Flush();
-                    p.StandardInput.Close();
-                    Console.WriteLine(p.StandardOutput.ReadToEnd());
-                }
+                };
+                p.Start();
+                foreach (var s in commands)
+                    p.StandardInput.WriteLine(s);
+                p.StandardInput.Flush();
+                p.StandardInput.Close();
+                Console.WriteLine(p.StandardOutput.ReadToEnd());
                 return true;
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -246,16 +244,12 @@ namespace SilDev
             if (!PathEx.DirOrFileExists(src))
                 return false;
             var dest = PathEx.Combine(destPath);
-            int exitCode;
-            using (var p = Send($"COPY /Y \"{src}\" \"{dest}\"", runAsAdmin, false))
-            {
-                if (!wait)
-                    return true;
-                if (p?.HasExited ?? false)
-                    p.WaitForExit();
-                exitCode = p?.ExitCode ?? 1;
-            }
-            return exitCode == 0;
+            using var p = Send($"COPY /Y \"{src}\" \"{dest}\"", runAsAdmin, false);
+            if (!wait)
+                return true;
+            if (p?.HasExited ?? false)
+                p.WaitForExit();
+            return (p?.ExitCode ?? 1) == 0;
         }
 
         /// <summary>
@@ -279,16 +273,12 @@ namespace SilDev
             var src = PathEx.Combine(path);
             if (!PathEx.DirOrFileExists(src))
                 return true;
-            int exitCode;
-            using (var p = Send((PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src), runAsAdmin, false))
-            {
-                if (!wait)
-                    return true;
-                if (p?.HasExited ?? false)
-                    p.WaitForExit();
-                exitCode = p?.ExitCode ?? 1;
-            }
-            return exitCode == 0;
+            using var p = Send((PathEx.IsDir(src) ? "RMDIR /S /Q \"{0}\"" : "DEL /F /Q \"{0}\"").FormatCurrent(src), runAsAdmin, false);
+            if (!wait)
+                return true;
+            if (p?.HasExited ?? false)
+                p.WaitForExit();
+            return (p?.ExitCode ?? 1) == 0;
         }
 
         /// <summary>

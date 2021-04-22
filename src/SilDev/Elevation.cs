@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Elevation.cs
-// Version:  2020-01-13 13:02
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -31,7 +31,7 @@ namespace SilDev
         ///     Returns a <see cref="WindowsPrincipal"/> object that represents the current
         ///     Windows user.
         /// </summary>
-        public static WindowsPrincipal CurrentPrincipal => new WindowsPrincipal(WindowsIdentity.GetCurrent());
+        public static WindowsPrincipal CurrentPrincipal => new(WindowsIdentity.GetCurrent());
 
         /// <summary>
         ///     Determines whether the current principal belongs to the Windows

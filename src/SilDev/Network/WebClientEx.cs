@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WebClientEx.cs
-// Version:  2020-01-19 15:32
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -96,7 +96,7 @@ namespace SilDev.Network
         /// </param>
         protected override WebRequest GetWebRequest(Uri address)
         {
-            if (!(base.GetWebRequest(address) is HttpWebRequest request))
+            if (base.GetWebRequest(address) is not HttpWebRequest request)
                 return null;
             request.AllowAutoRedirect = AllowAutoRedirect;
             if (CookieContainer != null)

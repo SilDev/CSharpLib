@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IniHelper.cs
-// Version:  2020-02-03 20:22
+// Version:  2021-04-22 19:46
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -91,7 +91,7 @@ namespace SilDev.Ini
 
         private static bool IsValidSectionChar(char ch)
         {
-            if (ch == '[' || ch == ']')
+            if (ch is '[' or ']')
                 return false;
             return !char.IsControl(ch);
         }
