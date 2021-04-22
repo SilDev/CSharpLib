@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnumerableEx.cs
-// Version:  2020-01-15 10:54
+// Version:  2021-04-22 20:29
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -832,13 +832,13 @@ namespace SilDev
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
             var stack = new Stack<TSource>();
-            using (var enumerator = source.Reverse().GetEnumerator())
-                for (var i = 0; i < count; i++)
-                {
-                    if (!enumerator.MoveNext())
-                        break;
-                    stack.Push(enumerator.Current);
-                }
+            using var enumerator = source.Reverse().GetEnumerator();
+            for (var i = 0; i < count; i++)
+            {
+                if (!enumerator.MoveNext())
+                    break;
+                stack.Push(enumerator.Current);
+            }
             return stack;
         }
     }
