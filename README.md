@@ -8,5 +8,5 @@ I was tired of repeating the same steps over and over again when I started devel
 
 ### Requirements (Developer):
 - [Microsoft Windows 10 (64-bit recommended)](https://www.microsoft.com/software-download/windows10)
-   - _Microsoft Windows 7, 8 and 8.1 should work well, but is no longer tested_
-- [Microsoft Visual Studio 2019 + .NET Framework 4.7.2 SDK](https://www.visualstudio.com/downloads/)
+   - _Microsoft Windows 7, 8 and 8.1 should work fine, but are not officially supported here_
+- [Microsoft Visual Studio 2019 + .NET Framework 4.8 SDK](https://www.visualstudio.com/downloads/)
