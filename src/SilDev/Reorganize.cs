@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2021-04-22 19:46
+// Version:  2021-04-29 12:40
 // 
 // Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1000,7 +1000,7 @@ namespace SilDev
         ///     The source to convert.
         /// </param>
         public static bool ToBoolean<TSource>(this TSource? src) where TSource : struct, IComparable, IConvertible =>
-            src != null && ToBoolean((TSource)src);
+            src is bool b ? b : src != null && ToBoolean((TSource)src);
 
         /// <summary>
         ///     Converts the value of this element to its equivalent Unicode character.
