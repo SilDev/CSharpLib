@@ -2,12 +2,12 @@
 
 # Si13n7 Dev.™ CSharp Library
 
+> I was tired of repeating the same steps over and over again when I started developing a new program. So I started writing some classes that I could easily use here and there. This got more and more over time, which made the whole thing rather cluttered and less useful. So I had to start documenting functions cleanly. The chaos became a useful little library, which contains many useful functions. Everything is documented within the classes, so I do not bother to explain this extra. Just browse the classes and take with you, whatever you need, everything here is free.
+
 In retrospect, it's funny to see how big this library got because I only added new stuff when I needed it. Well, I cannot ignore the downfall of .NET Framework in favor of .NET Core and the associated strong focus on modularity and multiplatform support. Therefore I decided to give up this library in this form and to port it into individual smaller projects to .NET Core in order to also focus on modularity and multiplatform support.
 
 I will publish all this development under my real name and also make it available via NuGet.
 - Find it here: https://github.com/Roydl and https://www.nuget.org/profiles/Roydl
-
-~~I was tired of repeating the same steps over and over again when I started developing a new program. So I started writing some classes that I could easily use here and there. This got more and more over time, which made the whole thing rather cluttered and less useful. So I had to start documenting functions cleanly. The chaos became a useful little library, which contains many useful functions. Everything is documented within the classes, so I do not bother to explain this extra. Just browse the classes and take with you, whatever you need, everything here is free.~~
 
 
 ***
