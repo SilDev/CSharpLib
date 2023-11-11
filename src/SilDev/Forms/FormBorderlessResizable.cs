@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FormBorderlessResizable.cs
-// Version:  2020-01-19 14:57
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,7 +18,6 @@ namespace SilDev.Forms
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Windows.Forms;
 
@@ -188,6 +187,7 @@ namespace SilDev.Forms
         /// </summary>
         public FormBorderlessResizable() => BorderThickness = 6;
 
+        /// ReSharper disable CommentTypo
         /// <summary>
         ///     Get the border areas depending on the specified
         ///     <see cref="ResizingBorderFlags"/> flags.
@@ -209,7 +209,6 @@ namespace SilDev.Forms
         ///     HTBOTTOMRIGHT values, indicating the position of the cursor hot spot, as
         ///     key; and a <see cref="Rectangle"/> with the border coordinates as value.
         /// </returns>
-        [SuppressMessage("ReSharper", "CommentTypo")]
         protected IEnumerable<(IntPtr, Rectangle)> GetResizingBorderAreas(ResizingBorderFlags flags, int thickness = 6)
         {
             if (flags.HasFlag(ResizingBorderFlags.None))
@@ -234,6 +233,7 @@ namespace SilDev.Forms
                 yield return AllBorderAreas[ResizingBorderFlags.BottomRight];
         }
 
+        /// ReSharper disable CommentTypo
         /// <summary>
         ///     Get the active border area <see cref="Message"/> depending on the specified
         ///     <see cref="ResizingBorderFlags"/> flags.
@@ -257,7 +257,6 @@ namespace SilDev.Forms
         ///     cursor hot spot, used to specify the value that is returned to Windows in
         ///     response to handling the <see cref="Message"/>.
         /// </returns>
-        [SuppressMessage("ReSharper", "CommentTypo")]
         protected IntPtr GetActiveResizingBorderMessage(ResizingBorderFlags flags, IntPtr lParam, int thickness = 6)
         {
             var borderArea = GetResizingBorderAreas(flags, thickness);
@@ -363,7 +362,7 @@ namespace SilDev.Forms
         /// </param>
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == (int)WindowsMessage.MouseFirst || m.Msg == (int)WindowsMessage.NcHitTest)
+            if (m.Msg is (int)WindowsMessage.MouseFirst or (int)WindowsMessage.NcHitTest)
             {
                 var result = GetActiveResizingBorderMessage(ResizingBorders, m.LParam);
                 if (result != IntPtr.Zero)

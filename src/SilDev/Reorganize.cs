@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2021-04-29 12:40
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Globalization;
     using System.IO;
@@ -54,7 +53,7 @@ namespace SilDev
     /// <summary>
     ///     Provides labels for size units.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    /// ReSharper disable InconsistentNaming
     public enum SizeUnit
     {
         /// <summary>
@@ -2084,8 +2083,8 @@ namespace SilDev
                         value.StartsWithEx("{", "[") &&
                         value.EndsWithEx("}", "]") &&
                         type.GetInterfaces()
-                            .FirstOrDefault(t => t.IsGenericType &&
-                                                 t.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
+                            .FirstOrDefault(t => (t.IsGenericType &&
+                                                  t.GetGenericTypeDefinition() == typeof(IEnumerable<>)) ||
                                                  t == typeof(ISerializable)) != null)
                     {
                         var method = typeof(Json).GetMethod("Deserialize")?.MakeGenericMethod(type);
@@ -2236,9 +2235,7 @@ namespace SilDev
                 item = new string(item.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(",", ";");
             var instance = (TConverter)Activator.CreateInstance(typeof(TConverter));
             var result = instance.ConvertFrom(item);
-            if (result == null)
-                throw new NullReferenceException();
-            return result;
+            return result ?? throw new NullReferenceException();
         }
     }
 }

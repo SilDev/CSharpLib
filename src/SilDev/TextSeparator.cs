@@ -5,14 +5,15 @@
 // ==============================================
 // 
 // Filename: TextSeparator.cs
-// Version:  2020-01-29 16:17
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
 #endregion
 
+// .NET Core version can be found at https://github.com/Roydl/Text
 namespace SilDev
 {
     /// <summary>

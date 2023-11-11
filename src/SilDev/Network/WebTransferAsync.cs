@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WebTransferAsync.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,7 +18,6 @@ namespace SilDev.Network
     using System;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -117,7 +116,6 @@ namespace SilDev.Network
         /// <summary>
         ///     Initializes a new instance of the <see cref="WebTransferAsync"/> class.
         /// </summary>
-        [SuppressMessage("ReSharper", "EmptyConstructor")]
         public WebTransferAsync() { }
 
         /// <summary>

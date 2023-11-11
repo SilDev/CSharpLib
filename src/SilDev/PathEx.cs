@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -310,6 +310,8 @@ namespace SilDev
             var path = string.Empty;
             try
             {
+                var prefix = PathPrefixStrs.FirstOrDefault(prefix => path0.StartsWith(prefix, StringComparison.Ordinal));
+
                 if (path0?.Split(PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries) is not IEnumerable<string> plains)
                     throw new ArgumentNullException(nameof(path0));
                 if (invalidPathChars?.Any() ?? false)
@@ -345,6 +347,9 @@ namespace SilDev
                         path = path.Replace(DirectorySeparatorStr, new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
                         path = path.Replace(DirectorySeparatorStr, new string(Path.AltDirectorySeparatorChar, num));
+
+                if (!string.IsNullOrEmpty(prefix) && !path.StartsWithEx(prefix))
+                    path = prefix + path;
             }
             catch (ArgumentException ex)
             {

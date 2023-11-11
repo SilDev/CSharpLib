@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TextBoxEx.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -73,7 +73,7 @@ namespace SilDev.Forms
                 Name = $"{tb.Name}PictureBox",
                 Size = new Size(16, 16)
             };
-            pBox.Click += (sender, e) => tb.Select();
+            pBox.Click += (_, _) => tb.Select();
             panel.Controls.Add(pBox);
             tb.Parent = panel;
             tb.BorderStyle = BorderStyle.None;

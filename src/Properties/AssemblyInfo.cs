@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 #endif
 
 [assembly: AssemblyCompany("Si13n7 Dev.™")]
-[assembly: AssemblyCopyright("Copyright © Si13n7 Dev.™ 2020")]
+[assembly: AssemblyCopyright("Copyright © Si13n7 Dev.™ 2023")]
 [assembly: AssemblyTrademark("Si13n7 Dev.™")]
 [assembly: AssemblyCulture("")]
 
@@ -31,6 +31,6 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("901502cc-aa7d-444e-944a-7fc063c34917")]
 
-[assembly: AssemblyVersion("21.4.29.0")]
+[assembly: AssemblyVersion("23.11.11.0")]
 
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -262,11 +262,9 @@ namespace SilDev.Forms
                 MessageBoxEx.Show(owner, UIStrings.TextCanNotBeEmpty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            using var dialog = new SaveFileDialog
-            {
-                Filter = $@"{UIStrings.TextFiles}|*.txt",
-                FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt"
-            };
+            using var dialog = new SaveFileDialog();
+            dialog.Filter = $@"{UIStrings.TextFiles}|*.txt";
+            dialog.FileName = $"{Path.GetFileNameWithoutExtension(PathEx.LocalPath)} {DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt";
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 MessageBoxEx.Show(owner, UIStrings.OperationCanceled, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);

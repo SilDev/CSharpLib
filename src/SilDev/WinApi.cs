@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2021-04-22 19:47
+// Version:  2023-11-11 16:26
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Globalization;
     using System.IO;
@@ -33,7 +32,7 @@ namespace SilDev
     ///     An overkill class that provides a lot of Windows API (Application
     ///     Programming Interface) functions.
     /// </summary>
-    [SuppressMessage("ReSharper", "CommentTypo")]
+    /// ReSharper disable CommentTypo
     public static class WinApi
     {
         /// <summary>
@@ -393,7 +392,6 @@ namespace SilDev
         ///     Provides enumerated attributes of memory allocation.
         /// </summary>
         [Flags]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum LocalAllocFlags : uint
         {
             /// <summary>
@@ -415,6 +413,7 @@ namespace SilDev
             /// <summary>
             ///     Same as <see cref="LMemMoveable"/>.
             /// </summary>
+            /// ReSharper disable once InconsistentNaming
             NonZeroLHND = LMemMoveable,
 
             /// <summary>
@@ -425,11 +424,13 @@ namespace SilDev
             /// <summary>
             ///     Combines <see cref="LMemFixed"/> and <see cref="LMemZeroInit"/>.
             /// </summary>
+            /// ReSharper disable once InconsistentNaming
             LPtr = LMemFixed | LMemZeroInit,
 
             /// <summary>
             ///     Combines <see cref="LMemMoveable"/> and <see cref="LMemZeroInit"/>.
             /// </summary>
+            /// ReSharper disable once InconsistentNaming
             LHND = LMemMoveable | LMemZeroInit
         }
 
@@ -950,7 +951,6 @@ namespace SilDev
         ///     Provides enumerated attributes of memory allocation.
         /// </summary>
         [Flags]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum SetWindowPosFlags : uint
         {
             /// <summary>
@@ -3603,7 +3603,7 @@ namespace SilDev
                         throw new PathNotFoundException(file);
                     var buffer = new byte[256];
                     using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-                        fs.Read(buffer, 0, fs.Length >= buffer.Length ? buffer.Length : (int)fs.Length);
+                        _ = fs.Read(buffer, 0, fs.Length >= buffer.Length ? buffer.Length : (int)fs.Length);
                     _ = NativeMethods.FindMimeFromData(IntPtr.Zero, null, buffer, 256, null, dwMimeFlags, out var mimetype, 0);
                     var mime = Marshal.PtrToStringUni(mimetype);
                     Marshal.FreeCoTaskMem(mimetype);
@@ -3981,7 +3981,7 @@ namespace SilDev
             ///     the system default UI language (also known as "install language") is
             ///     returned.
             /// </summary>
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            /// ReSharper disable once InconsistentNaming
             public static ushort GetUserDefaultUILanguage() =>
                 NativeMethods.GetUserDefaultUILanguage();
 
@@ -5138,7 +5138,7 @@ namespace SilDev
             /// <returns>
             ///     If the function succeeds, the return value is nonzero.
             /// </returns>
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            /// ReSharper disable once InconsistentNaming
             public static bool SetProcessDPIAware() =>
                 NativeMethods.SetProcessDPIAware();
 
@@ -5493,7 +5493,7 @@ namespace SilDev
             ///     structure on entry and on exit depends on the value set in the dwMessage
             ///     parameter. See the individual message pages for specifics.
             /// </param>
-            [SuppressMessage("ReSharper", "InconsistentNaming")]
+            /// ReSharper disable once InconsistentNaming
             public static UIntPtr SHAppBarMessage(AppBarMessageOption dwMessage, ref AppBarData pData) =>
                 NativeMethods.SHAppBarMessage(dwMessage, ref pData);
 
@@ -5756,10 +5756,8 @@ namespace SilDev
                         };
                         foreach (var scr in Screen.AllScreens.Where(scr => scr.Bounds.Contains(range)))
                             screen = scr;
-                        range = new Rectangle
+                        range = screen.WorkingArea with
                         {
-                            X = screen.WorkingArea.X,
-                            Y = screen.WorkingArea.Y,
                             Width = screen.WorkingArea.Width + screen.WorkingArea.X - cRect.Width,
                             Height = screen.WorkingArea.Height + screen.WorkingArea.Y - cRect.Height
                         };
@@ -5948,7 +5946,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="AppBarData"/> instance to compare.
             /// </param>
-            public bool Equals(AppBarData other) =>
+            public readonly bool Equals(AppBarData other) =>
                 CbSize == other.CbSize &&
                 HWnd == other.HWnd &&
                 UCallbackMessage == other.UCallbackMessage &&
@@ -5963,13 +5961,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is AppBarData item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(AppBarData).GetHashCode();
 
             /// <summary>
@@ -6042,7 +6040,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="CallWndProcRet"/> instance to compare.
             /// </param>
-            public bool Equals(CallWndProcRet other) =>
+            public readonly bool Equals(CallWndProcRet other) =>
                 LResult == other.LResult &&
                 LParam == other.LParam &&
                 WParam == other.WParam &&
@@ -6056,13 +6054,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is CallWndProcRet item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(CallWndProcRet).GetHashCode();
 
             /// <summary>
@@ -6133,7 +6131,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="CopyData"/> instance to compare.
             /// </param>
-            public bool Equals(CopyData other) =>
+            public readonly bool Equals(CopyData other) =>
                 DwData == other.DwData &&
                 CbData == other.CbData &&
                 LpData == other.LpData;
@@ -6145,13 +6143,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is CopyData item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(CopyData).GetHashCode();
 
             /// <summary>
@@ -6220,7 +6218,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="DeviceInput"/> instance to compare.
             /// </param>
-            public bool Equals(DeviceInput other) =>
+            public readonly bool Equals(DeviceInput other) =>
                 Type == other.Type &&
                 Data == other.Data;
 
@@ -6231,13 +6229,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is DeviceInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(DeviceInput).GetHashCode();
 
             /// <summary>
@@ -6290,7 +6288,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="LuId"/> instance to compare.
             /// </param>
-            public bool Equals(LuId other) =>
+            public readonly bool Equals(LuId other) =>
                 LowPart == other.LowPart &&
                 HighPart == other.HighPart;
 
@@ -6301,13 +6299,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is LuId item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(LuId).GetHashCode();
 
             /// <summary>
@@ -6362,7 +6360,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="LuIdAndAttributes"/> instance to compare.
             /// </param>
-            public bool Equals(LuIdAndAttributes other) =>
+            public readonly bool Equals(LuIdAndAttributes other) =>
                 Luid == other.Luid &&
                 Attributes == other.Attributes;
 
@@ -6373,13 +6371,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is LuIdAndAttributes item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(LuIdAndAttributes).GetHashCode();
 
             /// <summary>
@@ -6466,7 +6464,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="MouseInput"/> instance to compare.
             /// </param>
-            public bool Equals(MouseInput other) =>
+            public readonly bool Equals(MouseInput other) =>
                 X == other.X &&
                 Y == other.Y &&
                 MouseData == other.MouseData &&
@@ -6481,13 +6479,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is MouseInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(MouseInput).GetHashCode();
 
             /// <summary>
@@ -6546,7 +6544,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="MouseKeyboardHardwareInput"/> instance to compare.
             /// </param>
-            public bool Equals(MouseKeyboardHardwareInput other) =>
+            public readonly bool Equals(MouseKeyboardHardwareInput other) =>
                 Mouse == other.Mouse;
 
             /// <summary>
@@ -6556,13 +6554,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is MouseKeyboardHardwareInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(MouseKeyboardHardwareInput).GetHashCode();
 
             /// <summary>
@@ -6635,7 +6633,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="ProcessBasicInformation"/> instance to compare.
             /// </param>
-            public bool Equals(ProcessBasicInformation other) =>
+            public readonly bool Equals(ProcessBasicInformation other) =>
                 ExitStatus == other.ExitStatus &&
                 PebBaseAddress == other.PebBaseAddress &&
                 AffinityMask == other.AffinityMask &&
@@ -6649,13 +6647,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is ProcessBasicInformation item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(ProcessBasicInformation).GetHashCode();
 
             /// <summary>
@@ -6719,7 +6717,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="ThemeMargins"/> instance to compare.
             /// </param>
-            public bool Equals(ThemeMargins other) =>
+            public readonly bool Equals(ThemeMargins other) =>
                 CxLeftWidth == other.CxLeftWidth &&
                 CxRightWidth == other.CxRightWidth &&
                 CyTopHeight == other.CyTopHeight &&
@@ -6732,13 +6730,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is ThemeMargins item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(ThemeMargins).GetHashCode();
 
             /// <summary>
@@ -6780,7 +6778,7 @@ namespace SilDev
             /// <summary>
             ///     Gets the number of entries in the Privileges collection.
             /// </summary>
-            public int PrivilegeCount => Privileges?.Count ?? 0;
+            public readonly int PrivilegeCount => Privileges?.Count ?? 0;
 
             /// <summary>
             ///     Specifies an array of <see cref="LuIdAndAttributes"/> structures. Each
@@ -6791,7 +6789,7 @@ namespace SilDev
             /// </summary>
             public IReadOnlyList<LuIdAndAttributes> Privileges
             {
-                get => _privileges;
+                readonly get => _privileges;
                 internal set => _privileges = value as LuIdAndAttributes[];
             }
 
@@ -6802,7 +6800,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="TokenPrivileges"/> instance to compare.
             /// </param>
-            public bool Equals(TokenPrivileges other)
+            public readonly bool Equals(TokenPrivileges other)
             {
                 if (PrivilegeCount != other.PrivilegeCount)
                     return false;
@@ -6818,13 +6816,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is TokenPrivileges item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(TokenPrivileges).GetHashCode();
 
             /// <summary>
@@ -6907,7 +6905,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="WindowPlacement"/> instance to compare.
             /// </param>
-            public bool Equals(WindowPlacement other) =>
+            public readonly bool Equals(WindowPlacement other) =>
                 Length == other.Length &&
                 Flags == other.Flags &&
                 ShowCmd == other.ShowCmd &&
@@ -6922,13 +6920,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is WindowPlacement item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(WindowPlacement).GetHashCode();
 
             /// <summary>
@@ -6983,7 +6981,7 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="WindowThemeAttributeOptions"/> instance to compare.
             /// </param>
-            public bool Equals(WindowThemeAttributeOptions other) =>
+            public readonly bool Equals(WindowThemeAttributeOptions other) =>
                 Flags == other.Flags && Mask == other.Mask;
 
             /// <summary>
@@ -6993,13 +6991,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override bool Equals(object other) =>
+            public override readonly bool Equals(object other) =>
                 other is WindowThemeAttributeOptions item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override int GetHashCode() =>
+            public override readonly int GetHashCode() =>
                 typeof(WindowThemeAttributeOptions).GetHashCode();
 
             /// <summary>
@@ -7930,8 +7928,7 @@ namespace SilDev
             ///     </para>
             /// </returns>
             [DllImport(DllNames.Urlmon, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = false)]
-            internal static extern int FindMimeFromData(IntPtr pBc, [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)]
-                                                        byte[] pBuffer, int cbSize, [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed, MimeFlags dwMimeFlags, out IntPtr ppwzMimeOut, int dwReserved);
+            internal static extern int FindMimeFromData(IntPtr pBc, [MarshalAs(UnmanagedType.LPWStr)] string pwzUrl, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I1, SizeParamIndex = 3)] byte[] pBuffer, int cbSize, [MarshalAs(UnmanagedType.LPWStr)] string pwzMimeProposed, MimeFlags dwMimeFlags, out IntPtr ppwzMimeOut, int dwReserved);
 
             /// <summary>
             ///     Retrieves a handle to the top-level window whose class name and window name
@@ -10020,8 +10017,7 @@ namespace SilDev
             /// <returns>
             /// </returns>
             [DllImport(DllNames.Shell32, SetLastError = true, BestFitMapping = false, CharSet = CharSet.Unicode)]
-            internal static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)]
-                                                        string pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, FileInfoFlags uFlags);
+            internal static extern IntPtr SHGetFileInfo([MarshalAs(UnmanagedType.LPStr, SizeConst = 32767)] string pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, FileInfoFlags uFlags);
 
             /// <summary>
             ///     The ShowScrollBar function shows or hides the specified scroll bar.

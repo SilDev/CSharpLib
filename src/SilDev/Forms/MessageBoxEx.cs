@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2020-01-19 15:32
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -443,10 +443,8 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon, defButton, options);
-            using var f = new Form
-            {
-                TopMost = true
-            };
+            using var f = new Form();
+            f.TopMost = true;
             return MessageBox.Show(f, text, caption, buttons, icon, defButton, options);
         }
 
@@ -480,10 +478,8 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon, defButton);
-            using var f = new Form
-            {
-                TopMost = true
-            };
+            using var f = new Form();
+            f.TopMost = true;
             return MessageBox.Show(f, text, caption, buttons, icon, defButton);
         }
 
@@ -512,10 +508,8 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon);
-            using var f = new Form
-            {
-                TopMost = true
-            };
+            using var f = new Form();
+            f.TopMost = true;
             return MessageBox.Show(f, text, caption, buttons, icon);
         }
 
@@ -540,10 +534,8 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons);
-            using var f = new Form
-            {
-                TopMost = true
-            };
+            using var f = new Form();
+            f.TopMost = true;
             return MessageBox.Show(f, text, caption, buttons);
         }
 
@@ -564,10 +556,8 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text, caption);
-            using var f = new Form
-            {
-                TopMost = true
-            };
+            using var f = new Form();
+            f.TopMost = true;
             return MessageBox.Show(f, text, caption);
         }
 
@@ -676,10 +666,8 @@ namespace SilDev.Forms
             Initialize();
             if (!TopMost)
                 return MessageBox.Show(text);
-            using var f = new Form
-            {
-                TopMost = true
-            };
+            using var f = new Form();
+            f.TopMost = true;
             return MessageBox.Show(f, text);
         }
 

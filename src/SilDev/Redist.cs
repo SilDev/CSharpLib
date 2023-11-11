@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Redist.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,7 +16,6 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Investment;
     using Microsoft.Win32;
@@ -25,8 +24,8 @@ namespace SilDev
     ///     Provides identity flags of redistributable packages. For more information,
     ///     see <see cref="Redist.IsInstalled(RedistFlags[])"/>.
     /// </summary>
+    /// ReSharper disable InconsistentNaming
     [Flags]
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum RedistFlags
     {
         /// <summary>
@@ -179,7 +178,7 @@ namespace SilDev
                     Recheck:
                     result = year switch
                     {
-                        "2005" => names.Any(x => x.Contains(year) && (arch.EqualsEx("x64") && x.ContainsEx(arch) || !x.ContainsEx("x64"))),
+                        "2005" => names.Any(x => x.Contains(year) && ((arch.EqualsEx("x64") && x.ContainsEx(arch)) || !x.ContainsEx("x64"))),
                         _ => names.Any(x => x.Contains(year) && x.ContainsEx(arch)),
                     };
                     if (result)

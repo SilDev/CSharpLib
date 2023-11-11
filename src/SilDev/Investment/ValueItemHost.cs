@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ValueItemHost.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -338,7 +338,7 @@ namespace SilDev.Investment
         public ValueItem<TValue> GetItem<TValue>(TKey key) where TValue : IEquatable<TValue>
         {
             var name = GetKeyName(key);
-            if (string.IsNullOrEmpty(name) || !ItemDictionary.TryGetValue(name, out var obj) || !(obj is ValueItem<TValue> item))
+            if (string.IsNullOrEmpty(name) || !ItemDictionary.TryGetValue(name, out var obj) || obj is not ValueItem<TValue> item)
                 return new ValueItem<TValue>(default);
             return item;
         }

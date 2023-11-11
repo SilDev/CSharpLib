@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -19,7 +19,6 @@ namespace SilDev
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -36,7 +35,7 @@ namespace SilDev
     /// </summary>
     public static class FileEx
     {
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        // ReSharper disable UnusedMember.Local
         private enum DatHeaderKey
         {
             VersionNumber1,
@@ -151,7 +150,7 @@ namespace SilDev
                 using var fs = new FileStream(src, FileMode.Open, FileAccess.Read);
                 bool decompress;
                 var header = new byte[DatHeaderSize];
-                fs.Read(header, 0, header.Length);
+                _ = fs.Read(header, 0, header.Length);
                 if (DatHeaderIsValid(header))
                     decompress = header[(int)DatHeaderKey.CompressionMode] > 0;
                 else
@@ -344,7 +343,7 @@ namespace SilDev
             using var fs2 = otherFileInfo.OpenRead();
             int len1, len2;
             while ((len1 = fs1.Read(buffer1, 0, count)) > 0 && (len2 = fs2.Read(buffer2, 0, count)) > 0)
-                if (len1 != len2 || len1 < count && !buffer1.Take(len1).SequenceEqual(buffer2.Take(len2)) || !buffer1.SequenceEqual(buffer2))
+                if (len1 != len2 || (len1 < count && !buffer1.Take(len1).SequenceEqual(buffer2.Take(len2))) || !buffer1.SequenceEqual(buffer2))
                     return false;
             return true;
         }

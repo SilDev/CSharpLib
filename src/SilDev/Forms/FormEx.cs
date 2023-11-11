@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -86,7 +86,7 @@ namespace SilDev.Forms
             if (form == null || form.Opacity > 0d)
                 return;
 
-            maxOpacity = Math.Min(Math.Max(effectDuration, .25d), 1d);
+            maxOpacity = Math.Min(Math.Max(maxOpacity, .25d), 1d);
             if (form.Opacity >= maxOpacity)
                 return;
             effectDuration = Math.Min(Math.Max(effectDuration, 25), 750);

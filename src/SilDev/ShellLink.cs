@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ShellLink.cs
-// Version:  2020-01-24 20:10
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,7 +16,6 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Runtime.InteropServices.ComTypes;
     using Intern;
@@ -89,7 +88,7 @@ namespace SilDev
         /// <param name="other">
         ///     The <see cref="ShellLinkInfo"/> instance to compare.
         /// </param>
-        public bool Equals(ShellLinkInfo other) =>
+        public readonly bool Equals(ShellLinkInfo other) =>
             Description == other.Description &&
             Arguments == other.Arguments &&
             TargetPath == other.TargetPath &&
@@ -104,7 +103,7 @@ namespace SilDev
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override bool Equals(object other)
+        public override readonly bool Equals(object other)
         {
             if (other is ShellLinkInfo sli)
                 return Equals(sli);
@@ -114,7 +113,7 @@ namespace SilDev
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        public override int GetHashCode() =>
+        public override readonly int GetHashCode() =>
             typeof(ShellLinkInfo).GetHashCode();
 
         /// <summary>
@@ -160,7 +159,7 @@ namespace SilDev
         ///     <see langword="true"/> to skip existing links without further checks;
         ///     otherwise, <see langword="false"/>.
         /// </param>
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        /// ReSharper disable SuspiciousTypeConversion.Global
         public static bool Create(ShellLinkInfo shellLinkInfo, bool skipExists = false)
         {
             try

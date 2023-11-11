@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -295,14 +295,16 @@ namespace SilDev.Forms
 
         private void Button_Click(object sender, EventArgs e)
         {
-            using var dialog = new OpenFileDialog
+            using var dialog = new OpenFileDialog();
+            dialog.InitialDirectory = PathEx.LocalDir;
+            dialog.Multiselect = false;
+            dialog.RestoreDirectory = false;
+            using (var owner = new Form())
             {
-                InitialDirectory = PathEx.LocalDir,
-                Multiselect = false,
-                RestoreDirectory = false
-            };
-            using (var owner = new Form { ShowIcon = false, TopMost = true })
+                owner.ShowIcon = false;
+                owner.TopMost = true;
                 dialog.ShowDialog(owner);
+            }
             if (File.Exists(dialog.FileName))
                 _textBox.Text = dialog.FileName;
         }
@@ -402,9 +404,7 @@ namespace SilDev.Forms
                 if (!FilePath?.EqualsEx(path) ?? false)
                     IconPointers = null;
                 FilePath = path;
-                var icon = GetIcons(index);
-                if (icon == null)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                var icon = GetIcons(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
                 _button.Image = new Bitmap(icon.ToBitmap(), icon.Width, icon.Height);
                 _button.Text = index.ToStringDefault();
             }

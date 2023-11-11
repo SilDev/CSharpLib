@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PortableExecutable.cs
-// Version:  2020-01-13 13:03
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,14 +16,13 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
     /// <summary>
     ///     Provides enumerated values of the machine field values that specifies its
     ///     CPU type.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    /// ReSharper disable InconsistentNaming
     public enum MachineType
     {
         /// <summary>
@@ -209,7 +208,7 @@ namespace SilDev
         public static bool Is64Bit(string path)
         {
             var pe = GetMachineTypes(path);
-            return pe == MachineType.AMD64 || pe == MachineType.IA64;
+            return pe is MachineType.AMD64 or MachineType.IA64;
         }
     }
 }

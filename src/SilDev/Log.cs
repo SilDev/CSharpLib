@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -428,7 +428,7 @@ namespace SilDev
                 var seek = $"/{DebugKey}";
                 foreach (var arg in Environment.GetCommandLineArgs().Skip(1))
                 {
-                    if (mode < 1 && !arg.EqualsEx(seek) || mode++ < 1)
+                    if ((mode < 1 && !arg.EqualsEx(seek)) || mode++ < 1)
                         continue;
                     mode = arg.EqualsEx("True") ? 1 : arg.ToInt32();
                     break;
@@ -531,7 +531,7 @@ namespace SilDev
         /// </param>
         public static void Write(string logMessage, bool exitProcess = false)
         {
-            if (!FirstCall || DebugMode < 1 || FirstEntry && string.IsNullOrEmpty(logMessage))
+            if (!FirstCall || DebugMode < 1 || (FirstEntry && string.IsNullOrEmpty(logMessage)))
                 return;
 
             lock (SyncObject)
@@ -633,10 +633,7 @@ namespace SilDev
                     return;
                 DebugMode = 1;
             }
-            if (DebugMode < 2 && (exception is ArgumentNullException ||
-                                  exception is NullReferenceException ||
-                                  exception is NotSupportedException ||
-                                  exception is WarningException))
+            if (DebugMode < 2 && exception is ArgumentNullException or NullReferenceException or NotSupportedException or WarningException)
                 return;
             Write($"Handled {exception}", exitProcess);
         }

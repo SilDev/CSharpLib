@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: InputDevice.cs
-// Version:  2020-01-13 13:02
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,14 +17,13 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.InteropServices;
 
     /// <summary>
     ///     Provides enumerated values of Virtual-Key codes.
     /// </summary>
-    [SuppressMessage("ReSharper", "CommentTypo")]
+    /// ReSharper disable CommentTypo InconsistentNaming
     public enum VirtualKey
     {
         /// <summary>

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -189,10 +189,10 @@ namespace SilDev
                     }
                     catch (Exception ex) when (ex.IsCaught())
                     {
-                        if (!(ex is ArgumentException))
+                        if (ex is not ArgumentException)
                             Log.Write(ex);
                     }
-                if (mPath?.EqualsEx(path) ?? isPath && doubleTap || doubleTap)
+                if (mPath?.EqualsEx(path) ?? ((isPath && doubleTap) || doubleTap))
                     yield return p;
             }
         }
@@ -339,7 +339,7 @@ namespace SilDev
                             throw new NullReferenceException();
                         process.StartInfo.WorkingDirectory = workingDirectory;
                     }
-                    if (!process.StartInfo.UseShellExecute && !process.StartInfo.CreateNoWindow && process.StartInfo.WindowStyle == ProcessWindowStyle.Hidden)
+                    if (!process.StartInfo.UseShellExecute && process.StartInfo is { CreateNoWindow: false, WindowStyle: ProcessWindowStyle.Hidden })
                         process.StartInfo.CreateNoWindow = true;
                     var processStarted = false;
                     if (process.StartInfo.Verb.EqualsEx("RunNotAs"))
@@ -656,10 +656,8 @@ namespace SilDev
                             WinApi.NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
                             if (!waitOnHandle)
                                 continue;
-                            using var wh = new ManualResetEvent(false)
-                            {
-                                SafeWaitHandle = new SafeWaitHandle(h, false)
-                            };
+                            using var wh = new ManualResetEvent(false);
+                            wh.SafeWaitHandle = new SafeWaitHandle(h, false);
                             wh.WaitOne(100);
                         }
                         if (p?.HasExited ?? false)

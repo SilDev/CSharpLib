@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,14 +18,12 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
     using Microsoft.Win32;
 #if !x64
     using Intern;
-
 #endif
 
     /// <summary>
@@ -748,7 +746,6 @@ namespace SilDev
         /// <param name="defValue">
         ///     The value that is used as default.
         /// </param>
-        [SuppressMessage("ReSharper", "ConvertIfStatementToSwitchStatement")]
         public static string ReadString(RegistryKey key, string subKey, string entry, string defValue = "")
         {
             var value = defValue;

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2020-01-28 00:09
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -34,7 +34,7 @@ namespace SilDev
         private static bool _cmdLineArgsQuotes;
         private static string _commandLine;
         private static int? _machineId;
-        private static Version _version;
+        private static Version _osversion, _version;
 
         /// <summary>
         ///     Gets a unique system identification number.
@@ -54,6 +54,29 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Gets a <see cref="Environment.OSVersion"/> version object with support for
+        ///     Windows 11 and later.
+        /// </summary>
+        public static Version OperatingSystemVersion
+        {
+            get
+            {
+                if (_osversion != default)
+                    return _osversion;
+                _osversion = Environment.OSVersion.Version;
+                if (_osversion.Major != 10 || _osversion.Build < 22000)
+                    return _osversion;
+                var caption = Win32_OperatingSystem.Caption;
+                var first = caption.FirstOrDefault(char.IsNumber);
+                var second = caption.SecondOrDefault(char.IsNumber);
+                var third = caption.ThirdOrDefault(char.IsNumber);
+                var major = int.Parse($"{first}{second}");
+                var minor = third != default ? int.Parse($"{third}") : _osversion.Minor;
+                return _osversion = new Version(major, minor, _osversion.Build, _osversion.Revision);
+            }
+        }
+
+        /// <summary>
         ///     Gets a <see cref="System.Version"/> object that describes the exact major,
         ///     minor, build and revision numbers of the common language runtime.
         /// </summary>
@@ -68,27 +91,21 @@ namespace SilDev
                 if (version.Major >= 4)
                     return _version = version;
                 var release = Reg.Read(Registry.LocalMachine, keyPath, "Release", 0);
-                if (release >= 528040)
-                    return _version = new Version(4, 8);
-                if (release >= 461808)
-                    return _version = new Version(4, 7, 2);
-                if (release >= 461308)
-                    return _version = new Version(4, 7, 1);
-                if (release >= 460798)
-                    return _version = new Version(4, 7);
-                if (release >= 394802)
-                    return _version = new Version(4, 6, 2);
-                if (release >= 394254)
-                    return _version = new Version(4, 6, 1);
-                if (release >= 393295)
-                    return _version = new Version(4, 6);
-                if (release >= 379893)
-                    return _version = new Version(4, 5, 2);
-                if (release >= 378675)
-                    return _version = new Version(4, 5, 1);
-                if (release >= 378389)
-                    return _version = new Version(4, 5);
-                return _version = Environment.Version;
+                return release switch
+                {
+                    >= 533320 => _version = new Version(4, 8, 1),
+                    >= 528040 => _version = new Version(4, 8),
+                    >= 461808 => _version = new Version(4, 7, 2),
+                    >= 461308 => _version = new Version(4, 7, 1),
+                    >= 460798 => _version = new Version(4, 7),
+                    >= 394802 => _version = new Version(4, 6, 2),
+                    >= 394254 => _version = new Version(4, 6, 1),
+                    >= 393295 => _version = new Version(4, 6),
+                    >= 379893 => _version = new Version(4, 5, 2),
+                    >= 378675 => _version = new Version(4, 5, 1),
+                    >= 378389 => _version = new Version(4, 5),
+                    _ => _version = Environment.Version
+                };
             }
         }
 

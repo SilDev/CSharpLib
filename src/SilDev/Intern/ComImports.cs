@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ComImports.cs
-// Version:  2020-01-19 15:32
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,14 +16,12 @@
 namespace SilDev.Intern
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
     using System.Text;
 
+    // ReSharper disable InconsistentNaming
     internal static class ComImports
     {
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         internal enum EDataFlow
         {
             eRender,
@@ -32,17 +30,13 @@ namespace SilDev.Intern
             EDataFlow_enum_count
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         internal enum ERole
         {
             eConsole,
             eMultimedia,
             eCommunications,
             ERole_enum_count
-        }
-
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        } // ReSharper disable SuspiciousTypeConversion.Global
         internal static ISimpleAudioVolume GetVolumeObject(string name)
         {
             var deviceEnumerator = (IMMDeviceEnumerator)new MMDeviceEnumerator();
@@ -77,7 +71,6 @@ namespace SilDev.Intern
 
         [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         internal interface IMMDeviceEnumerator
         {
             int NotImpl1();
@@ -88,7 +81,6 @@ namespace SilDev.Intern
 
         [Guid("D666063F-1587-4E43-81F1-B948E807363F")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
         internal interface IMMDevice
         {
             [PreserveSig]

@@ -5,19 +5,21 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
 #endregion
 
+// Improved .NET Core versions can be found
+// at https://github.com/Roydl/Crypto and
+// at https://github.com/Roydl/Text
 namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -162,7 +164,7 @@ namespace SilDev
         /// </param>
         public static int CombineHashCodes(int hash1, int hash2)
         {
-            var hash = (uint)((hash1 << 5) | (int)((uint)hash1 >> 27));
+            var hash = (uint)((hash1 << 5) | (hash1 >>> 27));
             return ((int)hash + hash1) ^ hash2;
         }
 
@@ -909,11 +911,9 @@ namespace SilDev
             {
                 try
                 {
-                    using var rm = new RijndaelManaged
-                    {
-                        BlockSize = 128,
-                        KeySize = (int)keySize
-                    };
+                    using var rm = new RijndaelManaged();
+                    rm.BlockSize = 128;
+                    rm.KeySize = (int)keySize;
                     using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
                     {
                         rm.Key = db.GetBytes(rm.KeySize / 8);
@@ -983,11 +983,9 @@ namespace SilDev
             {
                 try
                 {
-                    using var rm = new RijndaelManaged
-                    {
-                        BlockSize = 128,
-                        KeySize = (int)keySize
-                    };
+                    using var rm = new RijndaelManaged();
+                    rm.BlockSize = 128;
+                    rm.KeySize = (int)keySize;
                     using (var db = new Rfc2898DeriveBytes(password, salt ?? password.Encrypt(ChecksumAlgorithm.Sha512).ToBytesUtf8(), 1000))
                     {
                         rm.Key = db.GetBytes(rm.KeySize / 8);
@@ -2648,9 +2646,7 @@ namespace SilDev
             /// </exception>
             protected void Encrypt<THashAlgorithm>(Stream stream, THashAlgorithm algorithm) where THashAlgorithm : HashAlgorithm
             {
-                using var csp = algorithm;
-                if (csp == null)
-                    throw new ArgumentNullException(nameof(algorithm));
+                using var csp = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
                 RawHash = csp.ComputeHash(stream);
             }
 
@@ -2675,9 +2671,7 @@ namespace SilDev
                 if (string.IsNullOrEmpty(text))
                     return;
                 var ba = text.ToBytesUtf8();
-                using var csp = algorithm;
-                if (csp == null)
-                    throw new ArgumentNullException(nameof(algorithm));
+                using var csp = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
                 RawHash = csp.ComputeHash(ba);
             }
 
@@ -2788,7 +2782,7 @@ namespace SilDev
             /// <exception cref="ArgumentNullException">
             ///     stream is null.
             /// </exception>
-            [SuppressMessage("ReSharper", "ShiftExpressionResultEqualsZero")]
+            /// ReSharper disable ShiftExpressionResultEqualsZero
             public override void Encrypt(Stream stream)
             {
                 if (stream == null)

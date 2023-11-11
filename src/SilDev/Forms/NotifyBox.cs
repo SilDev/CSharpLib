@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -391,27 +391,27 @@ namespace SilDev.Forms
                         case NotifyBoxStartPosition.CenterLeft:
                         case NotifyBoxStartPosition.TopLeft:
                         case NotifyBoxStartPosition.BottomLeft:
-                            Location = new Point(taskBarLocation == TaskBarLocation.Left ? taskBarSize + 3 : 3, Location.Y);
+                            Location = Location with { X = taskBarLocation == TaskBarLocation.Left ? taskBarSize + 3 : 3 };
                             break;
                         case NotifyBoxStartPosition.CenterRight:
                         case NotifyBoxStartPosition.TopRight:
                         case NotifyBoxStartPosition.BottomRight:
-                            Location = new Point(Screen.PrimaryScreen.Bounds.Width - Width - (taskBarLocation == TaskBarLocation.Right ? taskBarSize + 3 : 3), Location.Y);
+                            Location = Location with { X = Screen.PrimaryScreen.Bounds.Width - Width - (taskBarLocation == TaskBarLocation.Right ? taskBarSize + 3 : 3) };
                             break;
                     }
                     switch (position)
                     {
                         case NotifyBoxStartPosition.CenterLeft:
                         case NotifyBoxStartPosition.CenterRight:
-                            Location = new Point(Location.X, Screen.PrimaryScreen.Bounds.Height / 2 - Height / 2);
+                            Location = Location with { Y = Screen.PrimaryScreen.Bounds.Height / 2 - Height / 2 };
                             break;
                         case NotifyBoxStartPosition.BottomLeft:
                         case NotifyBoxStartPosition.BottomRight:
-                            Location = new Point(Location.X, Screen.PrimaryScreen.Bounds.Height - Height - (taskBarLocation == TaskBarLocation.Bottom ? taskBarSize + 3 : 3));
+                            Location = Location with { Y = Screen.PrimaryScreen.Bounds.Height - Height - (taskBarLocation == TaskBarLocation.Bottom ? taskBarSize + 3 : 3) };
                             break;
                         case NotifyBoxStartPosition.TopLeft:
                         case NotifyBoxStartPosition.TopRight:
-                            Location = new Point(Location.X, taskBarLocation == TaskBarLocation.Top ? taskBarSize + 3 : 3);
+                            Location = Location with { Y = taskBarLocation == TaskBarLocation.Top ? taskBarSize + 3 : 3 };
                             break;
                     }
                 }

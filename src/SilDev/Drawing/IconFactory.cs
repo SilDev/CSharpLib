@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IconFactory.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,7 +17,6 @@ namespace SilDev.Drawing
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
@@ -347,7 +346,7 @@ namespace SilDev.Drawing
         /// <exception cref="ArgumentNullException">
         ///     image or stream is null.
         /// </exception>
-        [SuppressMessage("ReSharper", "AccessToDisposedClosure")]
+        /// ReSharper disable AccessToDisposedClosure
         public static void Save(Image image, Stream stream, IconFactorySizeOption option = IconFactorySizeOption.Application, bool dispose = false)
         {
             if (image == null)

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: MessageBoxButtonText.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -89,7 +89,7 @@ namespace SilDev.Forms
         /// <param name="other">
         ///     The <see cref="MessageBoxButtonText"/> instance to compare.
         /// </param>
-        public bool Equals(MessageBoxButtonText other) =>
+        public readonly bool Equals(MessageBoxButtonText other) =>
             Ok == other.Ok &&
             Cancel == other.Cancel &&
             Abort == other.Abort &&
@@ -105,13 +105,13 @@ namespace SilDev.Forms
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override bool Equals(object other) =>
+        public override readonly bool Equals(object other) =>
             other is MessageBoxButtonText item && Equals(item);
 
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        public override int GetHashCode() =>
+        public override readonly int GetHashCode() =>
             typeof(MessageBoxButtonText).GetHashCode();
 
         /// <summary>

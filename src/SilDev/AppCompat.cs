@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: AppCompat.cs
-// Version:  2020-01-24 20:10
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,7 +16,6 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
     using Microsoft.Win32;
@@ -25,7 +24,6 @@ namespace SilDev
     ///     Provides color mode options. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum AppCompatColorMode
     {
         /// <summary>
@@ -48,7 +46,6 @@ namespace SilDev
     ///     Provides DPI scaling behavior options. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum AppCompatDpiScalingBehavior
     {
         /// <summary>
@@ -69,6 +66,7 @@ namespace SilDev
         /// <summary>
         ///     DPI scaling performed by system (enhanced).
         /// </summary>
+        /// ReSharper disable once InconsistentNaming
         GdiDpiScaling_DpiUnaware = 4
     }
 
@@ -98,7 +96,7 @@ namespace SilDev
     ///     Provides OS version options. For more information, see
     ///     <see cref="AppCompat.SetLayers(string, AppCompatLayers)"/>.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    /// ReSharper disable InconsistentNaming
     public enum AppCompatSystemVersion
     {
         /// <summary>
@@ -188,7 +186,7 @@ namespace SilDev
         ///     <see langword="true"/> to run the program in 640x480 screen resolution;
         ///     otherwise, <see langword="false"/>.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        /// ReSharper disable once InconsistentNaming
         public bool RunIn640x480ScreenResolution { get; set; }
 
         /// <summary>
@@ -204,7 +202,7 @@ namespace SilDev
         /// <param name="other">
         ///     The <see cref="AppCompatLayers"/> instance to compare.
         /// </param>
-        public bool Equals(AppCompatLayers other) =>
+        public readonly bool Equals(AppCompatLayers other) =>
             ColorMode == other.ColorMode &&
             DpiScalingBehavior == other.DpiScalingBehavior &&
             DpiScalingSystem == other.DpiScalingSystem &&
@@ -220,7 +218,7 @@ namespace SilDev
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override bool Equals(object other)
+        public override readonly bool Equals(object other)
         {
             if (other is AppCompatLayers acl)
                 return Equals(acl);
@@ -230,7 +228,7 @@ namespace SilDev
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        public override int GetHashCode() =>
+        public override readonly int GetHashCode() =>
             typeof(AppCompatLayers).GetHashCode();
 
         /// <summary>
@@ -299,7 +297,7 @@ namespace SilDev
 
             const string keyPath = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers";
             var builder = new StringBuilder();
-            var osVer = Environment.OSVersion.Version;
+            var osVer = EnvironmentEx.OperatingSystemVersion;
             if (compatLayers.DisableFullscreenOptimizations)
                 builder.AppendLine("DISABLEDXMAXIMIZEDWINDOWEDMODE");
             if (compatLayers.RunAsAdministrator)

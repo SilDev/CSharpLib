@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Json.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,7 +17,6 @@ namespace SilDev
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -208,9 +207,7 @@ namespace SilDev
             {
                 if (path == null)
                     throw new ArgumentNullException(nameof(path));
-                var output = Serialize(source);
-                if (output == null)
-                    throw new NullReferenceException();
+                var output = Serialize(source) ?? throw new NullReferenceException();
                 var dest = PathEx.Combine(path);
                 using var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew);
                 if (!formatted)
@@ -318,7 +315,6 @@ namespace SilDev
             }
         }
 
-        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
         private static void Format(Stream stream, char[] buffer, int count, char spacer, ref int depth, ref bool isEscape, ref bool isValue)
         {
             if (stream == null)

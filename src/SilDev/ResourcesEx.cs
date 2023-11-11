@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2021-04-22 19:47
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,7 +18,6 @@ namespace SilDev
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -301,7 +300,6 @@ namespace SilDev
         /// <param name="location">
         ///     The directory where the 'imageres.dll' file is located.
         /// </param>
-        [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
         public static string GetImageResourceName(int value, string location = "%system%")
         {
             var path = PathEx.Combine(location);

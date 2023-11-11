@@ -461,6 +461,7 @@
             <summary>
                 DPI scaling performed by system (enhanced).
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="T:SilDev.AppCompatDpiScalingSystem">
             <summary>
@@ -488,6 +489,7 @@
                 Provides OS version options. For more information, see
                 <see cref="M:SilDev.AppCompat.SetLayers(System.String,SilDev.AppCompatLayers)"/>.
             </summary>
+            ReSharper disable InconsistentNaming
         </member>
         <member name="F:SilDev.AppCompatSystemVersion.Default">
             <summary>
@@ -576,6 +578,7 @@
                 <see langword="true"/> to run the program in 640x480 screen resolution;
                 otherwise, <see langword="false"/>.
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="P:SilDev.AppCompatLayers.RunAsAdministrator">
             <summary>
@@ -2050,6 +2053,7 @@
             <exception cref="T:System.ArgumentNullException">
                 image or stream is null.
             </exception>
+            ReSharper disable AccessToDisposedClosure
         </member>
         <member name="M:SilDev.Drawing.IconFactory.Save(System.Collections.Generic.IEnumerable{System.Drawing.Image},System.String)">
             <summary>
@@ -3043,6 +3047,7 @@
             </summary>
         </member>
         <member name="M:SilDev.Forms.FormBorderlessResizable.GetResizingBorderAreas(SilDev.Forms.FormBorderlessResizable.ResizingBorderFlags,System.Int32)">
+            ReSharper disable CommentTypo
             <summary>
                 Get the border areas depending on the specified
                 <see cref="T:SilDev.Forms.FormBorderlessResizable.ResizingBorderFlags"/> flags.
@@ -3066,6 +3071,7 @@
             </returns>
         </member>
         <member name="M:SilDev.Forms.FormBorderlessResizable.GetActiveResizingBorderMessage(SilDev.Forms.FormBorderlessResizable.ResizingBorderFlags,System.IntPtr,System.Int32)">
+            ReSharper disable CommentTypo
             <summary>
                 Get the active border area <see cref="T:System.Windows.Forms.Message"/> depending on the specified
                 <see cref="T:SilDev.Forms.FormBorderlessResizable.ResizingBorderFlags"/> flags.
@@ -4350,6 +4356,7 @@
                 <see langword="true"/> to determine that the picture box is click-able;
                 otherwise, <see langword="false"/>.
             </param>
+            ReSharper disable SuspiciousTypeConversion.Global
         </member>
         <member name="M:SilDev.Forms.PictureBoxNonClickable.WndProc(System.Windows.Forms.Message@)">
             <summary>
@@ -6580,6 +6587,7 @@
                 Provides quick access to <see cref="T:SilDev.QuickWmi.Win32_OperatingSystem"/> WMI class
                 properties.
             </summary>
+            ReSharper disable CommentTypo InconsistentNaming
         </member>
         <member name="P:SilDev.QuickWmi.Win32_OperatingSystem.BootDevice">
             <summary>
@@ -10042,6 +10050,7 @@
             <exception cref="T:System.ArgumentNullException">
                 stream is null.
             </exception>
+            ReSharper disable ShiftExpressionResultEqualsZero
         </member>
         <member name="M:SilDev.Crypto.Adler32.Encrypt(System.String)">
             <summary>
@@ -11998,6 +12007,12 @@
                 Gets a unique system identification number.
             </summary>
         </member>
+        <member name="P:SilDev.EnvironmentEx.OperatingSystemVersion">
+            <summary>
+                Gets a <see cref="P:System.Environment.OSVersion"/> version object with support for
+                Windows 11 and later.
+            </summary>
+        </member>
         <member name="P:SilDev.EnvironmentEx.Version">
             <summary>
                 Gets a <see cref="T:System.Version"/> object that describes the exact major,
@@ -12980,6 +12995,7 @@
             <summary>
                 Provides enumerated values of Virtual-Key codes.
             </summary>
+            ReSharper disable CommentTypo InconsistentNaming
         </member>
         <member name="F:SilDev.VirtualKey.LButton">
             <summary>
@@ -14560,6 +14576,7 @@
             <summary>
                 Provides options for specifying a Domain Name System provider.
             </summary>
+            ReSharper disable CommentTypo
         </member>
         <member name="F:SilDev.Network.NetEx.DnsOption.Cloudflare">
             <summary>
@@ -14586,11 +14603,13 @@
             <summary>
                 Determines whether the current IPv4 connection is available.
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="P:SilDev.Network.NetEx.IPv6IsAvalaible">
             <summary>
                 Determines whether the current IPv6 connection is available.
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="P:SilDev.Network.NetEx.LastPingReply">
             <summary>
@@ -18195,6 +18214,7 @@
                 Provides enumerated values of the machine field values that specifies its
                 CPU type.
             </summary>
+            ReSharper disable InconsistentNaming
         </member>
         <member name="F:SilDev.MachineType.Unknown">
             <summary>
@@ -18709,6 +18729,7 @@
                 Provides identity flags of redistributable packages. For more information,
                 see <see cref="M:SilDev.Redist.IsInstalled(SilDev.RedistFlags[])"/>.
             </summary>
+            ReSharper disable InconsistentNaming
         </member>
         <member name="F:SilDev.RedistFlags.VC2005X86">
             <summary>
@@ -19502,6 +19523,7 @@
             <summary>
                 Provides labels for size units.
             </summary>
+            ReSharper disable InconsistentNaming
         </member>
         <member name="F:SilDev.SizeUnit.Byte">
             <summary>
@@ -21342,6 +21364,7 @@
                 <see langword="true"/> to skip existing links without further checks;
                 otherwise, <see langword="false"/>.
             </param>
+            ReSharper disable SuspiciousTypeConversion.Global
         </member>
         <member name="M:SilDev.ShellLink.Destroy(System.String)">
             <summary>
@@ -21499,6 +21522,21 @@
                 The type of restore point.
             </param>
         </member>
+        <member name="T:SilDev.TaskBarAlignment">
+            <summary>
+                Provides enumerated flags of the taskbar alignment, added in Windows 11.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBarAlignment.Left">
+            <summary>
+                The taskbar alignment is on the left side.
+            </summary>
+        </member>
+        <member name="F:SilDev.TaskBarAlignment.Center">
+            <summary>
+                The taskbar alignment is centered.
+            </summary>
+        </member>
         <member name="T:SilDev.TaskBarLocation">
             <summary>
                 Provides enumerated flags of the taskbar location.
@@ -21615,6 +21653,11 @@
                 The new state to set.
             </param>
         </member>
+        <member name="M:SilDev.TaskBar.GetAlignment">
+            <summary>
+                Returns the current <see cref="T:SilDev.TaskBarAlignment"/> of the taskbar.
+            </summary>
+        </member>
         <member name="M:SilDev.TaskBar.GetLocation(System.IntPtr)">
             <summary>
                 Returns the location of the taskbar.
@@ -21638,6 +21681,7 @@
             <param name="hWnd">
                 A handle to the window to be added to the taskbar.
             </param>
+            ReSharper disable SuspiciousTypeConversion.Global
         </member>
         <member name="M:SilDev.TaskBar.DeleteTab(System.IntPtr)">
             <summary>
@@ -21646,6 +21690,7 @@
             <param name="hWnd">
                 A handle to the window to be deleted from the taskbar.
             </param>
+            ReSharper disable SuspiciousTypeConversion.Global
         </member>
         <member name="M:SilDev.TaskBar.GetPinLink(System.String)">
             <summary>
@@ -21684,6 +21729,7 @@
                 Provides static methods to manage a progress bar hosted in a taskbar
                 button.
             </summary>
+            ReSharper disable SuspiciousTypeConversion.Global
         </member>
         <member name="M:SilDev.TaskBarProgress.SetState(System.IntPtr,SilDev.TaskBarProgressState)">
             <summary>
@@ -21962,6 +22008,7 @@
                 An overkill class that provides a lot of Windows API (Application
                 Programming Interface) functions.
             </summary>
+            ReSharper disable CommentTypo
         </member>
         <member name="T:SilDev.WinApi.EnumChildProc">
             <summary>
@@ -22335,6 +22382,7 @@
             <summary>
                 Same as <see cref="F:SilDev.WinApi.LocalAllocFlags.LMemMoveable"/>.
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="F:SilDev.WinApi.LocalAllocFlags.LMemZeroInit">
             <summary>
@@ -22345,11 +22393,13 @@
             <summary>
                 Combines <see cref="F:SilDev.WinApi.LocalAllocFlags.LMemFixed"/> and <see cref="F:SilDev.WinApi.LocalAllocFlags.LMemZeroInit"/>.
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="F:SilDev.WinApi.LocalAllocFlags.LHND">
             <summary>
                 Combines <see cref="F:SilDev.WinApi.LocalAllocFlags.LMemMoveable"/> and <see cref="F:SilDev.WinApi.LocalAllocFlags.LMemZeroInit"/>.
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="T:SilDev.WinApi.MemAllocTypes">
             <summary>
@@ -25662,6 +25712,7 @@
                 the system default UI language (also known as "install language") is
                 returned.
             </summary>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.GetWindowLong(System.IntPtr,SilDev.WinApi.WindowLongFlags)">
             <summary>
@@ -26665,6 +26716,7 @@
             <returns>
                 If the function succeeds, the return value is nonzero.
             </returns>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.SetProcessWorkingSetSize(System.IntPtr,System.UIntPtr,System.UIntPtr)">
             <summary>
@@ -26991,6 +27043,7 @@
                 structure on entry and on exit depends on the value set in the dwMessage
                 parameter. See the individual message pages for specifics.
             </param>
+            ReSharper disable once InconsistentNaming
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.ShellExecute(System.IntPtr,System.String,System.String,System.String,System.String,SilDev.WinApi.ShowWindowFlags)">
             <summary>

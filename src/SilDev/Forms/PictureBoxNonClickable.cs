@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: PictureBoxNonClickable.cs
-// Version:  2020-01-13 13:04
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,7 +16,6 @@
 namespace SilDev.Forms
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Windows.Forms;
 
     /// <summary>
@@ -36,11 +35,12 @@ namespace SilDev.Forms
         ///     <see langword="true"/> to determine that the picture box is click-able;
         ///     otherwise, <see langword="false"/>.
         /// </param>
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        /// ReSharper disable SuspiciousTypeConversion.Global
         public PictureBoxNonClickable(bool clickable = false)
         {
             if (clickable)
                 return;
+
             if (Parent is IMouseEvent p)
                 MouseClick += p.MouseClick;
         }

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,7 +17,6 @@ namespace SilDev.Network
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Net;
     using System.Net.NetworkInformation;
@@ -31,7 +30,7 @@ namespace SilDev.Network
         /// <summary>
         ///     Provides options for specifying a Domain Name System provider.
         /// </summary>
-        [SuppressMessage("ReSharper", "CommentTypo")]
+        /// ReSharper disable CommentTypo
         public enum DnsOption
         {
             /// <summary>
@@ -72,13 +71,13 @@ namespace SilDev.Network
         /// <summary>
         ///     Determines whether the current IPv4 connection is available.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        /// ReSharper disable once InconsistentNaming
         public static bool IPv4IsAvalaible => _ipv4IsAvalaible ??= InternetIsAvailable();
 
         /// <summary>
         ///     Determines whether the current IPv6 connection is available.
         /// </summary>
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        /// ReSharper disable once InconsistentNaming
         public static bool IPv6IsAvalaible => _ipv6IsAvalaible ??= InternetIsAvailable(true);
 
         /// <summary>
@@ -237,7 +236,7 @@ namespace SilDev.Network
             }
             var addresses = GetDnsAddresses(dnsOptions);
             var protocol = Convert.ToInt32(iPv6);
-            return addresses[protocol].Select(address => Ping(address, maxRoundtripTime) < maxRoundtripTime).Any(isAvailable => !iPv6 && (_ipv4IsAvalaible = isAvailable).ToBoolean() || iPv6 && (_ipv6IsAvalaible = isAvailable).ToBoolean());
+            return addresses[protocol].Select(address => Ping(address, maxRoundtripTime) < maxRoundtripTime).Any(isAvailable => (!iPv6 && (_ipv4IsAvalaible = isAvailable).ToBoolean()) || (iPv6 && (_ipv6IsAvalaible = isAvailable).ToBoolean()));
         }
 
         /// <summary>

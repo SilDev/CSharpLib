@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2021-04-22 19:47
+// Version:  2023-11-11 16:27
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -16,13 +16,28 @@
 namespace SilDev
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Windows.Forms;
     using Intern;
     using Microsoft.Win32;
+
+    /// <summary>
+    ///     Provides enumerated flags of the taskbar alignment, added in Windows 11.
+    /// </summary>
+    public enum TaskBarAlignment
+    {
+        /// <summary>
+        ///     The taskbar alignment is on the left side.
+        /// </summary>
+        Left,
+
+        /// <summary>
+        ///     The taskbar alignment is centered.
+        /// </summary>
+        Center,
+    }
 
     /// <summary>
     ///     Provides enumerated flags of the taskbar location.
@@ -173,6 +188,20 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Returns the current <see cref="TaskBarAlignment"/> of the taskbar.
+        /// </summary>
+        public static TaskBarAlignment GetAlignment()
+        {
+            var tbAl = Reg.Read("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "TaskbarAl", -1);
+            return tbAl switch
+            {
+                < 0 when EnvironmentEx.OperatingSystemVersion.Major > 10 => TaskBarAlignment.Center,
+                < 0 => TaskBarAlignment.Left,
+                _ => tbAl > 0 ? TaskBarAlignment.Center : TaskBarAlignment.Left
+            };
+        }
+
+        /// <summary>
         ///     Returns the location of the taskbar.
         /// </summary>
         /// <param name="hWnd">
@@ -197,19 +226,14 @@ namespace SilDev
         public static int GetSize(IntPtr hWnd = default)
         {
             var screen = hWnd == default ? Screen.PrimaryScreen : Screen.FromHandle(hWnd);
-            switch (GetLocation())
+            return GetLocation() switch
             {
-                case TaskBarLocation.Top:
-                    return screen.WorkingArea.Top;
-                case TaskBarLocation.Bottom:
-                    return screen.Bounds.Bottom - screen.WorkingArea.Bottom;
-                case TaskBarLocation.Right:
-                    return screen.Bounds.Right - screen.WorkingArea.Right;
-                case TaskBarLocation.Left:
-                    return screen.WorkingArea.Left;
-                default:
-                    return 0;
-            }
+                TaskBarLocation.Top => screen.WorkingArea.Top,
+                TaskBarLocation.Bottom => screen.Bounds.Bottom - screen.WorkingArea.Bottom,
+                TaskBarLocation.Right => screen.Bounds.Right - screen.WorkingArea.Right,
+                TaskBarLocation.Left => screen.WorkingArea.Left,
+                _ => 0
+            };
         }
 
         /// <summary>
@@ -218,7 +242,7 @@ namespace SilDev
         /// <param name="hWnd">
         ///     A handle to the window to be added to the taskbar.
         /// </param>
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        /// ReSharper disable SuspiciousTypeConversion.Global
         public static void AddTab(IntPtr hWnd) =>
             (TaskBarInstance as ComImports.ITaskBarList3)?.AddTab(hWnd);
 
@@ -228,7 +252,7 @@ namespace SilDev
         /// <param name="hWnd">
         ///     A handle to the window to be deleted from the taskbar.
         /// </param>
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+        /// ReSharper disable SuspiciousTypeConversion.Global
         public static void DeleteTab(IntPtr hWnd) =>
             (TaskBarInstance as ComImports.ITaskBarList3)?.DeleteTab(hWnd);
 
@@ -296,7 +320,7 @@ namespace SilDev
             if (IsPinned(file) == pin)
                 return true;
 
-            var isPresentWindows = Environment.OSVersion.Version.Major >= 10;
+            var isPresentWindows = EnvironmentEx.OperatingSystemVersion.Major >= 10;
             var shellKeyPath = default(string);
             try
             {
@@ -320,6 +344,7 @@ namespace SilDev
                 if (!isPresentWindows)
                 {
                 */
+
                 var applied = false;
                 for (var i = 0; i < verbs.Count(); i++)
                 {
@@ -380,7 +405,7 @@ namespace SilDev
     ///     Provides static methods to manage a progress bar hosted in a taskbar
     ///     button.
     /// </summary>
-    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+    /// ReSharper disable SuspiciousTypeConversion.Global
     public static class TaskBarProgress
     {
         /// <summary>
