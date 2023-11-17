@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-11-17 19:01
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -26,6 +26,13 @@ namespace SilDev
     /// <summary>
     ///     Provides enumerated symbol index values of the Windows Image Resource
     ///     dynamic link library ('imageres.dll') file on Windows 10.
+    ///     <para>
+    ///         Please note that Microsoft has started replacing some icons with blank
+    ///         ones and the general order also changes with each version of Windows.
+    ///         The order should be handled until Windows 11, but if some symbols are
+    ///         wrong, you can play this indexing game yourself using directly the
+    ///         <see cref="ResourcesEx.GetSystemIcon(int, bool, string)"/> method.
+    ///     </para>
     /// </summary>
     public enum ImageResourceSymbol
     {
@@ -273,13 +280,19 @@ namespace SilDev
             if (!path.EndsWithEx("imageres.dll") || !File.Exists(path))
                 path = PathEx.Combine("%system%\\imageres.dll");
             var version = FileEx.GetFileVersion(path);
+            var index = (int)value;
+            if (version.Major == 10)
+            {
+                // Windows 10
+                if (version.Build < 22000)
+                    return index;
 
-            // Windows 10
-            if (version.Major >= 10)
-                return (int)value;
+                // Windows 11 or above
+                if (index > 207)
+                    return index + 1;
+            }
 
             // Windows 7 + 8
-            var index = (int)value;
             if (index < 187)
                 return index;
             if (index.IsBetween(187, 215))
@@ -308,10 +321,16 @@ namespace SilDev
             if (!path.EndsWithEx("imageres.dll") || !File.Exists(path))
                 path = PathEx.Combine("%system%\\imageres.dll");
             var version = FileEx.GetFileVersion(path);
+            if (version.Major == 10)
+            {
+                // Windows 10
+                if (version.Build < 22000)
+                    return Enum.GetName(typeof(ImageResourceSymbol), value);
 
-            // Windows 10
-            if (version.Major >= 10)
-                return Enum.GetName(typeof(ImageResourceSymbol), value);
+                // Windows 11 or above
+                if (value > 207)
+                    return Enum.GetName(typeof(ImageResourceSymbol), ++value);
+            }
 
             // Windows 7 + 8
             if (value < 187)
@@ -338,7 +357,7 @@ namespace SilDev
         /// <param name="location">
         ///     The directory where the 'imageres.dll' file is located.
         /// </param>
-        public static Icon GetSystemIcon(ImageResourceSymbol index, bool large = false, string location = "%system%")
+        public static Icon GetSystemIcon(int index, bool large = false, string location = "%system%")
         {
             try
             {
@@ -349,7 +368,7 @@ namespace SilDev
                     path = Path.Combine(path, "imageres.dll");
                 if (!File.Exists(path))
                     path = PathEx.Combine("%system%\\imageres.dll");
-                return GetIconFromFile(path, GetImageResourceValue(index), large);
+                return GetIconFromFile(path, index, large);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -359,17 +378,15 @@ namespace SilDev
             return null;
         }
 
-        /// <summary>
-        ///     Extracts a small icon resource under the specified index, from the
-        ///     'imageres.dll' under specified location, and returns its <see cref="Icon"/>
-        ///     instance.
-        /// </summary>
-        /// <param name="index">
-        ///     The index of the icon to extract.
-        /// </param>
-        /// <param name="location">
-        ///     The directory where the 'imageres.dll' file is located.
-        /// </param>
+        /// <inheritdoc cref="GetSystemIcon(int, bool, string)"/>
+        public static Icon GetSystemIcon(int index, string location) =>
+            GetSystemIcon(index, false, location);
+
+        /// <inheritdoc cref="GetSystemIcon(int, bool, string)"/>
+        public static Icon GetSystemIcon(ImageResourceSymbol index, bool large = false, string location = "%system%") =>
+            GetSystemIcon(GetImageResourceValue(index), large, location);
+
+        /// <inheritdoc cref="GetSystemIcon(int, bool, string)"/>
         public static Icon GetSystemIcon(ImageResourceSymbol index, string location) =>
             GetSystemIcon(index, false, location);
 
