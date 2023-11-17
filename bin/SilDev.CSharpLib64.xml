@@ -20969,6 +20969,13 @@
             <summary>
                 Provides enumerated symbol index values of the Windows Image Resource
                 dynamic link library ('imageres.dll') file on Windows 10.
+                <para>
+                    Please note that Microsoft has started replacing some icons with blank
+                    ones and the general order also changes with each version of Windows.
+                    The order should be handled until Windows 11, but if some symbols are
+                    wrong, you can play this indexing game yourself using directly the
+                    <see cref="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.Boolean,System.String)"/> method.
+                </para>
             </summary>
         </member>
         <member name="T:SilDev.ResourcesEx">
@@ -21059,7 +21066,7 @@
                 The directory where the 'imageres.dll' file is located.
             </param>
         </member>
-        <member name="M:SilDev.ResourcesEx.GetSystemIcon(SilDev.ImageResourceSymbol,System.Boolean,System.String)">
+        <member name="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.Boolean,System.String)">
             <summary>
                 Extracts a large or small icon resource under the specified index, from the
                 'imageres.dll' under specified location, and returns its <see cref="T:System.Drawing.Icon"/>
@@ -21076,18 +21083,14 @@
                 The directory where the 'imageres.dll' file is located.
             </param>
         </member>
+        <member name="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.String)">
+            <inheritdoc cref="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.Boolean,System.String)"/>
+        </member>
+        <member name="M:SilDev.ResourcesEx.GetSystemIcon(SilDev.ImageResourceSymbol,System.Boolean,System.String)">
+            <inheritdoc cref="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.Boolean,System.String)"/>
+        </member>
         <member name="M:SilDev.ResourcesEx.GetSystemIcon(SilDev.ImageResourceSymbol,System.String)">
-            <summary>
-                Extracts a small icon resource under the specified index, from the
-                'imageres.dll' under specified location, and returns its <see cref="T:System.Drawing.Icon"/>
-                instance.
-            </summary>
-            <param name="index">
-                The index of the icon to extract.
-            </param>
-            <param name="location">
-                The directory where the 'imageres.dll' file is located.
-            </param>
+            <inheritdoc cref="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.Boolean,System.String)"/>
         </member>
         <member name="M:SilDev.ResourcesEx.GetFileTypeIcon(System.String,System.Boolean)">
             <summary>
