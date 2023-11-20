@@ -3525,6 +3525,51 @@
                 A solid border.
             </summary>
         </member>
+        <member name="T:SilDev.Forms.ControlExColorMode">
+            <summary>
+                Specifies the color mode to apply for a control.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.Light">
+            <summary>
+                Increases the brightness.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.Dark">
+            <summary>
+                Decreases the brightness.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.LightLight">
+            <summary>
+                Increases the brightness a little more.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.DarkDark">
+            <summary>
+                Decreases the brightness a little more.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.LightLightLight">
+            <summary>
+                Extremely increases brightness.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.DarkDarkDark">
+            <summary>
+                Extremely decreases brightness.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.InvertRgb">
+            <summary>
+                Inverts the three RGB component (red, green, blue) values.
+            </summary>
+        </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.Inherit">
+            <summary>
+                Inherit from a second <see cref="T:SilDev.Forms.ControlExColorMode"/> option.
+            </summary>
+        </member>
         <member name="T:SilDev.Forms.ControlEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.Control"/> class.
@@ -3545,6 +3590,29 @@
             </summary>
             <param name="control">
                 The control to check.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.ChangeColorMode(System.Windows.Forms.Control,SilDev.Forms.ControlExColorMode,SilDev.Forms.ControlExColorMode)">
+            <summary>
+                Changes the three RGB component values (Red, Green, Blue) of the
+                <see cref="P:System.Windows.Forms.Control.ForeColor"/> and <see cref="P:System.Windows.Forms.Control.BackColor"/>
+                properties inside all nested controls of the specified control.
+                <para>
+                    Please note that it is not enough to change the colors of all control
+                    elements to achieve a full color mode. To do this you would have to
+                    create inherited classes that override important methods, or handle
+                    DrawHandlerEvents in which you would have to handle every little thing
+                    so that it doesn't look crappy..
+                </para>
+            </summary>
+            <param name="control">
+                The control to change all colors.
+            </param>
+            <param name="foreMode">
+                The <see cref="P:System.Windows.Forms.Control.ForeColor"/> mode to apply.
+            </param>
+            <param name="backMode">
+                The <see cref="P:System.Windows.Forms.Control.BackColor"/> mode to apply.
             </param>
         </member>
         <member name="M:SilDev.Forms.ControlEx.EnableDragMove(System.Windows.Forms.Control,System.Boolean)">
