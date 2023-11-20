@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-11-20 23:26
+// Version:  2023-11-20 23:35
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -223,7 +223,7 @@ namespace SilDev.Forms
                     ControlExColorMode.Light => ControlExColorMode.Dark,
                     ControlExColorMode.Dark => ControlExColorMode.Light,
                     ControlExColorMode.LightLight => ControlExColorMode.DarkDark,
-                    ControlExColorMode.DarkDark => ControlExColorMode.DarkDark,
+                    ControlExColorMode.DarkDark => ControlExColorMode.LightLight,
                     ControlExColorMode.LightLightLight => ControlExColorMode.DarkDarkDark,
                     ControlExColorMode.DarkDarkDark => ControlExColorMode.LightLightLight,
                     _ => ControlExColorMode.InvertRgb
