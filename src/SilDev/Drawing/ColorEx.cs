@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-11-20 23:28
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -452,7 +452,7 @@ namespace SilDev.Drawing
         /// </param>
         public static Color GetAverageColor(this Image image, bool disposeImage = false)
         {
-            if (!(image is { } img))
+            if (image is not { } img)
                 return Color.Empty;
             Color c;
             using (var bmp = new Bitmap(1, 1))

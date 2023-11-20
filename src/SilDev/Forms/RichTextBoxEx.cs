@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: RichTextBoxEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-11-20 23:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -48,7 +48,7 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkText(this RichTextBox richTextBox, string text, Color foreColor, Color? backColor = null, Font font = null)
         {
-            if (!(richTextBox is { } rtb) || string.IsNullOrWhiteSpace(text))
+            if (richTextBox is not { } rtb || string.IsNullOrWhiteSpace(text))
                 return;
             var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
             int start, startIndex = 0, end = rtb.Text.Length - 1, length = text.Length;
@@ -95,7 +95,7 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkLine(this RichTextBox richTextBox, string startKeyword, string endKeyword, Color foreColor, Color? backColor = null, Font font = null)
         {
-            if (!(richTextBox is { } rtb) || string.IsNullOrWhiteSpace(startKeyword))
+            if (richTextBox is not { } rtb || string.IsNullOrWhiteSpace(startKeyword))
                 return;
             var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
             var lines = rtb.Lines;
@@ -144,7 +144,7 @@ namespace SilDev.Forms
         /// </param>
         public static void MarkInLine(this RichTextBox richTextBox, string keyword, int count, Color foreColor, Color? backColor = null, Font font = null)
         {
-            if (!(richTextBox is { } rtb) || string.IsNullOrWhiteSpace(keyword))
+            if (richTextBox is not { } rtb || string.IsNullOrWhiteSpace(keyword))
                 return;
             var selection = new Point(rtb.SelectionStart, rtb.SelectionLength);
             var lines = rtb.Lines;

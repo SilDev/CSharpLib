@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-11-20 23:27
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -845,7 +845,7 @@ namespace SilDev
                 {
                     object newValue = value;
                     var valueType = typeof(TValue);
-                    if (type == RegistryValueKind.None || type == RegistryValueKind.Binary)
+                    if (type is RegistryValueKind.None or RegistryValueKind.Binary)
                     {
                         if (type == RegistryValueKind.None && valueType == typeof(string))
                         {
@@ -996,7 +996,7 @@ namespace SilDev
 #if any || x86
         public static bool ImportFile(string path, bool elevated = false, bool native = false)
 #else
-            public static bool ImportFile(string path, bool elevated = false, bool native = true)
+        public static bool ImportFile(string path, bool elevated = false, bool native = true)
 #endif
         {
             try
@@ -1041,7 +1041,7 @@ namespace SilDev
 #if any || x86
         public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = false)
 #else
-            public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
+        public static bool ImportFile(string path, string[] content, bool elevated = false, bool native = true)
 #endif
         {
             try
@@ -1106,7 +1106,7 @@ namespace SilDev
 #if any || x86
         public static bool ImportFile(string[] content, bool elevated = false, bool native = false) =>
 #else
-            public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
+        public static bool ImportFile(string[] content, bool elevated = false, bool native = true) =>
 #endif
             ImportFile(FileEx.GetUniqueTempPath("tmp", ".reg"), content, elevated, native);
 
