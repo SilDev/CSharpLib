@@ -3,10 +3,10 @@
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
-// 
+//
 // Filename: IniDirect.cs
 // Version:  2020-02-03 21:37
-// 
+//
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________

@@ -3,10 +3,10 @@
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
-// 
+//
 // Filename: ImageEx.cs
 // Version:  2021-04-22 19:45
-// 
+//
 // Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
@@ -312,7 +312,7 @@ namespace SilDev.Drawing
                 size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100d));
                 break;
             }
-            Return:
+        Return:
             return img.Redraw(size.First(), size.Last(), quality);
         }
 

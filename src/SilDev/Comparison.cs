@@ -3,10 +3,10 @@
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
-// 
+//
 // Filename: Comparison.cs
 // Version:  2020-02-03 20:26
-// 
+//
 // Copyright (c) 2020, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________

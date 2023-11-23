@@ -3,10 +3,10 @@
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
-// 
+//
 // Filename: IniHelper.cs
 // Version:  2021-04-22 19:46
-// 
+//
 // Copyright (c) 2021, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
