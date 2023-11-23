@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-11-23 14:14
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -753,6 +753,73 @@ namespace SilDev
         /// </param>
         public static string FormatCurrent(this string format, params object[] args) =>
             string.Format(CultureInfo.CurrentCulture, format, args);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified object using the
+        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        public static string FormatInvariant(this string format, object arg0) =>
+            string.Format(CultureInfo.InvariantCulture, format, arg0);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        /// <param name="arg1">
+        ///     The second object to format.
+        /// </param>
+        public static string FormatInvariant(this string format, object arg0, object arg1) =>
+            string.Format(CultureInfo.InvariantCulture, format, arg0, arg1);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="arg0">
+        ///     The first object to format.
+        /// </param>
+        /// <param name="arg1">
+        ///     The second object to format.
+        /// </param>
+        /// <param name="arg2">
+        ///     The third object to format.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static string FormatInvariant(this string format, object arg0, object arg1, object arg2) =>
+            string.Format(CultureInfo.InvariantCulture, format, arg0, arg1, arg2);
+
+        /// <summary>
+        ///     Replaces one or more format items in this string with the string
+        ///     representation of a specified objects using the
+        ///     <see cref="CultureInfo.InvariantCulture"/> format information.
+        /// </summary>
+        /// <param name="format">
+        ///     A composite format string.
+        /// </param>
+        /// <param name="args">
+        ///     The objects to format.
+        /// </param>
+        public static string FormatInvariant(this string format, params object[] args) =>
+            string.Format(CultureInfo.InvariantCulture, format, args);
 
         /// <summary>
         ///     Replaces one or more format items in this string with the string
