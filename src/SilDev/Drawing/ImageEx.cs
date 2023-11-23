@@ -301,7 +301,7 @@ namespace SilDev.Drawing
                 img.Width,
                 img.Height
             };
-            if (indicator <= 0 || indicator >= size.First() && indicator >= size.Last())
+            if (indicator <= 0 || (indicator >= size.First() && indicator >= size.Last()))
                 goto Return;
             for (var i = 0; i < size.Length; i++)
             {
@@ -312,7 +312,7 @@ namespace SilDev.Drawing
                 size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100d));
                 break;
             }
-        Return:
+            Return:
             return img.Redraw(size.First(), size.Last(), quality);
         }
 

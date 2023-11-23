@@ -105,13 +105,13 @@ namespace SilDev.Forms
         /// <param name="other">
         ///     The  <see cref="object"/> to compare.
         /// </param>
-        public override readonly bool Equals(object other) =>
+        public readonly override bool Equals(object other) =>
             other is MessageBoxButtonText item && Equals(item);
 
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
-        public override readonly int GetHashCode() =>
+        public readonly override int GetHashCode() =>
             typeof(MessageBoxButtonText).GetHashCode();
 
         /// <summary>

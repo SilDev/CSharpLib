@@ -121,7 +121,7 @@ namespace SilDev.Ini
                 if (!forceOverwrite || skipExistValue)
                 {
                     var curValue = Read(section, key, path);
-                    if (!forceOverwrite && curValue.Equals(strValue, StringComparison.Ordinal) || skipExistValue && !string.IsNullOrWhiteSpace(curValue))
+                    if ((!forceOverwrite && curValue.Equals(strValue, StringComparison.Ordinal)) || (skipExistValue && !string.IsNullOrWhiteSpace(curValue)))
                         return false;
                 }
                 if (string.Concat(section, key, value).All(TextEx.IsAscii))

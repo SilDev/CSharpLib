@@ -78,7 +78,7 @@ namespace SilDev.Ini
         }
 
         internal static bool SectionIsInvalid(string str) =>
-            !(string.IsNullOrEmpty(str) || HasValidStart(str) && str.All(IsValidSectionChar));
+            !(string.IsNullOrEmpty(str) || (HasValidStart(str) && str.All(IsValidSectionChar)));
 
         internal static bool KeyIsInvalid(string str) =>
             string.IsNullOrEmpty(str) || !HasValidStart(str) || !str.All(IsValidKeyChar);

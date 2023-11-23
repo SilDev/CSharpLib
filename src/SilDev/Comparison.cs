@@ -146,10 +146,10 @@ namespace SilDev
         /// </param>
         public static bool ContainsEx(this string source, StringComparison comparisonType, string target0, string target1)
         {
-            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1))
+            if (string.IsNullOrEmpty(source) || (string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1)))
                 return false;
-            return !string.IsNullOrEmpty(target0) && source.IndexOf(target0, 0, comparisonType) != -1 ||
-                   !string.IsNullOrEmpty(target1) && source.IndexOf(target1, 0, comparisonType) != -1;
+            return (!string.IsNullOrEmpty(target0) && source.IndexOf(target0, 0, comparisonType) != -1) ||
+                   (!string.IsNullOrEmpty(target1) && source.IndexOf(target1, 0, comparisonType) != -1);
         }
 
         /// <summary>
@@ -174,11 +174,11 @@ namespace SilDev
         /// </param>
         public static bool ContainsEx(this string source, StringComparison comparisonType, string target0, string target1, string target2)
         {
-            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1) && string.IsNullOrEmpty(target2))
+            if (string.IsNullOrEmpty(source) || (string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1) && string.IsNullOrEmpty(target2)))
                 return false;
-            return !string.IsNullOrEmpty(target0) && source.IndexOf(target0, 0, comparisonType) != -1 ||
-                   !string.IsNullOrEmpty(target1) && source.IndexOf(target1, 0, comparisonType) != -1 ||
-                   !string.IsNullOrEmpty(target2) && source.IndexOf(target2, 0, comparisonType) != -1;
+            return (!string.IsNullOrEmpty(target0) && source.IndexOf(target0, 0, comparisonType) != -1) ||
+                   (!string.IsNullOrEmpty(target1) && source.IndexOf(target1, 0, comparisonType) != -1) ||
+                   (!string.IsNullOrEmpty(target2) && source.IndexOf(target2, 0, comparisonType) != -1);
         }
 
         /// <summary>
@@ -478,11 +478,11 @@ namespace SilDev
         /// </param>
         public static bool ContainsItem<TElement>(this IEnumerable<TElement> source, TElement target0, TElement target1)
         {
-            if (source == null || target0 == null && target1 == null)
+            if (source == null || (target0 == null && target1 == null))
                 return false;
             var elements = source.AsArray();
-            return target0 != null && elements.Contains(target0) ||
-                   target1 != null && elements.Contains(target1);
+            return (target0 != null && elements.Contains(target0)) ||
+                   (target1 != null && elements.Contains(target1));
         }
 
         /// <summary>
@@ -506,12 +506,12 @@ namespace SilDev
         /// </param>
         public static bool ContainsItem<TElement>(this IEnumerable<TElement> source, TElement target0, TElement target1, TElement target2)
         {
-            if (source == null || target0 == null && target1 == null && target2 == null)
+            if (source == null || (target0 == null && target1 == null && target2 == null))
                 return false;
             var elements = source.AsArray();
-            return target0 != null && elements.Contains(target0) ||
-                   target1 != null && elements.Contains(target1) ||
-                   target2 != null && elements.Contains(target2);
+            return (target0 != null && elements.Contains(target0)) ||
+                   (target1 != null && elements.Contains(target1)) ||
+                   (target2 != null && elements.Contains(target2));
         }
 
         /// <summary>
@@ -586,15 +586,15 @@ namespace SilDev
         /// </param>
         public static bool ContainsItem(this IEnumerable<string> source, StringComparison comparisonType, string target0, string target1)
         {
-            if (source == null || target0 == null && target1 == null)
+            if (source == null || (target0 == null && target1 == null))
                 return false;
             var sa = source.AsArray();
             for (var i = 0; i < sa.Length; i++)
             {
                 if (sa[i] == null)
                     continue;
-                if (target0 != null && string.Equals(sa[i], target0, comparisonType) ||
-                    target1 != null && string.Equals(sa[i], target1, comparisonType))
+                if ((target0 != null && string.Equals(sa[i], target0, comparisonType)) ||
+                    (target1 != null && string.Equals(sa[i], target1, comparisonType)))
                     return true;
             }
             return false;
@@ -621,16 +621,16 @@ namespace SilDev
         /// </param>
         public static bool ContainsItem(this IEnumerable<string> source, StringComparison comparisonType, string target0, string target1, string target2)
         {
-            if (source == null || target0 == null && target1 == null && target2 == null)
+            if (source == null || (target0 == null && target1 == null && target2 == null))
                 return false;
             var sa = source.AsArray();
             for (var i = 0; i < sa.Length; i++)
             {
                 if (sa[i] == null)
                     continue;
-                if (target0 != null && string.Equals(sa[i], target0, comparisonType) ||
-                    target1 != null && string.Equals(sa[i], target1, comparisonType) ||
-                    target2 != null && string.Equals(sa[i], target2, comparisonType))
+                if ((target0 != null && string.Equals(sa[i], target0, comparisonType)) ||
+                    (target1 != null && string.Equals(sa[i], target1, comparisonType)) ||
+                    (target2 != null && string.Equals(sa[i], target2, comparisonType)))
                     return true;
             }
             return false;
@@ -779,10 +779,10 @@ namespace SilDev
         /// </param>
         public static bool StartsWithEx(this string source, StringComparison comparisonType, string target0, string target1)
         {
-            if (string.IsNullOrEmpty(source) || target0 == null && target1 == null)
+            if (string.IsNullOrEmpty(source) || (target0 == null && target1 == null))
                 return false;
-            return !string.IsNullOrEmpty(target0) && source.StartsWith(target0, comparisonType) ||
-                   !string.IsNullOrEmpty(target1) && source.StartsWith(target1, comparisonType);
+            return (!string.IsNullOrEmpty(target0) && source.StartsWith(target0, comparisonType)) ||
+                   (!string.IsNullOrEmpty(target1) && source.StartsWith(target1, comparisonType));
         }
 
         /// <summary>
@@ -807,11 +807,11 @@ namespace SilDev
         /// </param>
         public static bool StartsWithEx(this string source, StringComparison comparisonType, string target0, string target1, string target2)
         {
-            if (string.IsNullOrEmpty(source) || target0 == null && target1 == null && target2 == null)
+            if (string.IsNullOrEmpty(source) || (target0 == null && target1 == null && target2 == null))
                 return false;
-            return !string.IsNullOrEmpty(target0) && source.StartsWith(target0, comparisonType) ||
-                   !string.IsNullOrEmpty(target1) && source.StartsWith(target1, comparisonType) ||
-                   !string.IsNullOrEmpty(target2) && source.StartsWith(target2, comparisonType);
+            return (!string.IsNullOrEmpty(target0) && source.StartsWith(target0, comparisonType)) ||
+                   (!string.IsNullOrEmpty(target1) && source.StartsWith(target1, comparisonType)) ||
+                   (!string.IsNullOrEmpty(target2) && source.StartsWith(target2, comparisonType));
         }
 
         /// <summary>
@@ -1113,10 +1113,10 @@ namespace SilDev
         /// </param>
         public static bool EndsWithEx(this string source, StringComparison comparisonType, string target0, string target1)
         {
-            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1))
+            if (string.IsNullOrEmpty(source) || (string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1)))
                 return false;
-            return !string.IsNullOrEmpty(target0) && source.EndsWith(target0, comparisonType) ||
-                   !string.IsNullOrEmpty(target1) && source.EndsWith(target1, comparisonType);
+            return (!string.IsNullOrEmpty(target0) && source.EndsWith(target0, comparisonType)) ||
+                   (!string.IsNullOrEmpty(target1) && source.EndsWith(target1, comparisonType));
         }
 
         /// <summary>
@@ -1141,11 +1141,11 @@ namespace SilDev
         /// </param>
         public static bool EndsWithEx(this string source, StringComparison comparisonType, string target0, string target1, string target2)
         {
-            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1) && string.IsNullOrEmpty(target2))
+            if (string.IsNullOrEmpty(source) || (string.IsNullOrEmpty(target0) && string.IsNullOrEmpty(target1) && string.IsNullOrEmpty(target2)))
                 return false;
-            return !string.IsNullOrEmpty(target0) && source.EndsWith(target0, comparisonType) ||
-                   !string.IsNullOrEmpty(target1) && source.EndsWith(target1, comparisonType) ||
-                   !string.IsNullOrEmpty(target2) && source.EndsWith(target2, comparisonType);
+            return (!string.IsNullOrEmpty(target0) && source.EndsWith(target0, comparisonType)) ||
+                   (!string.IsNullOrEmpty(target1) && source.EndsWith(target1, comparisonType)) ||
+                   (!string.IsNullOrEmpty(target2) && source.EndsWith(target2, comparisonType));
         }
 
         /// <summary>

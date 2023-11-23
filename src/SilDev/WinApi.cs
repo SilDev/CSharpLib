@@ -5961,13 +5961,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is AppBarData item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(AppBarData).GetHashCode();
 
             /// <summary>
@@ -6054,13 +6054,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is CallWndProcRet item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(CallWndProcRet).GetHashCode();
 
             /// <summary>
@@ -6143,13 +6143,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is CopyData item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(CopyData).GetHashCode();
 
             /// <summary>
@@ -6229,13 +6229,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is DeviceInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(DeviceInput).GetHashCode();
 
             /// <summary>
@@ -6299,13 +6299,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is LuId item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(LuId).GetHashCode();
 
             /// <summary>
@@ -6371,13 +6371,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is LuIdAndAttributes item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(LuIdAndAttributes).GetHashCode();
 
             /// <summary>
@@ -6479,13 +6479,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is MouseInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(MouseInput).GetHashCode();
 
             /// <summary>
@@ -6554,13 +6554,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is MouseKeyboardHardwareInput item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(MouseKeyboardHardwareInput).GetHashCode();
 
             /// <summary>
@@ -6647,13 +6647,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is ProcessBasicInformation item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(ProcessBasicInformation).GetHashCode();
 
             /// <summary>
@@ -6730,13 +6730,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is ThemeMargins item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(ThemeMargins).GetHashCode();
 
             /// <summary>
@@ -6816,13 +6816,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is TokenPrivileges item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(TokenPrivileges).GetHashCode();
 
             /// <summary>
@@ -6920,13 +6920,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is WindowPlacement item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(WindowPlacement).GetHashCode();
 
             /// <summary>
@@ -6991,13 +6991,13 @@ namespace SilDev
             /// <param name="other">
             ///     The  <see cref="object"/> to compare.
             /// </param>
-            public override readonly bool Equals(object other) =>
+            public readonly override bool Equals(object other) =>
                 other is WindowThemeAttributeOptions item && Equals(item);
 
             /// <summary>
             ///     Returns the hash code for this instance.
             /// </summary>
-            public override readonly int GetHashCode() =>
+            public readonly override int GetHashCode() =>
                 typeof(WindowThemeAttributeOptions).GetHashCode();
 
             /// <summary>
