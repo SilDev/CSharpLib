@@ -20114,6 +20114,69 @@
                 The objects to format.
             </param>
         </member>
+        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified object using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+            <param name="arg2">
+                The third object to format.
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object[])">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                The objects to format.
+            </param>
+        </member>
         <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object)">
             <summary>
                 Replaces one or more format items in this string with the string
