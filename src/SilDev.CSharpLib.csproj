@@ -170,6 +170,7 @@
     <Compile Include="SilDev\Ini\IniReader.cs" />
     <Compile Include="SilDev\Ini\IniHelper.cs" />
     <Compile Include="SilDev\Ini\IniWriter.cs" />
+    <Compile Include="SilDev\Ini\Legacy\Ini.cs" />
     <Compile Include="SilDev\Investment\CacheInvestor.cs" />
     <Compile Include="SilDev\Investment\ValueItemHost.cs" />
     <Compile Include="SilDev\Investment\ValueItem.cs" />
@@ -293,6 +294,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(ProjectDir)..\.helper\AssemblyDateVersion.exe" (
