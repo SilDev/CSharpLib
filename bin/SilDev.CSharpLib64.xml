@@ -5564,6 +5564,463 @@
                 The destination file to be written.
             </param>
         </member>
+        <member name="T:SilDev.Ini.Legacy.Ini">
+            <summary>
+                Provides functionality to parse INI documents with automated caching
+                system.
+            </summary>
+        </member>
+        <member name="P:SilDev.Ini.Legacy.Ini.MaxCacheSize">
+            <summary>
+                Gets or sets the maximum number of cached files.
+            </summary>
+        </member>
+        <member name="P:SilDev.Ini.Legacy.Ini.SortBySections">
+            <summary>
+                Specifies a sequence of section names to be sorted first.
+            </summary>
+        </member>
+        <member name="P:SilDev.Ini.Legacy.Ini.FilePath">
+            <summary>
+                Gets or sets a default INI file.
+            </summary>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.SaveCache(System.String,System.String,System.Boolean)">
+            <summary>
+                Save the cached data to the specified file.
+            </summary>
+            <param name="cacheFilePath">
+                The full file path of the cache file to create.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file. If this parameter is NULL,
+                all cached data are saved.
+            </param>
+            <param name="compress">
+                <see langword="true"/> to compress the cache; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.LoadCache(System.String)">
+            <summary>
+                Loads the data of a cache file into memory.
+                <para>
+                    Please note that <see cref="P:SilDev.Ini.Legacy.Ini.MaxCacheSize"/> is ignored in this case.
+                </para>
+            </summary>
+            <param name="cacheFilePath">
+                The full path of a cache file.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.GetRegex(System.Boolean)">
+            <summary>
+                Gets the regular expression to convert the INI data into an accessible
+                format.
+            </summary>
+            <param name="allowEmptySection">
+                <see langword="true"/> to allow key value pairs without section; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.GetFile">
+            <summary>
+                Gets the full path of the default INI file.
+            </summary>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.SetFile(System.String[])">
+            <summary>
+                Specifies an INI file to use as default.
+            </summary>
+            <param name="paths">
+                An array of parts of the path.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.Detach(System.String)">
+            <summary>
+                Removes the read content of an INI file from cache.
+            </summary>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.GetSections(System.String,System.Boolean)">
+            <summary>
+                Retrieves all section names of an INI file or an INI file formatted string
+                value.
+            </summary>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="sorted">
+                <see langword="true"/> to sort the sections; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.GetSections(System.Boolean)">
+            <summary>
+                Retrieves all section names of an INI file or an INI file formatted string
+                value.
+            </summary>
+            <param name="sorted">
+                <see langword="true"/> to sort the sections; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.RemoveSection(System.String,System.String)">
+            <summary>
+                Removes the specified section including all associated keys of an INI file
+                or an INI file formatted string value.
+            </summary>
+            <param name="section">
+                The name of the section to remove.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.GetKeys(System.String,System.String,System.Boolean)">
+            <summary>
+                Retrieves all key names of an INI file or an INI file formatted string
+                value.
+            </summary>
+            <param name="section">
+                The name of the section to get the key names. The value must be NULL to get
+                all the key names of the specified fileOrContent parameter.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="sorted">
+                <see langword="true"/> to sort keys; otherwise, <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.GetKeys(System.String,System.Boolean)">
+            <summary>
+                Retrieves all key names of an INI file or an INI file formatted string
+                value.
+            </summary>
+            <param name="section">
+                The name of the section to get the key names. The value must be NULL to get
+                all the key names of the specified fileOrContent parameter.
+            </param>
+            <param name="sorted">
+                <see langword="true"/> to sort keys; otherwise, <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.RemoveKey(System.String,System.String,System.String)">
+            <summary>
+                Removes the specified key from the specified section, of an INI file or an
+                INI file formatted string value.
+            </summary>
+            <param name="section">
+                The name of the section containing the key to remove.
+            </param>
+            <param name="key">
+                The name of the key to remove.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.ReadAll(System.String,System.Boolean)">
+            <summary>
+                Retrieves the full content of an INI file or an INI file formatted string
+                value.
+            </summary>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="sorted">
+                <see langword="true"/> to sort the sections and keys; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.ReadAll(System.Boolean)">
+            <summary>
+                Retrieves the full content of an INI file or an INI file formatted string
+                value.
+            </summary>
+            <param name="sorted">
+                <see langword="true"/> to sort the sections and keys; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.Read(System.String,System.String,System.String,System.Boolean,System.Int32)">
+            <summary>
+                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI
+                file or an INI file formatted string value.
+            </summary>
+            <param name="section">
+                The name of the section containing the key name. The value must be NULL for
+                a non-section key.
+            </param>
+            <param name="key">
+                The name of the key whose associated value is to be retrieved.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="reread">
+                <see langword="true"/> to reread the INI file; otherwise,
+                <see langword="false"/>.
+            </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.ReadOnly(System.String,System.String,System.String,System.Int32)">
+            <summary>
+                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI
+                file or an INI file formatted string value and release all cached resources
+                used by the specified INI file or the INI file formatted string value.
+            </summary>
+            <param name="section">
+                The name of the section containing the key name. The value must be NULL for
+                a non-section key.
+            </param>
+            <param name="key">
+                The name of the key whose associated value is to be retrieved.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.Read``1(System.String,System.String,``0,System.String,System.Boolean)">
+            <summary>
+                Retrieves a value from the specified section in an INI file or an INI file
+                formatted string value.
+            </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="section">
+                The name of the section containing the key name.
+            </param>
+            <param name="key">
+                The name of the key whose associated value is to be retrieved.
+            </param>
+            <param name="defValue">
+                The value that is used as default.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="reread">
+                <see langword="true"/> to reread the INI file; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.ReadOnly``1(System.String,System.String,``0,System.String)">
+            <summary>
+                Retrieves a value from the specified section in an INI file or an INI file
+                formatted string value and release all cached resources used by the
+                specified INI file or the INI file formatted string value.
+            </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="section">
+                The name of the section containing the key name.
+            </param>
+            <param name="key">
+                The name of the key whose associated value is to be retrieved.
+            </param>
+            <param name="defValue">
+                The value that is used as default.
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.ReadDirect(System.String,System.String,System.String)">
+            <summary>
+                Retrieves a <see cref="T:System.String"/> value from the specified section in an INI
+                file.
+                <para>
+                    The Win32-API without file caching is used for reading in this case.
+                </para>
+            </summary>
+            <param name="section">
+                The name of the section containing the key name.
+            </param>
+            <param name="key">
+                The name of the key whose associated value is to be retrieved.
+            </param>
+            <param name="file">
+                The full file path of an INI file.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.WriteAll(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}},System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Writes the specified content to an INI file on the disk.
+            </summary>
+            <param name="content">
+                The content based on <see cref="M:SilDev.Ini.Legacy.Ini.ReadAll(System.String,System.Boolean)"/>.
+                <para>
+                    If this parameter is NULL, the function writes all the cached data from
+                    the specified INI file to the disk.
+                </para>
+            </param>
+            <param name="file">
+                The full file path of an INI file.
+                <para>
+                    If this parameter is NULL, the default INI file is used.
+                </para>
+            </param>
+            <param name="sorted">
+                <see langword="true"/> to sort the sections and keys; otherwise,
+                <see langword="false"/>.
+            </param>
+            <param name="detach">
+                <see langword="true"/> to release all cached resources used by the
+                specified INI file; otherwise, <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.WriteAll(System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Writes all the cached data from the specified INI file to the disk.
+            </summary>
+            <param name="file">
+                The full file path of an INI file.
+                <para>
+                    If this parameter is NULL, the default INI file is used.
+                </para>
+            </param>
+            <param name="sorted">
+                <see langword="true"/> to sort the sections and keys; otherwise,
+                <see langword="false"/>.
+            </param>
+            <param name="detach">
+                <see langword="true"/> to release all cached resources used by the
+                specified INI file; otherwise, <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.Write``1(System.String,System.String,``0,System.String,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+                Copies the specified value into the specified section of an INI file.
+                <para>
+                    This function updates only the cache and has no effect on the file
+                    until <see cref="M:SilDev.Ini.Legacy.Ini.WriteAll(System.String,System.Boolean,System.Boolean)"/> is called.
+                </para>
+            </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="section">
+                The name of the section to which the value will be copied.
+            </param>
+            <param name="key">
+                The name of the key to be associated with a value.
+                <para>
+                    If this parameter is NULL, the entire section, including all entries
+                    within the section, is deleted.
+                </para>
+            </param>
+            <param name="value">
+                The value to be written to the file.
+                <para>
+                    If this parameter is NULL, the key pointed to by the key parameter is
+                    deleted.
+                </para>
+            </param>
+            <param name="fileOrContent">
+                The full file path or content of an INI file.
+            </param>
+            <param name="forceOverwrite">
+                <see langword="true"/> to enable overwriting of a key with the same value
+                as specified; otherwise, <see langword="false"/>.
+            </param>
+            <param name="skipExistValue">
+                <see langword="true"/> to skip an existing value, even it is not the same
+                value as specified; otherwise, <see langword="false"/>.
+            </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.Write``1(System.String,System.String,``0,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+                Copies the specified value into the specified section of an INI file.
+                <para>
+                    This function updates only the cache and has no effect on the file
+                    until <see cref="M:SilDev.Ini.Legacy.Ini.WriteAll(System.String,System.Boolean,System.Boolean)"/> is called.
+                </para>
+            </summary>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="section">
+                The name of the section to which the value will be copied.
+            </param>
+            <param name="key">
+                The name of the key to be associated with a value.
+                <para>
+                    If this parameter is NULL, the entire section, including all entries
+                    within the section, is deleted.
+                </para>
+            </param>
+            <param name="value">
+                The value to be written to the file.
+                <para>
+                    If this parameter is NULL, the key pointed to by the key parameter is
+                    deleted.
+                </para>
+            </param>
+            <param name="forceOverwrite">
+                <see langword="true"/> to enable overwriting of a key with the same value
+                as specified; otherwise, <see langword="false"/>.
+            </param>
+            <param name="skipExistValue">
+                <see langword="true"/> to skip an existing value, even it is not the same
+                value as specified; otherwise, <see langword="false"/>.
+            </param>
+            <param name="index">
+                The value index used to handle multiple key value pairs.
+            </param>
+        </member>
+        <member name="M:SilDev.Ini.Legacy.Ini.WriteDirect(System.String,System.String,System.Object,System.String,System.Boolean,System.Boolean)">
+            <summary>
+                Copies the <see cref="T:System.String"/> representation of the specified
+                <see cref="T:System.Object"/> value into the specified section of an INI file. If
+                the file does not exist, it is created.
+                <para>
+                    The Win32-API is used for writing in this case. Please note that this
+                    function writes all changes directly on the disk. This causes many
+                    write accesses when used incorrectly.
+                </para>
+            </summary>
+            <param name="section">
+                The name of the section to which the value will be copied.
+            </param>
+            <param name="key">
+                The name of the key to be associated with a value.
+                <para>
+                    If this parameter is NULL, the entire section, including all entries
+                    within the section, is deleted.
+                </para>
+            </param>
+            <param name="value">
+                The value to be written to the file.
+                <para>
+                    If this parameter is NULL, the key pointed to by the key parameter is
+                    deleted.
+                </para>
+            </param>
+            <param name="file">
+                The full path of an INI file.
+            </param>
+            <param name="forceOverwrite">
+                <see langword="true"/> to enable overwriting of a key with the same value
+                as specified; otherwise, <see langword="false"/>.
+            </param>
+            <param name="skipExistValue">
+                <see langword="true"/> to skip an existing value, even it is not the same
+                value as specified; otherwise, <see langword="false"/>.
+            </param>
+        </member>
         <member name="T:SilDev.Investment.CacheInvestor">
             <summary>
                 Provides simple global caching of elements.
