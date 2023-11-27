@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IniDocument.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-11-27 12:17
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -440,8 +440,14 @@ namespace SilDev.Ini
         /// <param name="index">
         ///     The zero-based index whose the value is associated.
         /// </param>
-        public string GetValue(string section, string key, int index) =>
-            _document.ContainsKey(section ??= string.Empty) && _document[section].ContainsKey(key) && _document[section][key].Count > index ? _document[section][key][index] : null;
+        public string GetValue(string section, string key, int index)
+        {
+            if (_document.ContainsKey(section ??= string.Empty) &&
+                _document[section].ContainsKey(key) &&
+                _document[section][key].Count > index)
+                return _document[section][key][index];
+            return null;
+        }
 
         /// <summary>
         ///     Sets the specified value under the index for the specified key in the
