@@ -2791,6 +2791,11 @@
                 Expands the functionality for the <see cref="T:System.Drawing.Size"/> class.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.SizeEx.GetActiveDesktopSize">
+            <summary>
+                Gets the desktop size of the screen where the mouse pointer is located.
+            </summary>
+        </member>
         <member name="M:SilDev.Drawing.SizeEx.ScaleDimension(System.Int32,System.Single,System.Single)">
             <summary>
                 Scales the specified width or height dimension based on the specified DPI
@@ -11231,6 +11236,16 @@
         <member name="T:SilDev.Desktop">
             <summary>
                 Provides the functionality to manage desktop functions.
+            </summary>
+        </member>
+        <member name="P:SilDev.Desktop.AppsUseDarkTheme">
+            <summary>
+                Determines whether dark mode is enabled for applications.
+            </summary>
+        </member>
+        <member name="P:SilDev.Desktop.SystemUseDarkTheme">
+            <summary>
+                Determines whether dark mode is enabled for the system.
             </summary>
         </member>
         <member name="M:SilDev.Desktop.Refresh(System.Boolean,System.Boolean)">
