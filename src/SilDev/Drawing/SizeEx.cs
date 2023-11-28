@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: SizeEx.cs
-// Version:  2023-11-28 16:50
+// Version:  2023-11-28 17:18
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -26,14 +26,28 @@ namespace SilDev.Drawing
     public static class SizeEx
     {
         /// <summary>
+        ///     Gets the desktop size of the screen where the specified x- and
+        ///     y-coordinates are located.
+        /// </summary>
+        /// <param name="point">
+        ///     The x- and y-coordinates from which to determine the desktop size.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static Size GetDesktopSize(Point point)
+        {
+            foreach (var screen in Screen.AllScreens.Where(x => x.Bounds.Contains(point)))
+                return screen.WorkingArea.Size;
+            return Screen.PrimaryScreen.WorkingArea.Size;
+        }
+
+        /// <summary>
         ///     Gets the desktop size of the screen where the mouse pointer is located.
         /// </summary>
         public static Size GetActiveDesktopSize()
         {
             var curPos = WinApi.NativeHelper.GetCursorPos();
-            foreach (var screen in Screen.AllScreens.Where(x => x.Bounds.Contains(curPos)))
-                return screen.WorkingArea.Size;
-            return Screen.PrimaryScreen.WorkingArea.Size;
+            return GetDesktopSize(curPos);
         }
 
         /// <summary>
