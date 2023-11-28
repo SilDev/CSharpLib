@@ -2791,6 +2791,17 @@
                 Expands the functionality for the <see cref="T:System.Drawing.Size"/> class.
             </summary>
         </member>
+        <member name="M:SilDev.Drawing.SizeEx.GetDesktopSize(System.Drawing.Point)">
+            <summary>
+                Gets the desktop size of the screen where the specified x- and
+                y-coordinates are located.
+            </summary>
+            <param name="point">
+                The x- and y-coordinates from which to determine the desktop size.
+            </param>
+            <returns>
+            </returns>
+        </member>
         <member name="M:SilDev.Drawing.SizeEx.GetActiveDesktopSize">
             <summary>
                 Gets the desktop size of the screen where the mouse pointer is located.
