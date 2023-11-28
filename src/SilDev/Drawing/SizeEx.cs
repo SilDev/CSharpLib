@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: SizeEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2023-11-28 16:50
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,12 +17,25 @@ namespace SilDev.Drawing
 {
     using System;
     using System.Drawing;
+    using System.Linq;
+    using System.Windows.Forms;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="Size"/> class.
     /// </summary>
     public static class SizeEx
     {
+        /// <summary>
+        ///     Gets the desktop size of the screen where the mouse pointer is located.
+        /// </summary>
+        public static Size GetActiveDesktopSize()
+        {
+            var curPos = WinApi.NativeHelper.GetCursorPos();
+            foreach (var screen in Screen.AllScreens.Where(x => x.Bounds.Contains(curPos)))
+                return screen.WorkingArea.Size;
+            return Screen.PrimaryScreen.WorkingArea.Size;
+        }
+
         /// <summary>
         ///     Scales the specified width or height dimension based on the specified DPI
         ///     values.
