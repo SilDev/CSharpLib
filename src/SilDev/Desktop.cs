@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2020-01-13 13:02
+// Version:  2023-11-28 16:57
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -23,6 +23,20 @@ namespace SilDev
     /// </summary>
     public static class Desktop
     {
+        private const string ThemesPersonalizePath = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
+
+        /// <summary>
+        ///     Determines whether dark mode is enabled for applications.
+        /// </summary>
+        public static bool AppsUseDarkTheme =>
+            Reg.Read(ThemesPersonalizePath, "AppsUseLightTheme", 1) == 0;
+
+        /// <summary>
+        ///     Determines whether dark mode is enabled for the system.
+        /// </summary>
+        public static bool SystemUseDarkTheme =>
+            Reg.Read(ThemesPersonalizePath, "SystemUseLightTheme", 1) == 0;
+
         /// <summary>
         ///     Refreshes the desktop.
         /// </summary>
