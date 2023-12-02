@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -107,6 +107,28 @@ namespace SilDev
                     _ => _version = Environment.Version
                 };
             }
+        }
+
+        /// <summary>
+        ///     Determines whether the current Windows version corresponds to the specified
+        ///     values or is newer.
+        /// </summary>
+        /// <param name="major">
+        ///     The minimum major version number.
+        /// </param>
+        /// <param name="build">
+        ///     The minimum build version number.
+        /// </param>
+        public static bool IsAtLeastWindows(int major, int build = default)
+        {
+            if (major == 11)
+            {
+                major = 10;
+                if (build < 22000)
+                    build = 22000;
+            }
+            var osVersion = Environment.OSVersion.Version;
+            return osVersion.Major >= major && osVersion.Build >= build;
         }
 
         /// <summary>
