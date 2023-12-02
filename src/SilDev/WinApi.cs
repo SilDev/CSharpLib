@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2023-11-11 16:26
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -368,6 +368,75 @@ namespace SilDev
             ///     monitor.
             /// </summary>
             SetAutoHideBarEx = 0xc
+        }
+
+        /// <summary>
+        ///     Provides enumerated boolean options.
+        /// </summary>
+        public enum DwmBooleanOption
+        {
+            /// <summary>
+            ///     Send <see langword="false"/>.
+            /// </summary>
+            DwmwCpFalse = 0x0,
+
+            /// <summary>
+            ///     Send <see langword="true"/>.
+            /// </summary>
+            DwmwCpTrue = 0x1
+        }
+
+        /// <summary>
+        ///     Provides enumerated attributes of DwmSetWindowAttribute.
+        /// </summary>
+        public enum DwmWindowAttribute
+        {
+            /// <summary>
+            ///     Specifies to use the dark mode for a window (before update 20H1).
+            /// </summary>
+            [EditorBrowsable(EditorBrowsableState.Never)]
+            DwmwaUseImmersiveDarkModeBefore20H1 = 0x13,
+
+            /// <summary>
+            ///     Specifies to use the dark mode for a window.
+            /// </summary>
+            DwmwaUseImmersiveDarkMode = 0x14,
+
+            /// <summary>
+            ///     Specifies the rounded corner preference for a window.
+            /// </summary>
+            DwmwaWindowCornerPreference = 0x21,
+
+            /// <summary>
+            ///     Specifies to use the Mica material  for a window.
+            /// </summary>
+            DwmwaMicaEffect = 0x405
+        }
+
+        /// <summary>
+        ///     Provides enumerated preferences of DwmSetWindowAttribute.
+        /// </summary>
+        public enum DwmWindowCornerPreference
+        {
+            /// <summary>
+            ///     Let the system decide whether or not to round window corners.
+            /// </summary>
+            DwmwCpDefault = 0x0,
+
+            /// <summary>
+            ///     Never round window corners.
+            /// </summary>
+            DwmwCpDoNotRound = 0x1,
+
+            /// <summary>
+            ///     Round the corners if appropriate.
+            /// </summary>
+            DwmwCpRound = 0x2,
+
+            /// <summary>
+            ///     Round the corners if appropriate, with a small radius.
+            /// </summary>
+            DwmwCpRoundSmall = 0x3
         }
 
         /// <summary>
@@ -3439,6 +3508,35 @@ namespace SilDev
             /// </param>
             public static int DwmIsCompositionEnabled(ref int pfEnabled) =>
                 NativeMethods.DwmIsCompositionEnabled(ref pfEnabled);
+
+            /// <summary>
+            ///     Sets the value of Desktop Window Manager (DWM) non-client rendering
+            ///     attributes for a window.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     The handle to the window for which the attribute value is to be set.
+            /// </param>
+            /// <param name="pvAttribute">
+            ///     A pointer to an object containing the attribute value to set.
+            /// </param>
+            public static void DwmSetWindowAttribute(IntPtr hWnd, DwmWindowCornerPreference pvAttribute) =>
+                NativeMethods.DwmSetWindowAttribute(hWnd, DwmWindowAttribute.DwmwaWindowCornerPreference, ref pvAttribute, sizeof(uint));
+
+            /// <summary>
+            ///     Sets the value of Desktop Window Manager (DWM) non-client rendering
+            ///     attributes for a window.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     The handle to the window for which the attribute value is to be set.
+            /// </param>
+            /// <param name="dwAttribute">
+            ///     A flag describing which value to set, specified as a value of the
+            ///     <see cref="DwmWindowAttribute"/> enumeration. This parameter specifies
+            ///     which attribute to set, and the pvAttribute parameter points to an object
+            ///     containing the attribute value.
+            /// </param>
+            public static void DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, bool enabled = true) =>
+                NativeMethods.DwmSetWindowAttribute(hWnd, dwAttribute, ref enabled, Marshal.SizeOf(enabled));
 
             /// <summary>
             ///     Destroys a modal dialog box, causing the system to end any processing for
@@ -7765,6 +7863,64 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.Dwmapi, SetLastError = true)]
             internal static extern int DwmIsCompositionEnabled(ref int pfEnabled);
+
+            /// <summary>
+            ///     Sets the value of Desktop Window Manager (DWM) non-client rendering
+            ///     attributes for a window.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     The handle to the window for which the attribute value is to be set.
+            /// </param>
+            /// <param name="dwAttribute">
+            ///     A flag describing which value to set, specified as a value of the
+            ///     <see cref="DwmWindowAttribute"/> enumeration. This parameter specifies
+            ///     which attribute to set, and the pvAttribute parameter points to an object
+            ///     containing the attribute value.
+            /// </param>
+            /// <param name="pvAttribute">
+            ///     A pointer to an object containing the attribute value to set. The type of
+            ///     the value set depends on the value of the <paramref name="dwAttribute"/>
+            ///     parameter. The <see cref="DwmWindowAttribute"/> enumeration topic
+            ///     indicates, in the row for each flag, what type of value you should pass a
+            ///     pointer to in the <paramref name="pvAttribute"/> parameter.
+            /// </param>
+            /// <param name="cbAttribute">
+            ///     The size, in bytes, of the attribute value being set via the
+            ///     <paramref name="pvAttribute"/> parameter. The type of the value set, and
+            ///     therefore its size in bytes, depends on the value of the
+            ///     <paramref name="dwAttribute"/> parameter.
+            /// </param>
+            [DllImport(DllNames.Dwmapi, PreserveSig = true)]
+            internal static extern void DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref DwmWindowCornerPreference pvAttribute, uint cbAttribute);
+
+            /// <summary>
+            ///     Sets the value of Desktop Window Manager (DWM) non-client rendering
+            ///     attributes for a window.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     The handle to the window for which the attribute value is to be set.
+            /// </param>
+            /// <param name="dwAttribute">
+            ///     A flag describing which value to set, specified as a value of the
+            ///     <see cref="DwmWindowAttribute"/> enumeration. This parameter specifies
+            ///     which attribute to set, and the pvAttribute parameter points to an object
+            ///     containing the attribute value.
+            /// </param>
+            /// <param name="pvAttribute">
+            ///     A pointer to an object containing the attribute value to set. The type of
+            ///     the value set depends on the value of the <paramref name="dwAttribute"/>
+            ///     parameter. The <see cref="DwmWindowAttribute"/> enumeration topic
+            ///     indicates, in the row for each flag, what type of value you should pass a
+            ///     pointer to in the <paramref name="pvAttribute"/> parameter.
+            /// </param>
+            /// <param name="cbAttribute">
+            ///     The size, in bytes, of the attribute value being set via the
+            ///     <paramref name="pvAttribute"/> parameter. The type of the value set, and
+            ///     therefore its size in bytes, depends on the value of the
+            ///     <paramref name="dwAttribute"/> parameter.
+            /// </param>
+            [DllImport(DllNames.Dwmapi, PreserveSig = true)]
+            internal static extern void DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref bool pvAttribute, int cbAttribute);
 
             /// <summary>
             ///     Destroys a modal dialog box, causing the system to end any processing for
