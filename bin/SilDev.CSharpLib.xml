@@ -2357,6 +2357,29 @@
                 The color to be adjusted.
             </param>
         </member>
+        <member name="M:SilDev.Drawing.ColorEx.GetAppsThemeBackColor(System.Drawing.Color,System.Boolean)">
+            <summary>
+                Converts the specified color to a dark mode color when
+                <see cref="P:SilDev.Desktop.AppsUseDarkTheme"/> is enabled; otherwise the specified
+                color will be returned without changes.
+            </summary>
+            <param name="invertRgb">
+                Determines whether <see cref="M:SilDev.Drawing.ColorEx.InvertRgb(System.Drawing.Color,System.Nullable{System.Byte})"/> should be used
+                instead of <see cref="M:SilDev.Drawing.ColorEx.EnsureDarkDarkDark(System.Drawing.Color)"/> for the transformation.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ColorEx.GetAppsThemeForeColor(System.Drawing.Color,System.Boolean)">
+            <summary>
+                Converts the specified color to a dark mode color when
+                <see cref="P:SilDev.Desktop.AppsUseDarkTheme"/> is enabled; otherwise the specified
+                color will be returned without changes.
+            </summary>
+            <param name="invertRgb">
+                Determines whether <see cref="M:SilDev.Drawing.ColorEx.InvertRgb(System.Drawing.Color,System.Nullable{System.Byte})"/> should be used
+                instead of <see cref="M:SilDev.Drawing.ColorEx.EnsureLightLightLight(System.Drawing.Color)"/> for the
+                transformation.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ColorEx.GetRandomColor(System.Int32)">
             <summary>
                 Creates a random color based on the specified seed.
@@ -2799,15 +2822,13 @@
             <param name="point">
                 The x- and y-coordinates from which to determine the desktop size.
             </param>
-            <returns>
-            </returns>
         </member>
         <member name="M:SilDev.Drawing.SizeEx.GetActiveDesktopSize">
             <summary>
                 Gets the desktop size of the screen where the mouse pointer is located.
             </summary>
         </member>
-        <member name="M:SilDev.Drawing.SizeEx.ScaleDimension(System.Int32,System.Single,System.Single)">
+        <member name="M:SilDev.Drawing.SizeEx.ScaleDimension(System.Single,System.Single,System.Single)">
             <summary>
                 Scales the specified width or height dimension based on the specified DPI
                 values.
@@ -2821,6 +2842,9 @@
             <param name="newDpi">
                 The new resolution.
             </param>
+        </member>
+        <member name="M:SilDev.Drawing.SizeEx.ScaleDimension(System.Int32,System.Single,System.Single)">
+            <inheritdoc cref="M:SilDev.Drawing.SizeEx.ScaleDimension(System.Single,System.Single,System.Single)"/>
         </member>
         <member name="M:SilDev.Drawing.SizeEx.ScaleDimensions(System.Int32,System.Int32,System.Single,System.Single)">
             <summary>
@@ -3051,6 +3075,15 @@
                 The <see cref="T:SilDev.Forms.FormBorderlessResizable.ResizingBorderFlags"/> flags for resizing.
             </summary>
         </member>
+        <member name="P:SilDev.Forms.FormBorderlessResizable.RoundCorners">
+            <summary>
+                Determines whether the corners of the window are rounded.
+                <para>
+                    This feature requires at least Windows 11, where it is enabled by
+                    default.
+                </para>
+            </summary>
+        </member>
         <member name="P:SilDev.Forms.FormBorderlessResizable.BorderThickness">
             <summary>
                 Gets the border thickness.
@@ -3112,10 +3145,10 @@
                 response to handling the <see cref="T:System.Windows.Forms.Message"/>.
             </returns>
         </member>
-        <member name="M:SilDev.Forms.FormBorderlessResizable.SetResizingBorders(SilDev.TaskBarLocation)">
+        <member name="M:SilDev.Forms.FormBorderlessResizable.SetResizingBorders(SilDev.TaskBarLocation,SilDev.TaskBarAlignment)">
             <summary>
                 Sets the <see cref="P:SilDev.Forms.FormBorderlessResizable.ResizingBorders"/> flags depending on the specified
-                <see cref="T:SilDev.TaskBarLocation"/> flag.
+                taskbar location and alignment.
                 <para>
                     Result for <see cref="F:SilDev.TaskBarLocation.Left"/>:
                     <code>
@@ -3150,15 +3183,35 @@
                         <see cref="F:SilDev.Forms.FormBorderlessResizable.ResizingBorderFlags.All"/>
                     </code>
                 </para>
+                <para>
+                    Result for <see cref="F:SilDev.TaskBarAlignment.Center"/>:
+                    <code>
+                        <see cref="F:SilDev.Forms.FormBorderlessResizable.ResizingBorderFlags.Left"/> is added to <see cref="F:SilDev.TaskBarLocation.Top"/> and <see cref="F:SilDev.TaskBarLocation.Bottom"/>
+                    </code>
+                </para>
             </summary>
             <param name="taskBarLocation">
-                The <see cref="T:SilDev.TaskBarLocation"/> flag.
+                The <see cref="T:SilDev.TaskBarLocation"/>.
+            </param>
+            <param name="taskBarAlignment">
+                The <see cref="T:SilDev.TaskBarAlignment"/>.
             </param>
         </member>
         <member name="M:SilDev.Forms.FormBorderlessResizable.OnLoad(System.EventArgs)">
             <summary>
                 Raises the <see cref="E:System.Windows.Forms.Form.Load"/> event.
             </summary>
+            <param name="e">
+                An <see cref="T:System.EventArgs"/> that contains the event data.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.FormBorderlessResizable.WhenShown(System.Object,System.EventArgs)">
+            <summary>
+                Occurs whenever the form is first displayed.
+            </summary>
+            <param name="sender">
+                The object that owns the event.
+            </param>
             <param name="e">
                 An <see cref="T:System.EventArgs"/> that contains the event data.
             </param>
@@ -3629,6 +3682,18 @@
             </param>
             <param name="backMode">
                 The <see cref="P:System.Windows.Forms.Control.BackColor"/> mode to apply.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.EnableDarkMode(System.Windows.Forms.Control)">
+            <summary>
+                Enable dark mode for the specified control.
+                <para>
+                    Please note that this feature requires at least the Windows 10 October
+                    2018 Update.
+                </para>
+            </summary>
+            <param name="control">
+                The control to change all colors.
             </param>
         </member>
         <member name="M:SilDev.Forms.ControlEx.EnableDragMove(System.Windows.Forms.Control,System.Boolean)">
@@ -11259,6 +11324,30 @@
                 Determines whether dark mode is enabled for the system.
             </summary>
         </member>
+        <member name="M:SilDev.Desktop.EnableDarkMode(System.IntPtr)">
+            <summary>
+                Enable dark mode for the window under the specified handle.
+                <para>
+                    Please note that this feature requires at least the Windows 10 October
+                    2018 Update.
+                </para>
+            </summary>
+            <param name="hWnd">
+                Handle to a window.
+            </param>
+        </member>
+        <member name="M:SilDev.Desktop.GetDpi(System.IntPtr)">
+            <summary>
+                Gets the DPI from the specified handle to a window.
+            </summary>
+            <param name="hWnd">
+                Handle to a window.
+                <para>
+                    If this value is set to default, the handle of the current desktop will
+                    be used.
+                </para>
+            </param>
+        </member>
         <member name="M:SilDev.Desktop.Refresh(System.Boolean,System.Boolean)">
             <summary>
                 Refreshes the desktop.
@@ -12569,6 +12658,18 @@
                 Gets a <see cref="T:System.Version"/> object that describes the exact major,
                 minor, build and revision numbers of the common language runtime.
             </summary>
+        </member>
+        <member name="M:SilDev.EnvironmentEx.IsAtLeastWindows(System.Int32,System.Int32)">
+            <summary>
+                Determines whether the current Windows version corresponds to the specified
+                values or is newer.
+            </summary>
+            <param name="major">
+                The minimum major version number.
+            </param>
+            <param name="build">
+                The minimum build version number.
+            </param>
         </member>
         <member name="M:SilDev.EnvironmentEx.CommandLineArgs(System.Boolean,System.Int32,System.Boolean)">
             <summary>
@@ -22957,6 +23058,71 @@
                 monitor.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.DwmBooleanOption">
+            <summary>
+                Provides enumerated boolean options.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmBooleanOption.DwmwCpFalse">
+            <summary>
+                Send <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmBooleanOption.DwmwCpTrue">
+            <summary>
+                Send <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.DwmWindowAttribute">
+            <summary>
+                Provides enumerated attributes of DwmSetWindowAttribute.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowAttribute.DwmwaUseImmersiveDarkModeBefore20H1">
+            <summary>
+                Specifies to use the dark mode for a window (before update 20H1).
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowAttribute.DwmwaUseImmersiveDarkMode">
+            <summary>
+                Specifies to use the dark mode for a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowAttribute.DwmwaWindowCornerPreference">
+            <summary>
+                Specifies the rounded corner preference for a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowAttribute.DwmwaMicaEffect">
+            <summary>
+                Specifies to use the Mica material  for a window.
+            </summary>
+        </member>
+        <member name="T:SilDev.WinApi.DwmWindowCornerPreference">
+            <summary>
+                Provides enumerated preferences of DwmSetWindowAttribute.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowCornerPreference.DwmwCpDefault">
+            <summary>
+                Let the system decide whether or not to round window corners.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowCornerPreference.DwmwCpDoNotRound">
+            <summary>
+                Never round window corners.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowCornerPreference.DwmwCpRound">
+            <summary>
+                Round the corners if appropriate.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.DwmWindowCornerPreference.DwmwCpRoundSmall">
+            <summary>
+                Round the corners if appropriate, with a small radius.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.DuplicateOption">
             <summary>
                 Provides enumerated options of handle duplication.
@@ -25879,6 +26045,33 @@
                 A pointer to a value that, when this function returns successfully,
                 receives <see langword="true"/> if DWM composition is enabled; otherwise,
                 <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.DwmSetWindowAttribute(System.IntPtr,SilDev.WinApi.DwmWindowCornerPreference)">
+            <summary>
+                Sets the value of Desktop Window Manager (DWM) non-client rendering
+                attributes for a window.
+            </summary>
+            <param name="hWnd">
+                The handle to the window for which the attribute value is to be set.
+            </param>
+            <param name="pvAttribute">
+                A pointer to an object containing the attribute value to set.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.DwmSetWindowAttribute(System.IntPtr,SilDev.WinApi.DwmWindowAttribute,System.Boolean)">
+            <summary>
+                Sets the value of Desktop Window Manager (DWM) non-client rendering
+                attributes for a window.
+            </summary>
+            <param name="hWnd">
+                The handle to the window for which the attribute value is to be set.
+            </param>
+            <param name="dwAttribute">
+                A flag describing which value to set, specified as a value of the
+                <see cref="T:SilDev.WinApi.DwmWindowAttribute"/> enumeration. This parameter specifies
+                which attribute to set, and the pvAttribute parameter points to an object
+                containing the attribute value.
             </param>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.EndDialog(System.IntPtr,System.IntPtr)">
@@ -29683,6 +29876,62 @@
                 If this function succeeds, it returns S_OK. Otherwise, it returns an
                 HRESULT error code.
             </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.DwmSetWindowAttribute(System.IntPtr,SilDev.WinApi.DwmWindowAttribute,SilDev.WinApi.DwmWindowCornerPreference@,System.UInt32)">
+            <summary>
+                Sets the value of Desktop Window Manager (DWM) non-client rendering
+                attributes for a window.
+            </summary>
+            <param name="hWnd">
+                The handle to the window for which the attribute value is to be set.
+            </param>
+            <param name="dwAttribute">
+                A flag describing which value to set, specified as a value of the
+                <see cref="T:SilDev.WinApi.DwmWindowAttribute"/> enumeration. This parameter specifies
+                which attribute to set, and the pvAttribute parameter points to an object
+                containing the attribute value.
+            </param>
+            <param name="pvAttribute">
+                A pointer to an object containing the attribute value to set. The type of
+                the value set depends on the value of the <paramref name="dwAttribute"/>
+                parameter. The <see cref="T:SilDev.WinApi.DwmWindowAttribute"/> enumeration topic
+                indicates, in the row for each flag, what type of value you should pass a
+                pointer to in the <paramref name="pvAttribute"/> parameter.
+            </param>
+            <param name="cbAttribute">
+                The size, in bytes, of the attribute value being set via the
+                <paramref name="pvAttribute"/> parameter. The type of the value set, and
+                therefore its size in bytes, depends on the value of the
+                <paramref name="dwAttribute"/> parameter.
+            </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.DwmSetWindowAttribute(System.IntPtr,SilDev.WinApi.DwmWindowAttribute,System.Boolean@,System.Int32)">
+            <summary>
+                Sets the value of Desktop Window Manager (DWM) non-client rendering
+                attributes for a window.
+            </summary>
+            <param name="hWnd">
+                The handle to the window for which the attribute value is to be set.
+            </param>
+            <param name="dwAttribute">
+                A flag describing which value to set, specified as a value of the
+                <see cref="T:SilDev.WinApi.DwmWindowAttribute"/> enumeration. This parameter specifies
+                which attribute to set, and the pvAttribute parameter points to an object
+                containing the attribute value.
+            </param>
+            <param name="pvAttribute">
+                A pointer to an object containing the attribute value to set. The type of
+                the value set depends on the value of the <paramref name="dwAttribute"/>
+                parameter. The <see cref="T:SilDev.WinApi.DwmWindowAttribute"/> enumeration topic
+                indicates, in the row for each flag, what type of value you should pass a
+                pointer to in the <paramref name="pvAttribute"/> parameter.
+            </param>
+            <param name="cbAttribute">
+                The size, in bytes, of the attribute value being set via the
+                <paramref name="pvAttribute"/> parameter. The type of the value set, and
+                therefore its size in bytes, depends on the value of the
+                <paramref name="dwAttribute"/> parameter.
+            </param>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.EndDialog(System.IntPtr,System.IntPtr)">
             <summary>
