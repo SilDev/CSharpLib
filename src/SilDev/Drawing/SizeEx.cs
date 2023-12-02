@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: SizeEx.cs
-// Version:  2023-11-28 17:18
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -32,8 +32,6 @@ namespace SilDev.Drawing
         /// <param name="point">
         ///     The x- and y-coordinates from which to determine the desktop size.
         /// </param>
-        /// <returns>
-        /// </returns>
         public static Size GetDesktopSize(Point point)
         {
             foreach (var screen in Screen.AllScreens.Where(x => x.Bounds.Contains(point)))
@@ -63,6 +61,16 @@ namespace SilDev.Drawing
         /// <param name="newDpi">
         ///     The new resolution.
         /// </param>
+        public static float ScaleDimension(float value, float oldDpi, float newDpi)
+        {
+            var a = Math.Floor(oldDpi);
+            var b = Math.Floor(newDpi);
+            if (Math.Abs(a - b) < 1d)
+                return value;
+            return (int)Math.Floor(b / a * value);
+        }
+
+        /// <inheritdoc cref="ScaleDimension(float, float, float)"/>
         public static int ScaleDimension(int value, float oldDpi, float newDpi)
         {
             var a = Math.Floor(oldDpi);
@@ -115,12 +123,8 @@ namespace SilDev.Drawing
         ///         be used.
         ///     </para>
         /// </param>
-        public static Size ScaleDimensions(int width, int height, IntPtr hWnd = default)
-        {
-            var handle = hWnd == default ? WinApi.NativeMethods.GetDesktopWindow() : hWnd;
-            using var graphics = Graphics.FromHwnd(handle);
-            return ScaleDimensions(width, height, 96f, Math.Max(graphics.DpiX, graphics.DpiY));
-        }
+        public static Size ScaleDimensions(int width, int height, IntPtr hWnd = default) =>
+            ScaleDimensions(width, height, 96f, Desktop.GetDpi(hWnd));
 
         /// <summary>
         ///     Scales the width and height dimensions of this <see cref="Size"/> object

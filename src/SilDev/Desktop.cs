@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2023-11-28 16:57
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -15,6 +15,8 @@
 
 namespace SilDev
 {
+    using System;
+    using System.Drawing;
     using System.IO;
     using SHDocVw;
 
@@ -36,6 +38,42 @@ namespace SilDev
         /// </summary>
         public static bool SystemUseDarkTheme =>
             Reg.Read(ThemesPersonalizePath, "SystemUseLightTheme", 1) == 0;
+
+        /// <summary>
+        ///     Enable dark mode for the window under the specified handle.
+        ///     <para>
+        ///         Please note that this feature requires at least the Windows 10 October
+        ///         2018 Update.
+        ///     </para>
+        /// </summary>
+        /// <param name="hWnd">
+        ///     Handle to a window.
+        /// </param>
+        public static void EnableDarkMode(IntPtr hWnd)
+        {
+            if (hWnd == IntPtr.Zero || !EnvironmentEx.IsAtLeastWindows(10, 17763))
+                return;
+            _ = WinApi.NativeHelper.SetWindowTheme(hWnd, "DarkMode_Explorer");
+            WinApi.NativeHelper.DwmSetWindowAttribute(hWnd, WinApi.DwmWindowAttribute.DwmwaUseImmersiveDarkMode);
+            WinApi.NativeHelper.DwmSetWindowAttribute(hWnd, WinApi.DwmWindowAttribute.DwmwaMicaEffect);
+        }
+
+        /// <summary>
+        ///     Gets the DPI from the specified handle to a window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     Handle to a window.
+        ///     <para>
+        ///         If this value is set to default, the handle of the current desktop will
+        ///         be used.
+        ///     </para>
+        /// </param>
+        public static float GetDpi(IntPtr hWnd = default)
+        {
+            var handle = hWnd == default ? WinApi.NativeMethods.GetDesktopWindow() : hWnd;
+            using var graphics = Graphics.FromHwnd(handle);
+            return Math.Max(graphics.DpiX, graphics.DpiY);
+        }
 
         /// <summary>
         ///     Refreshes the desktop.

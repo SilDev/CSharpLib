@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2023-11-20 23:28
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -206,6 +206,39 @@ namespace SilDev.Drawing
             while (!current.IsLightLightLight())
                 current = ControlPaint.Light(current);
             return current;
+        }
+
+        /// <summary>
+        ///     Converts the specified color to a dark mode color when
+        ///     <see cref="Desktop.AppsUseDarkTheme"/> is enabled; otherwise the specified
+        ///     color will be returned without changes.
+        /// </summary>
+        /// <param name="invertRgb">
+        ///     Determines whether <see cref="InvertRgb(Color, byte?)"/> should be used
+        ///     instead of <see cref="EnsureDarkDarkDark(Color)"/> for the transformation.
+        /// </param>
+        public static Color GetAppsThemeBackColor(this Color color, bool invertRgb = false)
+        {
+            if (Desktop.AppsUseDarkTheme)
+                return invertRgb ? color.InvertRgb() : color.EnsureDarkDarkDark();
+            return color;
+        }
+
+        /// <summary>
+        ///     Converts the specified color to a dark mode color when
+        ///     <see cref="Desktop.AppsUseDarkTheme"/> is enabled; otherwise the specified
+        ///     color will be returned without changes.
+        /// </summary>
+        /// <param name="invertRgb">
+        ///     Determines whether <see cref="InvertRgb(Color, byte?)"/> should be used
+        ///     instead of <see cref="EnsureLightLightLight(Color)"/> for the
+        ///     transformation.
+        /// </param>
+        public static Color GetAppsThemeForeColor(this Color color, bool invertRgb = false)
+        {
+            if (Desktop.AppsUseDarkTheme)
+                return invertRgb ? color.InvertRgb() : color.EnsureLightLightLight();
+            return color;
         }
 
         /// <summary>

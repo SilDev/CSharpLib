@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormBorderlessResizable.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -166,6 +166,15 @@ namespace SilDev.Forms
         protected ResizingBorderFlags ResizingBorders { get; set; } = ResizingBorderFlags.All;
 
         /// <summary>
+        ///     Determines whether the corners of the window are rounded.
+        ///     <para>
+        ///         This feature requires at least Windows 11, where it is enabled by
+        ///         default.
+        ///     </para>
+        /// </summary>
+        protected bool RoundCorners { get; }
+
+        /// <summary>
         ///     Gets the border thickness.
         /// </summary>
         protected int BorderThickness
@@ -185,7 +194,11 @@ namespace SilDev.Forms
         ///     Initializes a new instance of the <see cref="FormBorderlessResizable"/>
         ///     form class.
         /// </summary>
-        public FormBorderlessResizable() => BorderThickness = 6;
+        public FormBorderlessResizable()
+        {
+            BorderThickness = 6;
+            RoundCorners = EnvironmentEx.IsAtLeastWindows(11);
+        }
 
         /// ReSharper disable CommentTypo
         /// <summary>
@@ -275,7 +288,7 @@ namespace SilDev.Forms
 
         /// <summary>
         ///     Sets the <see cref="ResizingBorders"/> flags depending on the specified
-        ///     <see cref="TaskBarLocation"/> flag.
+        ///     taskbar location and alignment.
         ///     <para>
         ///         Result for <see cref="TaskBarLocation.Left"/>:
         ///         <code>
@@ -310,35 +323,36 @@ namespace SilDev.Forms
         ///             <see cref="ResizingBorderFlags.All"/>
         ///         </code>
         ///     </para>
+        ///     <para>
+        ///         Result for <see cref="TaskBarAlignment.Center"/>:
+        ///         <code>
+        ///             <see cref="ResizingBorderFlags.Left"/> is added to <see cref="TaskBarLocation.Top"/> and <see cref="TaskBarLocation.Bottom"/>
+        ///         </code>
+        ///     </para>
         /// </summary>
         /// <param name="taskBarLocation">
-        ///     The <see cref="TaskBarLocation"/> flag.
+        ///     The <see cref="TaskBarLocation"/>.
         /// </param>
-        protected void SetResizingBorders(TaskBarLocation taskBarLocation)
+        /// <param name="taskBarAlignment">
+        ///     The <see cref="TaskBarAlignment"/>.
+        /// </param>
+        protected void SetResizingBorders(TaskBarLocation taskBarLocation, TaskBarAlignment taskBarAlignment)
         {
-            ResizingBorderFlags flags;
-            switch (taskBarLocation)
+            var flags = taskBarLocation switch
             {
-                case TaskBarLocation.Left:
-                case TaskBarLocation.Top:
-                    flags = ResizingBorderFlags.Right |
-                            ResizingBorderFlags.Bottom |
-                            ResizingBorderFlags.BottomRight;
-                    break;
-                case TaskBarLocation.Right:
-                    flags = ResizingBorderFlags.Left |
-                            ResizingBorderFlags.Bottom |
-                            ResizingBorderFlags.BottomLeft;
-                    break;
-                case TaskBarLocation.Bottom:
-                    flags = ResizingBorderFlags.Right |
-                            ResizingBorderFlags.Top |
-                            ResizingBorderFlags.TopRight;
-                    break;
-                default:
-                    flags = ResizingBorderFlags.All;
-                    break;
-            }
+                TaskBarLocation.Left => ResizingBorderFlags.Right | ResizingBorderFlags.Bottom | ResizingBorderFlags.BottomRight,
+                TaskBarLocation.Top => ResizingBorderFlags.Right | ResizingBorderFlags.Bottom | ResizingBorderFlags.BottomRight,
+                TaskBarLocation.Right => ResizingBorderFlags.Left | ResizingBorderFlags.Bottom | ResizingBorderFlags.BottomLeft,
+                TaskBarLocation.Bottom => ResizingBorderFlags.Right | ResizingBorderFlags.Top | ResizingBorderFlags.TopRight,
+                _ => ResizingBorderFlags.All
+            };
+            if (taskBarAlignment == TaskBarAlignment.Center)
+                flags = taskBarLocation switch
+                {
+                    TaskBarLocation.Top => ResizingBorderFlags.Left | flags,
+                    TaskBarLocation.Bottom => ResizingBorderFlags.Left | flags,
+                    _ => flags
+                };
             ResizingBorders = flags;
         }
 
@@ -352,7 +366,21 @@ namespace SilDev.Forms
         {
             base.OnLoad(e);
             FormBorderStyle = FormBorderStyle.None;
+            if (RoundCorners)
+                Shown += WhenShown;
         }
+
+        /// <summary>
+        ///     Occurs whenever the form is first displayed.
+        /// </summary>
+        /// <param name="sender">
+        ///     The object that owns the event.
+        /// </param>
+        /// <param name="e">
+        ///     An <see cref="EventArgs"/> that contains the event data.
+        /// </param>
+        protected virtual void WhenShown(object sender, EventArgs e) =>
+            WinApi.NativeHelper.DwmSetWindowAttribute(Handle, WinApi.DwmWindowCornerPreference.DwmwCpRound);
 
         /// <summary>
         ///     Processes Windows messages.

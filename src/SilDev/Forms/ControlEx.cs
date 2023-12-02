@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-11-20 23:35
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -188,6 +188,27 @@ namespace SilDev.Forms
                         button.FlatAppearance.MouseDownBackColor = GetColor(button.FlatAppearance.MouseDownBackColor, backMode);
                         button.FlatAppearance.MouseDownBackColor = GetColor(button.FlatAppearance.MouseDownBackColor, backMode);
                         break;
+                    case DataGridView { EnableHeadersVisualStyles: false } dgv:
+                        dgv.BackgroundColor = GetColor(dgv.BackgroundColor, backMode);
+                        dgv.ForeColor = GetColor(dgv.GridColor, foreMode);
+                        dgv.GridColor = GetColor(dgv.GridColor, foreMode).EnsureDark();
+                        dgv.ColumnHeadersDefaultCellStyle.BackColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.BackColor, backMode);
+                        dgv.ColumnHeadersDefaultCellStyle.ForeColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.ForeColor, foreMode);
+                        dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor, backMode);
+                        dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor, foreMode);
+                        dgv.RowHeadersDefaultCellStyle.BackColor = GetColor(dgv.RowHeadersDefaultCellStyle.BackColor, backMode);
+                        dgv.RowHeadersDefaultCellStyle.ForeColor = GetColor(dgv.RowHeadersDefaultCellStyle.ForeColor, foreMode);
+                        dgv.RowHeadersDefaultCellStyle.SelectionBackColor = GetColor(dgv.RowHeadersDefaultCellStyle.SelectionBackColor, backMode);
+                        dgv.RowHeadersDefaultCellStyle.SelectionForeColor = GetColor(dgv.RowHeadersDefaultCellStyle.SelectionForeColor, foreMode);
+                        dgv.RowsDefaultCellStyle.BackColor = GetColor(dgv.RowsDefaultCellStyle.BackColor, backMode);
+                        dgv.RowsDefaultCellStyle.ForeColor = GetColor(dgv.RowsDefaultCellStyle.ForeColor, foreMode);
+                        dgv.RowsDefaultCellStyle.SelectionBackColor = GetColor(dgv.RowsDefaultCellStyle.SelectionBackColor, backMode);
+                        dgv.RowsDefaultCellStyle.SelectionForeColor = GetColor(dgv.RowsDefaultCellStyle.SelectionForeColor, foreMode);
+                        dgv.DefaultCellStyle.BackColor = GetColor(dgv.DefaultCellStyle.BackColor, backMode);
+                        dgv.DefaultCellStyle.ForeColor = GetColor(dgv.DefaultCellStyle.ForeColor, foreMode);
+                        dgv.DefaultCellStyle.SelectionBackColor = GetColor(dgv.DefaultCellStyle.SelectionBackColor, backMode);
+                        dgv.DefaultCellStyle.SelectionForeColor = GetColor(dgv.DefaultCellStyle.SelectionForeColor, foreMode);
+                        break;
                     case ListView listView:
                         foreach (var item in listView.Items.Cast<ListViewItem>())
                         {
@@ -214,7 +235,7 @@ namespace SilDev.Forms
                 foreach (var child in parent.Controls.Cast<Control>())
                     queue.Enqueue(child);
             }
-            while (queue.Any());
+            while (queue.Count > 0);
             control.ResumeLayout(true);
 
             static ControlExColorMode Inherit(ControlExColorMode mode) =>
@@ -231,7 +252,7 @@ namespace SilDev.Forms
 
             static Color GetColor(Color color, ControlExColorMode mode)
             {
-                if (color == Color.Empty || color == Color.Transparent)
+                if (color == default || color == Color.Empty || color == Color.Transparent)
                     return color;
                 return mode switch
                 {
@@ -244,6 +265,34 @@ namespace SilDev.Forms
                     _ => color.InvertRgb()
                 };
             }
+        }
+
+        /// <summary>
+        ///     Enable dark mode for the specified control.
+        ///     <para>
+        ///         Please note that this feature requires at least the Windows 10 October
+        ///         2018 Update.
+        ///     </para>
+        /// </summary>
+        /// <param name="control">
+        ///     The control to change all colors.
+        /// </param>
+        public static void EnableDarkMode(this Control control)
+        {
+            if (control == default || !EnvironmentEx.IsAtLeastWindows(10, 17763))
+                return;
+            var queue = new Queue<Control>();
+            queue.Enqueue(control);
+            do
+            {
+                var parent = queue.Dequeue();
+                if (parent is Button { FlatStyle: not FlatStyle.System })
+                    continue;
+                Desktop.EnableDarkMode(parent.Handle);
+                foreach (Control child in parent.Controls)
+                    queue.Enqueue(child);
+            }
+            while (queue.Count > 0);
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -127,12 +127,12 @@ namespace SilDev.Forms
             var resLoc = Path.GetDirectoryName(resPath);
             AutoScaleDimensions = new SizeF(96f, 96f);
             AutoScaleMode = AutoScaleMode.Dpi;
-            BackColor = backColor ?? SystemColors.Control;
-            ForeColor = foreColor ?? SystemColors.ControlText;
-            Font = new Font("Consolas", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BackColor = backColor ?? (Desktop.AppsUseDarkTheme ? SystemColors.ControlText : SystemColors.Control);
+            ForeColor = foreColor ?? (Desktop.AppsUseDarkTheme ? SystemColors.Control : SystemColors.ControlText);
+            Font = new Font("Consolas", 9.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = ResourcesEx.GetSystemIcon(ImageResourceSymbol.OpenSearch, true, resLoc);
             MaximizeBox = false;
-            MaximumSize = new Size(680, Screen.FromHandle(Handle).WorkingArea.Height);
+            MaximumSize = new Size(680, SizeEx.GetActiveDesktopSize().Height);
             MinimizeBox = false;
             MinimumSize = new Size(680, 448);
             Name = "IconBrowserForm";
@@ -149,15 +149,15 @@ namespace SilDev.Forms
                 RowCount = 2
             };
             _tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            _tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+            _tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
             Controls.Add(_tableLayoutPanel);
             _panel = new Panel
             {
                 AutoScroll = true,
-                BackColor = buttonFace ?? SystemColors.ButtonFace,
+                BackColor = buttonFace ?? BackColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Enabled = false,
-                ForeColor = buttonText ?? SystemColors.ControlText,
+                ForeColor = buttonText ?? ForeColor,
                 Dock = DockStyle.Fill,
                 Name = "panel",
                 TabIndex = 0
@@ -173,42 +173,49 @@ namespace SilDev.Forms
                 Name = "innerTableLayoutPanel"
             };
             _innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            _innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 24));
+            _innerTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 28));
             _tableLayoutPanel.Controls.Add(_innerTableLayoutPanel, 0, 1);
             _textBox = new TextBox
             {
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.Top,
-                Font = Font,
+                Font = new Font("Segoe UI", 10.25f, FontStyle.Regular, GraphicsUnit.Point, 0),
+                Height = 24,
+                Multiline = true,
                 Name = "textBox",
                 TabIndex = 1
             };
+            _textBox.KeyPress += (_, e) => e.Handled = e.KeyChar == (char)Keys.Return;
             _textBox.TextChanged += TextBox_TextChanged;
             _innerTableLayoutPanel.Controls.Add(_textBox, 0, 0);
             _buttonPanel = new Panel
             {
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.Transparent,
-                BorderStyle = BorderStyle.FixedSingle,
+                BorderStyle = BorderStyle.None,
+                Dock = DockStyle.Top,
                 Name = "buttonPanel",
-                Size = new Size(20, 20)
+                Padding = new Padding(0),
+                Size = new Size(24, 24)
             };
             _innerTableLayoutPanel.Controls.Add(_buttonPanel, 1, 0);
             _button = new Button
             {
-                BackColor = buttonFace ?? SystemColors.ButtonFace,
+                BackColor = buttonFace ?? SystemColors.Control,
                 BackgroundImage = ResourcesEx.GetSystemIcon(ImageResourceSymbol.Directory, false, resLoc).ToBitmap(),
                 BackgroundImageLayout = ImageLayout.Zoom,
                 Dock = DockStyle.Fill,
-                FlatStyle = FlatStyle.Flat,
+                FlatStyle = buttonFace == null && buttonText == null && buttonHighlight == null ? FlatStyle.Standard : FlatStyle.Flat,
                 Font = Font,
                 ForeColor = buttonText ?? SystemColors.ControlText,
                 Name = "button",
                 TabIndex = 2,
                 UseVisualStyleBackColor = false
             };
-            _button.FlatAppearance.BorderSize = 0;
-            _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? ProfessionalColors.ButtonSelectedHighlight;
+            if (_button.FlatStyle == FlatStyle.Flat)
+            {
+                _button.FlatAppearance.BorderSize = 0;
+                _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? ProfessionalColors.ButtonSelectedHighlight;
+            }
             _button.Click += Button_Click;
             _buttonPanel.Controls.Add(_button);
             _progressCircle = new ProgressCircle
@@ -217,7 +224,7 @@ namespace SilDev.Forms
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.Transparent,
                 Dock = DockStyle.Fill,
-                ForeColor = (backColor ?? SystemColors.Control).InvertRgb().ToGrayScale(),
+                ForeColor = (backColor ?? BackColor).InvertRgb().ToGrayScale(),
                 RotationSpeed = 80,
                 Thickness = 2,
                 Visible = true
@@ -232,12 +239,16 @@ namespace SilDev.Forms
             Shown += (_, _) => TaskBarProgress.SetState(Handle, TaskBarProgressState.Indeterminate);
             ResumeLayout(false);
             PerformLayout();
+            if (Desktop.AppsUseDarkTheme && BackColor == SystemColors.ControlText && ForeColor == SystemColors.Control)
+            {
+                Desktop.EnableDarkMode(Handle);
+                Desktop.EnableDarkMode(_panel.Handle);
+            }
             var curPath = PathEx.Combine(path);
             if (!File.Exists(curPath))
                 curPath = resPath;
-            if (!File.Exists(curPath))
-                return;
-            _textBox.Text = curPath;
+            if (File.Exists(curPath))
+                _textBox.Text = curPath;
         }
 
         /// <summary>
@@ -285,7 +296,6 @@ namespace SilDev.Forms
             _panel.Enabled = false;
             _textBox.Enabled = false;
             _buttonPanel.SuspendLayout();
-            _buttonPanel.BorderStyle = BorderStyle.None;
             _buttonPanel.Controls.Clear();
             _buttonPanel.Controls.Add(_progressCircle);
             _buttonPanel.ResumeLayout(false);
@@ -361,7 +371,6 @@ namespace SilDev.Forms
                 _buttonPanel.SuspendLayout();
                 _buttonPanel.Controls.Clear();
                 _buttonPanel.Controls.Add(_button);
-                _buttonPanel.BorderStyle = BorderStyle.FixedSingle;
                 _buttonPanel.ResumeLayout(false);
                 TaskBarProgress.SetState(Handle, TaskBarProgressState.NoProgress);
                 if (!_panel.Focus())
@@ -379,8 +388,13 @@ namespace SilDev.Forms
                 SuspendLayout();
                 AutoScaleDimensions = new SizeF(96f, 96f);
                 AutoScaleMode = AutoScaleMode.Dpi;
-                BackColor = buttonFace ?? SystemColors.ButtonFace;
+                BackColor = buttonFace ?? SystemColors.Control;
                 ForeColor = buttonText ?? SystemColors.ControlText;
+                if (Desktop.AppsUseDarkTheme && BackColor == SystemColors.Control && ForeColor == SystemColors.ControlText)
+                {
+                    BackColor = SystemColors.ControlText;
+                    ForeColor = SystemColors.Control;
+                }
                 Name = "IconBox";
                 Size = new Size(58, 62);
                 _button = new Button
@@ -397,7 +411,7 @@ namespace SilDev.Forms
                     UseVisualStyleBackColor = false
                 };
                 _button.FlatAppearance.BorderSize = 0;
-                _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? ProfessionalColors.ButtonSelectedHighlight;
+                _button.FlatAppearance.MouseOverBackColor = buttonHighlight ?? (Desktop.AppsUseDarkTheme ? ProfessionalColors.ButtonSelectedHighlight.EnsureLight() : ProfessionalColors.ButtonSelectedHighlight);
                 _button.Click += Button_Click;
                 Controls.Add(_button);
                 ResumeLayout(false);

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-02 21:47
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -22,6 +22,7 @@ namespace SilDev.Forms
     using System.Media;
     using System.Threading;
     using System.Windows.Forms;
+    using Drawing;
     using Media;
     using Timer = System.Windows.Forms.Timer;
 
@@ -73,22 +74,22 @@ namespace SilDev.Forms
         /// <summary>
         ///     Gets or sets the background color for the notify box.
         /// </summary>
-        public Color BackColor { get; set; } = SystemColors.Menu;
+        public Color BackColor { get; set; } = SystemColors.Menu.GetAppsThemeBackColor();
 
         /// <summary>
         ///     Gets or sets the border color for the notify box.
         /// </summary>
-        public Color BorderColor { get; set; } = SystemColors.MenuHighlight;
+        public Color BorderColor { get; set; } = EnvironmentEx.IsAtLeastWindows(11) ? default : SystemColors.MenuHighlight.GetAppsThemeForeColor();
 
         /// <summary>
         ///     Gets or sets the caption color for the notify box.
         /// </summary>
-        public Color CaptionColor { get; set; } = SystemColors.MenuHighlight;
+        public Color CaptionColor { get; set; } = SystemColors.MenuHighlight.GetAppsThemeForeColor();
 
         /// <summary>
         ///     Gets or sets the text color for the notify box.
         /// </summary>
-        public Color TextColor { get; set; } = SystemColors.MenuText;
+        public Color TextColor { get; set; } = SystemColors.MenuText.GetAppsThemeForeColor();
 
         /// <summary>
         ///     Specifies that the notify box is placed above all non-topmost windows.
@@ -321,11 +322,12 @@ namespace SilDev.Forms
                 _duration = Convert.ToInt32(duration).IsBetween(1, 999) ? 1000 : duration;
                 _opacity = opacity;
                 SuspendLayout();
+                var currentDpi = Desktop.GetDpi();
                 var titleLabel = new Label
                 {
                     AutoSize = true,
                     BackColor = Color.Transparent,
-                    Font = new Font("Tahoma", 11.25f, FontStyle.Bold),
+                    Font = new Font("Tahoma", SizeEx.ScaleDimension(11.25f, 96f, currentDpi), FontStyle.Bold, GraphicsUnit.Point, 0),
                     ForeColor = captionColor,
                     Location = new Point(3, 3),
                     Text = title
@@ -335,19 +337,25 @@ namespace SilDev.Forms
                 {
                     AutoSize = true,
                     BackColor = Color.Transparent,
-                    Font = new Font("Tahoma", 8.25f, FontStyle.Regular),
+                    Font = new Font("Tahoma", SizeEx.ScaleDimension(8.25f, 96f, currentDpi), FontStyle.Regular, GraphicsUnit.Point, 0),
                     ForeColor = textColor,
-                    Location = new Point(8, 24),
+                    Location = new Point(5, SizeEx.ScaleDimension(24, 96f, currentDpi)),
                     Text = text
                 };
                 Controls.Add(_textLabel);
-                if (backColor != borderColor)
+                if (borderColor != default && backColor != borderColor)
                     for (var i = 0; i < 4; i++)
                         Controls.Add(new Panel
                         {
                             AutoSize = false,
                             BackColor = borderColor,
-                            Dock = i == 0 ? DockStyle.Top : i == 1 ? DockStyle.Right : i == 2 ? DockStyle.Bottom : DockStyle.Left,
+                            Dock = i switch
+                            {
+                                0 => DockStyle.Top,
+                                1 => DockStyle.Right,
+                                2 => DockStyle.Bottom,
+                                _ => DockStyle.Left
+                            },
                             Location = new Point(0, 0),
                             Size = new Size(1, 1)
                         });
@@ -370,11 +378,10 @@ namespace SilDev.Forms
                     Interval = byte.MaxValue
                 };
                 _timer2.Tick += ProgressDotsTimer_Tick;
-                AutoScaleDimensions = new SizeF(96f, 96f);
-                AutoScaleMode = AutoScaleMode.Dpi;
+                AutoScaleMode = AutoScaleMode.None;
                 BackColor = backColor;
-                ClientSize = new Size(48, 44);
-                Font = new Font("Tahoma", 8.25f, FontStyle.Regular, GraphicsUnit.Point, 0);
+                ClientSize = new Size(48, 44).ScaleDimensions(96f, currentDpi);
+                Font = new Font("Tahoma", SizeEx.ScaleDimension(8.25f, 96f, currentDpi), FontStyle.Regular, GraphicsUnit.Point, 0);
                 ForeColor = textColor;
                 FormBorderStyle = FormBorderStyle.None;
                 Opacity = 0d;
@@ -449,6 +456,8 @@ namespace SilDev.Forms
 
             private void NotifyForm_Shown(object sender, EventArgs e)
             {
+                if (EnvironmentEx.IsAtLeastWindows(11))
+                    WinApi.NativeHelper.DwmSetWindowAttribute(Handle, WinApi.DwmWindowCornerPreference.DwmwCpRound);
                 _timer.Enabled = true;
                 if (_textLabel.Text.EndsWith(" . . .", StringComparison.Ordinal))
                     _timer2.Enabled = true;
