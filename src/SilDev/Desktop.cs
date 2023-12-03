@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-03 15:23
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -40,10 +40,13 @@ namespace SilDev
             Reg.Read(ThemesPersonalizePath, "SystemUseLightTheme", 1) == 0;
 
         /// <summary>
-        ///     Enable dark mode for the window under the specified handle.
+        ///     Enables dark mode for the window under the specified handle.
         ///     <para>
-        ///         Please note that this feature requires at least the Windows 10 October
-        ///         2018 Update.
+        ///         Please note that this function is very limited and does not work
+        ///         everywhere as expected.
+        ///     </para>
+        ///     <para>
+        ///         This feature requires at least the Windows 10 October 2018 Update.
         ///     </para>
         /// </summary>
         /// <param name="hWnd">
@@ -55,6 +58,25 @@ namespace SilDev
                 return;
             _ = WinApi.NativeHelper.SetWindowTheme(hWnd, "DarkMode_Explorer");
             WinApi.NativeHelper.DwmSetWindowAttribute(hWnd, WinApi.DwmWindowAttribute.DwmwaUseImmersiveDarkMode);
+        }
+
+        /// <summary>
+        ///     Enables Mica effect mode for the window under the specified handle.
+        ///     <para>
+        ///         Please note that this function is very limited and does not work
+        ///         everywhere as expected.
+        ///     </para>
+        ///     <para>
+        ///         This feature requires at least Windows 11.
+        ///     </para>
+        /// </summary>
+        /// <param name="hWnd">
+        ///     Handle to a window.
+        /// </param>
+        public static void EnableMicaEffect(IntPtr hWnd)
+        {
+            if (hWnd == IntPtr.Zero || !EnvironmentEx.IsAtLeastWindows(11))
+                return;
             WinApi.NativeHelper.DwmSetWindowAttribute(hWnd, WinApi.DwmWindowAttribute.DwmwaMicaEffect);
         }
 
