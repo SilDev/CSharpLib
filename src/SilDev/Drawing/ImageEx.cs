@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-03 15:30
+// Version:  2023-12-03 17:35
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -91,42 +91,27 @@ namespace SilDev.Drawing
 #else
             var memoryLimit = Environment.Is64BitProcess ? 0x80000000d : 0x40000000;
 #endif
-            double bit;
-            switch (pixelFormat)
+            var bit = pixelFormat switch
             {
-                case PixelFormat.Format1bppIndexed:
-                    bit = 1d;
-                    break;
-                case PixelFormat.Format4bppIndexed:
-                    bit = 4d;
-                    break;
-                case PixelFormat.Format8bppIndexed:
-                    bit = 8d;
-                    break;
-                case PixelFormat.Format16bppArgb1555:
-                case PixelFormat.Format16bppGrayScale:
-                case PixelFormat.Format16bppRgb555:
-                case PixelFormat.Format16bppRgb565:
-                    bit = 16d;
-                    break;
-                case PixelFormat.Format32bppArgb:
-                case PixelFormat.Format32bppPArgb:
-                case PixelFormat.Format32bppRgb:
-                    bit = 32d;
-                    break;
-                case PixelFormat.Format48bppRgb:
-                    bit = 48d;
-                    break;
-                default:
-                    bit = 64d;
-                    break;
-            }
+                PixelFormat.Format1bppIndexed => 1d,
+                PixelFormat.Format4bppIndexed => 4d,
+                PixelFormat.Format8bppIndexed => 8d,
+                PixelFormat.Format16bppArgb1555 => 16d,
+                PixelFormat.Format16bppGrayScale => 16d,
+                PixelFormat.Format16bppRgb555 => 16d,
+                PixelFormat.Format16bppRgb565 => 16d,
+                PixelFormat.Format32bppArgb => 32d,
+                PixelFormat.Format32bppPArgb => 32d,
+                PixelFormat.Format32bppRgb => 32d,
+                PixelFormat.Format48bppRgb => 48d,
+                _ => 64d
+            };
             var absolutRange = (int)Math.Ceiling(Math.Sqrt(memoryLimit / (bit * .125d)));
             return pixelIndicator.IsBetween(1, absolutRange);
         }
 
         /// <summary>
-        ///     Determines whether the specified <see cref="Image"/> size is within the
+        ///     Determines whether the specified image width and height is within the
         ///     allowed range, depending on the specified pixel format.
         /// </summary>
         /// <param name="width">
@@ -145,8 +130,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Determines whether the specified <see cref="Image"/> size is within the
-        ///     allowed range, depending on the specified pixel format.
+        ///     Determines whether the specified image size is within the allowed range,
+        ///     depending on the specified pixel format.
         /// </summary>
         /// <param name="size">
         ///     The image size to check.
@@ -161,8 +146,7 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Determines whether the specified <see cref="Image"/> size is within the
-        ///     allowed range.
+        ///     Determines whether the specified image size is within the allowed range.
         /// </summary>
         /// <param name="image">
         ///     The image to check.
@@ -198,8 +182,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Redraws the specified <see cref="Image"/> with the specified size and with
-        ///     the specified rendering quality.
+        ///     Redraws this image with the specified size and with the specified rendering
+        ///     quality.
         /// </summary>
         /// <param name="image">
         ///     The image to draw.
@@ -279,8 +263,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Redraws the specified <see cref="Image"/> with the specified maximum size
-        ///     indicator and with the specified rendering quality.
+        ///     Redraws this image with the specified maximum size indicator and with the
+        ///     specified rendering quality.
         /// </summary>
         /// <param name="image">
         ///     The image to draw.
@@ -317,8 +301,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Redraws the specified <see cref="Image"/> with the specified maximum size
-        ///     indicator and with the highest available rendering quality.
+        ///     Redraws this image with the specified maximum size indicator and with the
+        ///     highest available rendering quality.
         /// </summary>
         /// <param name="image">
         ///     The image to draw.
@@ -331,7 +315,7 @@ namespace SilDev.Drawing
             image.Redraw(SmoothingMode.HighQuality, indicator);
 
         /// <summary>
-        ///     Blurs the specified <see cref="Image"/> with the specified strength.
+        ///     Blurs this image with the specified strength.
         /// </summary>
         /// <param name="image">
         ///     The image to blur.
@@ -360,7 +344,7 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Sets the color-adjustment matrix for the specified <see cref="Image"/>.
+        ///     Sets the color-adjustment matrix for this image.
         /// </summary>
         /// <param name="image">
         ///     The image to change.
@@ -368,26 +352,127 @@ namespace SilDev.Drawing
         /// <param name="colorMatrix">
         ///     The color-adjustment matrix to set.
         /// </param>
-        public static Image SetColorMatrix(this Image image, ColorMatrix colorMatrix)
+        /// <param name="gamma">
+        ///     The gamma value to set.
+        /// </param>
+        public static Image SetColorMatrix(this Image image, ColorMatrix colorMatrix, float gamma = 1f)
         {
             if (image is not { } img)
                 return default;
             var bmp = new Bitmap(img.Width, img.Height);
             using var g = Graphics.FromImage(bmp);
             using var ia = new ImageAttributes();
+            if (Math.Abs(gamma - 1f) > 0)
+            {
+                ia.ClearColorMatrix();
+                ia.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                ia.SetGamma(gamma, ColorAdjustType.Bitmap);
+            }
             ia.SetColorMatrix(colorMatrix);
             g.DrawImage(img, new Rectangle(0, 0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, ia);
             return bmp;
         }
 
         /// <summary>
-        ///     Inverts the color matrix of the specified <see cref="Image"/>.
+        ///     Changes the color-adjustments of this image.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to change.
+        /// </param>
+        /// <param name="brightness">
+        ///     The brightness value to set.
+        /// </param>
+        /// <param name="contrast">
+        ///     The contrast value to set.
+        /// </param>
+        /// <param name="gamma">
+        ///     The gamma value to set.
+        /// </param>
+        /// <param name="alpha">
+        ///     The alpha value to set.
+        /// </param>
+        public static Image ChangeColorMatrix(this Image image, float brightness = 1f, float contrast = 1f, float gamma = 1f, float alpha = 1f)
+        {
+            if (image is not { } img)
+                return default;
+            if (Math.Abs(brightness - 1f) == 0 &&
+                Math.Abs(contrast - 1f) == 0 &&
+                Math.Abs(gamma - 1f) == 0 &&
+                Math.Abs(alpha - 1f) == 0)
+                return img;
+            brightness -= 1.0f;
+            var cm = new ColorMatrix(new[]
+            {
+                new[] { contrast, 0f, 0f, 0f, 0f },
+                new[] { 0f, contrast, 0f, 0f, 0f },
+                new[] { 0f, 0f, contrast, 0f, 0f },
+                new[] { 0f, 0f, 0f, alpha, 0f },
+                new[]
+                {
+                    brightness, brightness, brightness, 0f, 1f
+                }
+            });
+            return SetColorMatrix(img, cm, gamma);
+        }
+
+        /// <summary>
+        ///     Sets the brightness of this image.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to change.
+        /// </param>
+        /// <param name="brightness">
+        ///     The brightness value to set.
+        /// </param>
+        public static Image SetBrightness(this Image image, float brightness) =>
+            image.ChangeColorMatrix(brightness);
+
+        /// <summary>
+        ///     Sets the contrast of this image.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to change.
+        /// </param>
+        /// <param name="contrast">
+        ///     The contrast value to set.
+        /// </param>
+        public static Image SetContrast(this Image image, float contrast) =>
+            image.ChangeColorMatrix(1f, contrast);
+
+        /// <summary>
+        ///     Sets the gamma of this image.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to change.
+        /// </param>
+        /// <param name="gamma">
+        ///     The gamma value to set.
+        /// </param>
+        public static Image SetGamma(this Image image, float gamma) =>
+            image.ChangeColorMatrix(1f, 1f, gamma);
+
+        /// <summary>
+        ///     Sets the alpha of this image.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to change.
+        /// </param>
+        /// <param name="alpha">
+        ///     The alpha value to set.
+        /// </param>
+        public static Image SetAlpha(this Image image, float alpha) =>
+            image.ChangeColorMatrix(1f, 1f, 1f, alpha);
+
+        /// <summary>
+        ///     Inverts the color matrix of this image.
         /// </summary>
         /// <param name="image">
         ///     The image to convert.
         /// </param>
         public static Image InvertColors(this Image image)
         {
+            if (image is not { } img)
+                return default;
             var cm = new ColorMatrix(new[]
             {
                 new[] { -1f, 00f, 00f, 00f, 00f },
@@ -396,17 +481,69 @@ namespace SilDev.Drawing
                 new[] { 00f, 00f, 00f, 01f, 00f },
                 new[] { 01f, 01f, 01f, 00f, 01f }
             });
-            return SetColorMatrix(image, cm);
+            return SetColorMatrix(img, cm);
         }
 
         /// <summary>
-        ///     Scales the color matrix of the specified <see cref="Image"/> to gray.
+        ///     Applies a color rotation to this image.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to change.
+        /// </param>
+        /// <param name="angle">
+        ///     An angle to rotate.
+        /// </param>
+        public static Image HueRotate(Image image, int angle)
+        {
+            if (image is not { } img)
+                return default;
+            if (angle == 0)
+                return img;
+            var rad = Math.PI * angle / 180d;
+            var cos = (float)Math.Cos(rad);
+            var sin = (float)Math.Sin(rad);
+            var cm = new ColorMatrix(new[]
+            {
+                new[]
+                {
+                    0.213f + cos * 0.787f - sin * 0.213f,
+                    0.213f - cos * 0.213f + sin * 0.143f,
+                    0.213f - cos * 0.213f - sin * 0.787f,
+                    0f,
+                    0f
+                },
+                new[]
+                {
+                    0.715f - cos * 0.715f - sin * 0.715f,
+                    0.715f + cos * 0.285f + sin * 0.140f,
+                    0.715f - cos * 0.715f + sin * 0.715f,
+                    0f,
+                    0f
+                },
+                new[]
+                {
+                    0.072f - cos * 0.072f + sin * 0.928f,
+                    0.072f - cos * 0.072f - sin * 0.283f,
+                    0.072f + cos * 0.928f + sin * 0.072f,
+                    0f,
+                    0f
+                },
+                new[] { 0f, 0f, 0f, 1f, 0f },
+                new[] { 0f, 0f, 0f, 0f, 1f }
+            });
+            return img.SetColorMatrix(cm);
+        }
+
+        /// <summary>
+        ///     Scales the color matrix of this image to gray.
         /// </summary>
         /// <param name="image">
         ///     The image to scale.
         /// </param>
         public static Image ToGrayScale(this Image image)
         {
+            if (image is not { } img)
+                return default;
             var cm = new ColorMatrix(new[]
             {
                 new[] { 0.30f, 0.30f, 0.30f, 0.00f, 0.00f },
@@ -415,12 +552,12 @@ namespace SilDev.Drawing
                 new[] { 0.00f, 0.00f, 0.00f, 1.00f, 0.00f },
                 new[] { 0.00f, 0.00f, 0.00f, 0.00f, 1.00f }
             });
-            return SetColorMatrix(image, cm);
+            return SetColorMatrix(img, cm);
         }
 
         /// <summary>
-        ///     Scales the color matrix of the specified <see cref="Image"/> to gray and
-        ///     switch back to the original image the next time this function is called.
+        ///     Scales the color matrix of this image to gray and switch back to the
+        ///     original image the next time this function is called.
         /// </summary>
         /// <param name="image">
         ///     The image to switch.
@@ -462,8 +599,8 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Recolors the pixels of the specified <see cref="Image"/> using a specified
-        ///     old color and a specified new color.
+        ///     Recolors the pixels of this image using a specified old color and a
+        ///     specified new color.
         /// </summary>
         /// <param name="image">
         ///     The image to change.
@@ -507,7 +644,7 @@ namespace SilDev.Drawing
         }
 
         /// <summary>
-        ///     Gets the frames of the specified <see cref="Image"/>.
+        ///     Gets the frames of this image.
         /// </summary>
         /// <param name="image">
         ///     The image to get the frames.
