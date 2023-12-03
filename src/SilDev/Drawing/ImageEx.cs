@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-03 15:26
+// Version:  2023-12-03 15:30
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -329,6 +329,35 @@ namespace SilDev.Drawing
         /// </param>
         public static Image Redraw(this Image image, int indicator) =>
             image.Redraw(SmoothingMode.HighQuality, indicator);
+
+        /// <summary>
+        ///     Blurs the specified <see cref="Image"/> with the specified strength.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to blur.
+        /// </param>
+        /// <param name="strength">
+        ///     The strength, which must be between 1 and 99.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     image is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     strength is less than 1 or greater than 99.
+        /// </exception>
+        public static Image Blur(this Image image, int strength = 90)
+        {
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+            if (strength is < 1 or > 99)
+                throw new ArgumentOutOfRangeException(nameof(image));
+            var width = image.Width;
+            var height = image.Height;
+            strength = 100 - strength;
+            var ws = (int)Math.Max(width / 100f * strength, 1f);
+            var hs = (int)Math.Max(height / 100f * strength, 1f);
+            return image.Redraw(ws, hs).Redraw(width, height);
+        }
 
         /// <summary>
         ///     Sets the color-adjustment matrix for the specified <see cref="Image"/>.
