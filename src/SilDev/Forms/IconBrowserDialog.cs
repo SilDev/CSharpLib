@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-03 21:17
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -138,7 +138,7 @@ namespace SilDev.Forms
             Name = "IconBrowserForm";
             Size = MinimumSize;
             SizeGripStyle = SizeGripStyle.Hide;
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
             Text = UIStrings.ResourceBrowser;
             _tableLayoutPanel = new TableLayoutPanel
             {
