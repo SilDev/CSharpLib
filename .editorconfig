@@ -1,6 +1,11 @@
 [*.{cs,resx}]
 end_of_line=lf
 
+# Broken at the moment
+dotnet_diagnostic.IDE0028.severity = none
+dotnet_diagnostic.IDE0300.severity = none
+dotnet_diagnostic.IDE0305.severity = none
+
 # Microsoft .NET properties
 csharp_new_line_before_members_in_object_initializers=false
 csharp_preferred_modifier_order=public, private, protected, internal, file, new, static, abstract, virtual, sealed, readonly, override, extern, unsafe, volatile, async, required:suggestion
