@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-03 14:57
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -5941,6 +5941,7 @@ namespace SilDev
 
             internal const string Advapi32 = "advapi32.dll";
             internal const string Dwmapi = "dwmapi.dll";
+            internal const string Gdi32 = "gdi32.dll";
             internal const string Msi = "msi.dll";
             internal const string Rstrtmgr = "rstrtmgr.dll";
             internal const string Urlmon = "urlmon.dll";
@@ -7233,6 +7234,51 @@ namespace SilDev
             internal static extern bool AnimateWindow(IntPtr hWnd, int time, AnimateWindowFlags flags);
 
             /// <summary>
+            ///     The BitBlt function performs a bit-block transfer of the color data
+            ///     corresponding to a rectangle of pixels from the specified source device
+            ///     context into a destination device context.
+            /// </summary>
+            /// <param name="hDestDc">
+            ///     A handle to the destination device context.
+            /// </param>
+            /// <param name="x">
+            ///     The x-coordinate, in logical units, of the upper-left corner of the
+            ///     destination rectangle.
+            /// </param>
+            /// <param name="y">
+            ///     The y-coordinate, in logical units, of the upper-left corner of the
+            ///     destination rectangle.
+            /// </param>
+            /// <param name="nWidth">
+            ///     The width, in logical units, of the source and destination rectangles.
+            /// </param>
+            /// <param name="nHeight">
+            ///     The height, in logical units, of the source and the destination rectangles.
+            /// </param>
+            /// <param name="hSrcDc">
+            ///     A handle to the source device context.
+            /// </param>
+            /// <param name="xSrc">
+            ///     The x-coordinate, in logical units, of the upper-left corner of the source
+            ///     rectangle.
+            /// </param>
+            /// <param name="ySrc">
+            ///     The y-coordinate, in logical units, of the upper-left corner of the source
+            ///     rectangle.
+            /// </param>
+            /// <param name="dwRop">
+            ///     A raster-operation code. These codes define how the color data for the
+            ///     source rectangle is to be combined with the color data for the destination
+            ///     rectangle to achieve the final color.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is nonzero.
+            /// </returns>
+            [DllImport(DllNames.Gdi32)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool BitBlt(IntPtr hDestDc, int x, int y, int nWidth, int nHeight, IntPtr hSrcDc, int xSrc, int ySrc, int dwRop);
+
+            /// <summary>
             ///     Passes the hook information to the next hook procedure in the current hook
             ///     chain. A hook procedure can call this function either before or after
             ///     processing the hook information.
@@ -8296,6 +8342,24 @@ namespace SilDev
             internal static extern bool GetCursorPos(out Point lpPoint);
 
             /// <summary>
+            ///     The GetDC function retrieves a handle to a device context (DC) for the
+            ///     client area of a specified window or for the entire screen. You can use the
+            ///     returned handle in subsequent GDI functions to draw in the DC. The device
+            ///     context is an opaque data structure, whose values are used internally by
+            ///     GDI.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window whose DC is to be retrieved. If this value is
+            ///     <see langword="null"/>, it retrieves the DC for the entire screen.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is a handle to the DC for the
+            ///     specified window's client area.
+            /// </returns>
+            [DllImport(DllNames.User32)]
+            internal static extern IntPtr GetDC(IntPtr hWnd);
+
+            /// <summary>
             ///     Retrieves a handle to the desktop window. The desktop window covers the
             ///     entire screen. The desktop window is the area on top of which other windows
             ///     are painted.
@@ -9312,6 +9376,26 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern bool ReleaseCapture();
+
+            /// <summary>
+            ///     The ReleaseDC function releases a device context (DC), freeing it for use
+            ///     by other applications. The effect of the ReleaseDC function depends on the
+            ///     type of DC. It frees only common and window DCs. It has no effect on class
+            ///     or private DCs.
+            /// </summary>
+            /// <param name="hWnd">
+            ///     A handle to the window whose DC is to be released.
+            /// </param>
+            /// <param name="hDc">
+            ///     A handle to the DC to be released.
+            /// </param>
+            /// <returns>
+            ///     The return value indicates whether the DC was released. If the DC was
+            ///     released, the return value is 1.
+            /// </returns>
+            [DllImport(DllNames.User32)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDc);
 
             /// <summary>
             ///     Deletes a menu item or detaches a submenu from the specified menu. If the

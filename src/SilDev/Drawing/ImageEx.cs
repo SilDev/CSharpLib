@@ -3,11 +3,11 @@
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
-//
+// 
 // Filename: ImageEx.cs
-// Version:  2021-04-22 19:45
-//
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Version:  2023-12-03 15:26
+// 
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -561,5 +561,41 @@ namespace SilDev.Drawing
         /// </param>
         public static bool EqualsEx(this Image source, Image target) =>
             (source as Bitmap).EqualsEx(target as Bitmap);
+
+        /// <summary>
+        ///     Captures the entire desktop under the specified window.
+        /// </summary>
+        /// <param name="hWnd">
+        ///     Handle to a window.
+        /// </param>
+        /// <param name="x">
+        ///     The x-coordinate, in logical units, of the upper-left corner of the
+        ///     destination image.
+        /// </param>
+        /// <param name="y">
+        ///     The y-coordinate, in logical units, of the upper-left corner of the
+        ///     destination image.
+        /// </param>
+        /// <param name="width">
+        ///     The width, in logical units, of the source and destination image.
+        /// </param>
+        /// <param name="height">
+        ///     The height, in logical units, of the source and the destination image.
+        /// </param>
+        public static Image CaptureDesktop(IntPtr hWnd, int x, int y, int width, int height)
+        {
+            if (hWnd == IntPtr.Zero)
+                return default;
+            var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            using var g = Graphics.FromImage(bmp);
+            var desktop = WinApi.NativeMethods.GetDC(IntPtr.Zero);
+            if (desktop == IntPtr.Zero ||
+                !WinApi.NativeMethods.BitBlt(g.GetHdc(), 0, 0, width, height, desktop, x, y, 0xcc0020) ||
+                !WinApi.NativeMethods.ReleaseDC(IntPtr.Zero, desktop) ||
+                !WinApi.NativeMethods.ReleaseDC(hWnd, WinApi.NativeMethods.GetDC(hWnd)))
+                return default;
+            g.ReleaseHdc();
+            return bmp;
+        }
     }
 }

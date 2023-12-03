@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-03 15:26
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -17,8 +17,10 @@ namespace SilDev.Forms
 {
     using System;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
+    using Drawing;
 
     /// <summary>
     ///     Provides special <see cref="Form"/> settings.
@@ -43,8 +45,31 @@ namespace SilDev.Forms
     public static class FormEx
     {
         /// <summary>
-        ///     Allows to dock the specified <see cref="Form"/> to the virtual screen
-        ///     edges.
+        ///     Captures the entire desktop under this form.
+        ///     <para>
+        ///         Please note that the form window must be hidden for the moment of
+        ///         capture, which may cause flickering.
+        ///     </para>
+        /// </summary>
+        /// <param name="form">
+        ///     The form window behind which is the desktop that should be captured.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     form is null.
+        /// </exception>
+        public static Image CaptureDesktopBehindWindow(this Form form)
+        {
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+            var opacity = form.Opacity;
+            form.Opacity = 0d;
+            var image = ImageEx.CaptureDesktop(form.Handle, form.Width, form.Height, form.Left, form.Top);
+            form.Opacity = opacity;
+            return image;
+        }
+
+        /// <summary>
+        ///     Allows to dock this form to the virtual screen edges.
         /// </summary>
         /// <param name="form">
         ///     The form window to be dock-able.
@@ -52,7 +77,7 @@ namespace SilDev.Forms
         /// <exception cref="ArgumentNullException">
         ///     form is null.
         /// </exception>
-        public static void Dockable(Form form)
+        public static void Dockable(this Form form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
@@ -66,7 +91,7 @@ namespace SilDev.Forms
         }
 
         /// <summary>
-        ///     Applies a fade-in effect to the specified form.
+        ///     Applies a fade-in effect this form.
         /// </summary>
         /// <param name="form">
         ///     The form to fade-in.
@@ -81,7 +106,7 @@ namespace SilDev.Forms
         ///     <see langword="true"/> to bring the form into the foreground; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static void FadeIn(Form form, int effectDuration = 25, double maxOpacity = 1d, bool setForeground = true)
+        public static void FadeIn(this Form form, int effectDuration = 25, double maxOpacity = 1d, bool setForeground = true)
         {
             if (form == null || form.Opacity > 0d)
                 return;
