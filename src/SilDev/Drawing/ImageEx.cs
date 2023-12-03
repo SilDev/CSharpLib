@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-03 17:35
+// Version:  2023-12-03 18:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -493,7 +493,7 @@ namespace SilDev.Drawing
         /// <param name="angle">
         ///     An angle to rotate.
         /// </param>
-        public static Image HueRotate(Image image, int angle)
+        public static Image HueRotate(this Image image, int angle)
         {
             if (image is not { } img)
                 return default;
