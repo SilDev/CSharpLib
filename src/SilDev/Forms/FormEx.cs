@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2023-12-03 15:26
+// Version:  2023-12-03 17:48
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -63,7 +63,7 @@ namespace SilDev.Forms
                 throw new ArgumentNullException(nameof(form));
             var opacity = form.Opacity;
             form.Opacity = 0d;
-            var image = ImageEx.CaptureDesktop(form.Handle, form.Width, form.Height, form.Left, form.Top);
+            var image = ImageEx.CaptureDesktop(form.Handle, form.Left, form.Top, form.Width, form.Height);
             form.Opacity = opacity;
             return image;
         }
