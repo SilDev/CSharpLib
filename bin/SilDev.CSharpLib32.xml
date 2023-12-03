@@ -2603,7 +2603,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.SizeIsValid(System.Int32,System.Int32,System.Drawing.Imaging.PixelFormat)">
             <summary>
-                Determines whether the specified <see cref="T:System.Drawing.Image"/> size is within the
+                Determines whether the specified image width and height is within the
                 allowed range, depending on the specified pixel format.
             </summary>
             <param name="width">
@@ -2618,8 +2618,8 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.SizeIsValid(System.Drawing.Size,System.Drawing.Imaging.PixelFormat)">
             <summary>
-                Determines whether the specified <see cref="T:System.Drawing.Image"/> size is within the
-                allowed range, depending on the specified pixel format.
+                Determines whether the specified image size is within the allowed range,
+                depending on the specified pixel format.
             </summary>
             <param name="size">
                 The image size to check.
@@ -2630,8 +2630,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.SizeIsValid(System.Drawing.Image)">
             <summary>
-                Determines whether the specified <see cref="T:System.Drawing.Image"/> size is within the
-                allowed range.
+                Determines whether the specified image size is within the allowed range.
             </summary>
             <param name="image">
                 The image to check.
@@ -2654,8 +2653,8 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.Redraw(System.Drawing.Image,System.Int32,System.Int32,System.Drawing.Drawing2D.SmoothingMode)">
             <summary>
-                Redraws the specified <see cref="T:System.Drawing.Image"/> with the specified size and with
-                the specified rendering quality.
+                Redraws this image with the specified size and with the specified rendering
+                quality.
             </summary>
             <param name="image">
                 The image to draw.
@@ -2672,8 +2671,8 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.Redraw(System.Drawing.Image,System.Drawing.Drawing2D.SmoothingMode,System.Int32)">
             <summary>
-                Redraws the specified <see cref="T:System.Drawing.Image"/> with the specified maximum size
-                indicator and with the specified rendering quality.
+                Redraws this image with the specified maximum size indicator and with the
+                specified rendering quality.
             </summary>
             <param name="image">
                 The image to draw.
@@ -2688,8 +2687,8 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.Redraw(System.Drawing.Image,System.Int32)">
             <summary>
-                Redraws the specified <see cref="T:System.Drawing.Image"/> with the specified maximum size
-                indicator and with the highest available rendering quality.
+                Redraws this image with the specified maximum size indicator and with the
+                highest available rendering quality.
             </summary>
             <param name="image">
                 The image to draw.
@@ -2699,9 +2698,26 @@
                 a new size.
             </param>
         </member>
-        <member name="M:SilDev.Drawing.ImageEx.SetColorMatrix(System.Drawing.Image,System.Drawing.Imaging.ColorMatrix)">
+        <member name="M:SilDev.Drawing.ImageEx.Blur(System.Drawing.Image,System.Int32)">
             <summary>
-                Sets the color-adjustment matrix for the specified <see cref="T:System.Drawing.Image"/>.
+                Blurs this image with the specified strength.
+            </summary>
+            <param name="image">
+                The image to blur.
+            </param>
+            <param name="strength">
+                The strength, which must be between 1 and 99.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                image is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                strength is less than 1 or greater than 99.
+            </exception>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SetColorMatrix(System.Drawing.Image,System.Drawing.Imaging.ColorMatrix,System.Single)">
+            <summary>
+                Sets the color-adjustment matrix for this image.
             </summary>
             <param name="image">
                 The image to change.
@@ -2709,18 +2725,96 @@
             <param name="colorMatrix">
                 The color-adjustment matrix to set.
             </param>
+            <param name="gamma">
+                The gamma value to set.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.ChangeColorMatrix(System.Drawing.Image,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+                Changes the color-adjustments of this image.
+            </summary>
+            <param name="image">
+                The image to change.
+            </param>
+            <param name="brightness">
+                The brightness value to set.
+            </param>
+            <param name="contrast">
+                The contrast value to set.
+            </param>
+            <param name="gamma">
+                The gamma value to set.
+            </param>
+            <param name="alpha">
+                The alpha value to set.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SetBrightness(System.Drawing.Image,System.Single)">
+            <summary>
+                Sets the brightness of this image.
+            </summary>
+            <param name="image">
+                The image to change.
+            </param>
+            <param name="brightness">
+                The brightness value to set.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SetContrast(System.Drawing.Image,System.Single)">
+            <summary>
+                Sets the contrast of this image.
+            </summary>
+            <param name="image">
+                The image to change.
+            </param>
+            <param name="contrast">
+                The contrast value to set.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SetGamma(System.Drawing.Image,System.Single)">
+            <summary>
+                Sets the gamma of this image.
+            </summary>
+            <param name="image">
+                The image to change.
+            </param>
+            <param name="gamma">
+                The gamma value to set.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SetAlpha(System.Drawing.Image,System.Single)">
+            <summary>
+                Sets the alpha of this image.
+            </summary>
+            <param name="image">
+                The image to change.
+            </param>
+            <param name="alpha">
+                The alpha value to set.
+            </param>
         </member>
         <member name="M:SilDev.Drawing.ImageEx.InvertColors(System.Drawing.Image)">
             <summary>
-                Inverts the color matrix of the specified <see cref="T:System.Drawing.Image"/>.
+                Inverts the color matrix of this image.
             </summary>
             <param name="image">
                 The image to convert.
             </param>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.HueRotate(System.Drawing.Image,System.Int32)">
+            <summary>
+                Applies a color rotation to this image.
+            </summary>
+            <param name="image">
+                The image to change.
+            </param>
+            <param name="angle">
+                An angle to rotate.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.ToGrayScale(System.Drawing.Image)">
             <summary>
-                Scales the color matrix of the specified <see cref="T:System.Drawing.Image"/> to gray.
+                Scales the color matrix of this image to gray.
             </summary>
             <param name="image">
                 The image to scale.
@@ -2728,8 +2822,8 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.SwitchGrayScale(System.Drawing.Image,System.Object,System.Boolean)">
             <summary>
-                Scales the color matrix of the specified <see cref="T:System.Drawing.Image"/> to gray and
-                switch back to the original image the next time this function is called.
+                Scales the color matrix of this image to gray and switch back to the
+                original image the next time this function is called.
             </summary>
             <param name="image">
                 The image to switch.
@@ -2744,8 +2838,8 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.RecolorPixels(System.Drawing.Image,System.Drawing.Color,System.Drawing.Color)">
             <summary>
-                Recolors the pixels of the specified <see cref="T:System.Drawing.Image"/> using a specified
-                old color and a specified new color.
+                Recolors the pixels of this image using a specified old color and a
+                specified new color.
             </summary>
             <param name="image">
                 The image to change.
@@ -2770,7 +2864,7 @@
         </member>
         <member name="M:SilDev.Drawing.ImageEx.GetFrames(System.Drawing.Image,System.Boolean)">
             <summary>
-                Gets the frames of the specified <see cref="T:System.Drawing.Image"/>.
+                Gets the frames of this image.
             </summary>
             <param name="image">
                 The image to get the frames.
@@ -2807,6 +2901,28 @@
             </param>
             <param name="target">
                 The <see cref="T:System.Drawing.Image"/> to compare.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.CaptureDesktop(System.IntPtr,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Captures the entire desktop under the specified window.
+            </summary>
+            <param name="hWnd">
+                Handle to a window.
+            </param>
+            <param name="x">
+                The x-coordinate, in logical units, of the upper-left corner of the
+                destination image.
+            </param>
+            <param name="y">
+                The y-coordinate, in logical units, of the upper-left corner of the
+                destination image.
+            </param>
+            <param name="width">
+                The width, in logical units, of the source and destination image.
+            </param>
+            <param name="height">
+                The height, in logical units, of the source and the destination image.
             </param>
         </member>
         <member name="T:SilDev.Drawing.SizeEx">
@@ -3824,10 +3940,24 @@
                 Expands the functionality for the <see cref="T:System.Windows.Forms.Form"/> class.
             </summary>
         </member>
+        <member name="M:SilDev.Forms.FormEx.CaptureDesktopBehindWindow(System.Windows.Forms.Form)">
+            <summary>
+                Captures the entire desktop under this form.
+                <para>
+                    Please note that the form window must be hidden for the moment of
+                    capture, which may cause flickering.
+                </para>
+            </summary>
+            <param name="form">
+                The form window behind which is the desktop that should be captured.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                form is null.
+            </exception>
+        </member>
         <member name="M:SilDev.Forms.FormEx.Dockable(System.Windows.Forms.Form)">
             <summary>
-                Allows to dock the specified <see cref="T:System.Windows.Forms.Form"/> to the virtual screen
-                edges.
+                Allows to dock this form to the virtual screen edges.
             </summary>
             <param name="form">
                 The form window to be dock-able.
@@ -3838,7 +3968,7 @@
         </member>
         <member name="M:SilDev.Forms.FormEx.FadeIn(System.Windows.Forms.Form,System.Int32,System.Double,System.Boolean)">
             <summary>
-                Applies a fade-in effect to the specified form.
+                Applies a fade-in effect this form.
             </summary>
             <param name="form">
                 The form to fade-in.
@@ -11326,10 +11456,28 @@
         </member>
         <member name="M:SilDev.Desktop.EnableDarkMode(System.IntPtr)">
             <summary>
-                Enable dark mode for the window under the specified handle.
+                Enables dark mode for the window under the specified handle.
                 <para>
-                    Please note that this feature requires at least the Windows 10 October
-                    2018 Update.
+                    Please note that this function is very limited and does not work
+                    everywhere as expected.
+                </para>
+                <para>
+                    This feature requires at least the Windows 10 October 2018 Update.
+                </para>
+            </summary>
+            <param name="hWnd">
+                Handle to a window.
+            </param>
+        </member>
+        <member name="M:SilDev.Desktop.EnableMicaEffect(System.IntPtr)">
+            <summary>
+                Enables Mica effect mode for the window under the specified handle.
+                <para>
+                    Please note that this function is very limited and does not work
+                    everywhere as expected.
+                </para>
+                <para>
+                    This feature requires at least Windows 11.
                 </para>
             </summary>
             <param name="hWnd">
@@ -29264,6 +29412,49 @@
                 If the function succeeds, the return value is nonzero.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.BitBlt(System.IntPtr,System.Int32,System.Int32,System.Int32,System.Int32,System.IntPtr,System.Int32,System.Int32,System.Int32)">
+            <summary>
+                The BitBlt function performs a bit-block transfer of the color data
+                corresponding to a rectangle of pixels from the specified source device
+                context into a destination device context.
+            </summary>
+            <param name="hDestDc">
+                A handle to the destination device context.
+            </param>
+            <param name="x">
+                The x-coordinate, in logical units, of the upper-left corner of the
+                destination rectangle.
+            </param>
+            <param name="y">
+                The y-coordinate, in logical units, of the upper-left corner of the
+                destination rectangle.
+            </param>
+            <param name="nWidth">
+                The width, in logical units, of the source and destination rectangles.
+            </param>
+            <param name="nHeight">
+                The height, in logical units, of the source and the destination rectangles.
+            </param>
+            <param name="hSrcDc">
+                A handle to the source device context.
+            </param>
+            <param name="xSrc">
+                The x-coordinate, in logical units, of the upper-left corner of the source
+                rectangle.
+            </param>
+            <param name="ySrc">
+                The y-coordinate, in logical units, of the upper-left corner of the source
+                rectangle.
+            </param>
+            <param name="dwRop">
+                A raster-operation code. These codes define how the color data for the
+                source rectangle is to be combined with the color data for the destination
+                rectangle to achieve the final color.
+            </param>
+            <returns>
+                If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.CallNextHookEx(System.IntPtr,System.Int32,System.IntPtr,System.IntPtr)">
             <summary>
                 Passes the hook information to the next hook procedure in the current hook
@@ -30290,6 +30481,23 @@
                 Returns nonzero if successful or zero otherwise.
             </returns>
         </member>
+        <member name="M:SilDev.WinApi.NativeMethods.GetDC(System.IntPtr)">
+            <summary>
+                The GetDC function retrieves a handle to a device context (DC) for the
+                client area of a specified window or for the entire screen. You can use the
+                returned handle in subsequent GDI functions to draw in the DC. The device
+                context is an opaque data structure, whose values are used internally by
+                GDI.
+            </summary>
+            <param name="hWnd">
+                A handle to the window whose DC is to be retrieved. If this value is
+                <see langword="null"/>, it retrieves the DC for the entire screen.
+            </param>
+            <returns>
+                If the function succeeds, the return value is a handle to the DC for the
+                specified window's client area.
+            </returns>
+        </member>
         <member name="M:SilDev.WinApi.NativeMethods.GetDesktopWindow">
             <summary>
                 Retrieves a handle to the desktop window. The desktop window covers the
@@ -31254,6 +31462,24 @@
             </summary>
             <returns>
                 If the function succeeds, the return value is nonzero.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.ReleaseDC(System.IntPtr,System.IntPtr)">
+            <summary>
+                The ReleaseDC function releases a device context (DC), freeing it for use
+                by other applications. The effect of the ReleaseDC function depends on the
+                type of DC. It frees only common and window DCs. It has no effect on class
+                or private DCs.
+            </summary>
+            <param name="hWnd">
+                A handle to the window whose DC is to be released.
+            </param>
+            <param name="hDc">
+                A handle to the DC to be released.
+            </param>
+            <returns>
+                The return value indicates whether the DC was released. If the DC was
+                released, the return value is 1.
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.RemoveMenu(System.IntPtr,System.UInt32,SilDev.WinApi.ModifyMenuFlags)">
