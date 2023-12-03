@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: WinApi.cs
-// Version:  2023-12-03 14:57
+// Version:  2023-12-03 21:13
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1279,6 +1279,509 @@ namespace SilDev
             ///     <see cref="WriteDac"/>, and <see cref="WriteOwner"/> access.
             /// </summary>
             Required = Delete | ReadControl | WriteDac | WriteOwner
+        }
+
+        /// <summary>
+        ///     Provides enumerated system metric constants.
+        /// </summary>
+        public enum SystemMetric
+        {
+            /// <summary>
+            ///     Width of the screen.
+            /// </summary>
+            CxScreen = 0,
+
+            /// <summary>
+            ///     Height of the screen.
+            /// </summary>
+            CyScreen = 1,
+
+            /// <summary>
+            ///     Width of a vertical scroll bar.
+            /// </summary>
+            CxVScroll = 2,
+
+            /// <summary>
+            ///     Height of a horizontal scroll bar.
+            /// </summary>
+            CyHScroll = 3,
+
+            /// <summary>
+            ///     Height of a caption area.
+            /// </summary>
+            CyCaption = 4,
+
+            /// <summary>
+            ///     Width of a window border.
+            /// </summary>
+            CxBorder = 5,
+
+            /// <summary>
+            ///     Height of a window border.
+            /// </summary>
+            CyBorder = 6,
+
+            /// <summary>
+            ///     Width of a dialog box frame.
+            /// </summary>
+            CxDlgFrame = 7,
+
+            /// <summary>
+            ///     Height of a dialog box frame.
+            /// </summary>
+            CyDlgFrame = 8,
+
+            /// <summary>
+            ///     Height of the thumb box in a vertical scroll bar.
+            /// </summary>
+            CyVThumb = 9,
+
+            /// <summary>
+            ///     Width of the thumb box in a horizontal scroll bar.
+            /// </summary>
+            CxHThumb = 10,
+
+            /// <summary>
+            ///     Width of an icon.
+            /// </summary>
+            CxIcon = 11,
+
+            /// <summary>
+            ///     Height of an icon.
+            /// </summary>
+            CyIcon = 12,
+
+            /// <summary>
+            ///     Width of a cursor.
+            /// </summary>
+            CxCursor = 13,
+
+            /// <summary>
+            ///     Height of a cursor.
+            /// </summary>
+            CyCursor = 14,
+
+            /// <summary>
+            ///     Height of a single-line menu.
+            /// </summary>
+            CyMenu = 15,
+
+            /// <summary>
+            ///     Width of the client area for a full-screen window.
+            /// </summary>
+            CxFullScreen = 16,
+
+            /// <summary>
+            ///     Height of the client area for a full-screen window.
+            /// </summary>
+            CyFullScreen = 17,
+
+            /// <summary>
+            ///     Height of the Kanji window at the bottom of the screen.
+            /// </summary>
+            CyKanjiWindow = 18,
+
+            /// <summary>
+            ///     Nonzero if a mouse is installed; otherwise, 0.
+            /// </summary>
+            MousePresent = 19,
+
+            /// <summary>
+            ///     Height of a vertical scroll bar.
+            /// </summary>
+            CyVScroll = 20,
+
+            /// <summary>
+            ///     Width of the arrow bitmap on a horizontal scroll bar.
+            /// </summary>
+            CxHScroll = 21,
+
+            /// <summary>
+            ///     Nonzero if the debugging version of User.exe is installed; otherwise, 0.
+            /// </summary>
+            Debug = 22,
+
+            /// <summary>
+            ///     Nonzero if the meanings of the left and right mouse buttons are swapped;
+            ///     otherwise, 0.
+            /// </summary>
+            SwapButton = 23,
+
+            /// <summary>
+            ///     Reserved for future use.
+            /// </summary>
+            Reserved1 = 24,
+
+            /// <summary>
+            ///     Reserved for future use.
+            /// </summary>
+            Reserved2 = 25,
+
+            /// <summary>
+            ///     Reserved for future use.
+            /// </summary>
+            Reserved3 = 26,
+
+            /// <summary>
+            ///     Reserved for future use.
+            /// </summary>
+            Reserved4 = 27,
+
+            /// <summary>
+            ///     Minimum width of a window.
+            /// </summary>
+            CxMin = 28,
+
+            /// <summary>
+            ///     Minimum height of a window.
+            /// </summary>
+            CyMin = 29,
+
+            /// <summary>
+            ///     Width of a window caption area.
+            /// </summary>
+            CxSize = 30,
+
+            /// <summary>
+            ///     Height of a window caption area.
+            /// </summary>
+            CySize = 31,
+
+            /// <summary>
+            ///     Width of the frame around the perimeter of a window that has a caption but
+            ///     is not sizable.
+            /// </summary>
+            CxFrame = 32,
+
+            /// <summary>
+            ///     Height of the frame around the perimeter of a window that has a caption but
+            ///     is not sizable.
+            /// </summary>
+            CyFrame = 33,
+
+            /// <summary>
+            ///     Minimum tracking width of a window.
+            /// </summary>
+            CxMinTrack = 34,
+
+            /// <summary>
+            ///     Minimum tracking height of a window.
+            /// </summary>
+            CyMinTrack = 35,
+
+            /// <summary>
+            ///     Width of the rectangle around the location of a first click in a
+            ///     double-click sequence.
+            /// </summary>
+            CxDoubleClk = 36,
+
+            /// <summary>
+            ///     Height of the rectangle around the location of a first click in a
+            ///     double-click sequence.
+            /// </summary>
+            CyDoubleClk = 37,
+
+            /// <summary>
+            ///     Width of a grid cell for items in large icon view.
+            /// </summary>
+            CxIconSpacing = 38,
+
+            /// <summary>
+            ///     Height of a grid cell for items in large icon view.
+            /// </summary>
+            CyIconSpacing = 39,
+
+            /// <summary>
+            ///     Nonzero if drop-down menus are right-aligned with the corresponding
+            ///     menu-bar item; 0 if the menus are left-aligned.
+            /// </summary>
+            MenuDropAlignment = 40,
+
+            /// <summary>
+            ///     Nonzero if the Microsoft Windows for Pen computing extensions are
+            ///     installed; otherwise, 0.
+            /// </summary>
+            PenWindows = 41,
+
+            /// <summary>
+            ///     Nonzero if User32.dll supports DBCS; otherwise, 0.
+            /// </summary>
+            DbcsEnabled = 42,
+
+            /// <summary>
+            ///     Number of buttons on the mouse or zero if no mouse is installed.
+            /// </summary>
+            CxMouseButtons = 43,
+
+            /// <summary>
+            ///     Nonzero if the system is installed in a network environment; otherwise, 0.
+            /// </summary>
+            Secure = 44,
+
+            /// <summary>
+            ///     Width of a three-dimensional border.
+            /// </summary>
+            CxEdge = 45,
+
+            /// <summary>
+            ///     Height of a three-dimensional border.
+            /// </summary>
+            CyEdge = 46,
+
+            /// <summary>
+            ///     Minimum spacing between windows.
+            /// </summary>
+            CxMinSpacing = 47,
+
+            /// <summary>
+            ///     Minimum vertical spacing between windows.
+            /// </summary>
+            CyMinSpacing = 48,
+
+            /// <summary>
+            ///     Width of a small icon.
+            /// </summary>
+            CxSmIcon = 49,
+
+            /// <summary>
+            ///     Height of a small icon.
+            /// </summary>
+            CySmIcon = 50,
+
+            /// <summary>
+            ///     Height of a small caption.
+            /// </summary>
+            CySmCaption = 51,
+
+            /// <summary>
+            ///     Width of small caption buttons.
+            /// </summary>
+            CxSmSize = 52,
+
+            /// <summary>
+            ///     Height of small caption buttons.
+            /// </summary>
+            CySmSize = 53,
+
+            /// <summary>
+            ///     Width of menu bar buttons.
+            /// </summary>
+            CxMenuSize = 54,
+
+            /// <summary>
+            ///     Height of menu bar buttons.
+            /// </summary>
+            CyMenuSize = 55,
+
+            /// <summary>
+            ///     How the system arranges minimized windows.
+            /// </summary>
+            Arrange = 56,
+
+            /// <summary>
+            ///     Minimum width of a minimized window.
+            /// </summary>
+            CxMinimized = 57,
+
+            /// <summary>
+            ///     Height of a minimized window.
+            /// </summary>
+            CyMinimized = 58,
+
+            /// <summary>
+            ///     Maximum width of a window that has a caption and sizing borders.
+            /// </summary>
+            CxMaxTrack = 59,
+
+            /// <summary>
+            ///     Maximum height of a window that has a caption and sizing borders.
+            /// </summary>
+            CyMaxTrack = 60,
+
+            /// <summary>
+            ///     Width of the client area for a maximized window.
+            /// </summary>
+            CxMaximized = 61,
+
+            /// <summary>
+            ///     Height of the client area for a maximized window.
+            /// </summary>
+            CyMaximized = 62,
+
+            /// <summary>
+            ///     Nonzero if the system is installed on a network; otherwise, 0.
+            /// </summary>
+            Network = 63,
+
+            /// <summary>
+            ///     Value that specifies how the system is started: 0-normal, 1-fail-safe,
+            ///     2-fail-safe with network.
+            /// </summary>
+            CleanBoot = 67,
+
+            /// <summary>
+            ///     Width of a rectangle centered on a drag point to allow for limited movement
+            ///     of the mouse pointer before a drag operation begins.
+            /// </summary>
+            CxDrag = 68,
+
+            /// <summary>
+            ///     Height of a rectangle centered on a drag point to allow for limited
+            ///     movement of the mouse pointer before a drag operation begins.
+            /// </summary>
+            CyDrag = 69,
+
+            /// <summary>
+            ///     Nonzero if the user requires an application to present information visually
+            ///     in situations where it would otherwise present the information only in
+            ///     audible form; otherwise, 0.
+            /// </summary>
+            ShowSounds = 70,
+
+            /// <summary>
+            ///     Width of the default menu check-mark bitmap.
+            /// </summary>
+            CxMenuCheck = 71,
+
+            /// <summary>
+            ///     Height of the default menu check-mark bitmap.
+            /// </summary>
+            CyMenuCheck = 72,
+
+            /// <summary>
+            ///     Nonzero if the computer has a low-end (slow) processor; otherwise, 0.
+            /// </summary>
+            SlowMachine = 73,
+
+            /// <summary>
+            ///     Nonzero if the system is enabled for Hebrew and Arabic languages;
+            ///     otherwise, 0.
+            /// </summary>
+            MideastEnabled = 74,
+
+            /// <summary>
+            ///     Nonzero if a mouse with a wheel is installed; otherwise, 0.
+            /// </summary>
+            MouseWheelPresent = 75,
+
+            /// <summary>
+            ///     The width of the virtual screen.
+            /// </summary>
+            XVirtualScreen = 76,
+
+            /// <summary>
+            ///     The height of the virtual screen.
+            /// </summary>
+            YVirtualScreen = 77,
+
+            /// <summary>
+            ///     The width of each virtual screen.
+            /// </summary>
+            CxVirtualScreen = 78,
+
+            /// <summary>
+            ///     The height of each virtual screen.
+            /// </summary>
+            CyVirtualScreen = 79,
+
+            /// <summary>
+            ///     The number of display monitors on a desktop.
+            /// </summary>
+            CMonitors = 80,
+
+            /// <summary>
+            ///     Nonzero if all the display monitors have the same color format; otherwise,
+            ///     0.
+            /// </summary>
+            SameDisplayFormat = 81,
+
+            /// <summary>
+            ///     Nonzero if Input Method Manager/Input Method Editor features are enabled;
+            ///     otherwise, 0.
+            /// </summary>
+            ImmEnabled = 82,
+
+            /// <summary>
+            ///     Width of the left and right edges of the focus rectangle that the
+            ///     DrawFocusRect draws.
+            /// </summary>
+            CxFocusBorder = 83,
+
+            /// <summary>
+            ///     Height of the top and bottom edges of the focus rectangle that the
+            ///     DrawFocusRect draws.
+            /// </summary>
+            CyFocusBorder = 84,
+
+            /// <summary>
+            ///     Nonzero if the current operating system is the Windows XP Tablet PC
+            ///     edition, 0 otherwise.
+            /// </summary>
+            TabletPc = 86,
+
+            /// <summary>
+            ///     Nonzero if the current operating system is the Windows XP Media Center
+            ///     Edition, 0 otherwise.
+            /// </summary>
+            MediaCenter = 87,
+
+            /// <summary>
+            ///     Nonzero if the current operating system is the Windows XP Starter Edition,
+            ///     0 otherwise.
+            /// </summary>
+            Starter = 88,
+
+            /// <summary>
+            ///     Nonzero if the system is a Server Edition, 0 otherwise.
+            /// </summary>
+            ServerR2 = 89,
+
+            /// <summary>
+            ///     Nonzero if a mouse with a horizontal wheel is installed; otherwise, 0.
+            /// </summary>
+            MouseHorizontalWheelPresent = 91,
+
+            /// <summary>
+            ///     Width of the border added to minimized windows.
+            /// </summary>
+            CxAddedBorder = 92,
+
+            /// <summary>
+            ///     Nonzero if the current operating system supports digitizers, 0 otherwise.
+            /// </summary>
+            Digitizer = 94,
+
+            /// <summary>
+            ///     Maximum number of contacts supported by the input digitizer device.
+            /// </summary>
+            MaximumTouches = 95,
+
+            /// <summary>
+            ///     Nonzero if the current session is remote (via Terminal Services), 0
+            ///     otherwise.
+            /// </summary>
+            RemoteSession = 0x1000,
+
+            /// <summary>
+            ///     Nonzero if the system is being shut down; otherwise, 0.
+            /// </summary>
+            ShuttingDown = 0x2000,
+
+            /// <summary>
+            ///     Nonzero if the current session is remote-controlled; otherwise, 0.
+            /// </summary>
+            RemoteControl = 0x2001,
+
+            /// <summary>
+            ///     Nonzero if the current device is a tablet or convertible slate mode, 0
+            ///     otherwise.
+            /// </summary>
+            ConvertibleSlateMode = 0x2003,
+
+            /// <summary>
+            ///     Nonzero if the system is docked, 0 otherwise.
+            /// </summary>
+            SystemDocked = 0x2004
         }
 
         /// <summary>
@@ -4047,6 +4550,20 @@ namespace SilDev
             /// </param>
             public static IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert) =>
                 NativeMethods.GetSystemMenu(hWnd, bRevert);
+
+            /// <summary>
+            ///     Retrieves the specified system metric or system configuration setting in
+            ///     pixels.
+            /// </summary>
+            /// <param name="nIndex">
+            ///     The system metric or configuration setting to be retrieved.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is the requested system metric
+            ///     or configuration setting. If the function fails, the return value is 0
+            /// </returns>
+            public static int GetSystemMetrics(SystemMetric nIndex) =>
+                NativeMethods.GetSystemMetrics(nIndex);
 
             /// <summary>
             ///     Gets the current theme color of the operating system.
@@ -8610,6 +9127,20 @@ namespace SilDev
             /// </returns>
             [DllImport(DllNames.User32, SetLastError = true)]
             internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+            /// <summary>
+            ///     Retrieves the specified system metric or system configuration setting in
+            ///     pixels.
+            /// </summary>
+            /// <param name="nIndex">
+            ///     The system metric or configuration setting to be retrieved.
+            /// </param>
+            /// <returns>
+            ///     If the function succeeds, the return value is the requested system metric
+            ///     or configuration setting. If the function fails, the return value is 0
+            /// </returns>
+            [DllImport(DllNames.User32, SetLastError = true)]
+            internal static extern int GetSystemMetrics(SystemMetric nIndex);
 
             /// <summary>
             ///     Returns the language identifier for the user UI language for the current
