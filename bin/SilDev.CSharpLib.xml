@@ -24089,6 +24089,508 @@
                 <see cref="F:SilDev.WinApi.StandardAccessRights.WriteDac"/>, and <see cref="F:SilDev.WinApi.StandardAccessRights.WriteOwner"/> access.
             </summary>
         </member>
+        <member name="T:SilDev.WinApi.SystemMetric">
+            <summary>
+                Provides enumerated system metric constants.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxScreen">
+            <summary>
+                Width of the screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyScreen">
+            <summary>
+                Height of the screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxVScroll">
+            <summary>
+                Width of a vertical scroll bar.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyHScroll">
+            <summary>
+                Height of a horizontal scroll bar.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyCaption">
+            <summary>
+                Height of a caption area.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxBorder">
+            <summary>
+                Width of a window border.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyBorder">
+            <summary>
+                Height of a window border.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxDlgFrame">
+            <summary>
+                Width of a dialog box frame.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyDlgFrame">
+            <summary>
+                Height of a dialog box frame.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyVThumb">
+            <summary>
+                Height of the thumb box in a vertical scroll bar.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxHThumb">
+            <summary>
+                Width of the thumb box in a horizontal scroll bar.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxIcon">
+            <summary>
+                Width of an icon.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyIcon">
+            <summary>
+                Height of an icon.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxCursor">
+            <summary>
+                Width of a cursor.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyCursor">
+            <summary>
+                Height of a cursor.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMenu">
+            <summary>
+                Height of a single-line menu.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxFullScreen">
+            <summary>
+                Width of the client area for a full-screen window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyFullScreen">
+            <summary>
+                Height of the client area for a full-screen window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyKanjiWindow">
+            <summary>
+                Height of the Kanji window at the bottom of the screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.MousePresent">
+            <summary>
+                Nonzero if a mouse is installed; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyVScroll">
+            <summary>
+                Height of a vertical scroll bar.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxHScroll">
+            <summary>
+                Width of the arrow bitmap on a horizontal scroll bar.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Debug">
+            <summary>
+                Nonzero if the debugging version of User.exe is installed; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.SwapButton">
+            <summary>
+                Nonzero if the meanings of the left and right mouse buttons are swapped;
+                otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Reserved1">
+            <summary>
+                Reserved for future use.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Reserved2">
+            <summary>
+                Reserved for future use.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Reserved3">
+            <summary>
+                Reserved for future use.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Reserved4">
+            <summary>
+                Reserved for future use.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMin">
+            <summary>
+                Minimum width of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMin">
+            <summary>
+                Minimum height of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxSize">
+            <summary>
+                Width of a window caption area.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CySize">
+            <summary>
+                Height of a window caption area.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxFrame">
+            <summary>
+                Width of the frame around the perimeter of a window that has a caption but
+                is not sizable.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyFrame">
+            <summary>
+                Height of the frame around the perimeter of a window that has a caption but
+                is not sizable.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMinTrack">
+            <summary>
+                Minimum tracking width of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMinTrack">
+            <summary>
+                Minimum tracking height of a window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxDoubleClk">
+            <summary>
+                Width of the rectangle around the location of a first click in a
+                double-click sequence.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyDoubleClk">
+            <summary>
+                Height of the rectangle around the location of a first click in a
+                double-click sequence.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxIconSpacing">
+            <summary>
+                Width of a grid cell for items in large icon view.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyIconSpacing">
+            <summary>
+                Height of a grid cell for items in large icon view.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.MenuDropAlignment">
+            <summary>
+                Nonzero if drop-down menus are right-aligned with the corresponding
+                menu-bar item; 0 if the menus are left-aligned.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.PenWindows">
+            <summary>
+                Nonzero if the Microsoft Windows for Pen computing extensions are
+                installed; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.DbcsEnabled">
+            <summary>
+                Nonzero if User32.dll supports DBCS; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMouseButtons">
+            <summary>
+                Number of buttons on the mouse or zero if no mouse is installed.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Secure">
+            <summary>
+                Nonzero if the system is installed in a network environment; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxEdge">
+            <summary>
+                Width of a three-dimensional border.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyEdge">
+            <summary>
+                Height of a three-dimensional border.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMinSpacing">
+            <summary>
+                Minimum spacing between windows.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMinSpacing">
+            <summary>
+                Minimum vertical spacing between windows.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxSmIcon">
+            <summary>
+                Width of a small icon.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CySmIcon">
+            <summary>
+                Height of a small icon.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CySmCaption">
+            <summary>
+                Height of a small caption.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxSmSize">
+            <summary>
+                Width of small caption buttons.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CySmSize">
+            <summary>
+                Height of small caption buttons.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMenuSize">
+            <summary>
+                Width of menu bar buttons.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMenuSize">
+            <summary>
+                Height of menu bar buttons.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Arrange">
+            <summary>
+                How the system arranges minimized windows.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMinimized">
+            <summary>
+                Minimum width of a minimized window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMinimized">
+            <summary>
+                Height of a minimized window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMaxTrack">
+            <summary>
+                Maximum width of a window that has a caption and sizing borders.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMaxTrack">
+            <summary>
+                Maximum height of a window that has a caption and sizing borders.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMaximized">
+            <summary>
+                Width of the client area for a maximized window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMaximized">
+            <summary>
+                Height of the client area for a maximized window.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Network">
+            <summary>
+                Nonzero if the system is installed on a network; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CleanBoot">
+            <summary>
+                Value that specifies how the system is started: 0-normal, 1-fail-safe,
+                2-fail-safe with network.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxDrag">
+            <summary>
+                Width of a rectangle centered on a drag point to allow for limited movement
+                of the mouse pointer before a drag operation begins.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyDrag">
+            <summary>
+                Height of a rectangle centered on a drag point to allow for limited
+                movement of the mouse pointer before a drag operation begins.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.ShowSounds">
+            <summary>
+                Nonzero if the user requires an application to present information visually
+                in situations where it would otherwise present the information only in
+                audible form; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxMenuCheck">
+            <summary>
+                Width of the default menu check-mark bitmap.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyMenuCheck">
+            <summary>
+                Height of the default menu check-mark bitmap.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.SlowMachine">
+            <summary>
+                Nonzero if the computer has a low-end (slow) processor; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.MideastEnabled">
+            <summary>
+                Nonzero if the system is enabled for Hebrew and Arabic languages;
+                otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.MouseWheelPresent">
+            <summary>
+                Nonzero if a mouse with a wheel is installed; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.XVirtualScreen">
+            <summary>
+                The width of the virtual screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.YVirtualScreen">
+            <summary>
+                The height of the virtual screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxVirtualScreen">
+            <summary>
+                The width of each virtual screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyVirtualScreen">
+            <summary>
+                The height of each virtual screen.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CMonitors">
+            <summary>
+                The number of display monitors on a desktop.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.SameDisplayFormat">
+            <summary>
+                Nonzero if all the display monitors have the same color format; otherwise,
+                0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.ImmEnabled">
+            <summary>
+                Nonzero if Input Method Manager/Input Method Editor features are enabled;
+                otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxFocusBorder">
+            <summary>
+                Width of the left and right edges of the focus rectangle that the
+                DrawFocusRect draws.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CyFocusBorder">
+            <summary>
+                Height of the top and bottom edges of the focus rectangle that the
+                DrawFocusRect draws.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.TabletPc">
+            <summary>
+                Nonzero if the current operating system is the Windows XP Tablet PC
+                edition, 0 otherwise.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.MediaCenter">
+            <summary>
+                Nonzero if the current operating system is the Windows XP Media Center
+                Edition, 0 otherwise.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Starter">
+            <summary>
+                Nonzero if the current operating system is the Windows XP Starter Edition,
+                0 otherwise.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.ServerR2">
+            <summary>
+                Nonzero if the system is a Server Edition, 0 otherwise.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.MouseHorizontalWheelPresent">
+            <summary>
+                Nonzero if a mouse with a horizontal wheel is installed; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.CxAddedBorder">
+            <summary>
+                Width of the border added to minimized windows.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.Digitizer">
+            <summary>
+                Nonzero if the current operating system supports digitizers, 0 otherwise.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.MaximumTouches">
+            <summary>
+                Maximum number of contacts supported by the input digitizer device.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.RemoteSession">
+            <summary>
+                Nonzero if the current session is remote (via Terminal Services), 0
+                otherwise.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.ShuttingDown">
+            <summary>
+                Nonzero if the system is being shut down; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.RemoteControl">
+            <summary>
+                Nonzero if the current session is remote-controlled; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.ConvertibleSlateMode">
+            <summary>
+                Nonzero if the current device is a tablet or convertible slate mode, 0
+                otherwise.
+            </summary>
+        </member>
+        <member name="F:SilDev.WinApi.SystemMetric.SystemDocked">
+            <summary>
+                Nonzero if the system is docked, 0 otherwise.
+            </summary>
+        </member>
         <member name="T:SilDev.WinApi.Win32HookFlags">
             <summary>
                 Provides enumerated hook constants.
@@ -26651,6 +27153,19 @@
                 the window menu back to the default state. The previous window menu, if
                 any, is destroyed.
             </param>
+        </member>
+        <member name="M:SilDev.WinApi.NativeHelper.GetSystemMetrics(SilDev.WinApi.SystemMetric)">
+            <summary>
+                Retrieves the specified system metric or system configuration setting in
+                pixels.
+            </summary>
+            <param name="nIndex">
+                The system metric or configuration setting to be retrieved.
+            </param>
+            <returns>
+                If the function succeeds, the return value is the requested system metric
+                or configuration setting. If the function fails, the return value is 0
+            </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeHelper.GetSystemThemeColor(System.Boolean)">
             <summary>
@@ -30734,6 +31249,19 @@
                 If the bRevert parameter is <see langword="false"/>, the return value is a
                 handle to a copy of the window menu. If the bRevert parameter is
                 <see langword="true"/>, the return value is <see langword="null"/>.
+            </returns>
+        </member>
+        <member name="M:SilDev.WinApi.NativeMethods.GetSystemMetrics(SilDev.WinApi.SystemMetric)">
+            <summary>
+                Retrieves the specified system metric or system configuration setting in
+                pixels.
+            </summary>
+            <param name="nIndex">
+                The system metric or configuration setting to be retrieved.
+            </param>
+            <returns>
+                If the function succeeds, the return value is the requested system metric
+                or configuration setting. If the function fails, the return value is 0
             </returns>
         </member>
         <member name="M:SilDev.WinApi.NativeMethods.GetUserDefaultUILanguage">
