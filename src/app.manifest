@@ -1,17 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-  <assemblyIdentity version="1.0.0.0" name="SilDev.CSharpLibs.app"/>
-  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
-    <security>
-      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
-        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
-      </requestedPrivileges>
-    </security>
-  </trustInfo>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v3">
+  <assemblyIdentity version="6.1.7601.24499" processorArchitecture="*" name="SilDev.CSharpLib.dll" type="win32"/>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
       <!-- Windows 11  -->
-      <maxversiontested Id="10.0.22621.2506"/>
+      <maxversiontested Id="10.0.22621.2715"/>
       <!-- Windows 10 and 11  -->
       <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
       <!-- Windows 8.1 -->
