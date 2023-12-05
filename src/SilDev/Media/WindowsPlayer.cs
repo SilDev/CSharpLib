@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: WindowsPlayer.cs
-// Version:  2020-01-19 15:32
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,6 +20,7 @@ namespace SilDev.Media
     using System.IO;
     using System.Reflection;
     using System.Text;
+    using static WinApi;
 
     /// <summary>
     ///     Provides basic functionality of the Windows library to play audio files.
@@ -48,7 +49,7 @@ namespace SilDev.Media
         ///     driver. A lower value specifies a higher (more accurate) resolution.
         /// </param>
         public static uint TimeBeginPeriod(uint uPeriod) =>
-            WinApi.NativeMethods.TimeBeginPeriod(uPeriod);
+            NativeMethods.TimeBeginPeriod(uPeriod);
 
         /// <summary>
         ///     Clears a previously set minimum timer resolution.
@@ -58,7 +59,7 @@ namespace SilDev.Media
         ///     <see cref="TimeBeginPeriod(uint)"/> function.
         /// </param>
         public static uint TimeEndPeriod(uint uPeriod) =>
-            WinApi.NativeMethods.TimeEndPeriod(uPeriod);
+            NativeMethods.TimeEndPeriod(uPeriod);
 
         /// <summary>
         ///     Retrieves the sound volume of the current application.
@@ -67,7 +68,7 @@ namespace SilDev.Media
         /// </exception>
         public static int GetSoundVolume()
         {
-            WinApi.ThrowError(WinApi.NativeMethods.WaveOutGetVolume(IntPtr.Zero, out var currVol));
+            ThrowError(NativeMethods.WaveOutGetVolume(IntPtr.Zero, out var currVol));
             var calcVol = (ushort)(currVol & 0xffff);
             return calcVol / (ushort.MaxValue / 0xa) * 0xa;
         }
@@ -84,7 +85,7 @@ namespace SilDev.Media
         {
             var newVolume = ushort.MaxValue / 0xa * (value.IsBetween(0x0, 0x64) ? value / 0xa : 0x64);
             var newVolumeAllChannels = ((uint)newVolume & 0xffff) | ((uint)newVolume << 16);
-            WinApi.ThrowError(WinApi.NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels));
+            ThrowError(NativeMethods.WaveOutSetVolume(IntPtr.Zero, newVolumeAllChannels));
         }
 
         /// <summary>
@@ -148,7 +149,7 @@ namespace SilDev.Media
         private static string SndStatus()
         {
             var sb = new StringBuilder(128);
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero));
+            ThrowError(NativeMethods.MciSendString($"status {Alias} mode", sb, (uint)sb.Capacity, IntPtr.Zero));
             return sb.ToStringThenClear();
         }
 
@@ -157,19 +158,19 @@ namespace SilDev.Media
             if (!string.IsNullOrEmpty(SndStatus()))
                 SndClose();
             var arg = $"open \"{path}\" alias {Alias}";
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
+            ThrowError(NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
         }
 
         private static void SndClose()
         {
             var arg = $"close {Alias}";
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
+            ThrowError(NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
         }
 
         private static void SndPlay(bool loop = false)
         {
             var arg = $"play {Alias}{(loop ? " repeat" : string.Empty)}";
-            WinApi.ThrowError(WinApi.NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
+            ThrowError(NativeMethods.MciSendString(arg, null, 0, IntPtr.Zero));
         }
     }
 }

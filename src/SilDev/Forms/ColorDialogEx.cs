@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ColorDialogEx.cs
-// Version:  2020-01-13 13:03
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -18,6 +18,7 @@ namespace SilDev.Forms
     using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using static WinApi;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="ColorDialog"/> class.
@@ -80,19 +81,19 @@ namespace SilDev.Forms
         protected override IntPtr HookProc(IntPtr hWnd, int msg, IntPtr wparam, IntPtr lparam)
         {
             var hookProc = base.HookProc(hWnd, msg, wparam, lparam);
-            if (msg != (int)WinApi.WindowMenuFlags.WmInitDialog)
+            if (msg != (int)WindowMenuFlags.WmInitDialog)
                 return hookProc;
             if (!string.IsNullOrEmpty(_title))
-                WinApi.NativeMethods.SetWindowText(hWnd, _title);
+                NativeMethods.SetWindowText(hWnd, _title);
             if (_owner != null)
             {
                 var cRect = new Rectangle(0, 0, 0, 0);
-                if (WinApi.NativeMethods.GetWindowRect(hWnd, ref cRect))
+                if (NativeMethods.GetWindowRect(hWnd, ref cRect))
                 {
                     var width = cRect.Width - cRect.X;
                     var height = cRect.Height - cRect.Y;
                     var pRect = new Rectangle(0, 0, 0, 0);
-                    if (WinApi.NativeMethods.GetWindowRect(_owner.Handle, ref pRect))
+                    if (NativeMethods.GetWindowRect(_owner.Handle, ref pRect))
                     {
                         var ptCenter = new Point(pRect.X, pRect.Y);
                         ptCenter.X += (pRect.Width - pRect.X) / 2;
@@ -110,7 +111,7 @@ namespace SilDev.Forms
             }
             if (_point == null)
                 return hookProc;
-            WinApi.NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, _point.X, _point.Y, 0, 0, WinApi.SetWindowPosFlags.NoSize | WinApi.SetWindowPosFlags.NoZOrder | WinApi.SetWindowPosFlags.ShowWindow);
+            NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, _point.X, _point.Y, 0, 0, SetWindowPosFlags.NoSize | SetWindowPosFlags.NoZOrder | SetWindowPosFlags.ShowWindow);
             return hookProc;
         }
     }

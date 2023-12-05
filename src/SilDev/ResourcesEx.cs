@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2023-12-05 13:10
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -22,6 +22,7 @@ namespace SilDev
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using static WinApi;
 
     /// <summary>
     ///     Provides enumerated symbol index values of the Windows Image Resource
@@ -166,15 +167,15 @@ namespace SilDev
             path = PathEx.Combine(path);
             if (!File.Exists(path))
                 throw new PathNotFoundException(path);
-            var count = WinApi.NativeMethods.ExtractIconEx(path, -1, null, null, 0);
+            var count = NativeMethods.ExtractIconEx(path, -1, null, null, 0);
             if (count < 1)
             {
-                WinApi.ThrowLastError();
+                ThrowLastError();
                 yield break;
             }
             var ptrs1 = new IntPtr[count];
             var ptrs2 = new IntPtr[count];
-            count = WinApi.NativeMethods.ExtractIconEx(path, 0, ptrs1, ptrs2, count);
+            count = NativeMethods.ExtractIconEx(path, 0, ptrs1, ptrs2, count);
             for (var i = 0; i < count; i++)
                 yield return Tuple.Create(Icon.FromHandle(ptrs1[i]), Icon.FromHandle(ptrs2[i]));
         }
@@ -206,14 +207,14 @@ namespace SilDev
             path = PathEx.Combine(path);
             if (!File.Exists(path))
                 throw new PathNotFoundException(path);
-            var count = WinApi.NativeMethods.ExtractIconEx(path, -1, null, null, 0);
+            var count = NativeMethods.ExtractIconEx(path, -1, null, null, 0);
             if (count < 1)
             {
-                WinApi.ThrowLastError();
+                ThrowLastError();
                 yield break;
             }
             var ptrs = new IntPtr[count];
-            count = WinApi.NativeMethods.ExtractIconEx(path, 0, large ? ptrs : null, !large ? ptrs : null, count);
+            count = NativeMethods.ExtractIconEx(path, 0, large ? ptrs : null, !large ? ptrs : null, count);
             for (var i = 0; i < count; i++)
                 yield return Icon.FromHandle(ptrs[i]);
         }
@@ -244,10 +245,10 @@ namespace SilDev
                 if (!File.Exists(file))
                     throw new PathNotFoundException(file);
                 var ptrs = new IntPtr[1];
-                var count = WinApi.NativeMethods.ExtractIconEx(file, index, large ? ptrs : null, !large ? ptrs : null, 1);
+                var count = NativeMethods.ExtractIconEx(file, index, large ? ptrs : null, !large ? ptrs : null, 1);
                 if (count < 1)
                 {
-                    WinApi.ThrowLastError();
+                    ThrowLastError();
                     return null;
                 }
                 var ptr = ptrs.FirstOrDefault();
@@ -410,12 +411,12 @@ namespace SilDev
                     throw new ArgumentNullException(nameof(path));
                 if (!File.Exists(path))
                     throw new PathNotFoundException(path);
-                var shfi = new WinApi.ShFileInfo();
-                var flags = WinApi.FileInfoFlags.Icon | WinApi.FileInfoFlags.UseFileAttributes;
-                flags |= large ? WinApi.FileInfoFlags.LargeIcon : WinApi.FileInfoFlags.SmallIcon;
-                WinApi.NativeMethods.SHGetFileInfo(path, 0x80, ref shfi, (uint)Marshal.SizeOf(shfi), flags);
+                var shfi = new ShFileInfo();
+                var flags = FileInfoFlags.Icon | FileInfoFlags.UseFileAttributes;
+                flags |= large ? FileInfoFlags.LargeIcon : FileInfoFlags.SmallIcon;
+                NativeMethods.SHGetFileInfo(path, 0x80, ref shfi, (uint)Marshal.SizeOf(shfi), flags);
                 var ico = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
-                WinApi.NativeMethods.DestroyIcon(shfi.hIcon);
+                NativeMethods.DestroyIcon(shfi.hIcon);
                 return ico;
             }
             catch (Exception ex) when (ex.IsCaught())

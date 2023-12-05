@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ContextMenuStripEx.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -22,6 +22,7 @@ namespace SilDev.Forms
     using System.Drawing.Drawing2D;
     using System.Linq;
     using System.Windows.Forms;
+    using static WinApi;
 
     /// <summary>
     ///     Provides enumerated values of <see cref="ContextMenuStrip"/> animations.
@@ -36,32 +37,32 @@ namespace SilDev.Forms
         /// <summary>
         ///     Fade in animation.
         /// </summary>
-        Blend = WinApi.AnimateWindowFlags.Blend,
+        Blend = AnimateWindowFlags.Blend,
 
         /// <summary>
         ///     Makes the <see cref="ContextMenuStrip"/> appear to collapse inward.
         /// </summary>
-        Center = WinApi.AnimateWindowFlags.Center,
+        Center = AnimateWindowFlags.Center,
 
         /// <summary>
         ///     Slide animation from left to right.
         /// </summary>
-        SlideHorPositive = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.HorPositive,
+        SlideHorPositive = AnimateWindowFlags.Slide | AnimateWindowFlags.HorPositive,
 
         /// <summary>
         ///     Slide animation from right to left.
         /// </summary>
-        SlideHorNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.HorNegative,
+        SlideHorNegative = AnimateWindowFlags.Slide | AnimateWindowFlags.HorNegative,
 
         /// <summary>
         ///     Slide animation from top to bottom.
         /// </summary>
-        SlideVerPositive = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerPositive,
+        SlideVerPositive = AnimateWindowFlags.Slide | AnimateWindowFlags.VerPositive,
 
         /// <summary>
         ///     Slide animation from bottom to top.
         /// </summary>
-        SlideVerNegative = WinApi.AnimateWindowFlags.Slide | WinApi.AnimateWindowFlags.VerNegative
+        SlideVerNegative = AnimateWindowFlags.Slide | AnimateWindowFlags.VerNegative
     }
 
     /// <summary>
@@ -175,7 +176,7 @@ namespace SilDev.Forms
                     return;
                 if (animation != ContextMenuStripExAnimation.Default)
                 {
-                    WinApi.NativeMethods.AnimateWindow(owner.Handle, time, (WinApi.AnimateWindowFlags)animation);
+                    NativeMethods.AnimateWindow(owner.Handle, time, (AnimateWindowFlags)animation);
                     if (loaded)
                         return;
                     loaded = true;

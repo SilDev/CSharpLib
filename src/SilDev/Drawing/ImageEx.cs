@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-03 18:28
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -23,6 +23,7 @@ namespace SilDev.Drawing
     using System.Linq;
     using System.Threading;
     using Properties;
+    using static WinApi;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="Image"/> class.
@@ -754,11 +755,11 @@ namespace SilDev.Drawing
                 return default;
             var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
             using var g = Graphics.FromImage(bmp);
-            var desktop = WinApi.NativeMethods.GetDC(IntPtr.Zero);
+            var desktop = NativeMethods.GetDC(IntPtr.Zero);
             if (desktop == IntPtr.Zero ||
-                !WinApi.NativeMethods.BitBlt(g.GetHdc(), 0, 0, width, height, desktop, x, y, 0xcc0020) ||
-                !WinApi.NativeMethods.ReleaseDC(IntPtr.Zero, desktop) ||
-                !WinApi.NativeMethods.ReleaseDC(hWnd, WinApi.NativeMethods.GetDC(hWnd)))
+                !NativeMethods.BitBlt(g.GetHdc(), 0, 0, width, height, desktop, x, y, 0xcc0020) ||
+                !NativeMethods.ReleaseDC(IntPtr.Zero, desktop) ||
+                !NativeMethods.ReleaseDC(hWnd, NativeMethods.GetDC(hWnd)))
                 return default;
             g.ReleaseHdc();
             return bmp;

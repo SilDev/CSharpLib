@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Memory.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -21,6 +21,7 @@ namespace SilDev
     using System.Runtime.InteropServices;
     using System.Text;
     using Properties;
+    using static WinApi;
 
     /// <summary>
     ///     Provides static methods to reduce the memory usage of the current process.
@@ -129,8 +130,8 @@ namespace SilDev
         /// </param>
         public ProcessMemory(IntPtr hWnd)
         {
-            _ = WinApi.NativeMethods.GetWindowThreadProcessId(hWnd, out var ownerProcessId);
-            _hProcess = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessVmOperation | WinApi.AccessRights.ProcessVmRead | WinApi.AccessRights.ProcessVmWrite | WinApi.AccessRights.ProcessQueryInformation, false, ownerProcessId);
+            _ = NativeMethods.GetWindowThreadProcessId(hWnd, out var ownerProcessId);
+            _hProcess = NativeMethods.OpenProcess(AccessRights.ProcessVmOperation | AccessRights.ProcessVmRead | AccessRights.ProcessVmWrite | AccessRights.ProcessQueryInformation, false, ownerProcessId);
         }
 
         ~ProcessMemory() =>
@@ -142,7 +143,7 @@ namespace SilDev
         public string GetImageFileName()
         {
             var sb = new StringBuilder(short.MaxValue);
-            return !WinApi.NativeMethods.GetProcessImageFileName(_hProcess, sb, sb.Capacity - 1) ? null : sb.ToStringThenClear();
+            return !NativeMethods.GetProcessImageFileName(_hProcess, sb, sb.Capacity - 1) ? null : sb.ToStringThenClear();
         }
 
         /// <summary>
@@ -154,7 +155,7 @@ namespace SilDev
         public IntPtr Allocate(object value)
         {
             var size = new IntPtr(Marshal.SizeOf(value));
-            var ptr = WinApi.NativeMethods.VirtualAllocEx(_hProcess, IntPtr.Zero, size, WinApi.MemAllocTypes.Commit, WinApi.MemProtectFlags.PageReadWrite);
+            var ptr = NativeMethods.VirtualAllocEx(_hProcess, IntPtr.Zero, size, MemAllocTypes.Commit, MemProtectFlags.PageReadWrite);
             if (ptr != IntPtr.Zero)
                 _allocations.Add(ptr);
             return ptr;
@@ -176,7 +177,7 @@ namespace SilDev
                 using var pin = new MemoryPinner(value);
                 var bytesRead = IntPtr.Zero;
                 var size = new IntPtr(Marshal.SizeOf(value));
-                if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, pin.PointerHandle, size, ref bytesRead))
+                if (NativeMethods.ReadProcessMemory(_hProcess, address, pin.PointerHandle, size, ref bytesRead))
                     return;
                 throw new MemoryException(ExceptionMessages.BytesReadFailed + bytesRead);
             }
@@ -201,7 +202,7 @@ namespace SilDev
             {
                 var sb = new StringBuilder(short.MaxValue);
                 var bytesRead = IntPtr.Zero;
-                if (WinApi.NativeMethods.ReadProcessMemory(_hProcess, address, sb, new IntPtr(size), ref bytesRead))
+                if (NativeMethods.ReadProcessMemory(_hProcess, address, sb, new IntPtr(size), ref bytesRead))
                     return sb.ToStringThenClear();
                 throw new MemoryException(ExceptionMessages.BytesReadFailed + bytesRead);
             }
@@ -230,7 +231,7 @@ namespace SilDev
             try
             {
                 using var pin = new MemoryPinner(value);
-                if (WinApi.NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.PointerHandle, size, out var bytesWritten))
+                if (NativeMethods.WriteProcessMemory(_hProcess, buffer, pin.PointerHandle, size, out var bytesWritten))
                     return;
                 throw new MemoryException(ExceptionMessages.BytesWriteFailed + bytesWritten);
             }
@@ -257,8 +258,8 @@ namespace SilDev
             if (!disposing || _hProcess == IntPtr.Zero)
                 return;
             foreach (var ptr in _allocations.Cast<IntPtr>())
-                _ = WinApi.NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, WinApi.MemFreeType.Release);
-            WinApi.NativeMethods.CloseHandle(_hProcess);
+                _ = NativeMethods.VirtualFreeEx(_hProcess, ptr, IntPtr.Zero, MemFreeType.Release);
+            NativeMethods.CloseHandle(_hProcess);
         }
     }
 }

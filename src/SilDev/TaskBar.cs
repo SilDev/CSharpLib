@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -22,6 +22,7 @@ namespace SilDev
     using System.Windows.Forms;
     using Intern;
     using Microsoft.Win32;
+    using static WinApi;
 
     /// <summary>
     ///     Provides enumerated flags of the taskbar alignment, added in Windows 11.
@@ -152,12 +153,12 @@ namespace SilDev
         /// </summary>
         public static TaskBarState GetState()
         {
-            var data = new WinApi.AppBarData();
+            var data = new AppBarData();
             try
             {
                 data.CbSize = (uint)Marshal.SizeOf(data);
-                data.HWnd = WinApi.NativeMethods.FindWindow("System_TrayWnd", null);
-                return (TaskBarState)WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOption.GetState, ref data);
+                data.HWnd = NativeMethods.FindWindow("System_TrayWnd", null);
+                return (TaskBarState)NativeMethods.SHAppBarMessage(AppBarMessageOption.GetState, ref data);
             }
             finally
             {
@@ -173,13 +174,13 @@ namespace SilDev
         /// </param>
         public static void SetState(TaskBarState state)
         {
-            var data = new WinApi.AppBarData();
+            var data = new AppBarData();
             try
             {
                 data.CbSize = (uint)Marshal.SizeOf(data);
-                data.HWnd = WinApi.NativeMethods.FindWindow("System_TrayWnd", null);
+                data.HWnd = NativeMethods.FindWindow("System_TrayWnd", null);
                 data.LParam = (int)state;
-                WinApi.NativeMethods.SHAppBarMessage(WinApi.AppBarMessageOption.SetState, ref data);
+                NativeMethods.SHAppBarMessage(AppBarMessageOption.SetState, ref data);
             }
             finally
             {
@@ -336,8 +337,8 @@ namespace SilDev
                 var verbs = link.Verbs();
 
                 var sb = new StringBuilder(byte.MaxValue);
-                var lib = WinApi.NativeMethods.LoadLibrary(WinApi.DllNames.Shell32);
-                _ = WinApi.NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
+                var lib = NativeMethods.LoadLibrary(DllNames.Shell32);
+                _ = NativeMethods.LoadString(lib, pin ? 0x150au : 0x150bu, sb, 0xff);
                 var verb = sb.ToStringThenClear();
 
                 /*

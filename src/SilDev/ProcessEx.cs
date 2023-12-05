@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev
     using System.Threading;
     using Microsoft.Win32.SafeHandles;
     using Properties;
+    using static WinApi;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="Process"/> class to enable
@@ -129,9 +130,9 @@ namespace SilDev
                     if (hWndNewParent == IntPtr.Zero)
                         hWndNewParent = newParent.Handle;
                 }
-                if (WinApi.NativeMethods.SetParent(hWndChild, hWndNewParent) != IntPtr.Zero)
+                if (NativeMethods.SetParent(hWndChild, hWndNewParent) != IntPtr.Zero)
                     return true;
-                WinApi.ThrowLastError();
+                ThrowLastError();
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -353,33 +354,33 @@ namespace SilDev
                             var tokenHandle = IntPtr.Zero;
                             try
                             {
-                                var pseudoHandle = WinApi.NativeMethods.GetCurrentProcess();
+                                var pseudoHandle = NativeMethods.GetCurrentProcess();
                                 if (pseudoHandle == IntPtr.Zero)
-                                    WinApi.ThrowLastError(ExceptionMessages.PseudoHandleNotFound);
-                                if (!WinApi.NativeMethods.OpenProcessToken(pseudoHandle, 0x20, out tokenHandle))
-                                    WinApi.ThrowLastError(ExceptionMessages.PseudoHandleTokenAccess);
-                                var newLuId = new WinApi.LuId();
-                                if (!WinApi.NativeMethods.LookupPrivilegeValue(null, "SeIncreaseQuotaPrivilege", ref newLuId))
-                                    WinApi.ThrowLastError(ExceptionMessages.PrivilegeValueAccess);
-                                var newState = new WinApi.TokenPrivileges
+                                    ThrowLastError(ExceptionMessages.PseudoHandleNotFound);
+                                if (!NativeMethods.OpenProcessToken(pseudoHandle, 0x20, out tokenHandle))
+                                    ThrowLastError(ExceptionMessages.PseudoHandleTokenAccess);
+                                var newLuId = new LuId();
+                                if (!NativeMethods.LookupPrivilegeValue(null, "SeIncreaseQuotaPrivilege", ref newLuId))
+                                    ThrowLastError(ExceptionMessages.PrivilegeValueAccess);
+                                var newState = new TokenPrivileges
                                 {
                                     Privileges = new[]
                                     {
-                                        new WinApi.LuIdAndAttributes
+                                        new LuIdAndAttributes
                                         {
                                             Attributes = 0x2,
                                             Luid = newLuId
                                         }
                                     }
                                 };
-                                if (!WinApi.NativeHelper.AdjustTokenPrivileges(tokenHandle, false, ref newState))
-                                    WinApi.ThrowLastError(ExceptionMessages.TokenPrivilegesAdjustment);
+                                if (!NativeHelper.AdjustTokenPrivileges(tokenHandle, false, ref newState))
+                                    ThrowLastError(ExceptionMessages.TokenPrivilegesAdjustment);
                             }
                             finally
                             {
-                                WinApi.NativeMethods.CloseHandle(tokenHandle);
+                                NativeMethods.CloseHandle(tokenHandle);
                             }
-                            var shellWindow = WinApi.NativeMethods.GetShellWindow();
+                            var shellWindow = NativeMethods.GetShellWindow();
                             if (shellWindow == IntPtr.Zero)
                                 throw new NullReferenceException();
                             var shellHandle = IntPtr.Zero;
@@ -387,25 +388,25 @@ namespace SilDev
                             var primaryToken = IntPtr.Zero;
                             try
                             {
-                                if (WinApi.NativeMethods.GetWindowThreadProcessId(shellWindow, out var pid) <= 0)
-                                    WinApi.ThrowLastError(ExceptionMessages.ShellPidNotFound);
-                                shellHandle = WinApi.NativeMethods.OpenProcess(WinApi.AccessRights.ProcessQueryInformation, false, pid);
+                                if (NativeMethods.GetWindowThreadProcessId(shellWindow, out var pid) <= 0)
+                                    ThrowLastError(ExceptionMessages.ShellPidNotFound);
+                                shellHandle = NativeMethods.OpenProcess(AccessRights.ProcessQueryInformation, false, pid);
                                 if (shellHandle == IntPtr.Zero)
-                                    WinApi.ThrowLastError(ExceptionMessages.ShellProcessAccess);
-                                if (!WinApi.NativeMethods.OpenProcessToken(shellHandle, 0x2, out shellToken))
-                                    WinApi.ThrowLastError(ExceptionMessages.ShellProcessTokenAccess);
-                                if (!WinApi.NativeMethods.DuplicateTokenEx(shellToken, 0x18bu, IntPtr.Zero, WinApi.SecurityImpersonationLevels.SecurityImpersonation, WinApi.TokenTypes.TokenPrimary, out primaryToken))
-                                    WinApi.ThrowLastError(ExceptionMessages.ShellProcessTokenDuplication);
-                                var startupInfo = new WinApi.StartupInfo();
-                                if (!WinApi.NativeMethods.CreateProcessWithTokenW(primaryToken, 0, process.StartInfo.FileName, process.StartInfo.Arguments, 0, IntPtr.Zero, process.StartInfo.WorkingDirectory, ref startupInfo, out var processInformation))
-                                    WinApi.ThrowLastError(ExceptionMessages.NoProcessWithDuplicatedToken);
+                                    ThrowLastError(ExceptionMessages.ShellProcessAccess);
+                                if (!NativeMethods.OpenProcessToken(shellHandle, 0x2, out shellToken))
+                                    ThrowLastError(ExceptionMessages.ShellProcessTokenAccess);
+                                if (!NativeMethods.DuplicateTokenEx(shellToken, 0x18bu, IntPtr.Zero, SecurityImpersonationLevels.SecurityImpersonation, TokenTypes.TokenPrimary, out primaryToken))
+                                    ThrowLastError(ExceptionMessages.ShellProcessTokenDuplication);
+                                var startupInfo = new StartupInfo();
+                                if (!NativeMethods.CreateProcessWithTokenW(primaryToken, 0, process.StartInfo.FileName, process.StartInfo.Arguments, 0, IntPtr.Zero, process.StartInfo.WorkingDirectory, ref startupInfo, out var processInformation))
+                                    ThrowLastError(ExceptionMessages.NoProcessWithDuplicatedToken);
                                 processId = processInformation.dwProcessId;
                             }
                             finally
                             {
-                                WinApi.NativeMethods.CloseHandle(primaryToken);
-                                WinApi.NativeMethods.CloseHandle(shellToken);
-                                WinApi.NativeMethods.CloseHandle(shellHandle);
+                                NativeMethods.CloseHandle(primaryToken);
+                                NativeMethods.CloseHandle(shellToken);
+                                NativeMethods.CloseHandle(shellHandle);
                             }
                             processStarted = true;
                         }
@@ -622,13 +623,13 @@ namespace SilDev
             if (process == null)
                 return default;
             var handles = new HashSet<IntPtr>();
-            var threads = new WinApi.EnumThreadWndProc((hWnd, _) =>
+            var threads = new EnumThreadWndProc((hWnd, _) =>
             {
                 handles.Add(hWnd);
                 return true;
             });
             foreach (ProcessThread thread in process.Threads)
-                WinApi.NativeMethods.EnumThreadWindows((uint)thread.Id, threads, IntPtr.Zero);
+                NativeMethods.EnumThreadWindows((uint)thread.Id, threads, IntPtr.Zero);
             return handles;
         }
 
@@ -653,7 +654,7 @@ namespace SilDev
                     {
                         foreach (var h in p.ThreadHandles())
                         {
-                            WinApi.NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
+                            NativeHelper.PostMessage(h, 0x10, IntPtr.Zero, IntPtr.Zero);
                             if (!waitOnHandle)
                                 continue;
                             using var wh = new ManualResetEvent(false);

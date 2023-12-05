@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -28,6 +28,7 @@ namespace SilDev
     using Compression;
     using Intern;
     using Properties;
+    using static WinApi;
 
     /// <summary>
     ///     Provides static methods based on the <see cref="File"/> class to perform
@@ -1290,23 +1291,23 @@ namespace SilDev
             var paths = files?.Select(PathEx.Combine).ToArray();
             if (!paths?.Any() ?? true)
                 yield break;
-            WinApi.ThrowError(WinApi.NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString()));
+            ThrowError(NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString()));
             IEnumerable<int> procIds;
             try
             {
-                WinApi.ThrowError(WinApi.NativeMethods.RmRegisterResources(handle, (uint)paths.Length, paths, 0u, null, 0u, null));
+                ThrowError(NativeMethods.RmRegisterResources(handle, (uint)paths.Length, paths, 0u, null, 0u, null));
                 var pnProcInfo = 0u;
                 var lpdwRebootReasons = 0u;
-                if (WinApi.ThrowError(WinApi.NativeMethods.RmGetList(handle, out var pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons), 0, 234) == 0)
+                if (ThrowError(NativeMethods.RmGetList(handle, out var pnProcInfoNeeded, ref pnProcInfo, null, ref lpdwRebootReasons), 0, 234) == 0)
                     yield break;
-                var processInfo = new WinApi.RmProcessInfo[pnProcInfoNeeded];
+                var processInfo = new RmProcessInfo[pnProcInfoNeeded];
                 pnProcInfo = pnProcInfoNeeded;
-                WinApi.ThrowError(WinApi.NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons));
+                ThrowError(NativeMethods.RmGetList(handle, out pnProcInfoNeeded, ref pnProcInfo, processInfo, ref lpdwRebootReasons));
                 procIds = processInfo.Select(e => e.Process.dwProcessId);
             }
             finally
             {
-                _ = WinApi.NativeMethods.RmEndSession(handle);
+                _ = NativeMethods.RmEndSession(handle);
             }
             foreach (var id in procIds)
             {

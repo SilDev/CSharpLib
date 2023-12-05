@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ProcessPrincipal.cs
-// Version:  2020-01-19 15:31
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -20,6 +20,7 @@ namespace SilDev
     using System.IO;
     using System.Runtime.InteropServices;
     using Properties;
+    using static WinApi;
 
     /// <summary>
     ///     Provides the functionality to handle the current principal name.
@@ -121,7 +122,7 @@ namespace SilDev
         private static void GetPointers(out IntPtr offset, out IntPtr buffer)
         {
             var curHandle = Process.GetCurrentProcess().Handle;
-            var pebBaseAddress = WinApi.NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
+            var pebBaseAddress = NativeHelper.GetProcessBasicInformation(curHandle).PebBaseAddress;
             var processParameters = Marshal.ReadIntPtr(pebBaseAddress, 4 * IntPtr.Size);
             var unicodeSize = IntPtr.Size * 2;
             offset = processParameters.Increment(new IntPtr(4 * 4 + 5 * IntPtr.Size + unicodeSize + IntPtr.Size + unicodeSize));

@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: Tray.cs
-// Version:  2020-01-13 13:03
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,7 @@ namespace SilDev
 {
     using System;
     using System.Threading;
+    using static WinApi;
 
     /// <summary>
     ///     Provides the functionality to manage the items of the system tray area.
@@ -49,17 +50,17 @@ namespace SilDev
                     var hWnd = IntPtr.Zero;
                     foreach (var str in array)
                     {
-                        WinApi.NativeHelper.FindNestedWindow(ref hWnd, str);
+                        NativeHelper.FindNestedWindow(ref hWnd, str);
                         if (hWnd == IntPtr.Zero)
                             throw new NullReferenceException();
                     }
                     MouseMove:
-                    WinApi.NativeMethods.GetClientRect(hWnd, out var rect1);
+                    NativeMethods.GetClientRect(hWnd, out var rect1);
                     for (var x = 0; x < rect1.Right; x += 5)
                     {
                         for (var y = 0; y < rect1.Bottom; y += 5)
-                            WinApi.NativeHelper.SendMessage(hWnd, (uint)WinApi.WindowMenuFlags.WmMouseMove, IntPtr.Zero, new IntPtr((y << 16) + x));
-                        WinApi.NativeMethods.GetClientRect(hWnd, out var rect2);
+                            NativeHelper.SendMessage(hWnd, (uint)WindowMenuFlags.WmMouseMove, IntPtr.Zero, new IntPtr((y << 16) + x));
+                        NativeMethods.GetClientRect(hWnd, out var rect2);
                         if (rect1 != rect2)
                             goto MouseMove;
                     }

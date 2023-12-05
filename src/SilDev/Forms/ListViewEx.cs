@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -17,6 +17,7 @@ namespace SilDev.Forms
 {
     using System;
     using System.Windows.Forms;
+    using static WinApi;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="ListView"/> class.
@@ -55,7 +56,7 @@ namespace SilDev.Forms
                 return;
             if (cursor == default)
                 cursor = Cursors.Arrow;
-            WinApi.NativeHelper.SendMessage(lv.Handle, LvmSetHotCursor, IntPtr.Zero, cursor.Handle);
+            NativeHelper.SendMessage(lv.Handle, LvmSetHotCursor, IntPtr.Zero, cursor.Handle);
         }
     }
 }

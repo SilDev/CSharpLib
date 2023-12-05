@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: SizeEx.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev.Drawing
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
+    using static WinApi;
 
     /// <summary>
     ///     Expands the functionality for the <see cref="Size"/> class.
@@ -44,7 +45,7 @@ namespace SilDev.Drawing
         /// </summary>
         public static Size GetActiveDesktopSize()
         {
-            var curPos = WinApi.NativeHelper.GetCursorPos();
+            var curPos = NativeHelper.GetCursorPos();
             return GetDesktopSize(curPos);
         }
 

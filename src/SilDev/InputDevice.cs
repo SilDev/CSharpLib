@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: InputDevice.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using static WinApi;
 
     /// <summary>
     ///     Provides enumerated values of Virtual-Key codes.
@@ -1077,7 +1078,7 @@ namespace SilDev
         /// </param>
         public static uint GetScanCode(VirtualKey key, bool extended = false)
         {
-            var code = 1u | (WinApi.NativeMethods.MapVirtualKey((uint)key, 0u) << 16);
+            var code = 1u | (NativeMethods.MapVirtualKey((uint)key, 0u) << 16);
             if (extended)
                 code |= 0x1000000;
             return code;
@@ -1101,7 +1102,7 @@ namespace SilDev
         ///     The <see cref="VirtualKey"/> value to check.
         /// </param>
         public static bool GetKeyState(VirtualKey key) =>
-            WinApi.NativeMethods.GetAsyncKeyState((int)key) < 0;
+            NativeMethods.GetAsyncKeyState((int)key) < 0;
 
         /// <summary>
         ///     Determines whether a key is up or down at the time the function is called,
@@ -1112,7 +1113,7 @@ namespace SilDev
         ///     The <see cref="ushort"/> representation of a Virtual-Key code to check.
         /// </param>
         public static bool GetKeyState(ushort key) =>
-            WinApi.NativeMethods.GetAsyncKeyState(key) < 0;
+            NativeMethods.GetAsyncKeyState(key) < 0;
 
         /// <summary>
         ///     Determines whether a key is up or down at the time the function is called,
@@ -1123,7 +1124,7 @@ namespace SilDev
         ///     The <see cref="string"/> representation of a Virtual-Key code to check.
         /// </param>
         public static bool GetKeyState(string key) =>
-            WinApi.NativeMethods.GetAsyncKeyState(GetKeyCode(key)) < 0;
+            NativeMethods.GetAsyncKeyState(GetKeyCode(key)) < 0;
 
         /// <summary>
         ///     Determines which keys were up or down at the time the function is called,
@@ -1158,7 +1159,7 @@ namespace SilDev
         {
             var wParam = scanCode ? 0u : GetKeyCode(key);
             var lParam = !scanCode ? 0u : GetScanCode(key);
-            return WinApi.NativeHelper.PostMessage(hWnd, (uint)keyState, (IntPtr)wParam, (IntPtr)lParam);
+            return NativeHelper.PostMessage(hWnd, (uint)keyState, (IntPtr)wParam, (IntPtr)lParam);
         }
 
         /// <summary>
@@ -1183,7 +1184,7 @@ namespace SilDev
         {
             var wParam = scanCode ? 0u : GetKeyCode(key);
             var lParam = !scanCode ? 0u : GetScanCode(key);
-            return WinApi.NativeHelper.SendMessage(hWnd, (uint)keyState, (IntPtr)wParam, (IntPtr)lParam);
+            return NativeHelper.SendMessage(hWnd, (uint)keyState, (IntPtr)wParam, (IntPtr)lParam);
         }
 
         /// <summary>
@@ -1195,7 +1196,7 @@ namespace SilDev
         {
             if (!directInput)
             {
-                var hWnd = WinApi.NativeMethods.GetForegroundWindow();
+                var hWnd = NativeMethods.GetForegroundWindow();
                 SendKeyState(hWnd, VirtualKey.LButton, VirtualKeyState.KeyDown, true);
                 SendKeyState(hWnd, VirtualKey.LButton, VirtualKeyState.KeyUp, true);
                 return;
@@ -1203,22 +1204,22 @@ namespace SilDev
 
             var inputs = new[]
             {
-                new WinApi.DeviceInput
+                new DeviceInput
                 {
-                    Data = new WinApi.MouseKeyboardHardwareInput
+                    Data = new MouseKeyboardHardwareInput
                     {
-                        Mouse = new WinApi.MouseInput
+                        Mouse = new MouseInput
                         {
                             Flags = 0x2
                         }
                     },
                     Type = 0
                 },
-                new WinApi.DeviceInput
+                new DeviceInput
                 {
-                    Data = new WinApi.MouseKeyboardHardwareInput
+                    Data = new MouseKeyboardHardwareInput
                     {
-                        Mouse = new WinApi.MouseInput
+                        Mouse = new MouseInput
                         {
                             Flags = 0x4
                         }
@@ -1227,7 +1228,7 @@ namespace SilDev
                 }
             };
 
-            _ = WinApi.NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(WinApi.DeviceInput)));
+            _ = NativeMethods.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(DeviceInput)));
         }
     }
 }

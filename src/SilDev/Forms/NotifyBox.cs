@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NotifyBox.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev.Forms
     using System.Windows.Forms;
     using Drawing;
     using Media;
+    using static WinApi;
     using Timer = System.Windows.Forms.Timer;
 
     /// <summary>
@@ -457,7 +458,7 @@ namespace SilDev.Forms
             private void NotifyForm_Shown(object sender, EventArgs e)
             {
                 if (EnvironmentEx.IsAtLeastWindows(11))
-                    WinApi.NativeHelper.DwmSetWindowAttribute(Handle, WinApi.DwmWindowCornerPreference.DwmwCpRound);
+                    NativeHelper.DwmSetWindowAttribute(Handle, DwmWindowCornerPreference.DwmwCpRound);
                 _timer.Enabled = true;
                 if (_textLabel.Text.EndsWith(" . . .", StringComparison.Ordinal))
                     _timer2.Enabled = true;

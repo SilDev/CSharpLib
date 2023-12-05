@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ConsoleWindow.cs
-// Version:  2020-01-27 23:21
+// Version:  2023-12-05 13:51
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -19,6 +19,7 @@ namespace SilDev
     using System.IO;
     using System.Runtime.InteropServices;
     using Microsoft.Win32.SafeHandles;
+    using static WinApi;
 
     /// <summary>
     ///     Provides the functionality to allocate a <see cref="Console"/> window.
@@ -47,17 +48,17 @@ namespace SilDev
         /// </summary>
         public static void Allocate(bool disableCloseButton = false)
         {
-            if (WinApi.NativeMethods.AttachConsole(AttachParent) != 0 || Marshal.GetLastWin32Error() == ErrorAccessDenied || WinApi.NativeMethods.AllocConsole() == 0)
+            if (NativeMethods.AttachConsole(AttachParent) != 0 || Marshal.GetLastWin32Error() == ErrorAccessDenied || NativeMethods.AllocConsole() == 0)
                 return;
 
             if (disableCloseButton)
             {
-                var hWnd = WinApi.NativeMethods.GetConsoleWindow();
+                var hWnd = NativeMethods.GetConsoleWindow();
                 if (hWnd == IntPtr.Zero)
                     return;
-                var hMenu = WinApi.NativeMethods.GetSystemMenu(hWnd, false);
+                var hMenu = NativeMethods.GetSystemMenu(hWnd, false);
                 if (hMenu != IntPtr.Zero)
-                    _ = WinApi.NativeMethods.DeleteMenu(hMenu, (int)WinApi.WindowMenuFlags.ScClose, WinApi.ModifyMenuFlags.ByCommand);
+                    _ = NativeMethods.DeleteMenu(hMenu, (int)WindowMenuFlags.ScClose, ModifyMenuFlags.ByCommand);
             }
 
             var fsOut = CreateFileStream("CONOUT$", GenericWrite, FileShareWrite, FileAccess.Write);
@@ -90,7 +91,7 @@ namespace SilDev
 
         private static FileStream CreateFileStream(string name, uint win32DesiredAccess, uint win32ShareMode, FileAccess dotNetFileAccess)
         {
-            _safeFileHandle = new SafeFileHandle(WinApi.NativeMethods.CreateFileW(name, win32DesiredAccess, win32ShareMode, IntPtr.Zero, OpenExisting, FileAttributeNormal, IntPtr.Zero), true);
+            _safeFileHandle = new SafeFileHandle(NativeMethods.CreateFileW(name, win32DesiredAccess, win32ShareMode, IntPtr.Zero, OpenExisting, FileAttributeNormal, IntPtr.Zero), true);
             return _safeFileHandle.IsInvalid ? null : new FileStream(_safeFileHandle, dotNetFileAccess);
         }
 

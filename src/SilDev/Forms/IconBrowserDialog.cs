@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IconBrowserDialog.cs
-// Version:  2023-12-03 21:17
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev.Forms
     using System.Windows.Forms;
     using Drawing;
     using Properties;
+    using static WinApi;
     using Timer = System.Windows.Forms.Timer;
 
     /// <summary>
@@ -88,7 +89,7 @@ namespace SilDev.Forms
                 lock (SyncObject)
                 {
                     if (value == null)
-                        _iconPointers?.Where(x => x != IntPtr.Zero).ForEach(x => WinApi.NativeMethods.DestroyIcon(x));
+                        _iconPointers?.Where(x => x != IntPtr.Zero).ForEach(x => NativeMethods.DestroyIcon(x));
                     _iconPointers = value;
                 }
             }
@@ -435,14 +436,14 @@ namespace SilDev.Forms
             {
                 if (IconPointers != null)
                     return index >= IconPointers.Length ? null : Icon.FromHandle(IconPointers[index]);
-                var count = WinApi.NativeMethods.ExtractIconEx(FilePath, -1, null, null, 0);
+                var count = NativeMethods.ExtractIconEx(FilePath, -1, null, null, 0);
                 if (count < 1)
                 {
                     IconPointers = Array.Empty<IntPtr>();
                     return null;
                 }
                 IconPointers = new IntPtr[count];
-                count = WinApi.NativeMethods.ExtractIconEx(FilePath, 0, IconPointers, null, count);
+                count = NativeMethods.ExtractIconEx(FilePath, 0, IconPointers, null, count);
                 return index >= count ? null : Icon.FromHandle(IconPointers[index]);
             }
 

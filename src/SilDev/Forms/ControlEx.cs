@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-12-05 13:10
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,6 +24,7 @@ namespace SilDev.Forms
     using Drawing;
     using Properties;
     using static System.Windows.Forms.ListViewItem;
+    using static WinApi;
 
     /// <summary>
     ///     Specifies the border style for a control.
@@ -323,8 +324,8 @@ namespace SilDev.Forms
                 var curCursor = owner.Cursor;
                 if (cursor)
                     owner.Cursor = Cursors.SizeAll;
-                WinApi.NativeMethods.ReleaseCapture();
-                WinApi.NativeMethods.SendMessage(ancestor.Handle, 0xa1, new IntPtr(0x2), IntPtr.Zero);
+                NativeMethods.ReleaseCapture();
+                NativeMethods.SendMessage(ancestor.Handle, 0xa1, new IntPtr(0x2), IntPtr.Zero);
                 if (owner.Cursor != curCursor)
                     owner.Cursor = curCursor;
             }
@@ -354,7 +355,7 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
-            var style = (int)WinApi.NativeHelper.SendMessage(c.Handle, 0x1037u, IntPtr.Zero, IntPtr.Zero);
+            var style = (int)NativeHelper.SendMessage(c.Handle, 0x1037u, IntPtr.Zero, IntPtr.Zero);
             var flags = new[]
             {
                 0x8000,
@@ -369,7 +370,7 @@ namespace SilDev.Forms
                 }
                 style &= ~flag;
             }
-            WinApi.NativeHelper.SendMessage(c.Handle, 0x1036u, IntPtr.Zero, new IntPtr(style));
+            NativeHelper.SendMessage(c.Handle, 0x1036u, IntPtr.Zero, new IntPtr(style));
         }
 
         /// <summary>

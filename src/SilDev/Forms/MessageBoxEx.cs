@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -21,6 +21,7 @@ namespace SilDev.Forms
     using System.Text;
     using System.Windows.Forms;
     using Properties;
+    using static WinApi;
 
     /// <summary>
     ///     Displays a message window, also known as a dialog box, based on
@@ -43,8 +44,8 @@ namespace SilDev.Forms
         private static int _nButton;
 
         private static IWin32Window _owner;
-        private static readonly WinApi.EnumChildProc EnumProc = MessageBoxEnumProc;
-        private static readonly WinApi.HookProc HookProc = MessageBoxHookProc;
+        private static readonly EnumChildProc EnumProc = MessageBoxEnumProc;
+        private static readonly HookProc HookProc = MessageBoxHookProc;
 
         /// <summary>
         ///     Specifies that the mouse pointer moves once to a new dialog box.
@@ -682,14 +683,14 @@ namespace SilDev.Forms
                     _owner = owner;
                     if (_owner.Handle != IntPtr.Zero)
                     {
-                        var placement = new WinApi.WindowPlacement();
-                        WinApi.NativeMethods.GetWindowPlacement(_owner.Handle, ref placement);
+                        var placement = new WindowPlacement();
+                        NativeMethods.GetWindowPlacement(_owner.Handle, ref placement);
                         if (placement.ShowCmd == 2)
                             return;
                     }
                 }
                 if (_owner != null || ButtonTextOverrideEnabled)
-                    _hHook = WinApi.NativeMethods.SetWindowsHookEx(WinApi.Win32HookFlags.WhCallWndProcRet, HookProc, IntPtr.Zero, (int)WinApi.NativeMethods.GetCurrentThreadId());
+                    _hHook = NativeMethods.SetWindowsHookEx(Win32HookFlags.WhCallWndProcRet, HookProc, IntPtr.Zero, (int)NativeMethods.GetCurrentThreadId());
             }
             catch (Exception ex) when (ex.IsCaught())
             {
@@ -700,27 +701,27 @@ namespace SilDev.Forms
         private static IntPtr MessageBoxHookProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode < 0)
-                return WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
-            var msg = (WinApi.CallWndProcRet)Marshal.PtrToStructure(lParam, typeof(WinApi.CallWndProcRet));
-            if (msg.Message != (int)WinApi.Win32HookFlags.HCbtActivate)
+                return NativeHelper.CallNextHookEx(nCode, wParam, lParam);
+            var msg = (CallWndProcRet)Marshal.PtrToStructure(lParam, typeof(CallWndProcRet));
+            if (msg.Message != (int)Win32HookFlags.HCbtActivate)
             {
-                if (msg.Message != (int)WinApi.WindowMenuFlags.WmInitDialog)
-                    return WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
+                if (msg.Message != (int)WindowMenuFlags.WmInitDialog)
+                    return NativeHelper.CallNextHookEx(nCode, wParam, lParam);
                 if (!ButtonTextOverrideEnabled)
                     return MessageBoxUnhookProc();
                 try
                 {
                     var className = new StringBuilder(10);
-                    _ = WinApi.NativeMethods.GetClassName(msg.HWnd, className, className.Capacity);
+                    _ = NativeMethods.GetClassName(msg.HWnd, className, className.Capacity);
                     if (className.ToStringThenClear() == "#32770")
                     {
                         _nButton = 0;
-                        WinApi.NativeMethods.EnumChildWindows(msg.HWnd, EnumProc, IntPtr.Zero);
+                        NativeMethods.EnumChildWindows(msg.HWnd, EnumProc, IntPtr.Zero);
                         if (_nButton == 1)
                         {
-                            var hButton = WinApi.NativeMethods.GetDlgItem(msg.HWnd, 2);
+                            var hButton = NativeMethods.GetDlgItem(msg.HWnd, 2);
                             if (hButton != IntPtr.Zero)
-                                WinApi.NativeMethods.SetWindowText(hButton, ButtonText.Ok);
+                                NativeMethods.SetWindowText(hButton, ButtonText.Ok);
                         }
                     }
                 }
@@ -735,13 +736,13 @@ namespace SilDev.Forms
                 if (_owner != null)
                 {
                     var cRect = new Rectangle(0, 0, 0, 0);
-                    if (WinApi.NativeMethods.GetWindowRect(msg.HWnd, ref cRect))
+                    if (NativeMethods.GetWindowRect(msg.HWnd, ref cRect))
                     {
                         var width = cRect.Width - cRect.X;
                         var height = cRect.Height - cRect.Y;
-                        WinApi.NativeHelper.CenterWindow(msg.HWnd, _owner.Handle, true);
+                        NativeHelper.CenterWindow(msg.HWnd, _owner.Handle, true);
                         if (CenterMousePointer)
-                            WinApi.NativeHelper.SetCursorPos(msg.HWnd, new Point(width / 2, height / 2 + 24));
+                            NativeHelper.SetCursorPos(msg.HWnd, new Point(width / 2, height / 2 + 24));
                     }
                 }
             }
@@ -749,12 +750,12 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
-            return !ButtonTextOverrideEnabled ? MessageBoxUnhookProc() : WinApi.NativeHelper.CallNextHookEx(nCode, wParam, lParam);
+            return !ButtonTextOverrideEnabled ? MessageBoxUnhookProc() : NativeHelper.CallNextHookEx(nCode, wParam, lParam);
         }
 
         private static IntPtr MessageBoxUnhookProc()
         {
-            _ = WinApi.NativeMethods.UnhookWindowsHookEx(_hHook);
+            _ = NativeMethods.UnhookWindowsHookEx(_hHook);
             _hHook = IntPtr.Zero;
             _owner = null;
             if (ButtonTextOverrideEnabled)
@@ -765,38 +766,38 @@ namespace SilDev.Forms
         private static bool MessageBoxEnumProc(IntPtr hWnd, IntPtr lParam)
         {
             var className = new StringBuilder(10);
-            _ = WinApi.NativeMethods.GetClassName(hWnd, className, className.Capacity);
+            _ = NativeMethods.GetClassName(hWnd, className, className.Capacity);
             if (!className.ToStringThenClear().EqualsEx("Button"))
                 return true;
-            switch (WinApi.NativeMethods.GetDlgCtrlID(hWnd))
+            switch (NativeMethods.GetDlgCtrlID(hWnd))
             {
                 case 1:
                     if (ButtonText.Ok != null)
-                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Ok);
+                        NativeMethods.SetWindowText(hWnd, ButtonText.Ok);
                     break;
                 case 2:
                     if (ButtonText.Cancel != null)
-                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Cancel);
+                        NativeMethods.SetWindowText(hWnd, ButtonText.Cancel);
                     break;
                 case 3:
                     if (ButtonText.Abort != null)
-                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Abort);
+                        NativeMethods.SetWindowText(hWnd, ButtonText.Abort);
                     break;
                 case 4:
                     if (ButtonText.Retry != null)
-                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Retry);
+                        NativeMethods.SetWindowText(hWnd, ButtonText.Retry);
                     break;
                 case 5:
                     if (ButtonText.Ignore != null)
-                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Ignore);
+                        NativeMethods.SetWindowText(hWnd, ButtonText.Ignore);
                     break;
                 case 6:
                     if (ButtonText.Yes != null)
-                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.Yes);
+                        NativeMethods.SetWindowText(hWnd, ButtonText.Yes);
                     break;
                 case 7:
                     if (ButtonText.No != null)
-                        WinApi.NativeMethods.SetWindowText(hWnd, ButtonText.No);
+                        NativeMethods.SetWindowText(hWnd, ButtonText.No);
                     break;
             }
             _nButton++;

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2023-12-05 13:10
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -21,6 +21,7 @@ namespace SilDev.Forms
     using System.Linq;
     using System.Windows.Forms;
     using Drawing;
+    using static WinApi;
 
     /// <summary>
     ///     Provides special <see cref="Form"/> settings.
@@ -85,7 +86,7 @@ namespace SilDev.Forms
             {
                 if (sender is not Form f)
                     return;
-                WinApi.NativeHelper.MoveWindowToVisibleScreenArea(f.Handle);
+                NativeHelper.MoveWindowToVisibleScreenArea(f.Handle);
                 f.Update();
             };
         }
@@ -139,7 +140,7 @@ namespace SilDev.Forms
                 owner.Enabled = false;
                 form.Opacity = maxOpacity;
                 if (setForeground)
-                    WinApi.NativeHelper.SetForegroundWindow(form.Handle);
+                    NativeHelper.SetForegroundWindow(form.Handle);
                 owner.Dispose();
             }
         }

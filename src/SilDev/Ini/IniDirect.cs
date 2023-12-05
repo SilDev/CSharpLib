@@ -3,11 +3,11 @@
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
-//
+// 
 // Filename: IniDirect.cs
-// Version:  2020-02-03 21:37
-//
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Version:  2023-12-05 13:51
+// 
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -19,6 +19,7 @@ namespace SilDev.Ini
     using System.IO;
     using System.Linq;
     using System.Text;
+    using static WinApi;
 
     /// <summary>
     ///     Provides static functions for accessing INI files using the Win32 API.
@@ -50,7 +51,7 @@ namespace SilDev.Ini
                 if (!File.Exists(path))
                     throw new PathNotFoundException(path);
                 var sb = new StringBuilder(short.MaxValue);
-                if (WinApi.NativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
+                if (NativeMethods.GetPrivateProfileString(section, key, string.Empty, sb, sb.Capacity, path) != 0)
                     output = sb.ToStringThenClear();
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -130,7 +131,7 @@ namespace SilDev.Ini
                 if (!encoding.Equals(Encoding.Unicode) && !encoding.Equals(Encoding.BigEndianUnicode))
                     EncodingEx.ChangeEncoding(path, Encoding.Unicode);
                 Write:
-                return WinApi.NativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
+                return NativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
             }
             catch (Exception ex) when (ex.IsCaught())
             {

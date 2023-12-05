@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormBorderlessResizable.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-05 13:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -168,8 +168,8 @@ namespace SilDev.Forms
         /// <summary>
         ///     Determines whether the corners of the window are rounded.
         ///     <para>
-        ///         &#9888; This feature requires at least Windows 11, where it is enabled by
-        ///         default.
+        ///         &#9888; This feature requires at least Windows 11, where it is enabled
+        ///         by default.
         ///     </para>
         /// </summary>
         protected bool RoundCorners { get; }
@@ -380,7 +380,7 @@ namespace SilDev.Forms
         ///     An <see cref="EventArgs"/> that contains the event data.
         /// </param>
         protected virtual void WhenShown(object sender, EventArgs e) =>
-            WinApi.NativeHelper.DwmSetWindowAttribute(Handle, WinApi.DwmWindowCornerPreference.DwmwCpRound);
+            Desktop.RoundCorners(Handle);
 
         /// <summary>
         ///     Processes Windows messages.
