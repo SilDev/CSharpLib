@@ -3195,8 +3195,8 @@
             <summary>
                 Determines whether the corners of the window are rounded.
                 <para>
-                    This feature requires at least Windows 11, where it is enabled by
-                    default.
+                    &#9888; This feature requires at least Windows 11, where it is enabled
+                    by default.
                 </para>
             </summary>
         </member>
@@ -3512,7 +3512,7 @@
                 Creates a small split button on the right side of this <see cref="T:System.Windows.Forms.Button"/>
                 which is mostly used for drop down menu controls.
                 <para>
-                    Please note that the <see cref="T:System.Windows.Forms.FlatStyle"/> is overwritten to
+                    &#9762;  Please note that the <see cref="T:System.Windows.Forms.FlatStyle"/> is overwritten to
                     <see cref="F:System.Windows.Forms.FlatStyle.Flat"/> which is required to apply highlight
                     effects.
                 </para>
@@ -3530,7 +3530,7 @@
                 Creates or removes the small split button on the right side of this
                 <see cref="T:System.Windows.Forms.Button"/> which is mostly used for drop down menu controls.
                 <para>
-                    Please note that the <see cref="T:System.Windows.Forms.FlatStyle"/> is overwritten to
+                    &#9762; Please note that the <see cref="T:System.Windows.Forms.FlatStyle"/> is overwritten to
                     <see cref="F:System.Windows.Forms.FlatStyle.Flat"/> which is required to apply highlight
                     effects.
                 </para>
@@ -3786,8 +3786,8 @@
                     Please note that it is not enough to change the colors of all control
                     elements to achieve a full color mode. To do this you would have to
                     create inherited classes that override important methods, or handle
-                    DrawHandlerEvents in which you would have to handle every little thing
-                    so that it doesn't look crappy..
+                    draw events in which you would have to handle every little thing so
+                    that it doesn't look crappy.
                 </para>
             </summary>
             <param name="control">
@@ -3804,8 +3804,8 @@
             <summary>
                 Enable dark mode for the specified control.
                 <para>
-                    Please note that this feature requires at least the Windows 10 October
-                    2018 Update.
+                    &#9888; Please note that this feature requires at least the Windows 10
+                    October 2018 Update.
                 </para>
             </summary>
             <param name="control">
@@ -3944,8 +3944,8 @@
             <summary>
                 Captures the entire desktop under this form.
                 <para>
-                    Please note that the form window must be hidden for the moment of
-                    capture, which may cause flickering.
+                    &#9762;  Please note that the form window must be hidden for the moment
+                    of capture, which may cause flickering.
                 </para>
             </summary>
             <param name="form">
@@ -5600,7 +5600,7 @@
                 Copies everything of the specified <see cref="T:SilDev.Ini.IniDocument"/> instance to
                 this instance.
                 <para>
-                    Please note that existing values will be overwritten.
+                    &#9762; Please note that existing values will be overwritten.
                 </para>
             </summary>
             <param name="ini">
@@ -7040,11 +7040,11 @@
             <summary>
                 Provides basic functionality of the IrrKlang library.
                 <para>
-                    Please note that this class requires the latest binaries of the
+                    &#9888; Please note that this class requires the latest binaries of the
                     IrrKlang library.
                 </para>
                 <para>
-                    Visit: <see href="https://www.ambiera.com/irrklang/"/>
+                    &#127968; Visit: <see href="https://www.ambiera.com/irrklang/"/>
                 </para>
             </summary>
         </member>
@@ -11458,11 +11458,12 @@
             <summary>
                 Enables dark mode for the window under the specified handle.
                 <para>
-                    Please note that this function is very limited and does not work
-                    everywhere as expected.
+                    &#9888; Please note that this function is very limited and does not
+                    work everywhere as expected.
                 </para>
                 <para>
-                    This feature requires at least the Windows 10 October 2018 Update.
+                    &#9888; This feature requires at least the Windows 10 October 2018
+                    Update.
                 </para>
             </summary>
             <param name="hWnd">
@@ -11473,15 +11474,30 @@
             <summary>
                 Enables Mica effect mode for the window under the specified handle.
                 <para>
-                    Please note that this function is very limited and does not work
-                    everywhere as expected.
+                    &#9888; Please note that this function is very limited and does not
+                    work everywhere as expected.
                 </para>
                 <para>
-                    This feature requires at least Windows 11.
+                    &#9888; This feature requires at least Windows 11.
                 </para>
             </summary>
             <param name="hWnd">
                 Handle to a window.
+            </param>
+        </member>
+        <member name="M:SilDev.Desktop.RoundCorners(System.IntPtr,System.Boolean)">
+            <summary>
+                Rounds the corners of the window under the specified handle, if
+                appropriate.
+                <para>
+                    &#9888; This feature requires at least Windows 11.
+                </para>
+            </summary>
+            <param name="hWnd">
+                Handle to a window.
+            </param>
+            <param name="small">
+                Enables a smaller radius.
             </param>
         </member>
         <member name="M:SilDev.Desktop.GetDpi(System.IntPtr)">
@@ -11745,9 +11761,22 @@
             <summary>
                 Creates all directories and subdirectories in the specified path unless
                 they already exist.
+                <para>
+                    &#9762; Please note that if the specified path leads to an existing
+                    file, it will be deleted and a directory will be created in its place.
+                </para>
             </summary>
             <param name="path">
                 The directory to create.
+            </param>
+        </member>
+        <member name="M:SilDev.DirectoryEx.CreateParent(System.String)">
+            <summary>
+                Creates all directories and subdirectories in the parent directory of the
+                specified path unless they already exist.
+            </summary>
+            <param name="path">
+                The path containing the directory to create.
             </param>
         </member>
         <member name="M:SilDev.DirectoryEx.Copy(System.String,System.String,System.Boolean,System.Boolean)">
@@ -21833,11 +21862,12 @@
                 Provides enumerated symbol index values of the Windows Image Resource
                 dynamic link library ('imageres.dll') file on Windows 10.
                 <para>
-                    Please note that Microsoft has started replacing some icons with blank
-                    ones and the general order also changes with each version of Windows.
-                    The order should be handled until Windows 11, but if some symbols are
-                    wrong, you can play this indexing game yourself using directly the
-                    <see cref="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.Boolean,System.String)"/> method.
+                    &#9762; Please note that Microsoft has started replacing some icons
+                    with blank ones and the general order also changes with each version of
+                    Windows. The order should be handled until Windows 11, but if some
+                    symbols are wrong, you can play this indexing game yourself using
+                    directly the <see cref="M:SilDev.ResourcesEx.GetSystemIcon(System.Int32,System.Boolean,System.String)"/>
+                    method.
                 </para>
             </summary>
         </member>
