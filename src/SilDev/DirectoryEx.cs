@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2020-01-14 19:26
+// Version:  2023-12-05 13:10
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -394,6 +394,10 @@ namespace SilDev
         /// <summary>
         ///     Creates all directories and subdirectories in the specified path unless
         ///     they already exist.
+        ///     <para>
+        ///         &#9762; Please note that if the specified path leads to an existing
+        ///         file, it will be deleted and a directory will be created in its place.
+        ///     </para>
         /// </summary>
         /// <param name="path">
         ///     The directory to create.
@@ -411,6 +415,32 @@ namespace SilDev
                     File.Delete(dir);
                 var di = Directory.CreateDirectory(dir);
                 return di.Exists;
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                Log.Write(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     Creates all directories and subdirectories in the parent directory of the
+        ///     specified path unless they already exist.
+        /// </summary>
+        /// <param name="path">
+        ///     The path containing the directory to create.
+        /// </param>
+        public static bool CreateParent(string path)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                    throw new ArgumentNullException(nameof(path));
+                var item = PathEx.Combine(path);
+                if (PathEx.DirOrFileExists(item))
+                    return true;
+                var dir = Path.GetDirectoryName(item);
+                return Create(dir);
             }
             catch (Exception ex) when (ex.IsCaught())
             {
