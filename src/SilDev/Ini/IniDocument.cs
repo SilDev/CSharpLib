@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IniDocument.cs
-// Version:  2023-11-27 12:17
+// Version:  2023-12-05 13:10
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -541,7 +541,7 @@ namespace SilDev.Ini
         ///     Copies everything of the specified <see cref="IniDocument"/> instance to
         ///     this instance.
         ///     <para>
-        ///         Please note that existing values will be overwritten.
+        ///         &#9762; Please note that existing values will be overwritten.
         ///     </para>
         /// </summary>
         /// <param name="ini">

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-05 13:10
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -144,8 +144,8 @@ namespace SilDev.Forms
         ///         Please note that it is not enough to change the colors of all control
         ///         elements to achieve a full color mode. To do this you would have to
         ///         create inherited classes that override important methods, or handle
-        ///         DrawHandlerEvents in which you would have to handle every little thing
-        ///         so that it doesn't look crappy..
+        ///         draw events in which you would have to handle every little thing so
+        ///         that it doesn't look crappy.
         ///     </para>
         /// </summary>
         /// <param name="control">
@@ -270,8 +270,8 @@ namespace SilDev.Forms
         /// <summary>
         ///     Enable dark mode for the specified control.
         ///     <para>
-        ///         Please note that this feature requires at least the Windows 10 October
-        ///         2018 Update.
+        ///         &#9888; Please note that this feature requires at least the Windows 10
+        ///         October 2018 Update.
         ///     </para>
         /// </summary>
         /// <param name="control">

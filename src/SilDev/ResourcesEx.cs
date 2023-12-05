@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ResourcesEx.cs
-// Version:  2023-11-17 19:01
+// Version:  2023-12-05 13:10
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -27,11 +27,12 @@ namespace SilDev
     ///     Provides enumerated symbol index values of the Windows Image Resource
     ///     dynamic link library ('imageres.dll') file on Windows 10.
     ///     <para>
-    ///         Please note that Microsoft has started replacing some icons with blank
-    ///         ones and the general order also changes with each version of Windows.
-    ///         The order should be handled until Windows 11, but if some symbols are
-    ///         wrong, you can play this indexing game yourself using directly the
-    ///         <see cref="ResourcesEx.GetSystemIcon(int, bool, string)"/> method.
+    ///         &#9762; Please note that Microsoft has started replacing some icons
+    ///         with blank ones and the general order also changes with each version of
+    ///         Windows. The order should be handled until Windows 11, but if some
+    ///         symbols are wrong, you can play this indexing game yourself using
+    ///         directly the <see cref="ResourcesEx.GetSystemIcon(int, bool, string)"/>
+    ///         method.
     ///     </para>
     /// </summary>
     public enum ImageResourceSymbol

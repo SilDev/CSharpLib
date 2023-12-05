@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2023-12-03 15:23
+// Version:  2023-12-05 13:10
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -42,11 +42,12 @@ namespace SilDev
         /// <summary>
         ///     Enables dark mode for the window under the specified handle.
         ///     <para>
-        ///         Please note that this function is very limited and does not work
-        ///         everywhere as expected.
+        ///         &#9888; Please note that this function is very limited and does not
+        ///         work everywhere as expected.
         ///     </para>
         ///     <para>
-        ///         This feature requires at least the Windows 10 October 2018 Update.
+        ///         &#9888; This feature requires at least the Windows 10 October 2018
+        ///         Update.
         ///     </para>
         /// </summary>
         /// <param name="hWnd">
@@ -63,11 +64,11 @@ namespace SilDev
         /// <summary>
         ///     Enables Mica effect mode for the window under the specified handle.
         ///     <para>
-        ///         Please note that this function is very limited and does not work
-        ///         everywhere as expected.
+        ///         &#9888; Please note that this function is very limited and does not
+        ///         work everywhere as expected.
         ///     </para>
         ///     <para>
-        ///         This feature requires at least Windows 11.
+        ///         &#9888; This feature requires at least Windows 11.
         ///     </para>
         /// </summary>
         /// <param name="hWnd">

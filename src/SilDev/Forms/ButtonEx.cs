@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ButtonEx.cs
-// Version:  2021-04-22 19:45
+// Version:  2023-12-05 13:10
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -31,7 +31,7 @@ namespace SilDev.Forms
         ///     Creates a small split button on the right side of this <see cref="Button"/>
         ///     which is mostly used for drop down menu controls.
         ///     <para>
-        ///         Please note that the <see cref="FlatStyle"/> is overwritten to
+        ///         &#9762;  Please note that the <see cref="FlatStyle"/> is overwritten to
         ///         <see cref="FlatStyle.Flat"/> which is required to apply highlight
         ///         effects.
         ///     </para>
@@ -88,7 +88,7 @@ namespace SilDev.Forms
         ///     Creates or removes the small split button on the right side of this
         ///     <see cref="Button"/> which is mostly used for drop down menu controls.
         ///     <para>
-        ///         Please note that the <see cref="FlatStyle"/> is overwritten to
+        ///         &#9762; Please note that the <see cref="FlatStyle"/> is overwritten to
         ///         <see cref="FlatStyle.Flat"/> which is required to apply highlight
         ///         effects.
         ///     </para>

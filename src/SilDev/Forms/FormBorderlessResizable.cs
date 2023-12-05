@@ -168,7 +168,7 @@ namespace SilDev.Forms
         /// <summary>
         ///     Determines whether the corners of the window are rounded.
         ///     <para>
-        ///         This feature requires at least Windows 11, where it is enabled by
+        ///         &#9888; This feature requires at least Windows 11, where it is enabled by
         ///         default.
         ///     </para>
         /// </summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FormEx.cs
-// Version:  2023-12-03 17:48
+// Version:  2023-12-05 13:10
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -47,8 +47,8 @@ namespace SilDev.Forms
         /// <summary>
         ///     Captures the entire desktop under this form.
         ///     <para>
-        ///         Please note that the form window must be hidden for the moment of
-        ///         capture, which may cause flickering.
+        ///         &#9762;  Please note that the form window must be hidden for the moment
+        ///         of capture, which may cause flickering.
         ///     </para>
         /// </summary>
         /// <param name="form">

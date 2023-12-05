@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IrrKlangPlayer.cs
-// Version:  2020-01-19 15:32
+// Version:  2023-12-05 13:10
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -24,11 +24,11 @@ namespace SilDev.Media
     /// <summary>
     ///     Provides basic functionality of the IrrKlang library.
     ///     <para>
-    ///         Please note that this class requires the latest binaries of the
+    ///         &#9888; Please note that this class requires the latest binaries of the
     ///         IrrKlang library.
     ///     </para>
     ///     <para>
-    ///         Visit: <see href="https://www.ambiera.com/irrklang/"/>
+    ///         &#127968; Visit: <see href="https://www.ambiera.com/irrklang/"/>
     ///     </para>
     /// </summary>
     public static class IrrKlangPlayer
