@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-08 12:31
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -26,7 +26,22 @@ namespace SilDev
     /// </summary>
     public static class Desktop
     {
+        private const string DesktopWindowManagerPath = "HKCU\\Software\\Microsoft\\Windows\\DWM";
         private const string ThemesPersonalizePath = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
+
+        /// <summary>
+        ///     Determines whether the accent color is shown for the system's title bars
+        ///     and borders.
+        /// </summary>
+        public static bool AccentColorOnTitlebar =>
+            Reg.Read(DesktopWindowManagerPath, "ColorPrevalence", 0) == 1;
+
+        /// <summary>
+        ///     Determines whether the accent color is shown for the system's taskbar and
+        ///     start menu.
+        /// </summary>
+        public static bool AccentColorOnTaskbar =>
+            Reg.Read(ThemesPersonalizePath, "ColorPrevalence", 0) == 1;
 
         /// <summary>
         ///     Determines whether dark mode is enabled for applications.
