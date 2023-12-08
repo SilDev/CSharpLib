@@ -11526,6 +11526,18 @@
                 Provides the functionality to manage desktop functions.
             </summary>
         </member>
+        <member name="P:SilDev.Desktop.AccentColorOnTitlebar">
+            <summary>
+                Determines whether the accent color is shown for the system's title bars
+                and borders.
+            </summary>
+        </member>
+        <member name="P:SilDev.Desktop.AccentColorOnTaskbar">
+            <summary>
+                Determines whether the accent color is shown for the system's taskbar and
+                start menu.
+            </summary>
+        </member>
         <member name="P:SilDev.Desktop.AppsUseDarkTheme">
             <summary>
                 Determines whether dark mode is enabled for applications.
