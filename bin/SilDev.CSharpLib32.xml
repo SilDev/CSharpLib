@@ -1924,6 +1924,88 @@
                 otherwise, <see langword="false"/>.
             </param>
         </member>
+        <member name="M:SilDev.DictionaryEx.TryAdd``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
+            <summary>
+                Attempts to add  the specified key and value to this dictionary.
+                <para>
+                    &#9888; Nothing happens if the <paramref name="key"/> already exists.
+                </para>
+            </summary>
+            <typeparam name="TKey">
+                The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+                The type of the value.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Collections.Generic.Dictionary`2"/> to add the key/value pair.
+            </param>
+            <param name="key">
+                The key of the element to add.
+            </param>
+            <param name="value">
+                The value of the element to add. It can be <see langword="null"/>.
+            </param>
+            <returns>
+                <see langword="true"/> if the key/value pair was added successfully;
+                otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:SilDev.DictionaryEx.TrySet``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
+            <summary>
+                Attempts to add, set, or remove the specified key and value from this
+                dictionary.
+                <para>
+                    &#9762; If the <paramref name="key"/> already exists, it will be
+                    overwritten, and if the <paramref name="value"/> is also
+                    <see langword="null"/> the <paramref name="key"/> is even completely
+                    removed.
+                </para>
+            </summary>
+            <typeparam name="TKey">
+                The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+                The type of the value.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Collections.Generic.Dictionary`2"/> to set the key/value pair.
+            </param>
+            <param name="key">
+                The key of the element to add, set or removed, depending on
+                <paramref name="value"/>.
+            </param>
+            <param name="value">
+                The value of the element to add. It can be <see langword="null"/>.
+            </param>
+            <returns>
+                <see langword="true"/> if the key/value pair was updated successfully;
+                otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:SilDev.DictionaryEx.TryGetValue``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
+            <summary>
+                Gets the value associated with the specified key.
+            </summary>
+            <typeparam name="TKey">
+                The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+                The type of the value.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Collections.Generic.Dictionary`2"/> to get the value associated with
+                the specified key.
+            </param>
+            <param name="key">
+                The key of the value to get.
+            </param>
+            <param name="defValue">
+                The value returned if the key does not exist.
+            </param>
+            <returns>
+            </returns>
+        </member>
         <member name="T:SilDev.Drawing.IconFactorySizeOption">
             <summary>
                 The option for determining automatic resizing.
