@@ -151,6 +151,7 @@
     <Compile Include="SilDev\Compression\GZip.cs" />
     <Compile Include="SilDev\Compression\Zip.cs" />
     <Compile Include="SilDev\Compression\Archiver\ArchiverBase.cs" />
+    <Compile Include="SilDev\DictionaryEx.cs" />
     <Compile Include="SilDev\Drawing\IconFactory.cs" />
     <Compile Include="SilDev\Drawing\ImageFrame.cs" />
     <Compile Include="SilDev\EncodingEx.cs" />
