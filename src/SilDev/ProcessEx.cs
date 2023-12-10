@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-10 14:36
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -22,6 +22,7 @@ namespace SilDev
     using System.Linq;
     using System.Management;
     using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.Win32.SafeHandles;
     using Properties;
     using static WinApi;
@@ -611,6 +612,31 @@ namespace SilDev
         /// </param>
         public static Process Start(string fileName, bool verbRunAs, bool dispose) =>
             Start(fileName, null, null, verbRunAs, dispose);
+
+        /// <summary>
+        ///     Waits asynchronously for this process to exit.
+        /// </summary>
+        /// <param name="process">
+        ///     The process to wait for cancellation.
+        /// </param>
+        /// <param name="cancelToken">
+        ///     A cancellation token. If invoked, the task will return immediately as
+        ///     canceled.
+        /// </param>
+        /// <returns>
+        ///     A Task representing waiting for the process to end.
+        /// </returns>
+        public static Task WaitForExitAsync(this Process process, CancellationToken cancelToken = default)
+        {
+            if (process?.HasExited != false)
+                return Task.CompletedTask;
+            var tcs = new TaskCompletionSource<object>();
+            process.EnableRaisingEvents = true;
+            process.Exited += (_, _) => tcs.TrySetResult(null);
+            if (cancelToken != default)
+                cancelToken.Register(tcs.SetCanceled);
+            return process.HasExited ? Task.CompletedTask : tcs.Task;
+        }
 
         /// <summary>
         ///     Retrieves all thread handles of the specified process.
