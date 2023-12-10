@@ -19594,6 +19594,21 @@
                 otherwise, <see langword="false"/>.
             </param>
         </member>
+        <member name="M:SilDev.ProcessEx.WaitForExitAsync(System.Diagnostics.Process,System.Threading.CancellationToken)">
+            <summary>
+                Waits asynchronously for this process to exit.
+            </summary>
+            <param name="process">
+                The process to wait for cancellation.
+            </param>
+            <param name="cancelToken">
+                A cancellation token. If invoked, the task will return immediately as
+                canceled.
+            </param>
+            <returns>
+                A Task representing waiting for the process to end.
+            </returns>
+        </member>
         <member name="M:SilDev.ProcessEx.ThreadHandles(System.Diagnostics.Process)">
             <summary>
                 Retrieves all thread handles of the specified process.
