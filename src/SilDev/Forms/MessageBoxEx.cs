@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-11 23:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -19,6 +19,7 @@ namespace SilDev.Forms
     using System.Drawing;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
     using Properties;
     using static WinApi;
@@ -115,6 +116,7 @@ namespace SilDev.Forms
             try
             {
                 Initialize(owner);
+                InitDarkMode(caption);
                 return MessageBox.Show(owner, text, caption, buttons, icon, defButton, options);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -158,6 +160,7 @@ namespace SilDev.Forms
             try
             {
                 Initialize(owner);
+                InitDarkMode(caption);
                 return MessageBox.Show(owner, text, caption, buttons, icon, defButton);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -197,6 +200,7 @@ namespace SilDev.Forms
             try
             {
                 Initialize(owner);
+                InitDarkMode(caption);
                 return MessageBox.Show(owner, text, caption, buttons, icon);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -232,6 +236,7 @@ namespace SilDev.Forms
             try
             {
                 Initialize(owner);
+                InitDarkMode(caption);
                 return MessageBox.Show(owner, text, caption, buttons);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -263,6 +268,7 @@ namespace SilDev.Forms
             try
             {
                 Initialize(owner);
+                InitDarkMode(caption);
                 return MessageBox.Show(owner, text, caption);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -400,6 +406,7 @@ namespace SilDev.Forms
             try
             {
                 Initialize(owner);
+                InitDarkMode();
                 return MessageBox.Show(owner, text);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -442,6 +449,7 @@ namespace SilDev.Forms
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options)
         {
             Initialize();
+            InitDarkMode(caption);
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon, defButton, options);
             using var f = new Form();
@@ -477,6 +485,7 @@ namespace SilDev.Forms
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton)
         {
             Initialize();
+            InitDarkMode(caption);
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon, defButton);
             using var f = new Form();
@@ -507,6 +516,7 @@ namespace SilDev.Forms
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             Initialize();
+            InitDarkMode(caption);
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons, icon);
             using var f = new Form();
@@ -533,6 +543,7 @@ namespace SilDev.Forms
         public static DialogResult Show(string text, string caption, MessageBoxButtons buttons)
         {
             Initialize();
+            InitDarkMode(caption);
             if (!TopMost)
                 return MessageBox.Show(text, caption, buttons);
             using var f = new Form();
@@ -555,6 +566,7 @@ namespace SilDev.Forms
         public static DialogResult Show(string text, string caption)
         {
             Initialize();
+            InitDarkMode(caption);
             if (!TopMost)
                 return MessageBox.Show(text, caption);
             using var f = new Form();
@@ -665,6 +677,7 @@ namespace SilDev.Forms
         public static DialogResult Show(string text)
         {
             Initialize();
+            InitDarkMode();
             if (!TopMost)
                 return MessageBox.Show(text);
             using var f = new Form();
@@ -696,6 +709,20 @@ namespace SilDev.Forms
             {
                 Log.Write(ex);
             }
+        }
+
+        private static void InitDarkMode(string caption = null)
+        {
+            if (!Desktop.AppsUseDarkTheme || !EnvironmentEx.IsAtLeastWindows(10, 17763))
+                return;
+            Task.Run(() =>
+            {
+                IntPtr hWnd;
+                do
+                    hWnd = NativeHelper.FindWindow("#32770", caption);
+                while (hWnd == IntPtr.Zero);
+                Desktop.EnableDarkMode(hWnd, true);
+            });
         }
 
         private static IntPtr MessageBoxHookProc(int nCode, IntPtr wParam, IntPtr lParam)
