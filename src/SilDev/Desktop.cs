@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Desktop.cs
-// Version:  2023-12-08 12:31
+// Version:  2023-12-11 23:27
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
     using SHDocVw;
@@ -69,12 +70,30 @@ namespace SilDev
         /// <param name="hWnd">
         ///     Handle to a window.
         /// </param>
-        public static void EnableDarkMode(IntPtr hWnd)
+        /// <param name="recursive">
+        ///     <see langword="true"/> to enable dark mode for child window handles;
+        ///     otherwise, <see langword="false"/>.
+        /// </param>
+        public static void EnableDarkMode(IntPtr hWnd, bool recursive = false)
         {
             if (hWnd == IntPtr.Zero || !EnvironmentEx.IsAtLeastWindows(10, 17763))
                 return;
-            _ = NativeHelper.SetWindowTheme(hWnd, "DarkMode_Explorer");
-            NativeHelper.DwmSetWindowAttribute(hWnd, DwmWindowAttribute.DwmwaUseImmersiveDarkMode);
+            var child = IntPtr.Zero;
+            var queue = new Queue<IntPtr>();
+            queue.Enqueue(hWnd);
+            do
+            {
+                var parent = queue.Dequeue();
+                _ = NativeHelper.SetWindowTheme(parent, "DarkMode_Explorer");
+                NativeHelper.DwmSetWindowAttribute(parent, DwmWindowAttribute.DwmwaUseImmersiveDarkMode);
+                if (!recursive)
+                    break;
+                child = NativeHelper.FindWindowEx(hWnd, child, null, null);
+                if (child == IntPtr.Zero)
+                    break;
+                queue.Enqueue(child);
+            }
+            while (queue.Count > 0);
         }
 
         /// <summary>
