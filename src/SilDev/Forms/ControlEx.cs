@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-12-11 13:02
+// Version:  2023-12-11 18:35
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -91,6 +91,12 @@ namespace SilDev.Forms
         ///     Inherit from a second <see cref="ControlExColorMode"/> option.
         /// </summary>
         Inherit = 7,
+
+        /// <summary>
+        ///     If possible, try to use the dark mode system back color; otherwise
+        ///     <see cref="DarkDark"/> is used.
+        /// </summary>
+        SystemDark = 8
     }
 
     /// <summary>
@@ -158,7 +164,7 @@ namespace SilDev.Forms
         /// <param name="backMode">
         ///     The <see cref="Control.BackColor"/> mode to apply.
         /// </param>
-        public static void ChangeColorMode(this Control control, ControlExColorMode backMode = ControlExColorMode.DarkDark, ControlExColorMode foreMode = ControlExColorMode.Inherit)
+        public static void ChangeColorMode(this Control control, ControlExColorMode backMode = ControlExColorMode.SystemDark, ControlExColorMode foreMode = ControlExColorMode.Inherit)
         {
             if (control == default)
                 return;
@@ -174,59 +180,59 @@ namespace SilDev.Forms
             do
             {
                 var parent = queue.Dequeue();
-                parent.ForeColor = GetColor(parent.ForeColor, foreMode);
-                parent.BackColor = GetColor(parent.BackColor, backMode);
+                parent.ForeColor = GetColor(parent.ForeColor, foreMode, false);
+                parent.BackColor = GetColor(parent.BackColor, backMode, true);
                 switch (parent)
                 {
                     case ContextMenuStrip cms:
                         foreach (var item in cms.Items.Cast<ToolStripItem>())
                         {
-                            item.ForeColor = GetColor(item.ForeColor, foreMode);
-                            item.BackColor = GetColor(item.BackColor, backMode);
+                            item.ForeColor = GetColor(item.ForeColor, foreMode, false);
+                            item.BackColor = GetColor(item.BackColor, backMode, true);
                         }
                         break;
                     case Button { FlatStyle: FlatStyle.Flat } button:
-                        button.FlatAppearance.BorderColor = GetColor(button.FlatAppearance.BorderColor, foreMode);
-                        button.FlatAppearance.CheckedBackColor = GetColor(button.FlatAppearance.CheckedBackColor, backMode);
-                        button.FlatAppearance.MouseDownBackColor = GetColor(button.FlatAppearance.MouseDownBackColor, backMode);
-                        button.FlatAppearance.MouseDownBackColor = GetColor(button.FlatAppearance.MouseDownBackColor, backMode);
+                        button.FlatAppearance.BorderColor = GetColor(button.FlatAppearance.BorderColor, foreMode, false);
+                        button.FlatAppearance.CheckedBackColor = GetColor(button.FlatAppearance.CheckedBackColor, backMode, true);
+                        button.FlatAppearance.MouseDownBackColor = GetColor(button.FlatAppearance.MouseDownBackColor, backMode, true);
+                        button.FlatAppearance.MouseDownBackColor = GetColor(button.FlatAppearance.MouseDownBackColor, backMode, true);
                         break;
                     case DataGridView { EnableHeadersVisualStyles: false } dgv:
-                        dgv.BackgroundColor = GetColor(dgv.BackgroundColor, backMode);
-                        dgv.ForeColor = GetColor(dgv.GridColor, foreMode);
-                        dgv.GridColor = GetColor(dgv.GridColor, foreMode).EnsureDark();
-                        dgv.ColumnHeadersDefaultCellStyle.BackColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.BackColor, backMode);
-                        dgv.ColumnHeadersDefaultCellStyle.ForeColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.ForeColor, foreMode);
-                        dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor, backMode);
-                        dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor, foreMode);
-                        dgv.RowHeadersDefaultCellStyle.BackColor = GetColor(dgv.RowHeadersDefaultCellStyle.BackColor, backMode);
-                        dgv.RowHeadersDefaultCellStyle.ForeColor = GetColor(dgv.RowHeadersDefaultCellStyle.ForeColor, foreMode);
-                        dgv.RowHeadersDefaultCellStyle.SelectionBackColor = GetColor(dgv.RowHeadersDefaultCellStyle.SelectionBackColor, backMode);
-                        dgv.RowHeadersDefaultCellStyle.SelectionForeColor = GetColor(dgv.RowHeadersDefaultCellStyle.SelectionForeColor, foreMode);
-                        dgv.RowsDefaultCellStyle.BackColor = GetColor(dgv.RowsDefaultCellStyle.BackColor, backMode);
-                        dgv.RowsDefaultCellStyle.ForeColor = GetColor(dgv.RowsDefaultCellStyle.ForeColor, foreMode);
-                        dgv.RowsDefaultCellStyle.SelectionBackColor = GetColor(dgv.RowsDefaultCellStyle.SelectionBackColor, backMode);
-                        dgv.RowsDefaultCellStyle.SelectionForeColor = GetColor(dgv.RowsDefaultCellStyle.SelectionForeColor, foreMode);
-                        dgv.DefaultCellStyle.BackColor = GetColor(dgv.DefaultCellStyle.BackColor, backMode);
-                        dgv.DefaultCellStyle.ForeColor = GetColor(dgv.DefaultCellStyle.ForeColor, foreMode);
-                        dgv.DefaultCellStyle.SelectionBackColor = GetColor(dgv.DefaultCellStyle.SelectionBackColor, backMode);
-                        dgv.DefaultCellStyle.SelectionForeColor = GetColor(dgv.DefaultCellStyle.SelectionForeColor, foreMode);
+                        dgv.BackgroundColor = GetColor(dgv.BackgroundColor, backMode, true);
+                        dgv.ForeColor = GetColor(dgv.GridColor, foreMode, false);
+                        dgv.GridColor = GetColor(dgv.GridColor, foreMode, false).EnsureDark();
+                        dgv.ColumnHeadersDefaultCellStyle.BackColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.BackColor, backMode, true);
+                        dgv.ColumnHeadersDefaultCellStyle.ForeColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.ForeColor, foreMode, false);
+                        dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor, backMode, true);
+                        dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = GetColor(dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor, foreMode, false);
+                        dgv.RowHeadersDefaultCellStyle.BackColor = GetColor(dgv.RowHeadersDefaultCellStyle.BackColor, backMode, true);
+                        dgv.RowHeadersDefaultCellStyle.ForeColor = GetColor(dgv.RowHeadersDefaultCellStyle.ForeColor, foreMode, false);
+                        dgv.RowHeadersDefaultCellStyle.SelectionBackColor = GetColor(dgv.RowHeadersDefaultCellStyle.SelectionBackColor, backMode, true);
+                        dgv.RowHeadersDefaultCellStyle.SelectionForeColor = GetColor(dgv.RowHeadersDefaultCellStyle.SelectionForeColor, foreMode, false);
+                        dgv.RowsDefaultCellStyle.BackColor = GetColor(dgv.RowsDefaultCellStyle.BackColor, backMode, true);
+                        dgv.RowsDefaultCellStyle.ForeColor = GetColor(dgv.RowsDefaultCellStyle.ForeColor, foreMode, false);
+                        dgv.RowsDefaultCellStyle.SelectionBackColor = GetColor(dgv.RowsDefaultCellStyle.SelectionBackColor, backMode, true);
+                        dgv.RowsDefaultCellStyle.SelectionForeColor = GetColor(dgv.RowsDefaultCellStyle.SelectionForeColor, foreMode, false);
+                        dgv.DefaultCellStyle.BackColor = GetColor(dgv.DefaultCellStyle.BackColor, backMode, true);
+                        dgv.DefaultCellStyle.ForeColor = GetColor(dgv.DefaultCellStyle.ForeColor, foreMode, false);
+                        dgv.DefaultCellStyle.SelectionBackColor = GetColor(dgv.DefaultCellStyle.SelectionBackColor, backMode, true);
+                        dgv.DefaultCellStyle.SelectionForeColor = GetColor(dgv.DefaultCellStyle.SelectionForeColor, foreMode, false);
                         break;
                     case ListView listView:
                         foreach (var item in listView.Items.Cast<ListViewItem>())
                         {
-                            item.ForeColor = GetColor(item.ForeColor, foreMode);
-                            item.BackColor = GetColor(item.BackColor, backMode);
+                            item.ForeColor = GetColor(item.ForeColor, foreMode, false);
+                            item.BackColor = GetColor(item.BackColor, backMode, true);
                             foreach (var subItem in item.SubItems.Cast<ListViewSubItem>())
                             {
-                                subItem.ForeColor = GetColor(subItem.ForeColor, foreMode);
-                                subItem.BackColor = GetColor(subItem.BackColor, backMode);
+                                subItem.ForeColor = GetColor(subItem.ForeColor, foreMode, false);
+                                subItem.BackColor = GetColor(subItem.BackColor, backMode, true);
                             }
                         }
                         break;
                     case RichTextBox richTextBox:
-                        richTextBox.SelectionColor = GetColor(richTextBox.SelectionColor, foreMode);
-                        richTextBox.SelectionBackColor = GetColor(richTextBox.SelectionBackColor, backMode);
+                        richTextBox.SelectionColor = GetColor(richTextBox.SelectionColor, foreMode, false);
+                        richTextBox.SelectionBackColor = GetColor(richTextBox.SelectionBackColor, backMode, true);
                         break;
                     case TabControl tabControl:
                         foreach (var tabPage in tabControl.TabPages.Cast<Control>())
@@ -254,10 +260,16 @@ namespace SilDev.Forms
                     _ => ControlExColorMode.InvertRgb
                 };
 
-            static Color GetColor(Color color, ControlExColorMode mode)
+            static Color GetColor(Color color, ControlExColorMode mode, bool isBack)
             {
                 if (color == default || color == Color.Empty || color == Color.Transparent)
                     return color;
+                if (isBack && mode == ControlExColorMode.SystemDark)
+                {
+                    var backColor = Color.FromArgb(0x20, 0x20, 0x20);
+                    var newColor = color.EnsureDarkDark();
+                    return newColor.IsInRange(backColor, 16) ? backColor : newColor;
+                }
                 return mode switch
                 {
                     ControlExColorMode.Light => color.EnsureLight(),
@@ -266,6 +278,7 @@ namespace SilDev.Forms
                     ControlExColorMode.DarkDark => color.EnsureDarkDark(),
                     ControlExColorMode.LightLightLight => color.EnsureLightLightLight(),
                     ControlExColorMode.DarkDarkDark => color.EnsureDarkDarkDark(),
+                    ControlExColorMode.SystemDark => color.EnsureLightLight(),
                     _ => color.InvertRgb()
                 };
             }
