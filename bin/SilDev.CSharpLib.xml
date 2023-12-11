@@ -11565,7 +11565,7 @@
                 Determines whether dark mode is enabled for the system.
             </summary>
         </member>
-        <member name="M:SilDev.Desktop.EnableDarkMode(System.IntPtr)">
+        <member name="M:SilDev.Desktop.EnableDarkMode(System.IntPtr,System.Boolean)">
             <summary>
                 Enables dark mode for the window under the specified handle.
                 <para>
@@ -11579,6 +11579,10 @@
             </summary>
             <param name="hWnd">
                 Handle to a window.
+            </param>
+            <param name="recursive">
+                <see langword="true"/> to enable dark mode for child window handles;
+                otherwise, <see langword="false"/>.
             </param>
         </member>
         <member name="M:SilDev.Desktop.EnableMicaEffect(System.IntPtr)">
