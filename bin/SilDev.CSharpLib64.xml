@@ -3837,6 +3837,12 @@
                 Inherit from a second <see cref="T:SilDev.Forms.ControlExColorMode"/> option.
             </summary>
         </member>
+        <member name="F:SilDev.Forms.ControlExColorMode.SystemDark">
+            <summary>
+                If possible, try to use the dark mode system back color; otherwise
+                <see cref="F:SilDev.Forms.ControlExColorMode.DarkDark"/> is used.
+            </summary>
+        </member>
         <member name="T:SilDev.Forms.ControlEx">
             <summary>
                 Expands the functionality for the <see cref="T:System.Windows.Forms.Control"/> class.
