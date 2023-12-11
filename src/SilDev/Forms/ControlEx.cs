@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-11 13:02
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -166,7 +166,9 @@ namespace SilDev.Forms
                 backMode = Inherit(foreMode);
             if (foreMode == ControlExColorMode.Inherit)
                 foreMode = Inherit(backMode);
-            control.SuspendLayout();
+            var isSuspended = control.LayoutIsSuspended();
+            if (!isSuspended)
+                control.SuspendLayout();
             var queue = new Queue<Control>();
             queue.Enqueue(control);
             do
@@ -237,7 +239,8 @@ namespace SilDev.Forms
                     queue.Enqueue(child);
             }
             while (queue.Count > 0);
-            control.ResumeLayout(true);
+            if (!isSuspended)
+                control.ResumeLayout(true);
 
             static ControlExColorMode Inherit(ControlExColorMode mode) =>
                 mode switch
