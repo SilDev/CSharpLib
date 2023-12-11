@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-12-11 18:35
+// Version:  2023-12-11 18:45
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -164,7 +164,12 @@ namespace SilDev.Forms
         /// <param name="backMode">
         ///     The <see cref="Control.BackColor"/> mode to apply.
         /// </param>
-        public static void ChangeColorMode(this Control control, ControlExColorMode backMode = ControlExColorMode.SystemDark, ControlExColorMode foreMode = ControlExColorMode.Inherit)
+        /// <param name="changeNested">
+        ///     <see langword="true"/> to change the color of the specified control and all
+        ///     its nested controls; otherwise, <see langword="false"/> to change the color
+        ///     only of the specified control.
+        /// </param>
+        public static void ChangeColorMode(this Control control, ControlExColorMode backMode = ControlExColorMode.SystemDark, ControlExColorMode foreMode = ControlExColorMode.Inherit, bool changeNested = true)
         {
             if (control == default)
                 return;
@@ -182,6 +187,8 @@ namespace SilDev.Forms
                 var parent = queue.Dequeue();
                 parent.ForeColor = GetColor(parent.ForeColor, foreMode, false);
                 parent.BackColor = GetColor(parent.BackColor, backMode, true);
+                if (!changeNested)
+                    break;
                 switch (parent)
                 {
                     case ContextMenuStrip cms:
@@ -283,6 +290,14 @@ namespace SilDev.Forms
                 };
             }
         }
+
+        /// <inheritdoc cref="ChangeColorMode(Control, ControlExColorMode, ControlExColorMode, bool)"/>
+        public static void ChangeColorMode(this Control control, ControlExColorMode backMode, bool changeNested) =>
+            control.ChangeColorMode(backMode, ControlExColorMode.Inherit, changeNested);
+
+        /// <inheritdoc cref="ChangeColorMode(Control, ControlExColorMode, bool)"/>
+        public static void ChangeColorMode(this Control control, bool changeNested) =>
+            control.ChangeColorMode(ControlExColorMode.SystemDark, ControlExColorMode.Inherit, changeNested);
 
         /// <summary>
         ///     Enable dark mode for the specified control.
