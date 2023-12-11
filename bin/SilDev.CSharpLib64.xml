@@ -3865,7 +3865,7 @@
                 The control to check.
             </param>
         </member>
-        <member name="M:SilDev.Forms.ControlEx.ChangeColorMode(System.Windows.Forms.Control,SilDev.Forms.ControlExColorMode,SilDev.Forms.ControlExColorMode)">
+        <member name="M:SilDev.Forms.ControlEx.ChangeColorMode(System.Windows.Forms.Control,SilDev.Forms.ControlExColorMode,SilDev.Forms.ControlExColorMode,System.Boolean)">
             <summary>
                 Changes the three RGB component values (Red, Green, Blue) of the
                 <see cref="P:System.Windows.Forms.Control.ForeColor"/> and <see cref="P:System.Windows.Forms.Control.BackColor"/>
@@ -3887,6 +3887,17 @@
             <param name="backMode">
                 The <see cref="P:System.Windows.Forms.Control.BackColor"/> mode to apply.
             </param>
+            <param name="changeNested">
+                <see langword="true"/> to change the color of the specified control and all
+                its nested controls; otherwise, <see langword="false"/> to change the color
+                only of the specified control.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.ChangeColorMode(System.Windows.Forms.Control,SilDev.Forms.ControlExColorMode,System.Boolean)">
+            <inheritdoc cref="M:SilDev.Forms.ControlEx.ChangeColorMode(System.Windows.Forms.Control,SilDev.Forms.ControlExColorMode,SilDev.Forms.ControlExColorMode,System.Boolean)"/>
+        </member>
+        <member name="M:SilDev.Forms.ControlEx.ChangeColorMode(System.Windows.Forms.Control,System.Boolean)">
+            <inheritdoc cref="M:SilDev.Forms.ControlEx.ChangeColorMode(System.Windows.Forms.Control,SilDev.Forms.ControlExColorMode,System.Boolean)"/>
         </member>
         <member name="M:SilDev.Forms.ControlEx.EnableDarkMode(System.Windows.Forms.Control)">
             <summary>
