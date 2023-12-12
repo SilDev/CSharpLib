@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: MessageBoxEx.cs
-// Version:  2023-12-11 23:28
+// Version:  2023-12-12 09:29
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -45,6 +45,7 @@ namespace SilDev.Forms
         private static int _nButton;
 
         private static IWin32Window _owner;
+        private static readonly string DefCaption;
         private static readonly EnumChildProc EnumProc = MessageBoxEnumProc;
         private static readonly HookProc HookProc = MessageBoxHookProc;
 
@@ -75,7 +76,11 @@ namespace SilDev.Forms
         /// </summary>
         public static bool TopMost { get; set; }
 
-        static MessageBoxEx() => _hHook = IntPtr.Zero;
+        static MessageBoxEx()
+        {
+            DefCaption = AssemblyInfo.Title;
+            _hHook = IntPtr.Zero;
+        }
 
         /// <summary>
         ///     Displays a message box with the specified text, caption, buttons, icon,
@@ -310,7 +315,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options) =>
-            Show(owner, text, string.Empty, buttons, icon, defButton, options);
+            Show(owner, text, DefCaption, buttons, icon, defButton, options);
 
         /// <summary>
         ///     Displays a message box with the specified text, buttons, icon, and default
@@ -339,7 +344,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton) =>
-            Show(owner, text, string.Empty, buttons, icon, defButton);
+            Show(owner, text, DefCaption, buttons, icon, defButton);
 
         /// <summary>
         ///     Displays a message box with the specified text, buttons, and icon in the
@@ -364,7 +369,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons, MessageBoxIcon icon) =>
-            Show(owner, text, string.Empty, buttons, icon);
+            Show(owner, text, DefCaption, buttons, icon);
 
         /// <summary>
         ///     Displays a message box with the specified text, icon, and buttons in the
@@ -385,7 +390,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(IWin32Window owner, string text, MessageBoxButtons buttons) =>
-            Show(owner, text, string.Empty, buttons);
+            Show(owner, text, DefCaption, buttons);
 
         /// <summary>
         ///     Displays a message box with the specified text in the center of the
@@ -602,7 +607,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton, MessageBoxOptions options) =>
-            Show(text, string.Empty, buttons, icon, defButton, options);
+            Show(text, DefCaption, buttons, icon, defButton, options);
 
         /// <summary>
         ///     Displays a message box with the specified text, buttons, icon, and default
@@ -627,7 +632,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defButton) =>
-            Show(text, string.Empty, buttons, icon, defButton);
+            Show(text, DefCaption, buttons, icon, defButton);
 
         /// <summary>
         ///     Displays a message box with the specified text, buttons, and icon.
@@ -647,7 +652,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(string text, MessageBoxButtons buttons, MessageBoxIcon icon) =>
-            Show(text, string.Empty, buttons, icon);
+            Show(text, DefCaption, buttons, icon);
 
         /// <summary>
         ///     Displays a message box with the specified text, and buttons.
@@ -663,7 +668,7 @@ namespace SilDev.Forms
         ///     One of the <see cref="DialogResult"/> values.
         /// </returns>
         public static DialogResult Show(string text, MessageBoxButtons buttons) =>
-            Show(text, string.Empty, buttons);
+            Show(text, DefCaption, buttons);
 
         /// <summary>
         ///     Displays a message box with the specified text.
