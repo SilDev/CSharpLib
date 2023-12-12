@@ -1924,7 +1924,7 @@
                 otherwise, <see langword="false"/>.
             </param>
         </member>
-        <member name="M:SilDev.DictionaryEx.TryAdd``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+        <member name="M:SilDev.DictionaryEx.TryAdd``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
             <summary>
                 Attempts to add  the specified key and value to this dictionary.
                 <para>
@@ -1951,7 +1951,7 @@
                 otherwise, <see langword="false"/>.
             </returns>
         </member>
-        <member name="M:SilDev.DictionaryEx.TrySet``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+        <member name="M:SilDev.DictionaryEx.TrySet``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
             <summary>
                 Attempts to add, set, or remove the specified key and value from this
                 dictionary.
@@ -1983,7 +1983,7 @@
                 otherwise, <see langword="false"/>.
             </returns>
         </member>
-        <member name="M:SilDev.DictionaryEx.TryGetValue``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+        <member name="M:SilDev.DictionaryEx.TryGetValue``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
             <summary>
                 Gets the value associated with the specified key.
             </summary>
@@ -1994,8 +1994,8 @@
                 The type of the value.
             </typeparam>
             <param name="source">
-                The <see cref="T:System.Collections.Generic.IReadOnlyDictionary`2"/> to get the value
-                associated with the specified key.
+                The <see cref="T:System.Collections.Generic.Dictionary`2"/> to get the value associated with
+                the specified key.
             </param>
             <param name="key">
                 The key of the value to get.
@@ -2005,8 +2005,8 @@
             </param>
             <returns>
                 <see langword="true"/> if the object that implements the
-                <see cref="T:System.Collections.Generic.IReadOnlyDictionary`2"/> interface contains an
-                element that has the specified key; otherwise, <see langword="false"/>.
+                <see cref="T:System.Collections.Generic.Dictionary`2"/> interface contains an element that
+                has the specified key; otherwise, <see langword="false"/>.
             </returns>
         </member>
         <member name="M:SilDev.DictionaryEx.TryGetValue``2(System.Collections.Generic.IReadOnlyDictionary{``0,``1},``0,``1)">
@@ -2030,6 +2030,9 @@
                 The value returned if the key does not exist.
             </param>
             <returns>
+                <see langword="true"/> if the object that implements the
+                <see cref="T:System.Collections.Generic.IReadOnlyDictionary`2"/> interface contains an
+                element that has the specified key; otherwise, <see langword="false"/>.
             </returns>
         </member>
         <member name="T:SilDev.Drawing.IconFactorySizeOption">
