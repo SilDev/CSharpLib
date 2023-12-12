@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DictionaryEx.cs
-// Version:  2023-12-13 00:04
+// Version:  2023-12-13 00:22
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -44,7 +44,7 @@ namespace SilDev
         ///     <see langword="true"/> if the key/value pair was added successfully;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue value)
+        public static bool TryAdd<TKey, TValue>(this Dictionary<TKey, TValue> source, TKey key, TValue value)
         {
             if (source == null || key == null || source.ContainsKey(key))
                 return false;
@@ -82,7 +82,7 @@ namespace SilDev
         ///     <see langword="true"/> if the key/value pair was updated successfully;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool TrySet<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue value)
+        public static bool TrySet<TKey, TValue>(this Dictionary<TKey, TValue> source, TKey key, TValue value)
         {
             if (source == null || key == null)
                 return false;
@@ -107,8 +107,8 @@ namespace SilDev
         ///     The type of the value.
         /// </typeparam>
         /// <param name="source">
-        ///     The <see cref="IReadOnlyDictionary{TKey, TValue}"/> to get the value
-        ///     associated with the specified key.
+        ///     The <see cref="Dictionary{TKey, TValue}"/> to get the value associated with
+        ///     the specified key.
         /// </param>
         /// <param name="key">
         ///     The key of the value to get.
@@ -118,10 +118,10 @@ namespace SilDev
         /// </param>
         /// <returns>
         ///     <see langword="true"/> if the object that implements the
-        ///     <see cref="IReadOnlyDictionary{TKey, TValue}"/> interface contains an
-        ///     element that has the specified key; otherwise, <see langword="false"/>.
+        ///     <see cref="Dictionary{TKey, TValue}"/> interface contains an element that
+        ///     has the specified key; otherwise, <see langword="false"/>.
         /// </returns>
-        public static TValue TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue defValue = default)
+        public static TValue TryGetValue<TKey, TValue>(this Dictionary<TKey, TValue> source, TKey key, TValue defValue = default)
         {
             if (source == null || key == null || !source.ContainsKey(key))
                 return defValue;
@@ -148,6 +148,9 @@ namespace SilDev
         ///     The value returned if the key does not exist.
         /// </param>
         /// <returns>
+        ///     <see langword="true"/> if the object that implements the
+        ///     <see cref="IReadOnlyDictionary{TKey, TValue}"/> interface contains an
+        ///     element that has the specified key; otherwise, <see langword="false"/>.
         /// </returns>
         public static TValue TryGetValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> source, TKey key, TValue defValue = default)
         {
