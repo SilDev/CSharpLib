@@ -3,11 +3,11 @@
 // ==============================================
 // This file is distributed under the MIT License
 // ==============================================
-//
+// 
 // Filename: Comparison.cs
-// Version:  2020-02-03 20:26
-//
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Version:  2023-12-13 21:45
+// 
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -2006,6 +2006,68 @@ namespace SilDev
             }
             return result;
         }
+
+        /// <summary>
+        ///     Determines whether two sequences are equal by comparing their elements by
+        ///     using a specified <see cref="IEqualityComparer{T}"/>.
+        ///     <para>
+        ///         Please note that this method does the same as
+        ///         <see cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource}, IEqualityComparer{TSource})"/>
+        ///         , except that parameters set to <see langword="null"/> will also
+        ///         compare instead of throwing an exception.
+        ///     </para>
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of the input sequences.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IEnumerable{T}"/> to compare to second.
+        /// </param>
+        /// <param name="target">
+        ///     An <see cref="IEnumerable{T}"/> to compare to the first sequence.
+        /// </param>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{T}"/> to use to compare elements.
+        /// </param>
+        public static bool SequenceEqualEx<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> target, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                return target == null;
+            if (target == null)
+                return false;
+            comparer ??= EqualityComparer<TSource>.Default;
+            using var enumerator1 = source.GetEnumerator();
+            using var enumerator2 = target.GetEnumerator();
+            while (enumerator1.MoveNext())
+            {
+                if (enumerator2.MoveNext() && comparer.Equals(enumerator1.Current, enumerator2.Current))
+                    continue;
+                return false;
+            }
+            return !enumerator2.MoveNext();
+        }
+
+        /// <summary>
+        ///     Determines whether two sequences are equal by comparing their elements by
+        ///     using the default equality comparer for their type.
+        ///     <para>
+        ///         Please note that this method does the same as
+        ///         <see cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource})"/>
+        ///         , except that parameters set to <see langword="null"/> will also
+        ///         compare instead of throwing an exception.
+        ///     </para>
+        /// </summary>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of the input sequences.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IEnumerable{T}"/> to compare to second.
+        /// </param>
+        /// <param name="target">
+        ///     An <see cref="IEnumerable{T}"/> to compare to the first sequence.
+        /// </param>
+        public static bool SequenceEqualEx<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> target) =>
+            source.SequenceEqualEx(target, null);
 
         #endregion
     }
