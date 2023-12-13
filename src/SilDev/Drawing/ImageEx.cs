@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-13 23:29
+// Version:  2023-12-13 23:34
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -577,7 +577,7 @@ namespace SilDev.Drawing
             {
                 if (image is not { } img)
                     return default;
-                var code = CombineHashCodes("SilDev.ImageEx.SwitchGrayScale", key ?? '\0');
+                var code = (nameof(SwitchAlpha), key ?? '\0').GetHashCode();
                 if (!ImagePairCache.ContainsKey(code))
                 {
                     var imgPair = Tuple.Create(img, img.ToGrayScale());
@@ -623,7 +623,7 @@ namespace SilDev.Drawing
             {
                 if (image is not { } img)
                     return default;
-                var code = CombineHashCodes("SilDev.ImageEx.SwitchAlpha", key ?? '\0', alpha);
+                var code = (nameof(SwitchAlpha), key ?? '\0').GetHashCode();
                 if (!ImagePairCache.ContainsKey(code))
                 {
                     var imgPair = Tuple.Create(img, img.SetAlpha(alpha));
@@ -669,7 +669,7 @@ namespace SilDev.Drawing
             {
                 if (image is not { } img)
                     return default;
-                var code = CombineHashCodes("SilDev.ImageEx.SwitchBlur", key ?? '\0', strength);
+                var code = (nameof(SwitchBlur), key ?? '\0').GetHashCode();
                 if (!ImagePairCache.ContainsKey(code))
                 {
                     var imgPair = Tuple.Create(img, img.Blur(strength));
