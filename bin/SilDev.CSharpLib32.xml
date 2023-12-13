@@ -2985,6 +2985,34 @@
                 <see langword="false"/>.
             </param>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.Cache(System.Drawing.Image,System.String,System.Boolean)">
+            <summary>
+                Adds an image associated with the specified key to the internal cache.
+            </summary>
+            <param name="image">
+                The image to cache.
+            </param>
+            <param name="key">
+                The key of the image.
+            </param>
+            <param name="dispose">
+                <see langword="true"/> to dispose the cached images; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.Cache(System.String,System.Boolean)">
+            <summary>
+                Retrieves a previously added image associated with the specified key from
+                the internal cache.
+            </summary>
+            <param name="key">
+                The key of the image.
+            </param>
+            <param name="dispose">
+                <see langword="true"/> to dispose the cached images; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.RecolorPixels(System.Drawing.Image,System.Drawing.Color,System.Drawing.Color)">
             <summary>
                 Recolors the pixels of this image using a specified old color and a
