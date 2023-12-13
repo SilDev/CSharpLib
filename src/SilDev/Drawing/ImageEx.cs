@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-13 23:29
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -23,6 +23,7 @@ namespace SilDev.Drawing
     using System.Linq;
     using System.Threading;
     using Properties;
+    using static Crypto;
     using static WinApi;
 
     /// <summary>
@@ -576,10 +577,102 @@ namespace SilDev.Drawing
             {
                 if (image is not { } img)
                     return default;
-                var code = (key ?? '\0').GetHashCode();
+                var code = CombineHashCodes("SilDev.ImageEx.SwitchGrayScale", key ?? '\0');
                 if (!ImagePairCache.ContainsKey(code))
                 {
                     var imgPair = Tuple.Create(img, img.ToGrayScale());
+                    ImagePairCache.Add(code, imgPair);
+                    img = imgPair.Item2;
+                }
+                else
+                {
+                    if (!dispose)
+                        img = img == ImagePairCache[code].Item1 ? ImagePairCache[code].Item2 : ImagePairCache[code].Item1;
+                    else
+                    {
+                        img = new Bitmap(ImagePairCache[code].Item1);
+                        ImagePairCache[code].Item1.Dispose();
+                        ImagePairCache[code].Item2.Dispose();
+                        ImagePairCache.Remove(code);
+                    }
+                }
+                return img;
+            }
+        }
+
+        /// <summary>
+        ///     Set the alpha of this image to the specified value and switch back to the
+        ///     original image the next time this function is called.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to switch.
+        /// </param>
+        /// <param name="key">
+        ///     The key for the cache.
+        /// </param>
+        /// <param name="alpha">
+        ///     The alpha to set.
+        /// </param>
+        /// <param name="dispose">
+        ///     <see langword="true"/> to dispose the cached images; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static Image SwitchAlpha(this Image image, object key, float alpha = .5f, bool dispose = false)
+        {
+            lock (SyncObject)
+            {
+                if (image is not { } img)
+                    return default;
+                var code = CombineHashCodes("SilDev.ImageEx.SwitchAlpha", key ?? '\0', alpha);
+                if (!ImagePairCache.ContainsKey(code))
+                {
+                    var imgPair = Tuple.Create(img, img.SetAlpha(alpha));
+                    ImagePairCache.Add(code, imgPair);
+                    img = imgPair.Item2;
+                }
+                else
+                {
+                    if (!dispose)
+                        img = img == ImagePairCache[code].Item1 ? ImagePairCache[code].Item2 : ImagePairCache[code].Item1;
+                    else
+                    {
+                        img = new Bitmap(ImagePairCache[code].Item1);
+                        ImagePairCache[code].Item1.Dispose();
+                        ImagePairCache[code].Item2.Dispose();
+                        ImagePairCache.Remove(code);
+                    }
+                }
+                return img;
+            }
+        }
+
+        /// <summary>
+        ///     Blurs this image with the specified strength and switch back to the
+        ///     original image the next time this function is called.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to switch.
+        /// </param>
+        /// <param name="key">
+        ///     The key for the cache.
+        /// </param>
+        /// <param name="strength">
+        ///     The strength, which must be between 1 and 99.
+        /// </param>
+        /// <param name="dispose">
+        ///     <see langword="true"/> to dispose the cached images; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static Image SwitchBlur(this Image image, object key, int strength = 20, bool dispose = false)
+        {
+            lock (SyncObject)
+            {
+                if (image is not { } img)
+                    return default;
+                var code = CombineHashCodes("SilDev.ImageEx.SwitchBlur", key ?? '\0', strength);
+                if (!ImagePairCache.ContainsKey(code))
+                {
+                    var imgPair = Tuple.Create(img, img.Blur(strength));
                     ImagePairCache.Add(code, imgPair);
                     img = imgPair.Item2;
                 }
