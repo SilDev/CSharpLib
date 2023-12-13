@@ -2947,6 +2947,44 @@
                 <see langword="false"/>.
             </param>
         </member>
+        <member name="M:SilDev.Drawing.ImageEx.SwitchAlpha(System.Drawing.Image,System.Object,System.Single,System.Boolean)">
+            <summary>
+                Set the alpha of this image to the specified value and switch back to the
+                original image the next time this function is called.
+            </summary>
+            <param name="image">
+                The image to switch.
+            </param>
+            <param name="key">
+                The key for the cache.
+            </param>
+            <param name="alpha">
+                The alpha to set.
+            </param>
+            <param name="dispose">
+                <see langword="true"/> to dispose the cached images; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.Drawing.ImageEx.SwitchBlur(System.Drawing.Image,System.Object,System.Int32,System.Boolean)">
+            <summary>
+                Blurs this image with the specified strength and switch back to the
+                original image the next time this function is called.
+            </summary>
+            <param name="image">
+                The image to switch.
+            </param>
+            <param name="key">
+                The key for the cache.
+            </param>
+            <param name="strength">
+                The strength, which must be between 1 and 99.
+            </param>
+            <param name="dispose">
+                <see langword="true"/> to dispose the cached images; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
         <member name="M:SilDev.Drawing.ImageEx.RecolorPixels(System.Drawing.Image,System.Drawing.Color,System.Drawing.Color)">
             <summary>
                 Recolors the pixels of this image using a specified old color and a
