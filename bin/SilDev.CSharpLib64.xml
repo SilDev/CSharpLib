@@ -9334,6 +9334,51 @@
                 The sequences of bytes to compare with the first.
             </param>
         </member>
+        <member name="M:SilDev.Comparison.SequenceEqualEx``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+                Determines whether two sequences are equal by comparing their elements by
+                using a specified <see cref="T:System.Collections.Generic.IEqualityComparer`1"/>.
+                <para>
+                    Please note that this method does the same as
+                    <see cref="M:System.Linq.Enumerable.SequenceEqual``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})"/>
+                    , except that parameters set to <see langword="null"/> will also
+                    compare instead of throwing an exception.
+                </para>
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of the input sequences.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to second.
+            </param>
+            <param name="target">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to the first sequence.
+            </param>
+            <param name="comparer">
+                An <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> to use to compare elements.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.SequenceEqualEx``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+                Determines whether two sequences are equal by comparing their elements by
+                using the default equality comparer for their type.
+                <para>
+                    Please note that this method does the same as
+                    <see cref="M:System.Linq.Enumerable.SequenceEqual``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})"/>
+                    , except that parameters set to <see langword="null"/> will also
+                    compare instead of throwing an exception.
+                </para>
+            </summary>
+            <typeparam name="TSource">
+                The type of the elements of the input sequences.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to second.
+            </param>
+            <param name="target">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to the first sequence.
+            </param>
+        </member>
         <member name="T:SilDev.SymmetricKeyAlgorithm">
             <summary>
                 Specifies enumerated constants used to encrypt and decrypt data.
