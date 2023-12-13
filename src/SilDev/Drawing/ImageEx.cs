@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-13 23:34
+// Version:  2023-12-14 00:36
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -32,7 +32,7 @@ namespace SilDev.Drawing
     public static class ImageEx
     {
         private static volatile object _syncObject;
-        private static volatile Dictionary<int, Tuple<Image, Image>> _imagePairCache;
+        private static volatile Dictionary<string, Image> _imageCache;
 
         /// <summary>
         ///     Gets an <see cref="Image"/> object which consists of a semi-transparent
@@ -58,15 +58,15 @@ namespace SilDev.Drawing
             }
         }
 
-        private static Dictionary<int, Tuple<Image, Image>> ImagePairCache
+        private static Dictionary<string, Image> ImageCache
         {
             get
             {
-                if (_imagePairCache != null)
-                    return _imagePairCache;
+                if (_imageCache != null)
+                    return _imageCache;
                 lock (SyncObject)
-                    _imagePairCache = new Dictionary<int, Tuple<Image, Image>>();
-                return _imagePairCache;
+                    _imageCache = new Dictionary<string, Image>();
+                return _imageCache;
             }
         }
 
@@ -577,26 +577,22 @@ namespace SilDev.Drawing
             {
                 if (image is not { } img)
                     return default;
-                var code = (nameof(SwitchAlpha), key ?? '\0').GetHashCode();
-                if (!ImagePairCache.ContainsKey(code))
+                var key1 = $"{nameof(SwitchGrayScale)}+{key}";
+                var key2 = $"{key1}+{key1.GetHashCode()}";
+                if (!ImageCache.ContainsKey(key1) && !ImageCache.ContainsKey(key2))
                 {
-                    var imgPair = Tuple.Create(img, img.ToGrayScale());
-                    ImagePairCache.Add(code, imgPair);
-                    img = imgPair.Item2;
+                    ImageCache.Add(key1, img);
+                    ImageCache.Add(key2, img.ToGrayScale());
                 }
-                else
-                {
-                    if (!dispose)
-                        img = img == ImagePairCache[code].Item1 ? ImagePairCache[code].Item2 : ImagePairCache[code].Item1;
-                    else
-                    {
-                        img = new Bitmap(ImagePairCache[code].Item1);
-                        ImagePairCache[code].Item1.Dispose();
-                        ImagePairCache[code].Item2.Dispose();
-                        ImagePairCache.Remove(code);
-                    }
-                }
-                return img;
+                var img1 = ImageCache[key1];
+                var img2 = ImageCache[key2];
+                if (!dispose)
+                    return image == img1 ? img2 : img1;
+                img1.Dispose();
+                img2.Dispose();
+                ImageCache.Remove(key1);
+                ImageCache.Remove(key2);
+                return image;
             }
         }
 
@@ -623,26 +619,22 @@ namespace SilDev.Drawing
             {
                 if (image is not { } img)
                     return default;
-                var code = (nameof(SwitchAlpha), key ?? '\0').GetHashCode();
-                if (!ImagePairCache.ContainsKey(code))
+                var key1 = $"{nameof(SwitchAlpha)}+{key}";
+                var key2 = $"{key1}+{key1.GetHashCode()}";
+                if (!ImageCache.ContainsKey(key1) && !ImageCache.ContainsKey(key2))
                 {
-                    var imgPair = Tuple.Create(img, img.SetAlpha(alpha));
-                    ImagePairCache.Add(code, imgPair);
-                    img = imgPair.Item2;
+                    ImageCache.Add(key1, img);
+                    ImageCache.Add(key2, img.SetAlpha(alpha));
                 }
-                else
-                {
-                    if (!dispose)
-                        img = img == ImagePairCache[code].Item1 ? ImagePairCache[code].Item2 : ImagePairCache[code].Item1;
-                    else
-                    {
-                        img = new Bitmap(ImagePairCache[code].Item1);
-                        ImagePairCache[code].Item1.Dispose();
-                        ImagePairCache[code].Item2.Dispose();
-                        ImagePairCache.Remove(code);
-                    }
-                }
-                return img;
+                var img1 = ImageCache[key1];
+                var img2 = ImageCache[key2];
+                if (!dispose)
+                    return image == img1 ? img2 : img1;
+                img1.Dispose();
+                img2.Dispose();
+                ImageCache.Remove(key1);
+                ImageCache.Remove(key2);
+                return image;
             }
         }
 
@@ -669,28 +661,67 @@ namespace SilDev.Drawing
             {
                 if (image is not { } img)
                     return default;
-                var code = (nameof(SwitchBlur), key ?? '\0').GetHashCode();
-                if (!ImagePairCache.ContainsKey(code))
+                var key1 = $"{nameof(SwitchBlur)}+{key}";
+                var key2 = $"{key1}+{key1.GetHashCode()}";
+                if (!ImageCache.ContainsKey(key1) && !ImageCache.ContainsKey(key2))
                 {
-                    var imgPair = Tuple.Create(img, img.Blur(strength));
-                    ImagePairCache.Add(code, imgPair);
-                    img = imgPair.Item2;
+                    ImageCache.Add(key1, img);
+                    ImageCache.Add(key2, img.Blur(strength));
                 }
-                else
-                {
-                    if (!dispose)
-                        img = img == ImagePairCache[code].Item1 ? ImagePairCache[code].Item2 : ImagePairCache[code].Item1;
-                    else
-                    {
-                        img = new Bitmap(ImagePairCache[code].Item1);
-                        ImagePairCache[code].Item1.Dispose();
-                        ImagePairCache[code].Item2.Dispose();
-                        ImagePairCache.Remove(code);
-                    }
-                }
+                var img1 = ImageCache[key1];
+                var img2 = ImageCache[key2];
+                if (!dispose)
+                    return image == img1 ? img2 : img1;
+                img1.Dispose();
+                img2.Dispose();
+                ImageCache.Remove(key1);
+                ImageCache.Remove(key2);
+                return image;
+            }
+        }
+
+        /// <summary>
+        ///     Adds an image associated with the specified key to the internal cache.
+        /// </summary>
+        /// <param name="image">
+        ///     The image to cache.
+        /// </param>
+        /// <param name="key">
+        ///     The key of the image.
+        /// </param>
+        /// <param name="dispose">
+        ///     <see langword="true"/> to dispose the cached images; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static Image Cache(this Image image, string key, bool dispose = false)
+        {
+            lock (SyncObject)
+            {
+                if (key != null && image != null && !ImageCache.ContainsKey(key))
+                    ImageCache.Add(key, image);
+                var img = ImageCache.TryGetValue(key);
+                if (!dispose)
+                    return img;
+                if (key != null && ImageCache.ContainsKey(key))
+                    ImageCache.Remove(key);
+                img?.Dispose();
                 return img;
             }
         }
+
+        /// <summary>
+        ///     Retrieves a previously added image associated with the specified key from
+        ///     the internal cache.
+        /// </summary>
+        /// <param name="key">
+        ///     The key of the image.
+        /// </param>
+        /// <param name="dispose">
+        ///     <see langword="true"/> to dispose the cached images; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static Image Cache(string key, bool dispose = false) =>
+            Cache(null, key, dispose);
 
         /// <summary>
         ///     Recolors the pixels of this image using a specified old color and a
