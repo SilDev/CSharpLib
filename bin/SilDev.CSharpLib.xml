@@ -23169,6 +23169,32 @@
                 Delay between refreshes in milliseconds.
             </param>
         </member>
+        <member name="M:SilDev.TypeEx.GetPropertiesEx(System.Type,System.Type[])">
+            <summary>
+                Returns all readable public properties of this <see cref="T:System.Type"/> where
+                none of the specified attributes are defined.
+            </summary>
+            <param name="type">
+                The type to retrieves the properties from.
+            </param>
+            <param name="excludeAttributes">
+                The attributes where none can be defined.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                type or excludeAttributes is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.TypeEx.GetPropertiesEx(System.Type)">
+            <summary>
+                Returns all readable public properties of this <see cref="T:System.Type"/>.
+            </summary>
+            <param name="type">
+                The type to retrieves the properties from.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                type or excludeAttributes is null.
+            </exception>
+        </member>
         <member name="T:SilDev.WinApi">
             <summary>
                 An overkill class that provides a lot of Windows API (Application
