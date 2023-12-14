@@ -251,6 +251,7 @@
     <Compile Include="SilDev\Network\WebClientEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SilDev\TypeEx.cs" />
     <Compile Include="SilDev\WinApi.cs" />
     <Compile Include="SilDev\Intern\XmlHelper.cs" />
   </ItemGroup>
