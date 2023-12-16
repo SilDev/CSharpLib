@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: CultureConfig.cs
-// Version:  2023-12-16 17:19
+// Version:  2023-12-16 18:12
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -155,32 +155,5 @@ namespace SilDev
         /// </param>
         public static int GetCultureId(string englishName) =>
             GetCultureInfo(englishName).TextInfo.LCID;
-
-        /// <summary>
-        ///     Gets the language name in English of the specified language identify code.
-        /// </summary>
-        /// <param name="code">
-        ///     A number that identifies the culture.
-        /// </param>
-        public static string GetCultureEnglishName(int code) =>
-            GetCultureInfo(code).EnglishName;
-
-        /// <summary>
-        ///     Gets the native language name of the specified language.
-        /// </summary>
-        /// <param name="englishName">
-        ///     The culture name in English.
-        /// </param>
-        public static string GetCultureNativeName(string englishName) =>
-            GetCultureInfo(englishName).NativeName;
-
-        /// <summary>
-        ///     Gets the native language name of the specified language identify code.
-        /// </summary>
-        /// <param name="code">
-        ///     A number that identifies the culture.
-        /// </param>
-        public static string GetCultureNativeName(int code) =>
-            GetCultureInfo(code).NativeName;
     }
 }
