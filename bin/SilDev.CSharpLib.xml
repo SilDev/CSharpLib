@@ -7255,30 +7255,6 @@
                 The culture name in English.
             </param>
         </member>
-        <member name="M:SilDev.CultureConfig.GetCultureEnglishName(System.Int32)">
-            <summary>
-                Gets the language name in English of the specified language identify code.
-            </summary>
-            <param name="code">
-                A number that identifies the culture.
-            </param>
-        </member>
-        <member name="M:SilDev.CultureConfig.GetCultureNativeName(System.String)">
-            <summary>
-                Gets the native language name of the specified language.
-            </summary>
-            <param name="englishName">
-                The culture name in English.
-            </param>
-        </member>
-        <member name="M:SilDev.CultureConfig.GetCultureNativeName(System.Int32)">
-            <summary>
-                Gets the native language name of the specified language identify code.
-            </summary>
-            <param name="code">
-                A number that identifies the culture.
-            </param>
-        </member>
         <member name="T:SilDev.Media.IrrKlangPlayer">
             <summary>
                 Provides basic functionality of the IrrKlang library.
