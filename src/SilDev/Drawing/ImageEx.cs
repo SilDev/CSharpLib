@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-14 00:36
+// Version:  2023-12-18 23:08
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,6 +16,7 @@
 namespace SilDev.Drawing
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
@@ -31,8 +32,7 @@ namespace SilDev.Drawing
     /// </summary>
     public static class ImageEx
     {
-        private static volatile object _syncObject;
-        private static volatile Dictionary<string, Image> _imageCache;
+        private static ConcurrentDictionary<string, Image> _imageCache;
 
         /// <summary>
         ///     Gets an <see cref="Image"/> object which consists of a semi-transparent
@@ -46,26 +46,14 @@ namespace SilDev.Drawing
         /// </summary>
         public static Image DefaultSearchSymbol => Resources.SearchImage;
 
-        private static object SyncObject
-        {
-            get
-            {
-                if (_syncObject != null)
-                    return _syncObject;
-                var obj = new object();
-                Interlocked.CompareExchange<object>(ref _syncObject, obj, null);
-                return _syncObject;
-            }
-        }
-
-        private static Dictionary<string, Image> ImageCache
+        private static ConcurrentDictionary<string, Image> ImageCache
         {
             get
             {
                 if (_imageCache != null)
                     return _imageCache;
-                lock (SyncObject)
-                    _imageCache = new Dictionary<string, Image>();
+                var dict = new ConcurrentDictionary<string, Image>();
+                Interlocked.CompareExchange(ref _imageCache, dict, null);
                 return _imageCache;
             }
         }
@@ -571,30 +559,8 @@ namespace SilDev.Drawing
         ///     <see langword="true"/> to dispose the cached images; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static Image SwitchGrayScale(this Image image, object key, bool dispose = false)
-        {
-            lock (SyncObject)
-            {
-                if (image is not { } img)
-                    return default;
-                var key1 = $"{nameof(SwitchGrayScale)}+{key}";
-                var key2 = $"{key1}+{key1.GetHashCode()}";
-                if (!ImageCache.ContainsKey(key1) && !ImageCache.ContainsKey(key2))
-                {
-                    ImageCache.Add(key1, img);
-                    ImageCache.Add(key2, img.ToGrayScale());
-                }
-                var img1 = ImageCache[key1];
-                var img2 = ImageCache[key2];
-                if (!dispose)
-                    return image == img1 ? img2 : img1;
-                img1.Dispose();
-                img2.Dispose();
-                ImageCache.Remove(key1);
-                ImageCache.Remove(key2);
-                return image;
-            }
-        }
+        public static Image SwitchGrayScale(this Image image, object key, bool dispose = false) =>
+            SwitchEffectInternal<object>(image, key, dispose);
 
         /// <summary>
         ///     Set the alpha of this image to the specified value and switch back to the
@@ -613,30 +579,8 @@ namespace SilDev.Drawing
         ///     <see langword="true"/> to dispose the cached images; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static Image SwitchAlpha(this Image image, object key, float alpha = .5f, bool dispose = false)
-        {
-            lock (SyncObject)
-            {
-                if (image is not { } img)
-                    return default;
-                var key1 = $"{nameof(SwitchAlpha)}+{key}";
-                var key2 = $"{key1}+{key1.GetHashCode()}";
-                if (!ImageCache.ContainsKey(key1) && !ImageCache.ContainsKey(key2))
-                {
-                    ImageCache.Add(key1, img);
-                    ImageCache.Add(key2, img.SetAlpha(alpha));
-                }
-                var img1 = ImageCache[key1];
-                var img2 = ImageCache[key2];
-                if (!dispose)
-                    return image == img1 ? img2 : img1;
-                img1.Dispose();
-                img2.Dispose();
-                ImageCache.Remove(key1);
-                ImageCache.Remove(key2);
-                return image;
-            }
-        }
+        public static Image SwitchAlpha(this Image image, object key, float alpha = .5f, bool dispose = false) =>
+            SwitchEffectInternal(image, key, dispose, alpha);
 
         /// <summary>
         ///     Blurs this image with the specified strength and switch back to the
@@ -655,30 +599,8 @@ namespace SilDev.Drawing
         ///     <see langword="true"/> to dispose the cached images; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static Image SwitchBlur(this Image image, object key, int strength = 20, bool dispose = false)
-        {
-            lock (SyncObject)
-            {
-                if (image is not { } img)
-                    return default;
-                var key1 = $"{nameof(SwitchBlur)}+{key}";
-                var key2 = $"{key1}+{key1.GetHashCode()}";
-                if (!ImageCache.ContainsKey(key1) && !ImageCache.ContainsKey(key2))
-                {
-                    ImageCache.Add(key1, img);
-                    ImageCache.Add(key2, img.Blur(strength));
-                }
-                var img1 = ImageCache[key1];
-                var img2 = ImageCache[key2];
-                if (!dispose)
-                    return image == img1 ? img2 : img1;
-                img1.Dispose();
-                img2.Dispose();
-                ImageCache.Remove(key1);
-                ImageCache.Remove(key2);
-                return image;
-            }
-        }
+        public static Image SwitchBlur(this Image image, object key, int strength = 20, bool dispose = false) =>
+            SwitchEffectInternal(image, key, dispose, strength);
 
         /// <summary>
         ///     Adds an image associated with the specified key to the internal cache.
@@ -695,18 +617,15 @@ namespace SilDev.Drawing
         /// </param>
         public static Image Cache(this Image image, string key, bool dispose = false)
         {
-            lock (SyncObject)
-            {
-                if (key != null && image != null && !ImageCache.ContainsKey(key))
-                    ImageCache.Add(key, image);
-                var img = ImageCache.TryGetValue(key);
-                if (!dispose)
-                    return img;
-                if (key != null && ImageCache.ContainsKey(key))
-                    ImageCache.Remove(key);
-                img?.Dispose();
+            if (key != null && image != null && !ImageCache.ContainsKey(key))
+                ImageCache.TryAdd(key, image);
+            var img = ImageCache.TryGetValue(key);
+            if (!dispose)
                 return img;
-            }
+            if (key != null && ImageCache.ContainsKey(key))
+                ImageCache.TryRemove(key, out _);
+            img?.Dispose();
+            return img;
         }
 
         /// <summary>
@@ -887,6 +806,39 @@ namespace SilDev.Drawing
                 return default;
             g.ReleaseHdc();
             return bmp;
+        }
+
+        private static Image SwitchEffectInternal<T>(Image image, object key, bool dispose, T effect = default)
+        {
+            if (image is not { } img)
+                return default;
+            var key1 = $"{typeof(T).Name}+{effect}+{key}";
+            var key2 = $"{key1}+{key1.GetHashCode()}";
+            if (!ImageCache.ContainsKey(key1) && !ImageCache.ContainsKey(key2))
+            {
+                ImageCache.TryAdd(key1, img);
+                switch (effect)
+                {
+                    case float alpha:
+                        ImageCache.TryAdd(key2, img.SetAlpha(alpha));
+                        break;
+                    case int strength:
+                        ImageCache.TryAdd(key2, img.Blur(strength));
+                        break;
+                    default:
+                        ImageCache.TryAdd(key2, img.ToGrayScale());
+                        break;
+                }
+            }
+            var img1 = ImageCache[key1];
+            var img2 = ImageCache[key2];
+            if (!dispose)
+                return image == img1 ? img2 : img1;
+            img1.Dispose();
+            img2.Dispose();
+            ImageCache.TryRemove(key1, out _);
+            ImageCache.TryRemove(key2, out _);
+            return image;
         }
     }
 }

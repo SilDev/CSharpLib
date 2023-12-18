@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-18 23:08
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -25,6 +25,7 @@ namespace SilDev
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
+    using QuickWmi;
 
     /// <summary>
     ///     Provides functionality for the catching and logging of handled or unhandled
@@ -41,14 +42,13 @@ namespace SilDev
     {
         private const string DateTimeFormat = @"yyyy-MM-dd HH:mm:ss,fff zzz";
         private static volatile object _syncObject;
-
-        private static volatile bool _catchUnhandled = true,
-                                     _conIsAllocated,
-                                     _firstCall,
-                                     _firstEntry;
-
         private static volatile string _debugKey;
-        private static volatile int _debugMode;
+
+        private static volatile int _debugMode,
+                                    _doNotCatchUnhandled,
+                                    _conIsAllocated,
+                                    _firstCall,
+                                    _firstEntry;
 
         private static volatile string _fileDir,
                                        _fileName,
@@ -66,12 +66,8 @@ namespace SilDev
         /// </summary>
         public static bool CatchUnhandled
         {
-            get => _catchUnhandled;
-            set
-            {
-                lock (SyncObject)
-                    _catchUnhandled = value;
-            }
+            get => _doNotCatchUnhandled == 0;
+            set => Interlocked.Exchange(ref _doNotCatchUnhandled, value ? 1 : 0);
         }
 
         /// <summary>
@@ -87,11 +83,7 @@ namespace SilDev
         public static int DebugMode
         {
             get => _debugMode;
-            set
-            {
-                lock (SyncObject)
-                    _debugMode = value;
-            }
+            set => Interlocked.Exchange(ref _debugMode, value);
         }
 
         /// <summary>
@@ -111,11 +103,9 @@ namespace SilDev
             {
                 if (_fileDir != null)
                     return _fileDir;
-                lock (SyncObject)
-                {
-                    _fileDir = Environment.GetEnvironmentVariable("TEMP");
-                    return _fileDir;
-                }
+                var dir = Environment.GetEnvironmentVariable("TEMP");
+                Interlocked.CompareExchange(ref _fileDir, dir, null);
+                return _fileDir;
             }
             set
             {
@@ -124,7 +114,9 @@ namespace SilDev
                     _fileDir = value;
                     _filePath = null;
                     _streamWriter?.Dispose();
+                    _streamWriter = null;
                     _fileStream?.Dispose();
+                    _fileStream = null;
                 }
             }
         }
@@ -138,11 +130,9 @@ namespace SilDev
             {
                 if (_fileName != null)
                     return _fileName;
-                lock (SyncObject)
-                {
-                    _fileName = $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
-                    return _fileName;
-                }
+                var name = $"{AssemblyName}_{DateTime.Now:yyyy-MM-dd}.log";
+                Interlocked.CompareExchange(ref _fileName, name, null);
+                return _fileName;
             }
         }
 
@@ -155,11 +145,9 @@ namespace SilDev
             {
                 if (_filePath != null)
                     return _filePath;
-                lock (SyncObject)
-                {
-                    _filePath = Path.Combine(FileDir, FileName);
-                    return _filePath;
-                }
+                var path = Path.Combine(FileDir, FileName);
+                Interlocked.CompareExchange(ref _filePath, path, null);
+                return _filePath;
             }
         }
 
@@ -180,17 +168,10 @@ namespace SilDev
             {
                 if (_debugKey != null)
                     return _debugKey;
-                lock (SyncObject)
-                {
-                    _debugKey = @"DebugMode";
-                    return _debugKey;
-                }
+                Interlocked.CompareExchange(ref _debugKey, @"DebugMode", null);
+                return _debugKey;
             }
-            set
-            {
-                lock (SyncObject)
-                    _debugKey = value;
-            }
+            set => Interlocked.Exchange(ref _debugKey, value);
         }
 
         private static object SyncObject
@@ -211,46 +192,33 @@ namespace SilDev
             {
                 if (_fileStream != null && _streamWriter != null)
                     return _streamWriter;
-                lock (SyncObject)
+                var fs = File.Open(FilePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                var sw = new StreamWriter(fs)
                 {
-                    _fileStream = File.Open(FilePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
-                    _streamWriter = new StreamWriter(_fileStream)
-                    {
-                        AutoFlush = true
-                    };
-                    return _streamWriter;
-                }
+                    AutoFlush = true
+                };
+                Interlocked.CompareExchange(ref _fileStream, fs, null);
+                Interlocked.CompareExchange(ref _streamWriter, sw, null);
+                return _streamWriter;
             }
         }
 
         private static bool ConIsAllocated
         {
-            get => _conIsAllocated;
-            set
-            {
-                lock (SyncObject)
-                    _conIsAllocated = value;
-            }
+            get => _conIsAllocated == 1;
+            set => Interlocked.Exchange(ref _conIsAllocated, value ? 1 : 0);
         }
 
         private static bool FirstCall
         {
-            get => _firstCall;
-            set
-            {
-                lock (SyncObject)
-                    _firstCall = value;
-            }
+            get => _firstCall == 1;
+            set => Interlocked.Exchange(ref _firstCall, value ? 1 : 0);
         }
 
         private static bool FirstEntry
         {
-            get => _firstEntry;
-            set
-            {
-                lock (SyncObject)
-                    _firstEntry = value;
-            }
+            get => _firstEntry == 1;
+            set => Interlocked.Exchange(ref _firstEntry, value ? 1 : 0);
         }
 
         /// <summary>
@@ -562,7 +530,10 @@ namespace SilDev
 
                     Append(front);
                     Append(" Operating System: '");
-                    Append(Environment.OSVersion.ToString());
+                    Append(Win32_OperatingSystem.Caption);
+                    Append(" (");
+                    Append(Win32_OperatingSystem.Version.ToString());
+                    Append(")");
                     AppendLine("'");
 
                     Append(front);
