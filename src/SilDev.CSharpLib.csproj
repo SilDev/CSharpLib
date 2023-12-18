@@ -173,8 +173,6 @@
     <Compile Include="SilDev\Ini\IniWriter.cs" />
     <Compile Include="SilDev\Ini\Legacy\Ini.cs" />
     <Compile Include="SilDev\Investment\CacheInvestor.cs" />
-    <Compile Include="SilDev\Investment\ValueItemHost.cs" />
-    <Compile Include="SilDev\Investment\ValueItem.cs" />
     <Compile Include="SilDev\CultureConfig.cs" />
     <Compile Include="SilDev\Drawing\ColorEx.cs" />
     <Compile Include="SilDev\Drawing\IconEx.cs" />
