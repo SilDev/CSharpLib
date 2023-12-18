@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Win32_OperatingSystem.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-18 22:31
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -16,8 +16,8 @@
 namespace SilDev.QuickWmi
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Management;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace SilDev.QuickWmi
     ///     properties.
     /// </summary>
     /// ReSharper disable CommentTypo InconsistentNaming
-    public static class Win32_OperatingSystem
+     public static class Win32_OperatingSystem
     {
         /// <summary>
         ///     Gets the name of the disk drive from which the Windows operating system
@@ -34,7 +34,7 @@ namespace SilDev.QuickWmi
         ///         Example: "\\Device\Harddisk0"
         ///     </para>
         /// </summary>
-        public static string BootDevice => GetValue(nameof(BootDevice));
+        public static string BootDevice => GetValue<string>(nameof(BootDevice));
 
         /// <summary>
         ///     Gets the build number of an operating system. It can be used for more
@@ -43,7 +43,7 @@ namespace SilDev.QuickWmi
         ///         Example: "1381".
         ///     </para>
         /// </summary>
-        public static string BuildNumber => GetValue(nameof(BuildNumber));
+        public static string BuildNumber => GetValue<string>(nameof(BuildNumber));
 
         /// <summary>
         ///     Gets the type of build used for an operating system.
@@ -51,7 +51,7 @@ namespace SilDev.QuickWmi
         ///         Examples: "retail build", "checked build"
         ///     </para>
         /// </summary>
-        public static string BuildType => GetValue(nameof(BuildType));
+        public static string BuildType => GetValue<string>(nameof(BuildType));
 
         /// <summary>
         ///     Gets the operating system version.
@@ -59,7 +59,7 @@ namespace SilDev.QuickWmi
         ///         Example: "Microsoft Windows 7 Enterprise"
         ///     </para>
         /// </summary>
-        public static string Caption => GetValue(nameof(Caption));
+        public static string Caption => GetValue<string>(nameof(Caption));
 
         /// <summary>
         ///     Gets the code page value an operating system uses. A code page contains a
@@ -69,7 +69,7 @@ namespace SilDev.QuickWmi
         ///     use an ANSI code page, this member is set to 0 (zero). The CodeSet string
         ///     can use a maximum of six characters to define the code page value.
         /// </summary>
-        public static string CodeSet => GetValue(nameof(CodeSet));
+        public static string CodeSet => GetValue<string>(nameof(CodeSet));
 
         /// <summary>
         ///     Gets the code for the country/region that an operating system uses. Values
@@ -80,7 +80,7 @@ namespace SilDev.QuickWmi
         ///         Example: "1" (United States)
         ///     </para>
         /// </summary>
-        public static string CountryCode => GetValue(nameof(CountryCode));
+        public static string CountryCode => GetValue<string>(nameof(CountryCode));
 
         /// <summary>
         ///     Gets the name of the first concrete class that appears in the inheritance
@@ -88,30 +88,30 @@ namespace SilDev.QuickWmi
         ///     properties of the class, this property allows all instances of this class
         ///     and its subclasses to be identified uniquely.
         /// </summary>
-        public static string CreationClassName => GetValue(nameof(CreationClassName));
+        public static string CreationClassName => GetValue<string>(nameof(CreationClassName));
 
         /// <summary>
         ///     Gets the creation class name of the scoping computer system.
         /// </summary>
-        public static string CSCreationClassName => GetValue(nameof(CSCreationClassName));
+        public static string CSCreationClassName => GetValue<string>(nameof(CSCreationClassName));
 
         /// <summary>
         ///     Gets a <see langword="null"/>-terminated string that indicates the latest
         ///     service pack installed on a computer. If no service pack is installed, the
         ///     string is <see langword="null"/>.
         /// </summary>
-        public static string CSDVersion => GetValue(nameof(CSDVersion));
+        public static string CSDVersion => GetValue<string>(nameof(CSDVersion));
 
         /// <summary>
         ///     Gets the name of the scoping computer system.
         /// </summary>
-        public static string CSName => GetValue(nameof(CSName));
+        public static string CSName => GetValue<string>(nameof(CSName));
 
         /// <summary>
         ///     Gets the number, in minutes, an operating system is offset from Greenwich
         ///     mean time (GMT). The number is positive, negative, or zero.
         /// </summary>
-        public static short? CurrentTimeZone => GetValue(nameof(CurrentTimeZone));
+        public static short CurrentTimeZone => GetValue<short>(nameof(CurrentTimeZone));
 
         /// <summary>
         ///     Gets the Data Execution Prevention. When the Data Execution Prevention
@@ -121,7 +121,7 @@ namespace SilDev.QuickWmi
         ///     Configuration Data (BCD) store and the properties in
         ///     <see cref="Win32_OperatingSystem"/> are set accordingly.
         /// </summary>
-        public static bool? DataExecutionPrevention_32BitApplications => GetValue(nameof(DataExecutionPrevention_32BitApplications));
+        public static bool DataExecutionPrevention_32BitApplications => GetValue<bool>(nameof(DataExecutionPrevention_32BitApplications));
 
         /// <summary>
         ///     Gets the Data Execution Prevention that is a hardware feature to prevent
@@ -131,7 +131,7 @@ namespace SilDev.QuickWmi
         ///     the BCD store and the properties in <see cref="Win32_OperatingSystem"/> are
         ///     set accordingly.
         /// </summary>
-        public static bool? DataExecutionPrevention_Available => GetValue(nameof(DataExecutionPrevention_Available));
+        public static bool DataExecutionPrevention_Available => GetValue<bool>(nameof(DataExecutionPrevention_Available));
 
         /// <summary>
         ///     Gets the Data Execution Prevention. When the Data Execution Prevention
@@ -140,7 +140,7 @@ namespace SilDev.QuickWmi
         ///     Data Execution Prevention feature is configured in the BCD store and the
         ///     properties in <see cref="Win32_OperatingSystem"/> are set accordingly.
         /// </summary>
-        public static bool? DataExecutionPrevention_Drivers => GetValue(nameof(DataExecutionPrevention_Drivers));
+        public static bool DataExecutionPrevention_Drivers => GetValue<bool>(nameof(DataExecutionPrevention_Drivers));
 
         /// <summary>
         ///     Gets the value indicating which Data Execution Prevention (DEP) setting is
@@ -169,7 +169,7 @@ namespace SilDev.QuickWmi
         ///         application by adding the application to an exceptions list.
         ///     </para>
         /// </summary>
-        public static byte? DataExecutionPrevention_SupportPolicy => GetValue(nameof(DataExecutionPrevention_SupportPolicy));
+        public static byte DataExecutionPrevention_SupportPolicy => GetValue<byte>(nameof(DataExecutionPrevention_SupportPolicy));
 
         /// <summary>
         ///     Gets the value indicating that the operating system is a checked (debug)
@@ -180,57 +180,57 @@ namespace SilDev.QuickWmi
         ///     determine the cause and location of the error. Performance may be affected
         ///     in a checked build due to the additional code that is executed.
         /// </summary>
-        public static bool? Debug => GetValue(nameof(Debug));
+        public static bool Debug => GetValue<bool>(nameof(Debug));
 
         /// <summary>
         ///     Gets the description of the Windows operating system. Some user interfaces
         ///     for example, those that allow editing of this description, limit its length
         ///     to 48 characters.
         /// </summary>
-        public static string Description => GetValue(nameof(Description));
+        public static string Description => GetValue<string>(nameof(Description));
 
         /// <summary>
         ///     Gets the value that specifies if the operating system is distributed across
         ///     several computer system nodes. If so, these nodes should be grouped as a
         ///     cluster.
         /// </summary>
-        public static bool? Distributed => GetValue(nameof(Distributed));
+        public static bool Distributed => GetValue<bool>(nameof(Distributed));
 
         /// <summary>
         ///     Gets the encryption level for secure transactions: 40-bit, 128-bit, or
         ///     n-bit.
         /// </summary>
-        public static uint? EncryptionLevel => GetValue(nameof(EncryptionLevel));
+        public static uint EncryptionLevel => GetValue<uint>(nameof(EncryptionLevel));
 
         /// <summary>
         ///     Gets the value that increases in priority is given to the foreground
         ///     application. Application boost is implemented by giving an application more
         ///     execution time slices (quantum lengths).
         /// </summary>
-        public static byte? ForegroundApplicationBoost => GetValue(nameof(ForegroundApplicationBoost));
+        public static byte ForegroundApplicationBoost => GetValue<byte>(nameof(ForegroundApplicationBoost));
 
         /// <summary>
         ///     Gets the number, in kilobytes, of physical memory currently unused and
         ///     available.
         /// </summary>
-        public static ulong? FreePhysicalMemory => GetValue(nameof(FreePhysicalMemory));
+        public static ulong FreePhysicalMemory => GetValue<ulong>(nameof(FreePhysicalMemory));
 
         /// <summary>
         ///     Gets the number, in kilobytes, that can be mapped into the operating system
         ///     paging files without causing any other pages to be swapped out.
         /// </summary>
-        public static ulong? FreeSpaceInPagingFiles => GetValue(nameof(FreeSpaceInPagingFiles));
+        public static ulong FreeSpaceInPagingFiles => GetValue<ulong>(nameof(FreeSpaceInPagingFiles));
 
         /// <summary>
         ///     Gets the number, in kilobytes, of virtual memory currently unused and
         ///     available.
         /// </summary>
-        public static ulong? FreeVirtualMemory => GetValue(nameof(FreeVirtualMemory));
+        public static ulong FreeVirtualMemory => GetValue<ulong>(nameof(FreeVirtualMemory));
 
         /// <summary>
         ///     Gets the install date of the operating system.
         /// </summary>
-        public static DateTime? InstallDate => GetValue(nameof(InstallDate), typeof(DateTime));
+        public static DateTime InstallDate => GetValue<DateTime>(nameof(InstallDate));
 
         /// <summary>
         ///     Gets the operating system cache optimize option.
@@ -241,17 +241,17 @@ namespace SilDev.QuickWmi
         ///         1: Optimize memory for system performance.
         ///     </para>
         /// </summary>
-        public static uint? LargeSystemCache => GetValue(nameof(LargeSystemCache));
+        public static uint LargeSystemCache => GetValue<uint>(nameof(LargeSystemCache));
 
         /// <summary>
         ///     Gets the date and time the operating system was last restarted.
         /// </summary>
-        public static DateTime? LastBootUpTime => GetValue(nameof(LastBootUpTime), typeof(DateTime));
+        public static DateTime LastBootUpTime => GetValue<DateTime>(nameof(LastBootUpTime));
 
         /// <summary>
         ///     Gets the operating system version of the local date and time-of-day.
         /// </summary>
-        public static DateTime? LocalDateTime => GetValue(nameof(LocalDateTime), typeof(DateTime));
+        public static DateTime LocalDateTime => GetValue<DateTime>(nameof(LocalDateTime));
 
         /// <summary>
         ///     Gets the language identifier used by the operating system. A language
@@ -260,13 +260,13 @@ namespace SilDev.QuickWmi
         ///     16-bit value that consists of a primary language identifier and a secondary
         ///     language identifier.
         /// </summary>
-        public static string Locale => GetValue(nameof(Locale));
+        public static string Locale => GetValue<string>(nameof(Locale));
 
         /// <summary>
         ///     Gets the name of the operating system manufacturer. For Windows-based
         ///     systems, this value is "Microsoft Corporation".
         /// </summary>
-        public static string Manufacturer => GetValue(nameof(Manufacturer));
+        public static string Manufacturer => GetValue<string>(nameof(Manufacturer));
 
         /// <summary>
         ///     Gets the maximum number of process contexts the operating system can
@@ -275,7 +275,7 @@ namespace SilDev.QuickWmi
         ///     have a fixed maximum, this object can help diagnose failures that occur
         ///     when the maximum is reached-if unknown, enter 4294967295 (0xFFFFFFFF).
         /// </summary>
-        public static uint? MaxNumberOfProcesses => GetValue(nameof(MaxNumberOfProcesses));
+        public static uint MaxNumberOfProcesses => GetValue<uint>(nameof(MaxNumberOfProcesses));
 
         /// <summary>
         ///     Gets the maximum number, in kilobytes, of memory that can be allocated to a
@@ -285,7 +285,7 @@ namespace SilDev.QuickWmi
         ///     may be infinity, in which case 0 (zero) should be entered. In other cases,
         ///     this value could be a constant, for example, 2G or 4G.
         /// </summary>
-        public static ulong? MaxProcessMemorySize => GetValue(nameof(MaxProcessMemorySize));
+        public static ulong MaxProcessMemorySize => GetValue<ulong>(nameof(MaxProcessMemorySize));
 
         /// <summary>
         ///     Gets the Multilingual User Interface Pack (MUI Pack) languages installed on
@@ -294,52 +294,52 @@ namespace SilDev.QuickWmi
         ///     an MUI Pack is installed, you can can change the user interface language to
         ///     one of 33 supported languages.
         /// </summary>
-        public static IReadOnlyCollection<string> MUILanguages => GetValue<string>(nameof(MUILanguages), typeof(IReadOnlyCollection<string>));
+        public static ReadOnlyCollection<string> MUILanguages => GetValue<ReadOnlyCollection<string>>(nameof(MUILanguages));
 
         /// <summary>
         ///     Gets the name of the operating system instance within a computer system.
         /// </summary>
-        public static string Name => GetValue(nameof(Name));
+        public static string Name => GetValue<string>(nameof(Name));
 
         /// <summary>
         ///     Gets the number of user licenses for the operating system. If unlimited,
         ///     enter 0 (zero). If unknown, enter -1.
         /// </summary>
-        public static uint? NumberOfLicensedUsers => GetValue(nameof(NumberOfLicensedUsers));
+        public static uint NumberOfLicensedUsers => GetValue<uint>(nameof(NumberOfLicensedUsers));
 
         /// <summary>
         ///     Gets the number of process contexts currently loaded or running on the
         ///     operating system.
         /// </summary>
-        public static uint? NumberOfProcesses => GetValue(nameof(NumberOfProcesses));
+        public static uint NumberOfProcesses => GetValue<uint>(nameof(NumberOfProcesses));
 
         /// <summary>
         ///     Gets the number of user sessions for which the operating system is storing
         ///     state information currently.
         /// </summary>
-        public static uint? NumberOfUsers => GetValue(nameof(NumberOfUsers));
+        public static uint NumberOfUsers => GetValue<uint>(nameof(NumberOfUsers));
 
         /// <summary>
         ///     Gets the Stock Keeping Unit (SKU) number for the operating system.
         /// </summary>
-        public static uint? OperatingSystemSKU => GetValue(nameof(OperatingSystemSKU));
+        public static uint OperatingSystemSKU => GetValue<uint>(nameof(OperatingSystemSKU));
 
         /// <summary>
         ///     Gets the company name for the registered user of the operating system.
         /// </summary>
-        public static string Organization => GetValue(nameof(Organization));
+        public static string Organization => GetValue<string>(nameof(Organization));
 
         /// <summary>
         ///     Gets the architecture of the operating system, as opposed to the processor.
         ///     This property can be localized.
         /// </summary>
-        public static string OSArchitecture => GetValue(nameof(OSArchitecture));
+        public static string OSArchitecture => GetValue<string>(nameof(OSArchitecture));
 
         /// <summary>
         ///     Gets the language version of the operating system installed. The following
         ///     list lists the possible values. Example: 0x0807 (German, Switzerland).
         /// </summary>
-        public static uint? OSLanguage => GetValue(nameof(OSLanguage));
+        public static uint OSLanguage => GetValue<uint>(nameof(OSLanguage));
 
         /// <summary>
         ///     Gets the installed and licensed system product additions to the operating
@@ -347,17 +347,17 @@ namespace SilDev.QuickWmi
         ///     Enterprise, Terminal Services, and Data Center (bits one, four, and seven
         ///     set). The following list lists possible values.
         /// </summary>
-        public static uint? OSProductSuite => GetValue(nameof(OSProductSuite));
+        public static uint OSProductSuite => GetValue<uint>(nameof(OSProductSuite));
 
         /// <summary>
         ///     Gets the type of operating system.
         /// </summary>
-        public static ushort? OSType => GetValue(nameof(OSType));
+        public static ushort OSType => GetValue<ushort>(nameof(OSType));
 
         /// <summary>
         ///     Gets the additional description for the current operating system version.
         /// </summary>
-        public static string OtherTypeDescription => GetValue(nameof(OtherTypeDescription));
+        public static string OtherTypeDescription => GetValue<string>(nameof(OtherTypeDescription));
 
         /// <summary>
         ///     Gets the value that specifies whether the physical address extensions (PAE)
@@ -367,24 +367,24 @@ namespace SilDev.QuickWmi
         ///     rather than two-level. Providing more physical memory to an application
         ///     reduces the need to swap memory to the page file and increases performance.
         /// </summary>
-        public static bool? PAEEnabled => GetValue(nameof(PAEEnabled));
+        public static bool PAEEnabled => GetValue<bool>(nameof(PAEEnabled));
 
         /// <summary>
         ///     Gets the value that specifies whether the operating system booted from an
         ///     external USB device. If <see langword="true"/>, the operating system has
         ///     detected it is booting on a supported locally connected storage device.
         /// </summary>
-        public static bool? PortableOperatingSystem => GetValue(nameof(PortableOperatingSystem));
+        public static bool PortableOperatingSystem => GetValue<bool>(nameof(PortableOperatingSystem));
 
         /// <summary>
         ///     Gets the value that specifies whether this is the primary operating system.
         /// </summary>
-        public static bool? Primary => GetValue(nameof(Primary));
+        public static bool Primary => GetValue<bool>(nameof(Primary));
 
         /// <summary>
         ///     Gets additional system information.
         /// </summary>
-        public static uint? ProductType => GetValue(nameof(ProductType));
+        public static uint ProductType => GetValue<uint>(nameof(ProductType));
 
         /// <summary>
         ///     Gets the name of the registered user of the operating system.
@@ -392,7 +392,7 @@ namespace SilDev.QuickWmi
         ///         Example: "Ben Smith"
         ///     </para>
         /// </summary>
-        public static string RegisteredUser => GetValue(nameof(RegisteredUser));
+        public static string RegisteredUser => GetValue<string>(nameof(RegisteredUser));
 
         /// <summary>
         ///     Gets the operating system product serial identification number.
@@ -400,19 +400,19 @@ namespace SilDev.QuickWmi
         ///         Example: "10497-OEM-0031416-71674"
         ///     </para>
         /// </summary>
-        public static string SerialNumber => GetValue(nameof(SerialNumber));
+        public static string SerialNumber => GetValue<string>(nameof(SerialNumber));
 
         /// <summary>
         ///     Gets the major version number of the service pack installed on the computer
         ///     system. If no service pack has been installed, the value is 0 (zero).
         /// </summary>
-        public static ushort? ServicePackMajorVersion => GetValue(nameof(ServicePackMajorVersion));
+        public static ushort ServicePackMajorVersion => GetValue<ushort>(nameof(ServicePackMajorVersion));
 
         /// <summary>
         ///     Gets the minor version number of the service pack installed on the computer
         ///     system. If no service pack has been installed, the value is 0 (zero).
         /// </summary>
-        public static ushort? ServicePackMinorVersion => GetValue(nameof(ServicePackMinorVersion));
+        public static ushort ServicePackMinorVersion => GetValue<ushort>(nameof(ServicePackMinorVersion));
 
         /// <summary>
         ///     Gets the total number of kilobytes that can be stored in the operating
@@ -420,7 +420,7 @@ namespace SilDev.QuickWmi
         ///     aware that this number does not represent the actual physical size of the
         ///     paging file on disk.
         /// </summary>
-        public static ulong? SizeStoredInPagingFiles => GetValue(nameof(SizeStoredInPagingFiles));
+        public static ulong SizeStoredInPagingFiles => GetValue<ulong>(nameof(SizeStoredInPagingFiles));
 
         /// <summary>
         ///     Gets the current status of the object. Various operational and
@@ -433,19 +433,19 @@ namespace SilDev.QuickWmi
         ///     administrative work. Not all such work is online, but the managed element
         ///     is neither "OK" nor in one of the other states.
         /// </summary>
-        public static string Status => GetValue(nameof(Status));
+        public static string Status => GetValue<string>(nameof(Status));
 
         /// <summary>
         ///     Gets the bit flags that identify the product suites available on the
         ///     system.
         /// </summary>
-        public static uint? SuiteMask => GetValue(nameof(SuiteMask));
+        public static uint SuiteMask => GetValue<uint>(nameof(SuiteMask));
 
         /// <summary>
         ///     Gets the physical disk partition on which the operating system is
         ///     installed.
         /// </summary>
-        public static string SystemDevice => GetValue(nameof(SystemDevice));
+        public static string SystemDevice => GetValue<string>(nameof(SystemDevice));
 
         /// <summary>
         ///     Gets the system directory of the operating system.
@@ -453,7 +453,7 @@ namespace SilDev.QuickWmi
         ///         Example: "C:\WINDOWS\SYSTEM32"
         ///     </para>
         /// </summary>
-        public static string SystemDirectory => GetValue(nameof(SystemDirectory));
+        public static string SystemDirectory => GetValue<string>(nameof(SystemDirectory));
 
         /// <summary>
         ///     Gets the letter of the disk drive on which the operating system resides.
@@ -461,7 +461,7 @@ namespace SilDev.QuickWmi
         ///         Example: "C:"
         ///     </para>
         /// </summary>
-        public static string SystemDrive => GetValue(nameof(SystemDrive));
+        public static string SystemDrive => GetValue<string>(nameof(SystemDrive));
 
         /// <summary>
         ///     Gets the total swap space in kilobytes. This value may be NULL
@@ -470,7 +470,7 @@ namespace SilDev.QuickWmi
         ///     UNIX, whole processes can be swapped out when the free page list falls and
         ///     remains below a specified amount.
         /// </summary>
-        public static ulong? TotalSwapSpaceSize => GetValue(nameof(TotalSwapSpaceSize));
+        public static ulong TotalSwapSpaceSize => GetValue<ulong>(nameof(TotalSwapSpaceSize));
 
         /// <summary>
         ///     Gets the number, in kilobytes, of virtual memory. For example, this may be
@@ -478,7 +478,7 @@ namespace SilDev.QuickWmi
         ///     that is, adding the amount of memory in or aggregated by the computer
         ///     system to the property, <see cref="SizeStoredInPagingFiles"/>.
         /// </summary>
-        public static ulong? TotalVirtualMemorySize => GetValue(nameof(TotalVirtualMemorySize));
+        public static ulong TotalVirtualMemorySize => GetValue<ulong>(nameof(TotalVirtualMemorySize));
 
         /// <summary>
         ///     Gets the total amount, in kilobytes, of physical memory available to the
@@ -486,12 +486,12 @@ namespace SilDev.QuickWmi
         ///     <see langword="true"/> amount of physical memory, but what is reported to
         ///     the operating system as available to it.
         /// </summary>
-        public static ulong? TotalVisibleMemorySize => GetValue(nameof(TotalVisibleMemorySize));
+        public static ulong TotalVisibleMemorySize => GetValue<ulong>(nameof(TotalVisibleMemorySize));
 
         /// <summary>
         ///     Gets the version number of the operating system.
         /// </summary>
-        public static Version Version => GetValue(nameof(Version), typeof(Version));
+        public static Version Version => GetValue<Version>(nameof(Version));
 
         /// <summary>
         ///     Gets the Windows directory of the operating system.
@@ -499,47 +499,39 @@ namespace SilDev.QuickWmi
         ///         Example: "C:\WINDOWS"
         ///     </para>
         /// </summary>
-        public static string WindowsDirectory => GetValue(nameof(WindowsDirectory));
+        public static string WindowsDirectory => GetValue<string>(nameof(WindowsDirectory));
 
-        private static dynamic GetValue<T>(string name, Type type)
+        private static object GetValue(string name)
         {
-            try
-            {
-                var d = GetValue(name);
-                if (type == typeof(IReadOnlyCollection<T>))
-                    d = new ReadOnlyCollection<T>(d);
-                else
-                {
-                    d = d.ToString();
-                    if (type == typeof(Version))
-                        d = System.Version.Parse(d);
-                    else if (type == typeof(DateTime))
-                        d = ManagementDateTimeConverter.ToDateTime(d);
-                }
-                return d;
-            }
-            catch (Exception ex) when (ex.IsCaught())
-            {
-                Log.Write(ex);
-                return null;
-            }
+            using var mo = new ManagementObject($"{nameof(Win32_OperatingSystem)}=@");
+            return mo[name];
         }
 
-        private static dynamic GetValue(string name, Type type) =>
-            GetValue<object>(name, type);
-
-        private static dynamic GetValue(string name)
+        private static T GetValue<T>(string name)
         {
             try
             {
-                using var obj = new ManagementObject(nameof(Win32_OperatingSystem) + "=@");
-                return obj[name];
+                var value = GetValue(name);
+                var type = typeof(T);
+                switch (value)
+                {
+                    case T item:
+                        return item;
+                    case string item when type == typeof(DateTime):
+                        return (T)(object)ManagementDateTimeConverter.ToDateTime(item);
+                    case string item when type == typeof(Version):
+                        while (item.Count(c => c == '.') < 3)
+                            item += ".0";
+                        return (T)(object)Version.Parse(item);
+                    case string[] item when type == typeof(ReadOnlyCollection<string>):
+                        return (T)(object)new ReadOnlyCollection<string>(item);
+                }
             }
             catch (Exception ex) when (ex.IsCaught())
             {
                 Log.Write(ex);
-                return null;
             }
+            return default;
         }
     }
 }
