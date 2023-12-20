@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Crypto.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -108,17 +108,17 @@ namespace SilDev
         Adler32,
 
         /// <summary>
-        ///     Cyclic Redundancy Check (CRC-16).
+        ///     Cyclic Redundancy Check (CRC-16/ARC).
         /// </summary>
         Crc16,
 
         /// <summary>
-        ///     Cyclic Redundancy Check (CRC-32).
+        ///     Cyclic Redundancy Check (CRC-32/C).
         /// </summary>
         Crc32,
 
         /// <summary>
-        ///     Cyclic Redundancy Check (CRC-64).
+        ///     Cyclic Redundancy Check (CRC-64/ECMA-182).
         /// </summary>
         Crc64,
 
@@ -651,7 +651,7 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string Encrypt<TSource>(this TSource source, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
+        public static string Encrypt<TSource>(this TSource source, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Sha256)
         {
             var instance = GetDefaultInstance(algorithm);
             switch (source)
@@ -681,7 +681,7 @@ namespace SilDev
         /// <param name="algorithm">
         ///     The algorithm to use.
         /// </param>
-        public static string EncryptFile(this string path, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Md5)
+        public static string EncryptFile(this string path, ChecksumAlgorithm algorithm = ChecksumAlgorithm.Sha256)
         {
             var instance = GetDefaultInstance(algorithm);
             instance.EncryptFile(path);
@@ -2548,7 +2548,7 @@ namespace SilDev
             /// </param>
             public void Encrypt(byte[] bytes)
             {
-                if (bytes == null || !bytes.Any())
+                if (bytes?.Length is null or < 1)
                     return;
                 using var ms = new MemoryStream(bytes);
                 Encrypt(ms);
@@ -2589,14 +2589,8 @@ namespace SilDev
             /// <param name="other">
             ///     The <see cref="Checksum"/> instance to compare.
             /// </param>
-            public virtual bool Equals(Checksum other)
-            {
-                if (RawHash is not byte[] ba1)
-                    return other?.RawHash == null;
-                if (other?.RawHash is not byte[] ba2 || ba1.Length != ba2.Length)
-                    return false;
-                return !ba2.Where((b, i) => ba1[i] != b).Any();
-            }
+            public virtual bool Equals(Checksum other) =>
+                RawHash.SequenceEqualEx(other?.RawHash);
 
             /// <summary>
             ///     Determines whether this instance have same values as the specified
@@ -2829,7 +2823,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides functionality to compute Cyclic Redundancy Check (CRC-16) hashes.
+        ///     Provides functionality to compute CRC-16/ARC (Cyclic Redundancy Check
+        ///     16-bit / ARC) hashes.
         /// </summary>
         public sealed class Crc16 : Checksum
         {
@@ -2949,8 +2944,10 @@ namespace SilDev
                 RawHash.ToStringDefault("x2").PadLeft(HashLength, '0');
         }
 
+        /// ReSharper disable once CommentTypo
         /// <summary>
-        ///     Provides functionality to compute Cyclic Redundancy Check (CRC-32) hashes.
+        ///     Provides functionality to compute CRC-32/C (Cyclic Redundancy Check 32-bit
+        ///     / Castagnoli) hashes.
         /// </summary>
         public sealed class Crc32 : Checksum
         {
@@ -2959,7 +2956,7 @@ namespace SilDev
             /// </summary>
             public const int HashLength = 8;
 
-            private const uint Polynomial = 0xedb88320u;
+            private const uint Polynomial = 0x82f63b78u;
             private const uint Seed = uint.MaxValue;
             private static IReadOnlyList<uint> _crcTable;
 
@@ -3101,7 +3098,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides functionality to compute Cyclic Redundancy Check (CRC-64) hashes.
+        ///     Provides functionality to compute CRC-64/ECMA-182 (Cyclic Redundancy Check
+        ///     64-bit / ECMA-182) hashes.
         /// </summary>
         public sealed class Crc64 : Checksum
         {
@@ -3110,7 +3108,7 @@ namespace SilDev
             /// </summary>
             public const int HashLength = 16;
 
-            private const ulong Polynomial = 0xd800000000000000uL;
+            private const ulong Polynomial = 0x42f0e1eba9ea3693uL;
             private const ulong Seed = ulong.MinValue;
             private static IReadOnlyList<ulong> _crcTable;
 
@@ -3128,9 +3126,9 @@ namespace SilDev
                     var table = new ulong[256];
                     for (var i = 0; i < 256; i++)
                     {
-                        var ul = (ulong)i;
-                        for (var j = 0; j < 8; j++)
-                            ul = (ul & 1) == 1 ? (ul >> 1) ^ Polynomial : ul >> 1;
+                        var ul = (ulong)i << (64 - 8);
+                        for (var k = 0; k < 8; k++)
+                            ul = (ul & (1uL << (64 - 1))) != 0 ? (ul << 1) ^ Polynomial : ul << 1;
                         table[i] = ul;
                     }
                     _crcTable = table;
@@ -3207,8 +3205,8 @@ namespace SilDev
                 int i;
                 var ul = Seed;
                 while ((i = stream.ReadByte()) != -1)
-                    ul = (ul >> 8) ^ CrcTable[(int)(i ^ (long)ul) & 0xff];
-                RawHash = ~ul;
+                    ul = CrcTable[(int)(((ul >> (64 - 8)) ^ (byte)i) & 0xff)] ^ (ul << 8);
+                RawHash = ul;
             }
 
             /// <summary>
@@ -3239,7 +3237,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides functionality to compute Message-Digest 5 (MD5) hashes.
+        ///     Provides functionality to compute MD5 (Message-Digest 5) hashes.
         /// </summary>
         public sealed class Md5 : Checksum
         {
@@ -3335,7 +3333,7 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides functionality to compute Secure Hash Algorithm 1 (SHA-1) hashes.
+        ///     Provides functionality to compute SHA-1 (Secure Hash Algorithm 1) hashes.
         /// </summary>
         public sealed class Sha1 : Checksum
         {
@@ -3431,7 +3429,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides functionality to compute Secure Hash Algorithm 2 (SHA-256) hashes.
+        ///     Provides functionality to compute SHA-256 (Secure Hash Algorithm 256)
+        ///     hashes.
         /// </summary>
         public sealed class Sha256 : Checksum
         {
@@ -3527,7 +3526,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides functionality to compute Secure Hash Algorithm 2 (SHA-384) hashes.
+        ///     Provides functionality to compute SHA-384 (Secure Hash Algorithm 384)
+        ///     hashes.
         /// </summary>
         public sealed class Sha384 : Checksum
         {
@@ -3623,7 +3623,8 @@ namespace SilDev
         }
 
         /// <summary>
-        ///     Provides functionality to compute Secure Hash Algorithm 2 (SHA-512) hashes.
+        ///     Provides functionality to compute SHA-512 (Secure Hash Algorithm 512)
+        ///     hashes.
         /// </summary>
         public sealed class Sha512 : Checksum
         {
