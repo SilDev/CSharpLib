@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Log.cs
-// Version:  2023-12-18 23:08
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -408,7 +408,7 @@ namespace SilDev
                     var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline);
                     var content = FileEx.ReadAllText(configPath);
                     var matches = regex.Matches(content).Cast<Match>().ToArray();
-                    if (matches.Any())
+                    if (matches.Length > 0)
                     {
                         if (pattern.Contains("?<Key>") && pattern.Contains("?<Value>"))
                             foreach (var match in matches)
@@ -481,7 +481,7 @@ namespace SilDev
                 Write($"Thrown {exception}");
                 return false;
             }
-            if (exception == null || exTypes == null || !exTypes.Any())
+            if (exception == null || exTypes?.Length is null or < 1)
                 return true;
             var current = exception.GetType();
             return exTypes.Any(type => type == current);
@@ -510,15 +510,7 @@ namespace SilDev
                     ConsoleWindow.Allocate(true);
                 }
 
-                Build:
-                if (FirstEntry)
-                {
-                    Append(ProcessEx.CurrentId.ToStringDefault());
-                    Append(" ");
-                    Append(DateTime.Now.ToStringDefault(DateTimeFormat));
-                    Append(" | ");
-                }
-                else
+                if (!FirstEntry)
                 {
                     FirstEntry = true;
 
@@ -565,12 +557,14 @@ namespace SilDev
                     AppendLine(separator);
 
                     AppendLine();
-                    if (!string.IsNullOrEmpty(logMessage))
-                        goto Build;
                 }
 
                 if (!string.IsNullOrEmpty(logMessage))
                 {
+                    Append(ProcessEx.CurrentId.ToStringDefault());
+                    Append(" ");
+                    Append(DateTime.Now.ToStringDefault(DateTimeFormat));
+                    Append(" | ");
                     AppendLine(logMessage);
                     AppendLine();
                 }

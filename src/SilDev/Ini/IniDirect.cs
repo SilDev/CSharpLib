@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IniDirect.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -125,12 +125,12 @@ namespace SilDev.Ini
                     if ((!forceOverwrite && curValue.Equals(strValue, StringComparison.Ordinal)) || (skipExistValue && !string.IsNullOrWhiteSpace(curValue)))
                         return false;
                 }
-                if (string.Concat(section, key, value).All(TextEx.IsAscii))
-                    goto Write;
-                var encoding = EncodingEx.GetEncoding(path);
-                if (!encoding.Equals(Encoding.Unicode) && !encoding.Equals(Encoding.BigEndianUnicode))
-                    EncodingEx.ChangeEncoding(path, Encoding.Unicode);
-                Write:
+                if (!string.Concat(section, key, value).All(TextEx.IsAscii))
+                {
+                    var encoding = EncodingEx.GetEncoding(path);
+                    if (!encoding.Equals(Encoding.Unicode) && !encoding.Equals(Encoding.BigEndianUnicode))
+                        EncodingEx.ChangeEncoding(path, Encoding.Unicode);
+                }
                 return NativeMethods.WritePrivateProfileString(section, key, strValue, path) != 0;
             }
             catch (Exception ex) when (ex.IsCaught())

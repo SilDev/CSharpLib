@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2023-12-05 13:10
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -251,7 +251,7 @@ namespace SilDev
                 if (!Directory.Exists(dir))
                     throw new PathNotFoundException(dir);
                 var dirs = Directory.GetDirectories(dir, searchPattern, SearchOption.TopDirectoryOnly);
-                if (searchOption == SearchOption.TopDirectoryOnly || !dirs.Any())
+                if (searchOption == SearchOption.TopDirectoryOnly || dirs.Length < 1)
                     return dirs;
                 return dirs.Concat(dirs.AsParallel().SelectMany(s => EnumerateDirectories(s, searchPattern, SearchOption.AllDirectories))).ToArray();
             }
@@ -720,12 +720,12 @@ namespace SilDev
                 if (dirInfo == null)
                     return len;
                 var files = dirInfo.GetFiles();
-                if (files.Any())
+                if (files.Length > 0)
                     Parallel.ForEach(files, fi => Interlocked.Add(ref len, fi.Length));
                 if (searchOption == SearchOption.TopDirectoryOnly)
                     return len;
                 var dirs = dirInfo.GetDirectories();
-                if (dirs.Any())
+                if (dirs.Length > 0)
                     Parallel.ForEach(dirs, di => Interlocked.Add(ref len, di.GetSize()));
                 return len;
             }
@@ -972,7 +972,7 @@ namespace SilDev
         public static IEnumerable<Process> GetLocks(IEnumerable<string> dirs)
         {
             var paths = dirs?.ToArray();
-            return paths?.Any() ?? false ? FileEx.GetLocks(paths.Select(PathEx.Combine).Where(PathEx.IsDir).SelectMany(s => GetFiles(s, SearchOption.AllDirectories))) : null;
+            return paths?.Length is > 0 ? FileEx.GetLocks(paths.Select(PathEx.Combine).Where(PathEx.IsDir).SelectMany(s => GetFiles(s, SearchOption.AllDirectories))) : null;
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: IniDocument.cs
-// Version:  2023-12-05 13:10
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -503,7 +503,7 @@ namespace SilDev.Ini
                 _document.Add(section, new Dictionary<string, IList<string>>(Comparer));
             if (!_document[section].ContainsKey(key))
                 _document[section].Add(key, new List<string>());
-            if (!_document[section][key].Any() || _document[section][key].Count <= index)
+            if (_document[section][key].Count < 1 || _document[section][key].Count <= index)
             {
                 _document[section][key].Add(value);
                 return;
@@ -553,11 +553,11 @@ namespace SilDev.Ini
                 return;
             foreach (var section in ini.Sections)
             {
-                if (ini[section]?.Any() != true)
+                if (ini[section]?.Count is null or < 1)
                     continue;
                 foreach (var key in ini[section].Keys)
                 {
-                    if (ini[section][key]?.Any() != true)
+                    if (ini[section][key]?.Count is null or < 1)
                         continue;
                     for (var i = 0; i < ini[section][key].Count; i++)
                         AddOrUpdate(section, key, i, ini[section][key][i]);

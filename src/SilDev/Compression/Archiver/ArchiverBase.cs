@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: ArchiverBase.cs
-// Version:  2020-01-19 15:33
+// Version:  2023-12-20 00:28
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -349,16 +349,16 @@ namespace SilDev.Compression.Archiver
         {
             dir = PathEx.Combine(dir);
             if (!Directory.Exists(dir))
-                goto Invalid;
+                return ReturnDefaults(ref dir, out path1, out path2);
 
             var names = Depencies?.ToArray();
-            if (names?.Any() ?? false)
+            if (names?.Length is > 0)
                 foreach (var name in names)
                 {
                     var path = Path.Combine(dir, name);
                     if (File.Exists(path))
                         continue;
-                    goto Invalid;
+                    return ReturnDefaults(ref dir, out path1, out path2);
                 }
 
             path1 = string.Empty;
@@ -366,8 +366,8 @@ namespace SilDev.Compression.Archiver
             for (var i = 0; i < 2; i++)
             {
                 names = (i == 0 ? CreateExeNames : ExtractExeNames)?.ToArray();
-                if (!names?.Any() ?? true)
-                    goto Invalid;
+                if (names?.Length is null or < 1)
+                    return ReturnDefaults(ref dir, out path1, out path2);
                 foreach (var name in names)
                 {
                     var path = Path.Combine(dir, name);
@@ -385,11 +385,16 @@ namespace SilDev.Compression.Archiver
             if (File.Exists(path1) && File.Exists(path2))
                 return true;
 
-            Invalid:
-            dir = string.Empty;
-            path1 = string.Empty;
-            path2 = string.Empty;
-            return false;
+            return ReturnDefaults(ref dir, out path1, out path2);
+
+            // ReSharper disable once RedundantAssignment
+            static bool ReturnDefaults(ref string dir, out string path1, out string path2)
+            {
+                dir = string.Empty;
+                path1 = string.Empty;
+                path2 = string.Empty;
+                return false;
+            }
         }
     }
 }

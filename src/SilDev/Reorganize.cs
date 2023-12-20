@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2023-11-23 14:14
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -927,7 +927,7 @@ namespace SilDev
                 s = s.Insert(i, newValue);
                 q.Enqueue(s);
             }
-            while (q.Any());
+            while (q.Count > 0);
             return s;
         }
 
@@ -1850,7 +1850,7 @@ namespace SilDev
             {
                 if (i > 3)
                     break;
-                if (!e.Any() || !e.StartsWithEx(ca))
+                if (e.Length < 1 || !e.StartsWithEx(ca))
                     continue;
                 if (e.All(char.IsDigit))
                 {

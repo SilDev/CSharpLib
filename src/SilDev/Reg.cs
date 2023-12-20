@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2023-11-20 23:27
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -452,7 +452,7 @@ namespace SilDev
                             copyQueue.Enqueue((srcSubItem, destSubItem));
                         }
                     }
-                    while (copyQueue.Any());
+                    while (copyQueue.Count > 0);
                 }
                 finally
                 {
@@ -461,7 +461,7 @@ namespace SilDev
                         var item = releaseQueue.Dequeue();
                         item?.Dispose();
                     }
-                    while (releaseQueue.Any());
+                    while (releaseQueue.Count > 0);
                 }
                 return SubKeyExists(destKey, destSubKey);
             }

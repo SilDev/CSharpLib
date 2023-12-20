@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -224,7 +224,7 @@ namespace SilDev.Network
             try
             {
                 var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-                if (!interfaces.Any())
+                if (interfaces.Length < 1)
                     throw new NetworkInformationException();
                 if (interfaces.All(x => x.OperationalStatus != OperationalStatus.Up))
                     throw new ArgumentException(ExceptionMessages.NetworkInterfacesNotFound);

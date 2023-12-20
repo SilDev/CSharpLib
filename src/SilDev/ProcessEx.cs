@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ProcessEx.cs
-// Version:  2023-12-10 14:36
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -749,7 +749,7 @@ namespace SilDev
                     continue;
                 items.Add(name);
             }
-            if (!items.Any())
+            if (items.Count < 1)
                 return count > 0;
             using (var p = CmdExec.KillAllTasks(items, true, false))
                 if (p?.HasExited ?? false)

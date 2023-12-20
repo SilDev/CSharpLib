@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ColorEx.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -288,27 +288,27 @@ namespace SilDev.Drawing
                 if (!code.Length.IsBetween(1, 8) || code.Any(x => !"0123456789ABCDEF".Contains(x)))
                     throw new ArgumentOutOfRangeException(nameof(htmlColor));
                 var sb = new StringBuilder();
-                Switch:
-                switch (code.Length)
-                {
-                    case 8:
-                        return Color.FromArgb(int.Parse(code, NumberStyles.HexNumber, CultureConfig.GlobalCultureInfo));
-                    case 6:
-                        return FromRgb(int.Parse(code, NumberStyles.HexNumber, CultureConfig.GlobalCultureInfo));
-                    case 3:
-                        foreach (var c in code)
-                        {
-                            sb.Append(c);
-                            sb.Append(c);
-                        }
-                        code = sb.ToStringThenClear();
-                        goto Switch;
-                    default:
-                        while (sb.Length < 6)
-                            sb.Append(code);
-                        code = sb.ToStringThenClear(0, 6);
-                        goto Switch;
-                }
+                while (true)
+                    switch (code.Length)
+                    {
+                        case 8:
+                            return Color.FromArgb(int.Parse(code, NumberStyles.HexNumber, CultureConfig.GlobalCultureInfo));
+                        case 6:
+                            return FromRgb(int.Parse(code, NumberStyles.HexNumber, CultureConfig.GlobalCultureInfo));
+                        case 3:
+                            foreach (var c in code)
+                            {
+                                sb.Append(c);
+                                sb.Append(c);
+                            }
+                            code = sb.ToStringThenClear();
+                            continue;
+                        default:
+                            while (sb.Length < 6)
+                                sb.Append(code);
+                            code = sb.ToStringThenClear(0, 6);
+                            continue;
+                    }
             }
             catch (Exception ex) when (ex.IsCaught())
             {

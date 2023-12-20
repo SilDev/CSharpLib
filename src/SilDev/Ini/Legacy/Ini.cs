@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2023-11-27 12:17
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -104,7 +104,7 @@ namespace SilDev.Ini.Legacy
         {
             try
             {
-                if (!CachedFiles?.Any() ?? true)
+                if (CachedFiles?.Count is null or < 1)
                     throw new NullReferenceException();
                 var path = PathEx.Combine(cacheFilePath ?? GetFile());
                 if (string.IsNullOrEmpty(path))
@@ -119,7 +119,7 @@ namespace SilDev.Ini.Legacy
                 var code = GetCode(file);
                 if (!CodeExists(code))
                     ReadAll(fileOrContent);
-                if (!CodeExists(code) || !CachedFiles[code].Any())
+                if (!CodeExists(code) || CachedFiles[code].Count < 1)
                     throw new ArgumentOutOfRangeException(nameof(fileOrContent));
                 var bytes = CachedFiles[code]?.SerializeObject();
                 if (bytes == null)
@@ -177,7 +177,9 @@ namespace SilDev.Ini.Legacy
         public static Regex GetRegex(bool allowEmptySection = true)
         {
             const RegexOptions options = RegexOptions.IgnoreCase | RegexOptions.Multiline;
-            return allowEmptySection ? new Regex(@"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))*", options) : new Regex(@"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))+", options);
+            return allowEmptySection
+                ? new Regex(@"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))*", options)
+                : new Regex(@"^((?:\[)(?<Section>[^\]]*)(?:\])(?:[\r\n]{0,}|\Z))((?!\[)(?<Key>[^=]*?)(?:=)(?<Value>[^\r\n]*)(?:[\r\n]{0,4}))+", options);
         }
 
         /// <summary>
@@ -900,9 +902,9 @@ namespace SilDev.Ini.Legacy
                     {
                         if (CachedFiles?[code][section][key].Count > i)
                             CachedFiles[code][section][key].RemoveAt(i);
-                        if (CachedFiles?[code][section][key].Any() ?? false)
+                        if (CachedFiles?[code][section][key].Count is > 0)
                             RemoveKey(code, section, key);
-                        if (CachedFiles?[code][section].Any() ?? false)
+                        if (CachedFiles?[code][section].Count is > 0)
                             RemoveSection(code, section);
                     }
                     return true;
@@ -1033,12 +1035,12 @@ namespace SilDev.Ini.Legacy
                     if ((!forceOverwrite && curValue.Equals(strValue, StringComparison.Ordinal)) || (skipExistValue && !string.IsNullOrWhiteSpace(curValue)))
                         return false;
                 }
-                if (string.Concat(section, key, value).All(TextEx.IsAscii))
-                    goto Write;
-                var encoding = EncodingEx.GetEncoding(path);
-                if (!encoding.Equals(Encoding.Unicode) && !encoding.Equals(Encoding.BigEndianUnicode))
-                    EncodingEx.ChangeEncoding(path, Encoding.Unicode);
-                Write:
+                if (!string.Concat(section, key, value).All(TextEx.IsAscii))
+                {
+                    var encoding = EncodingEx.GetEncoding(path);
+                    if (!encoding.Equals(Encoding.Unicode) && !encoding.Equals(Encoding.BigEndianUnicode))
+                        EncodingEx.ChangeEncoding(path, Encoding.Unicode);
+                }
                 return IniDirect.Write(path, section, key, strValue);
             }
             catch (Exception ex) when (ex.IsCaught())
@@ -1090,7 +1092,7 @@ namespace SilDev.Ini.Legacy
         }
 
         private static bool CodeExists(int code) =>
-            code != -1 && (CachedFiles?.ContainsKey(code) ?? false) && (CachedFiles[code]?.Any() ?? false);
+            code != -1 && (CachedFiles?.ContainsKey(code) ?? false) && CachedFiles[code]?.Count is > 0;
 
         private static int GetCode(string fileOrContent)
         {
@@ -1105,7 +1107,7 @@ namespace SilDev.Ini.Legacy
         }
 
         private static bool SectionExists(int code, string section) =>
-            !string.IsNullOrEmpty(section) && CodeExists(code) && (CachedFiles[code]?.ContainsKey(section) ?? false) && (CachedFiles[code][section]?.Any() ?? false);
+            !string.IsNullOrEmpty(section) && CodeExists(code) && (CachedFiles[code]?.ContainsKey(section) ?? false) && CachedFiles[code][section]?.Count is > 0;
 
         private static bool RemoveSection(int code, string section)
         {
@@ -1116,7 +1118,7 @@ namespace SilDev.Ini.Legacy
         }
 
         private static bool KeyExists(int code, string section, string key) =>
-            !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && (CachedFiles[code][section][key]?.Any() ?? false);
+            !string.IsNullOrEmpty(key) && SectionExists(code, section) && CachedFiles[code][section].ContainsKey(key) && CachedFiles[code][section][key]?.Count is > 0;
 
         private static bool RemoveKey(int code, string section, string key)
         {

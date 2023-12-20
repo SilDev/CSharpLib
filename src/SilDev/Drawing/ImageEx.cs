@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-18 23:08
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -275,18 +275,16 @@ namespace SilDev.Drawing
                 img.Width,
                 img.Height
             };
-            if (indicator <= 0 || (indicator >= size.First() && indicator >= size.Last()))
-                goto Return;
-            for (var i = 0; i < size.Length; i++)
-            {
-                if (size[i] <= indicator)
-                    continue;
-                var percent = (int)Math.Floor(100d / size[i] * indicator);
-                size[i] = (int)(size[i] * (percent / 100d));
-                size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100d));
-                break;
-            }
-            Return:
+            if (indicator > 0 && (indicator < size.First() || indicator < size.Last()))
+                for (var i = 0; i < size.Length; i++)
+                {
+                    if (size[i] <= indicator)
+                        continue;
+                    var percent = (int)Math.Floor(100d / size[i] * indicator);
+                    size[i] = (int)(size[i] * (percent / 100d));
+                    size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100d));
+                    break;
+                }
             return img.Redraw(size.First(), size.Last(), quality);
         }
 

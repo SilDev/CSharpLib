@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TaskBar.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -356,24 +356,24 @@ namespace SilDev
                     applied = true;
                     break;
                 }
-                if (applied)
-                    goto Done;
 
                 //}
 
-                if (string.IsNullOrWhiteSpace(verb))
-                    verb = "Toggle Taskbar Pin";
-                const string cmdKeyPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CommandStore\\shell\\Windows.taskbarpin";
-                var cmdHandler = Reg.ReadString(Registry.LocalMachine, cmdKeyPath, "ExplorerCommandHandler");
-                if (!string.IsNullOrEmpty(cmdHandler))
+                if (!applied)
                 {
-                    shellKeyPath = $"Software\\Classes\\*\\shell\\{verb}";
-                    Reg.Write(Registry.CurrentUser, shellKeyPath, "ExplorerCommandHandler", cmdHandler);
+                    if (string.IsNullOrWhiteSpace(verb))
+                        verb = "Toggle Taskbar Pin";
+                    const string cmdKeyPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CommandStore\\shell\\Windows.taskbarpin";
+                    var cmdHandler = Reg.ReadString(Registry.LocalMachine, cmdKeyPath, "ExplorerCommandHandler");
+                    if (!string.IsNullOrEmpty(cmdHandler))
+                    {
+                        shellKeyPath = $"Software\\Classes\\*\\shell\\{verb}";
+                        Reg.Write(Registry.CurrentUser, shellKeyPath, "ExplorerCommandHandler", cmdHandler);
+                    }
+                    if (Reg.EntryExists(Registry.CurrentUser, shellKeyPath, "ExplorerCommandHandler"))
+                        link.InvokeVerb(verb);
                 }
-                if (Reg.EntryExists(Registry.CurrentUser, shellKeyPath, "ExplorerCommandHandler"))
-                    link.InvokeVerb(verb);
 
-                Done:
                 if (!pin)
                     return !IsPinned(file);
                 var curLink = GetPinLink(path);

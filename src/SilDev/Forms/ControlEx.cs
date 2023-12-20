@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ControlEx.cs
-// Version:  2023-12-12 11:26
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -467,7 +467,7 @@ namespace SilDev.Forms
                         Log.Write(ex);
                 }
             }
-            while (queue.Any());
+            while (queue.Count > 0);
         }
 
         /// <summary>

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: CmdExec.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -84,8 +84,8 @@ namespace SilDev
                         content = content.Substring(start).TrimStart(trimChars);
                         sb.AppendLine(processWindowStyle == ProcessWindowStyle.Hidden || start == 9 ? "@ECHO OFF" : "@ECHO ON");
                     }
-                    var loopVars = Regex.Matches(content, @"((\s|\""|\'|\=)(?<var>(%[A-Za-z]{1,32}))(\s|\""|\'|\)))").Cast<Match>().ToArray();
-                    if (loopVars.Any())
+                    var loopVars = Regex.Matches(content, """((\s|\"|\'|\=)(?<var>(%[A-Za-z]{1,32}))(\s|\"|\'|\)))""").Cast<Match>().ToArray();
+                    if (loopVars.Length > 0)
                     {
                         var indicator = 0;
                         content = loopVars.Select(m => m.Groups["var"].Index + ++indicator)
@@ -302,7 +302,7 @@ namespace SilDev
             if (string.IsNullOrWhiteSpace(command))
                 return null;
             var time = seconds < 1 ? 1 : seconds > 3600 ? 3600 : seconds;
-            return Send($"PING LOCALHOST -n {time} > NUL && {command}", runAsAdmin, dispose);
+            return Send($"PING -n {time} -w 1000 0.0.0.0 > NUL && {command}", runAsAdmin, dispose);
         }
 
         /// <summary>
@@ -407,7 +407,7 @@ namespace SilDev
             var name = processName;
             if (!string.IsNullOrEmpty(extension) && !name.EndsWithEx(extension))
                 name += extension;
-            return Send($"(FOR /L %X in (1,{(seconds < 1 ? "0,2" : $"1,{seconds}")}) DO (PING -n 2 LOCALHOST >NUL & TASKLIST | FIND /I \"{name}\" || ({command} & EXIT /B))) & EXIT /B", runAsAdmin, dispose);
+            return Send($"(FOR /L %X in (1,{(seconds < 1 ? "0,2" : $"1,{seconds}")}) DO (PING -n 2 -w 1000 0.0.0.0 >NUL & TASKLIST | FIND /I \"{name}\" || ({command} & EXIT /B))) & EXIT /B", runAsAdmin, dispose);
         }
 
         /// <summary>

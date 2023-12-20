@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: IniWriter.cs
-// Version:  2021-04-22 19:46
+// Version:  2023-12-20 00:28
 // 
-// Copyright (c) 2021, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -61,7 +61,7 @@ namespace SilDev.Ini
                 if (IniHelper.SectionIsInvalid(section))
                     continue;
                 var keyValueDict = source[section];
-                var hasNoValue = !keyValueDict?.Any() ?? true;
+                var hasNoValue = keyValueDict?.Count is null or < 1;
                 if (hasNoValue && !IniHelper.IsImportantSection(section))
                     continue;
                 if (!string.IsNullOrEmpty(section))
@@ -77,7 +77,7 @@ namespace SilDev.Ini
                 }
                 foreach (var pair in keyValueDict)
                 {
-                    if (IniHelper.KeyIsInvalid(pair.Key) || !pair.Value.Any())
+                    if (IniHelper.KeyIsInvalid(pair.Key) || pair.Value.Count < 1)
                         continue;
                     foreach (var value in pair.Value)
                     {

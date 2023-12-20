@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Tray.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-20 00:29
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -54,15 +54,19 @@ namespace SilDev
                         if (hWnd == IntPtr.Zero)
                             throw new NullReferenceException();
                     }
-                    MouseMove:
-                    NativeMethods.GetClientRect(hWnd, out var rect1);
-                    for (var x = 0; x < rect1.Right; x += 5)
+                    var mouseMoved = true;
+                    while (mouseMoved)
                     {
-                        for (var y = 0; y < rect1.Bottom; y += 5)
-                            NativeHelper.SendMessage(hWnd, (uint)WindowMenuFlags.WmMouseMove, IntPtr.Zero, new IntPtr((y << 16) + x));
-                        NativeMethods.GetClientRect(hWnd, out var rect2);
-                        if (rect1 != rect2)
-                            goto MouseMove;
+                        NativeMethods.GetClientRect(hWnd, out var rect1);
+                        for (var x = 0; x < rect1.Right; x += 5)
+                        {
+                            for (var y = 0; y < rect1.Bottom; y += 5)
+                                NativeHelper.SendMessage(hWnd, (uint)WindowMenuFlags.WmMouseMove, IntPtr.Zero, new IntPtr((y << 16) + x));
+                            NativeMethods.GetClientRect(hWnd, out var rect2);
+                            mouseMoved = rect1 != rect2;
+                            if (mouseMoved)
+                                break;
+                        }
                     }
                 }
                 catch (Exception ex) when (ex.IsCaught())

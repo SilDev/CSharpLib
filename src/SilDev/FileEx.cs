@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-20 00:28
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1289,7 +1289,7 @@ namespace SilDev
         public static IEnumerable<Process> GetLocks(IEnumerable<string> files)
         {
             var paths = files?.Select(PathEx.Combine).ToArray();
-            if (!paths?.Any() ?? true)
+            if (paths?.Length is null or < 1)
                 yield break;
             ThrowError(NativeMethods.RmStartSession(out var handle, 0, Guid.NewGuid().ToString()));
             IEnumerable<int> procIds;
