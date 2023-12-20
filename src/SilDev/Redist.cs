@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Redist.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-20 11:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -31,82 +31,94 @@ namespace SilDev
         /// <summary>
         ///     Microsoft Visual C++ 2005 Redistributable Package (x86).
         /// </summary>
-        VC2005X86 = 0x1,
-
-        /// <summary>
-        ///     Microsoft Visual C++ 2005 Redistributable Package (x64).
-        /// </summary>
-        VC2005X64 = 0x2,
+        VC2005X86 = 1 << 00,
 
         /// <summary>
         ///     Microsoft Visual C++ 2008 Redistributable Package (x86).
         /// </summary>
-        VC2008X86 = 0x4,
-
-        /// <summary>
-        ///     Microsoft Visual C++ 2008 Redistributable Package (x64).
-        /// </summary>
-        VC2008X64 = 0x8,
+        VC2008X86 = 1 << 02,
 
         /// <summary>
         ///     Microsoft Visual C++ 2010 Redistributable Package (x86).
         /// </summary>
-        VC2010X86 = 0x10,
-
-        /// <summary>
-        ///     Microsoft Visual C++ 2010 Redistributable Package (x64).
-        /// </summary>
-        VC2010X64 = 0x20,
+        VC2010X86 = 1 << 04,
 
         /// <summary>
         ///     Microsoft Visual C++ 2012 Redistributable Package (x86).
         /// </summary>
-        VC2012X86 = 0x40,
-
-        /// <summary>
-        ///     Microsoft Visual C++ 2012 Redistributable Package (x64).
-        /// </summary>
-        VC2012X64 = 0x80,
+        VC2012X86 = 1 << 06,
 
         /// <summary>
         ///     Microsoft Visual C++ 2013 Redistributable Package (x86).
         /// </summary>
-        VC2013X86 = 0x100,
-
-        /// <summary>
-        ///     Microsoft Visual C++ 2013 Redistributable Package (x64).
-        /// </summary>
-        VC2013X64 = 0x200,
+        VC2013X86 = 1 << 08,
 
         /// <summary>
         ///     Microsoft Visual C++ 2015 Redistributable Package (x86).
         /// </summary>
-        VC2015X86 = 0x400,
-
-        /// <summary>
-        ///     Microsoft Visual C++ 2015 Redistributable Package (x64).
-        /// </summary>
-        VC2015X64 = 0x800,
+        VC2015X86 = 1 << 10,
 
         /// <summary>
         ///     Microsoft Visual C++ 2017 Redistributable Package (x86).
         /// </summary>
-        VC2017X86 = 0x1000,
-
-        /// <summary>
-        ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
-        /// </summary>
-        VC2017X64 = 0x2000,
+        VC2017X86 = 1 << 12,
 
         /// <summary>
         ///     Microsoft Visual C++ 2019 Redistributable Package (x86).
         /// </summary>
-        VC2019X86 = 0x4000,
+        VC2019X86 = 1 << 14,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2022 Redistributable Package (x86).
+        /// </summary>
+        VC2022X86 = 1 << 16,
+
+#if any || x64
+        /// <summary>
+        ///     Microsoft Visual C++ 2005 Redistributable Package (x64).
+        /// </summary>
+        VC2005X64 = 1 << 01,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2008 Redistributable Package (x64).
+        /// </summary>
+        VC2008X64 = 1 << 03,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2010 Redistributable Package (x64).
+        /// </summary>
+        VC2010X64 = 1 << 05,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2012 Redistributable Package (x64).
+        /// </summary>
+        VC2012X64 = 1 << 07,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2013 Redistributable Package (x64).
+        /// </summary>
+        VC2013X64 = 1 << 09,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2015 Redistributable Package (x64).
+        /// </summary>
+        VC2015X64 = 1 << 11,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2017 Redistributable Package (x64).
+        /// </summary>
+        VC2017X64 = 1 << 13,
 
         /// <summary>
         ///     Microsoft Visual C++ 2019 Redistributable Package (x64).
         /// </summary>
-        VC2019X64 = 0x8000
+        VC2019X64 = 1 << 15,
+
+        /// <summary>
+        ///     Microsoft Visual C++ 2022 Redistributable Package (x64).
+        /// </summary>
+        VC2022X64 = 1 << 17
+#endif
     }
 
     /// <summary>
@@ -157,6 +169,13 @@ namespace SilDev
 
         /// <summary>
         ///     Determines whether the specified redistributable package is installed.
+        ///     <para>
+        ///         &#9888; If <paramref name="keys"/> is undefined, it only determines
+        ///         whether VC++ 2022 is installed. The architecture differs depending on
+        ///         the process and library architecture. It should be noted that a 64-bit
+        ///         process using the Any-compiled library will only be
+        ///         <see langword="true"/> if both x86 and x64 are installed.
+        ///     </para>
         /// </summary>
         /// <param name="keys">
         ///     The redistributable package keys to check.
@@ -165,41 +184,58 @@ namespace SilDev
         {
             try
             {
-                keys = Enum.GetValues(typeof(RedistFlags)).Cast<RedistFlags>()
-                           .SelectMany(_ => keys, (item, key) => (item, key))
-                           .Where(type => (type.item & type.key) != 0)
-                           .Select(type => type.item).ToArray();
+                if (keys?.Length is null or < 1)
+#if any
+                    keys = Environment.Is64BitProcess ? new[] { RedistFlags.VC2022X64, RedistFlags.VC2022X86 } : new[] { RedistFlags.VC2022X86 };
+#elif x64
+                    keys = new[] { RedistFlags.VC2022X64, RedistFlags.VC2022X86 };
+#elif x86
+                    keys = new[] { RedistFlags.VC2022X86 };
+#endif
                 var result = false;
                 var names = GetDisplayNames();
-                foreach (var key in keys.Select(x => x.ToString()))
+                foreach (var key in keys.Extract().Select(x => x.ToString()))
                 {
                     var year = key.Substring(2, 4);
                     var arch = key.Substring(6);
-                    Recheck:
-                    result = year switch
+                    while (true)
                     {
-                        "2005" => names.Any(x => x.Contains(year) && ((arch.EqualsEx("x64") && x.ContainsEx(arch)) || !x.ContainsEx("x64"))),
-                        _ => names.Any(x => x.Contains(year) && x.ContainsEx(arch)),
-                    };
+                        result = year switch
+                        {
+                            "2005" => names.Any(x => x.Contains(year) && ((arch.EqualsEx("x64") && x.ContainsEx(arch)) || !x.ContainsEx("x64"))),
+                            _ => names.Any(x => x.Contains(year) && x.ContainsEx(arch)),
+                        };
+                        if (result)
+                            break;
+                        switch (year)
+                        {
+                            // No re-check needed.
+                            case "2005":
+                            case "2008":
+                            case "2010":
+                            case "2012":
+                            case "2013":
+                                break;
+
+                            // 2015-2019 must be checked again with the year changed, otherwise
+                            // it will not be recognized whether the specified version is older
+                            // than the version installed on the system.
+                            case "2015":
+                                year = "2017";
+                                continue;
+                            case "2017":
+                                year = "2019";
+                                continue;
+                            case "2019":
+                                year = "2022";
+                                continue;
+                        }
+                        break;
+                    }
+                    if (Log.DebugMode > 1)
+                        Log.Write($"Microsoft Visual C++ {year} Redistributable Package ({arch}) is {(result ? "installed" : "not installed")}.");
                     if (result)
                         continue;
-                    switch (year)
-                    {
-                        case "2005":
-                        case "2008":
-                        case "2010":
-                        case "2012":
-                        case "2013":
-                            break;
-
-                        // I know, I know... GOTO is evil shit! 
-                        case "2015":
-                            year = "2017";
-                            goto Recheck;
-                        case "2017":
-                            year = "2019";
-                            goto Recheck;
-                    }
                     break;
                 }
                 return result;
