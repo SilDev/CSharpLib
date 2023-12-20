@@ -1924,9 +1924,36 @@
                 otherwise, <see langword="false"/>.
             </param>
         </member>
+        <member name="M:SilDev.DictionaryEx.Update``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+            <summary>
+                Updates an element with the provided key and value of the specified
+                dictionary.
+            </summary>
+            <typeparam name="TKey">
+                The type of the keys in the dictionary.
+            </typeparam>
+            <typeparam name="TValue">
+                The type of the values in the dictionary.
+            </typeparam>
+            <param name="source">
+                The generic collection of key/value pairs.
+            </param>
+            <param name="key">
+                The key of the element to update.
+            </param>
+            <param name="value">
+                The new value.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                source or key is null.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                source is read-only.
+            </exception>
+        </member>
         <member name="M:SilDev.DictionaryEx.TryAdd``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1)">
             <summary>
-                Attempts to add  the specified key and value to this dictionary.
+                Attempts to add the specified key and value to this dictionary.
                 <para>
                     &#9888; Nothing happens if the <paramref name="key"/> already exists.
                 </para>
@@ -3245,6 +3272,55 @@
             <param name="defEncoding">
                 The default character encoding, which is returned if no character encoding
                 was found. If <see langword="null"/>, <see cref="P:SilDev.EncodingEx.Ansi"/> is used.
+            </param>
+        </member>
+        <member name="T:SilDev.EnumEx">
+            <summary>
+                Provides static methods based on the <see cref="T:System.Enum"/> class.
+            </summary>
+        </member>
+        <member name="M:SilDev.EnumEx.AddFlag``1(``0,``0)">
+            <summary>
+                Adds a flag to specified enum.
+            </summary>
+            <typeparam name="TEnum">
+                The type of source.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Enum"/> to change.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumEx.RemoveFlag``1(``0,``0)">
+            <summary>
+                Removes a flag of the specified enum.
+            </summary>
+            <typeparam name="TEnum">
+                The type of source.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Enum"/> to change.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumEx.Extract``1(``0)">
+            <summary>
+                Extracts every single value of the specified flags.
+            </summary>
+            <typeparam name="TEnum">
+                The type of source.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Enum"/> flags to extract.
+            </param>
+        </member>
+        <member name="M:SilDev.EnumEx.Extract``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+                Extracts every single value of the specified sequence of flags.
+            </summary>
+            <typeparam name="TEnum">
+                The type of the elements of source.
+            </typeparam>
+            <param name="source">
+                The <see cref="T:System.Enum"/> sequence of flags to extract.
             </param>
         </member>
         <member name="T:SilDev.Forms.ControlAlphaNumericComparer">
@@ -9034,17 +9110,17 @@
         </member>
         <member name="F:SilDev.ChecksumAlgorithm.Crc16">
             <summary>
-                Cyclic Redundancy Check (CRC-16).
+                Cyclic Redundancy Check (CRC-16/ARC).
             </summary>
         </member>
         <member name="F:SilDev.ChecksumAlgorithm.Crc32">
             <summary>
-                Cyclic Redundancy Check (CRC-32).
+                Cyclic Redundancy Check (CRC-32/C).
             </summary>
         </member>
         <member name="F:SilDev.ChecksumAlgorithm.Crc64">
             <summary>
-                Cyclic Redundancy Check (CRC-64).
+                Cyclic Redundancy Check (CRC-64/ECMA-182).
             </summary>
         </member>
         <member name="F:SilDev.ChecksumAlgorithm.Md5">
@@ -10564,7 +10640,8 @@
         </member>
         <member name="T:SilDev.Crypto.Crc16">
             <summary>
-                Provides functionality to compute Cyclic Redundancy Check (CRC-16) hashes.
+                Provides functionality to compute CRC-16/ARC (Cyclic Redundancy Check
+                16-bit / ARC) hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Crc16.HashLength">
@@ -10654,8 +10731,10 @@
             </summary>
         </member>
         <member name="T:SilDev.Crypto.Crc32">
+            ReSharper disable once CommentTypo
             <summary>
-                Provides functionality to compute Cyclic Redundancy Check (CRC-32) hashes.
+                Provides functionality to compute CRC-32/C (Cyclic Redundancy Check 32-bit
+                / Castagnoli) hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Crc32.HashLength">
@@ -10746,7 +10825,8 @@
         </member>
         <member name="T:SilDev.Crypto.Crc64">
             <summary>
-                Provides functionality to compute Cyclic Redundancy Check (CRC-64) hashes.
+                Provides functionality to compute CRC-64/ECMA-182 (Cyclic Redundancy Check
+                64-bit / ECMA-182) hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Crc64.HashLength">
@@ -10837,7 +10917,7 @@
         </member>
         <member name="T:SilDev.Crypto.Md5">
             <summary>
-                Provides functionality to compute Message-Digest 5 (MD5) hashes.
+                Provides functionality to compute MD5 (Message-Digest 5) hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Md5.HashLength">
@@ -10908,7 +10988,7 @@
         </member>
         <member name="T:SilDev.Crypto.Sha1">
             <summary>
-                Provides functionality to compute Secure Hash Algorithm 1 (SHA-1) hashes.
+                Provides functionality to compute SHA-1 (Secure Hash Algorithm 1) hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Sha1.HashLength">
@@ -10979,7 +11059,8 @@
         </member>
         <member name="T:SilDev.Crypto.Sha256">
             <summary>
-                Provides functionality to compute Secure Hash Algorithm 2 (SHA-256) hashes.
+                Provides functionality to compute SHA-256 (Secure Hash Algorithm 256)
+                hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Sha256.HashLength">
@@ -11050,7 +11131,8 @@
         </member>
         <member name="T:SilDev.Crypto.Sha384">
             <summary>
-                Provides functionality to compute Secure Hash Algorithm 2 (SHA-384) hashes.
+                Provides functionality to compute SHA-384 (Secure Hash Algorithm 384)
+                hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Sha384.HashLength">
@@ -11121,7 +11203,8 @@
         </member>
         <member name="T:SilDev.Crypto.Sha512">
             <summary>
-                Provides functionality to compute Secure Hash Algorithm 2 (SHA-512) hashes.
+                Provides functionality to compute SHA-512 (Secure Hash Algorithm 512)
+                hashes.
             </summary>
         </member>
         <member name="F:SilDev.Crypto.Sha512.HashLength">
@@ -19347,19 +19430,9 @@
                 Microsoft Visual C++ 2005 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.RedistFlags.VC2005X64">
-            <summary>
-                Microsoft Visual C++ 2005 Redistributable Package (x64).
-            </summary>
-        </member>
         <member name="F:SilDev.RedistFlags.VC2008X86">
             <summary>
                 Microsoft Visual C++ 2008 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.RedistFlags.VC2008X64">
-            <summary>
-                Microsoft Visual C++ 2008 Redistributable Package (x64).
             </summary>
         </member>
         <member name="F:SilDev.RedistFlags.VC2010X86">
@@ -19367,19 +19440,9 @@
                 Microsoft Visual C++ 2010 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.RedistFlags.VC2010X64">
-            <summary>
-                Microsoft Visual C++ 2010 Redistributable Package (x64).
-            </summary>
-        </member>
         <member name="F:SilDev.RedistFlags.VC2012X86">
             <summary>
                 Microsoft Visual C++ 2012 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.RedistFlags.VC2012X64">
-            <summary>
-                Microsoft Visual C++ 2012 Redistributable Package (x64).
             </summary>
         </member>
         <member name="F:SilDev.RedistFlags.VC2013X86">
@@ -19387,19 +19450,9 @@
                 Microsoft Visual C++ 2013 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.RedistFlags.VC2013X64">
-            <summary>
-                Microsoft Visual C++ 2013 Redistributable Package (x64).
-            </summary>
-        </member>
         <member name="F:SilDev.RedistFlags.VC2015X86">
             <summary>
                 Microsoft Visual C++ 2015 Redistributable Package (x86).
-            </summary>
-        </member>
-        <member name="F:SilDev.RedistFlags.VC2015X64">
-            <summary>
-                Microsoft Visual C++ 2015 Redistributable Package (x64).
             </summary>
         </member>
         <member name="F:SilDev.RedistFlags.VC2017X86">
@@ -19407,19 +19460,59 @@
                 Microsoft Visual C++ 2017 Redistributable Package (x86).
             </summary>
         </member>
-        <member name="F:SilDev.RedistFlags.VC2017X64">
-            <summary>
-                Microsoft Visual C++ 2017 Redistributable Package (x64).
-            </summary>
-        </member>
         <member name="F:SilDev.RedistFlags.VC2019X86">
             <summary>
                 Microsoft Visual C++ 2019 Redistributable Package (x86).
             </summary>
         </member>
+        <member name="F:SilDev.RedistFlags.VC2022X86">
+            <summary>
+                Microsoft Visual C++ 2022 Redistributable Package (x86).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2005X64">
+            <summary>
+                Microsoft Visual C++ 2005 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2008X64">
+            <summary>
+                Microsoft Visual C++ 2008 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2010X64">
+            <summary>
+                Microsoft Visual C++ 2010 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2012X64">
+            <summary>
+                Microsoft Visual C++ 2012 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2013X64">
+            <summary>
+                Microsoft Visual C++ 2013 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2015X64">
+            <summary>
+                Microsoft Visual C++ 2015 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2017X64">
+            <summary>
+                Microsoft Visual C++ 2017 Redistributable Package (x64).
+            </summary>
+        </member>
         <member name="F:SilDev.RedistFlags.VC2019X64">
             <summary>
                 Microsoft Visual C++ 2019 Redistributable Package (x64).
+            </summary>
+        </member>
+        <member name="F:SilDev.RedistFlags.VC2022X64">
+            <summary>
+                Microsoft Visual C++ 2022 Redistributable Package (x64).
             </summary>
         </member>
         <member name="T:SilDev.Redist">
@@ -19445,6 +19538,13 @@
         <member name="M:SilDev.Redist.IsInstalled(SilDev.RedistFlags[])">
             <summary>
                 Determines whether the specified redistributable package is installed.
+                <para>
+                    &#9888; If <paramref name="keys"/> is undefined, it only determines
+                    whether VC++ 2022 is installed. The architecture differs depending on
+                    the process and library architecture. It should be noted that a 64-bit
+                    process using the Any-compiled library will only be
+                    <see langword="true"/> if both x86 and x64 are installed.
+                </para>
             </summary>
             <param name="keys">
                 The redistributable package keys to check.
@@ -20177,151 +20277,6 @@
                 reorganizing of data.
             </summary>
         </member>
-        <member name="M:SilDev.Reorganize.AppendFormatCurrent(System.Text.StringBuilder,System.String,System.Object[])">
-            <summary>
-                Appends the string returned by processing a composite format string, which
-                contains zero or more format items, to this <see cref="T:System.Text.StringBuilder"/>
-                instance. Each format item is replaced by the string representation of a
-                corresponding argument in a parameter array using the
-                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format provider.
-            </summary>
-            <param name="stringBuilder">
-                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
-                append.
-            </param>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                An array of objects to format.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stringBuilder, format or args is null.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.AppendFormatDefault(System.Text.StringBuilder,System.String,System.Object[])">
-            <summary>
-                Appends the string returned by processing a composite format string, which
-                contains zero or more format items, to this <see cref="T:System.Text.StringBuilder"/>
-                instance. Each format item is replaced by the string representation of a
-                corresponding argument in a parameter array using the
-                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format provider.
-            </summary>
-            <param name="stringBuilder">
-                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
-                append.
-            </param>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                An array of objects to format.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stringBuilder, format or args is null.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.AppendFormatLine(System.Text.StringBuilder,System.IFormatProvider,System.String,System.Object[])">
-            <summary>
-                Appends the string returned by processing a composite format string, which
-                contains zero or more format items followed by the default line terminator
-                to the end, to this <see cref="T:System.Text.StringBuilder"/> instance. Each format item
-                is replaced by the string representation of a corresponding argument in a
-                parameter array using a specified format provider.
-            </summary>
-            <param name="stringBuilder">
-                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
-                append.
-            </param>
-            <param name="provider">
-                An object that supplies culture-specific formatting information.
-            </param>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                An array of objects to format.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stringBuilder, format or args is null.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.AppendFormatLineCurrent(System.Text.StringBuilder,System.String,System.Object[])">
-            <summary>
-                Appends the string returned by processing a composite format string, which
-                contains zero or more format items followed by the default line terminator
-                to the end, to this <see cref="T:System.Text.StringBuilder"/> instance. Each format item
-                is replaced by the string representation of a corresponding argument in a
-                parameter array using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format
-                provider.
-            </summary>
-            <param name="stringBuilder">
-                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
-                append.
-            </param>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                An array of objects to format.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stringBuilder, format or args is null.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.AppendFormatLineDefault(System.Text.StringBuilder,System.String,System.Object[])">
-            <summary>
-                Appends the string returned by processing a composite format string, which
-                contains zero or more format items followed by the default line terminator
-                to the end, to this <see cref="T:System.Text.StringBuilder"/> instance. Each format item
-                is replaced by the string representation of a corresponding argument in a
-                parameter array using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/>
-                format provider.
-            </summary>
-            <param name="stringBuilder">
-                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
-                append.
-            </param>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                An array of objects to format.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stringBuilder, format or args is null.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.ToStringThenClear(System.Text.StringBuilder)">
-            <summary>
-                Converts the value of this <see cref="T:System.Text.StringBuilder"/> instance to
-                <see cref="T:System.String"/> and removes all characters before <see cref="T:System.String"/>
-                is returned.
-            </summary>
-            <param name="stringBuilder">
-                The <see cref="T:System.Text.StringBuilder"/> instance to convert.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stringBuilder is null.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.ToStringThenClear(System.Text.StringBuilder,System.Int32,System.Int32)">
-            <summary>
-                Converts the value of a substring of this <see cref="T:System.Text.StringBuilder"/>
-                instance to <see cref="T:System.String"/> and removes all characters before
-                <see cref="T:System.String"/> is returned.
-            </summary>
-            <param name="stringBuilder">
-                The <see cref="T:System.Text.StringBuilder"/> instance to convert.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stringBuilder is null.
-            </exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-                startIndex or length is less than zero. -or- The sum of startIndex and
-                length is greater than the length of the current instance.
-            </exception>
-        </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnit,System.Boolean,System.Boolean,SilDev.SizeOption)">
             <summary>
                 Converts this numeric value into a string that represents the number
@@ -20424,133 +20379,6 @@
             <param name="sizeOptions">
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.CopyTo(System.IO.Stream,System.IO.Stream)">
-            <summary>
-                Reads the bytes from the specified stream and writes them to another
-                stream.
-            </summary>
-            <param name="srcStream">
-                The <see cref="T:System.IO.Stream"/> to copy.
-            </param>
-            <param name="destStream">
-                The <see cref="T:System.IO.Stream"/> to override.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stream or bytes is null.
-            </exception>
-            <exception cref="T:System.IO.IOException">
-                An I/O error occurred, such as the specified file cannot be found.
-            </exception>
-            <exception cref="T:System.NotSupportedException">
-                The stream does not support writing.
-            </exception>
-            <exception cref="T:System.ObjectDisposedException">
-                stream was closed while the bytes were being written.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.WriteByte(System.IO.Stream,System.Char)">
-            <summary>
-                Writes a character to the this stream and advances the current position
-                within this stream by the number of bytes written.
-            </summary>
-            <param name="stream">
-                The <see cref="T:System.IO.Stream"/> to write.
-            </param>
-            <param name="chr">
-                The character to write.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stream is null.
-            </exception>
-            <exception cref="T:System.IO.IOException">
-                An I/O error occurred, such as the specified file cannot be found.
-            </exception>
-            <exception cref="T:System.NotSupportedException">
-                The stream does not support writing.
-            </exception>
-            <exception cref="T:System.ObjectDisposedException">
-                stream was closed while the bytes were being written.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.WriteByte(System.IO.Stream,System.Char,System.Int32)">
-            <summary>
-                Writes a character repeated a specified number of times to the this stream
-                and advances the current position within this stream by the number of bytes
-                written.
-            </summary>
-            <param name="stream">
-                The <see cref="T:System.IO.Stream"/> to write.
-            </param>
-            <param name="chr">
-                The character to write.
-            </param>
-            <param name="count">
-                The number of times chr occurs.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stream is null.
-            </exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-                count is less than zero.
-            </exception>
-            <exception cref="T:System.IO.IOException">
-                An I/O error occurred, such as the specified file cannot be found.
-            </exception>
-            <exception cref="T:System.NotSupportedException">
-                The stream does not support writing.
-            </exception>
-            <exception cref="T:System.ObjectDisposedException">
-                stream was closed while the bytes were being written.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.WriteBytes(System.IO.Stream,System.String)">
-            <summary>
-                Writes a string to the this stream and advances the current position within
-                this stream by the number of bytes written.
-            </summary>
-            <param name="stream">
-                The <see cref="T:System.IO.Stream"/> to write.
-            </param>
-            <param name="str">
-                The string to write.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stream or str is null.
-            </exception>
-            <exception cref="T:System.IO.IOException">
-                An I/O error occurred, such as the specified file cannot be found.
-            </exception>
-            <exception cref="T:System.NotSupportedException">
-                The stream does not support writing.
-            </exception>
-            <exception cref="T:System.ObjectDisposedException">
-                stream was closed while the bytes were being written.
-            </exception>
-        </member>
-        <member name="M:SilDev.Reorganize.WriteBytes(System.IO.Stream,System.Byte[])">
-            <summary>
-                Writes a sequence of bytes to the this stream and advances the current
-                position within this stream by the number of bytes written.
-            </summary>
-            <param name="stream">
-                The <see cref="T:System.IO.Stream"/> to write.
-            </param>
-            <param name="buffer">
-                An array of bytes to write.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                stream or bytes is null.
-            </exception>
-            <exception cref="T:System.IO.IOException">
-                An I/O error occurred, such as the specified file cannot be found.
-            </exception>
-            <exception cref="T:System.NotSupportedException">
-                The stream does not support writing.
-            </exception>
-            <exception cref="T:System.ObjectDisposedException">
-                stream was closed while the bytes were being written.
-            </exception>
-        </member>
         <member name="M:SilDev.Reorganize.SerializeObject``1(``0,System.Runtime.Serialization.StreamingContextStates)">
             <summary>
                 Serializes this object graph into a sequence of bytes.
@@ -20592,243 +20420,6 @@
             </param>
             <param name="value">
                 The number to be incremented.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified object using the
-                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-            <param name="arg1">
-                The second object to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object,System.Object,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-            <param name="arg1">
-                The second object to format.
-            </param>
-            <param name="arg2">
-                The third object to format.
-            </param>
-            <returns>
-            </returns>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatCurrent(System.String,System.Object[])">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                The objects to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified object using the
-                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-            <param name="arg1">
-                The second object to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object,System.Object,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-            <param name="arg1">
-                The second object to format.
-            </param>
-            <param name="arg2">
-                The third object to format.
-            </param>
-            <returns>
-            </returns>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatInvariant(System.String,System.Object[])">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                The objects to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified object using the
-                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-            <param name="arg1">
-                The second object to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object,System.Object,System.Object)">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="arg0">
-                The first object to format.
-            </param>
-            <param name="arg1">
-                The second object to format.
-            </param>
-            <param name="arg2">
-                The third object to format.
-            </param>
-            <returns>
-            </returns>
-        </member>
-        <member name="M:SilDev.Reorganize.FormatDefault(System.String,System.Object[])">
-            <summary>
-                Replaces one or more format items in this string with the string
-                representation of a specified objects using the
-                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
-            </summary>
-            <param name="format">
-                A composite format string.
-            </param>
-            <param name="args">
-                The objects to format.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Replace(System.String,System.String,System.String,System.StringComparison)">
-            <summary>
-                Returns a new string in which all occurrences of a specified string in the
-                current instance are replaced with another specified string.
-            </summary>
-            <param name="str">
-            </param>
-            The string to change.
-            <param name="oldValue">
-                The string to be replaced.
-            </param>
-            <param name="newValue">
-                The string to replace all occurrences of oldValue.
-            </param>
-            <param name="comparisonType">
-                One of the enumeration values that specifies the rules for the search.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.ReduceWhiteSpace(System.String)">
-            <summary>
-                Reduce all white space characters in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Reverse(System.String)">
-            <summary>
-                Reverses the sequence of all characters in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Trim(System.String,System.Drawing.Font,System.Int32)">
-            <summary>
-                Trim the string logical on its maximum size.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="font">
-                The font that is used to measure.
-            </param>
-            <param name="width">
-                The maximum width in pixel.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.ToBoolean``1(``0)">
@@ -21311,67 +20902,6 @@
                 The <see cref="T:System.DateTime"/> value to convert.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.ToStrings(System.String)">
-            <summary>
-                Creates a sequence of strings based on natural (base e) logarithm of a
-                count of all the characters in the specified string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Sort(System.String[])">
-            <summary>
-                Sorts the elements in an entire string array using the
-                <see cref="T:System.IComparable`1"/> generic interface implementation of each
-                element of the string array.
-            </summary>
-            <param name="strs">
-                The sequence of strings to sort.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Split(System.String,System.String,System.StringSplitOptions)">
-            <summary>
-                Splits a string into substrings based on the strings in an array. You can
-                specify whether the substrings include empty array elements.
-            </summary>
-            <param name="str">
-                The string to split.
-            </param>
-            <param name="separator">
-                The string to use as a separator.
-            </param>
-            <param name="splitOptions">
-                The split options.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.SplitNewLine(System.String,System.StringSplitOptions,System.Boolean)">
-            <summary>
-                Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
-            </summary>
-            <param name="str">
-                The string to split.
-            </param>
-            <param name="splitOptions">
-                The split options.
-            </param>
-            <param name="trim">
-                <see langword="true"/> to trim each line; otherwise,
-                <see langword="false"/>.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.SplitNewLine(System.String,System.Boolean)">
-            <summary>
-                Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
-            </summary>
-            <param name="str">
-                The string to split.
-            </param>
-            <param name="trim">
-                <see langword="true"/> to trim each line; otherwise,
-                <see langword="false"/>.
-            </param>
-        </member>
         <member name="M:SilDev.Reorganize.ToBytes``1(System.String,``0)">
             <summary>
                 Converts all the characters in the specified string into a sequence of
@@ -21474,28 +21004,6 @@
                 The string to convert.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.LowerText(System.String,System.String[])">
-            <summary>
-                Converts the specified strings in a string to lowercase.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="strs">
-                The sequence of strings to convert.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.UpperText(System.String,System.String[])">
-            <summary>
-                Converts the specified strings in a string to uppercase.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="strs">
-                The sequence of strings to convert.
-            </param>
-        </member>
         <member name="M:SilDev.Reorganize.RemoveChar(System.Char[],System.Char[])">
             <summary>
                 Removes the specified characters in a char array.
@@ -21507,53 +21015,21 @@
                 The sequence of characters to remove.
             </param>
         </member>
-        <member name="M:SilDev.Reorganize.RemoveChar(System.String,System.Char[])">
-            <summary>
-                Removes the specified characters in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="chrs">
-                The sequence of characters to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.RemoveText(System.String,System.String[])">
-            <summary>
-                Removes the specified strings in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="strs">
-                The sequence of strings to remove.
-            </param>
-        </member>
-        <member name="M:SilDev.Reorganize.RemoveTextIgnoreCase(System.String,System.String[])">
-            <summary>
-                Removes the specified strings in a string.
-            </summary>
-            <param name="str">
-                The string to change.
-            </param>
-            <param name="patterns">
-                The sequence of regular expression patterns to match.
-            </param>
-        </member>
         <member name="M:SilDev.Reorganize.Replace(System.Byte[],System.Byte[],System.Byte[])">
             <summary>
                 Returns a new sequence of bytes in which all occurrences of a specified
                 sequence of bytes in this instance are replaced with another specified
                 sequence of bytes.
             </summary>
-            <param name="bytes">
+            <param name="source">
                 The sequence of bytes to change.
             </param>
-            <param name="oldValue">
+            <param name="current">
                 The sequence of bytes to be replaced.
             </param>
-            <param name="newValue">
-                The sequence of bytes to replace all occurrences of oldValue.
+            <param name="replacement">
+                The sequence of bytes to replace all occurrences of
+                <paramref name="current"/>.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.Parse(System.String,System.Type)">
@@ -21611,33 +21087,6 @@
             <param name="defValue">
                 The default value.
             </param>
-        </member>
-        <member name="M:SilDev.Reorganize.Update``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
-            <summary>
-                Updates an element with the provided key and value of the specified
-                dictionary.
-            </summary>
-            <typeparam name="TKey">
-                The type of the keys in the dictionary.
-            </typeparam>
-            <typeparam name="TValue">
-                The type of the values in the dictionary.
-            </typeparam>
-            <param name="source">
-                The generic collection of key/value pairs.
-            </param>
-            <param name="key">
-                The key of the element to update.
-            </param>
-            <param name="value">
-                The new value.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-                source or key is null.
-            </exception>
-            <exception cref="T:System.NotSupportedException">
-                source is read-only.
-            </exception>
         </member>
         <member name="T:SilDev.ImageResourceSymbol">
             <summary>
@@ -22058,6 +21507,631 @@
             </summary>
             <param name="path">
                 The link to get the target path.
+            </param>
+        </member>
+        <member name="M:SilDev.StreamEx.CopyTo(System.IO.Stream,System.IO.Stream)">
+            <summary>
+                Reads the bytes from the specified stream and writes them to another
+                stream.
+            </summary>
+            <param name="srcStream">
+                The <see cref="T:System.IO.Stream"/> to copy.
+            </param>
+            <param name="destStream">
+                The <see cref="T:System.IO.Stream"/> to override.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream or bytes is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occurred, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.StreamEx.WriteByte(System.IO.Stream,System.Char)">
+            <summary>
+                Writes a character to the this stream and advances the current position
+                within this stream by the number of bytes written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
+            </param>
+            <param name="chr">
+                The character to write.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occurred, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.StreamEx.WriteByte(System.IO.Stream,System.Char,System.Int32)">
+            <summary>
+                Writes a character repeated a specified number of times to the this stream
+                and advances the current position within this stream by the number of bytes
+                written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
+            </param>
+            <param name="chr">
+                The character to write.
+            </param>
+            <param name="count">
+                The number of times chr occurs.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                count is less than zero.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occurred, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.StreamEx.WriteBytes(System.IO.Stream,System.String)">
+            <summary>
+                Writes a string to the this stream and advances the current position within
+                this stream by the number of bytes written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
+            </param>
+            <param name="str">
+                The string to write.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream or str is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occurred, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.StreamEx.WriteBytes(System.IO.Stream,System.Byte[])">
+            <summary>
+                Writes a sequence of bytes to the this stream and advances the current
+                position within this stream by the number of bytes written.
+            </summary>
+            <param name="stream">
+                The <see cref="T:System.IO.Stream"/> to write.
+            </param>
+            <param name="buffer">
+                An array of bytes to write.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stream or bytes is null.
+            </exception>
+            <exception cref="T:System.IO.IOException">
+                An I/O error occurred, such as the specified file cannot be found.
+            </exception>
+            <exception cref="T:System.NotSupportedException">
+                The stream does not support writing.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                stream was closed while the bytes were being written.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringBuilderEx.AppendFormatCurrent(System.Text.StringBuilder,System.String,System.Object[])">
+            <summary>
+                Appends the string returned by processing a composite format string, which
+                contains zero or more format items, to this <see cref="T:System.Text.StringBuilder"/>
+                instance. Each format item is replaced by the string representation of a
+                corresponding argument in a parameter array using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format provider.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
+                append.
+            </param>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                An array of objects to format.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder, format or args is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringBuilderEx.AppendFormatDefault(System.Text.StringBuilder,System.String,System.Object[])">
+            <summary>
+                Appends the string returned by processing a composite format string, which
+                contains zero or more format items, to this <see cref="T:System.Text.StringBuilder"/>
+                instance. Each format item is replaced by the string representation of a
+                corresponding argument in a parameter array using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format provider.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
+                append.
+            </param>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                An array of objects to format.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder, format or args is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringBuilderEx.AppendFormatLine(System.Text.StringBuilder,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+                Appends the string returned by processing a composite format string, which
+                contains zero or more format items followed by the default line terminator
+                to the end, to this <see cref="T:System.Text.StringBuilder"/> instance. Each format item
+                is replaced by the string representation of a corresponding argument in a
+                parameter array using a specified format provider.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
+                append.
+            </param>
+            <param name="provider">
+                An object that supplies culture-specific formatting information.
+            </param>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                An array of objects to format.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder, format or args is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringBuilderEx.AppendFormatLineCurrent(System.Text.StringBuilder,System.String,System.Object[])">
+            <summary>
+                Appends the string returned by processing a composite format string, which
+                contains zero or more format items followed by the default line terminator
+                to the end, to this <see cref="T:System.Text.StringBuilder"/> instance. Each format item
+                is replaced by the string representation of a corresponding argument in a
+                parameter array using the <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format
+                provider.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
+                append.
+            </param>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                An array of objects to format.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder, format or args is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringBuilderEx.AppendFormatLineDefault(System.Text.StringBuilder,System.String,System.Object[])">
+            <summary>
+                Appends the string returned by processing a composite format string, which
+                contains zero or more format items followed by the default line terminator
+                to the end, to this <see cref="T:System.Text.StringBuilder"/> instance. Each format item
+                is replaced by the string representation of a corresponding argument in a
+                parameter array using the <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/>
+                format provider.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to which the string should be
+                append.
+            </param>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                An array of objects to format.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder, format or args is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringBuilderEx.ToStringThenClear(System.Text.StringBuilder)">
+            <summary>
+                Converts the value of this <see cref="T:System.Text.StringBuilder"/> instance to
+                <see cref="T:System.String"/> and removes all characters before <see cref="T:System.String"/>
+                is returned.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to convert.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringBuilderEx.ToStringThenClear(System.Text.StringBuilder,System.Int32,System.Int32)">
+            <summary>
+                Converts the value of a substring of this <see cref="T:System.Text.StringBuilder"/>
+                instance to <see cref="T:System.String"/> and removes all characters before
+                <see cref="T:System.String"/> is returned.
+            </summary>
+            <param name="stringBuilder">
+                The <see cref="T:System.Text.StringBuilder"/> instance to convert.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                stringBuilder is null.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                startIndex or length is less than zero. -or- The sum of startIndex and
+                length is greater than the length of the current instance.
+            </exception>
+        </member>
+        <member name="M:SilDev.StringEx.FormatCurrent(System.String,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified object using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatCurrent(System.String,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatCurrent(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+            <param name="arg2">
+                The third object to format.
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.StringEx.FormatCurrent(System.String,System.Object[])">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                The objects to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatInvariant(System.String,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified object using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatInvariant(System.String,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatInvariant(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+            <param name="arg2">
+                The third object to format.
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.StringEx.FormatInvariant(System.String,System.Object[])">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                The objects to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatDefault(System.String,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified object using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatDefault(System.String,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.FormatDefault(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="arg0">
+                The first object to format.
+            </param>
+            <param name="arg1">
+                The second object to format.
+            </param>
+            <param name="arg2">
+                The third object to format.
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:SilDev.StringEx.FormatDefault(System.String,System.Object[])">
+            <summary>
+                Replaces one or more format items in this string with the string
+                representation of a specified objects using the
+                <see cref="P:SilDev.CultureConfig.GlobalCultureInfo"/> format information.
+            </summary>
+            <param name="format">
+                A composite format string.
+            </param>
+            <param name="args">
+                The objects to format.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.Replace(System.String,System.String,System.String,System.StringComparison)">
+            <summary>
+                Returns a new string in which all occurrences of a specified string in the
+                current instance are replaced with another specified string.
+            </summary>
+            <param name="str">
+            </param>
+            The string to change.
+            <param name="oldValue">
+                The string to be replaced.
+            </param>
+            <param name="newValue">
+                The string to replace all occurrences of oldValue.
+            </param>
+            <param name="comparisonType">
+                One of the enumeration values that specifies the rules for the search.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.ReduceWhiteSpace(System.String)">
+            <summary>
+                Reduce all white space characters in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.Reverse(System.String)">
+            <summary>
+                Reverses the sequence of all characters in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.Trim(System.String,System.Drawing.Font,System.Int32)">
+            <summary>
+                Trim the string logical on its maximum size.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="font">
+                The font that is used to measure.
+            </param>
+            <param name="width">
+                The maximum width in pixel.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.ToStrings(System.String)">
+            <summary>
+                Creates a sequence of strings based on natural (base e) logarithm of a
+                count of all the characters in the specified string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.Sort(System.String[])">
+            <summary>
+                Sorts the elements in an entire string array using the
+                <see cref="T:System.IComparable`1"/> generic interface implementation of each
+                element of the string array.
+            </summary>
+            <param name="strs">
+                The sequence of strings to sort.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.Split(System.String,System.String,System.StringSplitOptions)">
+            <summary>
+                Splits a string into substrings based on the strings in an array. You can
+                specify whether the substrings include empty array elements.
+            </summary>
+            <param name="str">
+                The string to split.
+            </param>
+            <param name="separator">
+                The string to use as a separator.
+            </param>
+            <param name="splitOptions">
+                The split options.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.SplitNewLine(System.String,System.StringSplitOptions,System.Boolean)">
+            <summary>
+                Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
+            </summary>
+            <param name="str">
+                The string to split.
+            </param>
+            <param name="splitOptions">
+                The split options.
+            </param>
+            <param name="trim">
+                <see langword="true"/> to trim each line; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.SplitNewLine(System.String,System.Boolean)">
+            <summary>
+                Splits a string into substrings based on <see cref="P:System.Environment.NewLine"/>.
+            </summary>
+            <param name="str">
+                The string to split.
+            </param>
+            <param name="trim">
+                <see langword="true"/> to trim each line; otherwise,
+                <see langword="false"/>.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.LowerText(System.String,System.String[])">
+            <summary>
+                Converts the specified strings in a string to lowercase.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="strs">
+                The sequence of strings to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.UpperText(System.String,System.String[])">
+            <summary>
+                Converts the specified strings in a string to uppercase.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="strs">
+                The sequence of strings to convert.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.RemoveChar(System.String,System.Char[])">
+            <summary>
+                Removes the specified characters in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="chrs">
+                The sequence of characters to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.RemoveText(System.String,System.String[])">
+            <summary>
+                Removes the specified strings in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="strs">
+                The sequence of strings to remove.
+            </param>
+        </member>
+        <member name="M:SilDev.StringEx.RemoveTextIgnoreCase(System.String,System.String[])">
+            <summary>
+                Removes the specified strings in a string.
+            </summary>
+            <param name="str">
+                The string to change.
+            </param>
+            <param name="patterns">
+                The sequence of regular expression patterns to match.
             </param>
         </member>
         <member name="T:SilDev.SymbolicLink">
