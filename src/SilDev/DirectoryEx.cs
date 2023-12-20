@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DirectoryEx.cs
-// Version:  2023-12-20 00:28
+// Version:  2023-12-20 17:29
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -597,6 +597,51 @@ namespace SilDev
             catch (Exception ex) when (ex.IsCaught())
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        ///     Deletes all the specified directories.
+        /// </summary>
+        /// <param name="paths">
+        ///     The paths of the directories to be deleted.
+        /// </param>
+        /// <exception cref="IOException">
+        ///     See <see cref="Directory.Delete(string, bool)"/>.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///     See <see cref="Directory.Delete(string, bool)"/>.
+        /// </exception>
+        public static IEnumerable<string> DeleteAll(IEnumerable<string> paths)
+        {
+            if (paths == null)
+                yield break;
+            using var e = paths.GetEnumerator();
+            while (e.MoveNext())
+            {
+                var c = e.Current;
+                if (!Delete(c))
+                    yield return c;
+            }
+        }
+
+        /// <summary>
+        ///     Tries to delete all the specified directories.
+        /// </summary>
+        /// <param name="paths">
+        ///     The paths of the directories to be deleted.
+        /// </param>
+        public static IEnumerable<string> TryDeleteAll(IEnumerable<string> paths)
+        {
+            try
+            {
+                return DeleteAll(paths);
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+                return null;
             }
         }
 

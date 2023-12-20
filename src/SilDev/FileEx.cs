@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2023-12-20 00:28
+// Version:  2023-12-20 17:31
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -59,26 +59,25 @@ namespace SilDev
 
         private const int DatHeaderSize = 16;
 
-        private static byte[] DefDatHeader =>
-            new byte[]
-            {
-                // type version
-                1, 0, 0, 0,
+        private static byte[] DefDatHeader { get; } =
+        {
+            // Type version.
+            1, 0, 0, 0,
 
-                // type identifier 1-5 ("CSDAT", "C# Data")
-                (byte)'C',
-                (byte)'S',
-                (byte)'D',
-                (byte)'A',
-                (byte)'T',
+            // Type identifier 1-5 ("CSDAT", i.e. "C# Data").
+            (byte)'C',
+            (byte)'S',
+            (byte)'D',
+            (byte)'A',
+            (byte)'T',
 
-                // compression mode
-                0,
+            // Compression mode.
+            0,
 
-                // reserved for upcoming features
-                0, 0, 0,
-                0, 0, 0
-            };
+            // Reserved for upcoming features.
+            0, 0, 0,
+            0, 0, 0
+        };
 
         /// <summary>
         ///     Creates a new file, writes the specified object graph into to the file, and
@@ -108,7 +107,7 @@ namespace SilDev
                 var dest = PathEx.Combine(path);
                 using var fs = new FileStream(dest, overwrite ? FileMode.Create : FileMode.CreateNew);
                 var header = DefDatHeader;
-                header[(int)DatHeaderKey.CompressionMode] = Convert.ToByte(compress);
+                header[(int)DatHeaderKey.CompressionMode] = compress.ToByte();
                 fs.WriteBytes(header);
                 var bf = new BinaryFormatter(null, new StreamingContext(StreamingContextStates.File));
                 if (compress)
@@ -152,11 +151,11 @@ namespace SilDev
                 bool decompress;
                 var header = new byte[DatHeaderSize];
                 _ = fs.Read(header, 0, header.Length);
-                if (DatHeaderIsValid(header))
+                if (HeaderIsValid(header))
                     decompress = header[(int)DatHeaderKey.CompressionMode] > 0;
                 else
                 {
-                    decompress = !GZip.Header.Where((b, i) => header[i] != b).Any();
+                    decompress = !GZip.Header.SequenceEqual(header);
                     fs.Position = 0;
                 }
                 var bf = new BinaryFormatter(null, new StreamingContext(StreamingContextStates.File));
@@ -171,6 +170,32 @@ namespace SilDev
             {
                 Log.Write(ex);
                 return defValue;
+            }
+
+            static bool HeaderIsValid(IReadOnlyList<byte> header)
+            {
+                if (header.Count != DatHeaderSize)
+                    return false;
+                var defHeader = DefDatHeader;
+                for (var i = 0; i < DatHeaderSize; i++)
+                    switch ((DatHeaderKey)i)
+                    {
+                        case DatHeaderKey.CompressionMode:
+                        {
+                            var value = header[i];
+                            if (!value.IsBetween((byte)0, (byte)1))
+                                return false;
+                            break;
+                        }
+                        default:
+                        {
+                            var value = header[i];
+                            if (value != defHeader[i])
+                                return false;
+                            break;
+                        }
+                    }
+                return true;
             }
         }
 
@@ -1057,6 +1082,51 @@ namespace SilDev
         }
 
         /// <summary>
+        ///     Deletes all the specified files.
+        /// </summary>
+        /// <param name="paths">
+        ///     The paths of the files to be deleted.
+        /// </param>
+        /// <exception cref="IOException">
+        ///     See <see cref="File.Delete(string)"/>.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///     See <see cref="File.Delete(string)"/>.
+        /// </exception>
+        public static IEnumerable<string> DeleteAll(IEnumerable<string> paths)
+        {
+            if (paths == null)
+                yield break;
+            using var e = paths.GetEnumerator();
+            while (e.MoveNext())
+            {
+                var c = e.Current;
+                if (!Delete(c))
+                    yield return c;
+            }
+        }
+
+        /// <summary>
+        ///     Tries to delete all the specified files.
+        /// </summary>
+        /// <param name="paths">
+        ///     The paths of the files to be deleted.
+        /// </param>
+        public static IEnumerable<string> TryDeleteAll(IEnumerable<string> paths)
+        {
+            try
+            {
+                return DeleteAll(paths);
+            }
+            catch (Exception ex) when (ex.IsCaught())
+            {
+                if (Log.DebugMode > 1)
+                    Log.Write(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
         ///     Returns a unique name starting with a given prefix, followed by a hash of
         ///     the specified length and a specified suffix.
         /// </summary>
@@ -1517,32 +1587,6 @@ namespace SilDev
                 Log.Write(ex);
                 return new Version("0.0.0.0");
             }
-        }
-
-        private static bool DatHeaderIsValid(IReadOnlyList<byte> header)
-        {
-            if (header.Count != DatHeaderSize)
-                return false;
-            var defHeader = DefDatHeader;
-            for (var i = 0; i < DatHeaderSize; i++)
-                switch ((DatHeaderKey)i)
-                {
-                    case DatHeaderKey.CompressionMode:
-                    {
-                        var value = header[i];
-                        if (!value.IsBetween((byte)0, (byte)1))
-                            return false;
-                        break;
-                    }
-                    default:
-                    {
-                        var value = header[i];
-                        if (value != defHeader[i])
-                            return false;
-                        break;
-                    }
-                }
-            return true;
         }
     }
 }
