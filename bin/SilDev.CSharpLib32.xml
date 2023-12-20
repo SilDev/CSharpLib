@@ -9037,6 +9037,39 @@
                 An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to the first sequence.
             </param>
         </member>
+        <member name="M:SilDev.Comparison.Diff``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+                Retrieves a sequence with differences between two sequences where index,
+                source and target elements are enumerated.
+            </summary>
+            <typeparam name="TElement">
+                The type of the elements of the source and target sequences.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to second.
+            </param>
+            <param name="target">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to the first sequence.
+            </param>
+            <param name="comparer">
+                An <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> to use to compare elements.
+            </param>
+        </member>
+        <member name="M:SilDev.Comparison.Diff``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+                Retrieves a sequence with differences between two sequences where index,
+                source and target elements are enumerated.
+            </summary>
+            <typeparam name="TElement">
+                The type of the elements of the source and target sequences.
+            </typeparam>
+            <param name="source">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to second.
+            </param>
+            <param name="target">
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to compare to the first sequence.
+            </param>
+        </member>
         <member name="T:SilDev.SymmetricKeyAlgorithm">
             <summary>
                 Specifies enumerated constants used to encrypt and decrypt data.
@@ -11709,6 +11742,28 @@
                 The path of the directory to be deleted.
             </param>
         </member>
+        <member name="M:SilDev.DirectoryEx.DeleteAll(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Deletes all the specified directories.
+            </summary>
+            <param name="paths">
+                The paths of the directories to be deleted.
+            </param>
+            <exception cref="T:System.IO.IOException">
+                See <see cref="M:System.IO.Directory.Delete(System.String,System.Boolean)"/>.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                See <see cref="M:System.IO.Directory.Delete(System.String,System.Boolean)"/>.
+            </exception>
+        </member>
+        <member name="M:SilDev.DirectoryEx.TryDeleteAll(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Tries to delete all the specified directories.
+            </summary>
+            <param name="paths">
+                The paths of the directories to be deleted.
+            </param>
+        </member>
         <member name="M:SilDev.DirectoryEx.GetFullHashCode(System.IO.DirectoryInfo,System.Boolean)">
             <summary>
                 Returns the hash code for the specified directory instance member.
@@ -13257,6 +13312,28 @@
             </summary>
             <param name="path">
                 The path of the file to be deleted.
+            </param>
+        </member>
+        <member name="M:SilDev.FileEx.DeleteAll(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Deletes all the specified files.
+            </summary>
+            <param name="paths">
+                The paths of the files to be deleted.
+            </param>
+            <exception cref="T:System.IO.IOException">
+                See <see cref="M:System.IO.File.Delete(System.String)"/>.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+                See <see cref="M:System.IO.File.Delete(System.String)"/>.
+            </exception>
+        </member>
+        <member name="M:SilDev.FileEx.TryDeleteAll(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+                Tries to delete all the specified files.
+            </summary>
+            <param name="paths">
+                The paths of the files to be deleted.
             </param>
         </member>
         <member name="M:SilDev.FileEx.GetUniqueName(System.String,System.String,System.Int32)">
