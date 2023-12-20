@@ -155,6 +155,7 @@
     <Compile Include="SilDev\Drawing\IconFactory.cs" />
     <Compile Include="SilDev\Drawing\ImageFrame.cs" />
     <Compile Include="SilDev\EncodingEx.cs" />
+    <Compile Include="SilDev\EnumEx.cs" />
     <Compile Include="SilDev\Forms\ControlAlphaNumericComparer.cs" />
     <Compile Include="SilDev\Forms\FormBorderlessResizable.cs">
       <SubType>Form</SubType>
