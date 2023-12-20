@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DictionaryEx.cs
-// Version:  2023-12-13 00:22
+// Version:  2023-12-20 12:39
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -15,12 +15,60 @@
 
 namespace SilDev
 {
+    using System;
     using System.Collections.Generic;
+    using Properties;
 
     public static class DictionaryEx
     {
         /// <summary>
-        ///     Attempts to add  the specified key and value to this dictionary.
+        ///     Updates an element with the provided key and value of the specified
+        ///     dictionary.
+        /// </summary>
+        /// <typeparam name="TKey">
+        ///     The type of the keys in the dictionary.
+        /// </typeparam>
+        /// <typeparam name="TValue">
+        ///     The type of the values in the dictionary.
+        /// </typeparam>
+        /// <param name="source">
+        ///     The generic collection of key/value pairs.
+        /// </param>
+        /// <param name="key">
+        ///     The key of the element to update.
+        /// </param>
+        /// <param name="value">
+        ///     The new value.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     source or key is null.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     source is read-only.
+        /// </exception>
+        public static void Update<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue value) where TValue : IComparable, IComparable<TValue>
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (source.IsReadOnly)
+                throw new NotSupportedException(ExceptionMessages.ReadOnlyCollection);
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (source.ContainsKey(key))
+            {
+                if (value == null)
+                {
+                    source.Remove(key);
+                    return;
+                }
+                source[key] = value;
+                return;
+            }
+            source.Add(key, value);
+        }
+
+        /// <summary>
+        ///     Attempts to add the specified key and value to this dictionary.
         ///     <para>
         ///         &#9888; Nothing happens if the <paramref name="key"/> already exists.
         ///     </para>

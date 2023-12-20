@@ -239,6 +239,9 @@
     <Compile Include="SilDev\ResourcesEx.cs" />
     <Compile Include="SilDev\Service.cs" />
     <Compile Include="SilDev\ShellLink.cs" />
+    <Compile Include="SilDev\StreamEx.cs" />
+    <Compile Include="SilDev\StringBuilderEx.cs" />
+    <Compile Include="SilDev\StringEx.cs" />
     <Compile Include="SilDev\SymbolicLink.cs" />
     <Compile Include="SilDev\SystemRestore.cs" />
     <Compile Include="SilDev\TaskBar.cs" />
