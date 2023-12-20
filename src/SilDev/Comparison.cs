@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Comparison.cs
-// Version:  2023-12-13 21:45
+// Version:  2023-12-20 17:58
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -2068,6 +2068,68 @@ namespace SilDev
         /// </param>
         public static bool SequenceEqualEx<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> target) =>
             source.SequenceEqualEx(target, null);
+
+        #endregion
+
+        #region Diff
+
+        /// <summary>
+        ///     Retrieves a sequence with differences between two sequences where index,
+        ///     source and target elements are enumerated.
+        /// </summary>
+        /// <typeparam name="TElement">
+        ///     The type of the elements of the source and target sequences.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IEnumerable{T}"/> to compare to second.
+        /// </param>
+        /// <param name="target">
+        ///     An <see cref="IEnumerable{T}"/> to compare to the first sequence.
+        /// </param>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{T}"/> to use to compare elements.
+        /// </param>
+        public static IEnumerable<(int, TElement, TElement)> Diff<TElement>(this IEnumerable<TElement> source, IEnumerable<TElement> target, IEqualityComparer<TElement> comparer)
+        {
+            var index = -1;
+            comparer ??= EqualityComparer<TElement>.Default;
+            using var enumerator1 = source.GetEnumerator();
+            using var enumerator2 = target.GetEnumerator();
+            while (enumerator1.MoveNext())
+            {
+                index++;
+                var current1 = enumerator1.Current;
+                if (enumerator2.MoveNext())
+                {
+                    var current2 = enumerator2.Current;
+                    if (!comparer.Equals(current1, current2))
+                        yield return (index, current1, current2);
+                    continue;
+                }
+                yield return (index, current1, default);
+            }
+            while (enumerator2.MoveNext())
+            {
+                index++;
+                yield return (index, default, enumerator2.Current);
+            }
+        }
+
+        /// <summary>
+        ///     Retrieves a sequence with differences between two sequences where index,
+        ///     source and target elements are enumerated.
+        /// </summary>
+        /// <typeparam name="TElement">
+        ///     The type of the elements of the source and target sequences.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IEnumerable{T}"/> to compare to second.
+        /// </param>
+        /// <param name="target">
+        ///     An <see cref="IEnumerable{T}"/> to compare to the first sequence.
+        /// </param>
+        public static IEnumerable<(int, TElement, TElement)> Diff<TElement>(this IEnumerable<TElement> source, IEnumerable<TElement> target) =>
+            source.Diff(target, null);
 
         #endregion
     }
