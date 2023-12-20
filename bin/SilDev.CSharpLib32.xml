@@ -1928,6 +1928,10 @@
             <summary>
                 Updates an element with the provided key and value of the specified
                 dictionary.
+                <para>
+                    &#9762; Please note that the entire key-value pair is removed if
+                    <paramref name="value"/> is <see langword="null"/>.
+                </para>
             </summary>
             <typeparam name="TKey">
                 The type of the keys in the dictionary.
@@ -20252,6 +20256,7 @@
                 <see langword="false"/>.
             </param>
             <param name="sizeOptions">
+                The size format.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnit,System.Boolean,SilDev.SizeOption)">
@@ -20270,6 +20275,7 @@
                 <see langword="false"/> for the decimal numeral system.
             </param>
             <param name="sizeOptions">
+                The size format.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeUnit,SilDev.SizeOption)">
@@ -20284,6 +20290,7 @@
                 The new unit.
             </param>
             <param name="sizeOptions">
+                The size format.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,System.Boolean,SilDev.SizeOption)">
@@ -20304,6 +20311,7 @@
                 <see langword="false"/>.
             </param>
             <param name="sizeOptions">
+                The size format.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,System.Boolean,SilDev.SizeOption)">
@@ -20320,6 +20328,7 @@
                 <see langword="false"/> for the decimal numeral system.
             </param>
             <param name="sizeOptions">
+                The size format.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.FormatSize(System.Int64,SilDev.SizeOption)">
@@ -20332,6 +20341,7 @@
                 The value to be converted.
             </param>
             <param name="sizeOptions">
+                The size format.
             </param>
         </member>
         <member name="M:SilDev.Reorganize.SerializeObject``1(``0,System.Runtime.Serialization.StreamingContextStates)">
