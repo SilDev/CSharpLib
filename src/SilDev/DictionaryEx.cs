@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: DictionaryEx.cs
-// Version:  2023-12-20 12:39
+// Version:  2023-12-20 13:01
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -24,6 +24,10 @@ namespace SilDev
         /// <summary>
         ///     Updates an element with the provided key and value of the specified
         ///     dictionary.
+        ///     <para>
+        ///         &#9762; Please note that the entire key-value pair is removed if
+        ///         <paramref name="value"/> is <see langword="null"/>.
+        ///     </para>
         /// </summary>
         /// <typeparam name="TKey">
         ///     The type of the keys in the dictionary.

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reorganize.cs
-// Version:  2023-12-20 12:04
+// Version:  2023-12-20 12:57
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -115,6 +115,7 @@ namespace SilDev
         ///     <see langword="false"/>.
         /// </param>
         /// <param name="sizeOptions">
+        ///     The size format.
         /// </param>
         public static string FormatSize(this long value, SizeUnit unit, bool binary = true, bool suffix = true, SizeOption sizeOptions = SizeOption.None)
         {
@@ -150,6 +151,7 @@ namespace SilDev
         ///     <see langword="false"/> for the decimal numeral system.
         /// </param>
         /// <param name="sizeOptions">
+        ///     The size format.
         /// </param>
         public static string FormatSize(this long value, SizeUnit unit, bool binary, SizeOption sizeOptions) =>
             value.FormatSize(unit, binary, true, sizeOptions);
@@ -165,6 +167,7 @@ namespace SilDev
         ///     The new unit.
         /// </param>
         /// <param name="sizeOptions">
+        ///     The size format.
         /// </param>
         public static string FormatSize(this long value, SizeUnit unit, SizeOption sizeOptions) =>
             value.FormatSize(unit, true, true, sizeOptions);
@@ -186,6 +189,7 @@ namespace SilDev
         ///     <see langword="false"/>.
         /// </param>
         /// <param name="sizeOptions">
+        ///     The size format.
         /// </param>
         public static string FormatSize(this long value, bool binary = true, bool suffix = true, SizeOption sizeOptions = SizeOption.None)
         {
@@ -208,6 +212,7 @@ namespace SilDev
         ///     <see langword="false"/> for the decimal numeral system.
         /// </param>
         /// <param name="sizeOptions">
+        ///     The size format.
         /// </param>
         public static string FormatSize(this long value, bool binary, SizeOption sizeOptions) =>
             value.FormatSize(SizeUnit.Byte, binary, true, sizeOptions);
@@ -221,6 +226,7 @@ namespace SilDev
         ///     The value to be converted.
         /// </param>
         /// <param name="sizeOptions">
+        ///     The size format.
         /// </param>
         public static string FormatSize(this long value, SizeOption sizeOptions) =>
             value.FormatSize(true, true, sizeOptions);
