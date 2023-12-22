@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Reg.cs
-// Version:  2023-12-20 00:28
+// Version:  2023-12-22 10:16
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -38,29 +38,16 @@ namespace SilDev
 
         private static RegistryKey AsRegistryKey(this string key, bool nullable = false)
         {
-            switch (key?.ToUpperInvariant())
+            return key?.ToUpperInvariant() switch
             {
-                case "HKEY_CLASSES_ROOT":
-                case "HKCR":
-                    return Registry.ClassesRoot;
-                case "HKEY_CURRENT_CONFIG":
-                case "HKCC":
-                    return Registry.CurrentConfig;
-                case "HKEY_CURRENT_USER":
-                case "HKCU":
-                    return Registry.CurrentUser;
-                case "HKEY_LOCAL_MACHINE":
-                case "HKLM":
-                    return Registry.LocalMachine;
-                case "HKEY_PERFORMANCE_DATA":
-                case "HKPD":
-                    return Registry.PerformanceData;
-                case "HKEY_USERS":
-                case "HKU":
-                    return Registry.Users;
-                default:
-                    return !nullable ? Registry.CurrentUser : null;
-            }
+                "HKEY_CLASSES_ROOT" or "HKCR" => Registry.ClassesRoot,
+                "HKEY_CURRENT_CONFIG" or "HKCC" => Registry.CurrentConfig,
+                "HKEY_CURRENT_USER" or "HKCU" => Registry.CurrentUser,
+                "HKEY_LOCAL_MACHINE" or "HKLM" => Registry.LocalMachine,
+                "HKEY_PERFORMANCE_DATA" or "HKPD" => Registry.PerformanceData,
+                "HKEY_USERS" or "HKU" => Registry.Users,
+                _ => !nullable ? Registry.CurrentUser : null,
+            };
         }
 
         private static RegistryKey GetKey(this string path)

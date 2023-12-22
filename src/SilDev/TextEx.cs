@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: TextEx.cs
-// Version:  2023-11-11 16:27
+// Version:  2023-12-22 10:16
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -51,23 +51,19 @@ namespace SilDev
         /// <param name="ch">
         ///     The character to evaluate.
         /// </param>
-        public static bool IsLineSeparator(this char ch)
-        {
-            switch (ch)
+        public static bool IsLineSeparator(this char ch) =>
+            ch switch
             {
-                case TextSeparatorChar.LineFeed:
-                case TextSeparatorChar.VerticalTab:
-                case TextSeparatorChar.FormFeed:
-                case TextSeparatorChar.CarriageReturn:
-                case TextSeparatorChar.NextLine:
-                case TextSeparatorChar.BoundaryNeutral:
-                case TextSeparatorChar.LineSeparator:
-                case TextSeparatorChar.ParagraphSeparator:
-                    return true;
-                default:
-                    return false;
-            }
-        }
+                TextSeparatorChar.LineFeed or
+                TextSeparatorChar.VerticalTab or
+                TextSeparatorChar.FormFeed or
+                TextSeparatorChar.CarriageReturn or
+                TextSeparatorChar.NextLine or
+                TextSeparatorChar.BoundaryNeutral or
+                TextSeparatorChar.LineSeparator or
+                TextSeparatorChar.ParagraphSeparator => true,
+                _ => false
+            };
 
         /// <summary>
         ///     Strips multiple line separator characters.

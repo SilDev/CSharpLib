@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: NetEx.cs
-// Version:  2023-12-20 00:28
+// Version:  2023-12-22 10:16
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -92,40 +92,36 @@ namespace SilDev.Network
         /// <param name="dnsOptions">
         ///     The Domain Name System provider to get the addresses.
         /// </param>
-        public static string[][] GetDnsAddresses(DnsOption dnsOptions)
-        {
-            switch (dnsOptions)
+        public static string[][] GetDnsAddresses(DnsOption dnsOptions) =>
+            dnsOptions switch
             {
-                case DnsOption.Google:
-                    return new[]
+                DnsOption.Google => new[]
+                {
+                    new[]
                     {
-                        new[]
-                        {
-                            "8.8.8.8",
-                            "8.8.4.4"
-                        },
-                        new[]
-                        {
-                            "[2001:4860:4860::8888]",
-                            "[2001:4860:4860::8844]"
-                        }
-                    };
-                default:
-                    return new[]
+                        "8.8.8.8",
+                        "8.8.4.4"
+                    },
+                    new[]
                     {
-                        new[]
-                        {
-                            "1.1.1.1",
-                            "1.0.0.1"
-                        },
-                        new[]
-                        {
-                            "[2606:4700:4700::1111]",
-                            "[2606:4700:4700::1001]"
-                        }
-                    };
-            }
-        }
+                        "[2001:4860:4860::8888]",
+                        "[2001:4860:4860::8844]"
+                    }
+                },
+                _ => new[]
+                {
+                    new[]
+                    {
+                        "1.1.1.1",
+                        "1.0.0.1"
+                    },
+                    new[]
+                    {
+                        "[2606:4700:4700::1111]",
+                        "[2606:4700:4700::1001]"
+                    }
+                }
+            };
 
         /// <summary>
         ///     Gets the full host component of this <see cref="Uri"/> instance.

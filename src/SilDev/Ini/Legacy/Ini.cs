@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: Ini.cs
-// Version:  2023-12-20 00:28
+// Version:  2023-12-22 10:22
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -28,6 +28,11 @@ namespace SilDev.Ini.Legacy
     /// <summary>
     ///     Provides functionality to parse INI documents with automated caching
     ///     system.
+    ///     <para>
+    ///         Please note that this class is a legacy class, but it is still very
+    ///         powerful and has very high INI format fault tolerance, automatic type
+    ///         conversions, and allows almost all types to be stored in an INI file.
+    ///     </para>
     /// </summary>
     public static class Ini
     {
@@ -121,9 +126,7 @@ namespace SilDev.Ini.Legacy
                     ReadAll(fileOrContent);
                 if (!CodeExists(code) || CachedFiles[code].Count < 1)
                     throw new ArgumentOutOfRangeException(nameof(fileOrContent));
-                var bytes = CachedFiles[code]?.SerializeObject();
-                if (bytes == null)
-                    throw new NullReferenceException();
+                var bytes = CachedFiles[code]?.SerializeObject() ?? throw new NullReferenceException();
                 if (compress)
                     bytes = GZip.Compress(bytes);
                 File.WriteAllBytes(path, bytes);

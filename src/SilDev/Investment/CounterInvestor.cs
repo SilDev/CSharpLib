@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: CounterInvestor.cs
-// Version:  2020-01-24 20:58
+// Version:  2023-12-22 10:16
 // 
-// Copyright (c) 2020, Si13n7 Developments(tm)
+// Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -77,25 +77,21 @@ namespace SilDev.Investment
         public TCounter GetValue(int index) =>
             Handler(index, null);
 
-        private static bool IsValid(Type type)
-        {
-            switch (Type.GetTypeCode(type))
+        private static bool IsValid(Type type) =>
+            Type.GetTypeCode(type) switch
             {
-                case TypeCode.Char:
-                case TypeCode.SByte:
-                case TypeCode.Byte:
-                case TypeCode.Int16:
-                case TypeCode.UInt16:
-                case TypeCode.Int32:
-                case TypeCode.UInt32:
-                case TypeCode.Int64:
-                case TypeCode.UInt64:
-                case TypeCode.Decimal:
-                    return true;
-                default:
-                    return false;
-            }
-        }
+                TypeCode.Char or
+                TypeCode.SByte or
+                TypeCode.Byte or
+                TypeCode.Int16 or
+                TypeCode.UInt16 or
+                TypeCode.Int32 or
+                TypeCode.UInt32 or
+                TypeCode.Int64 or
+                TypeCode.UInt64 or
+                TypeCode.Decimal => true,
+                _ => false
+            };
 
         private static bool IsAddable(TCounter source)
         {
