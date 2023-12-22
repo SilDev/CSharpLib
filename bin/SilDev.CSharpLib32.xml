@@ -6053,6 +6053,11 @@
             <summary>
                 Provides functionality to parse INI documents with automated caching
                 system.
+                <para>
+                    Please note that this class is a legacy class, but it is still very
+                    powerful and has very high INI format fault tolerance, automatic type
+                    conversions, and allows almost all types to be stored in an INI file.
+                </para>
             </summary>
         </member>
         <member name="P:SilDev.Ini.Legacy.Ini.MaxCacheSize">
