@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ListViewEx.cs
-// Version:  2023-12-05 13:51
+// Version:  2023-12-22 11:56
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -25,6 +25,9 @@ namespace SilDev.Forms
     public static class ListViewEx
     {
         private const int LvmSetHotCursor = 0x103e;
+        private const int UiSfHideFocus = 0x1;
+        private const int UiSSet = 0x1;
+        private const int WmChangeUiState = 0x127;
 
         /// <summary>
         ///     Retrieves the <see cref="ListViewItem"/> at the current cursor's position.
@@ -57,6 +60,31 @@ namespace SilDev.Forms
             if (cursor == default)
                 cursor = Cursors.Arrow;
             NativeHelper.SendMessage(lv.Handle, LvmSetHotCursor, IntPtr.Zero, cursor.Handle);
+        }
+
+        /// <summary>
+        ///     Enables the Windows Explorer selection border style for
+        ///     <see cref="ListView"/> elements.
+        /// </summary>
+        /// <param name="listView">
+        ///     The <see cref="ListView"/> control to change.
+        /// </param>
+        public static void EnableExplorerSelectionStyle(this ListView listView)
+        {
+            if (listView is { } lv)
+                NativeHelper.SetWindowTheme(lv.Handle, Desktop.AppsUseDarkTheme ? "DarkMode_Explorer" : "Explorer");
+        }
+
+        /// <summary>
+        ///     Removes the dotted selection borders from <see cref="ListView"/> elements.
+        /// </summary>
+        /// <param name="listView">
+        ///     The <see cref="ListView"/> control to change.
+        /// </param>
+        public static void RemoveDottedSelectionBorders(this ListView listView)
+        {
+            if (listView is { } lv)
+                NativeHelper.SendMessage(lv.Handle, WmChangeUiState, new IntPtr(UiSSet | (0x10000 ^ UiSfHideFocus)), IntPtr.Zero);
         }
     }
 }
