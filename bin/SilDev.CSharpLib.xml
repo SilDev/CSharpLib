@@ -4342,6 +4342,23 @@
                 The <see cref="T:System.Windows.Forms.Cursor"/> to set.
             </param>
         </member>
+        <member name="M:SilDev.Forms.ListViewEx.EnableExplorerSelectionStyle(System.Windows.Forms.ListView)">
+            <summary>
+                Enables the Windows Explorer selection border style for
+                <see cref="T:System.Windows.Forms.ListView"/> elements.
+            </summary>
+            <param name="listView">
+                The <see cref="T:System.Windows.Forms.ListView"/> control to change.
+            </param>
+        </member>
+        <member name="M:SilDev.Forms.ListViewEx.RemoveDottedSelectionBorders(System.Windows.Forms.ListView)">
+            <summary>
+                Removes the dotted selection borders from <see cref="T:System.Windows.Forms.ListView"/> elements.
+            </summary>
+            <param name="listView">
+                The <see cref="T:System.Windows.Forms.ListView"/> control to change.
+            </param>
+        </member>
         <member name="T:SilDev.Forms.MessageBoxEx">
             <summary>
                 Displays a message window, also known as a dialog box, based on
