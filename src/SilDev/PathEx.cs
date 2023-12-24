@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2023-12-20 00:28
+// Version:  2023-12-24 12:38
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -50,8 +50,9 @@ namespace SilDev
 
         private static readonly string[] PathPrefixStrs =
         {
-            "\\??\\UNC\\",
-            "\\??\\",
+            "\\?\\UNC\\",
+            "\\?\\",
+            "\\.\\",
             "\\\\?\\",
             "\\\\.\\",
             "\\\\"
@@ -207,7 +208,11 @@ namespace SilDev
         /// <param name="path">
         ///     The specified path to check.
         /// </param>
-        public static bool IsValidPath(string path)
+        /// <param name="allowSpecialPaths">
+        ///     <see langword="true"/> to allow UNC paths and DOS device paths, which is
+        ///     enabled by default; otherwise, <see langword="false"/>.
+        /// </param>
+        public static bool IsValidPath(string path, bool allowSpecialPaths)
         {
             try
             {
@@ -221,16 +226,19 @@ namespace SilDev
                         throw new ArgumentException(ExceptionMessages.PathHasNoSeparators + path);
                     throw new ArgumentException(ExceptionMessages.PathHasInvalidSeparators + path);
                 }
-                foreach (var prefix in PathPrefixStrs)
+                var special = PathPrefixStrs.FirstOrDefault(s => path.StartsWith(s, StringComparison.Ordinal));
+                var isSpecial = special != null;
+                if (isSpecial)
                 {
-                    if (!path.StartsWith(prefix, StringComparison.Ordinal))
-                        continue;
-                    throw new NotSupportedException(ExceptionMessages.PathHasInvalidPrefix.FormatCurrent(prefix, path));
+                    if (!allowSpecialPaths)
+                        throw new NotSupportedException(ExceptionMessages.PathHasInvalidPrefix.FormatCurrent(special, path));
+                    if (path.Length < special.Length + 1)
+                        throw new ArgumentException(ExceptionMessages.PathLengthIsTooLow + path);
                 }
-                if (path.Contains(new string(Path.DirectorySeparatorChar, 2)))
+                if ((isSpecial ? path.Substring(special.Length) : path).Contains(new string(Path.DirectorySeparatorChar, 2)))
                     throw new ArgumentException(ExceptionMessages.ConsecutiveSeparatorsInPath + path);
-                var drive = path.Substring(0, 3);
-                if (!Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
+                var drive = !isSpecial ? path.Substring(0, 3) : null;
+                if (!isSpecial && !Regex.IsMatch(drive, @"^[a-zA-Z]:\\$"))
                     throw new DriveNotFoundException(ExceptionMessages.NoDriveInPath + path);
                 if (path.Length >= 260)
                     throw new PathTooLongException(ExceptionMessages.PathLengthIsTooLong + path);
@@ -240,9 +248,9 @@ namespace SilDev
                 var dirLength = Path.HasExtension(path) ? levels.Take(levels.Length - 1).Join(Path.DirectorySeparatorChar).Length : path.Length;
                 if (dirLength >= 248)
                     throw new PathTooLongException(ExceptionMessages.DirLengthIsTooLong + path);
-                if (!DriveInfo.GetDrives().Select(di => di.Name).Contains(drive))
+                if (!isSpecial && !DriveInfo.GetDrives().Select(di => di.Name).Contains(drive))
                     throw new DriveNotFoundException(ExceptionMessages.InvalidDriveInPath + path);
-                var subPath = path.Substring(3);
+                var subPath = path.Substring(isSpecial ? special.Length : 3);
                 if (subPath.Any(c => c != Path.DirectorySeparatorChar && Path.GetInvalidFileNameChars().Contains(c)))
                     throw new ArgumentException(ExceptionMessages.BadCharsInPath);
                 return true;
@@ -254,6 +262,15 @@ namespace SilDev
                 return false;
             }
         }
+
+        /// <summary>
+        ///     Determines whether the specified path has a valid format.
+        /// </summary>
+        /// <param name="path">
+        ///     The specified path to check.
+        /// </param>
+        public static bool IsValidPath(string path) =>
+            IsValidPath(path, true);
 
         /// <summary>
         ///     Determines whether the specified path is specified as directory.
@@ -337,6 +354,9 @@ namespace SilDev
                     }
                 }
 
+                if (!string.IsNullOrEmpty(prefix) && !path.StartsWithEx(prefix))
+                    path = prefix + path;
+
                 if (path.StartsWith($".{Path.DirectorySeparatorChar}", StringComparison.Ordinal) || path.Equals(".", StringComparison.Ordinal) || path.Contains($"{Path.DirectorySeparatorChar}.."))
                     path = Path.GetFullPath(path);
                 if (path.EndsWith(".", StringComparison.Ordinal))
@@ -347,9 +367,6 @@ namespace SilDev
                         path = path.Replace(DirectorySeparatorStr, new string(Path.DirectorySeparatorChar, num));
                     else if (key.EqualsEx("Alt"))
                         path = path.Replace(DirectorySeparatorStr, new string(Path.AltDirectorySeparatorChar, num));
-
-                if (!string.IsNullOrEmpty(prefix) && !path.StartsWithEx(prefix))
-                    path = prefix + path;
             }
             catch (ArgumentException ex)
             {
