@@ -18323,6 +18323,30 @@
                 The file or directory to check.
             </param>
         </member>
+        <member name="M:SilDev.PathEx.IsValidPath(System.String,System.Boolean)">
+            <summary>
+                Determines whether the specified path has a valid format.
+            </summary>
+            <param name="path">
+                The specified path to check.
+            </param>
+            <param name="allowSpecialPaths">
+                <see langword="true"/> to allow paths that has a special prefix; otherwise,
+                <see langword="false"/> to disallow the following
+                <para>
+                    <b>
+                        prefixes:
+                    </b>
+                </para>
+                <code>
+                    \??\UNC\
+                    \??\"
+                    \\?\
+                    \\.\
+                    \\
+                </code>
+            </param>
+        </member>
         <member name="M:SilDev.PathEx.IsValidPath(System.String)">
             <summary>
                 Determines whether the specified path has a valid format.
