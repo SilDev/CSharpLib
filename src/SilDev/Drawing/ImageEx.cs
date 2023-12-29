@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: ImageEx.cs
-// Version:  2023-12-20 00:28
+// Version:  2023-12-29 14:51
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -21,7 +21,6 @@ namespace SilDev.Drawing
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
-    using System.Linq;
     using System.Threading;
     using Properties;
     using static Crypto;
@@ -266,26 +265,42 @@ namespace SilDev.Drawing
         ///     Specifies the maximal size indicator, which determines when the image gets
         ///     a new size.
         /// </param>
-        public static Image Redraw(this Image image, SmoothingMode quality = SmoothingMode.HighQuality, int indicator = 1024)
+        /// <param name="enlargement">
+        ///     <see langword="true"/> to allow enlargement of the image; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static Image Redraw(this Image image, SmoothingMode quality = SmoothingMode.HighQuality, int indicator = 1024, bool enlargement = true)
         {
-            if (image is not { } img)
-                return default;
+            if (image is not { } img || indicator < 1)
+                return image;
             int[] size =
             {
                 img.Width,
                 img.Height
             };
-            if (indicator > 0 && (indicator < size.First() || indicator < size.Last()))
-                for (var i = 0; i < size.Length; i++)
+            var max = Math.Max(size[0], size[1]);
+            switch (enlargement)
+            {
+                case true when indicator != max:
+                case false when indicator < max:
                 {
-                    if (size[i] <= indicator)
-                        continue;
-                    var percent = (int)Math.Floor(100d / size[i] * indicator);
-                    size[i] = (int)(size[i] * (percent / 100d));
-                    size[i == 0 ? 1 : 0] = (int)(size[i == 0 ? 1 : 0] * (percent / 100d));
+                    if (size[0] == size[1])
+                    {
+                        size[0] = indicator;
+                        size[1] = indicator;
+                    }
+                    else
+                    {
+                        var iMax = size[0] == max ? 0 : 1;
+                        var iMin = iMax == 0 ? 1 : 0;
+                        var per = Math.Round(100d / max * indicator);
+                        size[iMax] = indicator;
+                        size[iMin] = (int)Math.Round(size[iMin] * (per / 100d));
+                    }
                     break;
                 }
-            return img.Redraw(size.First(), size.Last(), quality);
+            }
+            return img.Redraw(size[0], size[1], quality);
         }
 
         /// <summary>
@@ -299,8 +314,12 @@ namespace SilDev.Drawing
         ///     Specifies the maximal size indicator, which determines when the image gets
         ///     a new size.
         /// </param>
-        public static Image Redraw(this Image image, int indicator) =>
-            image.Redraw(SmoothingMode.HighQuality, indicator);
+        /// <param name="enlargement">
+        ///     <see langword="true"/> to allow enlargement of the image; otherwise,
+        ///     <see langword="false"/>.
+        /// </param>
+        public static Image Redraw(this Image image, int indicator, bool enlargement = true) =>
+            image.Redraw(SmoothingMode.HighQuality, indicator, enlargement);
 
         /// <summary>
         ///     Blurs this image with the specified strength.
