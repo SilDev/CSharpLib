@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: EnvironmentEx.cs
-// Version:  2023-12-02 21:47
+// Version:  2023-12-29 15:00
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -250,16 +250,24 @@ namespace SilDev
             CommandLine(true, skip);
 
         /// <summary>
-        ///     Provides filter for special environment variables.
+        ///     Separates the specified variable if it contains a colon before the last
+        ///     percent sign, followed by a number, sometimes with the Alt keyword before
+        ///     the number.
+        ///     <para>
+        ///         These filters are typically used to multiply
+        ///         <see cref="Path.DirectorySeparatorChar"/> characters in paths. In the
+        ///         case of the Alt keyword, the
+        ///         <see cref="Path.AltDirectorySeparatorChar"/> character is used.
+        ///     </para>
         /// </summary>
         /// <param name="variable">
-        ///     The name of the environment variable.
+        ///     The name of the environment variable with or without filter.
         /// </param>
         /// <param name="key">
-        ///     The key that specifies the directory separator.
+        ///     The keyword that specifies the directory separator.
         /// </param>
         /// <param name="num">
-        ///     The number that specifies the number of directory separators.
+        ///     The number indicating the directory separator multiplier.
         /// </param>
         public static void VariableFilter(ref string variable, out string key, out byte num)
         {
@@ -301,6 +309,10 @@ namespace SilDev
         ///         value and also supports the keyword "CurDir" to get the
         ///         <see cref="PathEx.LocalDir"/> value.
         ///     </para>
+        ///     <para>
+        ///         This function should not be confused with
+        ///         <see cref="GetVariableWithPath(string, bool, bool)"/>.
+        ///     </para>
         /// </summary>
         /// <param name="variable">
         ///     The name of the environment variable.
@@ -309,13 +321,26 @@ namespace SilDev
         ///     <see langword="true"/> to convert the result to lowercase; otherwise,
         ///     <see langword="false"/>.
         /// </param>
-        public static string GetVariableValue(string variable, bool lower = false)
+        /// <param name="noSubPath">
+        ///     <see langword="true"/> to get only the value of the environment variable,
+        ///     even if the variable is an entire path; otherwise, <see langword="false"/>
+        ///     to retrieve the entire path.
+        /// </param>
+        public static string GetVariableValue(string variable, bool lower = false, bool noSubPath = true)
         {
             var output = string.Empty;
             try
             {
                 if (string.IsNullOrWhiteSpace(variable))
                     throw new ArgumentNullException(nameof(variable));
+                var subPath = string.Empty;
+                if (variable.ContainsEx(PathEx.PathSeparatorChars))
+                {
+                    var plains = variable.Split(PathEx.PathSeparatorChars, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    variable = plains[0];
+                    if (!noSubPath && plains.Length > 1)
+                        subPath = $"{Path.DirectorySeparatorChar}{plains.Skip(1).Join(Path.DirectorySeparatorChar)}";
+                }
                 variable = variable.RemoveChar('%');
                 VariableFilter(ref variable, out var key, out var num);
                 if (variable.EqualsEx("CurDir", "CurrentDir"))
@@ -327,13 +352,8 @@ namespace SilDev
                     if (string.IsNullOrEmpty(match))
                     {
                         var table = (Hashtable)Environment.GetEnvironmentVariables();
-                        foreach (var varKey in table.Keys)
-                        {
-                            if (!((string)varKey).EqualsEx(variable))
-                                continue;
+                        if (table.Keys.Cast<string>().FirstOrDefault(k => k.EqualsEx(variable)) is { } varKey)
                             output = (string)table[varKey];
-                            break;
-                        }
                     }
                     else
                     {
@@ -341,6 +361,8 @@ namespace SilDev
                         output = Environment.GetFolderPath(folder);
                     }
                 }
+                if (!noSubPath)
+                    output += subPath;
                 if (lower)
                     output = output?.ToLowerInvariant();
                 if (!string.IsNullOrEmpty(output) && (!string.IsNullOrEmpty(key) || num > 1))
@@ -383,6 +405,11 @@ namespace SilDev
 
         /// <summary>
         ///     Converts the beginning of the specified path to an environment variable.
+        ///     <para>
+        ///         &#9888; Please note that
+        ///         <see cref="VariableFilter(ref string, out string, out byte)"/> has no
+        ///         effect here.
+        ///     </para>
         /// </summary>
         /// <param name="path">
         ///     The path to convert.
@@ -398,8 +425,13 @@ namespace SilDev
         /// </param>
         public static string GetVariableWithPath(string path, bool curDir = true, bool special = true)
         {
+            if (path.StartsWith("%", StringComparison.Ordinal))
+            {
+                path = GetVariableValue(path, false, false);
+                path = PathEx.Combine(path);
+            }
             var variable = GetVariableFromPathIntern(path, curDir, special, out var length);
-            if (string.IsNullOrEmpty(variable) || length <= 0)
+            if (string.IsNullOrEmpty(variable) || length < 1)
                 return path;
             return $"%{variable}%{path.Substring(length)}";
         }
@@ -410,18 +442,13 @@ namespace SilDev
             {
                 if (string.IsNullOrWhiteSpace(path))
                     throw new ArgumentNullException(nameof(path));
-                var current = path;
-                if (current.StartsWith("%", StringComparison.Ordinal) && (current.ContainsEx($"%{Path.DirectorySeparatorChar}", $"%{Path.AltDirectorySeparatorChar}") || current.EndsWith("%", StringComparison.Ordinal)))
-                {
-                    length = current.IndexOf('%', 1);
-                    return current.Substring(1, --length);
-                }
+                path = PathEx.Combine(path);
                 if (!PathEx.IsValidPath(path))
                     throw new ArgumentInvalidException(nameof(path));
                 if (curDir)
                 {
                     var localDir = PathEx.LocalDir;
-                    if (current.StartsWithEx(localDir))
+                    if (path.StartsWithEx(localDir))
                     {
                         length = localDir.Length;
                         return "CurDir";
@@ -431,7 +458,7 @@ namespace SilDev
                 foreach (var varKey in table.Keys)
                 {
                     var varValue = (string)table[varKey];
-                    if (varValue.Length < 3 || !PathEx.IsValidPath(varValue) || !current.StartsWithEx(varValue))
+                    if (varValue.Length < 3 || !PathEx.IsValidPath(varValue) || !path.StartsWithEx(varValue))
                         continue;
                     length = varValue.Length;
                     return (string)varKey;
@@ -442,7 +469,7 @@ namespace SilDev
                     foreach (var item in Enum.GetValues(type).Cast<Environment.SpecialFolder>())
                     {
                         var folder = Environment.GetFolderPath(item);
-                        if (folder.Length < 3 || !current.StartsWithEx(folder))
+                        if (folder.Length < 3 || !path.StartsWithEx(folder))
                             continue;
                         var name = Enum.GetName(type, item);
                         length = folder.Length;
@@ -450,7 +477,7 @@ namespace SilDev
                     }
                 }
                 var sysDrive = Environment.GetEnvironmentVariable("SystemDrive");
-                if (!string.IsNullOrEmpty(sysDrive) && current.StartsWithEx(sysDrive))
+                if (!string.IsNullOrEmpty(sysDrive) && path.StartsWithEx(sysDrive))
                 {
                     length = sysDrive.Length;
                     return "SystemDrive";

@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: PathEx.cs
-// Version:  2023-12-24 12:38
+// Version:  2023-12-29 15:00
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -34,6 +34,12 @@ namespace SilDev
     /// </summary>
     public static class PathEx
     {
+        internal static readonly char[] PathSeparatorChars =
+        {
+            Path.DirectorySeparatorChar,
+            Path.AltDirectorySeparatorChar
+        };
+
         private static readonly char[] InvalidPathChars =
         {
             '\u0000', '\u0001', '\u0002', '\u0003',
@@ -56,12 +62,6 @@ namespace SilDev
             "\\\\?\\",
             "\\\\.\\",
             "\\\\"
-        };
-
-        private static readonly char[] PathSeparatorChars =
-        {
-            Path.DirectorySeparatorChar,
-            Path.AltDirectorySeparatorChar
         };
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -385,7 +385,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -405,7 +405,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -428,7 +428,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -446,7 +446,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -468,7 +468,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -493,7 +493,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -521,7 +521,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="invalidPathChars">
@@ -543,7 +543,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="specialFolder">
@@ -562,7 +562,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="path0">
@@ -580,7 +580,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="path0">
@@ -601,7 +601,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="specialFolder">
@@ -619,7 +619,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="path0">
@@ -633,7 +633,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="path0">
@@ -650,7 +650,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="path0">
@@ -670,7 +670,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         /// </summary>
         /// <param name="paths">
@@ -684,7 +684,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
@@ -738,7 +738,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
@@ -759,7 +759,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
@@ -780,7 +780,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
@@ -801,7 +801,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
@@ -819,7 +819,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
@@ -837,7 +837,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
@@ -855,7 +855,7 @@ namespace SilDev
         ///     <para>
         ///         Allows relative paths, superordinate directory navigation and
         ///         environment variables based on
-        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool)"/>.
+        ///         <see cref="EnvironmentEx.GetVariableValue(string, bool, bool)"/>.
         ///     </para>
         ///     <para>
         ///         <see cref="Path.AltDirectorySeparatorChar"/> is used to separate path
