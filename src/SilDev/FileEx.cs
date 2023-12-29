@@ -5,7 +5,7 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2023-12-20 17:31
+// Version:  2023-12-29 14:57
 // 
 // Copyright (c) 2023, Si13n7 Developments(tm)
 // All rights reserved.
@@ -1247,6 +1247,39 @@ namespace SilDev
             {
                 Arguments = startArgs,
                 IconLocation = iconLocation,
+                LinkPath = linkPath,
+                TargetPath = targetPath
+            };
+            return ShellLink.Create(linkInfo, skipExists);
+        }
+
+        /// <summary>
+        ///     Creates a link to the specified file.
+        /// </summary>
+        /// <param name="targetPath">
+        ///     The file to be linked.
+        /// </param>
+        /// <param name="linkPath">
+        ///     The fully qualified name of the new link.
+        /// </param>
+        /// <param name="startArgs">
+        ///     The arguments which applies when the link is started.
+        /// </param>
+        /// <param name="iconLocation">
+        ///     The icon resource path.
+        /// </param>
+        /// <param name="skipExists">
+        ///     <see langword="true"/> to skip existing shortcuts, even if the target path
+        ///     of the same; otherwise, <see langword="false"/>.
+        /// </param>
+        public static bool CreateShellLink(string targetPath, string linkPath, string startArgs, string iconLocation, bool skipExists = false)
+        {
+            if (PathEx.IsDir(targetPath))
+                return false;
+            var linkInfo = new ShellLinkInfo
+            {
+                Arguments = startArgs,
+                IconLocation = (iconLocation, 0),
                 LinkPath = linkPath,
                 TargetPath = targetPath
             };
