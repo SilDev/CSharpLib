@@ -4226,7 +4226,7 @@
             <summary>
                 Captures the entire desktop under this form.
                 <para>
-                    &#9762;  Please note that the form window must be hidden for the moment
+                    &#9762; Please note that the form window must be hidden for the moment
                     of capture, which may cause flickering.
                 </para>
             </summary>
@@ -22927,6 +22927,11 @@
                 Delay between refreshes in milliseconds.
             </param>
         </member>
+        <member name="T:SilDev.TypeEx">
+            <summary>
+                Expands the functionality for the <see cref="T:System.Type"/> class.
+            </summary>
+        </member>
         <member name="M:SilDev.TypeEx.GetPropertiesEx(System.Type,System.Type[])">
             <summary>
                 Returns all readable public properties of this <see cref="T:System.Type"/> where
@@ -22936,22 +22941,134 @@
                 The type to retrieves the properties from.
             </param>
             <param name="excludeAttributes">
-                The attributes where none can be defined.
+                The attributes that determine that all properties that one of these
+                attributes has are excluded.
             </param>
             <exception cref="T:System.ArgumentNullException">
-                type or excludeAttributes is null.
+                type is null.
             </exception>
         </member>
         <member name="M:SilDev.TypeEx.GetPropertiesEx(System.Type)">
             <summary>
                 Returns all readable public properties of this <see cref="T:System.Type"/>.
             </summary>
+            <inheritdoc cref="M:SilDev.TypeEx.GetPropertiesEx(System.Type,System.Type[])"/>
+        </member>
+        <member name="M:SilDev.TypeEx.HasProperty(System.Type,System.String,System.StringComparison,System.Type[])">
+            <summary>
+                Determines whether a readable property with the specified name exists in
+                this <see cref="T:System.Type"/>.
+            </summary>
             <param name="type">
-                The type to retrieves the properties from.
+                The <see cref="T:System.Type"/> to check.
+            </param>
+            <param name="name">
+                The property name.
+            </param>
+            <param name="comparisonType">
+                Specifies how the <paramref name="name"/> will be compared.
+            </param>
+            <param name="excludeAttributes">
+                The attributes that determine that all properties that one of these
+                attributes has are excluded from the search.
             </param>
             <exception cref="T:System.ArgumentNullException">
-                type or excludeAttributes is null.
+                type or name is null.
             </exception>
+        </member>
+        <member name="M:SilDev.TypeEx.HasProperty(System.Type,System.String,System.Type[])">
+            <inheritdoc cref="M:SilDev.TypeEx.HasProperty(System.Type,System.String,System.StringComparison,System.Type[])"/>
+        </member>
+        <member name="M:SilDev.TypeEx.GetProperty(System.Type,System.String,System.StringComparison,System.Type[])">
+            <summary>
+                Returns the property associated with the specified name of this
+                <see cref="T:System.Type"/>.
+            </summary>
+            <param name="type">
+                The <see cref="T:System.Type"/> to get the property value from.
+            </param>
+            <param name="name">
+                The property name.
+            </param>
+            <param name="comparisonType">
+                Specifies how the <paramref name="name"/> will be compared.
+            </param>
+            <param name="excludeAttributes">
+                The attributes that determine that all properties that one of these
+                attributes has are excluded from the search.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                type or name is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.TypeEx.GetProperty(System.Type,System.String,System.Type[])">
+            <inheritdoc cref="M:SilDev.TypeEx.GetProperty(System.Type,System.String,System.StringComparison,System.Type[])"/>
+        </member>
+        <member name="M:SilDev.TypeEx.GetPropertyValue``2(``0,System.String,System.StringComparison,``1,System.Type[])">
+            <summary>
+                Returns the value of the specified property of this instance.
+            </summary>
+            <typeparam name="TInstance">
+                The instance type.
+            </typeparam>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="instance">
+                The instance to get the property value from.
+            </param>
+            <param name="name">
+                The property name.
+            </param>
+            <param name="comparisonType">
+                Specifies how the <paramref name="name"/> will be compared.
+            </param>
+            <param name="defValue">
+                The value returned if no property value was found.
+            </param>
+            <param name="excludeAttributes">
+                The attributes that determine that all properties that one of these
+                attributes has are excluded from the search.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                type or name is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.TypeEx.GetPropertyValue``2(``0,System.String,``1,System.Type[])">
+            <inheritdoc cref="M:SilDev.TypeEx.GetPropertyValue``2(``0,System.String,System.StringComparison,``1,System.Type[])"/>
+        </member>
+        <member name="M:SilDev.TypeEx.SetPropertyValue``2(``0,System.String,System.StringComparison,``1,System.Type[])">
+            <summary>
+                Sets the specified value of the specified property of this instance.
+            </summary>
+            <typeparam name="TInstance">
+                The instance type.
+            </typeparam>
+            <typeparam name="TValue">
+                The value type.
+            </typeparam>
+            <param name="instance">
+                The instance to get the property value from.
+            </param>
+            <param name="name">
+                The property name.
+            </param>
+            <param name="comparisonType">
+                Specifies how the <paramref name="name"/> will be compared.
+            </param>
+            <param name="value">
+                The value to be set.
+            </param>
+            <param name="excludeAttributes">
+                The attributes that determine that all properties that one of these
+                attributes has are excluded from the search.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                type or name is null.
+            </exception>
+        </member>
+        <member name="M:SilDev.TypeEx.SetPropertyValue``2(``0,System.String,``1,System.Type[])">
+            <inheritdoc cref="M:SilDev.TypeEx.SetPropertyValue``2(``0,System.String,System.StringComparison,``1,System.Type[])"/>
         </member>
         <member name="T:SilDev.WinApi">
             <summary>
