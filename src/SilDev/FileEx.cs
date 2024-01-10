@@ -5,9 +5,9 @@
 // ==============================================
 // 
 // Filename: FileEx.cs
-// Version:  2023-12-29 14:57
+// Version:  2024-01-10 17:35
 // 
-// Copyright (c) 2023, Si13n7 Developments(tm)
+// Copyright (c) 2024, Si13n7 Developments(tm)
 // All rights reserved.
 // ______________________________________________
 
@@ -346,30 +346,36 @@ namespace SilDev
                 return !fileInfo.Exists;
             if (fileInfo.Length != otherFileInfo.Length)
                 return false;
-            int count;
+            int size;
             if (fileInfo.Length < 8)
-                count = (int)fileInfo.Length;
+                size = (int)fileInfo.Length;
             else
             {
                 var len = (double)fileInfo.Length;
                 var log = Math.Log(len);
-                if (fileInfo.Length < 1024)
-                    count = (int)Math.Floor(len / log);
-                else if (fileInfo.Length < uint.MaxValue)
+                switch (fileInfo.Length)
                 {
-                    var sqrt = Math.Sqrt(len);
-                    count = (int)Math.Floor(sqrt / log);
+                    case < 1024:
+                        size = (int)Math.Floor(len / log);
+                        break;
+                    case < uint.MaxValue:
+                    {
+                        var sqrt = Math.Sqrt(len);
+                        size = (int)Math.Floor(sqrt / log);
+                        break;
+                    }
+                    default:
+                        size = 4096;
+                        break;
                 }
-                else
-                    count = 4096;
             }
-            var buffer1 = new byte[count];
-            var buffer2 = new byte[count];
+            var buffer1 = new byte[size];
+            var buffer2 = new byte[size];
             using var fs1 = fileInfo.OpenRead();
             using var fs2 = otherFileInfo.OpenRead();
             int len1, len2;
-            while ((len1 = fs1.Read(buffer1, 0, count)) > 0 && (len2 = fs2.Read(buffer2, 0, count)) > 0)
-                if (len1 != len2 || (len1 < count && !buffer1.Take(len1).SequenceEqual(buffer2.Take(len2))) || !buffer1.SequenceEqual(buffer2))
+            while ((len1 = fs1.Read(buffer1, 0, size)) > 0 && (len2 = fs2.Read(buffer2, 0, size)) > 0)
+                if (len1 != len2 || (len1 < size && !buffer1.Take(len1).SequenceEqual(buffer2.Take(len2))) || !buffer1.SequenceEqual(buffer2))
                     return false;
             return true;
         }
