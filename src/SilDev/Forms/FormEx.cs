@@ -48,7 +48,7 @@ namespace SilDev.Forms
         /// <summary>
         ///     Captures the entire desktop under this form.
         ///     <para>
-        ///         &#9762;  Please note that the form window must be hidden for the moment
+        ///         &#9762; Please note that the form window must be hidden for the moment
         ///         of capture, which may cause flickering.
         ///     </para>
         /// </summary>
